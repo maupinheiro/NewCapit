@@ -10,7 +10,7 @@ namespace DAL
 {
     class ConnectionUtil
     {
-        private static string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        private static string ConnectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
         public static SqlConnection GetConnection() 
         {

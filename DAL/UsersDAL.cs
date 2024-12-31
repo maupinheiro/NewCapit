@@ -40,6 +40,15 @@ namespace DAL
                 }
             }
         }
+        public static ConsultaCliente CheckCliente(ConsultaCliente obj)
+        {
+            string sqlQuery = "SELECT codcli FROM tbclientes WHERE (codcli = @codcli)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaCliente>(sqlQuery, obj).FirstOrDefault();
+            }
+        }
     }
    
 }

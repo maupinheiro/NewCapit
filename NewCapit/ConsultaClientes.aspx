@@ -8,7 +8,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-2 text-gray-800">Consulta Clientes</h1>
         <a href="Frm_CadClientes.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-industry"></i> Novo Cliente
+            class="fas fa-industry"></i> Novo Cadastro
         </a>
     </div>
     <!-- Content Graficos -->
@@ -22,7 +22,9 @@
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Total de Clientes
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">30</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                               <asp:Label ID="TotalClientes" runat="server" Text=""></asp:Label>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <img src="img/brasil.jpg" width="60px" alt="" />
@@ -41,7 +43,9 @@
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Região Norte
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">30</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <asp:Label ID="Norte" runat="server" Text=""></asp:Label>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <img src="img/regiao-norte.jpg" width="60px" alt="" />
@@ -60,7 +64,9 @@
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                 Região Nordeste
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <asp:Label ID="Nordeste" runat="server" Text=""></asp:Label>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <img src="img/regiao-nordeste.jpg" width="60px" alt="" />
@@ -81,7 +87,9 @@
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">40           </div>
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                        <asp:Label ID="Sul" runat="server" Text=""></asp:Label>
+                                     </div>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +110,9 @@
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Região Sudeste
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <asp:Label ID="Sudeste" runat="server" Text=""></asp:Label>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <img src="img/regiao-sudeste.jpg" width="60px" alt="" />
@@ -121,7 +131,9 @@
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Região Centro-Oeste
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <asp:Label ID="CentroOeste" runat="server" Text=""></asp:Label>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <img src="img/regiao-centro-oeste.jpg" width="60px" alt="" />
@@ -145,43 +157,28 @@
                         <asp:BoundField DataField="unidade" HeaderText="UNIDADE" />
                         <asp:BoundField DataField="regiao" HeaderText="REGIÃO   " />
                         <asp:BoundField DataField="cidcli" HeaderText="CIDADE" />
-                        <asp:BoundField DataField="estcli" HeaderText="UF" />
-                        <asp:BoundField DataField="dtccli" HeaderText="CADASTRO" />
-                        <asp:BoundField DataField="ativo_inativo" HeaderText="SITUAÇÃO" />
+                        <asp:BoundField DataField="estcli" HeaderText="UF" />                        
+                        <asp:BoundField DataField="ativo_inativo" HeaderText="SITUAÇÃO" ControlStyle-BackColor="Yellow" /> 
                          
-                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
-                             <ItemTemplate >
-                                <!--
-                                 <asp:Button ID="Button1" runat="server" CausesValidation="false" CommandName="SendMail"
-                                    Text="SendMail" CommandArgument='<%# Eval("id") %>' />
-                                <a class="btn btn-primary btn-sm" href="EditCliente?id=">Editar</a>
-                                    -->  
-                                 <a class="btn btn-primary btn-sm" href="EditCliente?id=">Editar</a>                                 
-                             </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField ShowHeader="False">
-                             <ItemTemplate >
-                                <!--
-                                 <asp:Button ID="Button1" runat="server" CausesValidation="false" CommandName="SendMail"
-                                    Text="SendMail" CommandArgument='<%# Eval("id") %>' />
-        
-                                 <a class="btn btn-primary btn-sm" href="EditCliente?id=">Editar</a>
+                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="230px">
+                             <ItemTemplate >                                 
+                                 <a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?id=">
+                                    <i class="fa fa-edit"></i>
+                                    Editar
+                                 </a> 
+                                 <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
+                                    <i class="fas fa-map-marker-alt"></i>                                    
+                                    Mapa
+                                 </a> 
+                                 <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
+                                    <i class="fa fa-trash"></i>                                    
+                                    Excluir
+                                 </a> 
                                  
-                                    <a class="btn btn-danger btn-sm" href="#">Excluir</a>
-                                    -->
-                                 <a class="btn btn-info btn-sm" href="#">Mapa</a>
                              </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField ShowHeader="False">
-                             <ItemTemplate >
-                                <!--
-                                 <asp:Button ID="Button1" runat="server" CausesValidation="false" CommandName="SendMail"
-                                    Text="SendMail" CommandArgument='<%# Eval("id") %>' />
-                                 -->
-                                <a class="btn btn-danger btn-sm" href="#">Excluir</a> 
-                             </ItemTemplate>
-                        </asp:TemplateField>
-                           
+
+                       
                     </Columns>
                 </asp:GridView>
             </div>
@@ -189,6 +186,7 @@
     </div> 
    
     <!-- JavaScript -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="src/javascript/script.js"></script>
     
 </asp:Content>
