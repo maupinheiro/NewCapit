@@ -1,272 +1,290 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltClientes.aspx.cs" Inherits="NewCapit.Frm_AltClientes" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-     <div class="container mt-5">
-     <h3>..: ATUALIZA CADASTRO :..</h3>
-     <hr />
-     <div class="row g-3">
-         <div class="col-md-1">
-             <div class="form-group">
-                 <span class="details">CÓDIGO:</span>
-                 <input type="text" id="txtCodCli" class="form-control" placeholder="" maxlength="11" autofocus required>
-             </div> 
-         </div>
-
-         <div class="col-md-1">
-             <div class="form-group">
-                 <span class="details">SAPIENS:</span>
-                 <input type="text" id="txtCodSapiens" class="form-control" placeholder="" maxlength="10">
-             </div>
-         </div>
-         <div class="col-md-1">
-             <div class="form-group">
-                 <span class="details">CÓD.VW:</span>
-                 <input type="text" id="txtCodVw" class="form-control" placeholder="" maxlength="10">
-             </div>
-         </div>
-
-         <div class="col-md-2">
-             <div class="form_group">
-                 <span class="details">TIPO:</span>
-                 <select name="tipo" id="cboTipo" class="form-control">
-                     <option value="CLIENTE">CLIENTE</option>
-                     <option value="EMBARCADOR">EMBARCADOR</option>
-                     <option value="TRANSPORTADOR">TRANSPORTADOR</option>
-                     <option value="OPERADOR LOGÍSTICO">OPERADOR LOGÍSTICO</option>
-                 </select>
-             </div>
-         </div>
-         <div class="col-md-2">
-             <div class="form_group">
-                     <span class="details">UNIDADE:</span>
-                     <input type="text" id="txtUnidade" class="form-control" placeholder="" maxlength="45" autofocus required>
-              </div>
-         </div>
-         <div class="col-md-2">
-             <span class="">REGIÃO DO PAÍS:</span>
-             <select name="regiao" id="cboRegiao" class="form-control">
-                 <option value="NORTE">NORTE</option>
-                 <option value="SUL">SUL</option>
-                 <option value="SUDESTE">SUDESTE</option>
-                 <option value="CENTRO-OESTE">CENTRO-OESTE</option>
-                 <option value="NORDESTE">NORDESTE</option>
-             </select>
-         </div>
-         
-         <div class="col-md-2">
+    <div class="container mt-5">
+        <h3>..: ATUALIZA CADASTRO :..</h3>
+        <hr />
+        <div class="row g-3">
+            <div class="col-md-1">
                 <div class="form-group">
-                    <span class="details">CADASTRO:</span>
-                    <input type="date" id="txtDtcCli" class="form-control" placeholder="" maxlength="10">
-                </div> 
-         </div> 
-         <div class="col-md-1">
-             <div class="form-group">
-                 <span class="">SITUAÇÃO:</span>
-                 <select name="status" id="status" class="form-control">
-                     <option value="ATIVO">ATIVO</option>
-                     <option value="INATIVO">INATIVO</option>                        
-                 </select>
-             </div> 
-         </div>            
-     </div>
+                    <span class="details">CÓDIGO:</span>
+                    <asp:TextBox ID="txtCodCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <br />
+                <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+            </div>
+            <div class="col-md-2">
+                <div class="form_group">
+                    <span class="details">TIPO DE CLIENTE:</span>
+                    <asp:DropDownList ID="cboTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">
+                        <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
+                        <asp:ListItem Value="CLIENTE" Text="CLIENTE"></asp:ListItem>
+                        <asp:ListItem Value="EMBARCADOR" Text="EMBARCADOR"></asp:ListItem>
+                        <asp:ListItem Value="TRANSPORTADOR" Text="TRANSPORTADOR"></asp:ListItem>
+                        <asp:ListItem Value="OPERADOR LOGÍSTICO" Text="OPERADOR LOGÍSTICO"></asp:ListItem>
+                        <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
+                    </asp:DropDownList><br />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form_group">
+                    <span class="details">UNIDADE:</span>
+                    <asp:TextBox ID="txtUnidade" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="45"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <span class="">REGIÃO DO PAÍS:</span>
+                <asp:DropDownList ID="cboRegiao" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">
+                    <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
+                    <asp:ListItem Value="NORTE" Text="NORTE"></asp:ListItem>
+                    <asp:ListItem Value="SUL" Text="SUL"></asp:ListItem>
+                    <asp:ListItem Value="SUDESTE" Text="SUDESTE"></asp:ListItem>
+                    <asp:ListItem Value="CENTRO-OESTE" Text="CENTRO-OESTE"></asp:ListItem>
+                    <asp:ListItem Value="NORDESTE" Text="NORDESTE"></asp:ListItem>
+                </asp:DropDownList><br />
+            </div>
 
-     <div class="row g-3">
-         <div class="col-md-3">
-             <div class="form-group">
-                 <span class="details">RAZÃO SOCIAL:</span>
-                 <input type="text" id="txtRazCli" class="form-control" placeholder="" maxlength="50" required>
-             </div>
-         </div>
-         
-         <div class="col-md-2">
-             <div class="form-group">
-                 <span class="details">CNPJ:</span>
-                 <input type="text" id="txtCnpj" class="form-control" placeholder="" maxlength="20" required>
-             </div>
-         </div>  
-         <div class="col-md-2">
-            <div class="form-group">
-                <span class="details">INSC. ESTADUAL:</span>
-                <input type="text" id="txtInscEstadual" class="form-control" placeholder="" maxlength="15" required>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">SAPIENS:</span>
+                    <asp:TextBox ID="txtCodSapiens" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                </div>
             </div>
-        </div> 
-        <div class="col-md-2">
-            <div class="form-group">
-                <span class="details">CONTATO:</span>
-                <input type="text" id="txtConCli" class="form-control" placeholder="" maxlength="30" required>
-            </div>
-        </div>    
-        <div class="col-md-2">
-            <div class="form-group">
-                <span class="details">FONE FIXO:</span>
-                <input type="text" id="txtTc1Cli" class="form-control" placeholder="(99) 9999-9999" maxlength="17" required>
-            </div>
-        </div> 
-        <div class="col-md-1">
-            <div class="form-group">
-                <span class="details">RAMAL:</span>
-                <input type="text" id="txtRamal" class="form-control" placeholder="9999" maxlength="4" >
-            </div>
-        </div> 
-     </div>
 
-     <div class="row g-3">
-         <div class="col-md-3">
-             <div class="form-group">
-                 <span class="details">NOME FANTASIA:</span>
-                 <input type="text" id="txtNomCli" class="form-control" placeholder="" maxlength="50" required>
-             </div>
-         </div>
-         <div class="col-md-2">
-            <div class="form-group">
-                <span class="details">CELULAR:</span>
-                <input type="text" id="txtTc2Cli" class="form-control" placeholder="(99) 9 9999-9999" maxlength="16">
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">CÓD.VW:</span>
+                    <asp:TextBox ID="txtCodVw" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                </div>
             </div>
-        </div> 
-        <div class="col-md-3">
-            <div class="form-group">
-                <span class="details">PROGRAMADORES:</span>
-                <input type="text" id="txtProgramador" class="form-control" placeholder="" maxlength="35" >
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="">STATUS:</span>
+                    <asp:DropDownList ID="status" runat="server" ForeColor="Blue" CssClass="form-control">
+                        <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
+                        <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
+                    </asp:DropDownList></>
+                </div>
             </div>
-        </div> 
-        <div class="col-md-2">
-            <div class="form-group">
-                <span class="details">TELEFONE/RAMAL:</span>
-                <input type="text" id="txtContato" class="form-control" placeholder="" maxlength="25" >
-            </div>
-        </div>  
-     </div>    
-
-     <div class="row g-3">
-          <div class="col-md-12">
-              <div class="form-group">
-                  <span class="details">E-MAIL(S):</span>
-                  <input type="text" id="txtEmail" class="form-control" placeholder="" maxlength="200" >
-              </div>
-          </div> 
-     </div>
-
-     <div class="row g-3">
-        <div class="col-md-2">
-           <div class="form-group">
-              <span class="details">CEP:</span>
-              <input type="text" id="txtCepCli" style=text-align:center class="form-control" placeholder="99999-999" maxlength="9" required>
-              
-           </div>
-        </div> 
-        <div class="col-md-1">
-             <br />
-             <button type="submit" id="btnCep" class="btn btn-outline-warning">Pesquisar</button>              
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-               <span class="details">ENDEREÇO:</span>
-               <input type="text" id="txtEndCli" class="form-control" placeholder="" maxlength="60" required>                  
+        <div class="row g-3">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">CNPJ:</span>
+                    <asp:TextBox ID="txtCnpj" data-mask="00.000.000/0000-00" ForeColor="Blue" runat="server" class="form-control"></asp:TextBox>
+                </div>
             </div>
-        </div> 
-        <div class="col-md-1">
-            <div class="form-group">
-               <span class="details">Nº:</span>
-               <input type="text" id="txtNumero" style=text-align:center class="form-control" placeholder="" maxlength="4" required>                  
+            <div class="col-md-1">
+                <br />
+                <asp:Button ID="btnCnpj" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
             </div>
-        </div> 
-        <div class="col-md-2">
-             <div class="form-group">
-                <span class="details">COMPLEMENTO:</span>
-                <input type="text" id="txtComplemento" style=text-align:center class="form-control" placeholder="" maxlength="15">                  
-             </div>
-        </div> 
-     </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <span class="details">RAZÃO SOCIAL:</span>
+                    <asp:TextBox ID="txtRazCli" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">TIPO:</span>
+                    <asp:TextBox ID="txtTipo" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">ABERTURA:</span>
+                    <asp:TextBox ID="txtAbertura" runat="server" ForeColor="Blue" CssClass="form-control" Width="130px" value=""></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">SITUAÇÃO:</span>
+                    <asp:TextBox ID="txtSituacao" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
+                </div>
+            </div>
 
-     <div class="row g-3">
-         <div class="col-md-2">
-             <div class="form-group">
-                 <span class="details">BAIRRO:</span>
-                 <input type="text" id="txtBaiCli" class="form-control" placeholder="" maxlength="60" required>
-             </div>
-         </div>    
-         <div class="col-md-3">
-             <div class="form-group">
-                 <span class="details">CIDADE:</span>
-                 <input type="text" id="txtCidCli" class="form-control" placeholder="" maxlength="60" required>
-             </div>
-         </div> 
-         <div class="col-md-1">
-             <div class="form-group">
-                 <span class="details">UF:</span>
-                 <input type="text" id="txtEstCli" style=text-align:center class="form-control" placeholder="" maxlength="2" required>
-             </div>
-         </div> 
-         <div class="col-md-2">
-             <div class="form-group">
-                 <span class="details">LATITUDE:</span>
-                 <input type="text" id="latitude" style=text-align:center class="form-control" placeholder="" maxlength="40">
-             </div>
-         </div> 
-         <div class="col-md-2">
-             <div class="form-group">
-                 <span class="details">LONGITUDE:</span>
-                 <input type="text" id="longitude" style=text-align:center class="form-control" placeholder="" maxlength="40">
-             </div>
-         </div>
-         <div class="col-md-1">
-             <div class="form-group">
-                 <span class="details">RAIO:</span>
-                 <input type="number" id="txtRaio" style=text-align:center class="form-control" placeholder="" min=1 max=2000>
-             </div>
-         </div> 
-         <div class="col-md-1">
-              <br />
-              <button type="button" class="btn btn-outline-warning">Pesquisar</button>              
-         </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <span class="details">NOME FANTASIA:</span>
+                    <asp:TextBox ID="txtNomCli" runat="server" CssClass="form-control" placeholder="" MaxLength="50" ForeColor="Blue"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">INSC. ESTADUAL:</span>
+                    <asp:TextBox ID="txtInscEstadual" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="15"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">CONTATO:</span>
+                    <asp:TextBox ID="txtConCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="30"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">FONE FIXO:</span>
+                    <asp:TextBox ID="txtTc1Cli" runat="server" ForeColor="Blue" CssClass="form-control" data-mask="(00) 0000-0000" MaxLength="15"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">RAMAL:</span>
+                    <asp:TextBox ID="txtRamal" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="9999" MaxLength="4"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">CELULAR:</span>
+                    <asp:TextBox ID="txtTc2Cli" runat="server" ForeColor="Blue" CssClass="form-control" data-mask="(00) 0 0000-0000" MaxLength="16"></asp:TextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <span class="details">PROGRAMADORES:</span>
+                    <asp:TextBox ID="txtProgramador" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="35"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">TELEFONE/RAMAL:</span>
+                    <asp:TextBox ID="txtContato" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="25"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="form-group">
+                    <span class="details">E-MAIL(S):</span>
+                    <asp:TextBox ID="txtEmail" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="200"></asp:TextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">CEP:</span>
+                    <asp:TextBox ID="txtCepCli" runat="server" ForeColor="Blue" CssClass="form-control" Width="130px" placeholder="99999-999" MaxLength="9"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <br />
+                <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+            </div>
+            <div class="col-md-7">
+                <div class="form-group">
+                    <span class="details">ENDEREÇO:</span>
+                    <asp:TextBox ID="txtEndCli" runat="server" ForeColor="Blue" CssClass="form-control" MaxLength="60"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">Nº:</span>
+                    <asp:TextBox ID="txtNumero" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">COMPLEMENTO:</span>
+                    <asp:TextBox ID="txtComplemento" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="15"> </asp:TextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">BAIRRO:</span>
+                    <asp:TextBox ID="txtBaiCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <span class="details">MUNICIPIO:</span>
+                    <asp:TextBox ID="txtCidCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">UF:</span>
+                    <asp:TextBox ID="txtEstCli" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">LATITUDE:</span>
+                    <asp:TextBox ID="latitude" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">LONGITUDE:</span>
+                    <asp:TextBox ID="longitude" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">RAIO:</span>
+                    <asp:TextBox ID="txtRaio" value="100" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" min="1" max="2000"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <br />
+                <button type="button" class="btn btn-outline-warning">Pesquisar</button>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">CADASTRADO EM:</span>
+                    <asp:Label ID="lblDtCadastro" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="details">POR:</span>
+                    <asp:TextBox ID="txtUsuCadastro" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                </div>
+            </div>
 
-     </div>
-     <div class="row g-3">
-    
-    <div class="col-md-2">
-        <div class="form-group">
-            <span class="details">DATA CADASTRO:</span>
-            <input type="text" id="txtDtcCad" class="form-control" maxlength="16" readonly>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">ÚLTIMA ATUALIZAÇÃO:</span>
+                    <asp:Label ID="lblDtAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="details">POR:</span>
+                    <asp:TextBox ID="txtUsuAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                </div>
+            </div>
+
+
+
         </div>
-    </div> 
-    <div class="col-md-4">
-        <div class="form-group">
-            <span class="details">USUÁRIO:</span>
-            <input type="text" id="txtUsuCad" class="form-control" placeholder="" maxlength="35" readonly >
+
+        <div class="row g-3">
+            <div class="col-md-1">
+                <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
+            </div>
+            <div class="col-md-1">
+                <button type="button" id="btnSalvar" runat="server" class="btn btn-outline-success  btn-lg">Salvar </button>
+            </div>
+            <div class="col-md-1">
+                <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                </a>
+            </div>
         </div>
-    </div> 
-    <div class="col-md-2">
-       <div class="form-group">
-           <span class="details">ATUALIZAÇÃO:</span>
-           <input type="text" id="txtDtcAlt" class="form-control" maxlength="16" readonly>
-       </div>
-    </div> 
-    <div class="col-md-4">
-       <div class="form-group">
-           <span class="details">USUÁRIO:</span>
-           <input type="text" id="txtUsuAlt" class="form-control" placeholder="" maxlength="35" readonly >
-       </div>
-    </div> 
+
     </div>
 
-     <div class="row g-3">   
-         <div class="col-md-1">
-            <br />
-             <button type="button" class="btn btn-outline-info  btn-lg"> Mapa </button>              
-         </div>
-         <div class="col-md-1">
-            <br />
-             <button type="button" class="btn btn-outline-success  btn-lg"> Salvar </button>              
-         </div>
-         <div class="col-md-1">
-             <br />
-             <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">
-                 Cancelar               
-             </a>                              
-         </div>
-     </div>
-
- </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
 
 </asp:Content>

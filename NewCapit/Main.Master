@@ -540,12 +540,12 @@
                 </div>
                 </div>
                 <!-- Footer -->
-                <footer class="sticky-footer bg-white">
+                <footer class="sticky-footer bg-white">                    
                     <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy;2025 - CAPIT Logística</span>
+                        <div class="copyright text-center">
+                            <span>&copy;2025 - CAPIT Logística</span>
                         </div>
-                    </div>
+                    </div>                   
                 </footer>
                 <!-- End of Footer -->
             </div>
@@ -573,6 +573,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

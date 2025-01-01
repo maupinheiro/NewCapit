@@ -69,7 +69,7 @@
                     <asp:DropDownList ID="status" runat="server" ForeColor="Blue" CssClass="form-control"> 
                         <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
                         <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
-                    </asp:DropDownList><br />
+                    </asp:DropDownList></>
                 </div> 
             </div>            
         </div>
