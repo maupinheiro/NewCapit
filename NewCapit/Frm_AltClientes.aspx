@@ -12,11 +12,7 @@
                     <span class="details">CÓDIGO:</span>
                     <asp:TextBox ID="txtCodCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
                 </div>
-            </div>
-            <div class="col-md-1">
-                <br />
-                <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
-            </div>
+            </div>            
             <div class="col-md-2">
                 <div class="form_group">
                     <span class="details">TIPO DE CLIENTE:</span>
@@ -264,9 +260,6 @@
                     <asp:TextBox ID="txtUsuAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                 </div>
             </div>
-
-
-
         </div>
 
         <div class="row g-3">

@@ -228,7 +228,7 @@
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEntregas"
                         aria-expanded="true" aria-controls="collapseEntregas">
                         <i class="fas fa-shipping-fast"></i>
-                        <span>Coletas/Entregas</span>
+                        <span>Coletas</span>
                     </a>
                     <div id="collapseEntregas" class="collapse" aria-labelledby="headingEntregas" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">

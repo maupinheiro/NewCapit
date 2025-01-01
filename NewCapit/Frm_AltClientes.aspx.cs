@@ -11,7 +11,19 @@ namespace NewCapit
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                string id = Request.QueryString["codcli"];
+                if (!string.IsNullOrEmpty(id))
+                {
+                    // Use o ID para carregar os detalhes
+                    txtCodCli.Text = id;
+                }
+            }
         }
+
+
+
     }
+    
 }

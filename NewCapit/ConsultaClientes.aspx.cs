@@ -17,9 +17,6 @@ namespace NewCapit
 {
     public partial class ConsultaClientes : System.Web.UI.Page
     {
-        //private string connectionString = ConfigurationManager.ConnectionStrings["con"].ConnectionString;
-        //private static string con = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
 
         protected void Page_Load(object sender, EventArgs e)
@@ -100,11 +97,21 @@ namespace NewCapit
             adpt4.Fill(dt4);
             con.Close();
             CentroOeste.Text = dt4.Rows[0][0].ToString();
+        }
+        protected void gvList_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Detalhes")
+            {
+                // Obtém o argumento do comando (ID da linha)
+                string id = e.CommandArgument.ToString();
 
+                // Redireciona para a nova página, passando o ID como parâmetro
+                Response.Redirect($"Frm_AltClientes.aspx?id={id}");
+            }
         }
 
 
-       
+
 
     }
 
