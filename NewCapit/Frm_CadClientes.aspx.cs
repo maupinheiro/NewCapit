@@ -149,14 +149,7 @@ namespace NewCapit
         {
             string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
               "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa)";
-            
-
-
-
-
-
-
-
+            //teste
 
             SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
