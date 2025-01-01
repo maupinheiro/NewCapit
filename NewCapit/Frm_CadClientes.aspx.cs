@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Security.Policy;
+using System.Web;
 using System.Web.Configuration;
+using System.Web.Script.Serialization;
 using Domain;
 
 namespace NewCapit
@@ -8,8 +11,26 @@ namespace NewCapit
     public partial class Frm_CadClientes : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                    txtUsuCadastro.Text = nomeUsuario;
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                }
+                DateTime dataHoraAtual = DateTime.Now;
+                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            }
 
         }
         protected void btnCep_Click(object sender, EventArgs e)
@@ -26,7 +47,20 @@ namespace NewCapit
         {
             if (txtCodCli.Text.Trim() == "")
             {
-                Response.Write("<script>alert('Por favor, digite um código para cadastro');</script>");
+                string nomeUsuario = txtUsuCadastro.Text;               
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite um código para cadastro.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 txtCodCli.Focus();
 
             }
@@ -37,13 +71,31 @@ namespace NewCapit
                 var obj = new ConsultaCliente
                 {
                     codcli = codigo
-                };                
-                
-                
+                };
+
+
                 var ConsultaCliente = DAL.UsersDAL.CheckCliente(obj);
                 if (ConsultaCliente != null)
                 {
-                    Response.Write("<script>alert('Código digite já cadastrado no sistema. Por favor, digiate outro.');</script>");
+                    string nomeUsuario = txtUsuCadastro.Text;
+                    string razaoSocial = ConsultaCliente.razcli;
+                    string unidade = ConsultaCliente.unidade;
+
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Código " + codigo + ", já cadastrado no sistema.";
+                    string linha3 = "Razão Social: " + razaoSocial + ".";
+                    string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    // Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    // Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
                     txtCodCli.Text = "";
                     txtCodCli.Focus();
                 }
@@ -73,7 +125,8 @@ namespace NewCapit
         {
             string cnpjSemMascara = RemoverMascaraCNPJ(txtCnpj.Text);
             var cnpj = Empresa.ObterCnpj(cnpjSemMascara);
-            if (cnpj != null) {
+            if (cnpj != null)
+            {
                 var cep = RemoverMascaraCep(cnpj.cep);
                 txtRazCli.Text = cnpj.nome;
                 txtTipo.Text = cnpj.tipo;
@@ -92,7 +145,164 @@ namespace NewCapit
 
 
         }
-      
+        protected void btnSalvar_Click(object sender, EventArgs e)
+        {
+            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
+              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa)";
+            SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
+            comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
+            comando.Parameters.AddWithValue("@dtccli", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
+            comando.Parameters.AddWithValue("@razcli", txtRazCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@concli", txtConCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@nomcli", txtNomCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tc1cli", txtTc1Cli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tc2cli", txtTc2Cli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@endcli", txtEndCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cepcli", txtCepCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@baicli", txtBaiCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cidcli", txtCidCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@estcli", txtEstCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@programador", txtProgramador.Text.ToUpper());
+            comando.Parameters.AddWithValue("@contato", txtContato.Text.ToUpper());
+            comando.Parameters.AddWithValue("@email", txtEmail.Text.ToUpper());
+            comando.Parameters.AddWithValue("@codvw", txtCodVw.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cnpj", txtCnpj.Text);
+            comando.Parameters.AddWithValue("@inscestadual", txtInscEstadual.Text);
+            comando.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
+            comando.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
+            comando.Parameters.AddWithValue("@codsapiens", txtCodSapiens.Text.ToUpper());
+            comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
+            comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
+            comando.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
+            comando.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.ToUpper());
+            comando.Parameters.AddWithValue("@dtccad", lblDtCadastro.Text);
+            comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
+            comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
+            comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());
+            comando.Parameters.AddWithValue("@regiao", cboRegiao.SelectedValue.ToUpper());
+            comando.Parameters.AddWithValue("@abertura", txtAbertura.Text);
+            comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tipoempresa", txtTipo.Text.ToUpper());
 
+            try
+            {
+                con.Open();
+                comando.ExecuteNonQuery();
+                con.Close();
+                string nomeUsuario = txtUsuCadastro.Text;
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Código " + txtCodCli.Text + ", cadastrado com sucesso.";
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                //Chama a página de consulta clientes
+                Response.Redirect("ConsultaClientes.aspx");
+
+            }
+            catch (Exception ex)
+            {
+                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(retorno);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                //Chama a página de consulta clientes
+                Response.Redirect("ConsultaClientes.aspx");
+            }
+
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void SalvarCliente() 
+        {
+            string sqlSalvarCliente = "insert into tbclientes" +                "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
+              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa)";
+            SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
+            comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
+            comando.Parameters.AddWithValue("@dtccli", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
+            comando.Parameters.AddWithValue("@razcli", txtRazCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@concli", txtConCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@nomcli", txtNomCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tc1cli", txtTc1Cli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tc2cli", txtTc2Cli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@endcli", txtEndCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cepcli", txtCepCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@baicli", txtBaiCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cidcli", txtCidCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@estcli", txtEstCli.Text.ToUpper());
+            comando.Parameters.AddWithValue("@programador", txtProgramador.Text.ToUpper());
+            comando.Parameters.AddWithValue("@contato", txtContato.Text.ToUpper());
+            comando.Parameters.AddWithValue("@email", txtEmail.Text.ToUpper());
+            comando.Parameters.AddWithValue("@codvw", txtCodVw.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cnpj", txtCnpj.Text);
+            comando.Parameters.AddWithValue("@inscestadual", txtInscEstadual.Text);
+            comando.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
+            comando.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
+            comando.Parameters.AddWithValue("@codsapiens", txtCodSapiens.Text.ToUpper());
+            comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
+            comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
+            comando.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
+            comando.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.ToUpper());
+            comando.Parameters.AddWithValue("@dtccad", lblDtCadastro.Text);
+            comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
+            comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
+            comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());
+            comando.Parameters.AddWithValue("@regiao", cboRegiao.SelectedValue.ToUpper());
+            comando.Parameters.AddWithValue("@abertura", txtAbertura.Text);
+            comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tipoempresa", txtTipo.Text.ToUpper());
+
+            try
+            {
+                con.Open();
+                comando.ExecuteNonQuery();
+                con.Close();
+                string nomeUsuario = txtUsuCadastro.Text; 
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Código " + txtCodCli.Text + ", cadastrado com sucesso.";
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                //Chama a página de consulta clientes
+                Response.Redirect("ConsultaClientes.aspx");
+
+            }
+            catch (Exception ex)
+            {
+                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(retorno);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                //Chama a página de consulta clientes
+                Response.Redirect("ConsultaClientes.aspx");
+            }
+
+            finally
+            {
+                con.Close();
+            }
+        }
     }
 }

@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 
 <html>
-    <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,6 +12,36 @@
     <meta name="author" content="">
 
     <title>...:: CAPIT Logística ::...</title>
+    <script type="text/javascript">
+
+        window.onbeforeunload = function () {            
+                
+            return "Você tem certeza de que deseja encerrar o sistema?";
+            < !--Modal Sair do Sistema-- >
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Deseja realmente sair do sistema?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Clique em Sair, para encerrar a sessão.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                            <a class="btn btn-primary" href="Login.aspx">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        };
+    </script>
+
+
+
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -71,7 +101,7 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Clientes</h6>
-                            <a class="collapse-item" href="ConsultaClientes.aspx">Consulta</a>
+                            <a class="collapse-item" href="ConsultaClientes.aspx">Manutenção</a>
                             <!--
                             <a class="collapse-item" href="cards.html">Novo Cliente</a>
                             <a class="collapse-item" href="cards.html">Cadastro de Rotas</a>
@@ -93,7 +123,7 @@
                         data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Transportadoras</h6>
-                            <a class="collapse-item" href="utilities-color.html">Consulta</a>
+                            <a class="collapse-item" href="utilities-color.html">Manutenção</a>
                             <!--
                             <a class="collapse-item" href="utilities-border.html">Novo</a>
                             <a class="collapse-item" href="utilities-animation.html">Limite de Crédito</a>                             
@@ -114,7 +144,7 @@
                         data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Veículos</h6>
-                            <a class="collapse-item" href="utilities-color.html">Consulta</a>
+                            <a class="collapse-item" href="utilities-color.html">Manutenção</a>
                            <!--
                             <a class="collapse-item" href="utilities-border.html">Novo Veículo</a>
                             <a class="collapse-item" href="utilities-animation.html">Controle de Carretas</a> 
@@ -154,7 +184,10 @@
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Motoristas</h6>
-                            <a class="collapse-item" href="login.html">Consulta</a>
+                            <a class="collapse-item" href="#">Manutenção</a>
+                            <a class="collapse-item" href="#">Jornada do Motorista</a>
+                            <a class="collapse-item" href="#">Gerar .TXT Dep. Pessoal</a>
+                            <a class="collapse-item" href="#">Validar Marcações</a>
                             <!--
                             <a class="collapse-item" href="register.html">Novo</a>
                             <a class="collapse-item" href="forgot-password.html">Relatórios Diversos</a>                            
@@ -456,14 +489,20 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Genildo Santos</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <asp:Label ID="lblUsuario" runat="server"></asp:Label>
+                                </span>
                                 <br />
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 
-                        small">Lider de Transprtes</span>
+                                 small">
+                                    <asp:Label ID="lblFuncao" runat="server"></asp:Label>
+                                </span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 
-                        small">Transnovag - Matriz</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    small">
+                                        <asp:Label ID="lblEmpresa" runat="server"></asp:Label>
+                                    </span>
+                                    <img class="img-profile rounded-circle"
+                                        src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

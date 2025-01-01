@@ -15,7 +15,7 @@ namespace DAL
     {
         public static Users CheckLogin(Users obj) 
         {
-            string sqlQuery = "SELECT nm_usuario, ds_senha FROM tb_usuario WHERE (nm_usuario = @nm_usuario) AND (ds_senha = @ds_senha)";
+            string sqlQuery = "SELECT * FROM tb_usuario WHERE (nm_usuario = @nm_usuario) AND (ds_senha = @ds_senha)";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -42,7 +42,7 @@ namespace DAL
         }
         public static ConsultaCliente CheckCliente(ConsultaCliente obj)
         {
-            string sqlQuery = "SELECT codcli FROM tbclientes WHERE (codcli = @codcli)";
+            string sqlQuery = "SELECT * FROM tbclientes WHERE (codcli = @codcli)";
 
             using (var con = ConnectionUtil.GetConnection())
             {

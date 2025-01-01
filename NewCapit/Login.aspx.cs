@@ -28,15 +28,27 @@ namespace NewCapit
 
                 var usuario = txtUsuario.Text.Trim();
                 var senha = txtSenha.Text.Trim();
-
+                //string departamento, funcao, empresaUsuario, foto;
                 var obj = new Users
                 {
                     nm_usuario = usuario,
-                    ds_senha = senha
+                    ds_senha = senha                  
+
                 };
                 var user = UsersDAL.CheckLogin(obj);
                 if (user != null)
                 {
+                    //Dados do usuário
+                    string nomeUsuario = user.nm_nome;
+                    string nomeEmpresa = user.emp_usuario;
+                    string funcaoUsuario = user.fun_usuario;
+                    // falta a foto
+                    //
+                    Session["UsuarioLogado"] = nomeUsuario;
+                    Session["EmpresaTrabalho"] = nomeEmpresa;
+                    Session["FuncaoUsuario"] = funcaoUsuario;
+
+                    //Chama a página principal
                     Response.Redirect("Home.aspx");
                 }
                 else 
