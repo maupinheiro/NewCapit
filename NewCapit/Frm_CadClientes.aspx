@@ -4,6 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+ 
     <div class="container mt-5">
         <h3>..: NOVO CADASTRO :..</h3>
         <hr />
@@ -264,7 +265,7 @@
             </div>
             <div class="col-md-1">
                <br />
-                <button type="button" id="btnSalvar" class="btn btn-outline-success  btn-lg" OnClick="btnSalvar_Click"> Salvar </button>              
+                <button type="button" id="btnSalvar" runat="server" class="btn btn-outline-success  btn-lg" OnClick="btnSalvar_Click"> Salvar </button>              
             </div>
             <div class="col-md-1">
                 <br />
@@ -275,6 +276,7 @@
         </div>
 
     </div>
+  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>    
    
