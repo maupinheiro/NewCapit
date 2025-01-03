@@ -12,6 +12,7 @@ using System.Configuration;
 using System.Drawing;
 using System.Web.UI.HtmlControls;
 using System.Web.Configuration;
+using System.Runtime.Remoting;
 
 namespace NewCapit
 {
@@ -107,6 +108,16 @@ namespace NewCapit
 
                 // Redireciona para a nova página, passando o ID como parâmetro
                 Response.Redirect($"Frm_AltClientes.aspx?id={id}");
+            }
+        }
+
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvList.DataKeys[row.RowIndex].Value.ToString();
+                
+                Response.Redirect("Frm_AltClientes.aspx?id="+id);
             }
         }
 
