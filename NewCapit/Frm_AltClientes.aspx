@@ -60,7 +60,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="">STATUS:</span>
-                    <asp:DropDownList ID="status" runat="server" ForeColor="Blue" CssClass="form-control">
+                    <asp:DropDownList ID="ddlStatus" runat="server" ForeColor="Blue" CssClass="form-control">
                         <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
                         <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
                     </asp:DropDownList></>
@@ -267,7 +267,8 @@
                 <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
             </div>
             <div class="col-md-1">
-                <button type="button" id="btnSalvar" runat="server" class="btn btn-outline-success  btn-lg">Salvar </button>
+                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success  btn-lg" Text="Salvar" OnClick="btnAlterar_Click" />
+               
             </div>
             <div class="col-md-1">
                 <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               

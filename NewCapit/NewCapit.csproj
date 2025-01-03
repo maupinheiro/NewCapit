@@ -111,6 +111,8 @@
     <Content Include="js\sb-admin-2.min.js" />
     <Content Include="js\scriptComboBox.js" />
     <Content Include="Login.aspx" />
+    <Content Include="user_img\3.jpeg" />
+    <Content Include="user_img\no_picture.png" />
     <Content Include="vendor\bootstrap\js\bootstrap.bundle.js" />
     <Content Include="vendor\bootstrap\js\bootstrap.bundle.min.js" />
     <Content Include="vendor\bootstrap\js\bootstrap.js" />
