@@ -158,86 +158,13 @@ namespace NewCapit
 
                 if (Session["UsuarioLogado"] != null)
                 {
-                    string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    var lblUsuario = nomeUsuario;
-                    txtUsuAlteracao.Text = nomeUsuario;
+                    // Use o ID para carregar os detalhes
+                    txtCodCli.Text = id;
                 }
-                else
-                {
-                    var lblUsuario = "<Usuário>";
-                }
-                DateTime dataHoraAtual = DateTime.Now;
-                lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             }
         }
 
-        public void CarregaDados()
-        {
-            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
-            {
-                id = HttpContext.Current.Request.QueryString["id"].ToString();
-            }
-            string sql = "select codcli,razcli,concli, nomcli,tc1cli,tc2cli,endcli,cepcli,numero,complemento,baicli,cidcli,estcli,cnpj,inscestadual,programador,contato,email,codvw,unidade,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,usualt,dtcalt,tipo,raio,regiao,abertura,situacao,tipoempresa,ramal from tbclientes where id=" + id;
-            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            adpt.Fill(dt);
-            con.Close();
 
-            if (dt.Rows.Count > 0)
-            {
-                // Preenchendo os TextBoxes com valores do DataTable
-                txtCodCli.Text = dt.Rows[0][0].ToString();
-                txtRazCli.Text = dt.Rows[0][1].ToString();
-                txtConCli.Text = dt.Rows[0][2].ToString();
-                txtNomCli.Text = dt.Rows[0][3].ToString();
-                txtTc1Cli.Text = dt.Rows[0][4].ToString();
-                txtTc2Cli.Text = dt.Rows[0][5].ToString();
-                txtEndCli.Text = dt.Rows[0][6].ToString();
-                txtCepCli.Text = dt.Rows[0][7].ToString();
-                txtNumero.Text = dt.Rows[0][8].ToString();
-                txtComplemento.Text = dt.Rows[0][9].ToString();
-                txtBaiCli.Text = dt.Rows[0][10].ToString();
-                txtCidCli.Text = dt.Rows[0][11].ToString();
-                txtEstCli.Text = dt.Rows[0][12].ToString();
-                txtCnpj.Text = dt.Rows[0][13].ToString();
-                txtInscEstadual.Text = dt.Rows[0][14].ToString();
-                txtProgramador.Text = dt.Rows[0][15].ToString();
-                txtContato.Text = dt.Rows[0][16].ToString();
-                txtEmail.Text = dt.Rows[0][17].ToString();
-                txtCodVw.Text = dt.Rows[0][18].ToString();
-                txtUnidade.Text = dt.Rows[0][19].ToString();
-                txtCodSapiens.Text = dt.Rows[0][20].ToString();
-                longitude.Text = dt.Rows[0][21].ToString();
-                latitude.Text = dt.Rows[0][22].ToString();
-                ddlStatus.SelectedValue = dt.Rows[0][23].ToString();
-                txtUsuCadastro.Text = dt.Rows[0][24].ToString();
-                lblDtCadastro.Text = (dt.Rows[0][25].ToString());
-                txtUsuAlteracao.Text = dt.Rows[0][26].ToString();
-                lblDtAlteracao.Text = dt.Rows[0][27].ToString();
-                cboTipo.SelectedValue = dt.Rows[0][28].ToString();
-                txtRaio.Text = dt.Rows[0][29].ToString();
-                cboRegiao.SelectedValue = dt.Rows[0][30].ToString();
-                txtAbertura.Text = dt.Rows[0][31].ToString();
-                txtSituacao.Text = dt.Rows[0][32].ToString();
-                txtTipo.Text = dt.Rows[0][33].ToString();
-                //txtConCli.Text = dt.Rows[0]["ConCli"].ToString();
-                txtRamal.Text = dt.Rows[0][34].ToString();
-
-
-
-            }
-        }
-
-        protected void btnAlterar_Click(object sender, EventArgs e)
-        {
-
-            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
-            {
-                id = HttpContext.Current.Request.QueryString["id"].ToString();
-            }
-            string sqlAtualizarCliente = "UPDATE tbclientes SET razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usualt = @usualt, dtcalt = @dtcalt, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa, ramal = @ramal WHERE id=" + id;
-            //teste
 
             SqlCommand comando = new SqlCommand(sqlAtualizarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
@@ -364,5 +291,5 @@ namespace NewCapit
         }
 
     }
-
+    
 }
