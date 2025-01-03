@@ -4,7 +4,7 @@
 
 <html>
 <head runat="server">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,28 +14,28 @@
     <title>...:: CAPIT Logística ::...</title>
     <script type="text/javascript">
 
-        window.onbeforeunload = function () {
-
+        window.onbeforeunload = function () {            
+                
             return "Você tem certeza de que deseja encerrar o sistema?";
             < !--Modal Sair do Sistema-- >
-                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Deseja realmente sair do sistema?</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">Clique em Sair, para encerrar a sessão.</div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                                <a class="btn btn-primary" href="Login.aspx">Sair</a>
-                            </div>
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Deseja realmente sair do sistema?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Clique em Sair, para encerrar a sessão.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                            <a class="btn btn-primary" href="Login.aspx">Sair</a>
                         </div>
                     </div>
                 </div>
+            </div>
 
         };
     </script>
@@ -56,9 +56,9 @@
 
     <!-- Cadastros styles for this template-->
     <link href="css/styleCadastros.css" rel="stylesheet">
-
-    <asp:ContentPlaceHolder ID="head" runat="server">
-    </asp:ContentPlaceHolder>
+    
+        <asp:ContentPlaceHolder ID="head" runat="server">
+        </asp:ContentPlaceHolder>
 </head>
 <body id="page-top">
     <form id="form1" runat="server">
@@ -67,12 +67,12 @@
             <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
                 <!-- Sidebar - Brand -->
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Home.aspx">
-                    <div class="sidebar-brand-icon rotate-n-15">
+                    <div class="sidebar-brand-icon rotate-n-15">                        
                         <img src="img/logo.png" width="32px" alt="" />
                     </div>
-                    <div class="sidebar-brand-text mx-3"><small>CAPIT Logística</small></div>
+                    <div class="sidebar-brand-text mx-3" ><small>CAPIT Logística</small></div>
                 </a>
-
+                
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0">
 
@@ -80,7 +80,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="Home.aspx">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Dashboard</span></a>
+                        <span>Dashboard</span></a>                        
                 </li>
 
                 <!-- Divider -->
@@ -145,7 +145,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Veículos</h6>
                             <a class="collapse-item" href="utilities-color.html">Manutenção</a>
-                            <!--
+                           <!--
                             <a class="collapse-item" href="utilities-border.html">Novo Veículo</a>
                             <a class="collapse-item" href="utilities-animation.html">Controle de Carretas</a> 
                             <a class="collapse-item" href="utilities-other.html">Nova Carreta</a>
@@ -222,7 +222,7 @@
                         </div>
                     </div>
                 </li>
-
+                
                 <!-- Nav Item - Entregas Menu -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEntregas"
@@ -233,7 +233,7 @@
                     <div id="collapseEntregas" class="collapse" aria-labelledby="headingEntregas" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Atendimento</h6>
-                            <a class="collapse-item" href="login.html">Consulta</a>
+                            <a class="collapse-item" href="login.html">Consulta</a> 
                             <!--
                             <a class="collapse-item" href="forgot-password.html">Relatórios Diversos</a>                            
                             <div class="collapse-divider"></div>
@@ -255,7 +255,7 @@
                     <div id="collapseDocumentos" class="collapse" aria-labelledby="headingDocumentos" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Documentos</h6>
-                            <a class="collapse-item" href="login.html">Consulta</a>
+                            <a class="collapse-item" href="login.html">Consulta</a> 
                             <!--
                             <a class="collapse-item" href="forgot-password.html">Relatórios Diversos</a>                            
                             <div class="collapse-divider"></div>
@@ -277,7 +277,7 @@
                     <div id="collapseSistema" class="collapse" aria-labelledby="headingSistema" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Configurações do Sistema</h6>
-                            <a class="collapse-item" href="login.html">Tabelas Auxiliares</a>
+                            <a class="collapse-item" href="login.html">Tabelas Auxiliares</a> 
                             <!--
                             <a class="collapse-item" href="forgot-password.html">Relatórios Diversos</a>                            
                             <div class="collapse-divider"></div>
@@ -296,7 +296,7 @@
                 <div class="text-center d-none d-md-inline">
                     <button class="rounded-circle border-0" id="sidebarToggle" type="button"></button>
                 </div>                
-                  -->
+                  -->  
             </ul>
             <!-- End of Sidebar -->
 
@@ -304,34 +304,25 @@
             <div id="content-wrapper" class="d-flex flex-column">
                 <!-- Main Content -->
                 <div id="content">
+                    
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
 
-                    <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                        <!-- Sidebar Toggle (Topbar) -->
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-
-                        <!-- Sidebar Toggler (Sidebar)  recolhe e expande menu lateral -->
-                        <div class="text-left d-none d-md-inline">
-                            <div class="row">
-                                <div class="col-md-1">
-                                    <button class="rounded-circle border-0" id="sidebarToggle" type="button">
-                                        <img src="img/setas.png" alt="" />
-                                    </button>
-                                </div>
-                                <div class="col-md-11">
-                                
-                                <asp:DropDownList ID="empresaEscolhida" runat="server" ForeColor="Blue" Width="350px" CssClass="form-control">
-                                    <asp:ListItem Value="TRANSNOVAG - MATRIZ" Text="TRANSNOVAG - MATRIZ"></asp:ListItem>
-                                    <asp:ListItem Value="OUTRA FILIAL" Text="OUTRA FILIAL"></asp:ListItem>
-                                </asp:DropDownList></> 
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Topbar Search 
+                    <!-- Sidebar Toggler (Sidebar)  recolhe e expande menu lateral -->
+                    <div class="text-left d-none d-md-inline">                     
+                        <button class="rounded-circle border-0" id="sidebarToggle" type="button">
+                            <img src="img/setas.png"  alt="" />
+                            <!--
+                            <i class="fas fa-sync-alt" style='font-size:32px;color:purple'></i>
+                            -->
+                        </button>                    
+                    </div>
+                    
+                    <!-- Topbar Search 
                     <div
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
@@ -345,43 +336,43 @@
                         </div>
                     </div>
                     -->
+    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
 
-                        <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ml-auto">
-
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                    aria-labelledby="searchDropdown">
-                                    <div class="form-inline mr-auto w-100 navbar-search">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small"
-                                                placeholder="Pesquisar..." aria-label="Search"
-                                                aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
-                                            </div>
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <div class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Pesquisar..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                        </li>                      
 
-                            <!-- Nav Item - Alerts -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Contador - Alertas -->
-                                    <span class="badge badge-danger badge-counter">0</span>
-                                </a>
-                                <!-- Dropdown - Alertas 
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Contador - Alertas -->
+                                <span class="badge badge-danger badge-counter">0</span>
+                            </a>
+                            <!-- Dropdown - Alertas 
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
@@ -423,17 +414,17 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
                             -->
-                            </li>
+                        </li>
 
-                            <!-- Nav Item - Messages -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-envelope fa-fw"></i>
-                                    <!-- Contador - Messagens -->
-                                    <span class="badge badge-danger badge-counter">0</span>
-                                </a>
-                                <!-- Dropdown - Messagens 
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Contador - Messagens -->
+                                <span class="badge badge-danger badge-counter">0</span>
+                            </a>
+                            <!-- Dropdown - Messagens 
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
@@ -490,65 +481,64 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                             -->
-                            </li>
+                        </li>
 
-                            <div class="topbar-divider d-none d-sm-block"></div>
+                        <div class="topbar-divider d-none d-sm-block"></div>
 
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                        <asp:Label ID="lblUsuario" runat="server"></asp:Label>
-                                    </span>
-                                    <br />
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <asp:Label ID="lblUsuario" runat="server"></asp:Label>
+                                </span>
+                                <br />
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 
                                  small">
-                                        <asp:Label ID="lblFuncao" runat="server"></asp:Label>
-                                    </span>
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 
+                                    <asp:Label ID="lblFuncao" runat="server"></asp:Label>
+                                </span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 
                                     small">
                                         <asp:Label ID="lblEmpresa" runat="server"></asp:Label>
                                     </span>
-                                    <img class="img-profile rounded-circle"
-                                        src="img/undraw_profile.svg">
+                                    <img class="img-profile rounded-circle" src='<%=foto%>'>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Alterar Foto
                                 </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                    aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Alterar Foto
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Alterar Senha
-                                    </a>
-                                    <!-- a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Alterar Senha
+                                </a>
+                                <!-- a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </ -->
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Sair
-                                    </a>
-                                </div>
-                            </li>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Sair
+                                </a>
+                            </div>
+                        </li>
 
-                        </ul>
+                    </ul>
 
-                    </nav>
-                    <!-- End of Topbar -->
-                    <!-- Begin Page Content -->
-                    <div class="container-fluid">
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
 
                         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                         </asp:ContentPlaceHolder>
 
-                    </div>
                 </div>
-                <!-- Footer 
+                </div>
+                <!-- Footer -->
                 <footer class="sticky-footer bg-white">                    
                     <div class="container my-auto">
                         <div class="copyright text-center">
@@ -559,11 +549,11 @@
                 <!-- End of Footer -->
             </div>
         </div>
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
+       <!-- Scroll to Top Button-->
+       <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
-        </a>
-        <!-- Modal Sair do Sistema-->
+       </a>
+       <!-- Modal Sair do Sistema-->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">

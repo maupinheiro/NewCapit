@@ -148,7 +148,7 @@
     <div class="card shadow mb-4">        
         <div class="card-body">
             <div class="table-responsive">              
-                <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" >
+                <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
                     <Columns>                        
                         <asp:BoundField DataField="id" HeaderText="#ID" />
                         <asp:BoundField DataField="codcli" HeaderText="CÓDIGO" />
@@ -162,11 +162,11 @@
                          
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="230px">
                              <ItemTemplate >                              
-                                 
-                               <a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
+                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
+                               <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                     <i class="fa fa-edit"></i>
                                     Editar
-                                 </a> 
+                                 </a> --%>
                                  
                                  <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
                                     <i class="fas fa-map-marker-alt"></i>                                    

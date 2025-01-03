@@ -4,11 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO;
 
 namespace NewCapit
 {
     public partial class Main : System.Web.UI.MasterPage
     {
+        public string foto;
+        string id_usuario;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack) {
@@ -40,6 +43,17 @@ namespace NewCapit
                 {
                     lblEmpresa.Text = "<Empresa>";
                 }
+            }
+            id_usuario = (string)Session["CodUsuario"];
+            String path = Server.MapPath("~/user_img/");
+            string file = id_usuario + ".jpeg";
+            if (File.Exists(path + file))
+            {
+                foto = "../user_img/" + file + "";
+            }
+            else
+            {
+                foto = "images/no_picture.png";
             }
         }
     }

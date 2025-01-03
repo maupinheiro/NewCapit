@@ -69,13 +69,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtCodVw;
 
         /// <summary>
-        /// Controle status.
+        /// Controle ddlStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList status;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
         /// <summary>
         /// Controle txtCnpj.
@@ -348,12 +348,12 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtUsuAlteracao;
 
         /// <summary>
-        /// Controle btnSalvar.
+        /// Controle btnAlterar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnSalvar;
+        protected global::System.Web.UI.WebControls.Button btnAlterar;
     }
 }
