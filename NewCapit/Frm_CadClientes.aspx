@@ -265,7 +265,7 @@
             </div>
             <div class="col-md-1">
                <br />
-                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar_Click" Text="Button" />        
+                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar_Click" Text="Salvar" />        
             </div>
             <div class="col-md-1">
                 <br />

@@ -26,7 +26,7 @@
                     </asp:DropDownList><br />
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form_group">
                     <span class="details">UNIDADE:</span>
                     <asp:TextBox ID="txtUnidade" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="45"></asp:TextBox>
@@ -76,7 +76,7 @@
             </div>
             <div class="col-md-1">
                 <br />
-                <asp:Button ID="btnCnpj" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+                <asp:Button ID="btnCnpj" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCnpj_Click" />
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -102,7 +102,6 @@
                     <asp:TextBox ID="txtSituacao" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
                 </div>
             </div>
-
         </div>
         <div class="row g-3">
             <div class="col-md-3">
@@ -166,12 +165,12 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CEP:</span>
-                    <asp:TextBox ID="txtCepCli" runat="server" ForeColor="Blue" CssClass="form-control" Width="130px" placeholder="99999-999" MaxLength="9"></asp:TextBox>
+                    <asp:TextBox ID="txtCepCli" runat="server" ForeColor="Blue" CssClass="form-control" Width="130px" placeholder="99999-999" MaxLength="9" ></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-1">
                 <br />
-                <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+                <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCep_Click" />
             </div>
             <div class="col-md-7">
                 <div class="form-group">

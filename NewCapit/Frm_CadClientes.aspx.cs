@@ -147,8 +147,8 @@ namespace NewCapit
         }
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
-              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa)";
+            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa,ramal)" +
+              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa,@ramal)";
             //teste
 
             SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
@@ -185,6 +185,7 @@ namespace NewCapit
             comando.Parameters.AddWithValue("@abertura", txtAbertura.Text);
             comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper());
             comando.Parameters.AddWithValue("@tipoempresa", txtTipo.Text.ToUpper());
+            comando.Parameters.AddWithValue("@ramal", txtRamal.Text);
 
             try
             {
