@@ -19,7 +19,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total de Veículos
+                                Total de Agregados / Terceiros
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <asp:Label ID="TotalVeiculos" runat="server" Text=""></asp:Label>
@@ -44,12 +44,15 @@
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">40%</div>
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                      
+                                    </div>
                                 </div>
                                 <div class="col">
                                     <div class="progress progress-sm mr-2">
+                                         
                                         <div class="progress-bar bg-info" role="progressbar"
-                                            style="width: 40%" aria-valuenow="40" aria-valuemin="0"
+                                            style="width:percentualAtivos%" aria-valuenow=percentualAtivos aria-valuemin="0"
                                             aria-valuemax="100">
                                         </div>
                                     </div>
@@ -61,6 +64,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -187,4 +191,24 @@
     <!-- JavaScript -->
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="src/javascript/script.js"></script>
+     <style>
+         .progress-bar-container {
+             width: 100%;
+             background-color: #f3f3f3;
+             border-radius: 5px;
+             height: 30px;
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+         }
+
+         .progress-bar {
+             height: 100%;
+             background-color: #4caf50;
+             text-align: center;
+             color: white;
+             line-height: 30px; /* Alinha o texto verticalmente */
+             width: 0%;
+             border-radius: 5px;
+             transition: width 0.5s ease-in-out;
+         }
+     </style>
 </asp:Content>
