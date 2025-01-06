@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -15,9 +16,11 @@ namespace NewCapit
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
-            ContagemAgregados();            
-
+            ContagemAgregados();
+            AllDataAgregados();
+            
         }
+
         private double CalcularPercentualAtivos()
         {
             string query = @"
@@ -39,6 +42,7 @@ namespace NewCapit
                         {
                             // percentualAtivos = Convert.ToDouble(result);
                             percentualAtivos = Convert.ToInt32(result);
+                            
                         }
                     }
                 }
@@ -100,6 +104,21 @@ namespace NewCapit
             adpt4.Fill(dt4);
             con.Close();
             veiculosInativos.Text = dt4.Rows[0][0].ToString();
+        }
+        private void AllDataAgregados()
+        {
+            var dataTable = DAL.ConAgregados.FetchDataTable();
+            if (dataTable.Rows.Count <= 0)
+            {
+                return;
+            }
+            gvListAgregados.DataSource = dataTable;
+            gvListAgregados.DataBind();
+
+            gvListAgregados.UseAccessibleHeader = true;
+            gvListAgregados.HeaderRow.TableSection = TableRowSection.TableHeader;
+            gvListAgregados.FooterRow.TableSection = TableRowSection.TableFooter;
+
         }
 
 

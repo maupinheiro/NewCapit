@@ -60,12 +60,12 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.Label veiculosInativos;
 
         /// <summary>
-        /// Controle gvList.
+        /// Controle gvListAgregados.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvList;
+        protected global::System.Web.UI.WebControls.GridView gvListAgregados;
     }
 }
