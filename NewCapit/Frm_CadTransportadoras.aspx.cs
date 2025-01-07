@@ -19,21 +19,11 @@ namespace NewCapit
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                if (Session["UsuarioLogado"] != null)
-                {
-                    string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    var lblUsuario = nomeUsuario;
-                    txtUsuCadastro.Text = nomeUsuario;
-                }
-                else
-                {
-                    var lblUsuario = "<Usuário>";
-                }
-                
+            PreencherComboFiliais();
+            DateTime dataHoraAtual = DateTime.Now;
+            txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
 
-            }
+        }
 
             PreencherComboFiliais();
             DateTime dataHoraAtual = DateTime.Now;
