@@ -196,8 +196,9 @@
                        
                     </Columns>
                 </asp:GridView>
-                 <asp:HiddenField ID="txtconformmessageValue" runat="server" />
+                 
             </div>
+            <asp:HiddenField ID="txtconformmessageValue" runat="server" />
         </div>
     </div> 
    
