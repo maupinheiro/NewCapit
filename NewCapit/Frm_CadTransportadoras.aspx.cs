@@ -15,6 +15,8 @@ namespace NewCapit
         protected void Page_Load(object sender, EventArgs e)
         {
             PreencherComboFiliais();
+            DateTime dataHoraAtual = DateTime.Now;
+            txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
 
         }
 
@@ -41,12 +43,7 @@ namespace NewCapit
                     cbFiliais.DataSource = reader;
                     cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
-                    cbFiliais.DataBind();  // Realiza o binding dos dados
-
-                    cbFiliais2.DataSource = reader;
-                    cbFiliais2.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cbFiliais2.DataValueField = "codigo";  // Campo que será o valor de cada item                    
-                    cbFiliais2.DataBind();  // Realiza o binding dos dados
+                    cbFiliais.DataBind();  // Realiza o binding dos dados                   
 
                     // Feche o reader
                     reader.Close();

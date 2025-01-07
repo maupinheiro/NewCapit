@@ -73,7 +73,7 @@ form .input-box span.details {
 
     .user-details .input-box input:focus,
     .user-details .input-box input:valid {
-        border-color: #9b59b6;
+        border-color: orangered /*#9b59b6*/;
     }
 
 
