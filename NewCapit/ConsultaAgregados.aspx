@@ -6,9 +6,10 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-2 text-gray-800">Consulta Agregados / Terceiros</h1>
-        <a href="Frm_CadClientes.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="Frm_CadTransportadoras.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
             class="fas fa-user-friends"></i> Novo Cadastro
         </a>
+
     </div>
     <!-- Content Graficos -->
     <div class="row">
@@ -168,7 +169,7 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
                         <asp:BoundField DataField="filial" HeaderText="FILIAL" />
                         <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
-                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="160px">
+                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
                             <ItemTemplate>
                                 <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
                                 <a class="btn btn-danger btn-sm" href="#">
