@@ -17,7 +17,8 @@ namespace DAL
     {
         public static DataTable FetchDataTable()
         {
-            string sql = "SELECT id, codcli, tipo, nomcli, unidade, regiao, cidcli, estcli, CONVERT(varchar, dtccli, 103) AS dtccli, ativo_inativo FROM tbclientes";
+            // alterado a query para verifica a coluna exclusao para itens excluídos
+            string sql = "SELECT id, codcli, tipo, nomcli, unidade, regiao, cidcli, estcli, CONVERT(varchar, dtccli, 103) AS dtccli, ativo_inativo FROM tbclientes where fl_exclusao is null";
            
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -36,7 +37,7 @@ namespace DAL
         }
         public static ConsultaCliente CheckCliente(ConsultaCliente obj)
         {
-            string sqlQuery = "SELECT codcli FROM tbclientes WHERE (codcli = @codcli)";
+            string sqlQuery = "SELECT codcli FROM tbclientes WHERE (codcli = @codcli) and fl_exclusao is null";
 
             using (var con = ConnectionUtil.GetConnection())
             {
