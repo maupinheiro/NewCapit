@@ -143,13 +143,13 @@
             </div>
         </div>
         <div class="row g-3">
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <div class="form-group">
                     <span class="details">BAIRRO:</span>
                     <asp:TextBox ID="txtBaiCli" runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="60"></asp:TextBox>
                 </div>
             </div>    
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <span class="details">MUNICIPIO:</span>
                     <asp:TextBox ID="txtCidCli" runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="60"></asp:TextBox>
@@ -161,7 +161,18 @@
                     <asp:TextBox ID="txtEstCli" style=text-align:center runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="2"></asp:TextBox>
                 </div>
             </div> 
-
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">CADASTRADO EM:</span>
+                    <asp:TextBox ID="txtHoraCadastro" runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="60"></asp:TextBox>
+                </div>
+            </div> 
+            <div class="col-md-3">
+                <div class="form-group">
+                    <span class="details">POR:</span>
+                    <asp:TextBox ID="txtCadastradoPor" style=text-align:center runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="2"></asp:TextBox>
+                </div>
+            </div> 
         </div>
 
 
