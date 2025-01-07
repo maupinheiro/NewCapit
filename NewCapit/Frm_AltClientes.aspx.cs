@@ -90,8 +90,6 @@ namespace NewCapit
             }
         }
 
-        protected void btnAlterar_Click(object sender, EventArgs e)
-        {
 
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
