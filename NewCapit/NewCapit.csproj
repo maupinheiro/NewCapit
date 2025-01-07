@@ -1,4 +1,5 @@
 ﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -74,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
+    <Content Include="ConsultaAgregados.aspx" />
     <Content Include="ConsultaClientes.aspx" />
     <Content Include="css\sb-admin-2.css" />
     <Content Include="css\sb-admin-2.min.css" />
@@ -84,16 +86,28 @@
     <Content Include="Frm_CadClientes.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Home.aspx" />
+    <Content Include="img\agregadoAtivo.png" />
+    <Content Include="img\agregadoInativo.png" />
+    <Content Include="img\agregados.png" />
     <Content Include="img\armazem.png" />
     <Content Include="img\brasil.jpg" />
+    <Content Include="img\caminhao.png" />
+    <Content Include="img\caminhoes.png" />
     <Content Include="img\logo.png" />
+    <Content Include="img\percentualAgregados.png" />
     <Content Include="img\regiao-centro-oeste.jpg" />
     <Content Include="img\regiao-nordeste.jpg" />
     <Content Include="img\regiao-norte.jpg" />
     <Content Include="img\regiao-sudeste.jpg" />
     <Content Include="img\regiao-sul.jpg" />
+    <Content Include="img\terceiros.png" />
+    <Content Include="img\totalagregados.png" />
     <Content Include="img\selecao.png" />
     <Content Include="img\setas.png" />
+    <Content Include="img\truck6.png" />
+    <Content Include="img\truck7.png" />
+    <Content Include="img\totalVeiculos.png" />
+    <Content Include="img\veiculoAtivo.png" />
     <Content Include="img\undraw_posting_photo.svg" />
     <Content Include="img\undraw_profile.svg" />
     <Content Include="img\undraw_profile_1.svg" />
@@ -101,6 +115,13 @@
     <Content Include="img\undraw_profile_3.svg" />
     <Content Include="img\undraw_rocket.svg" />
     <Content Include="img\user.png" />
+    <Content Include="img\vw.jpeg" />
+    <Content Include="img\user.jpeg" />
+    <Content Include="img\carreta.jpeg" />
+    <Content Include="img\cnh.jpeg" />
+    <Content Include="img\bobina.jpeg" />
+    <Content Include="img\veiculoInativo.png" />
+    <Content Include="img\web_ui_truck_delivery_icon_233659.png" />
     <Content Include="js\cnpj.config.js" />
     <Content Include="js\demo\chart-area-demo.js" />
     <Content Include="js\demo\chart-bar-demo.js" />
@@ -1793,6 +1814,13 @@
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
     <Compile Include="Cnpj.cs" />
+    <Compile Include="ConsultaAgregados.aspx.cs">
+      <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConsultaAgregados.aspx.designer.cs">
+      <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ConsultaClientes.aspx.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2044,6 +2072,9 @@
       <Name>Domain</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -2074,7 +2105,10 @@
       <ErrorText>Este projeto faz referência a pacotes do NuGet que não estão presentes neste computador. Use a Restauração de Pacotes do NuGet para baixá-los.  Para obter mais informações, consulte http://go.microsoft.com/fwlink/?LinkID=322105. O arquivo ausente é {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets'))" />
   </Target>
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

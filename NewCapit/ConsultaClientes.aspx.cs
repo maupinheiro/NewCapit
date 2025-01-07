@@ -121,6 +121,7 @@ namespace NewCapit
                 Response.Redirect("Frm_AltClientes.aspx?id="+id);
             }
         }
+
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
         protected void Excluir(object sender, EventArgs e)
         {
@@ -177,6 +178,7 @@ namespace NewCapit
             }
                 
         }
+
 
 
 

@@ -1,82 +1,66 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltClientes.aspx.cs" Inherits="NewCapit.Frm_AltClientes" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadAgregados.aspx.cs" Inherits="NewCapit.Frm_CadAgregados" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-5">
-        <h3>..: ATUALIZA CADASTRO :..</h3>
+        <h3>..: NOVO CADASTRO :..</h3>
         <hr />
         <div class="row g-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <span class="">FILIAL:</span>
+                    <asp:DropDownList ID="ddlCombo" runat="server" ForeColor="Blue" CssClass="form-control">
+                    </asp:DropDownList>
+                </div>
+            </div>
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
                     <asp:TextBox ID="txtCodCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
                 </div>
-            </div>            
-            <div class="col-md-2">
-                <div class="form_group">
-                    <span class="details">TIPO DE CLIENTE:</span>
-                    <asp:DropDownList ID="cboTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">
-                        <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
-                        <asp:ListItem Value="CLIENTE" Text="CLIENTE"></asp:ListItem>
-                        <asp:ListItem Value="EMBARCADOR" Text="EMBARCADOR"></asp:ListItem>
-                        <asp:ListItem Value="TRANSPORTADOR" Text="TRANSPORTADOR"></asp:ListItem>
-                        <asp:ListItem Value="OPERADOR LOGÍSTICO" Text="OPERADOR LOGÍSTICO"></asp:ListItem>
-                        <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
-                    </asp:DropDownList><br />
-                </div>
+            </div>
+            <div class="col-md-1">
+                <br />
+                <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
             </div>
             <div class="col-md-4">
-                <div class="form_group">
-                    <span class="details">UNIDADE:</span>
-                    <asp:TextBox ID="txtUnidade" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="45"></asp:TextBox>
+                <div class="form-group">
+                    <span class="">PESSOA:</span>
+                    <asp:DropDownList ID="DropDownList1" runat="server" ForeColor="Blue" Width="260px" CssClass="form-control">                        
+                        <asp:ListItem Value="FÍSICA" Text="FÍSICA"></asp:ListItem>
+                        <asp:ListItem Value="JURÍDICA" Text="JURÍDICA"></asp:ListItem>
+                    </asp:DropDownList></>
                 </div>
             </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <span class="details">CADASTRO:</span>
+                    <asp:Label ID="lblDataAtual" runat="server" ForeColor="Blue" width="130px" CssClass="form-control" placeholder="" MaxLength="10"></asp:Label>
+                </div>
+            </div>
+
             <div class="col-md-2">
-                <span class="">REGIÃO DO PAÍS:</span>
-                <asp:DropDownList ID="cboRegiao" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">
-                    <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
-                    <asp:ListItem Value="NORTE" Text="NORTE"></asp:ListItem>
-                    <asp:ListItem Value="SUL" Text="SUL"></asp:ListItem>
-                    <asp:ListItem Value="SUDESTE" Text="SUDESTE"></asp:ListItem>
-                    <asp:ListItem Value="CENTRO-OESTE" Text="CENTRO-OESTE"></asp:ListItem>
-                    <asp:ListItem Value="NORDESTE" Text="NORDESTE"></asp:ListItem>
-                </asp:DropDownList><br />
-            </div>
-
-            <div class="col-md-1">
-                <div class="form-group">
-                    <span class="details">SAPIENS:</span>
-                    <asp:TextBox ID="txtCodSapiens" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
-                </div>
-            </div>
-
-            <div class="col-md-1">
-                <div class="form-group">
-                    <span class="details">CÓD.VW:</span>
-                    <asp:TextBox ID="txtCodVw" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
-                </div>
-            </div>
-            <div class="col-md-1">
                 <div class="form-group">
                     <span class="">STATUS:</span>
-                    <asp:DropDownList ID="ddlStatus" runat="server" ForeColor="Blue" CssClass="form-control">
+                    <asp:DropDownList ID="status" runat="server" ForeColor="Blue" CssClass="form-control">
                         <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
                         <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
                     </asp:DropDownList></>
                 </div>
             </div>
         </div>
+
         <div class="row g-3">
             <div class="col-md-2">
                 <div class="form-group">
-                    <span class="details">CNPJ:</span>
-                    <asp:TextBox ID="txtCnpj" data-mask="00.000.000/0000-00" ForeColor="Blue" runat="server" class="form-control"></asp:TextBox>
+                    <span class="details" id="cpfoucnpj">CPF:</span>
+                    <asp:TextBox ID="txtCnpjCpf" data-mask="000.000.000-00" ForeColor="Blue" runat="server" class="form-control"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-1">
                 <br />
-                <asp:Button ID="btnCnpj" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCnpj_Click" />
+                <asp:Button ID="btnCnpj" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -102,7 +86,9 @@
                     <asp:TextBox ID="txtSituacao" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
                 </div>
             </div>
+
         </div>
+
         <div class="row g-3">
             <div class="col-md-3">
                 <div class="form-group">
@@ -128,12 +114,6 @@
                     <asp:TextBox ID="txtTc1Cli" runat="server" ForeColor="Blue" CssClass="form-control" data-mask="(00) 0000-0000" MaxLength="15"></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <span class="details">RAMAL:</span>
-                    <asp:TextBox ID="txtRamal" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="9999" MaxLength="4"></asp:TextBox>
-                </div>
-            </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <span class="details">CELULAR:</span>
@@ -142,18 +122,7 @@
             </div>
         </div>
         <div class="row g-3">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <span class="details">PROGRAMADORES:</span>
-                    <asp:TextBox ID="txtProgramador" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="35"></asp:TextBox>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <span class="details">TELEFONE/RAMAL:</span>
-                    <asp:TextBox ID="txtContato" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="25"></asp:TextBox>
-                </div>
-            </div>
+
             <div class="col-md-7">
                 <div class="form-group">
                     <span class="details">E-MAIL(S):</span>
@@ -165,12 +134,12 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CEP:</span>
-                    <asp:TextBox ID="txtCepCli" runat="server" ForeColor="Blue" CssClass="form-control" Width="130px" placeholder="99999-999" MaxLength="9" ></asp:TextBox>
+                    <asp:TextBox ID="txtCepCli" runat="server" ForeColor="Blue" CssClass="form-control" Width="130px" placeholder="99999-999" MaxLength="9"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-1">
                 <br />
-                <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCep_Click" />
+                <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
             </div>
             <div class="col-md-7">
                 <div class="form-group">
@@ -191,6 +160,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row g-3">
             <div class="col-md-2">
                 <div class="form-group">
@@ -210,28 +180,7 @@
                     <asp:TextBox ID="txtEstCli" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <span class="details">LATITUDE:</span>
-                    <asp:TextBox ID="latitude" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <span class="details">LONGITUDE:</span>
-                    <asp:TextBox ID="longitude" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <span class="details">RAIO:</span>
-                    <asp:TextBox ID="txtRaio" value="100" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" min="1" max="2000"></asp:TextBox>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <br />
-                <button type="button" class="btn btn-outline-warning">Pesquisar</button>
-            </div>
+
         </div>
         <div class="row g-3">
             <div class="col-md-2">
@@ -240,43 +189,27 @@
                     <asp:Label ID="lblDtCadastro" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-10">
                 <div class="form-group">
                     <span class="details">POR:</span>
                     <asp:TextBox ID="txtUsuCadastro" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
-                </div>
-            </div>
-
-            <div class="col-md-2">
-                <div class="form-group">
-                    <span class="details">ÚLTIMA ATUALIZAÇÃO:</span>
-                    <asp:Label ID="lblDtAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <span class="details">POR:</span>
-                    <asp:TextBox ID="txtUsuAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                 </div>
             </div>
         </div>
 
         <div class="row g-3">
             <div class="col-md-1">
-                <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
+                <br />
+                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" />
             </div>
             <div class="col-md-1">
-                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success  btn-lg" Text="Salvar" OnClick="btnAlterar_Click" />
-               
-            </div>
-            <div class="col-md-1">
-                <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                <br />
+                <a href="ConsultaAgregados.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
                 </a>
             </div>
         </div>
 
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
 
