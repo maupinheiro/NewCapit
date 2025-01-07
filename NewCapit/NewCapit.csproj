@@ -84,6 +84,7 @@
     <Content Include="Default.aspx" />
     <Content Include="Frm_AltClientes.aspx" />
     <Content Include="Frm_CadClientes.aspx" />
+    <Content Include="Frm_CadTransportadoras.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Home.aspx" />
     <Content Include="img\agregadoAtivo.png" />
@@ -1849,6 +1850,13 @@
     <Compile Include="Frm_CadClientes.aspx.designer.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Frm_CadTransportadoras.aspx.cs">
+      <DependentUpon>Frm_CadTransportadoras.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Frm_CadTransportadoras.aspx.designer.cs">
+      <DependentUpon>Frm_CadTransportadoras.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2051,6 +2059,7 @@
     <Content Include="scss\_navs.scss" />
     <Content Include="scss\_utilities.scss" />
     <Content Include="scss\_variables.scss" />
+    <Content Include="select2.min" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
