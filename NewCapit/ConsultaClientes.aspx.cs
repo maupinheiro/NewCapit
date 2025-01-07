@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Web.UI.HtmlControls;
 using System.Web.Configuration;
 using System.Runtime.Remoting;
+using System.Web.Script.Serialization;
 
 namespace NewCapit
 {
@@ -120,6 +121,64 @@ namespace NewCapit
                 Response.Redirect("Frm_AltClientes.aspx?id="+id);
             }
         }
+        //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
+        protected void Excluir(object sender, EventArgs e)
+        {
+            if (txtconformmessageValue.Value == "Yes")
+            {
+                using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+                {
+                    string id = gvList.DataKeys[row.RowIndex].Value.ToString();
+
+                    string sql = "update tbclientes set fl_exclusao='S' where id=@id";
+                    SqlCommand comando = new SqlCommand(sql, con);
+                    comando.Parameters.AddWithValue("@id", id);
+
+
+                    try
+                    {
+                        con.Open();
+                        comando.ExecuteNonQuery();
+                        con.Close();
+                        string retorno = "Registro excluído com sucesso!";
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        AllData();
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        //Chama a página de consulta clientes
+                        Response.Redirect("ConsultaClientes.aspx");
+                    }
+
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+            }
+                
+        }
+
+
 
 
 

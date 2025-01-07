@@ -3,6 +3,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <script language="javascript">
+     function ConfirmMessage() {
+         var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+         if (selectedvalue) {
+             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+        } else {
+            document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+        }
+     }
+   
+     </script>
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -172,11 +183,12 @@
                                     <i class="fas fa-map-marker-alt"></i>                                    
                                     Mapa
                                  </a> 
-
-                                 <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
+                                  <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>Excluir</asp:LinkButton>
+                                
+                                 <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
                                     <i class="fa fa-trash"></i>                                    
                                     Excluir
-                                 </a> 
+                                 </a> --%>
                                  
                              </ItemTemplate>
                         </asp:TemplateField>
@@ -184,6 +196,7 @@
                        
                     </Columns>
                 </asp:GridView>
+                 <asp:HiddenField ID="txtconformmessageValue" runat="server" />
             </div>
         </div>
     </div> 
