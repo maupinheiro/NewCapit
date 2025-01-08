@@ -157,65 +157,6 @@ namespace NewCapit
                     txtCodCli.Text = id;
                 }
             }
-        }
-
-
-
-            SqlCommand comando = new SqlCommand(sqlAtualizarCliente, con);
-            comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
-            comando.Parameters.AddWithValue("@razcli", txtRazCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@concli", txtConCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nomcli", txtNomCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tc1cli", txtTc1Cli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tc2cli", txtTc2Cli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@endcli", txtEndCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cepcli", txtCepCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@baicli", txtBaiCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cidcli", txtCidCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@estcli", txtEstCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@programador", txtProgramador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@contato", txtContato.Text.ToUpper());
-            comando.Parameters.AddWithValue("@email", txtEmail.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codvw", txtCodVw.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cnpj", txtCnpj.Text);
-            comando.Parameters.AddWithValue("@inscestadual", txtInscEstadual.Text);
-            comando.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
-            comando.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codsapiens", txtCodSapiens.Text.ToUpper());
-            comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
-            comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
-            comando.Parameters.AddWithValue("@ativo_inativo", ddlStatus.SelectedValue.ToUpper());
-            comando.Parameters.AddWithValue("@usualt", txtUsuAlteracao.Text.ToUpper());
-            comando.Parameters.AddWithValue("@dtcalt", lblDtAlteracao.Text);
-            comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
-            comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
-            comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());
-            comando.Parameters.AddWithValue("@regiao", cboRegiao.SelectedValue.ToUpper());
-            comando.Parameters.AddWithValue("@abertura", txtAbertura.Text);
-            comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tipoempresa", txtTipo.Text.ToUpper());
-            comando.Parameters.AddWithValue("@ramal", txtRamal.Text);
-
-            try
-            {
-                con.Open();
-                comando.ExecuteNonQuery();
-                con.Close();
-                string nomeUsuario = txtUsuCadastro.Text;
-                string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Código " + txtCodCli.Text + ", cadastro atualizado com sucesso.";
-                // Concatenando as linhas com '\n' para criar a mensagem
-                string mensagem = $"{linha1}\n{linha2}";
-                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                // Gerando o script JavaScript para exibir o alerta
-                string script = $"alert('{mensagemCodificada}');";
-                // Registrando o script para execução no lado do cliente
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                //Chama a página de consulta clientes
-                Response.Redirect("ConsultaClientes.aspx");
-
-
-            }
             catch (Exception ex)
             {
                 var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
