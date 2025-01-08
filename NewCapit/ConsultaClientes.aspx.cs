@@ -117,7 +117,8 @@ namespace NewCapit
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
         protected void Excluir(object sender, EventArgs e)
         {
-            
+            if(txtconformmessageValue.Value=="Sim")
+            {
                 using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
                 {
                     string id = gvList.DataKeys[row.RowIndex].Value.ToString();
@@ -165,7 +166,7 @@ namespace NewCapit
         }
                 
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
-            
+      
 
 
 }   }
