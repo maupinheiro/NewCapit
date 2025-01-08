@@ -23,8 +23,12 @@ namespace NewCapit
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            AllData();
-            CarregaRegioes();
+            if(!IsPostBack)
+            {
+                AllData();
+                CarregaRegioes();
+            }
+            
         }
 
 
@@ -113,7 +117,7 @@ namespace NewCapit
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
         protected void Excluir(object sender, EventArgs e)
         {
-            if(txtconformmessageValue.Value=="Sim")
+            if(txtconformmessageValue.Value=="Yes")
             {
                 using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
                 {
@@ -127,6 +131,7 @@ namespace NewCapit
                         con.Open();
                         comando.ExecuteNonQuery();
                         con.Close();
+                        AllData();
                         string retorno = "Registro excluído com sucesso!";
                         System.Text.StringBuilder sb = new System.Text.StringBuilder();
                         sb.Append("<script type = 'text/javascript'>");
@@ -136,7 +141,7 @@ namespace NewCapit
                         sb.Append("')};");
                         sb.Append("</script>");
                         ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                        AllData();
+                        
                     }
                     catch (Exception ex)
                     {
