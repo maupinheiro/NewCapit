@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Web.UI.HtmlControls;
 using System.Web.Configuration;
 using System.Runtime.Remoting;
+using System.Web.Script.Serialization;
 
 namespace NewCapit
 {
@@ -22,8 +23,12 @@ namespace NewCapit
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            AllData();
-            CarregaRegioes();
+            if(!IsPostBack)
+            {
+                AllData();
+                CarregaRegioes();
+            }
+            
         }
 
 
@@ -99,31 +104,69 @@ namespace NewCapit
             con.Close();
             CentroOeste.Text = dt4.Rows[0][0].ToString();
         }
-        protected void gvList_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Detalhes")
-            {
-                // Obtém o argumento do comando (ID da linha)
-                string id = e.CommandArgument.ToString();
-
-                // Redireciona para a nova página, passando o ID como parâmetro
-                Response.Redirect($"Frm_AltClientes.aspx?id={id}");
-            }
-        }
-
+        
         protected void Editar(object sender, EventArgs e)
         {
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
             {
                 string id = gvList.DataKeys[row.RowIndex].Value.ToString();
-                
-                Response.Redirect("Frm_AltClientes.aspx?id="+id);
+
+                Response.Redirect("Frm_AltClientes.aspx?id=" + id);
             }
         }
+        //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
+        protected void Excluir(object sender, EventArgs e)
+        {
+            if(txtconformmessageValue.Value=="Yes")
+            {
+                using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+                {
+                    string id = gvList.DataKeys[row.RowIndex].Value.ToString();
 
+                    string sql = "update tbclientes set fl_exclusao='S' where id=@id";
+                    SqlCommand comando = new SqlCommand(sql, con);
+                    comando.Parameters.AddWithValue("@id", id);
+                    try
+                    {
+                        con.Open();
+                        comando.ExecuteNonQuery();
+                        con.Close();
+                        AllData();
+                        string retorno = "Registro excluído com sucesso!";
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        //Chama a página de consulta clientes
+                        Response.Redirect("ConsultaClientes.aspx");
+                    }
 
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+            }
 
+            
+        }
+}   }
 
-    }
-
-}
