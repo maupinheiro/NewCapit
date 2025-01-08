@@ -82,10 +82,7 @@ namespace NewCapit
                 txtSituacao.Text = dt.Rows[0][31].ToString();
                 txtTipo.Text = dt.Rows[0][32].ToString();
                 //txtConCli.Text = dt.Rows[0]["ConCli"].ToString();
-                //txtRamal.Text = dt.Rows[0]["Ramal"].ToString();
-
-
-
+                txtRamal.Text = dt.Rows[0][34].ToString();
             }
         }
 
@@ -96,7 +93,7 @@ namespace NewCapit
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sqlAtualizarCliente = "UPDATE tbclientes SET dtccli = @dtccli, razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usucad = @usucad, dtccad = @dtccad, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa WHERE id=" + id;
+            string sqlAtualizarCliente = "UPDATE tbclientes SET razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usualt = @usualt, dtcalt = @dtcalt, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa, ramal = @ramal WHERE id=" + id;
             //teste
 
             SqlCommand comando = new SqlCommand(sqlAtualizarCliente, con);
