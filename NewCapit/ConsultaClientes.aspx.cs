@@ -106,14 +106,15 @@ namespace NewCapit
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
             {
                 string id = gvList.DataKeys[row.RowIndex].Value.ToString();
-                
-                Response.Redirect("Frm_AltClientes.aspx?id="+id);
+
+                Response.Redirect("Frm_AltClientes.aspx?id=" + id);
             }
         }
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
         protected void Excluir(object sender, EventArgs e)
         {
-            
+            if(txtconformmessageValue.Value=="Sim")
+            {
                 using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
                 {
                     string id = gvList.DataKeys[row.RowIndex].Value.ToString();
@@ -158,10 +159,13 @@ namespace NewCapit
                         con.Close();
                     }
                 }
-        }
-                
-        //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
+            }
+
             
+        }
+
+        //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
+      
 
 
 }   }
@@ -171,5 +175,3 @@ namespace NewCapit
 
 
 
-
-}
