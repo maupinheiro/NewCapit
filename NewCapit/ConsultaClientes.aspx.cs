@@ -125,8 +125,6 @@ namespace NewCapit
                     string sql = "update tbclientes set fl_exclusao='S' where id=@id";
                     SqlCommand comando = new SqlCommand(sql, con);
                     comando.Parameters.AddWithValue("@id", id);
-
-
                     try
                     {
                         con.Open();
@@ -142,8 +140,6 @@ namespace NewCapit
                         sb.Append("</script>");
                         ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                         AllData();
-
-
                     }
                     catch (Exception ex)
                     {
@@ -166,9 +162,9 @@ namespace NewCapit
                         con.Close();
                     }
                 }
-            }
-                
         }
+                
+    } 
 
 
 
