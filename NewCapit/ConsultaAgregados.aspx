@@ -166,6 +166,7 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
                         <asp:BoundField DataField="id" HeaderText="#ID" />
                         <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
                         <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
+                        <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
                         <asp:BoundField DataField="filial" HeaderText="FILIAL" />
                         <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />

@@ -15,13 +15,13 @@ namespace NewCapit
     {
 
         /// <summary>
-        /// Controle txtCodCli.
+        /// Controle txtCodTra.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodCli;
+        protected global::System.Web.UI.WebControls.TextBox txtCodTra;
 
         /// <summary>
         /// Controle btnAgregado.
@@ -60,13 +60,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtCpf_Cnpj;
 
         /// <summary>
-        /// Controle btnPesqCnpj.
+        /// Controle btnCnpj.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesqCnpj;
+        protected global::System.Web.UI.WebControls.Button btnCnpj;
 
         /// <summary>
         /// Controle txtRazCli.
@@ -220,6 +220,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEstCli;
+
+        /// <summary>
+        /// Controle txtDtUsu.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDtUsu;
+
+        /// <summary>
+        /// Controle txtUsuCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
 
         /// <summary>
         /// Controle btnSalvar1.

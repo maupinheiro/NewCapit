@@ -49,6 +49,15 @@ namespace DAL
                 return con.Query<ConsultaCliente>(sqlQuery, obj).FirstOrDefault();
             }
         }
+        public static ConsultaAgregado CheckAgregado(ConsultaAgregado obj)
+        {
+            string sqlQuery = "SELECT * FROM tbtransportadoras WHERE (codtra = @codtra)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaAgregado>(sqlQuery, obj).FirstOrDefault();
+            }
+        }
     }
    
 }
