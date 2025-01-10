@@ -77,6 +77,7 @@
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
     <Content Include="ConsultaClientes.aspx" />
+    <Content Include="ConsultaMotoristas.aspx" />
     <Content Include="css\sb-admin-2.css" />
     <Content Include="css\sb-admin-2.min.css" />
     <Content Include="css\styleCadastros.css" />
@@ -103,9 +104,15 @@
     <Content Include="img\regiao-sudeste.jpg" />
     <Content Include="img\regiao-sul.jpg" />
     <Content Include="img\terceiros.png" />
+    <Content Include="img\totalAgre.png" />
     <Content Include="img\totalagregados.png" />
     <Content Include="img\selecao.png" />
     <Content Include="img\setas.png" />
+    <Content Include="img\totalAtivos.png" />
+    <Content Include="img\totalFunc.png" />
+    <Content Include="img\totalInativos.png" />
+    <Content Include="img\totalMot.png" />
+    <Content Include="img\totalTerc.png" />
     <Content Include="img\truck6.png" />
     <Content Include="img\truck7.png" />
     <Content Include="img\totalVeiculos.png" />
@@ -1829,6 +1836,13 @@
     </Compile>
     <Compile Include="ConsultaClientes.aspx.designer.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConsultaMotoristas.aspx.cs">
+      <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConsultaMotoristas.aspx.designer.cs">
+      <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

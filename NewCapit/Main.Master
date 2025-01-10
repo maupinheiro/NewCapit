@@ -95,7 +95,7 @@
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                         aria-expanded="true" aria-controls="collapseTwo">
-                        <i class="fas fa-industry"></i>
+                        <i class="fas fa-warehouse"></i>
                         <span>Clientes</span>
                     </a>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -117,12 +117,12 @@
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransportadoras"
                         aria-expanded="true" aria-controls="collapseTransportadoras">
                         <i class="fas fa-truck"></i>
-                        <span>Transportadoras</span>
+                        <span>Agregados</span>
                     </a>
                     <div id="collapseTransportadoras" class="collapse" aria-labelledby="headingTransportadoras"
                         data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Transportadoras</h6>
+                            <h6 class="collapse-header">Agregados</h6>
                             <a class="collapse-item" href="ConsultaAgregados.aspx">Manutenção</a>
                             <!--
                             <a class="collapse-item" href="utilities-border.html">Novo</a>
@@ -137,7 +137,7 @@
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVeiculos"
                         aria-expanded="true" aria-controls="collapseVeiculos">
-                        <i class="fas fa-fw fa-wrench"></i>
+                        <i class="fas fa-shipping-fast"></i>
                         <span>Veículos</span>
                     </a>
                     <div id="collapseVeiculos" class="collapse" aria-labelledby="headingVeiculos"
@@ -184,7 +184,7 @@
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Motoristas</h6>
-                            <a class="collapse-item" href="#">Manutenção</a>
+                            <a class="collapse-item" href="ConsultaMotoristas.aspx">Manutenção</a>
                             <a class="collapse-item" href="#">Jornada do Motorista</a>
                             <a class="collapse-item" href="#">Gerar .TXT Dep. Pessoal</a>
                             <a class="collapse-item" href="#">Validar Marcações</a>
