@@ -17,9 +17,10 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-2 text-gray-800">Consulta Clientes</h1>
-        <a href="Frm_CadClientes.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-industry"></i> Novo Cadastro
+        <h1 class="h3 mb-2 text-gray-800">
+            <i class="fas fa-warehouse"></i> Consulta Clientes</h1>
+        <a href="Frm_CadClientes.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-warehouse"></i> Novo Cadastro
         </a>
     </div>
     <!-- Content Graficos -->
