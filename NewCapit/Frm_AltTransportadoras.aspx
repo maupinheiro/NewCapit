@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadTransportadoras.aspx.cs" Inherits="NewCapit.Frm_CadTransportadoras" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltTransportadoras.aspx.cs" Inherits="NewCapit.Frm_AltTransportadoras" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -6,9 +6,7 @@
 
     <div class="container mt-5">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i>TRANSPORTADOR
-            </h3>
-            <h3>NOVO CADASTRO</h3>
+           <h3>.: ATUALIZAR CADASTRO :.</h3>
         </div>
 
         <hr />
@@ -165,14 +163,14 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <span class="details">CADASTRADO EM:</span>
-                    <asp:TextBox ID="txtDtUsu" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="16"></asp:TextBox>
+                    <span class="details">CADASTRADO ALTERADO EM:</span>
+                    <asp:TextBox ID="txtAltDtUsu" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="16"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <span class="details">CADASTRADO POR:</span>
-                    <asp:TextBox ID="txtUsuCadastro" Style="text-align: left" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" ></asp:TextBox>
+                    <span class="details">CADASTRADO ALTERADO POR:</span>
+                    <asp:TextBox ID="txtUsuAltCadastro" Style="text-align: left" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
                 </div>
             </div>
 
@@ -181,7 +179,7 @@
         <div class="row g-3">
             <div class="col-md-1">
                 <br />
-                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
+                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success btn-lg" OnClick="btnSalvar1_Click" runat="server" Text="Salvar" />
             </div>
             <div class="col-md-1">
                 <br />

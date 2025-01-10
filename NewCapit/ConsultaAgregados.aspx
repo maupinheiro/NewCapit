@@ -3,6 +3,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <script language="javascript">
+function ConfirmMessage() {
+    var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+    if (selectedvalue) {
+        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+   } else {
+       document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+   }
+}
+   
+    </script>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-2 text-gray-800">
@@ -173,16 +184,14 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
                             <ItemTemplate>
-                                <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
-                                <a class="btn btn-danger btn-sm" href="#">
-                                    <i class="fa fa-trash"></i>
-                                    Excluir
-                                </a>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
+                                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>Excluir</asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
             </div>
+            <asp:HiddenField ID="txtconformmessageValue" runat="server" />
         </div>
     </div>
 

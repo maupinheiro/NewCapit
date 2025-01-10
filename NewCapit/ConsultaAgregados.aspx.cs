@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -54,8 +55,16 @@ namespace NewCapit
             }
 
             return percentualAtivos;
-        }       
+        }
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvListAgregados.DataKeys[row.RowIndex].Value.ToString();
 
+                Response.Redirect("Frm_AltTransportadoras.aspx?id=" + id);
+            }
+        }
 
 
         public void ContagemAgregados()
@@ -118,6 +127,59 @@ namespace NewCapit
             gvListAgregados.UseAccessibleHeader = true;
             gvListAgregados.HeaderRow.TableSection = TableRowSection.TableHeader;
             gvListAgregados.FooterRow.TableSection = TableRowSection.TableFooter;
+
+        }
+        protected void Excluir(object sender, EventArgs e)
+        {
+            if (txtconformmessageValue.Value == "Yes")
+            {
+                using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+                {
+                    string id = gvListAgregados.DataKeys[row.RowIndex].Value.ToString();
+
+                    string sql = "update tbtransportadoras set fl_exclusao='S' where id=@id";
+                    SqlCommand comando = new SqlCommand(sql, con);
+                    comando.Parameters.AddWithValue("@id", id);
+                    try
+                    {
+                        con.Open();
+                        comando.ExecuteNonQuery();
+                        con.Close();
+                        AllDataAgregados();
+                        string retorno = "Registro excluído com sucesso!";
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+
+                    }
+                    catch (Exception ex)
+                    {
+                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        //Chama a página de consulta clientes
+                        Response.Redirect("ConsultaClientes.aspx");
+                    }
+
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+            }
+
 
         }
 

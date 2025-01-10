@@ -168,5 +168,15 @@ namespace NewCapit
 
             
         }
+
+        //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
+      
+
+
 }   }
+
+
+
+
+
 

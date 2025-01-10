@@ -44,8 +44,7 @@ namespace NewCapit
                     string funcaoUsuario = user.fun_usuario;
                     //O cod do funcionario é passado para a página master para carregar a foto na pagina//
                     string codFuncionario = user.cod_usuario.ToString();
-                    // falta a foto
-                    //
+                 
                     Session["UsuarioLogado"] = nomeUsuario;
                     Session["EmpresaTrabalho"] = nomeEmpresa;
                     Session["FuncaoUsuario"] = funcaoUsuario;
