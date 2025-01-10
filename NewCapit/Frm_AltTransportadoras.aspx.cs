@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -14,9 +13,10 @@ using Microsoft.SqlServer.Server;
 
 namespace NewCapit
 {
-    public partial class Frm_CadTransportadoras : System.Web.UI.Page
+    public partial class Frm_AltTransportadoras : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+        string id;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -25,20 +25,22 @@ namespace NewCapit
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-                    txtUsuCadastro.Text = nomeUsuario;
+                    
+                    txtUsuAltCadastro.Text = nomeUsuario;
+                    
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
                 }
-                
 
+                CarregaDados();
             }
 
             PreencherComboFiliais();
             DateTime dataHoraAtual = DateTime.Now;
             txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
-            txtDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             btnCnpj.Visible = false;
 
         }
@@ -81,7 +83,7 @@ namespace NewCapit
         {
             if (txtCodTra.Text.Trim() == "")
             {
-                string nomeUsuario = txtUsuCadastro.Text;
+                string nomeUsuario = txtUsuAltCadastro.Text;
 
                 string linha1 = "Olá, " + nomeUsuario + "!";
                 string linha2 = "Por favor, digite um código para cadastro.";
@@ -110,7 +112,7 @@ namespace NewCapit
                 var ConsultaAgregados = DAL.UsersDAL.CheckAgregado(obj);
                 if (ConsultaAgregados != null)
                 {
-                    string nomeUsuario = txtUsuCadastro.Text;
+                    string nomeUsuario = txtUsuAltCadastro.Text;
                     string razaoSocial = ConsultaAgregados.fantra;
                     string filial = ConsultaAgregados.filial;
                     
@@ -183,7 +185,7 @@ namespace NewCapit
             }
             else
             {
-                string nomeUsuario = txtUsuCadastro.Text;
+                string nomeUsuario = txtUsuAltCadastro.Text;
                 string linha1 = "Olá, " + nomeUsuario + "!";
                 string linha2 = "Quantidade de números digistados, não correspondem a um CNPJ válido.";
                 string linha3 = "Por favor, verifique e tente novamente.";               
@@ -235,7 +237,7 @@ namespace NewCapit
                     }
                     else
                     {
-                        string nomeUsuario = txtUsuCadastro.Text;
+                        string nomeUsuario = txtUsuAltCadastro.Text;
                         string linha1 = "Olá, " + nomeUsuario + "!";
                         string linha2 = "Quantidade de números digistados, não correspondem a um CPF válido.";
                         string linha3 = "Por favor, verifique e tente novamente.";
@@ -261,11 +263,18 @@ namespace NewCapit
         {
             using (SqlConnection connection = con)
             {
+                if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+                {
+                    id = HttpContext.Current.Request.QueryString["id"].ToString();
+                }
                 string query = @"
-                    INSERT INTO tbtransportadoras 
-                    (codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, dtccad, usucad, antt, filial) 
-                    VALUES 
-                    (@CodTra, @DtCad, @NomTra, @ConTra, @FanTra, @Fone1, @Fone2, @EndTra, @CepTra, @BaiTra, @CidTra, @UfTra, @AtivaInativa, @Pessoa, @Cnpj, @InscEstadual, @Numero, @Complemento, @DtCCad, @UsuCad, @Antt, @Filial)";
+        UPDATE tbtransportadoras 
+        SET dtcad = @DtCad, nomtra = @NomTra, contra = @ConTra, fantra = @FanTra, fone1 = @Fone1, 
+            fone2 = @Fone2, endtra = @EndTra, ceptra = @CepTra, baitra = @BaiTra, cidtra = @CidTra, 
+            uftra = @UfTra, ativa_inativa = @AtivaInativa, pessoa = @Pessoa, cnpj = @Cnpj, 
+            inscestadual = @InscEstadual, numero = @Numero, complemento = @Complemento, 
+            dtccad = @DtCCad, usucad = @UsuCad, antt = @Antt, filial = @Filial,dtcalt=@DtCAlt, usualt=@UsuAlt,
+        WHERE ID = @id";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -287,32 +296,35 @@ namespace NewCapit
                     command.Parameters.AddWithValue("@InscEstadual", txtRg.Text);
                     command.Parameters.AddWithValue("@Numero", txtNumero.Text);
                     command.Parameters.AddWithValue("@Complemento", txtComplemento.Text);
-                    command.Parameters.AddWithValue("@DtCCad", txtDtCadastro.Text);
-                    command.Parameters.AddWithValue("@UsuCad", txtUsuCadastro.Text);
-                    //command.Parameters.AddWithValue("@DtCAlt", txt);
-                    //command.Parameters.AddWithValue("@UsuAlt", usuAlt);
+                    command.Parameters.AddWithValue("@DtCAlt", txtAltDtUsu.Text);
+                    command.Parameters.AddWithValue("@UsuAlt", txtUsuAltCadastro.Text);
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text);
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedValue);
-                    //command.Parameters.AddWithValue("@Tipo", );
+                    command.Parameters.AddWithValue("@ID", id);
 
                     try
                     {
                         con.Open();
-                        command.ExecuteNonQuery();
+                        int rowsAffected = command.ExecuteNonQuery();
                         con.Close();
-                        string nomeUsuario = txtUsuCadastro.Text;
-                        string linha1 = "Olá, " + nomeUsuario + "!";
-                        string linha2 = "Código " + txtCodTra.Text + ", cadastrado com sucesso.";
-                        // Concatenando as linhas com '\n' para criar a mensagem
-                        string mensagem = $"{linha1}\n{linha2}";
-                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                        // Gerando o script JavaScript para exibir o alerta
-                        string script = $"alert('{mensagemCodificada}');";
-                        // Registrando o script para execução no lado do cliente
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                        //Chama a página de consulta clientes
-                        Response.Redirect("ConsultaAgregados.aspx");
 
+                        if (rowsAffected > 0)
+                        {
+                            string nomeUsuario = txtUsuAltCadastro.Text;
+                            string linha1 = "Olá, " + nomeUsuario + "!";
+                            string linha2 = "Registro com código " + txtCodTra.Text + " atualizado com sucesso.";
+                            string mensagem = $"{linha1}\n{linha2}";
+                            string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                            string script = $"alert('{mensagemCodificada}');";
+                            ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                            Response.Redirect("ConsultaAgregados.aspx");
+                        }
+                        else
+                        {
+                            string mensagem = "Nenhum registro foi encontrado para atualizar.";
+                            string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                            ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -326,10 +338,92 @@ namespace NewCapit
                         sb.Append("')};");
                         sb.Append("</script>");
                         ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                        //Chama a página de consulta clientes
                         Response.Redirect("ConsultaClientes.aspx");
                     }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+            }
 
+        }
+
+        public void CarregaDados()
+        {
+            using (SqlConnection connection = con)
+            {
+                if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["id"]))
+                {
+                    id = HttpContext.Current.Request.QueryString["id"].ToString();
+                }
+
+                string query = @"
+        SELECT codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, 
+               cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, 
+               CONVERT(varchar, dtccad, 103)dtccad, usucad, antt, filial 
+        FROM tbtransportadoras 
+        WHERE ID = @id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+
+                    try
+                    {
+                        con.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Popula os campos da tela com os dados retornados do banco
+                                txtCodTra.Text = reader["codtra"].ToString();
+                                txtDtCadastro.Text = reader["dtcad"].ToString();
+                                txtRazCli.Text = reader["nomtra"].ToString();
+                                txtContato.Text = reader["contra"].ToString();
+                                txtFantasia.Text = reader["fantra"].ToString();
+                                txtFixo.Text = reader["fone1"].ToString();
+                                txtCelular.Text = reader["fone2"].ToString();
+                                txtEndCli.Text = reader["endtra"].ToString();
+                                txtCepCli.Text = reader["ceptra"].ToString();
+                                txtBaiCli.Text = reader["baitra"].ToString();
+                                txtCidCli.Text = reader["cidtra"].ToString();
+                                txtEstCli.Text = reader["uftra"].ToString();
+                                ddlSituacao.SelectedValue = reader["ativa_inativa"].ToString();
+                                cboPessoa.SelectedValue = reader["pessoa"].ToString();
+                                txtCpf_Cnpj.Text = reader["cnpj"].ToString();
+                                txtRg.Text = reader["inscestadual"].ToString();
+                                txtNumero.Text = reader["numero"].ToString();
+                                txtComplemento.Text = reader["complemento"].ToString();
+                                txtDtCadastro.Text = reader["dtccad"].ToString();
+                                txtUsuAltCadastro.Text = reader["usucad"].ToString();
+                                txtAntt.Text = reader["antt"].ToString();
+                                cbFiliais.SelectedValue = reader["filial"].ToString();
+                            }
+                            else
+                            {
+                                // Exibe mensagem caso o registro não seja encontrado
+                                string mensagem = "Nenhum registro foi encontrado para o ID fornecido.";
+                                string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                            }
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        Response.Redirect("ConsultaClientes.aspx");
+                    }
                     finally
                     {
                         con.Close();

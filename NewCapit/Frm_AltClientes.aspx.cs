@@ -181,5 +181,53 @@ namespace NewCapit
                 con.Close();
             }
         }
+
+        protected void btnCnpj_Click(object sender, EventArgs e)
+        {
+            PesquisarCnpj();
+        }
+        protected void btnCep_Click(object sender, EventArgs e)
+        {
+            WebCEP cep = new WebCEP(txtCepCli.Text);
+            txtBaiCli.Text = cep.Bairro.ToString();
+            txtCidCli.Text = cep.Cidade.ToString();
+            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
+            txtEstCli.Text = cep.UF.ToString();
+            txtNumero.Focus();
+        }
+        private string RemoverMascaraCNPJ(string cnpj)
+        {
+            // Remove os caracteres não numéricos (pontos, barras e traços)
+            return System.Text.RegularExpressions.Regex.Replace(cnpj, @"[^\d]", "");
+        }
+        private string RemoverMascaraCep(string cep)
+        {
+            // Remove os caracteres não numéricos (pontos, barras e traços)
+            return System.Text.RegularExpressions.Regex.Replace(cep, @"[^\d]", "");
+        }
+        private void PesquisarCnpj()
+        {
+            string cnpjSemMascara = RemoverMascaraCNPJ(txtCnpj.Text);
+            var cnpj = Empresa.ObterCnpj(cnpjSemMascara);
+            if (cnpj != null)
+            {
+                var cep = RemoverMascaraCep(cnpj.cep);
+                txtRazCli.Text = cnpj.nome;
+                txtTipo.Text = cnpj.tipo;
+                txtAbertura.Text = cnpj.abertura;
+                txtSituacao.Text = cnpj.situacao;
+                txtNomCli.Text = cnpj.fantasia;
+                txtCepCli.Text = cep;
+                txtEndCli.Text = cnpj.logradouro;
+                txtNumero.Text = cnpj.numero;
+                txtComplemento.Text = cnpj.complemento;
+                txtBaiCli.Text = cnpj.bairro;
+                txtCidCli.Text = cnpj.municipio;
+                txtEstCli.Text = cnpj.uf;
+
+            }
+
+
+        }
     }          
 }
