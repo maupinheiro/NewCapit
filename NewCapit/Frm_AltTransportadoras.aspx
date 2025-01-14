@@ -6,7 +6,7 @@
 
     <div class="container mt-5">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> TRANSPORTADOR
+            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i>TRANSPORTADOR
             </h3>
             <h3>ATUALIZA CADASTRO</h3>
         </div>
@@ -76,7 +76,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <span class="details">CADASTRO:</span>
-                    <asp:Label ID="txtDtCadastro" runat="server" ForeColor="Blue"  CssClass="form-control" value=""></asp:Label>
+                    <asp:Label ID="txtDtCadastro2" runat="server" ForeColor="Blue"  CssClass="form-control" value=""></asp:Label>
                 </div>
             </div>
             <div class="col-md-1">

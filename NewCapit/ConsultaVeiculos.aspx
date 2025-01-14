@@ -8,16 +8,16 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-left justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-shipping-fast"></i> Consulta Veículos</h1>
-        <a href="Frm_AltVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-shipping-fast"></i> Novo Cadastro
+            <i class="fas fa-shipping-fast"></i>Consulta Veículos</h1>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-shipping-fast"></i>Novo Cadastro
         </a>
     </div>
 
     <!-- Content Row -->
     <div class="row">
         <!-- Total Veículos -->        
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-2 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -30,11 +30,11 @@
                             </div>
                         </div>
                         <!-- sub menu total de veiculos -->
-                        <div class="col-auto">                            
+                        <div class="col-auto">
                              <ul class="nav navbar-nav navbar-right">
                              <li class="">                            
                              <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                             <i class="fas fa-shipping-fast fa-2x text-gray-300"></i>
+                            <i class="fas fa-shipping-fast fa-2x text-gray-300"></i>
                              <span class=" fa fa-angle-down"></span>                               
                              <ul class="dropdown-menu dropdown-usermenu pull-right">                             
                              </li>    
@@ -57,24 +57,32 @@
         </div>
 
         <!-- Frota -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-2 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Frota Ativa
+                                Frota
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <asp:Label ID="TotalFrota" runat="server" Text=""></asp:Label>
-                            </div>                           
+                            </div>
+                            <!--
+                            <span class="text-xs font-weight-bold text-success text-uppercase mb-1">MATRIZ:</span>
+                            <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">55</span>
+                            <span class="text-xs font-weight-bold text-success text-uppercase mb-1">MINAS:</span>
+                            <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">55</span>
+                            <span class="text-xs font-weight-bold text-success text-uppercase mb-1">CNT:</span>
+                            <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">55</span>
+                            -->
                         </div>
                         <!-- Sub menu frota -->
-                        <div class="col-auto">                            
+                        <div class="col-auto">
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">                            
                                     <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-truck fa-2x text-gray-300"></i>
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
                                     <span class=" fa fa-angle-down"></span>
                                   </>                               
                                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -135,21 +143,42 @@
             </div>
         </div>
 
-        <!-- Agregados  -->
-        <div class="col-xl-3 col-md-6 mb-4">
-           <div class="card border-left-warning shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                        Agregados Ativos
+        <!-- Agregados Matriz -->
+        <div class="col-xl-2 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Agregados -  Matriz                             
+                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                     <asp:Label ID="TotalAgregadoMatriz" runat="server" Text=""></asp:Label>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <asp:Label ID="TotalAgregados" runat="server" Text=""></asp:Label>
-                    </div>                           
                 </div>
+            </div>
+        </div>
+
+        <!-- Terceiros -->
+        <div class="col-xl-2 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Terceiros - Matriz
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <asp:Label ID="TotalTerceirosMatriz" runat="server" Text=""></asp:Label>
+                            </div>
+                        </div>
                 <!-- Sub menu agregados -->
-                <div class="col-auto">                            
+                        <div class="col-auto">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">                            
                             <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -207,28 +236,25 @@
                           </ul>
                         </li>
                     </ul>
-                </div>
+                        </div>
                 <!-- Fim do sub menu frota -->
+                    </div>
+                </div>
             </div>
         </div>
-</div>
-        </div>
-       
-        <!-- Terceiros  -->
-        <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                        Terceiros Ativos
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <asp:Label ID="TotalTerceiros" runat="server" Text=""></asp:Label>
-                    </div>                           
-                </div>
+        <!-- Terceiros CNT -->
+        <div class="col-xl-2 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Terceiros - CNTi
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                        </div>
                 <!-- Sub menu terceiros -->
-                <div class="col-auto">                            
+                        <div class="col-auto">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">                            
                             <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -286,64 +312,34 @@
                           </ul>
                         </li>
                     </ul>
-                </div>
+                        </div>
                 <!-- Fim do sub menu frota -->
+                    </div>
+                </div>
             </div>
         </div>
-</div>
-        </div>
-
-        <!-- Grid -->
-        <div class="card shadow mb-4">        
-            <div class="card-body">
-                <div class="table-responsive">              
-                    <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
-                        <Columns>                        
-                            <asp:BoundField DataField="codvei" HeaderText="#ID" />
-                            <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
-                            <asp:BoundField DataField="plavei" HeaderText="PLACA" />
-                            <asp:BoundField DataField="reboque1" HeaderText="REBOQUE" />
-                            <asp:BoundField DataField="tipoveiculo" HeaderText="TIPO" />
-                            <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
-                            <asp:BoundField DataField="transp" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />                             
-                            <asp:BoundField DataField="ativo_inativo" HeaderText="STATUS"/> 
-                     
-                            <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="230px">
-                                 <ItemTemplate >                              
-                                     <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
-                                         Editar</asp:LinkButton>
-                                   <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
-                                        <i class="fa fa-edit"></i>
-                                        Editar
-                                     </a> --%>
-                             
-                                     <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
-                                        <i class="fas fa-map-marker-alt"></i>                                    
-                                        Mapa
-                                     </a> 
-                                      <asp:LinkButton ID="lnkExcluir" runat="server" CssClass="btn btn-danger btn-sm" ><i class="fa fa-trash"></i></i>
-                                          Excluir</asp:LinkButton>
-                            
-                                     <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
-                                        <i class="fa fa-trash"></i>                                    
-                                        Excluir
-                                     </a> --%>
-                             
-                                 </ItemTemplate>
-                            </asp:TemplateField>
-
-                   
-                        </Columns>
-                    </asp:GridView>
-             
+        <!-- Agregados MINAS -->
+        <div class="col-xl-2 col-md-6 mb-4">
+            <div class="card border-left-secondary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                Agregados - CNTi
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
                 <asp:HiddenField ID="txtconformmessageValue" runat="server" />
             </div>
         </div>
-
+       
+        
     </div>
-    <!-- JavaScript -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="src/javascript/script.js"></script>
+
 
 </asp:Content>
