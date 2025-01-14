@@ -26,6 +26,10 @@ namespace NewCapit
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
                     txtUsuCadastro.Text = nomeUsuario;
+
+                    DateTime dataHoraAtual = DateTime.Now;
+                    txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                    txtDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 }
                 else
                 {
@@ -35,10 +39,7 @@ namespace NewCapit
 
             }
 
-            PreencherComboFiliais();
-            DateTime dataHoraAtual = DateTime.Now;
-            txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
-            txtDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            PreencherComboFiliais();            
             btnCnpj.Visible = false;
 
         }
@@ -258,7 +259,7 @@ namespace NewCapit
             }
         }
 
-        protected void btnSalvar1_Click(object sender, EventArgs e)
+        protected void btnSalvar_Click(object sender, EventArgs e)
         {
             using (SqlConnection connection = con)
             {

@@ -18,17 +18,26 @@ namespace NewCapit
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
+        private readonly object dataHoraAtual;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                //string id = Request.QueryString["codcli"];
-                //if (!string.IsNullOrEmpty(id))
-                //{
-                //    // Use o ID para carregar os detalhes
-                //    txtCodCli.Text = id;
-                //}
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                    txtUsuAlteracao.Text = nomeUsuario;
+                    DateTime dataHoraAtual = DateTime.Now;
+                    lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                }
                 CarregaDados();
+                
             }
         }
 
@@ -88,6 +97,18 @@ namespace NewCapit
 
         protected void btnAlterar_Click(object sender, EventArgs e)
         {
+            if (Session["UsuarioLogado"] != null)
+            {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+                var lblUsuario = nomeUsuario;
+                txtUsuAlteracao.Text = nomeUsuario;
+                DateTime dataHoraAtual = DateTime.Now;
+                lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            }
+            else
+            {
+                var lblUsuario = "<Usuário>";
+            }
 
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
@@ -137,7 +158,7 @@ namespace NewCapit
                 con.Close();
                 string nomeUsuario = txtUsuCadastro.Text;
                 string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Código " + txtCodCli.Text + ", cadastrado com sucesso.";
+                string linha2 = "Código " + txtCodCli.Text + ", atualizado com sucesso.";
                 // Concatenando as linhas com '\n' para criar a mensagem
                 string mensagem = $"{linha1}\n{linha2}";
                 string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);

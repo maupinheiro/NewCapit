@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -24,10 +26,8 @@ namespace NewCapit
                 if (Session["UsuarioLogado"] != null)
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    var lblUsuario = nomeUsuario;
-                    
-                    txtUsuAltCadastro.Text = nomeUsuario;
-                    
+                    var lblUsuario = nomeUsuario;                    
+                    txtUsuAltCadastro.Text = nomeUsuario;                   
                 }
                 else
                 {
@@ -84,7 +84,7 @@ namespace NewCapit
         private void PreencherComboFiliais(string filialCadastrada)
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codigo, descricao FROM tbempresa";
+            string query = "SELECT descricao FROM tbempresa";
 
             // Limpe os itens do DropDownList antes de popular novamente
             cbFiliais.Items.Clear();
@@ -226,14 +226,16 @@ namespace NewCapit
         }
         private void PesquisarCnpj()
         {
-            if (txtCpf_Cnpj.Text.Length == 14)
+            string cnpjSemMascara = RemoverMascaraCNPJ(txtCpf_Cnpj.Text);
+            if (cnpjSemMascara.Length == 14)
             {
-                string cnpjSemMascara = RemoverMascaraCNPJ(txtCpf_Cnpj.Text);
+               // string cnpjSemMascara = RemoverMascaraCNPJ(txtCpf_Cnpj.Text);
                 var cnpj = Empresa.ObterCnpj(cnpjSemMascara);
                 if (cnpj != null)
                 {
                     var cep = RemoverMascaraCep(cnpj.cep);
                     txtRazCli.Text = cnpj.nome;
+                    txtDtCadastro2.Text = cnpj.abertura;
                     txtCepCli.Text = cep;
                     txtEndCli.Text = cnpj.logradouro;
                     txtNumero.Text = cnpj.numero;
@@ -241,15 +243,7 @@ namespace NewCapit
                     txtBaiCli.Text = cnpj.bairro;
                     txtCidCli.Text = cnpj.municipio;
                     txtEstCli.Text = cnpj.uf;
-                }
-                //if (cnpj != null)
-                //{
-                //    if (cboPessoa.SelectedValue == "JURÍDICA")
-                //    {                        
-                //        string cnpjFormatado = string.Format("{000\\.000\\.000\\/0000-00}", long.Parse(cnpjSemMascara));
-                //        txtCpf_Cnpj.Text = cnpjFormatado;
-                //    }
-                //}
+                }               
             }
             else
             {
@@ -291,6 +285,7 @@ namespace NewCapit
                 btnCnpj.Visible = true;
             }
         }
+        
         protected void validaCPF()
         {
 
@@ -327,7 +322,7 @@ namespace NewCapit
             }
         }
 
-        protected void btnSalvar1_Click(object sender, EventArgs e)
+        protected void btnSalvar_Click(object sender, EventArgs e)
         {
             using (SqlConnection connection = con)
             {
@@ -343,6 +338,22 @@ namespace NewCapit
             inscestadual = @InscEstadual, numero = @Numero, complemento = @Complemento, 
             antt = @Antt, filial = @Filial,dtcalt=@DtCAlt, usualt=@UsuAlt
         WHERE ID = @id";
+
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                    txtUsuAltCadastro.Text = nomeUsuario;
+                    DateTime dataHoraAtual = DateTime.Now;
+                    // txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                    txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                }
+
+                string query = @" UPDATE tbtransportadoras SET dtcad=@DtCad, nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID=@id";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -416,26 +427,50 @@ namespace NewCapit
             }
 
         }
-
-        public void CarregaDados()
+              
+             
+        public void CarregaDadosAgregado()
         {
-            using (SqlConnection connection = con)
+            SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["id"]))
             {
-                if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["id"]))
-                {
-                    id = HttpContext.Current.Request.QueryString["id"].ToString();
-                }
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            string sql = "SELECT * FROM tbtransportadoras WHERE ID='" + id + "'";
 
-                string query = @"
-        SELECT codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, 
-               cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, 
-               CONVERT(varchar, dtccad, 103)dtccad, usucad, antt, filial 
-        FROM tbtransportadoras 
-        WHERE ID = @id";
+            SqlDataAdapter apt = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            apt.Fill(dt);
+            con.Close();
 
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
+            if (dt.Rows.Count > 0)
+            {
+                txtCodTra.Text = dt.Rows[0][1].ToString();
+                cboPessoa.Items.Insert(0, dt.Rows[0][14].ToString());
+                ddlTipo.Items.Insert(0, dt.Rows[0][25].ToString());
+                cbFiliais.Items.Insert(0, dt.Rows[0][24].ToString());
+                txtCpf_Cnpj.Text = dt.Rows[0][15].ToString();
+                txtRazCli.Text = dt.Rows[0][3].ToString();
+                txtAntt.Text = dt.Rows[0][23].ToString();
+                txtDtCadastro2.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy");
+                ddlSituacao.Items.Insert(0, dt.Rows[0][13].ToString());
+                txtRg.Text = dt.Rows[0][16].ToString();
+                txtFantasia.Text = dt.Rows[0][5].ToString();
+                txtContato.Text = dt.Rows[0][4].ToString();
+                txtFixo.Text = dt.Rows[0][5].ToString();
+                txtCelular.Text = dt.Rows[0][6].ToString();
+                txtCepCli.Text = dt.Rows[0][9].ToString();
+                txtEndCli.Text = dt.Rows[0][8].ToString();
+                txtNumero.Text = dt.Rows[0][17].ToString();
+                txtComplemento.Text = dt.Rows[0][18].ToString();
+                txtBaiCli.Text = dt.Rows[0][10].ToString();
+                txtCidCli.Text = dt.Rows[0][11].ToString();
+                txtEstCli.Text = dt.Rows[0][12].ToString();
+                txtDtCad.Text = dt.Rows[0][19].ToString();
+                txtUsuCad.Text = dt.Rows[0][20].ToString();
+                txtAltDtUsu.Text = dt.Rows[0][21].ToString();
+                txtUsuAltCadastro.Text = dt.Rows[0][22].ToString();
 
                     try
                     {

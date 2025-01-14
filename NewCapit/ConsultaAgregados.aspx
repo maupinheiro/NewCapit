@@ -31,7 +31,7 @@ function ConfirmMessage() {
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">                               
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> 
                                 Total de Agregados / Terceiros
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
@@ -39,7 +39,6 @@ function ConfirmMessage() {
                             </div>
                         </div>
                         <div class="col-auto">
-                            
                             <img src="img/totalagregados.png" width="60px" alt="" />
                         </div>
                     </div>
@@ -59,7 +58,6 @@ function ConfirmMessage() {
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
                                     <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                                      
                                     </div>
                                 </div>
                                 <div class="col">

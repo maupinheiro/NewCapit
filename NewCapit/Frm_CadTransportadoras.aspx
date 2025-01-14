@@ -107,7 +107,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <span class="details">FIXO:</span>
+                    <span class="details">CELULAR:</span>
                     <asp:TextBox ID="txtCelular" runat="server" data-mask="(00) 0 0000-0000" ForeColor="Blue" CssClass="form-control" placeholder=""></asp:TextBox>
                 </div>
             </div>
@@ -192,7 +192,7 @@
         <div class="row g-3">
             <div class="col-md-1">
                 <br />
-                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
+                <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar_Click" />
             </div>
             <div class="col-md-1">
                 <br />
