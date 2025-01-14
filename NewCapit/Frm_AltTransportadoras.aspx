@@ -6,7 +6,9 @@
 
     <div class="container mt-5">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-           <h3>.: ATUALIZAR CADASTRO :.</h3>
+            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i>TRANSPORTADOR
+            </h3>
+            <h3>ATUALIZA CADASTRO</h3>
         </div>
 
         <hr />
@@ -21,20 +23,29 @@
                 <br />
                 <asp:Button ID="btnAgregado" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnAgregado_Click" />
             </div>
-            <div class="col-md-7">
+            <div class="col-md-2">
                 <div class="form_group">
                     <span class="details">PESSOA:</span>
-                    <asp:DropDownList ID="cboPessoa" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px" AutoPostBack = "true" OnSelectedIndexChanged = "OnSelectedIndexChanged">
-                        <asp:ListItem Text="Selecione..." Value="0" />
+                    <asp:DropDownList ID="cboPessoa" runat="server" ForeColor="Blue" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChanged">                        
                         <asp:ListItem Value="FÍSICA" Text="FÍSICA"></asp:ListItem>
                         <asp:ListItem Value="JURÍDICA" Text="JURÍDICA"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form_group">
+                    <span class="details">TIPO:</span>
+                    <asp:DropDownList ID="ddlTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">                        
+                        <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
+                        <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
+                        <asp:ListItem Value="EMPRESA" Text="EMPRESA"></asp:ListItem>
                     </asp:DropDownList>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form_group">
                     <span class="details">FILIAL:</span>
-                    <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" ForeColor="Blue" CssClass="form-control"></asp:DropDownList>
+                    <asp:DropDownList ID="cbFiliais" runat="server" ForeColor="Blue" CssClass="form-control"></asp:DropDownList>
                 </div>
             </div>
         </div>
@@ -53,7 +64,7 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <span class="details">PROPRIETÁRIO/RAZÃO SOCIAL:</span>
-                    <asp:TextBox ID="txtRazCli" runat="server" ForeColor="Blue" Width="550" CssClass="form-control" value=""></asp:TextBox>
+                    <asp:TextBox ID="txtRazCli" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-2">
@@ -62,10 +73,10 @@
                     <asp:TextBox ID="txtAntt" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <div class="form-group">
                     <span class="details">CADASTRO:</span>
-                    <asp:Label ID="txtDtCadastro" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:Label>
+                    <asp:Label ID="txtDtCadastro2" runat="server" ForeColor="Blue"  CssClass="form-control" value=""></asp:Label>
                 </div>
             </div>
             <div class="col-md-1">
@@ -105,7 +116,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <span class="details">FIXO:</span>
+                    <span class="details">CELULAR:</span>
                     <asp:TextBox ID="txtCelular" runat="server" data-mask="(00) 0 0000-0000" ForeColor="Blue" CssClass="form-control" placeholder=""></asp:TextBox>
                 </div>
             </div>
@@ -121,9 +132,7 @@
                 <br />
                 <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCep_Click" />
             </div>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <div class="form-group">
                     <span class="details">ENDEREÇO:</span>
                     <asp:TextBox ID="txtEndCli" runat="server" ForeColor="Blue" CssClass="form-control" MaxLength="60"></asp:TextBox>
@@ -135,7 +144,7 @@
                     <asp:TextBox ID="txtNumero" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control"></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <span class="details">COMPLEMENTO:</span>
                     <asp:TextBox ID="txtComplemento" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="15"> </asp:TextBox>
@@ -143,13 +152,13 @@
             </div>
         </div>
         <div class="row g-3">
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <div class="form-group">
                     <span class="details">BAIRRO:</span>
                     <asp:TextBox ID="txtBaiCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="form-group">
                     <span class="details">MUNICIPIO:</span>
                     <asp:TextBox ID="txtCidCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
@@ -161,15 +170,29 @@
                     <asp:TextBox ID="txtEstCli" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
                 </div>
             </div>
+        </div>
+        <div class="row g-3">
             <div class="col-md-2">
                 <div class="form-group">
-                    <span class="details">CADASTRADO ALTERADO EM:</span>
+                    <span class="details">CADASTRADO EM:</span>
+                    <asp:TextBox ID="txtDtCad" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="16"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="details">CADASTRADO POR:</span>
+                    <asp:TextBox ID="txtUsuCad" Style="text-align: left" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">ÚLTIMA ATUALIZAÇÃO::</span>
                     <asp:TextBox ID="txtAltDtUsu" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="16"></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
-                    <span class="details">CADASTRADO ALTERADO POR:</span>
+                    <span class="details">ATUALIZADO POR:</span>
                     <asp:TextBox ID="txtUsuAltCadastro" Style="text-align: left" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
                 </div>
             </div>
@@ -177,12 +200,11 @@
         </div>
 
         <div class="row g-3">
+            <br />
             <div class="col-md-1">
-                <br />
-                <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success btn-lg" OnClick="btnSalvar1_Click" runat="server" Text="Salvar" />
-            </div>
-            <div class="col-md-1">
-                <br />
+                <asp:Button ID="btnAtualizar" CssClass="btn btn-outline-success btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvar_Click" />
+            </div>           
+            <div class="col-md-1">                
                 <a href="ConsultaAgregados.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
                 </a>
             </div>
@@ -190,9 +212,9 @@
 
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script> 
-    
-    
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+
+
 </asp:Content>

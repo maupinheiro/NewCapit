@@ -42,6 +42,15 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.DropDownList cboPessoa;
 
         /// <summary>
+        /// Controle ddlTipo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipo;
+
+        /// <summary>
         /// Controle cbFiliais.
         /// </summary>
         /// <remarks>
@@ -87,13 +96,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtAntt;
 
         /// <summary>
-        /// Controle txtDtCadastro.
+        /// Controle txtDtCadastro2.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtDtCadastro;
+        protected global::System.Web.UI.WebControls.Label txtDtCadastro2;
 
         /// <summary>
         /// Controle ddlSituacao.
@@ -222,6 +231,24 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtEstCli;
 
         /// <summary>
+        /// Controle txtDtCad.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDtCad;
+
+        /// <summary>
+        /// Controle txtUsuCad.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUsuCad;
+
+        /// <summary>
         /// Controle txtAltDtUsu.
         /// </summary>
         /// <remarks>
@@ -240,12 +267,12 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtUsuAltCadastro;
 
         /// <summary>
-        /// Controle btnSalvar1.
+        /// Controle btnAtualizar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvar1;
+        protected global::System.Web.UI.WebControls.Button btnAtualizar;
     }
 }

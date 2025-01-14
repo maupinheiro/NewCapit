@@ -51,7 +51,7 @@ namespace NewCapit
         public void CarregaRegioes()
         {
             // total de clientes ativos e inativos
-            string sqlTotal = "select count(*) from tbclientes";
+            string sqlTotal = "select count(*) from tbclientes where fl_exclusao is null";
             SqlDataAdapter adptTotal = new SqlDataAdapter(sqlTotal, con);
             DataTable dtTotal = new DataTable();
             con.Open();

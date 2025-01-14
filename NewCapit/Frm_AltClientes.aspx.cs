@@ -18,17 +18,26 @@ namespace NewCapit
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
+        private readonly object dataHoraAtual;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                //string id = Request.QueryString["codcli"];
-                //if (!string.IsNullOrEmpty(id))
-                //{
-                //    // Use o ID para carregar os detalhes
-                //    txtCodCli.Text = id;
-                //}
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                    txtUsuAlteracao.Text = nomeUsuario;
+                    DateTime dataHoraAtual = DateTime.Now;
+                    lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                }
                 CarregaDados();
+                
             }
         }
 
@@ -91,17 +100,29 @@ namespace NewCapit
 
         protected void btnAlterar_Click(object sender, EventArgs e)
         {
+            if (Session["UsuarioLogado"] != null)
+            {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+                var lblUsuario = nomeUsuario;
+                txtUsuAlteracao.Text = nomeUsuario;
+                DateTime dataHoraAtual = DateTime.Now;
+                lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            }
+            else
+            {
+                var lblUsuario = "<Usuário>";
+            }
 
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sqlAtualizarCliente = "UPDATE tbclientes SET dtccli = @dtccli, razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usucad = @usucad, dtccad = @dtccad, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa WHERE id=" + id;
+            string sqlAtualizarCliente = "UPDATE tbclientes SET dtccli = @dtccli, razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usucad = @usucad, dtccad = @dtccad, usualt=@usualt, dtcalt=@dtcalt, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa WHERE id=" + id;
             //teste
 
             SqlCommand comando = new SqlCommand(sqlAtualizarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
-            comando.Parameters.AddWithValue("@dtccli", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
+            comando.Parameters.AddWithValue("@dtccli", lblDtCadastro.Text);
             comando.Parameters.AddWithValue("@razcli", txtRazCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@concli", txtConCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@nomcli", txtNomCli.Text.ToUpper());
@@ -126,6 +147,8 @@ namespace NewCapit
             comando.Parameters.AddWithValue("@ativo_inativo", ddlStatus.SelectedValue.ToUpper());
             comando.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.ToUpper());
             comando.Parameters.AddWithValue("@dtccad", lblDtCadastro.Text);
+            comando.Parameters.AddWithValue("@usualt", txtUsuAlteracao.Text.ToUpper());
+            comando.Parameters.AddWithValue("@dtcalt", lblDtAlteracao.Text);
             comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
             comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
             comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());
@@ -141,7 +164,7 @@ namespace NewCapit
                 con.Close();
                 string nomeUsuario = txtUsuCadastro.Text;
                 string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Código " + txtCodCli.Text + ", cadastrado com sucesso.";
+                string linha2 = "Código " + txtCodCli.Text + ", atualizado com sucesso.";
                 // Concatenando as linhas com '\n' para criar a mensagem
                 string mensagem = $"{linha1}\n{linha2}";
                 string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);

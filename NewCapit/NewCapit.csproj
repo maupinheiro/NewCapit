@@ -78,6 +78,7 @@
     <Content Include="ConsultaAgregados.aspx" />
     <Content Include="ConsultaClientes.aspx" />
     <Content Include="ConsultaMotoristas.aspx" />
+    <Content Include="ConsultaVeiculos.aspx" />
     <Content Include="css\sb-admin-2.css" />
     <Content Include="css\sb-admin-2.min.css" />
     <Content Include="css\styleCadastros.css" />
@@ -1843,6 +1844,13 @@
     </Compile>
     <Compile Include="ConsultaMotoristas.aspx.designer.cs">
       <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConsultaVeiculos.aspx.cs">
+      <DependentUpon>ConsultaVeiculos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConsultaVeiculos.aspx.designer.cs">
+      <DependentUpon>ConsultaVeiculos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
