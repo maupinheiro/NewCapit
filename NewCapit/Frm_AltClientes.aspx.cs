@@ -82,7 +82,7 @@ namespace NewCapit
                 txtSituacao.Text = dt.Rows[0][31].ToString();
                 txtTipo.Text = dt.Rows[0][32].ToString();
                 //txtConCli.Text = dt.Rows[0]["ConCli"].ToString();
-                txtRamal.Text = dt.Rows[0][34].ToString();
+               // txtRamal.Text = dt.Rows[0][34].ToString();
             }
         }
 
@@ -97,7 +97,6 @@ namespace NewCapit
            
             SqlCommand comando = new SqlCommand(sqlAtualizarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
-            comando.Parameters.AddWithValue("@dtccli", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
             comando.Parameters.AddWithValue("@razcli", txtRazCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@concli", txtConCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@nomcli", txtNomCli.Text.ToUpper());
@@ -120,8 +119,8 @@ namespace NewCapit
             comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@ativo_inativo", ddlStatus.SelectedValue.ToUpper());
-            comando.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.ToUpper());
-            comando.Parameters.AddWithValue("@dtccad", lblDtCadastro.Text);
+            comando.Parameters.AddWithValue("@usualt", txtUsuCadastro.Text.ToUpper());
+            comando.Parameters.AddWithValue("@dtcalt", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
             comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
             comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
             comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());
@@ -129,6 +128,7 @@ namespace NewCapit
             comando.Parameters.AddWithValue("@abertura", txtAbertura.Text);
             comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper());
             comando.Parameters.AddWithValue("@tipoempresa", txtTipo.Text.ToUpper());
+            comando.Parameters.AddWithValue("@ramal", txtRamal.Text.ToUpper());
 
             try
             {
