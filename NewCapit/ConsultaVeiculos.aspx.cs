@@ -29,6 +29,25 @@ namespace NewCapit
             con.Close();
             TotalVeiculos.Text = dtTotalVeiculos.Rows[0][0].ToString();
 
+            // total de veiculos ativos
+            string sqlTotalVeiculosAtivos = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO'";
+            SqlDataAdapter adptTotalVeiculosAtivos = new SqlDataAdapter(sqlTotalVeiculosAtivos, con);
+            DataTable dtTotalVeiculosAtivos = new DataTable();
+            con.Open();
+            adptTotalVeiculosAtivos.Fill(dtTotalVeiculosAtivos);
+            con.Close();
+            LbAtivos.Text = dtTotalVeiculosAtivos.Rows[0][0].ToString();
+
+            // total de veiculos inativos
+            string sqlTotalVeiculosInativos = "select count(*) from tbveiculos where ativo_inativo = 'INATIVO'";
+            SqlDataAdapter adptTotalVeiculosInativos = new SqlDataAdapter(sqlTotalVeiculosInativos, con);
+            DataTable dtTotalVeiculosInativos = new DataTable();
+            con.Open();
+            adptTotalVeiculosInativos.Fill(dtTotalVeiculosInativos);
+            con.Close();
+            LbInativos.Text = dtTotalVeiculosInativos.Rows[0][0].ToString();
+
+
             // Frota Total
             string sqlFrota = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'FROTA'  ";
             SqlDataAdapter adptFrota = new SqlDataAdapter(sqlFrota, con);
