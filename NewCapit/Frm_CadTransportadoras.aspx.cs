@@ -42,6 +42,7 @@ namespace NewCapit
             btnCnpj.Visible = false;
 
         }
+
         private void PreencherComboFiliais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -113,7 +114,7 @@ namespace NewCapit
                     string nomeUsuario = txtUsuCadastro.Text;
                     string razaoSocial = ConsultaAgregados.fantra;
                     string filial = ConsultaAgregados.filial;
-                    
+
 
                     string linha1 = "Olá, " + nomeUsuario + "!";
                     string linha2 = "Código " + codigo + ", já cadastrado no sistema.";
@@ -186,7 +187,7 @@ namespace NewCapit
                 string nomeUsuario = txtUsuCadastro.Text;
                 string linha1 = "Olá, " + nomeUsuario + "!";
                 string linha2 = "Quantidade de números digistados, não correspondem a um CNPJ válido.";
-                string linha3 = "Por favor, verifique e tente novamente.";               
+                string linha3 = "Por favor, verifique e tente novamente.";
 
                 // Concatenando as linhas com '\n' para criar a mensagem
                 string mensagem = $"{linha1}\n{linha2}\n{linha3}";
@@ -202,7 +203,7 @@ namespace NewCapit
                 txtCpf_Cnpj.Focus();
                 btnCnpj.Visible = true;
             }
-            
+
 
         }
         protected void btnCep_Click(object sender, EventArgs e)
@@ -292,7 +293,7 @@ namespace NewCapit
                     //command.Parameters.AddWithValue("@DtCAlt", txt);
                     //command.Parameters.AddWithValue("@UsuAlt", usuAlt);
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text);
-                    command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedValue);
+                    command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
                     //command.Parameters.AddWithValue("@Tipo", );
 
                     try
@@ -338,5 +339,8 @@ namespace NewCapit
             }
 
         }
+
     }
+        
+    
 }

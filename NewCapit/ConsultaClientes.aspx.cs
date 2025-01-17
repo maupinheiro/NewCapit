@@ -23,12 +23,12 @@ namespace NewCapit
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 AllData();
                 CarregaRegioes();
             }
-            
+
         }
 
 
@@ -104,7 +104,7 @@ namespace NewCapit
             con.Close();
             CentroOeste.Text = dt4.Rows[0][0].ToString();
         }
-        
+
         protected void Editar(object sender, EventArgs e)
         {
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
@@ -114,10 +114,11 @@ namespace NewCapit
                 Response.Redirect("Frm_AltClientes.aspx?id=" + id);
             }
         }
+
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
         protected void Excluir(object sender, EventArgs e)
         {
-            if(txtconformmessageValue.Value=="Yes")
+            if (txtconformmessageValue.Value == "Yes")
             {
                 using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
                 {
@@ -141,7 +142,7 @@ namespace NewCapit
                         sb.Append("')};");
                         sb.Append("</script>");
                         ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                        
+
                     }
                     catch (Exception ex)
                     {
@@ -166,14 +167,17 @@ namespace NewCapit
                 }
             }
 
-            
+            //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
+
+
         }
+    }
+    
+}
+ 
 
-        //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
-      
+        
 
-
-}   }
 
 
 

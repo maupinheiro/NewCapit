@@ -240,6 +240,24 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
 
         /// <summary>
+        /// Controle txtHoraCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtHoraCadastro;
+
+        /// <summary>
+        /// Controle txtCadastradoPor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCadastradoPor;
+
+        /// <summary>
         /// Controle btnSalvar1.
         /// </summary>
         /// <remarks>

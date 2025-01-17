@@ -150,7 +150,7 @@
                     <span class="details">BAIRRO:</span>
                     <asp:TextBox ID="txtBaiCli" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                 </div>
-            </div>
+            </div>    
             <div class="col-md-3">
                 <div class="form-group">
                     <span class="details">MUNICIPIO:</span>
@@ -172,10 +172,21 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <span class="details">CADASTRADO POR:</span>
-                    <asp:TextBox ID="txtUsuCadastro" Style="text-align: left" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" ></asp:TextBox>
+                    <asp:TextBox ID="txtUsuCadastro" Style="text-align: left" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
                 </div>
-            </div>
-
+            </div> 
+            <div class="col-md-2">
+                <div class="form-group">
+                    <span class="details">CADASTRADO EM:</span>
+                    <asp:TextBox ID="txtHoraCadastro" runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="60"></asp:TextBox>
+                </div>
+            </div> 
+            <div class="col-md-3">
+                <div class="form-group">
+                    <span class="details">POR:</span>
+                    <asp:TextBox ID="txtCadastradoPor" style=text-align:center runat="server" ForeColor="Blue" Cssclass="form-control" placeholder="" maxlength="2"></asp:TextBox>
+                </div>
+            </div> 
         </div>
 
         <div class="row g-3">
