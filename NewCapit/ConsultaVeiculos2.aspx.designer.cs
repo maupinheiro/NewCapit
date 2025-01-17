@@ -11,7 +11,7 @@ namespace NewCapit
 {
 
 
-    public partial class ConsultaVeiculos
+    public partial class ConsultaVeiculos2
     {
 
         /// <summary>

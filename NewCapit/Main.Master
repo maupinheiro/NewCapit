@@ -144,7 +144,7 @@
                         data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Veículos</h6>
-                            <a class="collapse-item" href="ConsultaVeiculos.aspx">Manutenção</a>
+                            <a class="collapse-item" href="ConsultaVeiculos2.aspx">Manutenção</a>
                            <!--
                             <a class="collapse-item" href="utilities-border.html">Novo Veículo</a>
                             <a class="collapse-item" href="utilities-animation.html">Controle de Carretas</a> 

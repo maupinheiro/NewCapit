@@ -8,10 +8,11 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Configuration;
+using System.Drawing.Drawing2D;
 
 namespace NewCapit
 {
-    public partial class ConsultaVeiculos : System.Web.UI.Page
+    public partial class ConsultaVeiculos2 : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -64,7 +65,7 @@ namespace NewCapit
             con.Open();
             adptAgregadoMatriz.Fill(dtAgregadoMatriz);
             con.Close();
-            TotalAgregados.Text = dtAgregadoMatriz.Rows[0][0].ToString();            
+            TotalAgregados.Text = dtAgregadoMatriz.Rows[0][0].ToString();
 
             // terceiros
             string sql4 = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO'";
