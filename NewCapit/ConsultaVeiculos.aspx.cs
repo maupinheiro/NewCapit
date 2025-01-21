@@ -87,5 +87,21 @@ namespace NewCapit
             con.Close();
             //veiculosInativos.Text = dt4.Rows[0][0].ToString();
         }
+
+        private void AllDataVeiculos()
+        {
+            var dataTable = DAL.ConVeiculos.FetchDataTable();
+            if (dataTable.Rows.Count <= 0)
+            {
+                return;
+            }
+            gvVeiculos.DataSource = dataTable;
+            gvVeiculos.DataBind();
+
+            gvVeiculos.UseAccessibleHeader = true;
+            gvVeiculos.HeaderRow.TableSection = TableRowSection.TableHeader;
+            gvVeiculos.FooterRow.TableSection = TableRowSection.TableFooter;
+
+        }
     }
 }

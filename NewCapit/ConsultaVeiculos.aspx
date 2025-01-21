@@ -8,9 +8,9 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-left justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-shipping-fast"></i>Consulta Veículos</h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-shipping-fast"></i>Novo Cadastro
+            <i class="fas fa-shipping-fast"></i> Consulta Veículos</h1>
+        <a href="Frm_CadVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-shipping-fast"></i> Novo Cadastro
         </a>
     </div>
 
@@ -395,11 +395,57 @@
 </div>
         </div>
 
+        <!-- Grid -->
+        <div class="card shadow mb-4">        
+            <div class="card-body">
+                <div class="table-responsive">              
+                    <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
+                        <Columns>                        
+                            <asp:BoundField DataField="codvei" HeaderText="#ID" />
+                            <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
+                            <asp:BoundField DataField="plavei" HeaderText="PLACA" />
+                            <asp:BoundField DataField="reboque1" HeaderText="REBOQUE" />
+                            <asp:BoundField DataField="tipoveiculo" HeaderText="TIPO" />
+                            <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
+                            <asp:BoundField DataField="transp" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />                             
+                            <asp:BoundField DataField="ativo_inativo" HeaderText="STATUS"/> 
+                     
+                            <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="230px">
+                                 <ItemTemplate >                              
+                                     <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
+                                         Editar</asp:LinkButton>
+                                   <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
+                                        <i class="fa fa-edit"></i>
+                                        Editar
+                                     </a> --%>
+                             
+                                     <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
+                                        <i class="fas fa-map-marker-alt"></i>                                    
+                                        Mapa
+                                     </a> 
+                                      <asp:LinkButton ID="lnkExcluir" runat="server" CssClass="btn btn-danger btn-sm" ><i class="fa fa-trash"></i></i>
+                                          Excluir</asp:LinkButton>
+                            
+                                     <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
+                                        <i class="fa fa-trash"></i>                                    
+                                        Excluir
+                                     </a> --%>
+                             
+                                 </ItemTemplate>
+                            </asp:TemplateField>
 
-
-
+                   
+                        </Columns>
+                    </asp:GridView>
+             
+                </div>
+                <asp:HiddenField ID="txtconformmessageValue" runat="server" />
+            </div>
+        </div>
 
     </div>
-
+    <!-- JavaScript -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="src/javascript/script.js"></script>
 
 </asp:Content>

@@ -24,6 +24,15 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtCodVei;
 
         /// <summary>
+        /// Controle btnVeiculo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnVeiculo;
+
+        /// <summary>
         /// Controle txtPlaca.
         /// </summary>
         /// <remarks>
@@ -267,13 +276,22 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.DropDownList ddlCarreta;
 
         /// <summary>
-        /// Controle txtTara.
+        /// Controle txtReb1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTara;
+        protected global::System.Web.UI.WebControls.TextBox txtReb1;
+
+        /// <summary>
+        /// Controle txtReb2.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtReb2;
 
         /// <summary>
         /// Controle ddlComposicao.
@@ -294,39 +312,22 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtEixos;
 
         /// <summary>
-<<<<<<< HEAD
-        /// Controle txtReb1.
-=======
-        /// Controle txtCap.
->>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
+        /// Controle txtCapacidade.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-<<<<<<< HEAD
-        protected global::System.Web.UI.WebControls.TextBox txtReb1;
-=======
-        protected global::System.Web.UI.WebControls.TextBox txtCap;
->>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
+        protected global::System.Web.UI.WebControls.TextBox txtCapacidade;
 
         /// <summary>
-        /// Controle txtReb2.
+        /// Controle txtTara.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtReb2;
-
-        /// <summary>
-        /// Controle txtCap.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCap;
+        protected global::System.Web.UI.WebControls.TextBox txtTara;
 
         /// <summary>
         /// Controle txtTolerancia.
@@ -338,13 +339,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtTolerancia;
 
         /// <summary>
-        /// Controle txtPBT.
+        /// Controle txtCarga.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPBT;
+        protected global::System.Web.UI.WebControls.TextBox txtCarga;
 
         /// <summary>
         /// Controle lblDtCadastro.

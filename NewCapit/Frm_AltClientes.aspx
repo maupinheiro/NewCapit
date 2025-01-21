@@ -266,8 +266,7 @@
                 <asp:Button ID="btnMapa" runat="server" CssClass="btn btn-outline-info btn-lg" Text="Mapa"/>
             </div>
             <div class="col-md-1">
-                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />
-               
+                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />               
             </div>
             <div class="col-md-1">
                 <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               

@@ -15,17 +15,21 @@
                 <span class="details">ID/FROTA:</span>
                 <asp:TextBox ID="txtCodVei" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
             </div>
-        </div>        
+        </div>
+        <div class="col-md-1">
+            <br />
+            <asp:Button ID="btnVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  />
+        </div>
         <div class="col-md-1">
             <div class="form-group">
                 <span class="details">PLACA:</span>
                 <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form_group">
                 <span class="details">TIPO DE VEÍCULO:</span>
-                <asp:DropDownList ID="cboTipo" runat="server" ForeColor="Blue" CssClass="form-control" AccessKey>
+                <asp:DropDownList ID="cboTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">
                     <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                     <asp:ListItem Value="BITREM" Text="BITREM"></asp:ListItem>
                     <asp:ListItem Value="BITRUCK" Text="BITRUCK"></asp:ListItem>
@@ -68,13 +72,13 @@
     </div>
 
     <div class="row g-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form_group">
                 <span class="details">RENAVAM:</span>
                 <asp:TextBox ID="txtRenavam" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="25"></asp:TextBox>
             </div>
         </div>   
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form_group">
                 <span class="details">CHASSI:</span>
                 <asp:TextBox ID="txtChassi" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="30"></asp:TextBox>
@@ -86,10 +90,10 @@
                 <asp:TextBox ID="txtLicenciamento" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="10" data-mask="00/00/0000" Width="130px" Style="text-align: center"></asp:TextBox>
             </div>
         </div>   
-        <div class="col-md-2">
+        <div class="col-md-1">
             <div class="form_group">
                 <span class="details">PROT. CET:</span>
-                <asp:TextBox ID="txtProtocolo" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10" ></asp:TextBox>
+                <asp:TextBox ID="txtProtocolo" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10" Width="130px"></asp:TextBox>
             </div>
         </div> 
         <div class="col-md-1">
@@ -98,10 +102,10 @@
                 <asp:TextBox ID="txtValCET" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10" Width="130px" data-mask="00/00/0000"></asp:TextBox>
             </div>
         </div> 
-        <div class="col-md-2">
+        <div class="col-md-1">
             <div class="form_group">
                 <span class="details">OPACIDADE:</span>
-                <asp:TextBox ID="txtOpacidade" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10" data-mask="00/00/0000"></asp:TextBox>
+                <asp:TextBox ID="txtOpacidade" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10" Width="130px" data-mask="00/00/0000"></asp:TextBox>
             </div>
         </div>
     </div><br />
@@ -247,24 +251,9 @@
             <div class="form-group">
                 <span class="">COMPOSIÇÃO:</span>
                 <asp:DropDownList ID="ddlComposicao" runat="server" ForeColor="Blue" CssClass="form-control">
-                     <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
-                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA" Text="SELECIONE">CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER" Text="">CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER</asp:ListItem>
-                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA" Text="">CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER" Text="">CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA" Text="">CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER" Text="">CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA" Text="">CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER" Text="">CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER</asp:ListItem>
-                    <asp:ListItem Value="TRUCK" Text="">TRUCK</asp:ListItem>
-                    <asp:ListItem Value="BITRUCK" Text="">BITRUCK</asp:ListItem>
-                    <asp:ListItem Value="BITREM" Text="">BITREM</asp:ListItem>
-                    <asp:ListItem Value="TOCO" Text="">TOCO</asp:ListItem>
-                    <asp:ListItem Value="VEICULO 3/4" Text="">VEICULO 3/4</asp:ListItem>
-                    <asp:ListItem Value="CAVALO SIMPLES COM PRANCHA" Text="">CAVALO SIMPLES COM PRANCHA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM PRANCHA" Text="">CAVALO TRUCADO COM PRANCHA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA LS TOTAL SIDER PRANCHA" Text="">CAVALO TRUCADO COM CARRETA LS TOTAL SIDER LISA</asp:ListItem>
-                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA LS TOTAL SIDER PRANCHA" Text="">CAVALO SIMPLES COM CARRETA LS TOTAL SIDER LISA</asp:ListItem>                                    
+                    <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
+                    <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
+                                    
                 </asp:DropDownList></>
             </div>
         </div>
@@ -280,7 +269,7 @@
         <div class="col-md-1">
             <div class="form-group">
                 <span class="details">CAPACIDADE:</span>
-                <asp:TextBox ID="txtCap" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                <asp:TextBox ID="txtCapacidade" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
             </div>
         </div>
 >>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
@@ -326,7 +315,7 @@
     <div class="row g-3">
         
         <div class="col-md-1">
-                 <div class="form-group">
+            <div class="form-group">
                      <span id="numeroReb1" class="details">REB 999999:</span>
                      <asp:TextBox ID="txtReb1" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
                  </div>
@@ -353,7 +342,7 @@
         <div class="col-md-1">
             <div class="form-group">
                 <span class="details">CARGA LIQ.:</span>
-                <asp:TextBox ID="txtPBT" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                <asp:TextBox ID="txtCarga" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
             </div>
         </div>
         <div class="col-md-2">
