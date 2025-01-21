@@ -96,13 +96,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtAntt;
 
         /// <summary>
-        /// Controle txtDtCadastro2.
+        /// Controle txtDtCadastro.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtDtCadastro2;
+        protected global::System.Web.UI.WebControls.Label txtDtCadastro;
 
         /// <summary>
         /// Controle ddlSituacao.

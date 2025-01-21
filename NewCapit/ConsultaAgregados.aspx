@@ -182,8 +182,8 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
                             <ItemTemplate>
-                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
-                                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>Excluir</asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
+                                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i> Excluir</asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
