@@ -85,9 +85,11 @@
     <Content Include="css\styleLogin.css" />
     <Content Include="Default.aspx" />
     <Content Include="Frm_AltClientes.aspx" />
+    <Content Include="Frm_AltVeiculos.aspx" />
     <Content Include="Frm_CadClientes.aspx" />
     <Content Include="Frm_AltTransportadoras.aspx" />
     <Content Include="Frm_CadTransportadoras.aspx" />
+    <Content Include="Frm_CadVeiculos.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Home.aspx" />
     <Content Include="img\agregadoAtivo.png" />
@@ -1867,6 +1869,13 @@
     <Compile Include="Frm_AltClientes.aspx.designer.cs">
       <DependentUpon>Frm_AltClientes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Frm_AltVeiculos.aspx.cs">
+      <DependentUpon>Frm_AltVeiculos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Frm_AltVeiculos.aspx.designer.cs">
+      <DependentUpon>Frm_AltVeiculos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Frm_CadClientes.aspx.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1887,6 +1896,13 @@
     </Compile>
     <Compile Include="Frm_CadTransportadoras.aspx.designer.cs">
       <DependentUpon>Frm_CadTransportadoras.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_CadVeiculos.aspx.cs">
+      <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Frm_CadVeiculos.aspx.designer.cs">
+      <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -256,18 +256,17 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <span class="details">POR:</span>
-                    <asp:TextBox ID="txtUsuAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                    <asp:TextBox ID="txtUsuAlteracao" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" ></asp:TextBox>
                 </div>
             </div>
         </div>
 
         <div class="row g-3">
-            <div class="col-md-1">
-                <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
+            <div class="col-md-1">               
+                <asp:Button ID="btnMapa" runat="server" CssClass="btn btn-outline-info btn-lg" Text="Mapa"/>
             </div>
             <div class="col-md-1">
-                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />
-               
+                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />               
             </div>
             <div class="col-md-1">
                 <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               

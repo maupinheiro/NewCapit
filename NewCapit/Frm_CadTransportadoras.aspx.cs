@@ -34,6 +34,7 @@ namespace NewCapit
                 else
                 {
                     var lblUsuario = "<Usuário>";
+                    txtUsuCadastro.Text = lblUsuario;
                 }
                 
 

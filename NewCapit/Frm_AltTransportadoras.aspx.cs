@@ -327,7 +327,7 @@ namespace NewCapit
             }
         }
 
-        protected void btnSalvar1_Click(object sender, EventArgs e)
+        protected void btnSalvar_Click(object sender, EventArgs e)
         {
             using (SqlConnection connection = con)
             {

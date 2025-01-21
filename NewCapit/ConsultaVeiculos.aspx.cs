@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Configuration;
+using System.Collections;
+
 
 namespace NewCapit
 {
@@ -17,6 +19,7 @@ namespace NewCapit
         protected void Page_Load(object sender, EventArgs e)
         {
             ContagemVeiculo();
+            AllDataVeiculos();
         }
         public void ContagemVeiculo()
         {
@@ -294,6 +297,22 @@ namespace NewCapit
             con.Close();
             TPR.Text = dtDistTPR.Rows[0][0].ToString();
 
+
+        }
+
+        private void AllDataVeiculos()
+        {
+            var dataTable = DAL.ConVeiculos.FetchDataTable();
+            if (dataTable.Rows.Count <= 0)
+            {
+                return;
+            }
+            gvVeiculos.DataSource = dataTable;
+            gvVeiculos.DataBind();
+
+            gvVeiculos.UseAccessibleHeader = true;
+            gvVeiculos.HeaderRow.TableSection = TableRowSection.TableHeader;
+            gvVeiculos.FooterRow.TableSection = TableRowSection.TableFooter;
 
         }
     }
