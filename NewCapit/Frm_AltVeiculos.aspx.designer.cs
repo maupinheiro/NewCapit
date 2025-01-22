@@ -294,13 +294,21 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtEixos;
 
         /// <summary>
+<<<<<<< HEAD
         /// Controle txtReb1.
+=======
+        /// Controle txtCap.
+>>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
+<<<<<<< HEAD
         protected global::System.Web.UI.WebControls.TextBox txtReb1;
+=======
+        protected global::System.Web.UI.WebControls.TextBox txtCap;
+>>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
 
         /// <summary>
         /// Controle txtReb2.
