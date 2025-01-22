@@ -39,6 +39,7 @@ namespace NewCapit
             PreencherComboCoresVeiculos();
             PreencherComboRastreadores();
             PreencherComboMotoristas();
+            
         }
 
         private void PreencherComboFiliais()
@@ -220,5 +221,87 @@ namespace NewCapit
                 }
             }
         }
+
+        private void cboTipoCarreta_Leave()
+        {
+            string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
+            string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
+            string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
+            string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
+            string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
+            string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
+            string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
+            string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
+            string composicao9 = "TRUCK";
+            string composicao10 = "BITRUCK";
+            string composicao11 = "BITREM";
+            string composicao12 = "TOCO";
+            string composicao13 = "VEICULO 3/4";
+            string composicao14 = "CAVALO SIMPLES COM PRANCHA";
+            string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+
+            string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
+            string tipoComposicao = selectedValue;
+
+            if (tipoComposicao.Equals(composicao1))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao2))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 41500;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao3))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "41500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao4))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao5))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "53000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 53000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;                
+            }
+        }
+
     }
 }

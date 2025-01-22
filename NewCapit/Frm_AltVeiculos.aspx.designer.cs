@@ -312,13 +312,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtEixos;
 
         /// <summary>
-        /// Controle txtCapacidade.
+        /// Controle txtCap.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCapacidade;
+        protected global::System.Web.UI.WebControls.TextBox txtCap;
 
         /// <summary>
         /// Controle txtTara.
@@ -339,13 +339,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtTolerancia;
 
         /// <summary>
-        /// Controle txtCarga.
+        /// Controle txtPBT.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCarga;
+        protected global::System.Web.UI.WebControls.TextBox txtPBT;
 
         /// <summary>
         /// Controle lblDtCadastro.
