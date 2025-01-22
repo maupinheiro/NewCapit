@@ -234,21 +234,11 @@ namespace NewCapit
             string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
             string composicao9 = "TRUCK";
             string composicao10 = "BITRUCK";
-<<<<<<< HEAD
-            string composicao11 = "BITREM 7 EIXOS";
-=======
             string composicao11 = "BITREM";
->>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
             string composicao12 = "TOCO";
             string composicao13 = "VEICULO 3/4";
             string composicao14 = "CAVALO SIMPLES COM PRANCHA";
             string composicao15 = "CAVALO TRUCADO COM PRANCHA";
-<<<<<<< HEAD
-            string composicao16 = "CAVALO TRUCADO COM CARRETA LS TOTAL SIDER LISA";
-            string composicao17 = "CAVALO SIMPLES COM CARRETA LS TOTAL SIDER LISA";
-            
-=======
->>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
 
             string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
             string tipoComposicao = selectedValue;
@@ -309,197 +299,9 @@ namespace NewCapit
                 int nCapacidade = 53000;
                 int nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
-<<<<<<< HEAD
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-            }
-            else if (tipoComposicao.Equals(composicao6))
-            {
-                //"CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
-                txtEixos.Text = "06";
-                txtCap.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao7))
-            {
-                //"CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
-                txtEixos.Text = "06";
-                txtCap.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao8))
-            {
-                //"CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
-                txtEixos.Text = "06";
-                txtCap.Text = "53000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 53000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao9))
-            {
-                // "TRUCK";
-                txtEixos.Text = "03";
-                txtCap.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao10))
-            {
-                // BITRUCK
-                txtEixos.Text = "04";
-                txtCap.Text = "29000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 29000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao11))
-            {
-                // BITREM
-                txtEixos.Text = "07";
-                txtCap.Text = "57000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 57000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-
-            }
-            else if (tipoComposicao.Equals(composicao12))
-            {
-                //TOCO
-                txtEixos.Text = "2";
-                txtCap.Text = "16000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 16000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao13))
-            {
-                // 3/4
-                txtEixos.Text = "02";
-                txtCap.Text = "3000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 3000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao14))
-            {
-                // CAVALO SIMPLES COM PRANCHA
-                txtEixos.Text = "05";
-                txtCap.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao15))
-            {
-                // CAVALO SIMPLES COM PRANCHA
-                txtEixos.Text = "06";
-                txtCap.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao16))
-            {
-                //"CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
-                txtEixos.Text = "06";
-                txtCap.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao17))
-            {
-                txtEixos.Text = "05";
-                txtCap.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 41500;
-                int nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-        }
-
-        
-
-       
-
-        protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if(txtTara.Text !=string.Empty)
-            {
-                cboTipoCarreta_Leave();
-            }
-            else
-            {
-                string retorno = "É necessário preencher o campo Tara!";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(retorno);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                ddlComposicao.SelectedValue = "";
-            }
-            
-        }
-=======
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;                
             }
         }
 
->>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
     }
 }

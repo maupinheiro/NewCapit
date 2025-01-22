@@ -9,7 +9,7 @@
     <div class="d-sm-flex align-items-left justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
             <i class="fas fa-shipping-fast"></i> Consulta Veículos</h1>
-        <a href="Frm_CadVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <a href="Frm_AltVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
             <i class="fas fa-shipping-fast"></i> Novo Cadastro
         </a>
     </div>
