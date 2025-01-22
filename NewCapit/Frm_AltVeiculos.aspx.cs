@@ -234,14 +234,21 @@ namespace NewCapit
             string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
             string composicao9 = "TRUCK";
             string composicao10 = "BITRUCK";
+<<<<<<< HEAD
             string composicao11 = "BITREM 7 EIXOS";
+=======
+            string composicao11 = "BITREM";
+>>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
             string composicao12 = "TOCO";
             string composicao13 = "VEICULO 3/4";
             string composicao14 = "CAVALO SIMPLES COM PRANCHA";
             string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+<<<<<<< HEAD
             string composicao16 = "CAVALO TRUCADO COM CARRETA LS TOTAL SIDER LISA";
             string composicao17 = "CAVALO SIMPLES COM CARRETA LS TOTAL SIDER LISA";
             
+=======
+>>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
 
             string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
             string tipoComposicao = selectedValue;
@@ -302,6 +309,7 @@ namespace NewCapit
                 int nCapacidade = 53000;
                 int nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
+<<<<<<< HEAD
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
             }
             else if (tipoComposicao.Equals(composicao6))
@@ -487,5 +495,11 @@ namespace NewCapit
             }
             
         }
+=======
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;                
+            }
+        }
+
+>>>>>>> 32a0be2c431546afa6d0b3ca80eaa50750c28b3e
     }
 }
