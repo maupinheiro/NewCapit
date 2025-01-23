@@ -34,7 +34,7 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                 }
 
-                CarregaDados();
+                //CarregaDados();
 
                
                 DateTime dataHoraAtual = DateTime.Now;
@@ -46,41 +46,7 @@ namespace NewCapit
             
 
         }
-        //private void PreencherComboFiliais()
-        //{
-        //    // Consulta SQL que retorna os dados desejados
-        //    string query = "SELECT codigo, descricao FROM tbempresa";
-
-        //    // Crie uma conexão com o banco de dados
-        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-        //    {
-        //        try
-        //        {
-        //            // Abra a conexão com o banco de dados
-        //            conn.Open();
-
-        //            // Crie o comando SQL
-        //            SqlCommand cmd = new SqlCommand(query, conn);
-
-        //            // Execute o comando e obtenha os dados em um DataReader
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            // Preencher o ComboBox com os dados do DataReader
-        //            cbFiliais.DataSource = reader;
-        //            cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-        //            cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
-        //            cbFiliais.DataBind();  // Realiza o binding dos dados                   
-
-        //            // Feche o reader
-        //            reader.Close();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Trate exceções
-        //            Response.Write("Erro: " + ex.Message);
-        //        }
-        //    }
-        //}
+       
         private void PreencherComboFiliais(string filialCadastrada)
         {
             // Consulta SQL que retorna os dados desejados
@@ -235,7 +201,7 @@ namespace NewCapit
                 {
                     var cep = RemoverMascaraCep(cnpj.cep);
                     txtRazCli.Text = cnpj.nome;
-                    txtDtCadastro2.Text = cnpj.abertura;
+                    txtDtCadastro.Text = cnpj.abertura;
                     txtCepCli.Text = cep;
                     txtEndCli.Text = cnpj.logradouro;
                     txtNumero.Text = cnpj.numero;
@@ -353,7 +319,7 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                 }
 
-                string query = @" UPDATE tbtransportadoras SET dtcad=@DtCad, nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID=@id";
+                //string query = @" UPDATE tbtransportadoras SET dtcad=@DtCad, nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID=@id";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -453,7 +419,7 @@ namespace NewCapit
                 txtCpf_Cnpj.Text = dt.Rows[0][15].ToString();
                 txtRazCli.Text = dt.Rows[0][3].ToString();
                 txtAntt.Text = dt.Rows[0][23].ToString();
-                txtDtCadastro2.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy");
+                txtDtCadastro.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy");
                 ddlSituacao.Items.Insert(0, dt.Rows[0][13].ToString());
                 txtRg.Text = dt.Rows[0][16].ToString();
                 txtFantasia.Text = dt.Rows[0][5].ToString();
@@ -475,45 +441,45 @@ namespace NewCapit
                     try
                     {
                         con.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                // Popula os campos da tela com os dados retornados do banco
-                                txtCodTra.Text = reader["codtra"].ToString();
-                                txtDtCadastro.Text = reader["dtcad"].ToString();
-                                txtRazCli.Text = reader["nomtra"].ToString();
-                                txtContato.Text = reader["contra"].ToString();
-                                txtFantasia.Text = reader["fantra"].ToString();
-                                txtFixo.Text = reader["fone1"].ToString();
-                                txtCelular.Text = reader["fone2"].ToString();
-                                txtEndCli.Text = reader["endtra"].ToString();
-                                txtCepCli.Text = reader["ceptra"].ToString();
-                                txtBaiCli.Text = reader["baitra"].ToString();
-                                txtCidCli.Text = reader["cidtra"].ToString();
-                                txtEstCli.Text = reader["uftra"].ToString();
-                                ddlSituacao.SelectedValue = reader["ativa_inativa"].ToString();
-                                cboPessoa.SelectedValue = reader["pessoa"].ToString();
-                                txtCpf_Cnpj.Text = reader["cnpj"].ToString();
-                                txtRg.Text = reader["inscestadual"].ToString();
-                                txtNumero.Text = reader["numero"].ToString();
-                                txtComplemento.Text = reader["complemento"].ToString();
-                                txtDtCadastro.Text = reader["dtccad"].ToString();
-                                txtUsuAltCadastro.Text = reader["usucad"].ToString();
-                                txtAntt.Text = reader["antt"].ToString();
-                                string filial = reader["filial"].ToString();
-                                System.Diagnostics.Debug.WriteLine("Filial lida do banco: " + filial);
-                                PreencherComboFiliais(filial);
+                        //using (SqlDataReader reader = command.ExecuteReader())
+                        //{
+                        //    if (reader.Read())
+                        //    {
+                        //        // Popula os campos da tela com os dados retornados do banco
+                        //        txtCodTra.Text = reader["codtra"].ToString();
+                        //        txtDtCadastro.Text = reader["dtcad"].ToString();
+                        //        txtRazCli.Text = reader["nomtra"].ToString();
+                        //        txtContato.Text = reader["contra"].ToString();
+                        //        txtFantasia.Text = reader["fantra"].ToString();
+                        //        txtFixo.Text = reader["fone1"].ToString();
+                        //        txtCelular.Text = reader["fone2"].ToString();
+                        //        txtEndCli.Text = reader["endtra"].ToString();
+                        //        txtCepCli.Text = reader["ceptra"].ToString();
+                        //        txtBaiCli.Text = reader["baitra"].ToString();
+                        //        txtCidCli.Text = reader["cidtra"].ToString();
+                        //        txtEstCli.Text = reader["uftra"].ToString();
+                        //        ddlSituacao.SelectedValue = reader["ativa_inativa"].ToString();
+                        //        cboPessoa.SelectedValue = reader["pessoa"].ToString();
+                        //        txtCpf_Cnpj.Text = reader["cnpj"].ToString();
+                        //        txtRg.Text = reader["inscestadual"].ToString();
+                        //        txtNumero.Text = reader["numero"].ToString();
+                        //        txtComplemento.Text = reader["complemento"].ToString();
+                        //        txtDtCadastro.Text = reader["dtccad"].ToString();
+                        //        txtUsuAltCadastro.Text = reader["usucad"].ToString();
+                        //        txtAntt.Text = reader["antt"].ToString();
+                        //        string filial = reader["filial"].ToString();
+                        //        System.Diagnostics.Debug.WriteLine("Filial lida do banco: " + filial);
+                        //        PreencherComboFiliais(filial);
 
-                            }
-                            else
-                            {
-                                // Exibe mensagem caso o registro não seja encontrado
-                                string mensagem = "Nenhum registro foi encontrado para o ID fornecido.";
-                                string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                            }
-                        }
+                        //    }
+                        //    else
+                        //    {
+                        //        // Exibe mensagem caso o registro não seja encontrado
+                        //        string mensagem = "Nenhum registro foi encontrado para o ID fornecido.";
+                        //        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        //        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        //    }
+                        //}
                         con.Close();
                     }
                     catch (Exception ex)
@@ -538,5 +504,5 @@ namespace NewCapit
             }
 
         }
-    }
+    
 }

@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-1">
             <br />
-            <asp:Button ID="btnVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  />
+            <asp:Button ID="btnVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  OnClick="btnVeiculo_Click"  />
         </div>
         <div class="col-md-1">
             <div class="form-group">
@@ -203,7 +203,7 @@
         <div class="col-md-6">
             <div class="form_group">
                 <span class="details">PROPRIETÁRIO/TRANSPORTADORA:</span>
-                <asp:DropDownList ID="ddlTransportadora" name="nomeProprietario" runat="server" ForeColor="Blue" CssClass="form-control"></asp:DropDownList>
+                <asp:DropDownList ID="ddlTransportadora" name="nomeProprietario" runat="server" ForeColor="Blue" class="form-control select2"></asp:DropDownList>
             </div>
         </div>
        

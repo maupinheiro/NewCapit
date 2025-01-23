@@ -303,5 +303,26 @@ namespace NewCapit
             }
         }
 
+        protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(txtTara.Text != string.Empty)
+            {
+                cboTipoCarreta_Leave();
+            }
+            else
+            {
+                string retorno = "É necessário digitar o valor no campo Tara!";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(retorno);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                ddlComposicao.SelectedValue = "";
+            }
+            
+        }
     }
 }

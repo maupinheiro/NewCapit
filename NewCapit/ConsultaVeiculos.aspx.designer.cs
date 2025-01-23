@@ -51,16 +51,16 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.Label TotalFrota;
 
         /// <summary>
-        /// Controle TotalAgregadoMatriz.
+        /// Controle FrotaCNT.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalAgregadoMatriz;
+        protected global::System.Web.UI.WebControls.Label FrotaCNT;
 
         /// <summary>
-        /// Controle TotalTerceirosMatriz.
+        /// Controle FrotaSBC.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
@@ -132,13 +132,22 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.Label FrotaMINAS;
 
         /// <summary>
-        /// Controle TotalAgregados.
+        /// Controle TotalAgregadoMatriz.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalAgregados;
+        protected global::System.Web.UI.WebControls.Label TotalAgregadoMatriz;
+
+        /// <summary>
+        /// Controle TotalTerceirosMatriz.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label TotalTerceirosMatriz;
 
         /// <summary>
         /// Controle AgCNT.
@@ -220,15 +229,6 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label AgMG;
-
-        /// <summary>
-        /// Controle TotalTerceiros.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalTerceiros;
 
         /// <summary>
         /// Controle TCNT.

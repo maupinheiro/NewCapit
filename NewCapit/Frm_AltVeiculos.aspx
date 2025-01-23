@@ -250,7 +250,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <span class="">COMPOSIÇÃO:</span>
-                <asp:DropDownList ID="ddlComposicao" runat="server" ForeColor="Blue" CssClass="form-control">
+                <asp:DropDownList ID="ddlComposicao" runat="server" ForeColor="Blue" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true">
                      <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                     <asp:ListItem Value="CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA" Text="SELECIONE">CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA</asp:ListItem>
                     <asp:ListItem Value="CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER" Text="">CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER</asp:ListItem>
