@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -6,6 +9,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
 
 namespace NewCapit
 {
@@ -223,7 +227,31 @@ namespace NewCapit
             }
         }
 
+        protected void btnVeiculo_Click(object sender, EventArgs e)
+        {
+            string cod = txtCodVei.Text;
+            string sql = "select * from tbveiculos where codvei='" + cod + "'";
+            SqlDataAdapter da = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            da.Fill(dt);
+            con.Close();
 
+            if (dt.Rows.Count > 0)
+            {
+                string retorno = "o código digitado já possui veículo vinculado!";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(retorno);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+
+            }
+            
+        }
     }
     
     }
