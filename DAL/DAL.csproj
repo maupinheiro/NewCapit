@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Clientes.cs" />
     <Compile Include="ConAgregados.cs" />
+    <Compile Include="ConMotoristas.cs" />
     <Compile Include="ConnectionUtil.cs" />
     <Compile Include="ConVeiculos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

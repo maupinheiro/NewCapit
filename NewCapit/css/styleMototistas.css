@@ -1,0 +1,56 @@
+﻿body {
+}
+.dgv{
+    display: flex;
+    justify-content: flex-start;
+    align-self: flex-start;
+    flex-direction: column;
+}
+.dgvTitulos {
+    display: flex;
+    justify-content: flex-start;
+    align-self: flex-start;
+    flex-direction: row;
+    background-color: #138;
+    color: #fff;
+    border-radius: 15px 15px 0px 0px;
+}
+.dgvTitulos div, .dgvLinha div{
+    padding: 5px;
+
+}
+.dgvDados {
+    display: flex;
+    justify-content: flex-start;
+    align-self: flex-start;
+    flex-direction: column;
+}
+.dgvLinha {
+    display: flex;
+    justify-content: flex-start;
+    align-self: flex-start;
+    flex-direction: row;
+}
+.dgvLinha:nth-child(odd){
+    background-color: #ddd;
+
+}
+.dgvLinha:nth-child(even) {
+    background-color: #eee;
+}
+.dgvLinha:hover {
+    background-color: #088 !important;
+    color: #fff !important;
+    cursor:pointer;
+}
+
+
+.coluna1{
+    width: 90px;
+}
+.coluna2 {
+    width: 300px;
+}
+.coluna10 {
+    width: 230px;
+}

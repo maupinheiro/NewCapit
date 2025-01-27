@@ -132,22 +132,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.Label FrotaMINAS;
 
         /// <summary>
-        /// Controle TotalAgregadoMatriz.
+        /// Controle TotalAgregados.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalAgregadoMatriz;
-
-        /// <summary>
-        /// Controle TotalTerceirosMatriz.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalTerceirosMatriz;
+        protected global::System.Web.UI.WebControls.Label TotalAgregados;
 
         /// <summary>
         /// Controle AgCNT.
@@ -229,6 +220,15 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label AgMG;
+
+        /// <summary>
+        /// Controle TotalTerceiros.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label TotalTerceiros;
 
         /// <summary>
         /// Controle TCNT.

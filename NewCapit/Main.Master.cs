@@ -45,15 +45,15 @@ namespace NewCapit
                 }
             }
             id_usuario = (string)Session["CodUsuario"];
-            String path = Server.MapPath("~/user_img/");
-            string file = id_usuario + ".jpeg";
+            String path = Server.MapPath("~/fotos/");
+            string file = id_usuario + ".jpg";
             if (File.Exists(path + file))
             {
-                foto = "../user_img/" + file + "";
+                foto = "../fotos/" + file + "";
             }
             else
             {
-                foto = "images/no_picture.png";
+                foto = "fotos/usuario.jpg";
             }
         }
     }
