@@ -34,7 +34,7 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                 }
 
-                //CarregaDados();
+                 CarregaDadosAgregado();
 
                
                 DateTime dataHoraAtual = DateTime.Now;
@@ -441,46 +441,46 @@ namespace NewCapit
                     try
                     {
                         con.Open();
-                        //using (SqlDataReader reader = command.ExecuteReader())
-                        //{
-                        //    if (reader.Read())
-                        //    {
-                        //        // Popula os campos da tela com os dados retornados do banco
-                        //        txtCodTra.Text = reader["codtra"].ToString();
-                        //        txtDtCadastro.Text = reader["dtcad"].ToString();
-                        //        txtRazCli.Text = reader["nomtra"].ToString();
-                        //        txtContato.Text = reader["contra"].ToString();
-                        //        txtFantasia.Text = reader["fantra"].ToString();
-                        //        txtFixo.Text = reader["fone1"].ToString();
-                        //        txtCelular.Text = reader["fone2"].ToString();
-                        //        txtEndCli.Text = reader["endtra"].ToString();
-                        //        txtCepCli.Text = reader["ceptra"].ToString();
-                        //        txtBaiCli.Text = reader["baitra"].ToString();
-                        //        txtCidCli.Text = reader["cidtra"].ToString();
-                        //        txtEstCli.Text = reader["uftra"].ToString();
-                        //        ddlSituacao.SelectedValue = reader["ativa_inativa"].ToString();
-                        //        cboPessoa.SelectedValue = reader["pessoa"].ToString();
-                        //        txtCpf_Cnpj.Text = reader["cnpj"].ToString();
-                        //        txtRg.Text = reader["inscestadual"].ToString();
-                        //        txtNumero.Text = reader["numero"].ToString();
-                        //        txtComplemento.Text = reader["complemento"].ToString();
-                        //        txtDtCadastro.Text = reader["dtccad"].ToString();
-                        //        txtUsuAltCadastro.Text = reader["usucad"].ToString();
-                        //        txtAntt.Text = reader["antt"].ToString();
-                        //        string filial = reader["filial"].ToString();
-                        //        System.Diagnostics.Debug.WriteLine("Filial lida do banco: " + filial);
-                        //        PreencherComboFiliais(filial);
+                    //using (SqlDataReader reader = command.ExecuteReader())
+                    //{
+                    //    if (reader.Read())
+                    //    {
+                    //        // Popula os campos da tela com os dados retornados do banco
+                    //        txtCodTra.Text = reader["codtra"].ToString();
+                    //        txtDtCadastro.Text = reader["dtcad"].ToString();
+                    //        txtRazCli.Text = reader["nomtra"].ToString();
+                    //        txtContato.Text = reader["contra"].ToString();
+                    //        txtFantasia.Text = reader["fantra"].ToString();
+                    //        txtFixo.Text = reader["fone1"].ToString();
+                    //        txtCelular.Text = reader["fone2"].ToString();
+                    //        txtEndCli.Text = reader["endtra"].ToString();
+                    //        txtCepCli.Text = reader["ceptra"].ToString();
+                    //        txtBaiCli.Text = reader["baitra"].ToString();
+                    //        txtCidCli.Text = reader["cidtra"].ToString();
+                    //        txtEstCli.Text = reader["uftra"].ToString();
+                    //        ddlSituacao.SelectedValue = reader["ativa_inativa"].ToString();
+                    //        cboPessoa.SelectedValue = reader["pessoa"].ToString();
+                    //        txtCpf_Cnpj.Text = reader["cnpj"].ToString();
+                    //        txtRg.Text = reader["inscestadual"].ToString();
+                    //        txtNumero.Text = reader["numero"].ToString();
+                    //        txtComplemento.Text = reader["complemento"].ToString();
+                    //        txtDtCadastro.Text = reader["dtccad"].ToString();
+                    //        txtUsuAltCadastro.Text = reader["usucad"].ToString();
+                    //        txtAntt.Text = reader["antt"].ToString();
+                    //        string filial = reader["filial"].ToString();
+                    //        System.Diagnostics.Debug.WriteLine("Filial lida do banco: " + filial);
+                    //        PreencherComboFiliais(filial);
 
-                        //    }
-                        //    else
-                        //    {
-                        //        // Exibe mensagem caso o registro não seja encontrado
-                        //        string mensagem = "Nenhum registro foi encontrado para o ID fornecido.";
-                        //        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        //        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                        //    }
-                        //}
-                        con.Close();
+                    //    }
+                    //    else
+                    //    {
+                    //        // Exibe mensagem caso o registro não seja encontrado
+                    //        string mensagem = "Nenhum registro foi encontrado para o ID fornecido.";
+                    //        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    //        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    //    }
+                    //}
+                    con.Close();
                     }
                     catch (Exception ex)
                     {

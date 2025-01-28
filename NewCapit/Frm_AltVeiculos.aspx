@@ -229,9 +229,10 @@
                     <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                     <asp:ListItem Value="PROPRIA" Text="PROPRIA"></asp:ListItem>
                     <asp:ListItem Value="TRANSNOVAG" Text="TRANSNOVAG"></asp:ListItem> 
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
+
         <div class="col-md-1">
             <div class="form-group">
                 <span id="numeroReb1" class="details">REB 999999:</span>
@@ -284,12 +285,15 @@
                 <asp:TextBox ID="txtCap" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
             </div>
         </div>
+
         <div class="col-md-1">
             <div class="form-group">
                 <span class="details">TARA:</span>
                 <asp:TextBox ID="txtTara" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
             </div>
         </div>
+       
+        
         <div class="col-md-1">
             <div class="form-group">
                 <span class="details">TOL. %:</span>
@@ -319,7 +323,7 @@
     <div class="row g-3">        
         <div class="col-md-1">
             
-            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server"  Text="Cadastra" />
+            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server"  Text="Cadastra" OnClick="btnSalvar1_Click" />
         </div>
         <div class="col-md-1">
             

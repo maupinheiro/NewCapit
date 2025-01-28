@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NewCapit
 {
     public partial class Frm_AltVeiculos : System.Web.UI.Page
     {
+        string id;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -39,7 +42,7 @@ namespace NewCapit
             PreencherComboCoresVeiculos();
             PreencherComboRastreadores();
             PreencherComboMotoristas();
-            
+            CarregaTransportadoras();
         }
 
         private void PreencherComboFiliais()
@@ -323,6 +326,207 @@ namespace NewCapit
                 ddlComposicao.SelectedValue = "";
             }
             
+        }
+
+        public void CarregaTransportadoras()
+        {
+            string id = HttpContext.Current.Request.QueryString["id"];
+
+            // Verifica se o ID está presente na query string
+            if (string.IsNullOrEmpty(id))
+            {
+                // Log ou mensagem indicando que o ID não foi informado
+                return;
+            }
+
+            string sql = @"SELECT * FROM tbveiculos WHERE id = @id";
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    DataTable dt = new DataTable();
+
+                    using (SqlDataAdapter adpt = new SqlDataAdapter(cmd))
+                    {
+                        con.Open();
+                        adpt.Fill(dt);
+                    }
+
+                    // Verifica se encontrou resultados
+                    if (dt.Rows.Count == 0)
+                    {
+                        // Log ou mensagem indicando que não encontrou o registro
+                        return;
+                    }
+
+                    DataRow row = dt.Rows[0];
+
+                    // Método auxiliar para evitar exceções de valores nulos
+                    string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
+
+                    txtCodVei.Text = GetValue(row, 1);
+                    cboTipo.Items.Insert(0, GetValue(row, 2));
+                    ddlTipo.Items.Insert(0, GetValue(row, 3));
+                    txtModelo.Text = GetValue(row, 4);
+                    txtAno.Text = GetValue(row, 5);
+                    cbFiliais.Items.Insert(0, GetValue(row, 7));
+                    status.Items.Insert(0, GetValue(row, 8));
+                    txtPlaca.Text = GetValue(row, 9);
+                    txtReb1.Text = GetValue(row, 10);
+                    txtReb2.Text = GetValue(row, 11);
+                    ddlCarreta.Items.Insert(0, GetValue(row, 12));
+                    ddlComposicao.Items.Insert(0, GetValue(row, 13));
+                    ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
+                    txtCodRastreador.Text = GetValue(row, 15);
+                    ddlTecnologia.Items.Insert(0, GetValue(row, 16));
+                    txtEixos.Text = GetValue(row, 19);
+                    txtTara.Text = GetValue(row, 20);
+                    txtTolerancia.Text = GetValue(row, 21);
+                    txtCodMot.Text = GetValue(row, 27);
+                    ddlMotorista.Items.Insert(0, GetValue(row, 28));
+                    txtCodTra.Text = GetValue(row, 29);
+                    ddlTransportadora.Items.Insert(0, GetValue(row, 30));
+                    txtProtocolo.Text = GetValue(row, 37);
+                    txtLicenciamento.Text = GetValue(row, 38);
+                    ddlMarca.Items.Insert(0, GetValue(row, 39));
+                    txtRenavam.Text = GetValue(row, 40);
+                    ddlCor.Items.Insert(0, GetValue(row, 41));
+                    ddlComunicacao.Items.Insert(0, GetValue(row, 42));
+                    txtAntt.Text = GetValue(row, 43);
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log ou tratamento do erro
+                // Exemplo: ex.Message
+            }
+        }
+
+
+        
+
+        protected void btnSalvar1_Click(object sender, EventArgs e)
+        {
+            string id = HttpContext.Current.Request.QueryString["id"];
+
+            // Verifica se o ID está presente na query string
+            if (string.IsNullOrEmpty(id))
+            {
+                // Log ou mensagem indicando que o ID não foi informado
+                return;
+            }
+
+            string sql = @"
+        UPDATE tbveiculos 
+        SET 
+            codvei = @codvei,
+            tipvei = @tipvei,
+            tipoveiculo = @tipoveiculo,
+            modelo = @modelo,
+            ano = @ano,
+            nucleo = @nucleo,
+            ativo_inativo = @ativo_inativo,
+            plavei = @plavei,
+            reboque1 = @reboque1,
+            reboque2 = @reboque2,
+            tipocarreta = @tipocarreta,
+            tiporeboque = @tiporeboque,
+            rastreamento = @rastreamento,
+            codrastreador = @codrastreador,
+            eixos = @eixos,
+            tara = @tara,
+            tolerancia = @tolerancia,
+            codmot = @codmot,
+            motorista = @motorista,
+            codtra = @codtra,
+            transp = @transp,
+            usucad = @usucad,
+            dtccad = @dtccad,
+            usualt = @usualt,
+            dtcalt = @dtcalt,
+            protocolocet = @protocolocet,
+            venclicenciamento = @venclicenciamento,
+            marca = @marca,
+            renavan = @renavan,
+            cor = @cor,
+            comunicacao = @comunicacao,
+            antt = @antt
+        WHERE id = @id";
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    // Parâmetros de atualização
+                    cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text);
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue);
+                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue);
+                    cmd.Parameters.AddWithValue("@modelo", txtModelo.Text);
+                    cmd.Parameters.AddWithValue("@ano", txtAno.Text);
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue);
+                    cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue);
+                    cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text);
+                    cmd.Parameters.AddWithValue("@reboque1", txtReb1.Text);
+                    cmd.Parameters.AddWithValue("@reboque2", txtReb2.Text);
+                    cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedValue);
+                    cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedValue);
+                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue);
+                    cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
+                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedValue);
+                    cmd.Parameters.AddWithValue("@eixo", txtEixos.Text);
+                    cmd.Parameters.AddWithValue("@tara", txtTara.Text);
+                    cmd.Parameters.AddWithValue("@tolerancia", txtTolerancia.Text);
+                    cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text);
+                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedValue);
+                    cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text);
+                    cmd.Parameters.AddWithValue("@transp", ddlTransportadora.SelectedValue);
+                    cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name); // Exemplo para usuário atual
+                    cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocolo.Text);
+                    cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text);
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue);
+                    cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedValue);
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedValue);
+                    cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    con.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        // Log ou mensagem indicando sucesso
+                        string nomeUsuario = txtUsuCadastro.Text;
+                        string linha1 = "Olá, " + nomeUsuario + "!";
+                        string linha2 = "Código " + txtCodTra.Text + ", cadastrado com sucesso.";
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}\n{linha2}";
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        // Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+                        // Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        //Chama a página de consulta clientes
+                        Response.Redirect("ConsultaVeiculos.aspx");
+                    }
+                    else
+                    {
+                        // Log ou mensagem indicando falha na atualização
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log ou tratamento do erro
+                // Exemplo: ex.Message
+            }
         }
     }
 }

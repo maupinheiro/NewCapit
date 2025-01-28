@@ -68,7 +68,7 @@
                 <asp:DropDownList ID="status" runat="server" ForeColor="Blue" CssClass="form-control">
                     <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
                     <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
     </div>
@@ -142,7 +142,7 @@
                     <asp:ListItem Value="MONITORADO" Text="MONITORADO"></asp:ListItem>
                     <asp:ListItem Value="RASTREADO" Text="RASTREADO"></asp:ListItem>
                     <asp:ListItem Value="TELEMONITORADO" Text="TELEMONITORADO"></asp:ListItem>
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
         <div class="col-md-1">
@@ -154,7 +154,7 @@
         <div class="col-md-4">
             <div class="form_group">
                 <span class="details">TECNOLOGIA/RASTREADOR:</span>
-                <asp:DropDownList ID="ddlTecnologia" name="tecnologia" runat="server" ForeColor="Blue" CssClass="form-control"></asp:DropDownList>
+                <asp:DropDownList ID="ddlTecnologia" name="tecnologia" runat="server" ForeColor="Blue" CssClass="form-control" OnSelectedIndexChanged="ddlTecnologia_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
             </div>
         </div>
         <div class="col-md-2">
@@ -176,7 +176,7 @@
                     <asp:ListItem Value="NÃO TEM" Text="NÃO TEM"></asp:ListItem>
                     <asp:ListItem Value="RF/GPS/GPRS" Text="RF/GPS/GPRS"></asp:ListItem>
                     <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
     </div>
@@ -190,20 +190,20 @@
                     <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                     <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>
                     <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>                    
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
         <div class="col-md-1">
             <div class="form-group">
                 <span class="details">CÓDIGO:</span>
-                <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4"></asp:TextBox>
+                <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4"  AutoPostBack="true"></asp:TextBox>
             </div>
         </div>
        
         <div class="col-md-6">
             <div class="form_group">
                 <span class="details">PROPRIETÁRIO/TRANSPORTADORA:</span>
-                <asp:DropDownList ID="ddlTransportadora" name="nomeProprietario" runat="server" ForeColor="Blue" class="form-control select2"></asp:DropDownList>
+                <asp:DropDownList ID="ddlTransportadora" name="nomeProprietario" runat="server" ForeColor="Blue" CssClass="form-control select2" OnSelectedIndexChanged="ddlTransportadora_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
             </div>
         </div>
        
@@ -234,7 +234,7 @@
     <div class="row g-3">        
         <div class="col-md-1">
             
-            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server"  Text="Cadastra" />
+            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click"  Text="Cadastra" />
         </div>
         <div class="col-md-1">
             
@@ -249,13 +249,9 @@
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-    // In your Javascript (external .js resource or <script> tag)
-    $(document).ready(function () {
-        $('.ddlTransportadora').select2();
-    });
-</script>
+
+
+
+    
+
 </asp:Content>
