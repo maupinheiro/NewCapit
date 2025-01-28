@@ -17,7 +17,8 @@ namespace NewCapit
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (!IsPostBack) {
+            if (!IsPostBack)
+            {
                 if (Session["UsuarioLogado"] != null)
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
@@ -35,14 +36,16 @@ namespace NewCapit
                 DateTime dataHoraAtual = DateTime.Now;
                 txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+
                 txtTolerancia.Text = "5";
+                CarregaTransportadoras();
             }
             PreencherComboFiliais();
             PreencherComboMarcasVeiculos();
             PreencherComboCoresVeiculos();
             PreencherComboRastreadores();
             PreencherComboMotoristas();
-            CarregaTransportadoras();
+            
         }
 
         private void PreencherComboFiliais()
@@ -302,13 +305,13 @@ namespace NewCapit
                 int nCapacidade = 53000;
                 int nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;                
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
             }
         }
 
         protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(txtTara.Text != string.Empty)
+            if (txtTara.Text != string.Empty)
             {
                 cboTipoCarreta_Leave();
             }
@@ -325,7 +328,7 @@ namespace NewCapit
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                 ddlComposicao.SelectedValue = "";
             }
-            
+
         }
 
         public void CarregaTransportadoras()
@@ -362,7 +365,7 @@ namespace NewCapit
                         // Log ou mensagem indicando que não encontrou o registro
                         return;
                     }
-            
+
                     DataRow row = dt.Rows[0];
 
                     // Método auxiliar para evitar exceções de valores nulos
@@ -397,7 +400,7 @@ namespace NewCapit
                     ddlCor.Items.Insert(0, GetValue(row, 41));
                     ddlComunicacao.Items.Insert(0, GetValue(row, 42));
                     txtAntt.Text = GetValue(row, 43);
-                   
+
                 }
             }
             catch (Exception ex)
@@ -408,7 +411,7 @@ namespace NewCapit
         }
 
 
-        
+
 
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
@@ -527,6 +530,13 @@ namespace NewCapit
                 // Log ou tratamento do erro
                 // Exemplo: ex.Message
             }
+        }
+
+        protected void ddlTransportadora_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
+
+            txtCodTra.Text = cod_transp[0];
         }
     }
 }

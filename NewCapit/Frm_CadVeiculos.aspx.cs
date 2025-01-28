@@ -49,7 +49,7 @@ namespace NewCapit
             PreencherComboMarcasVeiculos();
             PreencherComboCoresVeiculos();
             PreencherComboRastreadores();
-            PreencherComboAgregados();
+            
 
 
            
