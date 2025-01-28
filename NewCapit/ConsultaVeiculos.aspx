@@ -16,7 +16,7 @@
 
     <!-- Content Row -->
     <div class="row">
-               <!-- Total Veículos -->        
+        <!-- Total Veículos -->        
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
@@ -497,5 +497,9 @@
     <!-- JavaScript -->
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="src/javascript/script.js"></script>
-
+    <!--
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"     crossorigin="anonymous" />
+    
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"        crossorigin="anonymous"></script>
+    -->
 </asp:Content>

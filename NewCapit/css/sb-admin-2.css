@@ -1556,10 +1556,10 @@ pre code {
   background-color: #b7c7f2;
 }
 
-.table-hover .table-primary:hover > td,
-.table-hover .table-primary:hover > th {
-  background-color: #b7c7f2;
-}
+    .table-hover .table-primary:hover > td,
+    .table-hover .table-primary:hover > th {
+        background-color: #b7c7f2;
+    }
 
 .table-secondary,
 .table-secondary > th,

@@ -10,35 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    
 
     <title>...:: CAPIT Logística ::...</title>
-    <script type="text/javascript">
-
-        window.onbeforeunload = function () {            
-                
-            return "Você tem certeza de que deseja encerrar o sistema?";
-            < !--Modal Sair do Sistema-- >
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Deseja realmente sair do sistema?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">Clique em Sair, para encerrar a sessão.</div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                            <a class="btn btn-primary" href="Login.aspx">Sair</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        };
-    </script>
+    
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -540,13 +515,16 @@
                 </div>
                 </div>
                 <!-- Footer -->
+                <!--
                 <footer class="sticky-footer bg-white">                    
                     <div class="container my-auto">
                         <div class="copyright text-center">
                             <span>&copy;2025 - CAPIT Logística</span>
                         </div>
-                    </div>                   
+                    </div>   
+                    
                 </footer>
+                    -->
                 <!-- End of Footer -->
             </div>
         </div>
@@ -574,6 +552,8 @@
             </div>
         </div>
 
+       
+
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -596,7 +576,7 @@
         <!-- Page level plugins -->
         <script src="vendor/datatables/jquery.dataTables.min.js"></script>
         <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-               
+                       
         <script>
             $(document).ready(function () {
                 $('.dataTable1').DataTable();

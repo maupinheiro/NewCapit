@@ -141,7 +141,7 @@ namespace NewCapit
             comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@ativo_inativo", ddlStatus.SelectedValue.ToUpper());
             comando.Parameters.AddWithValue("@usualt", txtUsuCadastro.Text.ToUpper());
-            comando.Parameters.AddWithValue("@dtcalt", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
+            comando.Parameters.AddWithValue("@dtcalt", lblDtCadastro.Text);
             comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
             comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
             comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());

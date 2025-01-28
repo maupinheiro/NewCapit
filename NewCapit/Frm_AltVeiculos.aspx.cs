@@ -362,7 +362,7 @@ namespace NewCapit
                         // Log ou mensagem indicando que não encontrou o registro
                         return;
                     }
-
+            
                     DataRow row = dt.Rows[0];
 
                     // Método auxiliar para evitar exceções de valores nulos

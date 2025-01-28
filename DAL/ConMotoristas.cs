@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DAL
+{
+    public class ConMotoristas
+    {
+        public static DataTable FetchDataTable()
+        {
+            string sql = "SELECT caminhofoto, codmot, nommot, cargo, tipomot, funcao, horario, codtra, transp, nucleo, CONVERT(varchar, dtnasc, 103) AS dtnasc, cpf, CONVERT(varchar, cadmot, 103) AS cadmot, status, id FROM tbmotoristas where fl_exclusao is null";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+
+                }
+            }
+        }
+
+
+    }
+}

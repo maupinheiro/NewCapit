@@ -42,13 +42,15 @@ namespace NewCapit
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 PreencherComboAgregados();
                 PreencherComboRastreadores();
-
+                
 
             }
             PreencherComboFiliais();
             PreencherComboMarcasVeiculos();
             PreencherComboCoresVeiculos();
-           
+            PreencherComboRastreadores();
+            PreencherComboAgregados();
+
 
            
 
@@ -214,7 +216,10 @@ namespace NewCapit
             {
                 try
                 {
+                    // Abra a conexão com o banco de dados
                     conn.Open();
+
+                    // Crie o comando SQL
                     SqlCommand cmd = new SqlCommand(query, conn);
 
                     if (!string.IsNullOrEmpty(filtroCodTra))
@@ -224,6 +229,7 @@ namespace NewCapit
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
+                    // Preencher o ComboBox com os dados do DataReader
                     ddlTransportadora.DataSource = reader;
                     ddlTransportadora.DataTextField = "Nome";
                     ddlTransportadora.DataValueField = "codtra";
@@ -231,10 +237,12 @@ namespace NewCapit
 
                     ddlTransportadora.Items.Insert(0, "Selecione Proprietário/Transportadora");
 
+                    // Feche o reader
                     reader.Close();
                 }
                 catch (Exception ex)
                 {
+                    // Trate exceções
                     Response.Write("Erro: " + ex.Message);
                 }
             }
@@ -264,7 +272,7 @@ namespace NewCapit
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
 
             }
-
+            
         }
 
         protected void btnSalvar1_Click(object sender, EventArgs e)
@@ -360,11 +368,11 @@ namespace NewCapit
             string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
 
             txtCodTra.Text = cod_transp[0];
-        }
-
+    }
+    
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
         }
     }
-}
+    }
