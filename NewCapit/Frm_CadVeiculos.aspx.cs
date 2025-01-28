@@ -19,6 +19,7 @@ namespace NewCapit
     public partial class Frm_CadVeiculos : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+        int sequencia;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -42,13 +43,13 @@ namespace NewCapit
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 PreencherComboAgregados();
                 PreencherComboRastreadores();
-                
+                PreencherComboFiliais();
+                PreencherComboMarcasVeiculos();
+                PreencherComboCoresVeiculos();
+                PreencherComboRastreadores();
 
             }
-            PreencherComboFiliais();
-            PreencherComboMarcasVeiculos();
-            PreencherComboCoresVeiculos();
-            PreencherComboRastreadores();
+            
             
 
 
@@ -277,102 +278,150 @@ namespace NewCapit
 
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-            string sql = @"
-        INSERT INTO tbveiculos (
-            codvei, tipvei, tipoveiculo, modelo, ano, nucleo, ativo_inativo, plavei, 
-            rastreamento, codrastreador, rastreador
-            codmot, motorista, codtra, transp, 
-            usucad, dtccad, protocolocet, venclicenciamento, marca, renavan, cor, 
-            comunicacao, antt
-        ) VALUES (
-            @codvei, @tipvei, @tipoveiculo, @modelo, @ano, @nucleo, @ativo_inativo, @plavei, 
-            @rastreamento, @codrastreador,,@rastreador 
-            @codmot, @motorista, @codtra, @transp, 
-            @usucad, @dtccad, @protocolocet, @venclicenciamento, @marca, @renavan, @cor, 
-            @comunicacao, @antt
-        )";
+            
 
-            //try
-            //{
+            string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
+
+            
+            string sql = @"
+                            INSERT INTO tbveiculos (
+                            id, codvei, tipvei, tipoveiculo, modelo, ano, nucleo, ativo_inativo, plavei, 
+                            rastreamento, codrastreador, rastreador, codtra, transp, 
+                            usucad, dtccad, protocolocet, venclicenciamento, marca, renavan, cor, 
+                            comunicacao, antt
+                        ) VALUES (
+                             @id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @nucleo, @ativo_inativo, @plavei, 
+                             @rastreamento, @codrastreador, @rastreador, @codtra, @transp, 
+                             @usucad, @dtccad, @protocolocet, @venclicenciamento, @marca, @renavan, @cor, 
+                             @comunicacao, @antt
+                        )";
+
+            try
+            {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
+                    GerarNumero();
                     // Adicionando os parâmetros da inserção
                     cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text);
                     cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue);
                     cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue);
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text);
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
-                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue);
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue);
                     cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text);
-                    //cmd.Parameters.AddWithValue("@reboque1", txtReb1.Text);
-                    //cmd.Parameters.AddWithValue("@reboque2", txtReb2.Text);
-                    //cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedValue);
-                    //cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedValue);
                     cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue);
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
-                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedValue);
-                    //cmd.Parameters.AddWithValue("@cap", txtEixos.Text);
-                    //cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
-                    //cmd.Parameters.AddWithValue("@tara", txtTara.Text);
-                    //cmd.Parameters.AddWithValue("@tolerancia", txtTolerancia.Text);
-                    //cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text);
-                    //cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedValue);
+                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text);
-                    cmd.Parameters.AddWithValue("@transp", ddlTransportadora.SelectedValue);
+                    cmd.Parameters.AddWithValue("@transp", cod_transp[1]);
                     cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text);
-                    cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@protocolocet", txtProtocolo.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue);
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
-                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedValue);
-                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedValue);
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.ToString());
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
+                    cmd.Parameters.AddWithValue("@id", sequencia);
 
+                    // Abrindo a conexão e executando a query
                     con.Open();
                     int rowsInserted = cmd.ExecuteNonQuery();
 
                     if (rowsInserted > 0)
                     {
-                        // Log ou mensagem indicando sucesso na inserção
                         string nomeUsuario = txtUsuCadastro.Text;
-                        string linha1 = "Olá, " + nomeUsuario + "!";
-                        string linha2 = "Código " + txtCodTra.Text + ", cadastrado com sucesso.";
-                        // Concatenando as linhas com '\n' para criar a mensagem
-                        string mensagem = $"{linha1}\n{linha2}";
-                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                        // Gerando o script JavaScript para exibir o alerta
-                        string script = $"alert('{mensagemCodificada}');";
-                        // Registrando o script para execução no lado do cliente
+                        string mensagem = $"Olá, {nomeUsuario}!\nVeículo com código {txtCodVei.Text} cadastrado com sucesso.";
+                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                        //Chama a página de consulta clientes
+
+                        // Redirecionar para a página de consulta
                         Response.Redirect("ConsultaVeiculos.aspx");
                     }
                     else
                     {
-                        // Log ou mensagem indicando falha na inserção
+                        string mensagem = "Falha ao cadastrar o veículo. Tente novamente.";
+                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
                     }
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Log ou tratamento do erro
-            //    // Exemplo: ex.Message
-            //}
+            }
+            catch (Exception ex)
+            {
+                string mensagemErro = "Erro ao cadastrar o veículo: " + ex.Message;
+                string scriptErro = $"alert('{HttpUtility.JavaScriptStringEncode(mensagemErro)}');";
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", scriptErro, true);
+            }
         }
+
 
         protected void ddlTransportadora_SelectedIndexChanged(object sender, EventArgs e)
         {
             string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
 
             txtCodTra.Text = cod_transp[0];
-    }
+
+            string query = "SELECT antt FROM tbtransportadoras WHERE fl_exclusao IS NULL AND ativa_inativa = 'ATIVO'";
+
+          
+                query += " AND LTRIM(RTRIM(codtra)) ='" + cod_transp[0]+"'";
+           
+
+            query += " ORDER BY fantra";
+
+            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                
+
+                DataTable dt = new DataTable();
+
+                using (SqlDataAdapter adpt = new SqlDataAdapter(cmd))
+                {
+                    con.Open();
+                    adpt.Fill(dt);
+                }
+
+                // Verifica se encontrou resultados
+                if (dt.Rows.Count == 0)
+                {
+                    // Log ou mensagem indicando que não encontrou o registro
+                    return;
+                }
+
+                DataRow row = dt.Rows[0];
+
+                // Método auxiliar para evitar exceções de valores nulos
+                string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
+
+                txtAntt.Text = GetValue(row, 0);
+                
+
+            }
+        }
     
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
         }
+        public void GerarNumero()
+        {
+            string sql_sequncia = " select isnull(max(id+1),1) as id from tbveiculos";
+
+            con.Open();
+
+            SqlDataAdapter da = new SqlDataAdapter(sql_sequncia, con);
+
+            DataTable dt2 = new DataTable();
+
+            da.Fill(dt2);
+
+            sequencia = int.Parse(dt2.Rows[0][0].ToString());
+
+            con.Close();
+        }
     }
-    }
+}

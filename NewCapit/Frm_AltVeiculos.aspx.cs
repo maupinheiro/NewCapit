@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -38,14 +39,18 @@ namespace NewCapit
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
                 txtTolerancia.Text = "5";
-                CarregaTransportadoras();
+                
+                PreencherComboAgregados();
+                PreencherComboFiliais();
+                PreencherComboMarcasVeiculos();
+                PreencherComboCoresVeiculos();
+                PreencherComboRastreadores();
+                PreencherComboMotoristas();
+
             }
-            PreencherComboFiliais();
-            PreencherComboMarcasVeiculos();
-            PreencherComboCoresVeiculos();
-            PreencherComboRastreadores();
-            PreencherComboMotoristas();
+            CarregaTransportadoras();
             
+
         }
 
         private void PreencherComboFiliais()
@@ -195,7 +200,7 @@ namespace NewCapit
         private void PreencherComboMotoristas()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codmot, nommot FROM tbmotoristas where fl_exclusao is null and status = 'ATIVO' ORDER BY nommot";
+            string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao IS NULL AND status = 'ATIVO' ORDER BY nommot";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -208,14 +213,17 @@ namespace NewCapit
                     // Crie o comando SQL
                     SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
+                    
+
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlTransportadora.DataSource = reader;
-                    ddlTransportadora.DataTextField = "nommot";  // Campo que será mostrado no ComboBox
-                    ddlTransportadora.DataValueField = "codmot";  // Campo que será o valor de cada item             
-                    ddlTransportadora.DataBind();  // Realiza o binding dos dados                   
+                    ddlMotorista.DataSource = reader;
+                    ddlMotorista.DataTextField = "nommot";
+                    ddlMotorista.DataValueField = "codmot";
+                    ddlMotorista.DataBind();
+
+                    ddlMotorista.Items.Insert(0, "Selecione o Motorista");
 
                     // Feche o reader
                     reader.Close();
@@ -227,6 +235,7 @@ namespace NewCapit
                 }
             }
         }
+
 
         private void cboTipoCarreta_Leave()
         {
@@ -342,7 +351,7 @@ namespace NewCapit
                 return;
             }
 
-            string sql = @"SELECT * FROM tbveiculos WHERE id = @id";
+            string sql = @"SELECT * FROM tbveiculos WHERE id = @id and fl_exclusao is null";
 
             try
             {
@@ -392,7 +401,7 @@ namespace NewCapit
                     txtCodMot.Text = GetValue(row, 27);
                     ddlMotorista.Items.Insert(0, GetValue(row, 28));
                     txtCodTra.Text = GetValue(row, 29);
-                    ddlTransportadora.Items.Insert(0, GetValue(row, 30));
+                    ddlTransportadora.Items.Insert(0, GetValue(row, 29)+"-"+ GetValue(row, 30));
                     txtProtocolo.Text = GetValue(row, 37);
                     txtLicenciamento.Text = GetValue(row, 38);
                     ddlMarca.Items.Insert(0, GetValue(row, 39));
@@ -400,7 +409,7 @@ namespace NewCapit
                     ddlCor.Items.Insert(0, GetValue(row, 41));
                     ddlComunicacao.Items.Insert(0, GetValue(row, 42));
                     txtAntt.Text = GetValue(row, 43);
-
+                   
                 }
             }
             catch (Exception ex)
@@ -538,5 +547,108 @@ namespace NewCapit
 
             txtCodTra.Text = cod_transp[0];
         }
+        private void PreencherComboAgregados(string filtroCodTra = null)
+        {
+            string query = "SELECT codtra, (CAST(codtra AS VARCHAR) + '-' + fantra) AS Nome FROM tbtransportadoras WHERE fl_exclusao IS NULL AND ativa_inativa = 'ATIVO'";
+
+            if (!string.IsNullOrEmpty(filtroCodTra))
+            {
+                query += " AND LTRIM(RTRIM(codtra)) = @codtra";
+            }
+
+            query += " ORDER BY fantra";
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    if (!string.IsNullOrEmpty(filtroCodTra))
+                    {
+                        cmd.Parameters.AddWithValue("@codtra", filtroCodTra);
+                    }
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlTransportadora.DataSource = reader;
+                    ddlTransportadora.DataTextField = "Nome";
+                    ddlTransportadora.DataValueField = "codtra";
+                    ddlTransportadora.DataBind();
+
+                    ddlTransportadora.Items.Insert(0, "Selecione Proprietário/Transportadora");
+
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+
+        protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodMot.Text = ddlMotorista.SelectedValue;
+
+            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sql = "SELECT * FROM tbveiculos WHERE codmot = @codmot";
+                con.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@codmot", txtCodMot.Text);
+
+                DataTable dt2 = new DataTable();
+                da.Fill(dt2);
+
+                if (dt2.Rows.Count > 0)
+                {
+                    // Registra o script de confirmação no lado do cliente
+                    string script = "ConfirmMessage();";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ConfirmMessage", script, true);
+
+                    // Verifica a resposta do usuário via txtconformmessageValue
+                    if (txtconformmessageValue.Value == "Yes")
+                    {
+                        string updateSql = "UPDATE tbveiculos SET codmot = NULL, motorista = NULL WHERE id = @id";
+                        using (SqlCommand cmd = new SqlCommand(updateSql, con))
+                        {
+                            cmd.Parameters.AddWithValue("@id", dt2.Rows[0][0].ToString());
+
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                // Exibe mensagem de sucesso
+                                string nomeUsuario = txtUsuCadastro.Text;
+                                string mensagem = $"Olá, {nomeUsuario}!\nCódigo {txtCodMot.Text}, foi desvinculado do veículo com sucesso.";
+                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                string successScript = $"alert('{mensagemCodificada}');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeSucesso", successScript, true);
+                            }
+                            else
+                            {
+                                // Log ou mensagem indicando falha na atualização
+                                string failScript = "alert('Falha ao desvincular o veículo.');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", failScript, true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ddlMotorista.ClearSelection();
+                        txtCodMot.Text=string.Empty;
+                    }
+                }
+            }
+        }
+
     }
 }

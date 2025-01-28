@@ -2,6 +2,18 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <script language="javascript">
+     function ConfirmMessage() {
+         var selectedvalue = confirm("Esse motorista já possui vinculo com um veículo. Deseja desvincular o veículo?");
+         if (selectedvalue) {
+             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+         } else {
+             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+         }
+    }
+    
+
+     </script>
     <div class="container mt-5">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-shipping-fast"></i> VEÍCULO </h3>
@@ -139,7 +151,7 @@
                     <asp:ListItem Value="MONITORADO" Text="MONITORADO"></asp:ListItem>
                     <asp:ListItem Value="RASTREADO" Text="RASTREADO"></asp:ListItem>
                     <asp:ListItem Value="TELEMONITORADO" Text="TELEMONITORADO"></asp:ListItem>
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
         <div class="col-md-1">
@@ -173,7 +185,7 @@
                     <asp:ListItem Value="NÃO TEM" Text="NÃO TEM"></asp:ListItem>
                     <asp:ListItem Value="RF/GPS/GPRS" Text="RF/GPS/GPRS"></asp:ListItem>
                     <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
-                </asp:DropDownList></>
+                </asp:DropDownList>
             </div>
         </div>
     </div>
@@ -206,8 +218,10 @@
         <div class="col-md-4">
             <div class="form_group">
                 <span class="details">MOTORISTA:</span>
-                <asp:DropDownList ID="ddlMotorista" name="nomeMotorista" runat="server" ForeColor="Blue" CssClass="form-control"></asp:DropDownList>
+                <asp:DropDownList ID="ddlMotorista" runat="server" ForeColor="Blue" CssClass="form-control select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                
             </div>
+            <asp:HiddenField ID="txtconformmessageValue" runat="server" />
         </div>
     </div>
     <div class="row g-3">

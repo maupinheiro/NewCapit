@@ -3,7 +3,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-        
+            <script language="javascript">
+function ConfirmMessage() {
+    var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+    if (selectedvalue) {
+        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+   } else {
+       document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+   }
+}
+   
+            </script>
     
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-left justify-content-between mb-4">
@@ -473,7 +483,7 @@
                                         <i class="fas fa-map-marker-alt"></i>                                    
                                         Mapa
                                      </a> 
-                                      <asp:LinkButton ID="lnkExcluir" runat="server" CssClass="btn btn-danger btn-sm" ><i class="fa fa-trash"></i></i>
+                                      <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="ConfirmMessage();" ><i class="fa fa-trash"></i></i>
                                           Excluir</asp:LinkButton>
                             
                                      <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
