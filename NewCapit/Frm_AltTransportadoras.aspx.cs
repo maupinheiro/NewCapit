@@ -34,26 +34,24 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                 }
 
-                CarregaDadosAgregado();
 
+                PreencherComboFiliais();
 
                 DateTime dataHoraAtual = DateTime.Now;
                 txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
                 txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 btnCnpj.Visible = false;
             }
-
+            
+            CarregaDadosAgregado();
 
 
         }
 
-        private void PreencherComboFiliais(string filialCadastrada)
+        private void PreencherComboFiliais()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT descricao FROM tbempresa";
-
-            // Limpe os itens do DropDownList antes de popular novamente
-            cbFiliais.Items.Clear();
+            string query = "SELECT codigo, descricao FROM tbempresa";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -69,39 +67,14 @@ namespace NewCapit
                     // Execute o comando e obtenha os dados em um DataReader
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Adicione os itens ao DropDownList
-                    while (reader.Read())
-                    {
-                        string codigo = reader["codigo"].ToString();
-                        string descricao = reader["descricao"].ToString();
-
-                        ListItem item = new ListItem(descricao.Trim(), codigo); // Trime espaços
-                        cbFiliais.Items.Add(item);
-                    }
+                    // Preencher o ComboBox com os dados do DataReader
+                    cbFiliais.DataSource = reader;
+                    cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+                    cbFiliais.DataBind();  // Realiza o binding dos dados                   
 
                     // Feche o reader
                     reader.Close();
-
-                    // Defina o item selecionado com base na descrição (texto)
-                    if (!string.IsNullOrEmpty(filialCadastrada))
-                    {
-                        filialCadastrada = filialCadastrada.Trim(); // Trime espaços para evitar problemas
-                        ListItem itemCadastrado = cbFiliais.Items.FindByText(filialCadastrada);
-
-                        if (itemCadastrado != null)
-                        {
-                            itemCadastrado.Selected = true; // Seleciona o item correspondente
-                        }
-                        else
-                        {
-                            // Caso a descrição não exista, adicione um item padrão
-                            cbFiliais.Items.Insert(0, new ListItem("Filial não encontrada: " + filialCadastrada, ""));
-                            cbFiliais.SelectedIndex = 0;
-
-                            // Log para verificar qual valor não foi encontrado
-                            System.Diagnostics.Debug.WriteLine("Filial não encontrada: " + filialCadastrada);
-                        }
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -290,91 +263,76 @@ namespace NewCapit
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            string id = HttpContext.Current.Request.QueryString["id"];
-            if (string.IsNullOrEmpty(id))
+            // Obtém o ID da transportadora da QueryString
+            if (!int.TryParse(HttpContext.Current.Request.QueryString["id"], out int id))
             {
-                string script = "alert('ID inválido ou não fornecido.');";
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('ID inválido ou não fornecido.');", true);
                 return;
             }
 
             string query = @"
         UPDATE tbtransportadoras 
         SET nomtra = @NomTra, contra = @ConTra, fantra = @FanTra, fone1 = @Fone1, 
-            fone2 = @Fone2, endtra = @EndTra, ceptra = @CepTra, baitra = @BaiTra, cidtra = @CidTra, 
-            uftra = @UfTra, ativa_inativa = @AtivaInativa, pessoa = @Pessoa, cnpj = @Cnpj, 
-            inscestadual = @InscEstadual, numero = @Numero, complemento = @Complemento, 
-            antt = @Antt, filial = @Filial, dtcalt = @DtCAlt, usualt = @UsuAlt
+            fone2 = @Fone2, endtra = @EndTra, ceptra = @CepTra, baitra = @BaiTra, 
+            cidtra = @CidTra, uftra = @UfTra, ativa_inativa = @AtivaInativa, pessoa = @Pessoa, 
+            cnpj = @Cnpj, inscestadual = @InscEstadual, numero = @Numero, complemento = @Complemento, 
+            antt = @Antt, filial = @Filial, dtcalt = @DtCAlt, usualt = @UsuAlt, tipo=@Tipo
         WHERE ID = @ID";
 
             // Atualiza informações do usuário logado e data de alteração
-            if (Session["UsuarioLogado"] != null)
-            {
-                string nomeUsuario = Session["UsuarioLogado"].ToString();
-                txtUsuAltCadastro.Text = nomeUsuario;
-                txtAltDtUsu.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-            }
-            else
-            {
-                txtUsuAltCadastro.Text = "Usuário não identificado";
-            }
+            string usuarioLogado = Session["UsuarioLogado"]?.ToString() ?? "Usuário não identificado";
+            DateTime dataAlteracao = DateTime.Now;
 
             using (SqlConnection connection = new SqlConnection(con.ConnectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
                 {
-                    command.Parameters.Add("@NomTra", SqlDbType.NVarChar).Value = txtRazCli.Text;
-                    command.Parameters.Add("@ConTra", SqlDbType.NVarChar).Value = txtContato.Text;
-                    command.Parameters.Add("@FanTra", SqlDbType.NVarChar).Value = txtFantasia.Text;
-                    command.Parameters.Add("@Fone1", SqlDbType.NVarChar).Value = txtFixo.Text;
-                    command.Parameters.Add("@Fone2", SqlDbType.NVarChar).Value = txtCelular.Text;
-                    command.Parameters.Add("@EndTra", SqlDbType.NVarChar).Value = txtEndCli.Text;
-                    command.Parameters.Add("@CepTra", SqlDbType.NVarChar).Value = txtCepCli.Text;
-                    command.Parameters.Add("@BaiTra", SqlDbType.NVarChar).Value = txtBaiCli.Text;
-                    command.Parameters.Add("@CidTra", SqlDbType.NVarChar).Value = txtCidCli.Text;
-                    command.Parameters.Add("@UfTra", SqlDbType.NVarChar).Value = txtEstCli.Text;
-                    command.Parameters.Add("@AtivaInativa", SqlDbType.NVarChar).Value = ddlSituacao.SelectedValue;
-                    command.Parameters.Add("@Pessoa", SqlDbType.NVarChar).Value = cboPessoa.SelectedValue;
-                    command.Parameters.Add("@Cnpj", SqlDbType.NVarChar).Value = txtCpf_Cnpj.Text;
-                    command.Parameters.Add("@InscEstadual", SqlDbType.NVarChar).Value = txtRg.Text;
-                    command.Parameters.Add("@Numero", SqlDbType.NVarChar).Value = txtNumero.Text;
-                    command.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = txtComplemento.Text;
-                    command.Parameters.Add("@DtCAlt", SqlDbType.DateTime).Value = DateTime.Now;
-                    command.Parameters.Add("@UsuAlt", SqlDbType.NVarChar).Value = txtUsuAltCadastro.Text;
-                    command.Parameters.Add("@Antt", SqlDbType.NVarChar).Value = txtAntt.Text;
-                    command.Parameters.Add("@Filial", SqlDbType.NVarChar).Value = cbFiliais.SelectedValue;
-                    command.Parameters.Add("@ID", SqlDbType.Int).Value = int.Parse(id);
+                    command.Parameters.AddWithValue("@NomTra", txtRazCli.Text);
+                    command.Parameters.AddWithValue("@ConTra", txtContato.Text);
+                    command.Parameters.AddWithValue("@FanTra", txtFantasia.Text);
+                    command.Parameters.AddWithValue("@Fone1", txtFixo.Text);
+                    command.Parameters.AddWithValue("@Fone2", txtCelular.Text);
+                    command.Parameters.AddWithValue("@EndTra", txtEndCli.Text);
+                    command.Parameters.AddWithValue("@CepTra", txtCepCli.Text);
+                    command.Parameters.AddWithValue("@BaiTra", txtBaiCli.Text);
+                    command.Parameters.AddWithValue("@CidTra", txtCidCli.Text);
+                    command.Parameters.AddWithValue("@UfTra", txtEstCli.Text);
+                    command.Parameters.AddWithValue("@AtivaInativa", ddlSituacao.SelectedItem.ToString());
+                    command.Parameters.AddWithValue("@Pessoa", cboPessoa.SelectedItem.ToString());
+                    command.Parameters.AddWithValue("@Cnpj", txtCpf_Cnpj.Text);
+                    command.Parameters.AddWithValue("@InscEstadual", txtRg.Text);
+                    command.Parameters.AddWithValue("@Numero", txtNumero.Text);
+                    command.Parameters.AddWithValue("@Complemento", txtComplemento.Text);
+                    command.Parameters.AddWithValue("@DtCAlt", dataAlteracao);
+                    command.Parameters.AddWithValue("@UsuAlt", usuarioLogado);
+                    command.Parameters.AddWithValue("@Antt", txtAntt.Text);
+                    command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
+                    command.Parameters.AddWithValue("@Tipo", ddlTipo.SelectedItem.ToString());
+                    command.Parameters.AddWithValue("@ID", id);
 
                     connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
                     {
-                        string mensagem = $"Olá, {txtUsuAltCadastro.Text}! Registro atualizado com sucesso.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        string mensagem = $"Olá, {usuarioLogado}! Registro atualizado com sucesso.";
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');", true);
                         Response.Redirect("ConsultaAgregados.aspx");
                     }
                     else
                     {
-                        string mensagem = "Nenhum registro foi encontrado para atualizar.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Nenhum registro foi encontrado para atualizar.');", true);
                     }
                 }
                 catch (Exception ex)
                 {
                     string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                    string script = $"alert('{mensagemErro}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
-                }
-                finally
-                {
-                    connection.Close();
+                    ClientScript.RegisterStartupScript(this.GetType(), "Erro", $"alert('{mensagemErro}');", true);
                 }
             }
         }
+
 
 
 
@@ -419,11 +377,12 @@ namespace NewCapit
                         txtNumero.Text = reader["numero"].ToString();
                         txtComplemento.Text = reader["complemento"].ToString();
                         txtDtCadastro.Text = reader["dtccad"].ToString();
-                        txtUsuAltCadastro.Text = reader["usucad"].ToString();
+                        txtUsuCad.Text = reader["usucad"].ToString();
                         txtAntt.Text = reader["antt"].ToString();
                         string filial = reader["filial"].ToString();
+                        ddlTipo.SelectedValue = reader["tipo"].ToString();
                         System.Diagnostics.Debug.WriteLine("Filial lida do banco: " + filial);
-                        PreencherComboFiliais(filial);
+                        cbFiliais.Items.Insert(0, filial);
 
                     }
                     else

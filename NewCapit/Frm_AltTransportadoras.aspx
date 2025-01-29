@@ -26,7 +26,8 @@
             <div class="col-md-2">
                 <div class="form_group">
                     <span class="details">PESSOA:</span>
-                    <asp:DropDownList ID="cboPessoa" runat="server" ForeColor="Blue" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChanged">                        
+                    <asp:DropDownList ID="cboPessoa" runat="server" ForeColor="Blue" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChanged"> 
+                        <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                         <asp:ListItem Value="FÍSICA" Text="FÍSICA"></asp:ListItem>
                         <asp:ListItem Value="JURÍDICA" Text="JURÍDICA"></asp:ListItem>
                     </asp:DropDownList>
@@ -35,7 +36,8 @@
             <div class="col-md-5">
                 <div class="form_group">
                     <span class="details">TIPO:</span>
-                    <asp:DropDownList ID="ddlTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">                        
+                    <asp:DropDownList ID="ddlTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">      
+                        <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                         <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                         <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
                         <asp:ListItem Value="EMPRESA" Text="EMPRESA"></asp:ListItem>
