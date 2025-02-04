@@ -77,7 +77,7 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Clientes</h6>
-                            <a class="collapse-item" href="ConsultaClientes.aspx">Manutenção</a>
+                            <a class="collapse-item" href="ConsultaClientes.aspx">Consulta</a>
                             <!--
                             <a class="collapse-item" href="cards.html">Novo Cliente</a>
                             <a class="collapse-item" href="cards.html">Cadastro de Rotas</a>
@@ -99,7 +99,7 @@
                         data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Agregados</h6>
-                            <a class="collapse-item" href="ConsultaAgregados.aspx">Manutenção</a>
+                            <a class="collapse-item" href="ConsultaAgregados.aspx">Consulta</a>
                             <!--
                             <a class="collapse-item" href="utilities-border.html">Novo</a>
                             <a class="collapse-item" href="utilities-animation.html">Limite de Crédito</a>                             
@@ -120,9 +120,10 @@
                         data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Veículos</h6>
-                            <a class="collapse-item" href="ConsultaVeiculos.aspx">Manutenção</a>
-                           <!--
-                            <a class="collapse-item" href="utilities-border.html">Novo Veículo</a>
+                            <a class="collapse-item" href="ConsultaVeiculos.aspx">Consulta</a>
+                           
+                            <a class="collapse-item" href="">Validades Diversas</a>
+                            <!--
                             <a class="collapse-item" href="utilities-animation.html">Controle de Carretas</a> 
                             <a class="collapse-item" href="utilities-other.html">Nova Carreta</a>
                             <a class="collapse-item" href="utilities-other.html">Emprestimo de Carreta</a>
@@ -160,7 +161,7 @@
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Controle de Motoristas</h6>
-                            <a class="collapse-item" href="ConsultaMotoristas.aspx">Manutenção</a>
+                            <a class="collapse-item" href="ConsultaMotoristas.aspx">Consulta</a>
                             <a class="collapse-item" href="#">Jornada do Motorista</a>
                             <a class="collapse-item" href="#">Gerar .TXT Dep. Pessoal</a>
                             <a class="collapse-item" href="#">Validar Marcações</a>

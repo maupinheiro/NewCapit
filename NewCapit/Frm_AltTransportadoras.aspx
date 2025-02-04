@@ -75,10 +75,10 @@
                     <asp:TextBox ID="txtAntt" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CADASTRO:</span>
-                    <asp:Label ID="txtDtCadastro" runat="server" ForeColor="Blue"  CssClass="form-control" value=""></asp:Label>
+                    <asp:Label ID="txtDtCadastro" runat="server" ForeColor="Blue"  width="120px" CssClass="form-control" value=""></asp:Label>
                 </div>
             </div>
             <div class="col-md-1">
@@ -113,7 +113,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <span class="details">FIXO:</span>
-                    <asp:TextBox ID="txtFixo" runat="server" data-mask="(00) 0000-0000" ForeColor="Blue" CssClass="form-control" placeholder=""></asp:TextBox>
+                    <asp:TextBox ID="txtFixo" Text="" runat="server" data-mask="(00) 0000-0000" ForeColor="Blue" CssClass="form-control" placeholder=""></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-2">

@@ -270,18 +270,11 @@ namespace NewCapit
                 return;
             }
 
-            string query = @"
-        UPDATE tbtransportadoras 
-        SET nomtra = @NomTra, contra = @ConTra, fantra = @FanTra, fone1 = @Fone1, 
-            fone2 = @Fone2, endtra = @EndTra, ceptra = @CepTra, baitra = @BaiTra, 
-            cidtra = @CidTra, uftra = @UfTra, ativa_inativa = @AtivaInativa, pessoa = @Pessoa, 
-            cnpj = @Cnpj, inscestadual = @InscEstadual, numero = @Numero, complemento = @Complemento, 
-            antt = @Antt, filial = @Filial, dtcalt = @DtCAlt, usualt = @UsuAlt, tipo=@Tipo
-        WHERE ID = @ID";
+            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID = @ID";
 
             // Atualiza informações do usuário logado e data de alteração
             string usuarioLogado = Session["UsuarioLogado"]?.ToString() ?? "Usuário não identificado";
-            DateTime dataAlteracao = DateTime.Now;
+            DateTime dataAlteracao = DateTime.Now;   
 
             using (SqlConnection connection = new SqlConnection(con.ConnectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -291,8 +284,8 @@ namespace NewCapit
                     command.Parameters.AddWithValue("@NomTra", txtRazCli.Text);
                     command.Parameters.AddWithValue("@ConTra", txtContato.Text);
                     command.Parameters.AddWithValue("@FanTra", txtFantasia.Text);
-                    command.Parameters.AddWithValue("@Fone1", txtFixo.Text);
-                    command.Parameters.AddWithValue("@Fone2", txtCelular.Text);
+                    command.Parameters.AddWithValue("@Fone1", this.txtFixo.Text);
+                    command.Parameters.AddWithValue("@Fone2", this.txtCelular.Text);
                     command.Parameters.AddWithValue("@EndTra", txtEndCli.Text);
                     command.Parameters.AddWithValue("@CepTra", txtCepCli.Text);
                     command.Parameters.AddWithValue("@BaiTra", txtBaiCli.Text);
@@ -304,7 +297,7 @@ namespace NewCapit
                     command.Parameters.AddWithValue("@InscEstadual", txtRg.Text);
                     command.Parameters.AddWithValue("@Numero", txtNumero.Text);
                     command.Parameters.AddWithValue("@Complemento", txtComplemento.Text);
-                    command.Parameters.AddWithValue("@DtCAlt", dataAlteracao);
+                    command.Parameters.AddWithValue("@DtCAlt", dataAlteracao.ToString("dd/MM/yyyy HH:mm"));
                     command.Parameters.AddWithValue("@UsuAlt", usuarioLogado);
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text);
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
@@ -333,10 +326,58 @@ namespace NewCapit
             }
         }
 
-
-
-
         public void CarregaDadosAgregado()
+        {
+            SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["id"]))
+            {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            string sql = "select * from tbtransportadoras where id='" + id + "'";
+            SqlDataAdapter apt = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            apt.Fill(dt);
+            con.Close();
+
+            if (dt.Rows.Count > 0)
+            {
+                txtCodTra.Text = dt.Rows[0][1].ToString();
+                txtDtCadastro.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy");                
+                txtRazCli.Text = dt.Rows[0][3].ToString();
+                txtContato.Text = dt.Rows[0][4].ToString();
+                txtFantasia.Text = dt.Rows[0][5].ToString();
+                txtFixo.Text = dt.Rows[0][6].ToString();
+                txtCelular.Text = dt.Rows[0][7].ToString();
+                txtEndCli.Text = dt.Rows[0][8].ToString();
+                txtCepCli.Text = dt.Rows[0][9].ToString();
+                txtBaiCli.Text = dt.Rows[0][10].ToString();
+                txtCidCli.Text = dt.Rows[0][11].ToString();
+                txtEstCli.Text = dt.Rows[0][12].ToString();
+                ddlSituacao.Items.Insert(0, dt.Rows[0][13].ToString());
+                cboPessoa.Items.Insert(0, dt.Rows[0][14].ToString());
+                txtCpf_Cnpj.Text = dt.Rows[0][15].ToString();                
+                txtRg.Text = dt.Rows[0][16].ToString();
+                txtNumero.Text = dt.Rows[0][17].ToString();
+                txtComplemento.Text = dt.Rows[0][18].ToString();
+                txtDtCad.Text = dt.Rows[0][19].ToString();
+                txtUsuCad.Text = dt.Rows[0][20].ToString();
+                txtAntt.Text = dt.Rows[0][23].ToString();
+                txtAltDtUsu.Text = dt.Rows[0][21].ToString();
+                txtUsuAltCadastro.Text = dt.Rows[0][22].ToString();
+                cbFiliais.Items.Insert(0, dt.Rows[0][24].ToString());
+                ddlTipo.Items.Insert(0, dt.Rows[0][25].ToString()); 
+            }
+            else
+            {
+                //lblMsg.Visible = true;
+                //pnlMot.Visible = false;
+            }
+        }
+
+
+
+        public void CarregaDadosAgregado3()
         {
             SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
             if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["id"]))
@@ -345,10 +386,6 @@ namespace NewCapit
             }
             string sql = "SELECT * FROM tbtransportadoras WHERE ID='" + id + "'";
             SqlCommand command = new SqlCommand(sql, con);
-
-
-
-
 
             try
             {

@@ -25,22 +25,17 @@ namespace NewCapit
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
 
-                    txtUsuCadastro.Text = nomeUsuario;
+                    txtAlteradoPor.Text = nomeUsuario;
 
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                    txtUsuCadastro.Text = lblUsuario;
-                }
-
-                DateTime dataHoraAtual = DateTime.Now;
-                txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
-                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-
-                txtTolerancia.Text = "5";
+                    txtAlteradoPor.Text = lblUsuario;
+                }              
                 
-                PreencherComboAgregados();
+                //PreencherComboAgregados();
+                CarregarDDLAgregados();
                 PreencherComboFiliais();
                 PreencherComboMarcasVeiculos();
                 PreencherComboCoresVeiculos();
@@ -49,7 +44,7 @@ namespace NewCapit
 
 
             }
-            CarregaTransportadoras();
+            CarregaDadosDoVeiculo();
 
 
         }
@@ -197,6 +192,10 @@ namespace NewCapit
                 }
             }
         }
+        protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
+        }
 
         private void PreencherComboMotoristas()
         {
@@ -224,7 +223,7 @@ namespace NewCapit
                     ddlMotorista.DataValueField = "codmot";
                     ddlMotorista.DataBind();
 
-                    ddlMotorista.Items.Insert(0, "Selecione o Motorista");
+                    ddlMotorista.Items.Insert(0, "");
 
                     // Feche o reader
                     reader.Close();
@@ -236,8 +235,6 @@ namespace NewCapit
                 }
             }
         }
-
-
         private void cboTipoCarreta_Leave()
         {
             string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
@@ -318,7 +315,6 @@ namespace NewCapit
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
             }
         }
-
         protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (txtTara.Text != string.Empty)
@@ -340,8 +336,7 @@ namespace NewCapit
             }
 
         }
-
-        public void CarregaTransportadoras()
+        public void CarregaDadosDoVeiculo()
         {
             string id = HttpContext.Current.Request.QueryString["id"];
 
@@ -386,23 +381,31 @@ namespace NewCapit
                     ddlTipo.Items.Insert(0, GetValue(row, 3));
                     txtModelo.Text = GetValue(row, 4);
                     txtAno.Text = GetValue(row, 5);
+                    txtCadastro.Text = GetValue(row, 6);
                     cbFiliais.Items.Insert(0, GetValue(row, 7));
                     status.Items.Insert(0, GetValue(row, 8));
                     txtPlaca.Text = GetValue(row, 9);
                     txtReb1.Text = GetValue(row, 10);
                     txtReb2.Text = GetValue(row, 11);
-                    ddlCarreta.Items.Insert(0, GetValue(row, 12));
-                    ddlComposicao.Items.Insert(0, GetValue(row, 13));
+                    ddlCarreta.Items.Insert(0, GetValue(row, 13));
+                    ddlComposicao.Items.Insert(0, GetValue(row, 12));
                     ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
                     txtCodRastreador.Text = GetValue(row, 15);
                     ddlTecnologia.Items.Insert(0, GetValue(row, 16));
+                    txtId.Text = GetValue(row, 17);
+                    txtCap.Text = GetValue(row, 18);
                     txtEixos.Text = GetValue(row, 19);
                     txtTara.Text = GetValue(row, 20);
                     txtTolerancia.Text = GetValue(row, 21);
+                    txtPBT.Text = GetValue(row, 22);
                     txtCodMot.Text = GetValue(row, 27);
                     ddlMotorista.Items.Insert(0, GetValue(row, 28));
                     txtCodTra.Text = GetValue(row, 29);
-                    ddlTransportadora.Items.Insert(0, GetValue(row, 29)+"-"+ GetValue(row, 30));
+                    ddlAgregados.Items.Insert(0, GetValue(row, 30));
+                    txtOpacidade.Text = GetValue(row, 31);
+                    txtCadastradoPor.Text = GetValue(row, 32);
+                    txtDtCadastro.Text = GetValue(row, 33);
+                    txtValCET.Text = GetValue(row, 36);
                     txtProtocolo.Text = GetValue(row, 37);
                     txtLicenciamento.Text = GetValue(row, 38);
                     ddlMarca.Items.Insert(0, GetValue(row, 39));
@@ -410,7 +413,18 @@ namespace NewCapit
                     ddlCor.Items.Insert(0, GetValue(row, 41));
                     ddlComunicacao.Items.Insert(0, GetValue(row, 42));
                     txtAntt.Text = GetValue(row, 43);
-                   
+                    ddlUfPlaca.Items.Insert(0, GetValue(row, 46));
+                    txtCidPlaca.Text = GetValue(row, 47);
+                    txtComprimento.Text = GetValue(row, 49);
+                    txtLargura.Text = GetValue(row, 50);
+                    txtAltura.Text = GetValue(row, 51);
+                    txtTipoSeguro.Text = GetValue(row, 54);
+                    ddlTacografo.Items.Insert(0, GetValue(row, 59));
+                    ddlModeloTacografo.Items.Insert(0, GetValue(row, 60));
+                    txtDataAquisicao.Text = GetValue(row, 61);
+                    txtChassi.Text = GetValue(row, 63);
+                    
+
                 }
             }
             catch (Exception ex)
@@ -419,10 +433,6 @@ namespace NewCapit
                 // Exemplo: ex.Message
             }
         }
-
-
-
-
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
             string id = HttpContext.Current.Request.QueryString["id"];
@@ -434,10 +444,7 @@ namespace NewCapit
                 return;
             }
 
-            string sql = @"
-    UPDATE tbveiculos 
-    SET 
-        codvei = @codvei,
+            string sql = @"UPDATE tbveiculos SET         
         tipvei = @tipvei,
         tipoveiculo = @tipoveiculo,
         modelo = @modelo,
@@ -466,45 +473,67 @@ namespace NewCapit
         renavan = @renavan,
         cor = @cor,
         comunicacao = @comunicacao,
-        antt = @antt
+        antt = @antt,
+        codreb1 = @codreb1,
+        codreb2 = @codreb2,
+        ufplaca = @ufplaca,
+        cidplaca = @cidplaca,        
+        comprimento = @comprimento,
+        largura = @largura,
+        altura = @altura,                
+        tacografo = @tacografo,
+        modelotacografo = @modelotacografo,
+        dataaquisicao = @dataaquisicao,        
+        chassi = @chassi
     WHERE id = @id";
-
             try
             {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    // Adiciona os parâmetros
-                    cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text);
-                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue);
-                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue);
-                    cmd.Parameters.AddWithValue("@modelo", txtModelo.Text);
+                    // Adiciona os parâmetros                    
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
-                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue);
-                    cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue);
-                    cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text);
-                    cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text) ? (object)DBNull.Value : txtReb1.Text);
-                    cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text) ? (object)DBNull.Value : txtReb2.Text);
-                    cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedValue);
-                    cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedValue);
-                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue);
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text);
+                    cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text);
+                    cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
                     cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
+                    cmd.Parameters.AddWithValue("@capacidade", txtCap.Text);
                     cmd.Parameters.AddWithValue("@tara", txtTara.Text);
                     cmd.Parameters.AddWithValue("@tolerancia", txtTolerancia.Text);
-                    cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text);
-                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedValue);
-                    cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text);
-                    cmd.Parameters.AddWithValue("@transp", ddlTransportadora.SelectedValue);
-                    cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name); // Usuário atual
+                    cmd.Parameters.AddWithValue("@ptb", txtPBT.Text);
+                    cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name.ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now); // Corrigido para DateTime
                     cmd.Parameters.AddWithValue("@protocolocet", txtProtocolo.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue);
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
-                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedValue);
-                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedValue);
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
+                    //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
+                    //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlUfPlaca.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@cidplaca", txtCidPlaca.Text);                   
+                    cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
+                    cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
+                    cmd.Parameters.AddWithValue("@altura", txtAltura.Text);
+                    cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);                    
+                    cmd.Parameters.AddWithValue("@chassi", txtChassi.Text);                    
                     cmd.Parameters.AddWithValue("@id", idConvertido);
 
                     con.Open();
@@ -512,7 +541,7 @@ namespace NewCapit
 
                     if (rowsAffected > 0)
                     {
-                        string mensagem = $"Olá, {txtUsuCadastro.Text}! Código {txtCodTra.Text} atualizado com sucesso.";
+                        string mensagem = $"Olá, {txtAlteradoPor.Text}! Código {txtCodTra.Text} atualizado com sucesso.";
                         string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
@@ -530,14 +559,6 @@ namespace NewCapit
                 string script = $"alert('{mensagemErro}');";
                 ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
             }
-        }
-
-
-        protected void ddlTransportadora_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
-
-            txtCodTra.Text = cod_transp[0];
         }
         private void PreencherComboAgregados(string filtroCodTra = null)
         {
@@ -568,12 +589,12 @@ namespace NewCapit
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlTransportadora.DataSource = reader;
-                    ddlTransportadora.DataTextField = "Nome";
-                    ddlTransportadora.DataValueField = "codtra";
-                    ddlTransportadora.DataBind();
+                    ddlAgregados.DataSource = reader;
+                    ddlAgregados.DataTextField = "Nome";
+                    ddlAgregados.DataValueField = "codtra";
+                    ddlAgregados.DataBind();
 
-                    ddlTransportadora.Items.Insert(0, "Selecione Proprietário/Transportadora");
+                    ddlAgregados.Items.Insert(0, "");
 
                     // Feche o reader
                     reader.Close();
@@ -585,7 +606,6 @@ namespace NewCapit
                 }
             }
         }
-
         protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodMot.Text = ddlMotorista.SelectedValue;
@@ -619,7 +639,7 @@ namespace NewCapit
                             if (rowsAffected > 0)
                             {
                                 // Exibe mensagem de sucesso
-                                string nomeUsuario = txtUsuCadastro.Text;
+                                string nomeUsuario = txtAlteradoPor.Text;
                                 string mensagem = $"Olá, {nomeUsuario}!\nCódigo {txtCodMot.Text}, foi desvinculado do veículo com sucesso.";
                                 string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
                                 string successScript = $"alert('{mensagemCodificada}');";
@@ -642,5 +662,67 @@ namespace NewCapit
             }
         }
 
+        // Função para carregar o DropDownList com dados dos agregados
+        private void CarregarDDLAgregados()
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT ID, fantra FROM tbtransportadoras WHERE fl_exclusao is null AND ativa_inativa = 'ATIVO' ORDER BY fantra";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                ddlAgregados.DataSource = reader;
+                ddlAgregados.DataTextField = "fantra";  // Campo a ser exibido
+                ddlAgregados.DataValueField = "ID";  // Valor associado ao item
+                ddlAgregados.DataBind();
+
+                // Adicionar o item padrão
+                ddlAgregados.Items.Insert(0, new ListItem("", "0"));
+            }
+        }
+
+        // Evento disparado quando o item do DropDownList é alterado
+        protected void ddlAgregados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(ddlAgregados.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherCampos(idSelecionado);
+            }
+            else
+            {
+                LimparCampos();
+            }
+        }
+
+        // Função para preencher os campos com os dados do banco
+        private void PreencherCampos(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtCodTra.Text = reader["codtra"].ToString();
+                    //ddlAgregados.Text = reader["fantra"].ToString();
+                    txtAntt.Text = reader["antt"].ToString();
+                }
+            }
+        }
+
+        // Função para limpar os campos
+        private void LimparCampos()
+        {
+            txtCodTra.Text = string.Empty;
+            txtAntt.Text = string.Empty;
+        }
     }
 }

@@ -39,9 +39,9 @@ namespace NewCapit
                 }
 
                 DateTime dataHoraAtual = DateTime.Now;
-                txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
-                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-                PreencherComboAgregados();
+                //txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");                
+                CarregarDDLAgregados();
                 PreencherComboRastreadores();
                 PreencherComboFiliais();
                 PreencherComboMarcasVeiculos();
@@ -49,14 +49,6 @@ namespace NewCapit
                 PreencherComboRastreadores();
 
             }
-            
-            
-
-
-           
-
-
-
         }
         private void PreencherComboFiliais()
         {
@@ -82,7 +74,7 @@ namespace NewCapit
                     cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cbFiliais.DataBind();  // Realiza o binding dos dados                   
-
+                    cbFiliais.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -118,7 +110,7 @@ namespace NewCapit
                     ddlMarca.DataTextField = "marca";  // Campo que será mostrado no ComboBox
                     ddlMarca.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlMarca.DataBind();  // Realiza o binding dos dados                   
-
+                    ddlMarca.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -154,7 +146,7 @@ namespace NewCapit
                     ddlCor.DataTextField = "cor";  // Campo que será mostrado no ComboBox
                     ddlCor.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlCor.DataBind();  // Realiza o binding dos dados                   
-
+                    ddlCor.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -189,7 +181,9 @@ namespace NewCapit
                     ddlTecnologia.DataSource = reader;
                     ddlTecnologia.DataTextField = "nomRastreador";  // Campo que será mostrado no ComboBox
                     ddlTecnologia.DataValueField = "codRastreador";  // Campo que será o valor de cada item                    
-                    ddlTecnologia.DataBind();  // Realiza o binding dos dados                   
+                    ddlTecnologia.DataBind();  // Realiza o binding dos dados
+                                               
+                    ddlTecnologia.Items.Insert(0, new ListItem("", "0"));
 
                     // Feche o reader
                     reader.Close();
@@ -201,55 +195,7 @@ namespace NewCapit
                 }
             }
         }
-
-        private void PreencherComboAgregados(string filtroCodTra = null)
-        {
-            string query = "SELECT codtra, (CAST(codtra AS VARCHAR) + '-' + fantra) AS Nome FROM tbtransportadoras WHERE fl_exclusao IS NULL AND ativa_inativa = 'ATIVO'";
-
-            if (!string.IsNullOrEmpty(filtroCodTra))
-            {
-                query += " AND LTRIM(RTRIM(codtra)) = @codtra";
-            }
-
-            query += " ORDER BY fantra";
-
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
-
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    if (!string.IsNullOrEmpty(filtroCodTra))
-                    {
-                        cmd.Parameters.AddWithValue("@codtra", filtroCodTra);
-                    }
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlTransportadora.DataSource = reader;
-                    ddlTransportadora.DataTextField = "Nome";
-                    ddlTransportadora.DataValueField = "codtra";
-                    ddlTransportadora.DataBind();
-
-                    ddlTransportadora.Items.Insert(0, "Selecione Proprietário/Transportadora");
-
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
-
-
+                
         protected void btnVeiculo_Click(object sender, EventArgs e)
         {
             string cod = txtCodVei.Text;
@@ -262,7 +208,7 @@ namespace NewCapit
 
             if (dt.Rows.Count > 0)
             {
-                string retorno = "o código digitado já possui veículo vinculado!";
+                string retorno = "Frota: " + cod + ", já possui veículo vinculado!";
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");
@@ -271,30 +217,20 @@ namespace NewCapit
                 sb.Append("')};");
                 sb.Append("</script>");
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
+                txtCodVei.Text = "";
+                txtCodVei.Focus();
             }
             
+
         }
 
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
+           //string[] cod_transp = ddlAgregados.SelectedItem.ToString().Split('-');
             
-
-            string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
-
-            
-            string sql = @"
-                            INSERT INTO tbveiculos (
-                            id, codvei, tipvei, tipoveiculo, modelo, ano, nucleo, ativo_inativo, plavei, 
-                            rastreamento, codrastreador, rastreador, codtra, transp, 
-                            usucad, dtccad, protocolocet, venclicenciamento, marca, renavan, cor, 
-                            comunicacao, antt
-                        ) VALUES (
-                             @id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @nucleo, @ativo_inativo, @plavei, 
-                             @rastreamento, @codrastreador, @rastreador, @codtra, @transp, 
-                             @usucad, @dtccad, @protocolocet, @venclicenciamento, @marca, @renavan, @cor, 
-                             @comunicacao, @antt
-                        )";
+            string sql = @"INSERT INTO tbveiculos (id, codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo)
+              VALUES
+              (@id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo)";
 
             try
             {
@@ -303,28 +239,40 @@ namespace NewCapit
                 {
                     GerarNumero();
                     // Adicionando os parâmetros da inserção
-                    cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text);
-                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue);
-                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue);
-                    cmd.Parameters.AddWithValue("@modelo", txtModelo.Text);
-                    cmd.Parameters.AddWithValue("@ano", txtAno.Text);
-                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue);
-                    cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text);
-                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue);
-                    cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
-                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text);
-                    cmd.Parameters.AddWithValue("@transp", cod_transp[1]);
-                    cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text);
-                    cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocolo.Text);
-                    cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
-                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
+                    cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.Trim().ToUpper());                    
+                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@ano", txtAno.Text.Trim());
+                    cmd.Parameters.AddWithValue("@dtcvei", DateTime.Now.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@ativo_inativo", "ATIVO");
+                    cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text.Trim());
+                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));                    
+                    cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text.Trim());
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text.Trim());
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.ToString().Trim());
+                    cmd.Parameters.AddWithValue("@antt", txtAntt.Text.Trim());
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlUfPlaca.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@cidplaca", txtCidPlaca.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text.Trim());
+                    cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text.Trim());
+                    cmd.Parameters.AddWithValue("@largura", txtLargura.Text.Trim());
+                    cmd.Parameters.AddWithValue("@altura", txtAltura.Text.Trim());
+                    cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@controlepatrimonio", txtControlePatrimonio.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
+                    cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text.Trim());
                     cmd.Parameters.AddWithValue("@id", sequencia);
 
                     // Abrindo a conexão e executando a query
@@ -356,53 +304,7 @@ namespace NewCapit
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", scriptErro, true);
             }
         }
-
-
-        protected void ddlTransportadora_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string[] cod_transp = ddlTransportadora.SelectedItem.ToString().Split('-');
-
-            txtCodTra.Text = cod_transp[0];
-
-            string query = "SELECT antt FROM tbtransportadoras WHERE fl_exclusao IS NULL AND ativa_inativa = 'ATIVO'";
-
-          
-                query += " AND LTRIM(RTRIM(codtra)) ='" + cod_transp[0]+"'";
-           
-
-            query += " ORDER BY fantra";
-
-            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (SqlCommand cmd = new SqlCommand(query, con))
-            {
-                
-
-                DataTable dt = new DataTable();
-
-                using (SqlDataAdapter adpt = new SqlDataAdapter(cmd))
-                {
-                    con.Open();
-                    adpt.Fill(dt);
-                }
-
-                // Verifica se encontrou resultados
-                if (dt.Rows.Count == 0)
-                {
-                    // Log ou mensagem indicando que não encontrou o registro
-                    return;
-                }
-
-                DataRow row = dt.Rows[0];
-
-                // Método auxiliar para evitar exceções de valores nulos
-                string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
-
-                txtAntt.Text = GetValue(row, 0);
-                
-
-            }
-        }
-    
+               
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
@@ -423,5 +325,73 @@ namespace NewCapit
 
             con.Close();
         }
+
+        // Função para carregar o DropDownList com dados dos agregados
+        private void CarregarDDLAgregados()
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))            
+            {
+                conn.Open();
+                string query = "SELECT ID, fantra FROM tbtransportadoras WHERE fl_exclusao is null AND ativa_inativa = 'ATIVO' ORDER BY fantra"; 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                ddlAgregados.DataSource = reader;
+                ddlAgregados.DataTextField = "fantra";  // Campo a ser exibido
+                ddlAgregados.DataValueField = "ID";  // Valor associado ao item
+                ddlAgregados.DataBind();
+
+                // Adicionar o item padrão
+                ddlAgregados.Items.Insert(0, new ListItem("", "0"));
+            }
+        }
+
+        // Evento disparado quando o item do DropDownList é alterado
+        protected void ddlAgregados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(ddlAgregados.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherCampos(idSelecionado);
+            }
+            else
+            {
+                LimparCampos();
+            }
+        }
+
+        // Função para preencher os campos com os dados do banco
+        private void PreencherCampos(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtCodTra.Text = reader["codtra"].ToString();
+                    //ddlAgregados.Text = reader["fantra"].ToString();
+                    txtAntt.Text = reader["antt"].ToString();
+                }
+            }
+        }
+
+        // Função para limpar os campos
+        private void LimparCampos()
+        {
+            txtCodTra.Text = string.Empty;
+            txtAntt.Text = string.Empty;
+        }
+
+
+
+
+
     }
 }

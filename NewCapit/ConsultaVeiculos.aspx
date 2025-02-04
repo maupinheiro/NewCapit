@@ -249,48 +249,48 @@ function ConfirmMessage() {
                               <li>
                                   <span>CNT: </span> 
                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+                                    <asp:Label ID="lbTerCNT" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                               <li>
                                   <span>SBC: </span> 
                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    <asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+                                    <asp:Label ID="lbTerSBC" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                               <li><span>MATRIZ: </span>
                                     <span class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                        <asp:Label ID="Label3" runat="server" Text=""></asp:Label>
+                                        <asp:Label ID="lbTerMatriz" runat="server" Text=""></asp:Label>
                                     </span>
                               </li>
                               <li><span>TAUBATÉ: </span>
                                     <span class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        <asp:Label ID="Label4" runat="server" Text=""></asp:Label>
+                                        <asp:Label ID="lbTerTaubate" runat="server" Text=""></asp:Label>
                                     </span>
                               </li>
                               <li><span>IPIRANGA: </span>
                                  <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    <asp:Label ID="Label5" runat="server" Text=""></asp:Label>
+                                    <asp:Label ID="lbTerIpiranga" runat="server" Text=""></asp:Label>
                                  </span>
                               </li>
                               <li><span>SÃO CARLOS: </span>
                                      <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        <asp:Label ID="Label6" runat="server" Text=""></asp:Label>
+                                        <asp:Label ID="lbTerSCarlos" runat="server" Text=""></asp:Label>
                                      </span>
                                </li>
                               <li><span>PR - PARANÁ: </span>
                                      <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
-                                        <asp:Label ID="Label7" runat="server" Text=""></asp:Label>
+                                        <asp:Label ID="lbTerPR" runat="server" Text=""></asp:Label>
                                      </span>
                               </li>
                               <li><span>PE - PERNAMBUCO: </span>
                                 <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                    <asp:Label ID="Label8" runat="server" Text=""></asp:Label>
+                                    <asp:Label ID="lbTerPE" runat="server" Text=""></asp:Label>
                                 </span>
                               </li>
                               <li><span>MG - MINAS GERAIS: </span>
                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                      <asp:Label ID="Label9" runat="server" Text=""></asp:Label>
+                                      <asp:Label ID="lbTerMG" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                           </ul>
@@ -302,164 +302,15 @@ function ConfirmMessage() {
         </div>
 </div>
         </div>
-        <!-- Terceiros CNT -->
-        <div class="col-xl-2 col-md-6 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Terceiros - CNTi
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
-                        </div>
-                <!-- Sub menu terceiros -->
-                        <%--<div class="col-auto">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="">                            
-                            <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-truck fa-2x text-gray-300"></i>
-                            <span class=" fa fa-angle-down"></span>
-                          </>                               
-                          <ul class="dropdown-menu dropdown-usermenu pull-right">
-                              <li>
-                                  <span>CNT: </span> 
-                                  <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    <asp:Label ID="TCNT" runat="server" Text=""></asp:Label>
-                                  </span>
-                              </li>
-                              <li>
-                                  <span>SBC: </span> 
-                                  <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    <asp:Label ID="TSBC" runat="server" Text=""></asp:Label>
-                                  </span>
-                              </li>
-                              <li><span>MATRIZ: </span>
-                                    <span class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                        <asp:Label ID="TMatriz" runat="server" Text=""></asp:Label>
-                                    </span>
-                              </li>
-                              <li><span>TAUBATÉ: </span>
-                                    <span class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        <asp:Label ID="TTaubate" runat="server" Text=""></asp:Label>
-                                    </span>
-                              </li>
-                              <li><span>IPIRANGA: </span>
-                                 <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    <asp:Label ID="TIpiranga" runat="server" Text=""></asp:Label>
-                                 </span>
-                              </li>
-                              <li><span>SÃO CARLOS: </span>
-                                     <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        <asp:Label ID="TSC" runat="server" Text=""></asp:Label>
-                                     </span>
-                               </li>
-                              <li><span>PR - PARANÁ: </span>
-                                     <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
-                                        <asp:Label ID="TPR" runat="server" Text=""></asp:Label>
-                                     </span>
-                              </li>
-                              <li><span>PE - PERNAMBUCO: </span>
-                                <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                    <asp:Label ID="TPE" runat="server" Text=""></asp:Label>
-                                </span>
-                              </li>
-                              <li><span>MG - MINAS GERAIS: </span>
-                                  <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                      <asp:Label ID="TMG" runat="server" Text=""></asp:Label>
-                                  </span>
-                              </li>
-                          </ul>
-                        </li>
-                    </ul>
-                        </div>--%>
-                <!-- Fim do sub menu frota -->
-                    </div>
-                </div>
-            </div>
-                    </div>
-        <!-- Agregados MINAS -->
-        <div class="col-xl-2 col-md-6 mb-4">
-            <div class="card border-left-secondary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                Agregados - CNTi
-                    </div>                           
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
-                </div>
-                <!-- Sub menu terceiros -->
-                <div class="col-auto">                            
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="">                            
-                            <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-truck fa-2x text-gray-300"></i>
-                            <span class=" fa fa-angle-down"></span>
-                          </>                               
-                          <ul class="dropdown-menu dropdown-usermenu pull-right">
-                              <li>
-                                  <span>CNT: </span> 
-                                  <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    <asp:Label ID="TCNT" runat="server" Text=""></asp:Label>
-                                  </span>
-                              </li>
-                              <li>
-                                  <span>SBC: </span> 
-                                  <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    <asp:Label ID="TSBC" runat="server" Text=""></asp:Label>
-                                  </span>
-                              </li>
-                              <li><span>MATRIZ: </span>
-                                    <span class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                        <asp:Label ID="TMatriz" runat="server" Text=""></asp:Label>
-                                    </span>
-                              </li>
-                              <li><span>TAUBATÉ: </span>
-                                    <span class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        <asp:Label ID="TTaubate" runat="server" Text=""></asp:Label>
-                                    </span>
-                              </li>
-                              <li><span>IPIRANGA: </span>
-                                 <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    <asp:Label ID="TIpiranga" runat="server" Text=""></asp:Label>
-                                 </span>
-                              </li>
-                              <li><span>SÃO CARLOS: </span>
-                                     <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        <asp:Label ID="TSC" runat="server" Text=""></asp:Label>
-                                     </span>
-                               </li>
-                              <li><span>PR - PARANÁ: </span>
-                                     <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
-                                        <asp:Label ID="TPR" runat="server" Text=""></asp:Label>
-                                     </span>
-                              </li>
-                              <li><span>PE - PERNAMBUCO: </span>
-                                <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                    <asp:Label ID="TPE" runat="server" Text=""></asp:Label>
-                                </span>
-                              </li>
-                              <li><span>MG - MINAS GERAIS: </span>
-                                  <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                      <asp:Label ID="TMG" runat="server" Text=""></asp:Label>
-                                  </span>
-                              </li>
-                          </ul>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Fim do sub menu frota -->
-            </div>
-        </div>
-</div>
-        </div>
+        
+    </div>
+       
 
         <!-- Grid -->
         <div class="card shadow mb-4">        
             <div class="card-body">
                 <div class="table-responsive">              
-                    <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
+                    <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
                         <Columns>                        
                             <asp:BoundField DataField="codvei" HeaderText="#ID" />
                             <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
@@ -503,7 +354,7 @@ function ConfirmMessage() {
             </div>
         </div>
 
-    </div>
+    
     <!-- JavaScript -->
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="src/javascript/script.js"></script>

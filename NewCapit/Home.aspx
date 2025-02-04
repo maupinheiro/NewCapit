@@ -3,14 +3,14 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    
 
-    
+
+
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-left justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800"> Visão Geral das Filiais</h1>
+        <h1 class="h3 mb-0 text-gray-800">Visão Geral das Filiais</h1>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-map-marker-alt fa-sm text-white-50"></i> Veículos no Mapa
+            <i class="fas fa-map-marker-alt fa-sm text-white-50"></i>Veículos no Mapa
         </a>
     </div>
 
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="dashboard_graph">
@@ -121,9 +121,9 @@
                             </div>
                         </div>
                     </div>
-		            <div class="col-md-2">
-                        <div id="dataFinal" class="pull-right">                      
-		                    <div class="form-group">
+                    <div class="col-md-2">
+                        <div id="dataFinal" class="pull-right">
+                            <div class="form-group">
                                 <input type="date" class="form-control" id="input_final">
                             </div>
                         </div>
@@ -131,19 +131,19 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
     <div class="row">
-         <!-- Content Column -->
+        <!-- Content Column -->
         <div class="col-lg-3 mb-4">
             <!-- Project Card Example -->
             <div class="card shadow mb-3">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Entregas</h6>
+                    <h6 class="m-0 font-weight-bold text-danger">Entregas</h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small font-weight-bold">Matriz <span class="float-right">1220</span></h4> 
+                    <h4 class="small font-weight-bold">Matriz <span class="float-right">1220</span></h4>
                     <div class="progress mb-3">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 20%"
                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
@@ -161,7 +161,7 @@
                     </div>
                     <h4 class="small font-weight-bold">CNT <span class="float-right">80</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 80%"
                             aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
@@ -174,62 +174,127 @@
                     <br />
                     <h4 class="small font-weight-bold">SBC <span class="float-right">20</span></h4>
                     <div class="progress">
-                         <div class="progress-bar bg-secondary" role="progressbar" style="width: 20%"
-                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                         </div>
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 20%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <br />
                     <h4 class="small font-weight-bold">Paraná <span class="float-right">20</span></h4>
                     <div class="progress">
-                         <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"
-                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                         </div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <br />
                     <h4 class="small font-weight-bold">São Carlos <span class="float-right">20</span></h4>
                     <div class="progress">
-                         <div class="progress-bar bg-primary" role="progressbar" style="width: 20%"
-                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                         </div>
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 20%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
                     </div>
                     <!-- aqui -->
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 mb-4">           
-             <div class="card shadow mb-4">                
-                 <div
-                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                     <h6 class="m-0 font-weight-bold text-primary">Carregamento</h6>                    
-                 </div>
-                 <!-- Card Body -->
-                 <div class="card-body">
-                     <div class="chart-pie pt-4 pb-2">
-                         <canvas id="myPieChart"></canvas>
-                     </div>
-                     <div class="mt-4 text-center small">                         
-                         <span class="mr-2">
-                             <i class="fas fa-circle text-primary"></i> Ag. Carreg.
-                         </span>
-                         <span class="mr-2">
-                             <i class="fas fa-circle text-success"></i> Ag. Descarga
-                         </span>
-                         <span class="mr-2">
-                             <i class="fas fa-circle text-info"></i> Em Transito
-                         </span>
-                         <br />
-                         <span class="mr-2">
-                             <i class="fas fa-circle text-warning"></i> Carregando
-                         </span>                         
+        <div class="col-lg-6 mb-4">
+            <!-- grafico de dias -->
+            <canvas id="myChart2"></canvas>
+            <canvas id="myChart3"></canvas>
+
+
+
+        </div>
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow mb-4">
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-danger">Carregamento</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="myPieChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
                         <span class="mr-2">
-                            <i class="fas fa-circle text-danger"></i> Concluido
+                            <i class="fas fa-circle text-primary"></i>Ag. Carreg.
                         </span>
-                     </div>
-                 </div>
-             </div>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i>Ag. Descarga
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i>Em Transito
+                        </span>
+                        <br />
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-warning"></i>Carregando
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-danger"></i>Concluido
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow mb-12">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-danger">Transportes </h6>
+                </div>
+                <div class="card-body">
+                    <h4 class="small font-weight-bold">Frota <span class="float-right">20</span></h4>
+                    <div class="progress">
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 20%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <br />
+                    <h4 class="small font-weight-bold">Agregados <span class="float-right">20</span></h4>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <br />
+                    <h4 class="small font-weight-bold">Terceiros <span class="float-right">20</span></h4>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 20%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart2');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
     
 
-  
+
 </asp:Content>

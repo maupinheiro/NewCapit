@@ -160,7 +160,7 @@
     <div class="card shadow mb-4">        
         <div class="card-body">
             <div class="table-responsive">              
-                <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
+                <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" >
                     <Columns>                        
                         <asp:BoundField DataField="id" HeaderText="#ID" />
                         <asp:BoundField DataField="codcli" HeaderText="CÓDIGO" />

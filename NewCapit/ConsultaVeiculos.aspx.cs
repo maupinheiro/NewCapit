@@ -152,6 +152,81 @@ namespace NewCapit
             con.Close();
             FrotaPR.Text = dtDistPR.Rows[0][0].ToString();
 
+
+            // Distribuição de terceiros por nucleo
+            string sqlDistTerCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='TERCEIRO' and nucleo = 'CNT' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerCNT = new SqlDataAdapter(sqlDistTerCNT, con);
+            DataTable dtDistTerCNT = new DataTable();
+            con.Open();
+            adptDistTerCNT.Fill(dtDistTerCNT);
+            con.Close();
+            lbTerCNT.Text = dtDistTerCNT.Rows[0][0].ToString();
+
+            string sqlDistTerMinas = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'MG - MINAS GERAIS' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerMinas = new SqlDataAdapter(sqlDistTerMinas, con);
+            DataTable dtDistTerMinas = new DataTable();
+            con.Open();
+            adptDistTerMinas.Fill(dtDistTerMinas);
+            con.Close();
+            lbTerMG.Text = dtDistTerMinas.Rows[0][0].ToString();
+
+            string sqlDistTerMatriz = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'MATRIZ' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerMatriz = new SqlDataAdapter(sqlDistTerMatriz, con);
+            DataTable dtDistTerMatriz = new DataTable();
+            con.Open();
+            adptDistTerMatriz.Fill(dtDistTerMatriz);
+            con.Close();
+            lbTerMatriz.Text = dtDistTerMatriz.Rows[0][0].ToString();
+
+            string sqlDistTerIpiranga = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'IPIRANGA' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerIpiranga = new SqlDataAdapter(sqlDistTerIpiranga, con);
+            DataTable dtDistTerIpiranga = new DataTable();
+            con.Open();
+            adptDistTerIpiranga.Fill(dtDistTerIpiranga);
+            con.Close();
+            lbTerIpiranga.Text = dtDistTerIpiranga.Rows[0][0].ToString();
+
+            string sqlDistTerPE = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'PE - PERNAMBUCO' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerPE = new SqlDataAdapter(sqlDistTerPE, con);
+            DataTable dtDistTerPE = new DataTable();
+            con.Open();
+            adptDistTerPE.Fill(dtDistTerPE);
+            con.Close();
+            lbTerPE.Text = dtDistTerPE.Rows[0][0].ToString();
+
+            string sqlDistTerSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'SBC' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerSBC = new SqlDataAdapter(sqlDistTerSBC, con);
+            DataTable dtDistTerSBC = new DataTable();
+            con.Open();
+            adptDistTerSBC.Fill(dtDistTerSBC);
+            con.Close();
+            lbTerSBC.Text = dtDistTerSBC.Rows[0][0].ToString();
+
+            string sqlDistTerTaubate = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'TAUBATE' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerTaubate = new SqlDataAdapter(sqlDistTerTaubate, con);
+            DataTable dtDistTerTaubate = new DataTable();
+            con.Open();
+            adptDistTerTaubate.Fill(dtDistTerTaubate);
+            con.Close();
+            lbTerTaubate.Text = dtDistTerTaubate.Rows[0][0].ToString();
+
+            string sqlDistTerSCarlos = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'SAO CARLOS' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerSCarlos = new SqlDataAdapter(sqlDistTerSCarlos, con);
+            DataTable dtDistTerSCarlos = new DataTable();
+            con.Open();
+            adptDistTerSCarlos.Fill(dtDistTerSCarlos);
+            con.Close();
+            lbTerSCarlos.Text = dtDistTerSCarlos.Rows[0][0].ToString();
+
+            string sqlDistTerPR = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'PR - PARANA' and fl_exclusao is null";
+            SqlDataAdapter adptDistTerPR = new SqlDataAdapter(sqlDistTerPR, con);
+            DataTable dtDistTerPR = new DataTable();
+            con.Open();
+            adptDistTerPR.Fill(dtDistTerPR);
+            con.Close();
+            lbTerPR.Text = dtDistTerPR.Rows[0][0].ToString();
+
+
             // Distribuição de agregados por nucleo
             string sqlDistAgCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='AGREGADO' and nucleo = 'CNT' and fl_exclusao is null";
             SqlDataAdapter adptDistAgCNT = new SqlDataAdapter(sqlDistAgCNT, con);
@@ -225,78 +300,6 @@ namespace NewCapit
             con.Close();
             AgPR.Text = dtDistAgPR.Rows[0][0].ToString();
 
-            // Distribuição de terceiros por nucleo
-            string sqlDistTCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='TERCEIRO' and nucleo = 'CNT' and fl_exclusao is null";
-            SqlDataAdapter adptDistTCNT = new SqlDataAdapter(sqlDistTCNT, con);
-            DataTable dtDistTCNT = new DataTable();
-            con.Open();
-            adptDistTCNT.Fill(dtDistTCNT);
-            con.Close();
-            TCNT.Text = dtDistTCNT.Rows[0][0].ToString();
-
-            string sqlDistTMG = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'MG - MINAS GERAIS' and fl_exclusao is null";
-            SqlDataAdapter adptDistTMG = new SqlDataAdapter(sqlDistTMG, con);
-            DataTable dtDistTMG = new DataTable();
-            con.Open();
-            adptDistTMG.Fill(dtDistTMG);
-            con.Close();
-            TMG.Text = dtDistTMG.Rows[0][0].ToString();
-
-            string sqlDistTMatriz = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'MATRIZ' and fl_exclusao is null";
-            SqlDataAdapter adptDistTMatriz = new SqlDataAdapter(sqlDistTMatriz, con);
-            DataTable dtDistTMatriz = new DataTable();
-            con.Open();
-            adptDistTMatriz.Fill(dtDistTMatriz);
-            con.Close();
-            TMatriz.Text = dtDistTMatriz.Rows[0][0].ToString();
-
-            string sqlDistTIpiranga = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'IPIRANGA' and fl_exclusao is null";
-            SqlDataAdapter adptDistTIpiranga = new SqlDataAdapter(sqlDistTIpiranga, con);
-            DataTable dtDistTIpiranga = new DataTable();
-            con.Open();
-            adptDistTIpiranga.Fill(dtDistTIpiranga);
-            con.Close();
-            TIpiranga.Text = dtDistTIpiranga.Rows[0][0].ToString();
-
-            string sqlDistTPE = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'PE - PERNAMBUCO' and fl_exclusao is null";
-            SqlDataAdapter adptDistTPE = new SqlDataAdapter(sqlDistTPE, con);
-            DataTable dtDistTPE = new DataTable();
-            con.Open();
-            adptDistTPE.Fill(dtDistTPE);
-            con.Close();
-            TPE.Text = dtDistTPE.Rows[0][0].ToString();
-
-            string sqlDistTSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'SBC' and fl_exclusao is null";
-            SqlDataAdapter adptDistTSBC = new SqlDataAdapter(sqlDistTSBC, con);
-            DataTable dtDistTSBC = new DataTable();
-            con.Open();
-            adptDistTSBC.Fill(dtDistTSBC);
-            con.Close();
-            TSBC.Text = dtDistTSBC.Rows[0][0].ToString();
-
-            string sqlDistTTaubate = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'TAUBATE' and fl_exclusao is null";
-            SqlDataAdapter adptDistTTaubate = new SqlDataAdapter(sqlDistTTaubate, con);
-            DataTable dtDistTTaubate = new DataTable();
-            con.Open();
-            adptDistTTaubate.Fill(dtDistTTaubate);
-            con.Close();
-            TTaubate.Text = dtDistTTaubate.Rows[0][0].ToString();
-
-            string sqlDistTSC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'SAO CARLOS' and fl_exclusao is null";
-            SqlDataAdapter adptDistTSC = new SqlDataAdapter(sqlDistTSC, con);
-            DataTable dtDistTSC = new DataTable();
-            con.Open();
-            adptDistTSC.Fill(dtDistTSC);
-            con.Close();
-            TSC.Text = dtDistTSC.Rows[0][0].ToString();
-
-            string sqlDistTPR = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'PR - PARANA' and fl_exclusao is null";
-            SqlDataAdapter adptDistTPR = new SqlDataAdapter(sqlDistTPR, con);
-            DataTable dtDistTPR = new DataTable();
-            con.Open();
-            adptDistTPR.Fill(dtDistTPR);
-            con.Close();
-            TPR.Text = dtDistTPR.Rows[0][0].ToString();
 
 
         }

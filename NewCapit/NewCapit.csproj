@@ -84,6 +84,7 @@
     <Content Include="css\styleCadastros.css" />
     <Content Include="css\styleLogin.css" />
     <Content Include="css\styleMototistas.css" />
+    <Content Include="css\StyleSelect2.css" />
     <Content Include="Default.aspx" />
     <Content Include="fotos\1010.JPG" />
     <Content Include="fotos\1070.JPG" />
@@ -366,7 +367,7 @@
     <Content Include="fotos\T8717.JPG" />
     <Content Include="fotos\T8718.JPG" />
     <Content Include="fotos\TNG30649.PNG" />
-    <Content Include="fotos\TNG30976.JPG" />
+    <Content Include="fotos\3.JPG" />
     <Content Include="fotos\TNG31610.JPG" />
     <Content Include="fotos\TNG31626.JPG" />
     <Content Include="fotos\TNG31691.JPG" />

@@ -106,7 +106,7 @@ namespace NewCapit
             veiculosAtivos.Text = dt3.Rows[0][0].ToString();
 
             // clientes na região Centro-Oeste
-            string sql4 = "select count(*) from tbtransportadoras where ativa_inativa = 'INATIVO' ";
+            string sql4 = "select count(*) from tbtransportadoras where ativa_inativa = 'ATIVO' ";
             SqlDataAdapter adpt4 = new SqlDataAdapter(sql4, con);
             DataTable dt4 = new DataTable();
             con.Open();
