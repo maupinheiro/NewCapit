@@ -23,5 +23,8 @@ namespace Domain
         public string foto_usuario { get; set;}
 
         public string nm_nome { get; set;}
+        public string fl_permissao { get; set; }
+
+
     }
 }

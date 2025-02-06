@@ -43,6 +43,26 @@ namespace NewCapit
                 {
                     lblEmpresa.Text = "<Empresa>";
                 }
+
+                if (Session["PermissaoUsuario"] != null)
+                {
+                    // Converte a string '1,2,3,4,5,6,7,8' em uma lista de inteiros
+                    List<int> modulosUsuario = Session["PermissaoUsuario"].ToString()
+                        .Split(',')  // Divide a string por vírgulas
+                        .Select(int.Parse)  // Converte cada item para inteiro
+                        .ToList();  // Converte para lista de inteiros
+
+                    // Controle de visibilidade dos menus
+                    ClientesMenu.Visible = modulosUsuario.Contains(1);
+                    TransportadorasMenu.Visible = modulosUsuario.Contains(2);
+                    VeiculosMenu.Visible = modulosUsuario.Contains(3);
+                    MotoristasMenu.Visible = modulosUsuario.Contains(4);
+                    CargasMenu.Visible = modulosUsuario.Contains(5);
+                    EntregasMenu.Visible = modulosUsuario.Contains(6);
+                    DocumentosMenu.Visible = modulosUsuario.Contains(7);
+                    SistemaMenu.Visible = modulosUsuario.Contains(8);
+                }
+
             }
             id_usuario = (string)Session["CodUsuario"];
             String path = Server.MapPath("~/fotos/");
@@ -55,6 +75,8 @@ namespace NewCapit
             {
                 foto = "fotos/usuario.jpg";
             }
+           
+           
         }
     }
 }
