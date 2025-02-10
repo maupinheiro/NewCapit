@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Nav Item - Pages Clientes Menu -->
-                <li class="nav-item">
+                <li id="ClientesMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                         aria-expanded="true" aria-controls="collapseTwo">
                         <i class="fas fa-warehouse"></i>
@@ -89,7 +89,7 @@
                 </li>
 
                 <!-- Nav Item - Proprietários Menu -->
-                <li class="nav-item">
+                <li id="TransportadorasMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransportadoras"
                         aria-expanded="true" aria-controls="collapseTransportadoras">
                         <i class="fas fa-truck"></i>
@@ -110,7 +110,7 @@
                 </li>
 
                 <!-- Nav Item - Veículos Menu -->
-                <li class="nav-item">
+                <li id="VeiculosMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVeiculos"
                         aria-expanded="true" aria-controls="collapseVeiculos">
                         <i class="fas fa-shipping-fast"></i>
@@ -152,7 +152,7 @@
                 </div>
                 -->
                 <!-- Nav Item - Motoristas Collapse Menu -->
-                <li class="nav-item">
+                <li id="MotoristasMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                         aria-expanded="true" aria-controls="collapsePages">
                         <i class="fas fa-id-card"></i>
@@ -178,7 +178,7 @@
                 </li>
 
                 <!-- Nav Item - Cargas Menu -->
-                <li class="nav-item">
+                <li id="CargasMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCargas"
                         aria-expanded="true" aria-controls="collapseCargas">
                         <i class="fas fa-pallet"></i>
@@ -201,7 +201,7 @@
                 </li>
                 
                 <!-- Nav Item - Entregas Menu -->
-                <li class="nav-item">
+                <li id="EntregasMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEntregas"
                         aria-expanded="true" aria-controls="collapseEntregas">
                         <i class="fas fa-shipping-fast"></i>
@@ -223,7 +223,7 @@
                 </li>
 
                 <!-- Nav Item - Documentos Menu -->
-                <li class="nav-item">
+                <li id="DocumentosMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDocumentos"
                         aria-expanded="true" aria-controls="collapseDocumentos">
                         <i class="fas fa-fw fa-folder"></i>
@@ -245,7 +245,7 @@
                 </li>
 
                 <!-- Nav Item - Sistema Menu -->
-                <li class="nav-item">
+                <li id="SistemaMenu" runat="server" class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSistema"
                         aria-expanded="true" aria-controls="collapseSistema">
                         <i class="fas fa-fw fa-cog"></i>
