@@ -6,7 +6,7 @@
 
     <div class="container mt-5">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i>TRANSPORTADOR
+            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> TRANSPORTADOR
             </h3>
             <h3>NOVO CADASTRO</h3>
         </div>

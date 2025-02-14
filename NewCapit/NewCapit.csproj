@@ -381,9 +381,11 @@
     <Content Include="fotos\user.png" />
     <Content Include="fotos\T7670.jpeg" />
     <Content Include="Frm_AltClientes.aspx" />
+    <Content Include="Frm_AltMotoristas.aspx" />
     <Content Include="Frm_AltVeiculos.aspx" />
     <Content Include="Frm_CadClientes.aspx" />
     <Content Include="Frm_AltTransportadoras.aspx" />
+    <Content Include="Frm_CadMotoristas.aspx" />
     <Content Include="Frm_CadTransportadoras.aspx" />
     <Content Include="Frm_CadVeiculos.aspx" />
     <Content Include="Global.asax" />
@@ -4332,6 +4334,13 @@
     <Compile Include="Frm_AltClientes.aspx.designer.cs">
       <DependentUpon>Frm_AltClientes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Frm_AltMotoristas.aspx.cs">
+      <DependentUpon>Frm_AltMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Frm_AltMotoristas.aspx.designer.cs">
+      <DependentUpon>Frm_AltMotoristas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Frm_AltVeiculos.aspx.cs">
       <DependentUpon>Frm_AltVeiculos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4352,6 +4361,13 @@
     </Compile>
     <Compile Include="Frm_AltTransportadoras.aspx.designer.cs">
       <DependentUpon>Frm_AltTransportadoras.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_CadMotoristas.aspx.cs">
+      <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Frm_CadMotoristas.aspx.designer.cs">
+      <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Frm_CadTransportadoras.aspx.cs">
       <DependentUpon>Frm_CadTransportadoras.aspx</DependentUpon>

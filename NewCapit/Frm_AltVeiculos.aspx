@@ -313,7 +313,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
-                    <asp:TextBox ID="txtCodMot" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4"></asp:TextBox>
+                    <asp:TextBox ID="txtCodMot" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-4">

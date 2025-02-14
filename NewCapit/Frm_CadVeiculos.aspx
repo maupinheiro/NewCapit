@@ -256,7 +256,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
-                    <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4" AutoPostBack="true"></asp:TextBox>
+                    <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
                 </div>
             </div>
 
