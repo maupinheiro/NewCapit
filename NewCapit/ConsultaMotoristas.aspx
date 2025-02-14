@@ -8,8 +8,8 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-2 text-gray-800">
             <i class="fas fa-address-card"></i> Consulta Motoristas</h1>
-        <a href="Frm_CadTransportadoras.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="far fa-address-card"></i> Novo Cadastro
+        <a href="Frm_CadMotoristas.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-user-plus"></i> Novo Cadastro
         </a>
     </div>
     <!-- Content Graficos -->
