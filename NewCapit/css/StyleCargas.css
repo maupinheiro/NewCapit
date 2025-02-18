@@ -1,0 +1,5 @@
+﻿/* Remover a barra de rolagem vertical */
+.dropdownlist-no-scroll {
+    overflow-y: hidden; /* Remove a rolagem vertical */
+    height: auto; /* Ajuste a altura conforme necessário */
+}
