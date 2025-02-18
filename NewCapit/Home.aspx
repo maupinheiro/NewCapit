@@ -1,22 +1,18 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="NewCapit.Home1" %>
 
-<%@ Register assembly="DevExpress.Web.Bootstrap.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.Bootstrap" tagprefix="dx" %>
-<%@ Register assembly="DevExpress.Web.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web" tagprefix="dx" %>
+<%@ Register Assembly="DevExpress.Web.Bootstrap.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.Bootstrap" TagPrefix="dx" %>
+<%@ Register Assembly="DevExpress.Web.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-
-
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-left justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Visão Geral das Filiais</h1>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-map-marker-alt fa-sm text-white-50"></i>Veículos no Mapa
+            <i class="fas fa-map-marker-alt fa-sm text-white-50"></i>&nbsp;Veículos no Mapa
         </a>
     </div>
-
     <!-- Content Row -->
     <div class="row">
         <!-- Total Entregas -->
@@ -108,176 +104,45 @@
             </div>
         </div>
     </div>
+    <!-- Graficos -->
+    <div class="col-md-12 col-sm-12 col-xs-12">
 
-    <div class="row">
+
+        <div class="row x_title">
+            <div class="col-md-8">
+                <h3>Resumo Atividades</h3>
+            </div>
+            <div class="col-md-2">
+                <div id="dataInicial" class="pull-right">
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="input_inicial">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div id="dataFinal" class="pull-right">
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="input_final">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  graficos de entregas por dias -->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="dashboard_graph">
-                <div class="row x_title">
-                    <div class="col-md-8">
-                        <h3>Resumo de Atividades</h3>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div id="dataInicial" class="pull-right">
-                            <div class="form-group">
-                                <input type="date" class="form-control" id="input_inicial">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div id="dataFinal" class="pull-right">
-                            <div class="form-group">
-                                <input type="date" class="form-control" id="input_final">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="demo-placeholder">            
+                <canvas id="chart_plot_02"></canvas>
             </div>
+
+
         </div>
+        <br>
     </div>
-    <div class="row">
-        <!-- Content Column -->
-        <div class="col-lg-3 mb-4">
-            <!-- Project Card Example -->
-            <div class="card shadow mb-3">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-danger">Entregas</h6>
-                </div>
-                <div class="card-body">
-                    <h4 class="small font-weight-bold">Matriz <span class="float-right">1220</span></h4>
-                    <div class="progress mb-3">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 20%"
-                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <h4 class="small font-weight-bold">Minas <span class="float-right">40</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <h4 class="small font-weight-bold">Pernambuco <span class="float-right">60</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <h4 class="small font-weight-bold">CNT <span class="float-right">80</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 80%"
-                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <h4 class="small font-weight-bold">Taubaté <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <br />
-                    <h4 class="small font-weight-bold">SBC <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <br />
-                    <h4 class="small font-weight-bold">Paraná <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <br />
-                    <h4 class="small font-weight-bold">São Carlos <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <!-- aqui -->
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-            <!-- grafico de dias -->
-            <canvas id="myChart2"></canvas>
-            <canvas id="myChart3"></canvas>
+    <!-- Fim dos Graficos
 
 
 
-        </div>
-        <div class="col-lg-3 mb-4">
-            <div class="card shadow mb-4">
-                <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-danger">Carregamento</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i>Ag. Carreg.
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i>Ag. Descarga
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i>Em Transito
-                        </span>
-                        <br />
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-warning"></i>Carregando
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-danger"></i>Concluido
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 mb-4">
-            <div class="card shadow mb-12">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-danger">Transportes </h6>
-                </div>
-                <div class="card-body">
-                    <h4 class="small font-weight-bold">Frota <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <br />
-                    <h4 class="small font-weight-bold">Agregados <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <br />
-                    <h4 class="small font-weight-bold">Terceiros <span class="float-right">20</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: 20%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-
-
-
-    </div>
-    
+    <!--
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('myChart2');
@@ -302,7 +167,7 @@
         });
     </script>
 
-    
+ -->
 
 
 </asp:Content>
