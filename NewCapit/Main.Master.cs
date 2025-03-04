@@ -53,14 +53,14 @@ namespace NewCapit
                         .ToList();  // Converte para lista de inteiros
 
                     // Controle de visibilidade dos menus
-                    ClientesMenu.Visible = modulosUsuario.Contains(1);
-                    TransportadorasMenu.Visible = modulosUsuario.Contains(2);
-                    VeiculosMenu.Visible = modulosUsuario.Contains(3);
-                    MotoristasMenu.Visible = modulosUsuario.Contains(4);
-                    CargasMenu.Visible = modulosUsuario.Contains(5);
-                    EntregasMenu.Visible = modulosUsuario.Contains(6);
-                    DocumentosMenu.Visible = modulosUsuario.Contains(7);
-                    SistemaMenu.Visible = modulosUsuario.Contains(8);
+                    //ClientesMenu.Visible = modulosUsuario.Contains(1);
+                    //TransportadorasMenu.Visible = modulosUsuario.Contains(2);
+                    //VeiculosMenu.Visible = modulosUsuario.Contains(3);
+                    //MotoristasMenu.Visible = modulosUsuario.Contains(4);
+                    //CargasMenu.Visible = modulosUsuario.Contains(5);
+                    //EntregasMenu.Visible = modulosUsuario.Contains(6);
+                    //DocumentosMenu.Visible = modulosUsuario.Contains(7);
+                    //SistemaMenu.Visible = modulosUsuario.Contains(8);
                 }
 
             }
