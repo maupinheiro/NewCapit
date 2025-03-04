@@ -53,7 +53,7 @@ namespace NewCapit
                     Session["PermissaoUsuario"] = permissaoUsuario;
 
                     //Chama a página principal
-                    Response.Redirect("Home.aspx");
+                    Response.Redirect("/dist/pages/Home.aspx");
                 }
                 else 
                 {

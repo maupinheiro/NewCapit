@@ -17,31 +17,31 @@ namespace NewCapit
             if (!IsPostBack) {
                 if (Session["UsuarioLogado"] != null) {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    lblUsuario.Text = nomeUsuario;
+                    //lblUsuario.Text = nomeUsuario;
                 }
                 else
                 {
-                    lblUsuario.Text = "<Usuário>";
+                    //lblUsuario.Text = "<Usuário>";
                 }
 
                 if (Session["FuncaoUsuario"] != null)
                 {
                     string nomeFuncao = Session["FuncaoUsuario"].ToString();
-                    lblFuncao.Text = nomeFuncao;
+                   // lblFuncao.Text = nomeFuncao;
                 }
                 else
                 {
-                    lblFuncao.Text = "<Função>";
+                   // lblFuncao.Text = "<Função>";
                 }
 
                 if (Session["EmpresaTrabalho"] != null)
                 {
                     string nomeEmpresa = Session["EmpresaTrabalho"].ToString();
-                    lblEmpresa.Text = nomeEmpresa;
+                   // lblEmpresa.Text = nomeEmpresa;
                 }
                 else
                 {
-                    lblEmpresa.Text = "<Empresa>";
+                   // lblEmpresa.Text = "<Empresa>";
                 }
 
                 if (Session["PermissaoUsuario"] != null)
