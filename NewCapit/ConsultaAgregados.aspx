@@ -1,18 +1,17 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="ConsultaAgregados.aspx.cs" Inherits="NewCapit.ConsultaAgregados" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+<asp:Content ID="Content" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script language="javascript">
-function ConfirmMessage() {
-    var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-    if (selectedvalue) {
-        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+        function ConfirmMessage() {
+            var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+            if (selectedvalue) {
+                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
    } else {
        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-   }
-}
-   
+            }
+        }
+
     </script>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -171,7 +170,7 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <asp:GridView runat="server" ID="gvListAgregados" CssClass="table table-bordered dataTable1" Width="100%" AutoGenerateColumns="False" DataKeyNames="id">
+                <asp:GridView runat="server" ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id">
                     <Columns>
                         <asp:BoundField DataField="id" HeaderText="#ID" />
                         <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
