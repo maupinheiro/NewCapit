@@ -311,7 +311,7 @@ namespace NewCapit
                     {
                         string mensagem = $"Olá, {usuarioLogado}! Registro atualizado com sucesso.";
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');", true);
-                        Response.Redirect("ConsultaAgregados.aspx");
+                        Response.Redirect("Consulta_Agregados.aspx");
                     }
                     else
                     {

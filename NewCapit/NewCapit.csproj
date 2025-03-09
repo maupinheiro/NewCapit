@@ -76,9 +76,9 @@
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
-    <Content Include="ConsultaClientes.aspx" />
-    <Content Include="ConsultaMotoristas.aspx" />
-    <Content Include="ConsultaVeiculos.aspx" />
+    <Content Include="dist\pages\ConsultaClientes.aspx" />
+    <Content Include="dist\pages\ConsultaMotoristas.aspx" />
+    <Content Include="dist\pages\ConsultaVeiculos.aspx" />
     <Content Include="css\sb-admin-2.css" />
     <Content Include="css\sb-admin-2.min.css" />
     <Content Include="css\styleCadastros.css" />
@@ -139,6 +139,7 @@
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
+    <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="fotos\1010.JPG" />
     <Content Include="fotos\1070.JPG" />
@@ -432,12 +433,12 @@
     <Content Include="fotos\TNG90039.JPG" />
     <Content Include="fotos\user.png" />
     <Content Include="fotos\T7670.jpeg" />
-    <Content Include="Frm_AltClientes.aspx" />
-    <Content Include="Frm_AltVeiculos.aspx" />
-    <Content Include="Frm_CadClientes.aspx" />
-    <Content Include="Frm_AltTransportadoras.aspx" />
-    <Content Include="Frm_CadTransportadoras.aspx" />
-    <Content Include="Frm_CadVeiculos.aspx" />
+    <Content Include="dist\pages\Frm_AltClientes.aspx" />
+    <Content Include="dist\pages\Frm_AltVeiculos.aspx" />
+    <Content Include="dist\pages\Frm_CadClientes.aspx" />
+    <Content Include="dist\pages\Frm_AltTransportadoras.aspx" />
+    <Content Include="dist\pages\Frm_CadTransportadoras.aspx" />
+    <Content Include="dist\pages\Frm_CadVeiculos.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Home2.aspx" />
     <Content Include="img\agregadoAtivo.png" />
@@ -482,7 +483,7 @@
     <Content Include="img\bobina.jpeg" />
     <Content Include="img\veiculoInativo.png" />
     <Content Include="img\web_ui_truck_delivery_icon_233659.png" />
-    <Content Include="index.html" />
+    <Content Include="dist\pages\index.html" />
     <Content Include="js\cnpj.config.js" />
     <Content Include="js\consultaMotoristas.js" />
     <Content Include="js\demo\chart-area-demo.js" />
@@ -493,7 +494,7 @@
     <Content Include="js\sb-admin-2.js" />
     <Content Include="js\sb-admin-2.min.js" />
     <Content Include="js\scriptComboBox.js" />
-    <Content Include="Login.aspx" />
+    <Content Include="dist\pages\Login.aspx" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="plugins\bootstrap-colorpicker\js\bootstrap-colorpicker.js" />
@@ -6165,7 +6166,7 @@
     <Content Include="vendor\skycons\index.html" />
     <Content Include="vendor\skycons\skycons.js" />
     <Content Include="Web.config" />
-    <Content Include="ConsultaVeiculos2.aspx" />
+    <Content Include="dist\pages\ConsultaVeiculos2.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CadUsuario.aspx.cs">
@@ -6175,7 +6176,7 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Cnpj.cs" />
+    <Compile Include="dist\pages\Cnpj.cs" />
     <Compile Include="ConsultaAgregados.aspx.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6183,25 +6184,25 @@
     <Compile Include="ConsultaAgregados.aspx.designer.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ConsultaClientes.aspx.cs">
+    <Compile Include="dist\pages\ConsultaClientes.aspx.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ConsultaClientes.aspx.designer.cs">
+    <Compile Include="dist\pages\ConsultaClientes.aspx.designer.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ConsultaMotoristas.aspx.cs">
+    <Compile Include="dist\pages\ConsultaMotoristas.aspx.cs">
       <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ConsultaMotoristas.aspx.designer.cs">
+    <Compile Include="dist\pages\ConsultaMotoristas.aspx.designer.cs">
       <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ConsultaVeiculos.aspx.cs">
+    <Compile Include="dist\pages\ConsultaVeiculos.aspx.cs">
       <DependentUpon>ConsultaVeiculos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ConsultaVeiculos.aspx.designer.cs">
+    <Compile Include="dist\pages\ConsultaVeiculos.aspx.designer.cs">
       <DependentUpon>ConsultaVeiculos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
@@ -6218,6 +6219,13 @@
     <Compile Include="dist\pages\Consulta_Agregados.aspx.designer.cs">
       <DependentUpon>Consulta_Agregados.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Frm_CadMotoristas.aspx.cs">
+      <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadMotoristas.aspx.designer.cs">
+      <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6225,46 +6233,46 @@
     <Compile Include="dist\pages\Home.aspx.designer.cs">
       <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Frm_AltClientes.aspx.cs">
+    <Compile Include="dist\pages\Frm_AltClientes.aspx.cs">
       <DependentUpon>Frm_AltClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Frm_AltClientes.aspx.designer.cs">
+    <Compile Include="dist\pages\Frm_AltClientes.aspx.designer.cs">
       <DependentUpon>Frm_AltClientes.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Frm_AltVeiculos.aspx.cs">
+    <Compile Include="dist\pages\Frm_AltVeiculos.aspx.cs">
       <DependentUpon>Frm_AltVeiculos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Frm_AltVeiculos.aspx.designer.cs">
+    <Compile Include="dist\pages\Frm_AltVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_AltVeiculos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Frm_CadClientes.aspx.cs">
+    <Compile Include="dist\pages\Frm_CadClientes.aspx.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Frm_CadClientes.aspx.designer.cs">
+    <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Frm_AltTransportadoras.aspx.cs">
+    <Compile Include="dist\pages\Frm_AltTransportadoras.aspx.cs">
       <DependentUpon>Frm_AltTransportadoras.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Frm_AltTransportadoras.aspx.designer.cs">
+    <Compile Include="dist\pages\Frm_AltTransportadoras.aspx.designer.cs">
       <DependentUpon>Frm_AltTransportadoras.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Frm_CadTransportadoras.aspx.cs">
+    <Compile Include="dist\pages\Frm_CadTransportadoras.aspx.cs">
       <DependentUpon>Frm_CadTransportadoras.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Frm_CadTransportadoras.aspx.designer.cs">
+    <Compile Include="dist\pages\Frm_CadTransportadoras.aspx.designer.cs">
       <DependentUpon>Frm_CadTransportadoras.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Frm_CadVeiculos.aspx.cs">
+    <Compile Include="dist\pages\Frm_CadVeiculos.aspx.cs">
       <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Frm_CadVeiculos.aspx.designer.cs">
+    <Compile Include="dist\pages\Frm_CadVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
@@ -6277,11 +6285,11 @@
     <Compile Include="Home2.aspx.designer.cs">
       <DependentUpon>Home2.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Login.aspx.cs">
+    <Compile Include="dist\pages\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Login.aspx.designer.cs">
+    <Compile Include="dist\pages\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Main.Master.cs">
@@ -6293,11 +6301,11 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebCEP.cs" />
-    <Compile Include="ConsultaVeiculos2.aspx.cs">
+    <Compile Include="dist\pages\ConsultaVeiculos2.aspx.cs">
       <DependentUpon>ConsultaVeiculos2.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ConsultaVeiculos2.aspx.designer.cs">
+    <Compile Include="dist\pages\ConsultaVeiculos2.aspx.designer.cs">
       <DependentUpon>ConsultaVeiculos2.aspx</DependentUpon>
     </Compile>
   </ItemGroup>

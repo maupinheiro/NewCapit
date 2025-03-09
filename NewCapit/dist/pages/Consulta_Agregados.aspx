@@ -20,8 +20,8 @@
             var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
             if (selectedvalue) {
                 document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
-        } else {
-            document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+            } else {
+                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
             }
         }
     </script>
@@ -132,26 +132,26 @@
             </div>
         </div>
         <!-- DataTales Example -->
-         <div class="card shadow mb-4">
+        <div class="card shadow mb-4">
               <div class="card-body">
                  <div class="table-responsive">
                      <asp:GridView ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server">
-    <Columns>
-        <asp:BoundField DataField="id" HeaderText="#ID" />
-        <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
-        <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
-        <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
-        <asp:BoundField DataField="filial" HeaderText="FILIAL" />
-        <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
-        <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
-        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
-            <ItemTemplate>
-                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
-                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i> Excluir</asp:LinkButton>
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-</asp:GridView>
+                     <Columns>
+                        <asp:BoundField DataField="id" HeaderText="#ID" />
+                        <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
+                        <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
+                        <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
+                        <asp:BoundField DataField="filial" HeaderText="FILIAL" />
+                        <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
+                        <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
+                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
+                                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i> Excluir</asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                     </Columns>
+                    </asp:GridView>
                  </div>
                  <asp:HiddenField ID="txtconformmessageValue" runat="server" />
               </div>
@@ -198,6 +198,6 @@
                 "responsive": true,
             });
         });
-</script>
+    </script>
 
 </asp:Content>

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using Domain;
+using DAL;
 
 namespace NewCapit
 {

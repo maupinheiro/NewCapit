@@ -3,20 +3,34 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    
-    <div class="container mt-5">
-        <!-- cabeçalho -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h3 class="h3 mb-2 text-gray-800"><i class="fas fa-shipping-fast"></i>VEÍCULO </h3>
-            <h3>NOVO CADASTRO</h3>
-        </div>
-        <hr />
-        <!-- linha 1 -->
-        <div class="row g-3">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">   
+
+    <div class="content-wrapper">
+         <section class="content">
+             <div class="container-fluid">
+                 <br />
+                 <div class="card card-warning">
+                     <div class="card-header">
+                         <h3 class="card-title"><i class="fas fa-shipping-fast"></i> VEÍCULO - NOVO CADASTRO</h3>
+                     </div>
+                 </div>
+                 <div class="card-header">        
+                      <!-- linha 1 -->
+                      <div class="row g-3">
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">FROTA:</span>
-                    <asp:TextBox ID="txtCodVei" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
+                    <asp:TextBox ID="txtCodVei" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-1">
@@ -26,7 +40,7 @@
             <div class="col-md-2">
                 <div class="form_group">
                     <span class="details">TIPO DE VEÍCULO:</span>
-                    <asp:DropDownList ID="cboTipo" runat="server" ForeColor="Blue" CssClass="form-control" Width="250px">
+                    <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" Width="250px">
                         <asp:ListItem Value="" Text=""></asp:ListItem>
                         <asp:ListItem Value="BITREM" Text="BITREM"></asp:ListItem>
                         <asp:ListItem Value="BITRUCK" Text="BITRUCK"></asp:ListItem>
@@ -43,13 +57,13 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">PLACA:</span>
-                    <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                    <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">UF:</span>
-                    <asp:DropDownList ID="ddlUfPlaca" runat="server" ForeColor="Blue" class="js-example-basic-single"
+                    <asp:DropDownList ID="ddlUfPlaca" runat="server" class="form-control select2"
  Width="100px">
                         <asp:ListItem Value=""></asp:ListItem>
                         <asp:ListItem Value="AC">AC</asp:ListItem>
@@ -86,18 +100,18 @@
             <div class="col-md-4">
                 <div class="form_group">
                     <span class="details">MUNICIPIO:</span>
-                    <asp:TextBox ID="txtCidPlaca" runat="server" Style="text-align: left" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
+                    <asp:TextBox ID="txtCidPlaca" runat="server" Style="text-align: left" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form_group">
                     <span class="details">FILIAL:</span>
-                    <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" ForeColor="Blue" CssClass="form-control"></asp:DropDownList>
+                    <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
                 </div>
             </div>            
         </div>
-        <!-- linha 2 -->
-        <div class="row g-3">
+                      <!-- linha 2 -->
+                      <div class="row g-3">
             <div class="col-md-1">
                  <div class="form_group">
                     <span class="details">FAB/MOD.:</span>
@@ -169,10 +183,9 @@
                     <asp:TextBox ID="txtAltura" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10" ></asp:TextBox>
                 </div>
             </div>
-        </div>
-       
-        <!-- linha 3 -->
-        <div class="row g-3">
+        </div>       
+                      <!-- linha 3 -->
+                      <div class="row g-3">
             <div class="col-md-5">
                 <div class="form_group">
                     <span class="details">MARCA:</span>
@@ -192,8 +205,8 @@
                 </div>
             </div>
         </div>
-        <!-- linha 4 -->
-        <div class="row g-3">
+                      <!-- linha 4 -->
+                      <div class="row g-3">
             <div class="col-md-2">
                 <div class="form-group">
                     <span class="">MONITORAMENTO:</span>
@@ -240,12 +253,12 @@
                 </div>
             </div>
         </div>
-        <!-- linha 5 -->
-        <div class="row g-3">
+                      <!-- linha 5 -->
+                      <div class="row g-3">
             <div class="col-md-2">
                 <div class="form-group">
                     <span class="">TIPO:</span>
-                    <asp:DropDownList ID="ddlTipo" runat="server" ForeColor="Blue" CssClass="form-control">
+                    <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control">
                         <asp:ListItem Value="" Text=""></asp:ListItem>
                         <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                         <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>
@@ -256,27 +269,26 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
-                    <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
+                    <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form_group">
                     <span class="details">PROPRIETÁRIO/TRANSPORTADORA:</span>
-                    <asp:DropDownList ID="ddlAgregados" class="js-example-basic-single" name="nomeProprietario" runat="server" ForeColor="Blue" Width="750px"  OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true" ></asp:DropDownList>
+                    <asp:DropDownList ID="ddlAgregados" class="form-control select2" name="nomeProprietario" runat="server"   OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true" ></asp:DropDownList>
                 </div>
             </div>
-
 
             <div class="col-md-3">
                 <div class="form-group">
                     <span class="details">ANTT/RNTRC:</span>
-                    <asp:TextBox ID="txtAntt" runat="server" Style="text-align: center" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
+                    <asp:TextBox ID="txtAntt" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
                 </div>
             </div>
         </div>
-        <!-- linha 6 -->
-        <div class="row g-3">
+                      <!-- linha 6 -->
+                      <div class="row g-3">
             <div class="col-md-2">
                 <div class="form-group">
                     <span class="details">CADASTRADO EM:</span>
@@ -302,8 +314,8 @@
                 </div>
             </div>
         </div>
-        <!-- linha 7 -->
-        <div class="row g-3">
+                      <!-- linha 7 -->
+                      <div class="row g-3">
             <div class="col-md-1">
 
                 <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click" Text="Cadastrar" />
@@ -314,24 +326,80 @@
                 </a>
             </div>
         </div>
+                 </div>
+             </div>
+         </section>
 
     </div>    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
-
-    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
-    <script src="assets/plugins/global/plugins.bundle.js"></script>
-
-
-    <!--
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    -->
-    <script>
-        $(document).ready(function () {
-            $('.js-example-basic-single').select2();
-        });
-    </script>
     
+    
+    <footer class="main-footer">
+       <div class="float-right d-none d-sm-block">
+           <b>Version</b> 2.1.0
+ 
+       </div>
+       <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
+   </footer>
+       <!-- jQuery -->
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="../../plugins/select2/js/select2.full.min.js"></script>    
+    <!-- InputMask -->
+    <script src="../../plugins/moment/moment.min.js"></script>
+    <script src="../../plugins/inputmask/jquery.inputmask.min.js"></script>   
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../dist/js/demo.js"></script>
+    <!-- Page specific script -->
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+                      
+                        
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+           
+        })
+       
+        
+</script>
+   
 </asp:Content>

@@ -40,7 +40,7 @@
    
     <div class="toggle-box">
         <div class="toggle-panel toggle-left">
-            <img src="img/logo.png" alt="" width="100" />
+            <img src="/img/logo.png" alt="" width="100" />
 	        <h1>CAPIT LOGÍSTICA</h1>
             <p>TRANSNOVAG TRANSPORTES</p>                
         </div>            
