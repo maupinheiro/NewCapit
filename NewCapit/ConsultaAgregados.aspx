@@ -1,24 +1,25 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="ConsultaAgregados.aspx.cs" Inherits="NewCapit.ConsultaAgregados" %>
 
-
-<asp:Content ID="Content" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script language="javascript">
-        function ConfirmMessage() {
-            var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-            if (selectedvalue) {
-                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+function ConfirmMessage() {
+    var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+    if (selectedvalue) {
+        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
    } else {
        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-            }
-        }
-
+   }
+}
+   
     </script>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-2 text-gray-800">
-            <i class="fas fa-truck"></i> Consulta Agregados / Terceiros</h1>
+            <i class="fas fa-truck"></i>Consulta Agregados / Terceiros</h1>
         <a href="Frm_CadTransportadoras.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-user-friends"></i> Novo Cadastro            
+            class="fas fa-user-friends"></i>Novo Cadastro            
         </a>
 
     </div>
@@ -30,7 +31,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> 
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Total de Agregados / Terceiros
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
@@ -60,9 +61,9 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <div class="progress progress-sm mr-2"> 
+                                    <div class="progress progress-sm mr-2">
                                         <div class="progress-bar bg-info" role="progressbar"
-style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
+                                            style="width: 50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
                                         </div>
                                     </div>
                                 </div>
@@ -169,19 +170,21 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <div class="table-responsive">
-                <asp:GridView runat="server" ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id">
+            <div class="table table-bordered table-hover table-responsive">
+
+                <!-- CssClass="table table-bordered dataTable1 table-hover" -->
+                <asp:GridView runat="server" ID="gvListAgregados" class="table table-bordered table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id">
                     <Columns>
                         <asp:BoundField DataField="id" HeaderText="#ID" />
                         <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
-                        <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
+                        <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" />
                         <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
                         <asp:BoundField DataField="filial" HeaderText="FILIAL" />
                         <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
                             <ItemTemplate>
-                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
                                 <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i> Excluir</asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -192,8 +195,49 @@ style="width:50%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript 
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="src/javascript/script.js"></script>
-     
+    -->
+
+    <!-- jQuery -->
+    <script src="../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../plugins/jszip/jszip.min.js"></script>
+    <script src="../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../dist/js/demo.js"></script>
+    <!-- Page specific script -->
+    <script>
+        $(function () {
+            $("#gvListAgregados").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+</script>
+
 </asp:Content>
