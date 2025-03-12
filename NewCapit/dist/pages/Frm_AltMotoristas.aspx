@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadMotoristas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadMotoristas" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltMotoristas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AltMotoristas" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -33,7 +32,7 @@
                 
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-address-card"></i>&nbsp;MOTORISTAS - NOVO CADASTRO</h3>
+                        <h3 class="card-title"><i class="fas fa-address-card"></i>&nbsp;MOTORISTAS - ATUALIZAÇÃO DE DADOS</h3>
                     </div>
                 </div>
             </div>
@@ -190,13 +189,13 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">Nº INSS:</span>
+                                <span class="details">INSS:</span>
                                 <asp:TextBox ID="txtINSS" runat="server" Style="text-align: center" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">Nº PIS:</span>
+                                <span class="details">PIS:</span>
                                 <div class="input-group">
                                     <input type="text" id="txtPIS" class="form-control">
                                 </div>
@@ -208,13 +207,13 @@
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">Nº CNH:</span>
+                                <span class="details">CNH:</span>
                                 <asp:TextBox ID="txtRegCNH" runat="server" Style="text-align: center" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">Nº FORM DA CNH:</span>
+                                <span class="details">FORM DA CNH:</span>
                                 <asp:TextBox ID="txtFormCNH" runat="server" Style="text-align: center" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
@@ -226,7 +225,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="">CATEGORIA:</span>
+                                <span class="">CAT.:</span>
                                 <asp:DropDownList ID="ddlCat" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="AE" Text="AE"></asp:ListItem>
@@ -237,7 +236,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="details">VALIDADE CNH:</span>
+                                <span class="details">VALIDADE:</span>
                                 <input type="text" id="txtValCNH" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                             </div>
                         </div>
@@ -286,7 +285,8 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">JORNADA DE TRABALHO:</span>
-                                <asp:DropDownList ID="ddlJornada" runat="server" CssClass="form-control"></asp:DropDownList>   
+                                <asp:DropDownList ID="ddlJornada" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -425,7 +425,20 @@
                                 <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                             </div>
                         </div>
-                  </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <span class="details">ATUALIZADO EM:</span>
+                                <asp:Label ID="lbDtAtualizacao" runat="server" CssClass="form-control" placeholder=""></asp:Label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="details">POR:</span>
+                                <asp:TextBox ID="txtAltCad" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Linha 9 do formulário -->
                     <div class="row g-3">
                         <div class="col-md-1">                          

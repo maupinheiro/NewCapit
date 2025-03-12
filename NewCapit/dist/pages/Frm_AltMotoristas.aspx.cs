@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -10,7 +10,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_CadMotoristas : System.Web.UI.Page
+    public partial class Frm_AltMotoristas : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -35,7 +35,6 @@ namespace NewCapit.dist.pages
                 PreencherComboCargo();
                 PreencherComboUFCNH();
                 PreencherComboJornada();
-
             }
             DateTime dataHoraAtual = DateTime.Now;
             txtDtCad.Text = dataHoraAtual.ToString("dd/MM/yyyy");
@@ -64,8 +63,8 @@ namespace NewCapit.dist.pages
                     ddlUF.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
                     ddlUF.DataValueField = "Uf";  // Campo que será o valor de cada item                    
                     ddlUF.DataBind();  // Realiza o binding dos dados 
-                    ddlUF.Items.Insert(0, new ListItem("", "0"));                   
-                    
+                    ddlUF.Items.Insert(0, new ListItem("", "0"));
+
                     // Feche o reader
                     reader.Close();
                 }
@@ -75,7 +74,7 @@ namespace NewCapit.dist.pages
                     Response.Write("Erro: " + ex.Message);
                 }
             }
-        }        
+        }
 
         private void CarregarMunicipiosDoEstado(int ufId)
         {
@@ -122,8 +121,8 @@ namespace NewCapit.dist.pages
             }
             else
             {
-              //  txtMunicipioCNH.Items.Clear();
-              //  txtMunicipioCNH.Items.Insert(0, new ListItem("Selecione o item", ""));
+                //  txtMunicipioCNH.Items.Clear();
+                //  txtMunicipioCNH.Items.Insert(0, new ListItem("Selecione o item", ""));
             }
         }
 
@@ -213,7 +212,7 @@ namespace NewCapit.dist.pages
             // Preencher os campos com base no valor selecionado
             if (idSelecionado > 0)
             {
-               // PreencherCamposCargo(idSelecionado);
+                // PreencherCamposCargo(idSelecionado);
             }
             else
             {
@@ -224,7 +223,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboCargo()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT cod_funcao, nm_funcao FROM tb_funcao";
+            string query = "SELECT cod_funcao, nm_funcao FROM tb_funcao ORDER BY nm_funcao";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -299,6 +298,7 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
         private void PreencherComboUFCNH()
         {
             // Consulta SQL que retorna os dados desejados
@@ -334,6 +334,7 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
         private void PreencherComboJornada()
         {
             // Consulta SQL que retorna os dados desejados
@@ -369,6 +370,5 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
     }
 }
