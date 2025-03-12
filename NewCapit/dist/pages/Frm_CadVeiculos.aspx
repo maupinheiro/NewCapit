@@ -269,7 +269,11 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
+<<<<<<< HEAD:NewCapit/Frm_CadVeiculos.aspx
+                    <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
+=======
                     <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
+>>>>>>> master:NewCapit/dist/pages/Frm_CadVeiculos.aspx
                 </div>
             </div>
 

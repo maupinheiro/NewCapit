@@ -1,27 +1,18 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="ConsultaAgregados.aspx.cs" Inherits="NewCapit.ConsultaAgregados" %>
 
-
-<asp:Content ID="Content" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script language="javascript">
-        function ConfirmMessage() {
-            var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-            if (selectedvalue) {
-                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
-            } else {
-                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-            }
-        }
-
+function ConfirmMessage() {
+    var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+    if (selectedvalue) {
+        document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+   } else {
+       document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+   }
+}
+   
     </script>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
