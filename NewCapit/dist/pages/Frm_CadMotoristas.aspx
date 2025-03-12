@@ -190,13 +190,13 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">INSS:</span>
+                                <span class="details">Nº INSS:</span>
                                 <asp:TextBox ID="txtINSS" runat="server" Style="text-align: center" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">PIS:</span>
+                                <span class="details">Nº PIS:</span>
                                 <div class="input-group">
                                     <input type="text" id="txtPIS" class="form-control">
                                 </div>
@@ -208,13 +208,13 @@
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">CNH:</span>
+                                <span class="details">Nº CNH:</span>
                                 <asp:TextBox ID="txtRegCNH" runat="server" Style="text-align: center" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">FORM DA CNH:</span>
+                                <span class="details">Nº FORM DA CNH:</span>
                                 <asp:TextBox ID="txtFormCNH" runat="server" Style="text-align: center" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
@@ -226,7 +226,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="">CAT.:</span>
+                                <span class="">CATEGORIA:</span>
                                 <asp:DropDownList ID="ddlCat" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="AE" Text="AE"></asp:ListItem>
@@ -237,7 +237,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="details">VALIDADE:</span>
+                                <span class="details">VALIDADE CNH:</span>
                                 <input type="text" id="txtValCNH" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                             </div>
                         </div>
@@ -285,19 +285,8 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="">JORNADA:</span>
-                                <asp:DropDownList ID="ddlJornada" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="INTEGRAL" Text="INTEGRAL"></asp:ListItem>
-                                    <asp:ListItem Value="06:00 - 14:48" Text="06:00 - 14:48"></asp:ListItem>
-                                    <asp:ListItem Value="06:00 - 15:48" Text="06:00 - 15:48"></asp:ListItem>
-                                    <asp:ListItem Value="06:00 - 18:00 12x36" Text="06:00 - 18:00 12x36"></asp:ListItem>
-                                    <asp:ListItem Value="09:00 - 18:48" Text="09:00 - 18:48"></asp:ListItem>
-                                    <asp:ListItem Value="12:00 - 21:48" Text="12:00 - 21:48"></asp:ListItem>
-                                    <asp:ListItem Value="13:25 - 22:11" Text="13:25 - 22:11"></asp:ListItem>
-                                    <asp:ListItem Value="18:00 - 06:00 12x36" Text="18:00 - 06:00 12x36"></asp:ListItem>
-                                    <asp:ListItem Value="21:12 - 06:00" Text="21:12 - 06:00"></asp:ListItem>
-                                </asp:DropDownList>
+                                <span class="">JORNADA DE TRABALHO:</span>
+                                <asp:DropDownList ID="ddlJornada" runat="server" CssClass="form-control"></asp:DropDownList>   
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -432,7 +421,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <span class="details">CADASTRADO POR:</span>
+                                <span class="details">POR:</span>
                                 <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                             </div>
                         </div>

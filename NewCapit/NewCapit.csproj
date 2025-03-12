@@ -47,10 +47,7 @@
     <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="GMaps, Version=4.1.0.5, Culture=neutral, PublicKeyToken=564d55b144e7aa5a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NewCapit\NewCapit\NewCapit\bin\GMaps.dll</HintPath>
-    </Reference>
+    <Reference Include="DevExpress.Web.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -80,14 +77,6 @@
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
-    <Content Include="dist\img\ico_truck.png" />
-    <Content Include="dist\img\ico_truck1.png" />
-    <Content Include="dist\img\ico_truck2.png" />
-    <Content Include="dist\img\ico_truck3.png" />
-    <Content Include="dist\img\ico_truck4.png" />
-    <Content Include="dist\img\ico_truck5.png" />
-    <Content Include="dist\img\ico_truck6.png" />
-    <Content Include="dist\img\ico_truck7.png" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
@@ -151,9 +140,10 @@
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
+    <Content Include="dist\pages\Frm_CadCargas.aspx" />
+    <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Home.aspx" />
-    <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="fotos\1010.JPG" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -6189,7 +6179,7 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Cnpj.cs" />
+    <Compile Include="Cnpj.cs" />
     <Compile Include="ConsultaAgregados.aspx.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6231,6 +6221,20 @@
     </Compile>
     <Compile Include="dist\pages\Consulta_Agregados.aspx.designer.cs">
       <DependentUpon>Consulta_Agregados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadCargas.aspx.cs">
+      <DependentUpon>Frm_CadCargas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadCargas.aspx.designer.cs">
+      <DependentUpon>Frm_CadCargas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AltMotoristas.aspx.cs">
+      <DependentUpon>Frm_AltMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AltMotoristas.aspx.designer.cs">
+      <DependentUpon>Frm_AltMotoristas.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
@@ -6287,13 +6291,6 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\pages\Mapa.aspx.cs">
-      <DependentUpon>Mapa.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\Mapa.aspx.designer.cs">
-      <DependentUpon>Mapa.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -6735,6 +6732,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

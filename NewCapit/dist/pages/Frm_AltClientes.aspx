@@ -85,7 +85,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="details">CNPJ:</span>
-                                    <asp:TextBox ID="txtCnpj" data-mask="00.000.000/0000-00" ForeColor="Blue" runat="server" class="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtCnpj" class="form-control" data-inputmask='"mask": "99.999.999/9999-99"' data-mask ForeColor="Blue" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-1">
