@@ -47,6 +47,10 @@
     <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="GMaps, Version=4.1.0.5, Culture=neutral, PublicKeyToken=564d55b144e7aa5a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NewCapit\NewCapit\NewCapit\bin\GMaps.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -76,6 +80,15 @@
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
+    <Content Include="dist\img\ico_truck.png" />
+    <Content Include="dist\img\ico_truck1.png" />
+    <Content Include="dist\img\ico_truck2.png" />
+    <Content Include="dist\img\ico_truck3.png" />
+    <Content Include="dist\img\ico_truck4.png" />
+    <Content Include="dist\img\ico_truck5.png" />
+    <Content Include="dist\img\ico_truck6.png" />
+    <Content Include="dist\img\ico_truck7.png" />
+    <Content Include="dist\Mapas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
@@ -6175,6 +6188,13 @@
     </Compile>
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\Mapas.aspx.cs">
+      <DependentUpon>Mapas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\Mapas.aspx.designer.cs">
+      <DependentUpon>Mapas.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Cnpj.cs" />
     <Compile Include="ConsultaAgregados.aspx.cs">

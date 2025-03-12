@@ -7,29 +7,29 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace CapitLTE
+namespace NewCapit.dist
 {
 
 
-    public partial class Home
+    public partial class Mapas
     {
 
         /// <summary>
-        /// Controle blocos.
+        /// Controle form1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl blocos;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Controle lblResposta.
+        /// Controle GMap2.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblResposta;
+        protected global::Subgurim.Controles.GMap GMap2;
     }
 }
