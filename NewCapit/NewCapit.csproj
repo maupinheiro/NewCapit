@@ -88,7 +88,6 @@
     <Content Include="dist\img\ico_truck5.png" />
     <Content Include="dist\img\ico_truck6.png" />
     <Content Include="dist\img\ico_truck7.png" />
-    <Content Include="dist\Mapas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
@@ -154,6 +153,7 @@
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Home.aspx" />
+    <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="fotos\1010.JPG" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -6189,13 +6189,6 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\Mapas.aspx.cs">
-      <DependentUpon>Mapas.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\Mapas.aspx.designer.cs">
-      <DependentUpon>Mapas.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\Cnpj.cs" />
     <Compile Include="ConsultaAgregados.aspx.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
@@ -6294,6 +6287,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Mapa.aspx.cs">
+      <DependentUpon>Mapa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Mapa.aspx.designer.cs">
+      <DependentUpon>Mapa.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

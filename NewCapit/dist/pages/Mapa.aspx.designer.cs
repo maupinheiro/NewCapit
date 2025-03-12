@@ -7,11 +7,11 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace NewCapit.dist
+namespace NewCapit.dist.pages
 {
 
 
-    public partial class Mapas
+    public partial class Mapa
     {
 
         /// <summary>
@@ -24,12 +24,12 @@ namespace NewCapit.dist
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Controle GMap2.
+        /// Controle GMap1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::Subgurim.Controles.GMap GMap2;
+        protected global::Subgurim.Controles.GMap GMap1;
     }
 }

@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    
     <script type="text/javascript">
 
         function abre_mapa(url, w, h) {
@@ -40,7 +41,7 @@
                         
                       </div>
                       <div class="col-md-2">
-                         <button type="button" class="btn btn-outline-primary btn-block" onclick="return abre_mapa('Mapas.aspx',1400,700);"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</button>                        
+                         <button type="button" class="btn btn-outline-primary btn-block" onclick="return abre_mapa('Mapa.aspx',1400,700);"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</button>                        
                 </div>
             </div>
             <!-- /.container-fluid -->
