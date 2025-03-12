@@ -245,6 +245,7 @@ href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
     padding: 5px;
 }
 </style>
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww"></script>
 <script type="text/javascript">
 
     function abre_relatorio(url, w, h) {
@@ -268,7 +269,7 @@ href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
             <div id="flexme1" ondblclick="return abre_mapa('mapa.aspx',1400,700);">
     
                              
-             <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="285px" enableServerEvents="True"  OnMarkerClick="GMap1_MarkerClick" />
+             <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="700px" enableServerEvents="True"  OnMarkerClick="GMap1_MarkerClick" />
     
          </div>
               <table id="FlexTable1" style="display:none"></table>
