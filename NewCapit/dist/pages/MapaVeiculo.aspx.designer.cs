@@ -7,38 +7,47 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace CapitLTE
+namespace NewCapit.dist.pages
 {
 
 
-    public partial class Home
+    public partial class MapaVeiculo
     {
 
         /// <summary>
-        /// Controle lnkMapa.
+        /// Controle txtPlaca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkMapa;
+        protected global::System.Web.UI.WebControls.TextBox txtPlaca;
 
         /// <summary>
-        /// Controle blocos.
+        /// Controle btnPlaca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl blocos;
+        protected global::System.Web.UI.WebControls.Button btnPlaca;
 
         /// <summary>
-        /// Controle lblResposta.
+        /// Controle GMap1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblResposta;
+        protected global::Subgurim.Controles.GMap GMap1;
+
+        /// <summary>
+        /// Controle hdnLatLon.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnLatLon;
     }
 }

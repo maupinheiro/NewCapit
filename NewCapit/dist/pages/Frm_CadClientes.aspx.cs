@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 using Domain;
 using DAL;
 
-namespace NewCapit
+namespace NewCapit.dist.pages
 {
     public partial class Frm_CadClientes : System.Web.UI.Page
     {
@@ -34,21 +34,22 @@ namespace NewCapit
             }
 
         }
-        protected void btnCep_Click(object sender, EventArgs e)
-        {
-            WebCEP cep = new WebCEP(txtCepCli.Text);
-            txtBaiCli.Text = cep.Bairro.ToString();
-            txtCidCli.Text = cep.Cidade.ToString();
-            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
-            txtEstCli.Text = cep.UF.ToString();
-            txtNumero.Focus();
-        }
+        //protected void btnCep_Click(object sender, EventArgs e)
+        //{
+
+        //    WebCEP cep = new WebCEP(txtCepCli.Text);
+        //    txtBaiCli.Text = cep.Bairro.ToString();
+        //    txtCidCli.Text = cep.Cidade.ToString();
+        //    txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
+        //    txtEstCli.Text = cep.UF.ToString();
+        //    txtNumero.Focus();
+        //}
 
         protected void btnCliente_Click(object sender, EventArgs e)
         {
             if (txtCodCli.Text.Trim() == "")
             {
-                string nomeUsuario = txtUsuCadastro.Text;               
+                string nomeUsuario = txtUsuCadastro.Text;
 
                 string linha1 = "Olá, " + nomeUsuario + "!";
                 string linha2 = "Por favor, digite um código para cadastro.";
@@ -229,9 +230,9 @@ namespace NewCapit
             }
         }
 
-        private void SalvarCliente() 
+        private void SalvarCliente()
         {
-            string sqlSalvarCliente = "insert into tbclientes" +                "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
+            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
               "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa)";
             SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
@@ -273,7 +274,7 @@ namespace NewCapit
                 con.Open();
                 comando.ExecuteNonQuery();
                 con.Close();
-                string nomeUsuario = txtUsuCadastro.Text; 
+                string nomeUsuario = txtUsuCadastro.Text;
                 string linha1 = "Olá, " + nomeUsuario + "!";
                 string linha2 = "Código " + txtCodCli.Text + ", cadastrado com sucesso.";
                 // Concatenando as linhas com '\n' para criar a mensagem
@@ -308,5 +309,17 @@ namespace NewCapit
                 con.Close();
             }
         }
+
+        protected void btnCep_Click(object sender, EventArgs e)
+        {
+            WebCEP cep = new WebCEP(txtCepCli.Text);
+            txtBaiCli.Text = cep.Bairro.ToString();
+            txtCidCli.Text = cep.Cidade.ToString();
+            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
+            txtEstCli.Text = cep.UF.ToString();
+            txtNumero.Focus();
+        }
+
+        
     }
 }

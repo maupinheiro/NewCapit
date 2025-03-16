@@ -474,5 +474,10 @@ namespace CapitLTE
 
 
         }
+
+        protected void lnkMapa_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("MapaVeiculo.aspx");
+        }
     }
 }

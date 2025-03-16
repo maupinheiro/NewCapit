@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="CapitLTE.Home" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="CapitLTE.Home" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -41,7 +41,8 @@
                         
                       </div>
                       <div class="col-md-2">
-                         <button type="button" class="btn btn-outline-primary btn-block" onclick="return abre_mapa('Mapa.aspx',1400,700);"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</button>                        
+                          <asp:LinkButton ID="lnkMapa" CssClass="btn btn-outline-primary btn-block" runat="server" OnClick="lnkMapa_Click"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</asp:LinkButton>
+                        <%-- <button type="button" class="btn btn-outline-primary btn-block" onclick="return abre_mapa('Mapa.aspx',1400,700);"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</button>  --%>                      
                 </div>
             </div>
             <!-- /.container-fluid -->
