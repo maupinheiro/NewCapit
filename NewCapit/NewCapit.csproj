@@ -74,7 +74,10 @@
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
+    <Content Include="css\styleTabela.css" />
+    <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
+    <Content Include="dist\pages\ConsultaEntregas.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
     <Content Include="css\sb-admin-2.css" />
@@ -6186,12 +6189,26 @@
     <Compile Include="ConsultaAgregados.aspx.designer.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ConsultaCargas.aspx.cs">
+      <DependentUpon>ConsultaCargas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaCargas.aspx.designer.cs">
+      <DependentUpon>ConsultaCargas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\ConsultaClientes.aspx.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="dist\pages\ConsultaClientes.aspx.designer.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaEntregas.aspx.cs">
+      <DependentUpon>ConsultaEntregas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaEntregas.aspx.designer.cs">
+      <DependentUpon>ConsultaEntregas.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ConsultaMotoristas.aspx.cs">
       <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>

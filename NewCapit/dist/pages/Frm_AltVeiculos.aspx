@@ -327,7 +327,7 @@
                 <div class="col-md-3">
                     <div class="form_group">
                         <span class="details">PROPRIETÁRIO/TRANSPORTADORA:</span>
-                        <asp:DropDownList ID="ddlAgregados" class="form-control select2" name="nomeProprietario" runat="server" ForeColor="Blue" Width="400px" OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                        <asp:DropDownList ID="ddlAgregados" class="form-control select2" name="nomeProprietario" runat="server" ForeColor="Blue" OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                     </div>
                 </div>
                 <div class="col-md-1">

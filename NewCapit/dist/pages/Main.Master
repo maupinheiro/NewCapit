@@ -2,31 +2,31 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<head runat="server">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CAPIT | Logístia</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css"/>
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"/>
+    <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- iCheck -->
-    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css"/>
+    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- JQVMap -->
-    <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css"/>
+    <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Daterange picker -->
-    <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
-    <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -59,8 +59,8 @@
                         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                             <i class="fas fa-search"></i>
                         </a>
-                        <%--<div class="navbar-search-block">
-                            <form class="form-inline">
+                        <div class="navbar-search-block">
+                          <%--  <form class="form-inline">
                                 <div class="input-group input-group-sm">
                                     <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                                     <div class="input-group-append">
@@ -72,8 +72,8 @@
                                         </button>
                                     </div>
                                 </div>
-                            </form>
-                        </div>--%>
+                            </form>--%>
+                        </div>
                     </li>
 
                     <!-- Messages Dropdown Menu -->
@@ -199,6 +199,17 @@
                         </div>
                     </div>
 
+                     <!-- SidebarSearch Form -->
+                     <div class="form-inline">
+                       <div class="input-group" data-widget="sidebar-search">
+                         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                         <div class="input-group-append">
+                           <button class="btn btn-sidebar">
+                             <i class="fas fa-search fa-fw"></i>
+                           </button>
+                         </div>
+                       </div>
+                     </div>
 
                     <!-- Sidebar Menu -->
                     <nav class="mt-2">
@@ -252,7 +263,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="ConsultaClientes.aspx" class="nav-link">
+                                        <a href="/dist/pages/ConsultaClientes.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
@@ -278,7 +289,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="Consulta_Agregados.aspx" class="nav-link">
+                                        <a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
@@ -302,7 +313,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="ConsultaVeiculos.aspx" class="nav-link">
+                                        <a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
@@ -350,7 +361,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="ConsultaMotoristas.aspx" class="nav-link">
+                                        <a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
@@ -404,7 +415,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="Frm_CadCargas.aspx" class="nav-link">
+                                        <a href="/dist/pages/ConsultaCargas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
@@ -419,10 +430,34 @@
                             </li>
 
                             <li class="nav-item">
+                                 <a href="#" class="nav-link">
+                                     <i class="nav-icon fas fa-table"></i>
+                                     <p>
+                                         Coletas/Entregas               
+                                         <i class="fas fa-angle-left right"></i>
+                                     </p>
+                                 </a>
+                                 <ul class="nav nav-treeview">
+                                     <li class="nav-item">
+                                         <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Consulta</p>
+                                         </a>
+                                     </li>
+                                     <li class="nav-item">
+                                         <a href="pages/tables/jsgrid.html" class="nav-link">
+                                             <i class="far fa-circle nav-icon"></i>
+                                             <p>Relatórios</p>
+                                         </a>
+                                     </li>                                    
+                                 </ul>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-table"></i>
                                     <p>
-                                        Manutenção Veicular               
+                                        Manutenção Ipiranga               
                                     <i class="fas fa-angle-left right"></i>
                                     </p>
                                 </a>
@@ -465,43 +500,42 @@
 
         <!-- /.control-sidebar -->
         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-
         </asp:ContentPlaceHolder>
     </form>
     <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/jquery/jquery.min.js"></script>
     <!-- jQuery UI 1.11.4 -->
-    <script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
         $.widget.bridge('uibutton', $.ui.button)
     </script>
     <!-- Bootstrap 4 -->
-    <%--<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- ChartJS -->
-    <script src="../../plugins/chart.js/Chart.min.js"></script>
+    <script src="plugins/chart.js/Chart.min.js"></script>
     <!-- Sparkline -->
-    <script src="../../plugins/sparklines/sparkline.js"></script>
+    <script src="plugins/sparklines/sparkline.js"></script>
     <!-- JQVMap -->
-    <script src="../../plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="../../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
     <!-- jQuery Knob Chart -->
-    <script src="../../plugins/jquery-knob/jquery.knob.min.js"></script>
+    <script src="plugins/jquery-knob/jquery.knob.min.js"></script>
     <!-- daterangepicker -->
-    <script src="../../plugins/moment/moment.min.js"></script>
-    <script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="plugins/moment/moment.min.js"></script>
+    <script src="plugins/daterangepicker/daterangepicker.js"></script>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
     <!-- Summernote -->
-    <script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="plugins/summernote/summernote-bs4.min.js"></script>
     <!-- overlayScrollbars -->
-    <script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>--%>
+    <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.js"></script>
+    <script src="dist/js/adminlte.js"></script>
     <!-- AdminLTE for demo purposes -->
-    <%--<script src="../../dist/js/demo.js"></script>
+    <script src="dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="../../dist/js/pages/dashboard.js"></script>--%>
+    <script src="dist/js/pages/dashboard.js"></script>
 
 </body>
 
