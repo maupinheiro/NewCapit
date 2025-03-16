@@ -1,33 +1,39 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadCargas.aspx.cs" Inherits="NewCapit.dist.pages.FrmCadCargas" %>
 
-<%@ Register Assembly="DevExpress.Web.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+     <!-- Google Font: Source Sans Pro -->
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+ <!-- Font Awesome -->
+ <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+ <!-- daterange picker -->
+ <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+ <!-- iCheck for checkboxes and radio inputs -->
+ <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+ <!-- Bootstrap Color Picker -->
+ <link rel="stylesheet" href="../../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+ <!-- Tempusdominus Bootstrap 4 -->
+ <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+ <!-- Select2 -->
+ <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+ <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+ <!-- Bootstrap4 Duallistbox -->
+ <link rel="stylesheet" href="../../plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+ <!-- BS Stepper -->
+ <link rel="stylesheet" href="../../plugins/bs-stepper/css/bs-stepper.min.css">
+ <!-- dropzonejs -->
+ <link rel="stylesheet" href="../../plugins/dropzone/min/dropzone.min.css">
+ <!-- Theme style -->
+ <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <script type="text/javascript">
+        function preencherTextBox() {
+            var comboBox = document.getElementById('<%= ddlTomador.ClientID %>');
+            var textBox = document.getElementById('<%= txtGr.ClientID %>');
+            textBox.value = comboBox.options[comboBox.selectedIndex].text;
+        }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
-    <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Bootstrap Color Picker -->
-    <link rel="stylesheet" href="../../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet" href="../../plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-    <!-- BS Stepper -->
-    <link rel="stylesheet" href="../../plugins/bs-stepper/css/bs-stepper.min.css">
-    <!-- dropzonejs -->
-    <link rel="stylesheet" href="../../plugins/dropzone/min/dropzone.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+   
 
     <div class="content-wrapper">
         <section class="content">
@@ -38,13 +44,13 @@
                     </div>
                 </dciv>
             </div>
-            <form>
+      
                 <div class="card-header">
                     <!-- Linha 1 do formulario -->
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="">
-                                <h1>00000000</h1>
+                                <h1>000001</h1>
                             </span>
                         </div>
                     </div>
@@ -59,15 +65,16 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="">SOLICITANTE:</span>
-                                <asp:DropDownList ID="ddlSolicitante" runat="server" CssClass="form-control">
-                                </asp:DropDownList>
+                                 <asp:DropDownList ID="ddlSolicitante" runat="server" class="form-control" AutoPostBack="True" 
+                              OnSelectedIndexChanged="DropDownListProdutos_SelectedIndexChanged">
+                <asp:ListItem Text="Selecione uma categoria" Value="0"></asp:ListItem>
+            </asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <span class="">TOMADOR DO SERVIÇO:</span>
-                                <asp:DropDownList ID="ddlTomador" runat="server" CssClass="form-control">
-                                </asp:DropDownList>
+                                <asp:DropDownList ID="ddlTomador" runat="server"  CssClass="form-control"  ></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -149,6 +156,10 @@
                                 <asp:TextBox ID="txtNumPedido" runat="server" class="form-control" placeholder="" MaxLength="11"></asp:TextBox>
                             </div>
                         </div>
+                        <div class="col-md-1">
+                            <br />
+                            <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  />
+                        </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">MATERIAL:</span>
@@ -188,8 +199,7 @@
                                 <span class="details">CONT. CLIENTE:</span>
                                 <asp:TextBox ID="txtControleCliente" runat="server" class="form-control" placeholder="" MaxLength="11"></asp:TextBox>
                             </div>
-                        </div>
-                        <div class="col-md-1"></div>
+                        </div>                        
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">PREV. ENTREGA:</span>
@@ -257,7 +267,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+          
         </section>
     </div>
 

@@ -19,7 +19,7 @@ using System.Configuration;
 
 
 
-namespace CapitLTE
+namespace NewCapit.dist.pages
 {
     public partial class Home : System.Web.UI.Page
     {
@@ -79,7 +79,7 @@ namespace CapitLTE
             html += "</div>";
             html += "</div>";
             html += "</div>";
-            HtmlGenericControl table = this.blocos;
+            HtmlGenericControl table = this.blocos ;
             table.InnerHtml = html;
         }
         public void CarregaGraficos()

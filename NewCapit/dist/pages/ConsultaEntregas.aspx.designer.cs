@@ -11,25 +11,25 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class Home
+    public partial class ConsultaEntregas
     {
 
         /// <summary>
-        /// Controle blocos.
+        /// Controle ddlStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl blocos;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
         /// <summary>
-        /// Controle lblResposta.
+        /// Controle lnkPesquisar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblResposta;
+        protected global::System.Web.UI.WebControls.LinkButton lnkPesquisar;
     }
 }
