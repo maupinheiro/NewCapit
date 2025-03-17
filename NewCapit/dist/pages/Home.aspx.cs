@@ -474,5 +474,10 @@ namespace NewCapit.dist.pages
 
 
         }
+
+        protected void lnkMapa_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("MapaVeiculo.aspx");
+        }
     }
 }

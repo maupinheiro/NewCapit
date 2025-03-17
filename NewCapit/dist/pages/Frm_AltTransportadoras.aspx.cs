@@ -13,7 +13,7 @@ using System.Web.UI.WebControls;
 using Domain;
 using Microsoft.SqlServer.Server;
 
-namespace NewCapit
+namespace NewCapit.dist.pages
 {
     public partial class Frm_AltTransportadoras : System.Web.UI.Page
     {

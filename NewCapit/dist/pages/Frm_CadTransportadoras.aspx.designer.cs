@@ -7,7 +7,7 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace NewCapit
+namespace NewCapit.dist.pages
 {
 
 

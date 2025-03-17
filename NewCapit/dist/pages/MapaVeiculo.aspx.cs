@@ -1,14 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
 using System.Linq;
 using System.Web;
-using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Web.Configuration;
+using System.Text.RegularExpressions;
+using System.Net;
+using System.IO;
+using System.Web.Script.Serialization;
+using System.Net.Mail;
+using System.Text;
+using GMaps;
+using GMaps.Classes;
+using Subgurim;
 using Subgurim.Controles;
+using Subgurim.Controls;
+using Subgurim.Maps;
+using Subgurim.Web;
+using System.Drawing;
+using System.Globalization;
 
 namespace NewCapit.dist.pages
 {
@@ -20,14 +33,14 @@ namespace NewCapit.dist.pages
         protected void btnPlaca_Click(object sender, EventArgs e)
         {
             string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf   ";
-            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where v.ds_placa='" + txtPlaca.Text + "'";
+            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where v.ds_placa='"+txtPlaca.Text+ "'";
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
             adpt.Fill(dt);
             con.Close();
 
-            if (dt.Rows.Count > 0)
+            if(dt.Rows.Count > 0)
             {
                 try
                 {
@@ -76,7 +89,7 @@ namespace NewCapit.dist.pages
             else
             {
                 string linha1 = "Placa não encontrada no sistema.";
-
+                
 
                 // Concatenando as linhas com '\n' para criar a mensagem
                 string mensagem = $"{linha1}";
@@ -92,7 +105,7 @@ namespace NewCapit.dist.pages
                 txtPlaca.Focus();
             }
 
-
+           
         }
 
 

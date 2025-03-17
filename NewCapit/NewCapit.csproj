@@ -47,7 +47,9 @@
     <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Web.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="GMaps">
+      <HintPath>..\..\..\NewCapit\NewCapit\NewCapit\bin\GMaps.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -68,11 +70,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
@@ -147,6 +144,9 @@
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Home.aspx" />
+    <Content Include="dist\pages\Mapa.aspx" />
+    <Content Include="dist\pages\Frm_CadClientes.aspx" />
+    <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="fotos\1010.JPG" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -441,7 +441,6 @@
     <Content Include="fotos\T7670.jpeg" />
     <Content Include="dist\pages\Frm_AltClientes.aspx" />
     <Content Include="dist\pages\Frm_AltVeiculos.aspx" />
-    <Content Include="dist\pages\Frm_CadClientes.aspx" />
     <Content Include="dist\pages\Frm_AltTransportadoras.aspx" />
     <Content Include="dist\pages\Frm_CadTransportadoras.aspx" />
     <Content Include="dist\pages\Frm_CadVeiculos.aspx" />
@@ -6182,7 +6181,7 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Cnpj.cs" />
+    <Compile Include="dist\pages\Cnpj.cs" />
     <Compile Include="ConsultaAgregados.aspx.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6281,13 +6280,6 @@
     <Compile Include="dist\pages\Frm_AltVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_AltVeiculos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Frm_CadClientes.aspx.cs">
-      <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
-      <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\Frm_AltTransportadoras.aspx.cs">
       <DependentUpon>Frm_AltTransportadoras.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6309,6 +6301,27 @@
     <Compile Include="dist\pages\Frm_CadVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Mapa.aspx.cs">
+      <DependentUpon>Mapa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Mapa.aspx.designer.cs">
+      <DependentUpon>Mapa.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadClientes.aspx.cs">
+      <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
+      <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\MapaVeiculo.aspx.cs">
+      <DependentUpon>MapaVeiculo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\MapaVeiculo.aspx.designer.cs">
+      <DependentUpon>MapaVeiculo.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -6326,15 +6339,15 @@
     <Compile Include="dist\pages\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Main.Master.cs">
+    <Compile Include="dist\pages\Main.Master.cs">
       <DependentUpon>Main.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Main.Master.designer.cs">
+    <Compile Include="dist\pages\Main.Master.designer.cs">
       <DependentUpon>Main.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebCEP.cs" />
+    <Compile Include="dist\pages\WebCEP.cs" />
     <Compile Include="dist\pages\ConsultaVeiculos2.aspx.cs">
       <DependentUpon>ConsultaVeiculos2.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6344,7 +6357,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Main.Master" />
+    <Content Include="dist\pages\Main.Master" />
     <Content Include="fotos\Thumbs.db" />
     <Content Include="dist\css\adminlte.css.map" />
     <Content Include="dist\css\adminlte.min.css.map" />

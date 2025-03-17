@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="ConsultaClientes.aspx.cs" Inherits="NewCapit.ConsultaClientes" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="ConsultaClientes.aspx.cs" Inherits="NewCapit.ConsultaClientes" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -194,7 +194,7 @@
                                 Editar
                              </a> --%>
 
-                                    <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
+                                    <a class="btn btn-info btn-sm">
                                         <i class="fas fa-map-marker-alt"></i>
                                         Mapa
                                     </a>

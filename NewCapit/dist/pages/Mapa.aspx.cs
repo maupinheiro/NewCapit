@@ -29,6 +29,12 @@ namespace NewCapit.dist.pages
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string hora, placa, lat, lon, ignicao, velocidade, rua, uf;
+
+        protected void btnPesquisar_Click(object sender, EventArgs e)
+        {
+
+        }
+
         GInfoWindow window;
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -12,7 +12,7 @@ using System.Web.Script.Serialization;
 using System.Web.UI.WebControls.WebParts;
 
 
-namespace NewCapit
+namespace NewCapit.dist.pages
 {
     public partial class Frm_AltClientes : System.Web.UI.Page
     {
