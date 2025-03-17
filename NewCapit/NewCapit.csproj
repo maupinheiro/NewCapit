@@ -144,8 +144,8 @@
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Home.aspx" />
-    <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
+    <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="fotos\1010.JPG" />
     <Content Include="fotos\1070.JPG" />
@@ -6301,19 +6301,19 @@
     <Compile Include="dist\pages\Frm_CadVeiculos.aspx.designer.cs">
       <DependentUpon>Frm_CadVeiculos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Mapa.aspx.cs">
-      <DependentUpon>Mapa.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\Mapa.aspx.designer.cs">
-      <DependentUpon>Mapa.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\Frm_CadClientes.aspx.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Mapa.aspx.cs">
+      <DependentUpon>Mapa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Mapa.aspx.designer.cs">
+      <DependentUpon>Mapa.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\MapaVeiculo.aspx.cs">
       <DependentUpon>MapaVeiculo.aspx</DependentUpon>

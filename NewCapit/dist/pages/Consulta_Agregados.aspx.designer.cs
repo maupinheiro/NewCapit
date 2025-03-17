@@ -96,15 +96,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.GridView gvListAgregados;
 
         /// <summary>
-        /// Controle example1.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView example1;
-
-        /// <summary>
         /// Controle txtconformmessageValue.
         /// </summary>
         /// <remarks>

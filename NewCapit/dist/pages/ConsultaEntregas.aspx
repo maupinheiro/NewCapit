@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="ConsultaEntregas.aspx.cs" Inherits="NewCapit.dist.pages.ConsultaEntregas" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="ConsultaEntregas.aspx.cs" Inherits="NewCapit.dist.pages.ConsultaEntregas" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>

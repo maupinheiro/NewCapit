@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltTransportadoras.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AltTransportadoras" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltTransportadoras.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AltTransportadoras" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
