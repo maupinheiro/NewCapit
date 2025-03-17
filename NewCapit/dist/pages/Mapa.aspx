@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Mapa.aspx.cs" Inherits="NewCapit.dist.pages.Mapa" EnableEventValidation="true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="~/dist/pages/Mapa.aspx.cs" Inherits="NewCapit.dist.pages.Mapa" EnableEventValidation="true" %>
 <%@ register assembly="GMaps" namespace="Subgurim.Controles" tagprefix="cc1" %>
 <!DOCTYPE html>
 
