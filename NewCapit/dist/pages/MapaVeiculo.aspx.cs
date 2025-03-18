@@ -223,7 +223,7 @@ namespace NewCapit.dist.pages
 
 
             string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf   ";
-            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where t.ds_lat=" + e.point.lat.ToString().Replace(",", ".") + " and t.ds_long=" + e.point.lng.ToString().Replace(",", ".");
+            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where t.ds_lat=" + e.point.lat.ToString().Replace(",", ".") + " and t.ds_long=" + e.point.lng.ToString().Replace(",", ".")+ " and YEAR(t.dt_posicao) = YEAR(GETDATE())";
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();

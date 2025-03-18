@@ -286,9 +286,5 @@
        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
    </footer>
  
- <%--<script>
-       $(function () {
-           bsCustomFileInput.init();
-       });
- </script>--%>
+
 </asp:Content>

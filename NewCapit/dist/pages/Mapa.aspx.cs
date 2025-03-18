@@ -87,35 +87,35 @@ namespace NewCapit.dist.pages
                 ico.iconAnchor = new GPoint(25, 10);
                 if (dt.Rows[r][8].ToString() == "0")
                 {
-                    ico.image = "img/ico_truck.png";
+                    ico.image = "../img/ico_truck.png";
                 }
                 if (dt.Rows[r][8].ToString() == "1")
                 {
-                    ico.image = "img/ico_truck1.png";
+                    ico.image = "../img/ico_truck1.png";
                 }
                 if (dt.Rows[r][8].ToString() == "2")
                 {
-                    ico.image = "img/ico_truck2.png";
+                    ico.image = "../img/ico_truck2.png";
                 }
                 if (dt.Rows[r][8].ToString() == "3")
                 {
-                    ico.image = "img/ico_truck3.png";
+                    ico.image = "../img/ico_truck3.png";
                 }
                 if (dt.Rows[r][8].ToString() == "4")
                 {
-                    ico.image = "img/ico_truck4.png";
+                    ico.image = "../img/ico_truck4.png";
                 }
                 if (dt.Rows[r][8].ToString() == "5")
                 {
-                    ico.image = "img/ico_truck5.png";
+                    ico.image = "../img/ico_truck5.png";
                 }
                 if (dt.Rows[r][8].ToString() == "6")
                 {
-                    ico.image = "img/ico_truck6.png";
+                    ico.image = "../img/ico_truck6.png";
                 }
                 if (dt.Rows[r][8].ToString() == "7")
                 {
-                    ico.image = "img/ico_truck7.png";
+                    ico.image = "../img/ico_truck7.png";
                 }
 
                 GMarkerOptions mOpts = new GMarkerOptions();
@@ -129,7 +129,7 @@ namespace NewCapit.dist.pages
                  GMap1.Add(window2);*/
 
                 GMap2.Add(marker);
-
+               
 
 
 
@@ -186,7 +186,7 @@ namespace NewCapit.dist.pages
 
 
                 GMap2.Add(window);
-
+                
 
                 //return "document.getElementById('Msg1').innerHTML="+ e.point.lat.ToString() + ";" + "document.getElementById('Msg2').innerHTML="+ e.point.lng.ToString();
 

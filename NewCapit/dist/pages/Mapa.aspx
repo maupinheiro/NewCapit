@@ -11,7 +11,7 @@
     
                                                
                                                 
-        <cc1:GMap ID="GMap2" runat="server" Width="100%" Height="870px" enableServerEvents="True" OnMarkerClick="GMap2_MarkerClick" />
+        <cc1:GMap ID="GMap2" runat="server" Width="100%" Height="870px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True" OnMarkerClick="GMap2_MarkerClick" />
                        
                      
    
