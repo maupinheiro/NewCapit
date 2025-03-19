@@ -98,12 +98,16 @@ namespace NewCapit.dist.pages
             gvListAgregados.DataSource = dataTable;
             gvListAgregados.DataBind();
 
-            gvListAgregados.UseAccessibleHeader = true;
-            gvListAgregados.HeaderRow.TableSection = TableRowSection.TableHeader;
-            gvListAgregados.FooterRow.TableSection = TableRowSection.TableFooter;
+            //gvListAgregados.UseAccessibleHeader = true;
+            //gvListAgregados.HeaderRow.TableSection = TableRowSection.TableHeader;
+            //gvListAgregados.FooterRow.TableSection = TableRowSection.TableFooter;
 
         }
-
+        protected void gvListAgregados_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvListAgregados.PageIndex = e.NewPageIndex;
+            AllDataAgregados();  // Método para recarregar os dados no GridView
+        }
         protected void Excluir(object sender, EventArgs e)
         {
             if (txtconformmessageValue.Value == "Yes")

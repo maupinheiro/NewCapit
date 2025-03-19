@@ -173,8 +173,8 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "graficoFrotaScript", html1, false);
 
-            string sqlm = "WITH Ranking AS (SELECT nomemotorista, COUNT(*) AS total_entregas, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_posicao FROM tbcarregamentos WHERE MONTH(emissao) = 04 AND YEAR(emissao) = 2024  GROUP BY nomemotorista) ";
-            sqlm += "SELECT * FROM Ranking WHERE rank_posicao <= 10";
+            string sqlm = "WITH Ranking AS (SELECT nomemotorista, codmotorista, COUNT(*) AS total_entregas, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_posicao FROM tbcarregamentos WHERE MONTH(emissao) = 02 AND YEAR(emissao) = 2024  GROUP BY nomemotorista, codmotorista) ";
+            sqlm += "SELECT * FROM Ranking WHERE rank_posicao <= 10 AND codmotorista NOT LIKE '%[^0-9]%'";
             SqlDataAdapter adptm = new SqlDataAdapter(sqlm, con);
             DataTable dtm = new DataTable();
             con.Open();
