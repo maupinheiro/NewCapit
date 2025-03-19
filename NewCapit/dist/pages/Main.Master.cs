@@ -17,11 +17,11 @@ namespace NewCapit
             if (!IsPostBack) {
                 if (Session["UsuarioLogado"] != null) {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    //lblUsuario.Text = nomeUsuario;
+                    lblUsuario.Text = nomeUsuario;
                 }
                 else
                 {
-                    //lblUsuario.Text = "<Usuário>";
+                    lblUsuario.Text = "<Usuário>";
                 }
 
                 if (Session["FuncaoUsuario"] != null)
@@ -37,11 +37,11 @@ namespace NewCapit
                 if (Session["EmpresaTrabalho"] != null)
                 {
                     string nomeEmpresa = Session["EmpresaTrabalho"].ToString();
-                   // lblEmpresa.Text = nomeEmpresa;
+                    lblNucleo.Text = nomeEmpresa;
                 }
                 else
                 {
-                   // lblEmpresa.Text = "<Empresa>";
+                    lblNucleo.Text = "<Empresa>";
                 }
 
                 if (Session["PermissaoUsuario"] != null)
@@ -65,15 +65,15 @@ namespace NewCapit
 
             }
             id_usuario = (string)Session["CodUsuario"];
-            String path = Server.MapPath("~/fotos/");
+            String path = Server.MapPath("../../fotos/");
             string file = id_usuario + ".jpg";
             if (File.Exists(path + file))
             {
-                foto = "../fotos/" + file + "";
+                foto = "../../fotos" + file + "";
             }
             else
             {
-                foto = "fotos/usuario.jpg";
+                foto = "../../fotos/usuario.jpg";
             }
            
            

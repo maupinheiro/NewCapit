@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -37,11 +38,15 @@ namespace NewCapit
             gvListMotoristas.DataSource = dataTable;
             gvListMotoristas.DataBind();
 
-            gvListMotoristas.UseAccessibleHeader = true;
-            gvListMotoristas.HeaderRow.TableSection = TableRowSection.TableHeader;
-            gvListMotoristas.FooterRow.TableSection = TableRowSection.TableFooter;
+            //gvListMotoristas.UseAccessibleHeader = true;
+            //gvListMotoristas.HeaderRow.TableSection = TableRowSection.TableHeader;
+            //gvListMotoristas.FooterRow.TableSection = TableRowSection.TableFooter;
         }
-
+        protected void gvListMotoristas_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvListMotoristas.PageIndex = e.NewPageIndex;
+            listarMotoristas();  // Método para recarregar os dados no GridView
+        }
         public void ContagemMotorista()
         {
             // total de veiculos

@@ -3,6 +3,16 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <style>
+     .pagination-centered {
+      text-align: center;
+     }
+
+     .pagination-centered table {
+     margin: 0 auto; /* Isso centraliza a tabela da paginação */
+     }
+
+ </style>
        <!-- Page Heading -->
     <div class="content-wrapper">
         <div class="content-header">
@@ -311,7 +321,8 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
-                     <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id">
+                     <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>
                         <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="45" ItemStyle-Width="45" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
                         <asp:TemplateField HeaderText="MOTORISTA">

@@ -16,6 +16,16 @@
 
     </script>
 
+    <style>
+        .pagination-centered {
+         text-align: center;
+        }
+
+        .pagination-centered table {
+        margin: 0 auto; /* Isso centraliza a tabela da paginação */
+        }
+
+    </style>
     <!-- Page Heading -->
     <div class="content-wrapper">
         <div class="content-header">
@@ -163,7 +173,8 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                    <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id">
+                    <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
                             <asp:BoundField DataField="id" HeaderText="#ID" />
                             <asp:BoundField DataField="codcli" HeaderText="CÓDIGO" />

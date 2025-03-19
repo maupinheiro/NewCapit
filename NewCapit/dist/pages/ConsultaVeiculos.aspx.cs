@@ -314,10 +314,15 @@ namespace NewCapit
             gvVeiculos.DataSource = dataTable;
             gvVeiculos.DataBind();
 
-            gvVeiculos.UseAccessibleHeader = true;
-            gvVeiculos.HeaderRow.TableSection = TableRowSection.TableHeader;
-            gvVeiculos.FooterRow.TableSection = TableRowSection.TableFooter;
+            //gvVeiculos.UseAccessibleHeader = true;
+            //gvVeiculos.HeaderRow.TableSection = TableRowSection.TableHeader;
+            //gvVeiculos.FooterRow.TableSection = TableRowSection.TableFooter;
 
+        }
+        protected void gvVeiculos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvVeiculos.PageIndex = e.NewPageIndex;
+            AllDataVeiculos();  // Método para recarregar os dados no GridView
         }
         protected void Editar(object sender, EventArgs e)
         {

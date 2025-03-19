@@ -42,9 +42,9 @@ namespace NewCapit
             gvList.DataSource = dataTable;
             gvList.DataBind();
 
-            gvList.UseAccessibleHeader = true;
-            gvList.HeaderRow.TableSection = TableRowSection.TableHeader;
-            gvList.FooterRow.TableSection = TableRowSection.TableFooter;
+            //gvList.UseAccessibleHeader = true;
+            //gvList.HeaderRow.TableSection = TableRowSection.TableHeader;
+            //gvList.FooterRow.TableSection = TableRowSection.TableFooter;
 
         }
 
@@ -104,7 +104,11 @@ namespace NewCapit
             con.Close();
             CentroOeste.Text = dt4.Rows[0][0].ToString();
         }
-
+        protected void gvList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvList.PageIndex = e.NewPageIndex;
+            AllData();  // Método para recarregar os dados no GridView
+        }
         protected void Editar(object sender, EventArgs e)
         {
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
