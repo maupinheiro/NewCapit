@@ -178,7 +178,7 @@
                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                                 <ItemTemplate>
                                     <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
-                                 Editar</asp:LinkButton>
+                                 </asp:LinkButton>
                                     <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                 <i class="fa fa-edit"></i>
                                 Editar
@@ -186,10 +186,10 @@
 
                                     <a class="btn btn-info btn-sm">
                                         <i class="fas fa-map-marker-alt"></i>
-                                        Mapa
+                                        
                                     </a>
                                     <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
-                                  Excluir</asp:LinkButton>
+                                  </asp:LinkButton>
 
                                     <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
                                 <i class="fa fa-trash"></i>                                    

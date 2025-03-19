@@ -61,7 +61,7 @@
                         <!-- BAR CHART -->
                         <div class="card card-success">
                             <div class="card-header">
-                                <h3 class="card-title">Operação</h3>
+                                <h3 class="card-title">Operação: 01/03/2025 a 07/03/2025</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -84,7 +84,7 @@
                 </div>
                 <div class="row">
                     <!-- DONUT CHART -->
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <div class="card card-warning">
                             <div class="card-header">
                                 <h3 class="card-title">Coletas/Entregas</h3>
@@ -103,10 +103,7 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
-                    </div>
-                    <div class="col-md-1">
-
-                    </div>
+                    </div>                   
                     <div class="col-md-6">
                         <!-- PIE CHART -->
                         <div class="card card-info">
@@ -144,7 +141,7 @@
                         <!-- AREA CHART -->
                         <div class="card card-danger">
                             <div class="card-header">
-                                <h3 class="card-title">Desempenho dos Veículos</h3>
+                                <h3 class="card-title">Veículos</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>

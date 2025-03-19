@@ -196,6 +196,7 @@
                         </div>
                         <div class="info">
                             <a href="#" class="d-block">Genildo Santos</a>
+                            <a href="#" class="d-block"><small>Transnovag - Matriz</small></a>
                         </div>
                     </div>
 
@@ -254,7 +255,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-copy"></i>
+                                    <i class="nav-icon fas fa-address-card"></i>
                                     <p>
                                         Clientes               
                                     <i class="fas fa-angle-left right"></i>
@@ -281,7 +282,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-chart-pie"></i>
+                                    <i class="nav-icon fas fa-user-friends"></i>
                                     <p>
                                         Agregados               
                                     <i class="right fas fa-angle-left"></i>
@@ -305,7 +306,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-tree"></i>
+                                    <i class="nav-icon fas fa-truck"></i>
                                     <p>
                                         Veículos        
                                     <i class="fas fa-angle-left right"></i>
@@ -314,7 +315,7 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-truck nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
                                     </li>
@@ -353,7 +354,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-edit"></i>
+                                    <i class="nav-icon fas fa-id-card-alt"></i>
                                     <p>
                                         Motoristas               
                                     <i class="fas fa-angle-left right"></i>
@@ -407,7 +408,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
+                                    <i class="nav-icon fas fa-coins"></i>
                                     <p>
                                         Cargas               
                                         <i class="fas fa-angle-left right"></i>
@@ -416,13 +417,13 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaCargas.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-pallet nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="pages/tables/jsgrid.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-calendar-alt nav-icon"></i>
                                             <p>Solicitações VW</p>
                                         </a>
                                     </li>                                    
@@ -431,7 +432,7 @@
 
                             <li class="nav-item">
                                  <a href="#" class="nav-link">
-                                     <i class="nav-icon fas fa-table"></i>
+                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                      <p>
                                          Coletas/Entregas               
                                          <i class="fas fa-angle-left right"></i>
@@ -440,7 +441,7 @@
                                  <ul class="nav nav-treeview">
                                      <li class="nav-item">
                                          <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
-                                             <i class="far fa-circle nav-icon"></i>
+                                             <i class="fas fa-warehouse nav-icon"></i>
                                              <p>Consulta</p>
                                          </a>
                                      </li>
@@ -455,7 +456,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
+                                    <i class="nav-icon fas fa-fire-extinguisher"></i>
                                     <p>
                                         Manutenção Ipiranga               
                                     <i class="fas fa-angle-left right"></i>
@@ -464,25 +465,25 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Manutenção Ipiranga</p>
+                                            <i class="fas fa-oil-can nav-icon"></i>
+                                            <p>Manutenção</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/tables/jsgrid.html" class="nav-link">
+                                        <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Fornecedores</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/tables/jsgrid.html" class="nav-link">
+                                        <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Postos</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/tables/jsgrid.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-gas-pump nav-icon"></i>
                                             <p>Combustível</p>
                                         </a>
                                     </li>
