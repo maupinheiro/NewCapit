@@ -75,6 +75,9 @@
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
     <Content Include="css\styleTabela.css" />
+    <Content Include="dist\img\credit\cargas.png" />
+    <Content Include="dist\img\credit\entregas.png" />
+    <Content Include="dist\img\credit\veiculo.png" />
     <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaEntregas.aspx" />
