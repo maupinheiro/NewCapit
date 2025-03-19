@@ -42,7 +42,7 @@
                       </div>
                       <div class="col-md-2">
                           <asp:LinkButton ID="lnkMapa" runat="server" class="btn btn-outline-primary btn-block" OnClick="lnkMapa_Click"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</asp:LinkButton>
-                        <%-- <button type="button" class="btn btn-outline-primary btn-block" onclick="return abre_mapa('Mapa.aspx',1400,700);"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</button>  --%>                      
+                            
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -276,24 +276,6 @@
         <!-- /.content -->
     </div>
 </div>
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
-
-    <!-- jQuery -->
-
-    <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="../../plugins/chart.js/Chart.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../../dist/js/demo.js"></script>
-    <!-- Page specific script -->
+   
    
 </asp:Content>

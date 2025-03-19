@@ -3,17 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">   
+     
 
     <div class="content-wrapper">
          <section class="content">
@@ -269,11 +259,8 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
-<<<<<<< HEAD:NewCapit/Frm_CadVeiculos.aspx
-                    <asp:TextBox ID="txtCodTra" runat="server" ForeColor="Blue" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
-=======
                     <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
->>>>>>> master:NewCapit/dist/pages/Frm_CadVeiculos.aspx
+
                 </div>
             </div>
 
@@ -344,19 +331,7 @@
        </div>
        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
    </footer>
-       <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Select2 -->
-    <script src="../../plugins/select2/js/select2.full.min.js"></script>    
-    <!-- InputMask -->
-    <script src="../../plugins/moment/moment.min.js"></script>
-    <script src="../../plugins/inputmask/jquery.inputmask.min.js"></script>   
-    <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../../dist/js/demo.js"></script>
+     
     <!-- Page specific script -->
     <script>
         $(function () {

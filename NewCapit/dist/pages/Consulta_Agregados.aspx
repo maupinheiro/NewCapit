@@ -1,34 +1,21 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Consulta_Agregados.aspx.cs" Inherits="NewCapit.dist.pages.Consulta_Agregados" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Consulta_Agregados.aspx.cs" Inherits="NewCapit.dist.pages.Consulta_Agregados" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-     
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css"> 
+   
 
     <script language="javascript">
         function ConfirmMessage() {
             var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-            if (selectedvalue) {
+        if (selectedvalue) {
                 document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
-<<<<<<< HEAD
+
         } else {
             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-=======
-            } else {
-                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
->>>>>>> master
-            }
+
         }
+        
     </script>
 
     <!-- Page Heading -->
@@ -137,28 +124,10 @@
             </div>
         </div>
         <!-- DataTales Example -->
-<<<<<<< HEAD
+
          <div class="card shadow mb-4">
               <div class="card-body">
-                 <div class="table-responsive">
-                     <asp:GridView ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server">
-    <Columns>
-        <asp:BoundField DataField="id" HeaderText="#ID" />
-        <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
-        <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
-        <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
-        <asp:BoundField DataField="filial" HeaderText="FILIAL" />
-        <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
-        <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
-        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
-            <ItemTemplate>
-                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
-                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i> Excluir</asp:LinkButton>
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-</asp:GridView>
-=======
+                
         <div class="card shadow mb-4">
               <div class="card-body">
                  <div class="table-responsive">
@@ -187,29 +156,11 @@
 
 
     </div>
-
+             
+         </div>
+        </div>
     <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables  & Plugins -->
-    <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../../plugins/jszip/jszip.min.js"></script>
-    <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../../dist/js/demo.js"></script>
-    <!-- Page specific script -->
+    
     <script>
         $(function () {
             $("#example1").DataTable({
@@ -226,10 +177,9 @@
                 "responsive": true,
             });
         });
-<<<<<<< HEAD
+
 </script>
-=======
-    </script>
->>>>>>> master
+
+   
 
 </asp:Content>
