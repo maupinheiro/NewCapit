@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
+<link rel="stylesheet" href="/css/styleTabela.css">
 <script language="javascript">
     function ConfirmMessage() {
         var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
@@ -47,17 +47,10 @@
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         <asp:Label ID="TotalVeiculos" runat="server" Text=""></asp:Label>
                                     </div>
-
                                 </div>
                                 <!-- sub menu total de veiculos -->
                                 <div class="col-auto">                            
                                      <ul class="nav navbar-nav navbar-right">
-                                         <li class="">                            
-                                             <class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                             <i class="fas fa-shipping-fast fa-2x text-gray-300"></i>
-                                             <span class=" fa fa-angle-down"></span>                               
-                                             <ul class="dropdown-menu dropdown-usermenu pull-right"> </ul>                            
-                                         </li>    
                                          <li>
                                              <span>ATIVOS: </span> 
                                              <span class="text-xs font-weight-bold text-primary text-uppercase mb-1">
@@ -77,8 +70,8 @@
               </div>
               <!-- Frota -->
               <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
+                 <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
@@ -151,11 +144,11 @@
                         <!-- Fim do sub menu frota -->
                     </div>
                 </div>
-            </div>
-        </div>
+                 </div>
+              </div>
               <!-- Agregados  -->
               <div class="col-xl-3 col-md-6 mb-4">
-           <div class="card border-left-warning shadow h-100 py-2">
+                 <div class="card border-left-warning shadow h-100 py-2">
                  <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -230,7 +223,7 @@
             </div>
         </div>
             </div>
-        </div>       
+              </div>       
               <!-- Terceiros  -->
               <div class="col-xl-3 col-md-6 mb-4">
                  <div class="card border-left-danger shadow h-100 py-2">
@@ -312,7 +305,10 @@
         </div>
      </div>
      <!-- Grid -->
-     <div class="card shadow mb-4">        
+     <div class="card shadow mb-4"> 
+        <div class="card-header">
+           <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">
+        </div>
         <div class="card-body">
             <div class="table-responsive">              
                 <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">

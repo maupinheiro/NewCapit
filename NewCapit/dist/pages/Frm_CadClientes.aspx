@@ -136,7 +136,7 @@
                       <div class="col-md-2">
                           <div class="form-group">
                               <span class="details">FONE FIXO:</span>
-                              <asp:TextBox ID="txtTc1Cli" runat="server" ForeColor="Blue" CssClass="form-control" data-mask="(00) 0000-0000" MaxLength="15"></asp:TextBox>
+                              <asp:TextBox ID="txtTc1Cli" runat="server" ForeColor="Blue" CssClass="form-control" data-inputmask='"mask": "(99) 9999-9999"' data-mask MaxLength="15"></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-1">

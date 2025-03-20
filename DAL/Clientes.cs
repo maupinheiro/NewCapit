@@ -18,7 +18,7 @@ namespace DAL
         public static DataTable FetchDataTable()
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos
-            string sql = "SELECT id, codcli, tipo, nomcli, unidade, regiao, cidcli, estcli, CONVERT(varchar, dtccli, 103) AS dtccli, ativo_inativo FROM tbclientes where fl_exclusao is null";
+            string sql = "SELECT id, codcli, tipo, nomcli, unidade, regiao, cidcli, estcli, CONVERT(varchar, dtccli, 103) AS dtccli, ativo_inativo FROM tbclientes where fl_exclusao is null ORDER BY nomcli";
            
             using (var con = ConnectionUtil.GetConnection())
             {

@@ -25,12 +25,12 @@
         <br />
         <div class="card card-success">
             <div class="card-header">
-                <h3 class="card-title">MAPA - BUSCA DE VEÍCULOS</h3>
+                <h3 class="card-title">MAPA - LOCALIZAÇÃO DOS VEÍCULOS</h3>
             </div>
         </div>
         <div class="card-header">
             <div class="row g-3">
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">PLACA:</span>
                         <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" placeholder="" MaxLength="11" ></asp:TextBox>
