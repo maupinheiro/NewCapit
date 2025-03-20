@@ -3,8 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   
-
+    <link rel="stylesheet" href="/css/styleTabela.css">
     <script language="javascript">
         function ConfirmMessage() {
             var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
@@ -138,6 +137,9 @@
               <div class="card-body">
                 
         <div class="card shadow mb-4">
+              <div class="card-header">
+                 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">
+              </div>
               <div class="card-body">
                  <div class="table-responsive">
                      <asp:GridView ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListAgregados_PageIndexChanging" ShowHeaderWhenEmpty="True">

@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-body row">
                       <div class="col-md-10">
-                        
+                         01/03/2025 - 06/03/2025
                       </div>
                       <div class="col-md-2">
                           <asp:LinkButton ID="lnkMapa" runat="server" class="btn btn-outline-primary btn-block" OnClick="lnkMapa_Click"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</asp:LinkButton>
@@ -61,7 +61,7 @@
                         <!-- BAR CHART -->
                         <div class="card card-success">
                             <div class="card-header">
-                                <h3 class="card-title">Operação: 01/03/2025 a 07/03/2025</h3>
+                                <h3 class="card-title">Operação</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
