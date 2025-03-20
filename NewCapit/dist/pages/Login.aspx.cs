@@ -45,12 +45,14 @@ namespace NewCapit
                     string permissaoUsuario = user.fl_permissao;
                     //O cod do funcionario é passado para a página master para carregar a foto na pagina//
                     string codFuncionario = user.cod_usuario.ToString();
+                    string fotoFuncionario = user.foto_usuario;
                  
                     Session["UsuarioLogado"] = nomeUsuario;
                     Session["EmpresaTrabalho"] = nomeEmpresa;
                     Session["FuncaoUsuario"] = funcaoUsuario;
                     Session["CodUsuario"] = codFuncionario;
                     Session["PermissaoUsuario"] = permissaoUsuario;
+                    Session["FotoUsuario"] = fotoFuncionario;
 
                     //Chama a página principal
                     Response.Redirect("/dist/pages/Home.aspx");

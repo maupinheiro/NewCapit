@@ -11,7 +11,7 @@ namespace NewCapit
     public partial class Main : System.Web.UI.MasterPage
     {
         public string foto;
-        string id_usuario;
+        string id_usuario, foto_usuario;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack) {
@@ -64,12 +64,15 @@ namespace NewCapit
                 }
 
             }
-            id_usuario = (string)Session["CodUsuario"];
+            foto_usuario = (string)Session["FotoUsuario"];
+
+            
+
             String path = Server.MapPath("../../fotos/");
-            string file = id_usuario + ".jpg";
+            string file = foto_usuario;
             if (File.Exists(path + file))
             {
-                foto = "../../fotos" + file + "";
+                foto = "../../fotos/" + file + "";
             }
             else
             {

@@ -28,8 +28,15 @@
     <!-- summernote -->
     <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
     <asp:ContentPlaceHolder ID="head" runat="server">
+    <style>
+        .img-custom {
+         width: 200px;
+         height: 200px;
+        }
+    </style>
     </asp:ContentPlaceHolder>
 </head>
+   
 <!-- layout-fixed -->
 <body class="hold-transition sidebar-mini layout-fixed">
     <form id="form1" runat="server">
@@ -192,8 +199,8 @@
 
                     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                         <div class="image">
-                            <img src="<%=foto%>" class="img-circle elevation-2" alt="User Image">
-                        </div>
+                          <img src="<%=foto%>" class="img-circle elevation-6 img-custom" alt="User Image">
+                        </div><br />
                         <div class="info">
                             <a href="#" class="d-block"><asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></a>
                             <a href="#" class="d-block"><small><asp:Label ID="lblNucleo" runat="server" Text=""></asp:Label></small></a>
