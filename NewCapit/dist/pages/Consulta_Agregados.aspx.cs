@@ -171,6 +171,25 @@ namespace NewCapit.dist.pages
                 Response.Redirect("Frm_AltTransportadoras.aspx?id=" + id);
             }
         }
+        private void AllData(string searchTerm = "")
+        {
+            var dataTable = DAL.ConAgregados.FetchDataTable2(searchTerm);
+            if (dataTable.Rows.Count <= 0)
+            {
+                gvListAgregados.DataSource = null;
+                gvListAgregados.DataBind();
+                return;
+            }
+
+            gvListAgregados.DataSource = dataTable;
+            gvListAgregados.DataBind();
+        }
+
+        protected void myInput_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = myInput.Text.Trim();
+            AllData(searchTerm);
+        }
     }
 
 }

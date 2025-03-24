@@ -28,5 +28,26 @@ namespace DAL
                 }
             }
         }
+
+        public static DataTable FetchDataTable2(string searchTerm)
+        {
+            string sql = "SELECT id, codvei, tipvei, plavei, reboque1, tipoveiculo, nucleo, transp, ativo_inativo FROM tbveiculos where fl_exclusao is null and plavei LIKE @searchTerm ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
     }
 }

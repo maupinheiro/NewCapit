@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-body row">
                       <div class="col-md-10">
-                         01/03/2025 - 06/03/2025
+                          <asp:Label ID="lblData" runat="server" Text=""></asp:Label>  
                       </div>
                       <div class="col-md-2">
                           <asp:LinkButton ID="lnkMapa" runat="server" class="btn btn-outline-primary btn-block" OnClick="lnkMapa_Click"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</asp:LinkButton>

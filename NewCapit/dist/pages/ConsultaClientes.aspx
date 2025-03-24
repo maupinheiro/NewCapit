@@ -172,7 +172,8 @@
         <!-- DataTales Grid -->
         <div class="card shadow mb-4">
             <div class="card-header">
-              <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">
+                <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+              <%--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">--%>
             </div>
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">

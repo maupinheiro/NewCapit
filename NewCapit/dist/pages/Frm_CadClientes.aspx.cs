@@ -34,17 +34,7 @@ namespace NewCapit.dist.pages
             }
 
         }
-        //protected void btnCep_Click(object sender, EventArgs e)
-        //{
-
-        //    WebCEP cep = new WebCEP(txtCepCli.Text);
-        //    txtBaiCli.Text = cep.Bairro.ToString();
-        //    txtCidCli.Text = cep.Cidade.ToString();
-        //    txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
-        //    txtEstCli.Text = cep.UF.ToString();
-        //    txtNumero.Focus();
-        //}
-
+       
         protected void btnCliente_Click(object sender, EventArgs e)
         {
             if (txtCodCli.Text.Trim() == "")
@@ -119,6 +109,7 @@ namespace NewCapit.dist.pages
         }
         private string RemoverMascaraCep(string cep)
         {
+            
             // Remove os caracteres não numéricos (pontos, barras e traços)
             return System.Text.RegularExpressions.Regex.Replace(cep, @"[^\d]", "");
         }

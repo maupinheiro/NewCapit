@@ -175,6 +175,25 @@ namespace NewCapit
 
 
         }
+        private void AllData(string searchTerm = "")
+        {
+            var dataTable = DAL.codCliente.FetchDataTable2(searchTerm);
+            if (dataTable.Rows.Count <= 0)
+            {
+                gvList.DataSource = null;
+                gvList.DataBind();
+                return;
+            }
+
+            gvList.DataSource = dataTable;
+            gvList.DataBind();
+        }
+
+        protected void myInput_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = myInput.Text.Trim();
+            AllData(searchTerm);
+        }
     }
     
 }

@@ -325,5 +325,25 @@ namespace NewCapit
 
 
         }
+
+        private void AllData(string searchTerm = "")
+        {
+            var dataTable = DAL.ConAgregados.FetchDataTable2(searchTerm);
+            if (dataTable.Rows.Count <= 0)
+            {
+                gvListMotoristas.DataSource = null;
+                gvListMotoristas.DataBind();
+                return;
+            }
+
+            gvListMotoristas.DataSource = dataTable;
+            gvListMotoristas.DataBind();
+        }
+
+        protected void myInput_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = myInput.Text.Trim();
+            AllData(searchTerm);
+        }
     }
 }

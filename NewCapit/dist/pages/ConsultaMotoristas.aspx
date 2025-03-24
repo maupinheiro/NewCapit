@@ -319,6 +319,9 @@
         </div>   
         <!-- Corpo da grid -->
         <div class="card shadow mb-4">
+             <div class="card-header">
+           <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                      <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">

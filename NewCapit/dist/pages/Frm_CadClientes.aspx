@@ -2,6 +2,43 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function aplicarMascara(input, mascara) {
+                input.addEventListener("input", function () {
+                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+                    let resultado = "";
+                    let posicao = 0;
+
+                    for (let i = 0; i < mascara.length; i++) {
+                        if (mascara[i] === "0") {
+                            if (valor[posicao]) {
+                                resultado += valor[posicao];
+                                posicao++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            resultado += mascara[i];
+                        }
+                    }
+
+                    input.value = resultado;
+                });
+            }
+
+            // Pegando os elementos no ASP.NET
+            let txtCNPJ = document.getElementById("<%= txtCnpj.ClientID %>");
+            let txtCep = document.getElementById("<%= txtCepCli.ClientID %>");
+        let txtTelefone = document.getElementById("<%= txtTc1Cli.ClientID %>");
+
+        if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
+        if (txtCep) aplicarMascara(txtData, "00000-000");
+        if (txtTelefone) aplicarMascara(txtTelefone, "(00) 00000-0000");
+    });
+    </script>
       <div class="content-wrapper">
       <section class="content">
           <div class="container-fluid">

@@ -40,6 +40,7 @@ namespace DAL
                 }
             }
         }
+        
         public static ConsultaCliente CheckCliente(ConsultaCliente obj)
         {
             string sqlQuery = "SELECT * FROM tbclientes WHERE (codcli = @codcli)";

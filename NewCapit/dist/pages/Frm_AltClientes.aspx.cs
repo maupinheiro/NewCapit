@@ -72,7 +72,8 @@ namespace NewCapit.dist.pages
                 txtCnpj.Text = dt.Rows[0][12].ToString();
                 txtInscEstadual.Text = dt.Rows[0][13].ToString();
                 txtProgramador.Text = dt.Rows[0][14].ToString();
-                txtContato.Text = dt.Rows[0][15].ToString();
+                txtConCli.Text = dt.Rows[0][15].ToString();
+                //txtContato.Text = dt.Rows[0][15].ToString();
                 txtEmail.Text = dt.Rows[0][16].ToString();
                 txtCodVw.Text = dt.Rows[0][17].ToString();
                 txtUnidade.Text = dt.Rows[0][18].ToString();
@@ -129,7 +130,7 @@ namespace NewCapit.dist.pages
             comando.Parameters.AddWithValue("@cidcli", txtCidCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@estcli", txtEstCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@programador", txtProgramador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@contato", txtContato.Text.ToUpper());
+            comando.Parameters.AddWithValue("@contato", txtConCli.Text.ToUpper());
             comando.Parameters.AddWithValue("@email", txtEmail.Text.ToUpper());
             comando.Parameters.AddWithValue("@codvw", txtCodVw.Text.ToUpper());
             comando.Parameters.AddWithValue("@cnpj", txtCnpj.Text);

@@ -386,5 +386,25 @@ namespace NewCapit
 
 
         }
+
+        private void AllData(string searchTerm = "")
+        {
+            var dataTable = DAL.ConVeiculos.FetchDataTable2(searchTerm);
+            if (dataTable.Rows.Count <= 0)
+            {
+                gvVeiculos.DataSource = null;
+                gvVeiculos.DataBind();
+                return;
+            }
+
+            gvVeiculos.DataSource = dataTable;
+            gvVeiculos.DataBind();
+        }
+
+        protected void myInput_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = myInput.Text.Trim();
+            AllData(searchTerm);
+        }
     }
 }

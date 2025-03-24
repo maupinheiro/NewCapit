@@ -30,6 +30,7 @@ namespace NewCapit.dist.pages
             {
                 CarregaBloco();
                 CarregaGraficos();
+                lblData.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + " - " + DateTime.Now.ToString("dd/MM/yyyy");
             }
         }
         public void CarregaBloco()

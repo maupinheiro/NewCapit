@@ -35,6 +35,27 @@ namespace DAL
                 }
             }
         }
+        public static DataTable FetchDataTable2(string searchTerm)
+        {
+            string sql = "SELECT id, codcli, tipo, nomcli, unidade, regiao, cidcli, estcli, dtccli, ativo_inativo FROM tbclientes " +
+                         "WHERE codcli LIKE @searchTerm OR nomcli LIKE @searchTerm";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
         public static ConsultaCliente CheckCliente(ConsultaCliente obj)
         {
             string sqlQuery = "SELECT codcli FROM tbclientes WHERE (codcli = @codcli) and fl_exclusao is null";
