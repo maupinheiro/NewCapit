@@ -33,13 +33,43 @@ namespace NewCapit.dist.pages
                 lblData.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + " - " + DateTime.Now.ToString("dd/MM/yyyy");
             }
         }
+        
         public void CarregaBloco()
         {
+            //TOTAL DE VIAGENS
+            string sqlt = "SELECT COUNT(*) AS Total FROM tbcarregamentos WHERE emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE))";
+            SqlDataAdapter adptt = new SqlDataAdapter(sqlt, con);
+            DataTable dtt = new DataTable();
+            con.Open();
+            adptt.Fill(dtt);
+            con.Close();
+            //TOTAL DE CONCLUÍDOS
+            string sqlc = "SELECT COUNT(*) AS Concluida FROM tbcarregamentos WHERE emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) and situacao='VIAGEM CONCLUIDA'";
+            SqlDataAdapter adptc = new SqlDataAdapter(sqlc, con);
+            DataTable dtc = new DataTable();
+            con.Open();
+            adptc.Fill(dtc);
+            con.Close();
+            //TOTAL EM ANDAMENTOS
+            string sqla = "SELECT COUNT(*) AS Concluida FROM tbcarregamentos WHERE emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) and situacao='EM ANDAMENTO'";
+            SqlDataAdapter adpta = new SqlDataAdapter(sqla, con);
+            DataTable dta = new DataTable();
+            con.Open();
+            adpta.Fill(dta);
+            con.Close();
+            //TOTAL DE PENDENTES
+            string sqlp = "SELECT COUNT(*) AS Concluida FROM tbcarregamentos WHERE emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) and situacao='PENDENTE'";
+            SqlDataAdapter adptp = new SqlDataAdapter(sqlp, con);
+            DataTable dtp = new DataTable();
+            con.Open();
+            adptp.Fill(dtp);
+            con.Close();
+
             string html;
             html = "<div class='col-lg-3 col-6'>";
             html += "<div class='small-box bg-info'>";
             html += "<div class='inner'>";
-            html += "<h3>150</h3>";
+            html += "<h3>" + dtt.Rows[0][0].ToString() +"</h3>";
             html += "<p>Total de Entregas</p>";
             html += "</div>";
             html += "<div class='icon'>";
@@ -50,7 +80,7 @@ namespace NewCapit.dist.pages
             html += "<div class='col-lg-3 col-6'>";
             html += "<div class='small-box bg-success'>";
             html += "<div class='inner'>";
-            html += "<h3>53</h3>";
+            html += "<h3>" + dta.Rows[0][0].ToString() +"</h3>";
             html += "<p>Entregas em Andamento</p>";
             html += "</div>";
             html += "<div class='icon'>";
@@ -61,7 +91,7 @@ namespace NewCapit.dist.pages
             html += "<div class='col-lg-3 col-6'>";
             html += "<div class='small-box bg-warning'>";
             html += "<div class='inner'>";
-            html += "<h3>44</h3>";
+            html += "<h3>" + dtc.Rows[0][0].ToString() +"</h3>";
             html += "<p>Entregas Concluidas</p>";
             html += "</div>";
             html += "<div class='icon'>";
@@ -72,7 +102,7 @@ namespace NewCapit.dist.pages
             html += "<div class='col-lg-3 col-6'>";
             html += "<div class='small-box bg-danger'>";
             html += "<div class='inner'>";
-            html += "<h3>65</h3>";
+            html += "<h3>" + dtp.Rows[0][0].ToString() +"</h3>";
             html += "<p>Entregas Pendentes</p>";
             html += "</div>";
             html += "<div class='icon'>";
@@ -85,6 +115,7 @@ namespace NewCapit.dist.pages
         }
         public void CarregaGraficos()
         {
+            
             string html = @"
                 <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
                 <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
@@ -174,7 +205,7 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "graficoFrotaScript", html1, false);
 
-            string sqlm = "WITH Ranking AS (SELECT nomemotorista, codmotorista, COUNT(*) AS total_entregas, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_posicao FROM tbcarregamentos WHERE MONTH(emissao) = 02 AND YEAR(emissao) = 2024  GROUP BY nomemotorista, codmotorista) ";
+            string sqlm = "WITH Ranking AS (SELECT nomemotorista, codmotorista, COUNT(*) AS total_entregas, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_posicao FROM tbcarregamentos WHERE MONTH(emissao) = 02 AND YEAR(emissao) = 2025  GROUP BY nomemotorista, codmotorista) ";
             sqlm += "SELECT * FROM Ranking WHERE rank_posicao <= 10 AND codmotorista NOT LIKE '%[^0-9]%'";
             SqlDataAdapter adptm = new SqlDataAdapter(sqlm, con);
             DataTable dtm = new DataTable();
@@ -270,15 +301,17 @@ namespace NewCapit.dist.pages
                 </script>";
 
             ClientScript.RegisterStartupScript(this.GetType(), "barChartVeiculosScript", html3, false);
-            string sqlw = @"SELECT DATENAME(weekday, emissao) AS DiaDaSemana, COUNT(*) AS QuantidadeDeViagens FROM tbcarregamentos WHERE nomclidestino LIKE 'VW%' AND emissao BETWEEN DATEADD(week, -60, GETDATE()) AND GETDATE()  --Intervalo de uma semana
-             GROUP BY DATENAME(weekday, emissao) ORDER BY  CASE DATENAME(weekday, emissao) WHEN 'Sunday' THEN 1 WHEN 'Monday' THEN 2 WHEN 'Tuesday' THEN 3 WHEN 'Wednesday' THEN 4 WHEN 'Thursday' THEN 5 WHEN 'Friday' THEN 6  WHEN 'Saturday' THEN 7 END";
+            string sqlw = @"WITH Ultimos7Dias AS (SELECT CONVERT(VARCHAR(5), DATEADD(DAY, -n, CAST(GETDATE() AS DATE)), 103) AS Dia  FROM (VALUES (1), (2), (3), (4), (5), (6), (7)) AS T(n))
+                            SELECT  U.Dia, COUNT(C.emissao) AS QuantidadeDeViagens FROM Ultimos7Dias U LEFT JOIN tbcarregamentos C ON CONVERT(VARCHAR(5), C.emissao, 103) = U.Dia AND C.nomclidestino LIKE 'VW%'
+                            AND C.emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) AND C.emissao < DATEADD(DAY, 1, CAST(GETDATE() AS DATE)) GROUP BY U.Dia ORDER BY MIN(U.Dia) asc";
             SqlDataAdapter adptTotal = new SqlDataAdapter(sqlw, con);
             DataTable dtw = new DataTable();
             con.Open();
             adptTotal.Fill(dtw);
             con.Close();
-            string sqlo = @"SELECT DATENAME(weekday, emissao) AS DiaDaSemana, COUNT(*) AS QuantidadeDeViagens FROM tbcarregamentos WHERE nomclidestino NOT LIKE 'VW%' AND emissao BETWEEN DATEADD(week, -60, GETDATE()) AND GETDATE()  --Intervalo de uma semana
-            GROUP BY DATENAME(weekday, emissao) ORDER BY  CASE DATENAME(weekday, emissao) WHEN 'Sunday' THEN 1 WHEN 'Monday' THEN 2 WHEN 'Tuesday' THEN 3 WHEN 'Wednesday' THEN 4 WHEN 'Thursday' THEN 5 WHEN 'Friday' THEN 6  WHEN 'Saturday' THEN 7 END";
+            string sqlo = @"WITH Ultimos7Dias AS (SELECT CONVERT(VARCHAR(5), DATEADD(DAY, -n, CAST(GETDATE() AS DATE)), 103) AS Dia  FROM (VALUES (1), (2), (3), (4), (5), (6), (7)) AS T(n))
+                            SELECT  U.Dia, COUNT(C.emissao) AS QuantidadeDeViagens FROM Ultimos7Dias U LEFT JOIN tbcarregamentos C ON CONVERT(VARCHAR(5), C.emissao, 103) = U.Dia AND C.nomclidestino NOT LIKE 'VW%'
+                            AND C.emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) AND C.emissao < DATEADD(DAY, 1, CAST(GETDATE() AS DATE)) GROUP BY U.Dia ORDER BY MIN(U.Dia) asc";
             SqlDataAdapter adptTotalo = new SqlDataAdapter(sqlo, con);
             DataTable dto = new DataTable();
             con.Open();
@@ -299,7 +332,7 @@ namespace NewCapit.dist.pages
                         var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
 
                         var areaChartData = {
-                            labels: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                            labels: [{2}],
                             datasets: [
                                 {
                                     label: 'Outros',
@@ -471,6 +504,8 @@ namespace NewCapit.dist.pages
             sb.Replace("{0}", outrosDataValues); // Substitui {0} pelos valores do DataTable 'Outros'
             string solicitacoesVWDataValues = string.Join(", ", dtw.AsEnumerable().Select(row => row["QuantidadeDeViagens"].ToString()));
             sb.Replace("{1}", solicitacoesVWDataValues); // Substitui {1} pelos valores do DataTable 'Solicitações VW'
+            string diasdasemana = string.Join(", ", dtw.AsEnumerable().Select(row => $"'{row["Dia"].ToString()}'"));
+            sb.Replace("{2}", diasdasemana); // Substitui {1} pelos valores do DataTable 'Solicitações VW'
             ClientScript.RegisterStartupScript(this.GetType(), "", sb.ToString(), false);
 
 

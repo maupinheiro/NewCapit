@@ -328,7 +328,7 @@ namespace NewCapit
 
         private void AllData(string searchTerm = "")
         {
-            var dataTable = DAL.ConAgregados.FetchDataTable2(searchTerm);
+            var dataTable = DAL.ConMotoristas.FetchDataTable2(searchTerm);
             if (dataTable.Rows.Count <= 0)
             {
                 gvListMotoristas.DataSource = null;
