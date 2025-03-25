@@ -194,15 +194,17 @@
                                 <ItemTemplate>
                                     <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
                                  </asp:LinkButton>
+                                       <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i></i> 
+                                           </asp:LinkButton>
                                     <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                 <i class="fa fa-edit"></i>
                                 Editar
                              </a> --%>
 
-                                    <a class="btn btn-info btn-sm">
+                                  <%--  <a class="btn btn-info btn-sm">
                                         <i class="fas fa-map-marker-alt"></i>
                                         
-                                    </a>
+                                    </a>--%>
                                     <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
                                   </asp:LinkButton>
 

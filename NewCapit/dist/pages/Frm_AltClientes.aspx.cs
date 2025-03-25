@@ -10,6 +10,14 @@ using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.UI.WebControls.WebParts;
+using GMaps;
+using GMaps.Classes;
+using Subgurim;
+using Subgurim.Controles;
+using Subgurim.Controls;
+using Subgurim.Maps;
+using Subgurim.Web;
+using System.Globalization;
 
 
 namespace NewCapit.dist.pages
@@ -246,6 +254,43 @@ namespace NewCapit.dist.pages
             }
 
 
+        }
+
+        protected void btnMapa_Click(object sender, EventArgs e)
+        {
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+            {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            string sql = "select razcli,latitude,longitude,raio, endcli,baicli,cidcli,estcli from tbclientes where latitude <>'' and longitude <>'' and  id=" + id;
+
+            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adpt.Fill(dt);
+            con.Close();
+
+            if (dt.Rows.Count > 0)
+            {
+                string url = "MapaCliente.aspx?id=" + id;
+                string script = $"window.open('{url}', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');";
+                ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+            }
+            else
+            {
+                string linha1 = "Cliente não possui coordenadas cadastradas.";
+
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+            }
         }
     }          
 }

@@ -72,7 +72,7 @@ namespace NewCapit.dist.pages
 
                     // Focar o veículo no mapa com zoom adequado
                     GMap1.setCenter(latlng1);
-                    GMap1.GZoom = 15;
+                    GMap1.GZoom = 18;
                     //GMap1; // Ajuste conforme necessário
                 }
                 catch

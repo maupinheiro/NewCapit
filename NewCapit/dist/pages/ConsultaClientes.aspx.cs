@@ -118,6 +118,45 @@ namespace NewCapit
                 Response.Redirect("Frm_AltClientes.aspx?id=" + id);
             }
         }
+        protected void Mapa(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvList.DataKeys[row.RowIndex].Value.ToString();
+
+                string sql = "select razcli,latitude,longitude,raio, endcli,baicli,cidcli,estcli from tbclientes where latitude <>'' and longitude <>'' and  id=" + id;
+
+                SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                adpt.Fill(dt);
+                con.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    string url = "MapaCliente.aspx?id=" + id;
+                    string script = $"window.open('{url}', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+                }
+                else
+                {
+                    string linha1 = "Cliente não possui coordenadas cadastradas.";
+
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    // Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    // Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                }
+
+                
+            }
+        }
 
         //Método que faz a "exclusão" do dado deixando ele com o status de invisivel
         protected void Excluir(object sender, EventArgs e)

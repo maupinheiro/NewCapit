@@ -271,7 +271,7 @@
                         </div>
                      <div class="row g-3">
                             <div class="col-md-1">
-                                <asp:Button ID="btnMapa" runat="server" CssClass="btn btn-outline-info btn-lg" Text="Mapa" />
+                                <asp:Button ID="btnMapa" runat="server" CssClass="btn btn-outline-info btn-lg" Text="Mapa" OnClick="btnMapa_Click" />
                             </div>
                             <div class="col-md-1">
                                 <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />

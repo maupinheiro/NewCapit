@@ -78,6 +78,7 @@
     <Content Include="dist\img\credit\cargas.png" />
     <Content Include="dist\img\credit\entregas.png" />
     <Content Include="dist\img\credit\veiculo.png" />
+    <Content Include="dist\img\icon_loc.png" />
     <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaEntregas.aspx" />
@@ -148,6 +149,7 @@
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
+    <Content Include="dist\pages\MapaCliente.aspx" />
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="fotos\1010.JPG" />
@@ -4356,6 +4358,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\MapaCliente.aspx.cs">
+      <DependentUpon>MapaCliente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\MapaCliente.aspx.designer.cs">
+      <DependentUpon>MapaCliente.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Mapa.aspx.cs">
       <DependentUpon>Mapa.aspx</DependentUpon>
