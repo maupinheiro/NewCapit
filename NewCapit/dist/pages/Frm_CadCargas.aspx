@@ -33,7 +33,14 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   
+   <script type="text/javascript">
+       // Usando AJAX para não fazer um PostBack completo, mas podemos usar um update panel também
+       function AtualizarCampos() {
+           var valorSelecionado = document.getElementById('<%= ddlSolicitante.ClientID %>').value;
+            // Aqui você faria uma chamada AJAX ou simples PostBack para atualizar os controles
+            __doPostBack('<%= ddlSolicitante.ClientID %>', '');
+       }
+   </script>
 
     <div class="content-wrapper">
         <section class="content">
@@ -43,17 +50,8 @@
                         <h3 class="card-title">CARGAS - NOVA CARGA</h3>
                     </div>
                 </dciv>
-            </div>
-      
-                <div class="card-header">
-                    <!-- Linha 1 do formulario -->
-                    <div class="col-md-1">
-                        <div class="form-group">
-                            <span class="">
-                                <h1>000001</h1>
-                            </span>
-                        </div>
-                    </div>
+            </div>      
+            <div class="card-header">                    
                     <!-- Linha 2 do formulario -->
                     <div class="row g-3">
                         <div class="col-md-2">
@@ -66,15 +64,15 @@
                             <div class="form-group">
                                 <span class="">SOLICITANTE:</span>
                                  <asp:DropDownList ID="ddlSolicitante" runat="server" class="form-control" AutoPostBack="True" 
-                              OnSelectedIndexChanged="DropDownListProdutos_SelectedIndexChanged">
+                              OnSelectedIndexChanged="ddlSolicitante_SelectedIndexChanged">
                 <asp:ListItem Text="Selecione uma categoria" Value="0"></asp:ListItem>
             </asp:DropDownList>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <span class="">TOMADOR DO SERVIÇO:</span>
-                                <asp:DropDownList ID="ddlTomador" runat="server"  CssClass="form-control"  ></asp:DropDownList>
+                                <asp:DropDownList ID="ddlTomador" runat="server"  CssClass="form-control"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -83,11 +81,11 @@
                                 <asp:TextBox ID="txtGr" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">CADASTRO:</span>
                                 <div class="input-group">
-                                    <asp:Label ID="lblDtCadCarga" runat="server" Style="text-align: center" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask></asp:Label>
+                                    <asp:Label ID="lblDtCadCarga" runat="server" Style="text-align: center" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/MM/yyyy HH:mm" data-mask></asp:Label>
                                 </div>
                             </div>
                         </div>
@@ -205,10 +203,7 @@
                                 <span class="details">PREV. ENTREGA:</span>
                                 <div class="input-group">
                                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
-                                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
+                                        <input type="date" class="form-control" />                                       
                                     </div>
                                 </div>
                             </div>
@@ -266,8 +261,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
-          
+                </div>          
         </section>
     </div>
 

@@ -20,24 +20,19 @@
                     <div class="row g-3">
                        <div class="col-md-2">
                             <div class="form-group">
-                                <span class="">Prev. Inicial:</span>
+                                <span class="">Previsão Inicial:</span>
                                 <div class="input-group date" id="prevInicial" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#prevInicial"/>
-                                    <div class="input-group-append" data-target="#prevInicial" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
+                                    <input type="date" class="form-control"/>
+                                    
                                 </div>
                             </div>
                        </div>
                       
                        <div class="col-md-2">
                             <div class="form-group">
-                                <span class="">Prev. Final:</span>
+                                <span class="">Previsão Final:</span>
                                 <div class="input-group date" id="prevFinal" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#prevFinal"/>
-                                    <div class="input-group-append" data-target="#prevFinal" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
+                                    <input type="date" class="form-control"/>
                                 </div>
                             </div>
                        </div>   
@@ -72,6 +67,7 @@
                                 <Columns>
                                    <asp:BoundField DataField="id" HeaderText="#ID" />
                                    <asp:BoundField DataField="carga" HeaderText="CARGA" />
+                                   <asp:BoundField DataField="" HeaderText="STATUS" /> 
                                    <asp:BoundField DataField="peso" HeaderText="PESO" />
                                    <asp:BoundField DataField="status" HeaderText="STATUS" />
                                    <asp:BoundField DataField="cliorigem" HeaderText="REMETENTE" />

@@ -29,99 +29,16 @@ namespace NewCapit.dist.pages
                 }
                 DateTime dataHoraAtual = DateTime.Now;
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-                lblDtCadCarga.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                lblDtCadCarga.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 
                 PreencherComboFiliais();
-               // PreencherComboSolicitantes();
+                
                // PreencherComboTomador();
                 PreencherComboRemetente();
-                PreencherComboDestinatario();
-                // Preencher o DropDownList de Categorias na primeira carga da página
-                PreencherCategorias();
+                PreencherComboDestinatario();                
             }
+            PreencherComboSolicitantes();
         }
-
-        // Preenche o DropDownList de Categorias
-        private void PreencherCategorias()
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT controle, nome FROM tbsolicitantes", conn);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                conn.Open();
-                da.Fill(dt);
-                conn.Close();
-
-                ddlSolicitante.DataSource = dt;
-                ddlSolicitante.DataTextField = "nome";
-                ddlSolicitante.DataValueField = "controle";
-                ddlSolicitante.DataBind();
-                ddlSolicitante.Items.Insert(0, new ListItem("", "0"));
-            }
-        }
-
-        // Evento para quando o usuário escolher uma categoria
-        protected void ddlSolicitante_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Obter a categoria selecionada
-            int categoriaID = Convert.ToInt32(ddlSolicitante.SelectedValue);
-
-            // Preencher o DropDownList de Produtos com base na categoria escolhida
-            PreencherProdutos(categoriaID);
-        }
-
-        // Preencher o DropDownList de Produtos com base na Categoria
-        private void PreencherProdutos(int categoriaID)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT codpagador, pagador, gerenciadora FROM tbtomadorservico WHERE codpagador = @CategoriaID", conn);
-                cmd.Parameters.AddWithValue("@CategoriaID", categoriaID);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                conn.Open();
-                da.Fill(dt);
-                conn.Close();
-
-                ddlTomador.DataSource = dt;
-                ddlTomador.DataTextField = "pagador";
-                ddlTomador.DataValueField = "codpagador";
-                ddlTomador.DataBind();
-            }
-        }
-
-        // Evento para quando o usuário escolher um produto
-        protected void DropDownListProdutos_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Obter o ProdutoID selecionado
-            int produtoID = Convert.ToInt32(ddlTomador.SelectedValue);
-
-            // Preencher o TextBox com o preço do produto escolhido
-            PreencherPreco(produtoID);
-        }
-
-        // Preencher o TextBox com o preço do produto
-        private void PreencherPreco(int produtoID)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT gerenciadora FROM tbtomadorservico WHERE codpagador = @ProdutoID", conn);
-                cmd.Parameters.AddWithValue("@ProdutoID", produtoID);
-
-                conn.Open();
-                var gerenciadora = cmd.ExecuteScalar();
-                conn.Close();
-
-                // Preencher o TextBox com o preço
-                //TextBoxPreco.Text = preco != DBNull.Value ? Convert.ToDecimal(preco).ToString("C") : "Preço não encontrado";
-                txtGr.Text = (string)gerenciadora;
-            }
-        }
-
-
 
         private void PreencherComboFiliais()
         {
@@ -158,11 +75,10 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         private void PreencherComboSolicitantes()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT controle, nome, tomador FROM tbsolicitantes";
+            string query = "SELECT id, nome, tomador, gr FROM tbsolicitantes";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -181,16 +97,75 @@ namespace NewCapit.dist.pages
                     // Preencher o ComboBox com os dados do DataReader
                     ddlSolicitante.DataSource = reader;
                     ddlSolicitante.DataTextField = "nome";  // Campo que será mostrado no ComboBox
-                    ddlSolicitante.DataValueField = "controle";  // Campo que será o valor de cada item                    
+                    ddlSolicitante.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlSolicitante.DataBind();  // Realiza o binding dos dados                   
                     ddlSolicitante.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
+                    
                 }
                 catch (Exception ex)
                 {
                     // Trate exceções
                     Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        protected void ddlSolicitante_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Obter o valor selecionado no primeiro ComboBox
+            string valorSelecionado = ddlSolicitante.SelectedItem.Text;
+
+            if (!string.IsNullOrEmpty(valorSelecionado))
+            {
+                // Preencher o segundo ComboBox e o TextBox de acordo com a seleção
+                PreencherCampos(valorSelecionado);
+                //PreencherComboTomador();
+            }
+        }
+        private void PreencherCampos(string gr)
+        {
+            // Conexão com o banco de dados            
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    conn.Open();
+
+                    string query = "SELECT id, tomador, gr FROM tbsolicitantes WHERE tomador = @tomador";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@tomador", gr);
+
+                        // Preencher o segundo ComboBox (DropDownList)
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            ddlTomador.Items.Clear();
+                            ddlTomador.Items.Add(new ListItem("Selecione...", ""));
+
+                            string grValor = ""; // Variável para armazenar o valor de `gr`
+
+                            while (reader.Read())
+                            {
+                                // Adiciona corretamente no DropDownList
+                                ddlTomador.Items.Add(new ListItem(reader["tomador"].ToString(), reader["id"].ToString()));
+
+                                // Verifica se o valor de "gr" não é nulo
+                                if (reader["gr"] != DBNull.Value)
+                                {
+                                    grValor = reader["gr"].ToString();
+                                }
+                            }
+
+                            // Preencher o TextBox com o valor correto de `gr`
+                            txtGr.Text = grValor;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Exibe o erro para depuração
+                    Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
                 }
             }
         }
@@ -231,41 +206,7 @@ namespace NewCapit.dist.pages
                     Response.Write("Erro: " + ex.Message);
                 }
             }
-        }
-
-        // Evento disparado quando o item do DropDownList é alterado
-        protected void ddlTomador_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Verifica se foi selecionado um produto
-            if (ddlTomador.SelectedValue != "")
-            {
-                int codpagador = int.Parse(ddlTomador.SelectedValue);
-                GetGerenciadoraDescricao(codpagador);
-            }
-            else
-            {
-                txtGr.Text = "";
-            }
-        }
-
-        private void GetGerenciadoraDescricao(int codpagador)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                string query = "SELECT gerenciadora FROM tbtomadorservico WHERE codpagador = @codpagador";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@codpagador", codpagador);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    txtGr.Text = reader.GetString(0);
-                }
-            }
-        }
-
+        }        
         private void PreencherComboRemetente()
         {
             // Consulta SQL que retorna os dados desejados
@@ -301,7 +242,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         private void PreencherComboDestinatario()
         {
             // Consulta SQL que retorna os dados desejados
