@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-body row">
                       <div class="col-md-10">
-                          <asp:Label ID="lblData" runat="server" Text=""></asp:Label>  
+                         <!-- <asp:Label ID="lblData" runat="server" Text=""></asp:Label> --> 
                       </div>
                       <div class="col-md-2">
                           <asp:LinkButton ID="lnkMapa" runat="server" class="btn btn-outline-primary btn-block" OnClick="lnkMapa_Click"><i class="fas fa-map-marker-alt"></i>  Veículos no Mapa</asp:LinkButton>

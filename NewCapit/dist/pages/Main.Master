@@ -197,20 +197,20 @@
                 <div class="sidebar">
                     <!-- Sidebar user panel (optional) -->
 
-                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                        <div class="image">                           
-                          <img src="<%=foto%>" class="img-circle elevation-6 img-custom" alt="Foto do Usuário">
-                        </div><br />
-                        <div class="info">
-                            <a href="#" class="d-block"><asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></a> 
-                            <a href="#" class="d-block"><small><asp:Label ID="lblNucleo" runat="server" Text=""></asp:Label></small></a>
-                        </div>                        
-                    </div>
+                    <div class="card card-widget">     
+                        <div class="card-header">
+                            <div class="user-block">
+                              <img class="img-circle" src="<%=foto%>" alt="User Image">
+                              <span class="username"><a href="#"><asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></a></span>
+                              <span class="description"><asp:Label ID="lblNucleo" runat="server" Text=""></asp:Label></span>
+                            </div>
+                          </div>
+                    </div>                    
 
                      <!-- SidebarSearch Form -->
                      <div class="form-inline">
                        <div class="input-group" data-widget="sidebar-search">
-                         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                         <input class="form-control form-control-sidebar" type="search" placeholder="Pesquisar..." aria-label="Search">
                          <div class="input-group-append">
                            <button class="btn btn-sidebar">
                              <i class="fas fa-search fa-fw"></i>
@@ -244,12 +244,115 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Matriz</p>
                                         </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-coins"></i>
+            <p>
+                Cargas               
+                <i class="fas fa-angle-left right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="/dist/pages/ConsultaCargas.aspx" class="nav-link">
+                    <i class="fas fa-pallet nav-icon"></i>
+                    <p>Consulta</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="pages/tables/jsgrid.html" class="nav-link">
+                    <i class="fas fa-calendar-alt nav-icon"></i>
+                    <p>Solicitações VW</p>
+                </a>
+            </li>                                    
+        </ul>
+    </li>
+                                            <li class="nav-item">
+         <a href="#" class="nav-link">
+             <i class="nav-icon fas fa-shipping-fast"></i>
+             <p>
+                 Coletas/Entregas               
+                 <i class="fas fa-angle-left right"></i>
+             </p>
+         </a>
+         <ul class="nav nav-treeview">
+             <li class="nav-item">
+                 <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
+                     <i class="fas fa-warehouse nav-icon"></i>
+                     <p>Consulta</p>
+                 </a>
+             </li>
+             <li class="nav-item">
+                 <a href="pages/tables/jsgrid.html" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Relatórios</p>
+                 </a>
+             </li>                                    
+         </ul>
+    </li>
+                                            <li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-fire-extinguisher"></i>
+        <p>
+            Manutenção Ipiranga               
+        <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="fas fa-oil-can nav-icon"></i>
+                <p>Manutenção</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Fornecedores</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Postos</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="fas fa-gas-pump nav-icon"></i>
+                <p>Combustível</p>
+            </a>
+        </li>
+    </ul>
+</li>
+                                        </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="./index2.html" class="nav-link">
+                                        <a href="" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>CNT</p>
                                         </a>
+                                          <ul class="nav nav-treeview">
+                                             <li class="nav-item">
+                                                 <a href="/dist/pages/ConsultaClientes.aspx" class="nav-link">
+                                                     <i class="fas fa-shipping-fast nav-icon"></i>
+                                                     <p>Controle de Coletas</p>
+                                                 </a>
+                                                 <a href="#" class="nav-link">
+                                                     <i class="fas fa-boxes nav-icon"></i>
+                                                     <p>Importar Planejamento</p>
+                                                 </a>
+                                                 <a href="#" class="nav-link">
+                                                     <i class="fas fa-calendar-alt nav-icon"></i>
+                                                     <p>Coletas</p>
+                                                 </a>
+                                                 <a href="#" class="nav-link">
+                                                    <i class="nav-icon fas fa-chart-pie"></i>
+                                                    <p>KPI Solicitações</p>
+                                                 </a>
+                                             </li>
+                                          </ul>
                                     </li>
                                     <li class="nav-item">
                                         <a href="./index3.html" class="nav-link">
@@ -412,91 +515,6 @@
                                     </li>
                                 </ul>
                             </li>
-
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-coins"></i>
-                                    <p>
-                                        Cargas               
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaCargas.aspx" class="nav-link">
-                                            <i class="fas fa-pallet nav-icon"></i>
-                                            <p>Consulta</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="pages/tables/jsgrid.html" class="nav-link">
-                                            <i class="fas fa-calendar-alt nav-icon"></i>
-                                            <p>Solicitações VW</p>
-                                        </a>
-                                    </li>                                    
-                                </ul>
-                            </li>
-
-                            <li class="nav-item">
-                                 <a href="#" class="nav-link">
-                                     <i class="nav-icon fas fa-shipping-fast"></i>
-                                     <p>
-                                         Coletas/Entregas               
-                                         <i class="fas fa-angle-left right"></i>
-                                     </p>
-                                 </a>
-                                 <ul class="nav nav-treeview">
-                                     <li class="nav-item">
-                                         <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
-                                             <i class="fas fa-warehouse nav-icon"></i>
-                                             <p>Consulta</p>
-                                         </a>
-                                     </li>
-                                     <li class="nav-item">
-                                         <a href="pages/tables/jsgrid.html" class="nav-link">
-                                             <i class="far fa-circle nav-icon"></i>
-                                             <p>Relatórios</p>
-                                         </a>
-                                     </li>                                    
-                                 </ul>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-fire-extinguisher"></i>
-                                    <p>
-                                        Manutenção Ipiranga               
-                                    <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fas fa-oil-can nav-icon"></i>
-                                            <p>Manutenção</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Fornecedores</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Postos</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fas fa-gas-pump nav-icon"></i>
-                                            <p>Combustível</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->
