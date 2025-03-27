@@ -38,9 +38,9 @@ namespace NewCapit.dist.pages
             gvListCargas.DataSource = dataTable;
             gvListCargas.DataBind();
 
-            gvListCargas.UseAccessibleHeader = true;
-            gvListCargas.HeaderRow.TableSection = TableRowSection.TableHeader;
-            gvListCargas.FooterRow.TableSection = TableRowSection.TableFooter;
+            //gvListCargas.UseAccessibleHeader = true;
+            //gvListCargas.HeaderRow.TableSection = TableRowSection.TableHeader;
+            //gvListCargas.FooterRow.TableSection = TableRowSection.TableFooter;
         }
         private void PreencherComboStatus()
         {
@@ -134,5 +134,86 @@ namespace NewCapit.dist.pages
 
 
         }
+
+        protected void lnkPesquisar_Click(object sender, EventArgs e)
+        {
+            string sql = @"SELECT id, carga, peso, status, cliorigem, clidestino, 
+                   CONVERT(varchar, previsao, 103) AS previsao, situacao 
+                   FROM tbcargas 
+                   WHERE fl_exclusao IS NULL";
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        DateTime? dtInicial = null;
+                        DateTime? dtFinal = null;
+
+                        string dataInicial = txtInicioData.Text.Trim();
+                        string dataFinal = txtFimData.Text.Trim();
+                        string status = ddlStatus.SelectedItem.Text;
+
+                        if (!string.IsNullOrWhiteSpace(dataInicial) && DateTime.TryParse(dataInicial, out DateTime parsedDataInicial))
+                        {
+                            dtInicial = parsedDataInicial;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(dataFinal) && DateTime.TryParse(dataFinal, out DateTime parsedDataFinal))
+                        {
+                            dtFinal = parsedDataFinal;
+                        }
+
+                        if (dtInicial.HasValue && dtFinal.HasValue)
+                        {
+                            sql += " AND previsao BETWEEN @dataInicial AND @dataFinal";
+                            cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = dtInicial.Value;
+                            cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = dtFinal.Value;
+                        }
+                        else if (dtInicial.HasValue)
+                        {
+                            sql += " AND previsao >= @dataInicial";
+                            cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = dtInicial.Value;
+                        }
+                        else if (dtFinal.HasValue)
+                        {
+                            sql += " AND previsao <= @dataFinal";
+                            cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = dtFinal.Value;
+                        }
+
+                        if (!string.IsNullOrEmpty(status) && status != "0") // Supondo que "0" seja a opção "Todos"
+                        {
+                            sql += " AND status = @status";
+                            cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
+                        }
+
+                        cmd.CommandText = sql;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            DataTable dataTable = new DataTable();
+                            dataTable.Load(reader);
+                            gvListCargas.DataSource = dataTable;
+                            gvListCargas.DataBind();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
+                    lblMensagem.ForeColor = System.Drawing.Color.Red;
+                }
+            }
+        }
+
+        protected void gvListCargas_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvListCargas.PageIndex = e.NewPageIndex;
+            PreencherTabela();  // Método para recarregar os dados no GridView
+        }
+
     }
 }
