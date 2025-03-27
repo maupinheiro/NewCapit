@@ -35,9 +35,10 @@ namespace NewCapit.dist.pages
                 
                // PreencherComboTomador();
                 PreencherComboRemetente();
-                PreencherComboDestinatario();                
+                PreencherComboDestinatario();
+                PreencherComboSolicitantes();
             }
-            PreencherComboSolicitantes();
+           
         }
 
         private void PreencherComboFiliais()
@@ -77,67 +78,58 @@ namespace NewCapit.dist.pages
         }
         private void PreencherComboSolicitantes()
         {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, nome, tomador, gr FROM tbsolicitantes";
+            string query = "SELECT id, nome FROM tbsolicitantes";
 
-            // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 try
                 {
-                    // Abra a conexão com o banco de dados
                     conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        ddlSolicitante.DataSource = reader;
+                        ddlSolicitante.DataTextField = "nome";
+                        ddlSolicitante.DataValueField = "id";
+                        ddlSolicitante.DataBind();
+                    }
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlSolicitante.DataSource = reader;
-                    ddlSolicitante.DataTextField = "nome";  // Campo que será mostrado no ComboBox
-                    ddlSolicitante.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlSolicitante.DataBind();  // Realiza o binding dos dados                   
-                    ddlSolicitante.Items.Insert(0, new ListItem("", "0"));
-                    // Feche o reader
-                    reader.Close();
-                    
+                    // Insere a opção inicial no DropDownList
+                    ddlSolicitante.Items.Insert(0, new ListItem("Selecione...", "0"));
                 }
                 catch (Exception ex)
                 {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
+                    Response.Write("<script>alert('Erro ao carregar solicitantes: " + ex.Message + "');</script>");
                 }
             }
         }
+
         protected void ddlSolicitante_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Obter o valor selecionado no primeiro ComboBox
-            string valorSelecionado = ddlSolicitante.SelectedItem.Text;
-
-            if (!string.IsNullOrEmpty(valorSelecionado))
+            if (ddlSolicitante.SelectedValue != "0")
             {
-                // Preencher o segundo ComboBox e o TextBox de acordo com a seleção
-                PreencherCampos(valorSelecionado);
-                //PreencherComboTomador();
+                PreencherCampos(ddlSolicitante.SelectedItem.Text);
+            }
+            else
+            {
+                ddlTomador.Items.Clear();
+                txtGr.Text = "";
             }
         }
-        private void PreencherCampos(string gr)
+
+        private void PreencherCampos(string nome)
         {
-            // Conexão com o banco de dados            
+            string query = "SELECT id, tomador, gr FROM tbsolicitantes WHERE nome = @nome";
+
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 try
                 {
                     conn.Open();
-
-                    string query = "SELECT id, tomador, gr FROM tbsolicitantes WHERE tomador = @tomador";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@tomador", gr);
+                        cmd.Parameters.AddWithValue("@nome", nome);
 
-                        // Preencher o segundo ComboBox (DropDownList)
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             ddlTomador.Items.Clear();
@@ -147,11 +139,13 @@ namespace NewCapit.dist.pages
 
                             while (reader.Read())
                             {
-                                // Adiciona corretamente no DropDownList
-                                ddlTomador.Items.Add(new ListItem(reader["tomador"].ToString(), reader["id"].ToString()));
+                                string tomador = reader["tomador"]?.ToString() ?? "";
+                                string id = reader["id"]?.ToString() ?? "";
 
-                                // Verifica se o valor de "gr" não é nulo
-                                if (reader["gr"] != DBNull.Value)
+                                ddlTomador.Items.Add(new ListItem(tomador, id));
+
+                                // Preenche `grValor` caso não seja nulo
+                                if (!(reader["gr"] is DBNull))
                                 {
                                     grValor = reader["gr"].ToString();
                                 }
@@ -164,11 +158,11 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    // Exibe o erro para depuração
-                    Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                    Response.Write("<script>alert('Erro ao preencher campos: " + ex.Message + "');</script>");
                 }
             }
         }
+
 
         private void PreencherComboTomador()
         {
