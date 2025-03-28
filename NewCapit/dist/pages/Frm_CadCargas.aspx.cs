@@ -340,7 +340,7 @@ namespace NewCapit.dist.pages
                     string unidade = ConsultaPedido.carga.ToString();
 
                     string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Pedido " + numPedido + ", já cadastrado no sistema.";
+                    string linha2 = "O pedido " + numPedido + ", já cadastrado no sistema.";
                     string linha3 = "Destinatário: " + razaoSocial + ".";
                     string linha4 = "Carga: " + unidade + ". Por favor, verifique.";
 
