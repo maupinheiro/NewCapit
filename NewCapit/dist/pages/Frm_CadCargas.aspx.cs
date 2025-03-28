@@ -31,9 +31,8 @@ namespace NewCapit.dist.pages
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 lblDtCadCarga.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 
-                PreencherComboFiliais();
-                
-               // PreencherComboTomador();
+                PreencherComboFiliais();                
+                PreencherComboMaterial();
                 PreencherComboRemetente();
                 PreencherComboDestinatario();
                 PreencherComboSolicitantes();
@@ -65,7 +64,7 @@ namespace NewCapit.dist.pages
                     cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cbFiliais.DataBind();  // Realiza o binding dos dados                   
-                    cbFiliais.Items.Insert(0, new ListItem("", "0"));
+                    cbFiliais.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -103,7 +102,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void ddlSolicitante_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddlSolicitante.SelectedValue != "0")
@@ -116,7 +114,6 @@ namespace NewCapit.dist.pages
                 txtGr.Text = "";
             }
         }
-
         private void PreencherCampos(string nome)
         {
             string query = "SELECT id, tomador, gr FROM tbsolicitantes WHERE nome = @nome";
@@ -133,7 +130,7 @@ namespace NewCapit.dist.pages
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             ddlTomador.Items.Clear();
-                            ddlTomador.Items.Add(new ListItem("Selecione...", ""));
+                            //ddlTomador.Items.Add(new ListItem("Selecione...", ""));
 
                             string grValor = ""; // Variável para armazenar o valor de `gr`
 
@@ -162,8 +159,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
-
         private void PreencherComboTomador()
         {
             // Consulta SQL que retorna os dados desejados
@@ -271,7 +266,104 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        private void PreencherComboMaterial()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbtipomaterial";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlMaterial.DataSource = reader;
+                    ddlMaterial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    ddlMaterial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlMaterial.DataBind();  // Realiza o binding dos dados                   
+                    ddlMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        protected void btnPedido_Click(object sender, EventArgs e)
+        {
+            if (txtNumPedido.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o número do pedido.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtNumPedido.Focus();
+
+            }
+            else
+            {
+                var numPedido = txtNumPedido.Text.Trim();
+
+                var obj = new Domain.ConsultaPedido
+                {
+                    pedido = numPedido
+                };
+
+
+                var ConsultaPedido = DAL.UsersDAL.CheckPedido(obj);
+                if (ConsultaPedido != null)
+                {
+                    string nomeUsuario = txtUsuCadastro.Text;
+                    string razaoSocial = ConsultaPedido.clidestino.ToString();
+                    string unidade = ConsultaPedido.carga.ToString();
+
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Pedido " + numPedido + ", já cadastrado no sistema.";
+                    string linha3 = "Destinatário: " + razaoSocial + ".";
+                    string linha4 = "Carga: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    // Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    // Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                    txtNumPedido.Text = "";
+                    txtNumPedido.Focus();
+                }
+                else
+                {
+                    ddlMaterial.Focus();
+                }
+
+            }
+        }
 
 
 

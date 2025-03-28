@@ -29,6 +29,7 @@
                                         <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                                         <asp:ListItem Value="CLIENTE" Text="CLIENTE"></asp:ListItem>
                                         <asp:ListItem Value="EMBARCADOR" Text="EMBARCADOR"></asp:ListItem>
+                                        <asp:ListItem Value="FORNECEDOR" Text="FORNECEDOR"></asp:ListItem>
                                         <asp:ListItem Value="TRANSPORTADOR" Text="TRANSPORTADOR"></asp:ListItem>
                                         <asp:ListItem Value="OPERADOR LOGÍSTICO" Text="OPERADOR LOGÍSTICO"></asp:ListItem>
                                         <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>

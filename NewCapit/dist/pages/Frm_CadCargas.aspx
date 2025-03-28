@@ -9,6 +9,8 @@
             textBox.value = comboBox.options[comboBox.selectedIndex].text;
         }
     </script>
+
+  
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
    <script type="text/javascript">
@@ -79,7 +81,7 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">REMETENTE:</span>
-                                <asp:DropDownList ID="ddlRemetente" class="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlRemetente" CssClass="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -129,19 +131,17 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PEDIDO:</span>
-                                <asp:TextBox ID="txtNumPedido" runat="server" class="form-control" placeholder="" MaxLength="11"></asp:TextBox>
+                                <asp:TextBox ID="txtNumPedido" runat="server" class="form-control" placeholder="" MaxLength="11" ></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <br />
-                            <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  />
+                            <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  OnClick="btnPedido_Click"/>
                         </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">MATERIAL:</span>
                                 <asp:DropDownList ID="ddlMaterial" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="SERV. FERROLENE" Text="SERV. FERROLENE"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -155,8 +155,29 @@
                             <div class="form_group">
                                 <span class="details">DEPOSITO:</span>
                                 <asp:DropDownList ID="ddlLocalCarreg" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="SERV. FERROLENE" Text="SERV. FERROLENE"></asp:ListItem>
+                                    <asp:ListItem Value="" Text="Selecione.."></asp:ListItem>
+                                    <asp:ListItem Value="ARATEL I" Text="ARATEL I"></asp:ListItem>
+                                    <asp:ListItem Value="ARATEL II" Text="ARATEL II"></asp:ListItem>
+                                    <asp:ListItem Value="ARATEL III" Text="ARATEL III"></asp:ListItem>
+                                    <asp:ListItem Value="ARATEL IV" Text="ARATEL IV"></asp:ListItem>
+                                    <asp:ListItem Value="ARATEL V" Text="ARATEL V"></asp:ListItem>
+                                    <asp:ListItem Value="F1LV" Text="F1LV"></asp:ListItem>
+                                    <asp:ListItem Value="F1PR" Text="F1PR"></asp:ListItem>
+                                    <asp:ListItem Value="F2P1" Text="F2P1"></asp:ListItem>
+                                    <asp:ListItem Value="F2P2" Text="F2P2"></asp:ListItem>
+                                    <asp:ListItem Value="F2P3" Text="F2P3"></asp:ListItem>
+                                    <asp:ListItem Value="F2P4" Text="F2P4"></asp:ListItem>
+                                    <asp:ListItem Value="F4P1" Text="F4P1"></asp:ListItem>
+                                    <asp:ListItem Value="F4P2" Text="F4P2"></asp:ListItem>
+                                    <asp:ListItem Value="F4P3" Text="F4P3"></asp:ListItem>
+                                    <asp:ListItem Value="F4P4" Text="F4P4"></asp:ListItem>
+                                    <asp:ListItem Value="F4P5" Text="F4P5"></asp:ListItem>
+                                    <asp:ListItem Value="F5P1" Text="F5P1"></asp:ListItem>
+                                    <asp:ListItem Value="F6P2" Text="F5P2"></asp:ListItem>
+                                    <asp:ListItem Value="DER I" Text="DER I"></asp:ListItem>
+                                    <asp:ListItem Value="DER II" Text="DER II"></asp:ListItem>
+                                    <asp:ListItem Value="DER III" Text="DER III"></asp:ListItem>
+                                    <asp:ListItem Value="PATIO" Text="PATIO"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -164,7 +185,7 @@
                             <div class="form_group">
                                 <span class="details">SITUAÇÃO:</span>
                                 <asp:DropDownList ID="ddlSituacaoMaterial" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="EM PROCESSO" Text="EM PROCESSO"></asp:ListItem>
                                     <asp:ListItem Value="PRONTO" Text="PRONTO"></asp:ListItem>
                                 </asp:DropDownList>
@@ -190,7 +211,7 @@
                             <div class="form_group">
                                 <span class="details">ENTREGA:</span>
                                 <asp:DropDownList ID="ddlEntrega" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="" Text="Selecione"></asp:ListItem>
                                     <asp:ListItem Value="NORMAL" Text="NORMAL"></asp:ListItem>
                                     <asp:ListItem Value="IMEDIATA" Text="IMEDIATA"></asp:ListItem>
                                 </asp:DropDownList>
@@ -250,6 +271,7 @@
         <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
     </footer>
     
+
 
     <script>
         $(function () {
