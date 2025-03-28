@@ -81,7 +81,7 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">REMETENTE:</span>
-                                <asp:DropDownList ID="ddlRemetente" CssClass="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlRemetente" CssClass="form-control select2" runat="server" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -109,7 +109,7 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">DESTINATÁRIO:</span>
-                                <asp:DropDownList ID="ddlDestinatario" class="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlDestinatario" class="form-control select2" runat="server" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -273,7 +273,7 @@
     
 
 
-    <script>
+  <%--  <script>
         $(function () {
             //Initialize Select2 Elements
             $('.select2').select2()
@@ -406,7 +406,7 @@
             myDropzone.removeAllFiles(true)
         }
         // DropzoneJS Demo Code End
-    </script>
+    </script>--%>
 
 
 

@@ -37,7 +37,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">CARGO:</span>
-                                <asp:DropDownList ID="ddlCargo" name="descricaoCargo" runat="server" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlCargo" name="descricaoCargo" runat="server" CssClass="form-control select2" ></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -220,7 +220,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">UF CNH:</span>
-                                <asp:DropDownList ID="ddlCNH" name="ufCNH" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCNH_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlCNH" name="ufCNH" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="ddlCNH_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-3">
