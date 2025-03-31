@@ -10,267 +10,332 @@
         }
     </script>
 
-  
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   <script type="text/javascript">
-       // Usando AJAX para não fazer um PostBack completo, mas podemos usar um update panel também
-       function AtualizarCampos() {
-           var valorSelecionado = document.getElementById('<%= ddlSolicitante.ClientID %>').value;
+    <script type="text/javascript">
+        // Usando AJAX para não fazer um PostBack completo, mas podemos usar um update panel também
+        function AtualizarCampos() {
+            var valorSelecionado = document.getElementById('<%= ddlSolicitante.ClientID %>').value;
             // Aqui você faria uma chamada AJAX ou simples PostBack para atualizar os controles
             __doPostBack('<%= ddlSolicitante.ClientID %>', '');
-       }
-   </script>
+        }
+    </script>
+    <script type="text/javascript">
+        // Script para detectar quando a tecla Enter é pressionada
+        function OnEnterKeyPress(event) {
+            if (event.keyCode === 13) { // 13 é o código da tecla Enter
+                document.getElementById('<%= btnPesquisar.ClientID %>').click();
+            }
+        }
+    </script>
 
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
                 <dciv class="card card-danger">
                     <div class="card-header">
-                        <h3 class="card-title">CARGAS - NOVA CARGA</h3>
+                        <h3 class="card-title">CARGAS - NOVA CARGA (<asp:Label ID="novaCarga" runat="server"></asp:Label>)</h3>
                     </div>
                 </dciv>
-            </div>      
-            <div class="card-header">                    
-                    <!-- Linha 2 do formulario -->
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form_group">
-                                <span class="details">FILIAL:</span>
-                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
+            </div>
+            <div class="card-header">
+                <!-- Linha 2 do formulario -->
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form_group">
+                            <span class="details">FILIAL:</span>
+                            <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="">SOLICITANTE:</span>
+                            <asp:DropDownList ID="ddlSolicitante" runat="server" class="form-control" AutoPostBack="True"
+                                OnSelectedIndexChanged="ddlSolicitante_SelectedIndexChanged">
+                                <asp:ListItem Text="" Value="0"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="">TOMADOR DO SERVIÇO:</span>
+                            <asp:DropDownList ID="ddlTomador" runat="server" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">GERENCIADORA DE RISCO:</span>
+                            <asp:TextBox ID="txtGr" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">CADASTRO:</span>
+                            <div class="input-group">
+                                <asp:Label ID="lblDtCadCarga" runat="server" Style="text-align: center" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/MM/yyyy HH:mm" data-mask></asp:Label>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <span class="">SOLICITANTE:</span>
-                                 <asp:DropDownList ID="ddlSolicitante" runat="server" class="form-control" AutoPostBack="True" 
-                              OnSelectedIndexChanged="ddlSolicitante_SelectedIndexChanged">
-                <asp:ListItem Text="Selecione uma categoria" Value="0"></asp:ListItem>
-            </asp:DropDownList>
-                            </div>
+                    </div>
+                </div>
+                <!-- Linha 3 do formulario -->
+                <div class="row g-3">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">CÓDIGO:</span>
+                            <asp:TextBox ID="txtCodCliOrigem" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <span class="">TOMADOR DO SERVIÇO:</span>
-                                <asp:DropDownList ID="ddlTomador" runat="server"  CssClass="form-control"></asp:DropDownList>
-                            </div>
+                    </div>
+                    <div class="col-md-1">
+                        <br />
+                        <asp:Button ID="btnPesquisar" runat="server" Text="Pesquisar" OnClick="btnPesquisar_Click" CssClass="btn btn-outline-warning" />
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form_group">
+                            <span class="details">REMETENTE:</span>
+                            <asp:DropDownList ID="ddlRemetente" CssClass="form-control select2" name="nomeRemetente" runat="server"></asp:DropDownList>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">GERENCIADORA DE RISCO:</span>
-                                <asp:TextBox ID="txtGr" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
-                            </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <span class="details">INICIO DA PRESTAÇÃO:</span>
+                            <asp:TextBox ID="txtMunicOrigem" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">CADASTRO:</span>
-                                <div class="input-group">
-                                    <asp:Label ID="lblDtCadCarga" runat="server" Style="text-align: center" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/MM/yyyy HH:mm" data-mask></asp:Label>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">UF:</span>
+                            <asp:TextBox ID="txtUFOrigem" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Linha 4 do formulario -->
+                <div class="row g-3">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">CÓDIGO:</span>
+                            <asp:TextBox ID="txtCodCliDestino" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <br />
+                        <asp:Button ID="btnPesquisarDest" runat="server" Text="Pesquisar" OnClick="btnPesquisarDest_Click" CssClass="btn btn-outline-warning" />
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form_group">
+                            <span class="details">DESTINATÁRIO:</span>
+                            <asp:DropDownList ID="ddlDestinatario" class="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <span class="details">TERMINO DA PRESTAÇÃO:</span>
+                            <asp:TextBox ID="txtMunicDestinatario" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">UF:</span>
+                            <asp:TextBox ID="txtUFDestinatario" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Linha 5 do formulário -->
+                <div class="row g-3">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">PEDIDO:</span>
+                            <asp:TextBox ID="txtNumPedido" runat="server" class="form-control" placeholder="" MaxLength="11"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <br />
+                        <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPedido_Click" />
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form_group">
+                            <span class="details">MATERIAL:</span>
+                            <asp:DropDownList ID="ddlMaterial" runat="server" CssClass="form-control">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">PESO:</span>
+                            <asp:TextBox ID="txtPeso" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form_group">
+                            <span class="details">DEPOSITO:</span>
+                            <asp:DropDownList ID="ddlLocalCarreg" runat="server" CssClass="form-control">
+                                <asp:ListItem Value="" Text="Selecione.."></asp:ListItem>
+                                <asp:ListItem Value="ARATEL I" Text="ARATEL I"></asp:ListItem>
+                                <asp:ListItem Value="ARATEL II" Text="ARATEL II"></asp:ListItem>
+                                <asp:ListItem Value="ARATEL III" Text="ARATEL III"></asp:ListItem>
+                                <asp:ListItem Value="ARATEL IV" Text="ARATEL IV"></asp:ListItem>
+                                <asp:ListItem Value="ARATEL V" Text="ARATEL V"></asp:ListItem>
+                                <asp:ListItem Value="F1LV" Text="F1LV"></asp:ListItem>
+                                <asp:ListItem Value="F1PR" Text="F1PR"></asp:ListItem>
+                                <asp:ListItem Value="F2P1" Text="F2P1"></asp:ListItem>
+                                <asp:ListItem Value="F2P2" Text="F2P2"></asp:ListItem>
+                                <asp:ListItem Value="F2P3" Text="F2P3"></asp:ListItem>
+                                <asp:ListItem Value="F2P4" Text="F2P4"></asp:ListItem>
+                                <asp:ListItem Value="F4P1" Text="F4P1"></asp:ListItem>
+                                <asp:ListItem Value="F4P2" Text="F4P2"></asp:ListItem>
+                                <asp:ListItem Value="F4P3" Text="F4P3"></asp:ListItem>
+                                <asp:ListItem Value="F4P4" Text="F4P4"></asp:ListItem>
+                                <asp:ListItem Value="F4P5" Text="F4P5"></asp:ListItem>
+                                <asp:ListItem Value="F5P1" Text="F5P1"></asp:ListItem>
+                                <asp:ListItem Value="F6P2" Text="F5P2"></asp:ListItem>
+                                <asp:ListItem Value="DER I" Text="DER I"></asp:ListItem>
+                                <asp:ListItem Value="DER II" Text="DER II"></asp:ListItem>
+                                <asp:ListItem Value="DER III" Text="DER III"></asp:ListItem>
+                                <asp:ListItem Value="PATIO" Text="PATIO"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form_group">
+                            <span class="details">SITUAÇÃO:</span>
+                            <asp:DropDownList ID="ddlSituacaoMaterial" runat="server" CssClass="form-control">
+                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                <asp:ListItem Value="EM PROCESSO" Text="EM PROCESSO"></asp:ListItem>
+                                <asp:ListItem Value="PRONTO" Text="PRONTO"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">CONT. CLIENTE:</span>
+                            <asp:TextBox ID="txtControleCliente" runat="server" class="form-control" placeholder="" MaxLength="11"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">PREV. ENTREGA:</span>
+                            <div class="input-group">
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <input type="date" class="form-control" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Linha 3 do formulario -->
-                    <div class="row g-3">
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">CÓDIGO:</span>
-                                <asp:TextBox ID="txtCodCliOrigem" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form_group">
-                                <span class="details">REMETENTE:</span>
-                                <asp:DropDownList ID="ddlRemetente" CssClass="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <span class="details">INICIO DA PRESTAÇÃO:</span>
-                                <asp:TextBox ID="txtMunicOrigem" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">UF:</span>
-                                <asp:TextBox ID="txtUFOrigem" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Linha 4 do formulario -->
-                    <div class="row g-3">
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">CÓDIGO:</span>
-                                <asp:TextBox ID="txtCodCliDestino" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form_group">
-                                <span class="details">DESTINATÁRIO:</span>
-                                <asp:DropDownList ID="ddlDestinatario" class="form-control select2" name="nomeRemetente" runat="server" AutoPostBack="true"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <span class="details">TERMINO DA PRESTAÇÃO:</span>
-                                <asp:TextBox ID="txtMunicDestinatario" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">UF:</span>
-                                <asp:TextBox ID="txtUFDestinatario" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Linha 5 do formulário -->
-                    <div class="row g-3">
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">PEDIDO:</span>
-                                <asp:TextBox ID="txtNumPedido" runat="server" class="form-control" placeholder="" MaxLength="11" ></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <br />
-                            <asp:Button ID="btnCliente" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning"  OnClick="btnPedido_Click"/>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form_group">
-                                <span class="details">MATERIAL:</span>
-                                <asp:DropDownList ID="ddlMaterial" runat="server" CssClass="form-control">
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">PESO:</span>
-                                <asp:TextBox ID="txtPeso" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form_group">
-                                <span class="details">DEPOSITO:</span>
-                                <asp:DropDownList ID="ddlLocalCarreg" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text="Selecione.."></asp:ListItem>
-                                    <asp:ListItem Value="ARATEL I" Text="ARATEL I"></asp:ListItem>
-                                    <asp:ListItem Value="ARATEL II" Text="ARATEL II"></asp:ListItem>
-                                    <asp:ListItem Value="ARATEL III" Text="ARATEL III"></asp:ListItem>
-                                    <asp:ListItem Value="ARATEL IV" Text="ARATEL IV"></asp:ListItem>
-                                    <asp:ListItem Value="ARATEL V" Text="ARATEL V"></asp:ListItem>
-                                    <asp:ListItem Value="F1LV" Text="F1LV"></asp:ListItem>
-                                    <asp:ListItem Value="F1PR" Text="F1PR"></asp:ListItem>
-                                    <asp:ListItem Value="F2P1" Text="F2P1"></asp:ListItem>
-                                    <asp:ListItem Value="F2P2" Text="F2P2"></asp:ListItem>
-                                    <asp:ListItem Value="F2P3" Text="F2P3"></asp:ListItem>
-                                    <asp:ListItem Value="F2P4" Text="F2P4"></asp:ListItem>
-                                    <asp:ListItem Value="F4P1" Text="F4P1"></asp:ListItem>
-                                    <asp:ListItem Value="F4P2" Text="F4P2"></asp:ListItem>
-                                    <asp:ListItem Value="F4P3" Text="F4P3"></asp:ListItem>
-                                    <asp:ListItem Value="F4P4" Text="F4P4"></asp:ListItem>
-                                    <asp:ListItem Value="F4P5" Text="F4P5"></asp:ListItem>
-                                    <asp:ListItem Value="F5P1" Text="F5P1"></asp:ListItem>
-                                    <asp:ListItem Value="F6P2" Text="F5P2"></asp:ListItem>
-                                    <asp:ListItem Value="DER I" Text="DER I"></asp:ListItem>
-                                    <asp:ListItem Value="DER II" Text="DER II"></asp:ListItem>
-                                    <asp:ListItem Value="DER III" Text="DER III"></asp:ListItem>
-                                    <asp:ListItem Value="PATIO" Text="PATIO"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form_group">
-                                <span class="details">SITUAÇÃO:</span>
-                                <asp:DropDownList ID="ddlSituacaoMaterial" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                    <asp:ListItem Value="EM PROCESSO" Text="EM PROCESSO"></asp:ListItem>
-                                    <asp:ListItem Value="PRONTO" Text="PRONTO"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">CONT. CLIENTE:</span>
-                                <asp:TextBox ID="txtControleCliente" runat="server" class="form-control" placeholder="" MaxLength="11"></asp:TextBox>
-                            </div>
-                        </div>                        
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">PREV. ENTREGA:</span>
-                                <div class="input-group">
-                                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                        <input type="date" class="form-control" />                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form_group">
-                                <span class="details">ENTREGA:</span>
-                                <asp:DropDownList ID="ddlEntrega" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text="Selecione"></asp:ListItem>
-                                    <asp:ListItem Value="NORMAL" Text="NORMAL"></asp:ListItem>
-                                    <asp:ListItem Value="IMEDIATA" Text="IMEDIATA"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
+                    <div class="col-md-1">
+                        <div class="form_group">
+                            <span class="details">ENTREGA:</span>
+                            <asp:DropDownList ID="ddlEntrega" runat="server" CssClass="form-control">
+                                <asp:ListItem Value="" Text="Selecione"></asp:ListItem>
+                                <asp:ListItem Value="NORMAL" Text="NORMAL"></asp:ListItem>
+                                <asp:ListItem Value="IMEDIATA" Text="IMEDIATA"></asp:ListItem>
+                            </asp:DropDownList>
                         </div>
                     </div>
-                    <!-- Linha 5 do formulário -->
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <div class="form_group">
-                                <span class="details">OBSERVAÇÕES NA CARGA:</span>
-                                <textarea class="form-control" rows="4" placeholder="Observações ..."></textarea>
-                            </div>
+                </div>
+                <!-- Linha 5 do formulário -->
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="form_group">
+                            <span class="details">OBSERVAÇÕES NA CARGA:</span>
+                            <textarea class="form-control" rows="4" placeholder="Observações ..."></textarea>
                         </div>
                     </div>
-                    <!-- Linha 6 do Formulário -->
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <div class="form_group">
-
-                            </div>
+                </div>
+                <!-- Linha 6 do Formulário -->
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>Pedido</th>
+                                        <th>Peso</th>
+                                        <th>Material</th>
+                                        <th>Status</th>
+                                        <th>Deposito</th>                                        
+                                        <th>Remetente</th>
+                                        <th>Destinatário</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>183</td>
+                                        <td>12500</td>
+                                        <td>Chapa</td>
+                                        <td><span class="tag tag-success">Pronto</span></td>
+                                        <td>F4P2</td>                                        
+                                        <td>FERROLENE(SP)</td>
+                                        <td>VW TAUBATE</td>
+                                        <td></td>
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <!-- Linha 7 do formulário -->
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">CADASTRADO EM:</span>
+                            <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" placeholder=""></asp:Label>
                         </div>
                     </div>
-                    <!-- Linha 7 do formulário -->
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">CADASTRADO EM:</span>
-                                <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" placeholder=""></asp:Label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">POR:</span>
-                                <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="details">POR:</span>
+                            <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                         </div>
                     </div>
-                    <!-- Linha 9 do formulário -->
-                    <div class="row g-3">
-                        <div class="col-md-1">
-                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" />
-                        </div>
-                        <div class="col-md-1">
-                            <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
-                            </a>
-                        </div>
+                </div>
+                <!-- Linha 9 do formulário -->
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Incluir Pedido" />
                     </div>
-                </div>          
+                    <div class="col-md-2">
+                        <asp:Button ID="Button1" CssClass="btn btn-outline-info  btn-lg" runat="server" Text="Fechar Carga" />
+                    </div>                    
+                    <div class="col-md-1">
+                        <a href="ConsultaCargas.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
-
+    <div class="modal fade" id="modal-danger">
+        <div class="modal-dialog">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h4 class="modal-title">ATENÇÃO</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Código não cadastrado no sistema&hellip;</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 2.1.0  
         </div>
         <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
     </footer>
-    
+
 
 
     <script>

@@ -149,8 +149,8 @@ namespace NewCapit.dist.pages
             comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@ativo_inativo", ddlStatus.SelectedValue.ToUpper());
-            comando.Parameters.AddWithValue("@usualt", txtUsuCadastro.Text.ToUpper());
-            comando.Parameters.AddWithValue("@dtcalt", lblDtCadastro.Text);
+            comando.Parameters.AddWithValue("@usualt", txtUsuAlteracao.Text.ToUpper());
+            comando.Parameters.AddWithValue("@dtcalt", lblDtAlteracao.Text);
             comando.Parameters.AddWithValue("@tipo", cboTipo.SelectedValue.ToUpper());
             comando.Parameters.AddWithValue("@unidade", txtUnidade.Text.ToUpper());
             comando.Parameters.AddWithValue("@raio", txtRaio.Text.ToUpper());

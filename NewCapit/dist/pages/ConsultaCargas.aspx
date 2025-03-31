@@ -21,8 +21,7 @@
                        <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">Previsão Inicial:</span>
-                                <div class="input-group date">
-                                    
+                                <div class="input-group date">                                    
                                     <asp:TextBox ID="txtInicioData" CssClass="form-control" TextMode="Date" runat="server"></asp:TextBox>
                                 </div>
                             </div>
@@ -44,9 +43,9 @@
                         </div>
                      </div>  
                      <div class="col-md-1">
-                         <br />
-                         <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i>
-    Pesquisar</asp:LinkButton>
+                         <br />                         
+                            <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i>
+    Pesquisar</asp:LinkButton>                        
                      </div>   
                    </div>  
                 </div>
@@ -60,8 +59,10 @@
                   <div class="col-12">
                     <!-- /.col -->
                     <div class="card">
-                        <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>                
-                         <!-- /.card-header -->
+                        
+                            <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>                
+                       
+                        <!-- /.card-header -->
                          <div class="card-body">
                            <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
                               <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">

@@ -314,7 +314,8 @@
                 <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>                        
-                        <asp:BoundField DataField="codvei" HeaderText="#ID" />
+                        <asp:BoundField DataField="id" HeaderText="#ID" />
+                        <asp:BoundField DataField="codvei" HeaderText="FROTA" />
                         <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
                         <asp:BoundField DataField="plavei" HeaderText="PLACA" />
                         <asp:BoundField DataField="reboque1" HeaderText="REBOQUE" />
@@ -355,11 +356,7 @@
         </div>
     </div>
  </div>    
-   
-    
-    
-
-    
+ 
     <!-- JavaScript 
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="src/javascript/script.js"></script>

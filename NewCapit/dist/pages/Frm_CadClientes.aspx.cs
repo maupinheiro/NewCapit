@@ -13,8 +13,6 @@ namespace NewCapit.dist.pages
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
 
-
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -23,16 +21,18 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
+
                     txtUsuCadastro.Text = nomeUsuario;
+
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                }
-                DateTime dataHoraAtual = DateTime.Now;
-                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                    txtUsuCadastro.Text = lblUsuario;
+                } 
             }
-
+            DateTime dataHoraAtual = DateTime.Now;
+            lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
         }
        
         protected void btnCliente_Click(object sender, EventArgs e)

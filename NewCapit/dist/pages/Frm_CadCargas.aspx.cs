@@ -36,10 +36,48 @@ namespace NewCapit.dist.pages
                 PreencherComboRemetente();
                 PreencherComboDestinatario();
                 PreencherComboSolicitantes();
+                PreencherNumCarga();
             }
            
         }
+        private void PreencherNumCarga()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT (carga + incremento) as ProximaCarga FROM tbcontadores";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Crie o comando SQL
+                        //SqlCommand cmd = new SqlCommand(query, conn);
+
+                        // Execute o comando e obtenha os dados em um DataReader
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // Preencher o TextBox com o nome encontrado 
+                                novaCarga.Text = reader["ProximaCarga"].ToString();
+                                
+                            }
+                        }
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Tratar erro
+                    //txtResultado.Text = "Erro: " + ex.Message;
+                }
+            }
+        }
         private void PreencherComboFiliais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -340,7 +378,7 @@ namespace NewCapit.dist.pages
                     string unidade = ConsultaPedido.carga.ToString();
 
                     string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "O pedido " + numPedido + ", já cadastrado no sistema.";
+                    string linha2 = "O pedido " + numPedido + ", já está cadastrado no sistema.";
                     string linha3 = "Destinatário: " + razaoSocial + ".";
                     string linha4 = "Carga: " + unidade + ". Por favor, verifique.";
 
@@ -364,12 +402,229 @@ namespace NewCapit.dist.pages
 
             }
         }
+        protected void btnPesquisar_Click(object sender, EventArgs e)
+        {
+            string codigo = txtCodCliOrigem.Text.Trim();
 
+            if (!string.IsNullOrEmpty(codigo))
+            {
+                // Chame o método que pesquisa os dados no banco
+                PesquisarCodigo(codigo);
+            }
+            else
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
 
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o código do remetente.";
 
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
 
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
 
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodCliOrigem.Focus();
 
+            }
+        }
+        private void PesquisarCodigo(string codigo)
+        {
 
+            if (txtCodCliOrigem.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o código do remetente.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodCliOrigem.Focus();
+
+            }
+            else
+            {
+                // Crie uma conexão com o banco de dados
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    try
+                    {
+                        conn.Open();
+
+                        // Comando SQL para buscar o código
+                        string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo";
+
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@Codigo", codigo);
+
+                            SqlDataReader reader = cmd.ExecuteReader();
+
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    // Preencher o TextBox com o nome encontrado
+                                    txtMunicOrigem.Text = reader["cidcli"].ToString();
+                                    txtUFOrigem.Text = reader["estcli"].ToString();
+
+                                    // Limpar e adicionar opções ao ComboBox
+                                    ddlRemetente.Items.Clear();
+                                    ddlRemetente.Items.Add(new ListItem(reader["nomcli"].ToString(), reader["codcli"].ToString()));
+                                }
+                            }
+                            else
+                            {
+                                // Caso não encontre nada
+                                string nomeUsuario = txtUsuCadastro.Text;
+
+                                string linha1 = "Olá, " + nomeUsuario + "!";
+                                string linha2 = "Código " + txtCodCliOrigem.Text.Trim() + ", não encontrado no sistema.";
+
+                                // Concatenando as linhas com '\n' para criar a mensagem
+                                string mensagem = $"{linha1}\n{linha2}";
+
+                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                // Gerando o script JavaScript para exibir o alerta
+                                string script = $"alert('{mensagemCodificada}');";
+
+                                // Registrando o script para execução no lado do cliente
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                                txtCodCliOrigem.Text = "";
+                                txtCodCliOrigem.Focus();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Tratar erro
+                        //txtResultado.Text = "Erro: " + ex.Message;
+                    }
+                }
+            }
+        }
+        protected void btnPesquisarDest_Click(object sender, EventArgs e)
+        {
+            string codigoDest = txtCodCliDestino.Text.Trim();
+
+            if (!string.IsNullOrEmpty(codigoDest))
+            {
+                // Chame o método que pesquisa os dados no banco
+                PesquisarCodigoDest(codigoDest);
+            }
+            else
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o código do destinatário.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodCliOrigem.Focus();
+
+            }
+        }
+        private void PesquisarCodigoDest(string codigoDest)
+        {
+
+            if (txtCodCliDestino.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o código do destinatário.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodCliOrigem.Focus();
+
+            }
+            else
+            {
+                // Crie uma conexão com o banco de dados
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    try
+                    {
+                        conn.Open();
+
+                        // Comando SQL para buscar o código
+                        string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo";
+
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@Codigo", codigoDest);
+
+                            SqlDataReader reader = cmd.ExecuteReader();
+
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    // Preencher o TextBox com o nome encontrado
+                                    txtMunicDestinatario.Text = reader["cidcli"].ToString();
+                                    txtUFDestinatario.Text = reader["estcli"].ToString();
+
+                                    // Limpar e adicionar opções ao ComboBox
+                                    ddlDestinatario.Items.Clear();
+                                    ddlDestinatario.Items.Add(new ListItem(reader["nomcli"].ToString(), reader["codcli"].ToString()));
+                                }
+                            }
+                            else
+                            {
+                                // Caso não encontre nada
+                                string nomeUsuario = txtUsuCadastro.Text;
+
+                                string linha1 = "Olá, " + nomeUsuario + "!";
+                                string linha2 = "Código " + txtCodCliDestino.Text.Trim() + ", não encontrado no sistema.";
+
+                                // Concatenando as linhas com '\n' para criar a mensagem
+                                string mensagem = $"{linha1}\n{linha2}";
+
+                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                // Gerando o script JavaScript para exibir o alerta
+                                string script = $"alert('{mensagemCodificada}');";
+
+                                // Registrando o script para execução no lado do cliente
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                                txtCodCliDestino.Text = "";
+                                txtCodCliDestino.Focus();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Tratar erro
+                        //txtResultado.Text = "Erro: " + ex.Message;
+                    }
+                }
+            }
+        }
     }
 }
