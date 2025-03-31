@@ -211,13 +211,13 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">CÓDIGO:</span>
-                    <asp:TextBox ID="txtCodRastreador" runat="server" Style="text-align: center" ForeColor="Blue" CssClass="form-control" placeholder="" MaxLength="4"></asp:TextBox>
+                    <asp:TextBox ID="txtCodRastreador" runat="server" Style="text-align: center" ForeColor="Blue" CssClass="form-control select2+-" placeholder="" MaxLength="4"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form_group">
                     <span class="details">TECNOLOGIA/RASTREADOR:</span>
-                    <asp:DropDownList ID="ddlTecnologia" name="tecnologia" runat="server" ForeColor="Blue" CssClass="form-control" OnSelectedIndexChanged="ddlTecnologia_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                    <asp:DropDownList ID="ddlTecnologia" name="tecnologia" runat="server" ForeColor="Blue" CssClass="form-control select2" OnSelectedIndexChanged="ddlTecnologia_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                 </div>
             </div>
             <div class="col-md-2">
