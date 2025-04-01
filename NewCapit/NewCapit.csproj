@@ -81,6 +81,7 @@
     <Content Include="dist\img\icon_loc.png" />
     <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
+    <Content Include="dist\pages\ConsultaColetasCNT.aspx" />
     <Content Include="dist\pages\ConsultaEntregas.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
@@ -4253,6 +4254,13 @@
     </Compile>
     <Compile Include="dist\pages\ConsultaClientes.aspx.designer.cs">
       <DependentUpon>ConsultaClientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaColetasCNT.aspx.cs">
+      <DependentUpon>ConsultaColetasCNT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaColetasCNT.aspx.designer.cs">
+      <DependentUpon>ConsultaColetasCNT.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ConsultaEntregas.aspx.cs">
       <DependentUpon>ConsultaEntregas.aspx</DependentUpon>
