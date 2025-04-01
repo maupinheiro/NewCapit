@@ -6,13 +6,25 @@
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
-            <div class="container-fluid">
-                <div class="content-header">
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-2 text-gray-800">
-                            <i class="fas fa-shipping-fast"></i>&nbsp;Coletas</h1>                        
-                    </div>
-                </div>
+            <div class="container-fluid">                
+               <div class="content-header">
+                    <div class="row g-3">
+                       <div class="col-md-10">                          
+                             <h1 class="h3 mb-2 text-gray-800">
+                               <i class="fas fa-shipping-fast"></i>&nbsp;Coletas</h1> 
+                       </div>
+                       <div class="col-md-1 text-center">
+                            <input type="text" class="knob" value="70" data-width="90" data-height="90" data-fgcolor="#f56954">
+                            <div class="knob-label">Atrasadas</div>
+                       </div>
+                       <div class="col-md-1 text-center">
+                          <input type="text" class="knob" value="80" data-width="90" data-height="90" data-fgColor="#3c8dbc">
+                          <div class="knob-label">No Prazo</div>
+                       </div>
+                        
+                  </div>
+               </div>
+                
                 <div class="row g-3">
                     <div class="col-md-2">
                         <div class="form-group">
@@ -48,6 +60,7 @@
                         <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i>
     Pesquisar</asp:LinkButton>
                     </div>
+                   
                 </div>
             </div>
             <!-- /.container-fluid -->
