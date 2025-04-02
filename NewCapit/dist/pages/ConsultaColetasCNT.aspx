@@ -61,7 +61,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i>
+                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i>
     Pesquisar</asp:LinkButton>
                     </div>
 
@@ -80,7 +80,7 @@
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 590px;">
                                 <table class="table table-head-fixed text-nowrap">
-                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" ShowHeaderWhenEmpty="True">
+                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
                                             <asp:BoundField DataField="id" HeaderText="COLETA" />
