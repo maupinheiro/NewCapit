@@ -195,6 +195,49 @@ namespace NewCapit.dist.pages
             gvListCargas.PageIndex = e.NewPageIndex;
             PreencherColetas();  // Método para recarregar os dados no GridView
         }
-    }        
-     
+        protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Obtendo os valores das colunas
+                string previsaoStr = DataBinder.Eval(e.Row.DataItem, "previsao")?.ToString();
+                string status = DataBinder.Eval(e.Row.DataItem, "status")?.ToString();
+
+                // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
+                int colunaAtendimentoIndex = 3; // Alterar conforme a posição real da coluna no GridView
+
+                DateTime previsao;
+                if (DateTime.TryParse(previsaoStr, out previsao))
+                {
+                    DateTime hoje = DateTime.Now.Date;
+                    TableCell cell = e.Row.Cells[colunaAtendimentoIndex]; // Obtém a célula da coluna "ATENDIMENTO"
+
+                    if (previsao < hoje && (status == "Concluído" || status == "Pendente"))
+                    {
+                        cell.Text = "Atrasado";
+                        cell.BackColor = System.Drawing.Color.Red; // Fundo vermelho
+                        cell.ForeColor = System.Drawing.Color.White; // Texto branco
+                    }
+                    else if (previsao == hoje && status == "Concluído")
+                    {
+                        cell.Text = "No Prazo";
+                        cell.BackColor = System.Drawing.Color.Green; // Fundo verde
+                        cell.ForeColor = System.Drawing.Color.White; // Texto branco
+                    }
+                    else if (previsao > hoje && status == "Concluído")
+                    {
+                        cell.Text = "Antecipado";
+                        cell.BackColor = System.Drawing.Color.Orange; // Fundo laranja
+                        cell.ForeColor = System.Drawing.Color.White; // Texto branco
+                    }
+                }
+            }
+        }
+
+
+
+
+
+    }
+
 }
