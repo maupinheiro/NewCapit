@@ -292,5 +292,16 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
             }
         }
+
+        protected void btnPesquisar_Click(object sender, EventArgs e)
+        {
+
+            
+           
+                string url = "MapaClientePesquisa.aspx?lat=" + latitude.Text+"&long="+longitude.Text;
+                string script = $"window.open('{url}', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');";
+                ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+            
+        }
     }          
 }

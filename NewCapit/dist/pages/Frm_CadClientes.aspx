@@ -34,11 +34,58 @@
         let txtCep = document.getElementById("<%= txtCepCli.ClientID %>");
         let txtTelefone = document.getElementById("<%= txtTc1Cli.ClientID %>");
 
+
         if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
         if (txtCep) aplicarMascara(txtData, "00000-000");
         if (txtTelefone) aplicarMascara(txtTelefone, "(00) 00000-0000");
     });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function aplicarMascaraLatitudeLongitude(input) {
+                input.addEventListener("input", function () {
+                    let valor = input.value;
+
+                    // Garante que o "-" sempre esteja no início
+                    if (!valor.startsWith("-")) {
+                        valor = "-" + valor.replace(/[^0-9.]/g, ""); // Remove caracteres inválidos e adiciona "-"
+                    } else {
+                        valor = "-" + valor.substring(1).replace(/[^0-9.]/g, ""); // Mantém o "-" e filtra o resto
+                    }
+
+                    // Remove pontos extras, mantendo apenas o primeiro
+                    let partes = valor.split(".");
+                    if (partes.length > 2) {
+                        valor = partes[0] + "." + partes.slice(1).join(""); // Remove pontos extras
+                    }
+
+                    // Garante que tenha no máximo 2 dígitos antes do ponto
+                    let match = valor.match(/^-?\d{0,2}(\.\d{0,8})?/);
+                    if (match) {
+                        valor = match[0];
+                    }
+
+                    input.value = valor;
+                });
+
+                // Adiciona o "-" automaticamente se o campo estiver vazio ao perder o foco
+                input.addEventListener("blur", function () {
+                    if (input.value === "-") {
+                        input.value = "";
+                    }
+                });
+            }
+
+            // Pegando os elementos no ASP.NET
+            let latitude = document.getElementById("<%= latitude.ClientID %>");
+        let longitude = document.getElementById("<%= longitude.ClientID %>");
+
+        if (latitude) aplicarMascaraLatitudeLongitude(latitude);
+        if (longitude) aplicarMascaraLatitudeLongitude(longitude);
+    });
+    </script>
+
+
       <div class="content-wrapper">
       <section class="content">
           <div class="container-fluid">
@@ -279,7 +326,8 @@
                       </div>
                       <div class="col-md-1">
                           <br />
-                          <button type="button" class="btn btn-outline-warning">Pesquisar</button>
+                          <asp:Button ID="btnPesquisar" CssClass="btn btn-outline-warning" runat="server" Text="Pesquisar" OnClick="btnPesquisar_Click" />
+                          
                       </div>
                   </div>
                   <div class="row g-3">

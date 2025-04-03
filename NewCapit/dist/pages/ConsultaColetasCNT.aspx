@@ -28,13 +28,13 @@
 
                     </div>
                 </div>
-
+                <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                 <div class="row g-3">
                     <div class="col-md-2">
                         <div class="form-group">
                             <span class="">Coleta Inicial:</span>
                             <div class="input-group date">
-                                <asp:TextBox ID="txtInicioData" CssClass="form-control" TextMode="Date" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtInicioData" CssClass="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                         <div class="form-group">
                             <span class="">Coleta Final:</span>
                             <div class="input-group date">
-                                <asp:TextBox ID="txtFimData" CssClass="form-control" TextMode="Date" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtFimData" CssClass="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -80,13 +80,17 @@
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 590px;">
                                 <table class="table table-head-fixed text-nowrap">
-                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListCargas_PageIndexChanging" ShowHeaderWhenEmpty="True" OnRowDataBound="gvListCargas_RowDataBound">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
                                             <asp:BoundField DataField="id" HeaderText="COLETA" />
                                             <asp:BoundField DataField="data_hora" HeaderText="DATA/HORA" />
                                             <asp:BoundField DataField="solicitacoes" HeaderText="SOLICITAÇÃO(ES)" />
-                                            <asp:BoundField DataField="" HeaderText="ATENDIMENTO" />
+                                            <asp:TemplateField HeaderText="ATENDIMENTO">
+                                            <ItemTemplate>
+                                                <asp:Label ID="lblAtendimento" runat="server" Text=""></asp:Label>
+                                            </ItemTemplate>
+                                            </asp:TemplateField>
                                             <asp:BoundField DataField="cliorigem" HeaderText="LOCAL DA COLETA" />
                                             <asp:BoundField DataField="clidestino" HeaderText="DESTINO" />
                                             <asp:BoundField DataField="veiculo" HeaderText="VEICULO" />
