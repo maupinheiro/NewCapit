@@ -28,13 +28,13 @@
 
                     </div>
                 </div>
-
+                <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                 <div class="row g-3">
                     <div class="col-md-2">
                         <div class="form-group">
                             <span class="">Coleta Inicial:</span>
                             <div class="input-group date">
-                                <asp:TextBox ID="txtInicioData" CssClass="form-control" TextMode="Date" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtInicioData" CssClass="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                         <div class="form-group">
                             <span class="">Coleta Final:</span>
                             <div class="input-group date">
-                                <asp:TextBox ID="txtFimData" CssClass="form-control" TextMode="Date" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtFimData" CssClass="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>

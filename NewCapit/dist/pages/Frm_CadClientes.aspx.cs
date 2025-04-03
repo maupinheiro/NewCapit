@@ -6,6 +6,7 @@ using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using Domain;
 using DAL;
+using System.Data;
 
 namespace NewCapit.dist.pages
 {
@@ -311,6 +312,12 @@ namespace NewCapit.dist.pages
             txtNumero.Focus();
         }
 
-        
+        protected void btnPesquisar_Click(object sender, EventArgs e)
+        {
+
+            string url = "MapaClientePesquisa.aspx?lat=" + latitude.Text + "&long=" + longitude.Text;
+            string script = $"window.open('{url}', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');";
+            ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+        }
     }
 }
