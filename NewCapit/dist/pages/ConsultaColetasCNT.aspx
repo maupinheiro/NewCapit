@@ -3,6 +3,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+          <style>
+    .scrollable-gridview {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+</style>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -78,8 +84,11 @@
                         <!-- /.col -->
                         <div class="card">
                             <!-- /.card-header -->
+                            
                             <div class="card-body table-responsive p-0" style="height: 590px;">
+                                 <div class="scrollable-gridview">
                                 <table class="table table-head-fixed text-nowrap">
+                                    
                                     <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListCargas_PageIndexChanging" ShowHeaderWhenEmpty="True" OnRowDataBound="gvListCargas_RowDataBound">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
@@ -105,11 +114,14 @@
                                             </asp:TemplateField>
                                         </Columns>
                                     </asp:GridView>
+                                          
                                 </table>
+                                    </div>
                                 <asp:HiddenField ID="txtconformmessageValue" runat="server" />
                             </div>
+                            </div>
                             <!-- /.card-body -->
-                        </div>
+                        
                         <!-- /.card -->
                     </div>
                 </div>
