@@ -42,7 +42,7 @@
                              <asp:DropDownList ID="ddlStatus" ame="nomeStatus"  runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                      </div>  
-                     <div class="col-md-1">
+                     <div class="col-md-3">
                          <br />                         
                             <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i>
     Pesquisar</asp:LinkButton>                        

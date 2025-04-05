@@ -15,8 +15,7 @@
                     </div>
                 </div>
             </div>
-            
-                <div class="card-header">
+            <div class="card-header">
                     <!-- Linha 1 do formulario -->
                     <div class="row g-3">
                         <div class="col-md-1">
@@ -414,8 +413,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
-           
+                </div>          
         
     </div>
 

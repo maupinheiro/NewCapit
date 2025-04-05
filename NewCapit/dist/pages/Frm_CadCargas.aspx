@@ -27,7 +27,7 @@
             <div class="container-fluid">
                 <dciv class="card card-danger">
                     <div class="card-header">
-                        <h3 class="card-title">CARGAS - NOVA CARGA</h3>
+                        <h3 class="card-title">CARGAS - NOVA CARGA (<asp:Label ID="novaCarga" runat="server" ></asp:Label>)</h3>
                     </div>
                 </dciv>
             </div>      
