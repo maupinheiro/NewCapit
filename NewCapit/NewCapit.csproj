@@ -148,6 +148,7 @@
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
+    <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
     <Content Include="dist\pages\MapaClientePesquisa.aspx" />
@@ -4319,6 +4320,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.designer.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_OrdemColetaCNT.aspx.cs">
+      <DependentUpon>Frm_OrdemColetaCNT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_OrdemColetaCNT.aspx.designer.cs">
+      <DependentUpon>Frm_OrdemColetaCNT.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>

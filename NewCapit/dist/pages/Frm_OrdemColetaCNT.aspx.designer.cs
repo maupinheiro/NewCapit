@@ -11,232 +11,277 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class FrmCadCargas
+    public partial class Frm_OrdemColetaCNT
     {
 
         /// <summary>
-        /// Controle novaCarga.
+        /// Controle txtCodMotorista.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label novaCarga;
+        protected global::System.Web.UI.WebControls.TextBox txtCodMotorista;
 
         /// <summary>
-        /// Controle cbFiliais.
+        /// Controle btnPesquisar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cbFiliais;
+        protected global::System.Web.UI.WebControls.Button btnPesquisar;
 
         /// <summary>
-        /// Controle ddlSolicitante.
+        /// Controle txtFilialMotCNT.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSolicitante;
+        protected global::System.Web.UI.WebControls.TextBox txtFilialMotCNT;
 
         /// <summary>
-        /// Controle ddlTomador.
+        /// Controle txtNomMot.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTomador;
+        protected global::System.Web.UI.WebControls.TextBox txtNomMot;
 
         /// <summary>
-        /// Controle txtGr.
+        /// Controle txtCodVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGr;
+        protected global::System.Web.UI.WebControls.TextBox txtCodVeiculo;
 
         /// <summary>
-        /// Controle lblDtCadCarga.
+        /// Controle btnPesqVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDtCadCarga;
+        protected global::System.Web.UI.WebControls.Button btnPesqVeiculo;
 
         /// <summary>
-        /// Controle txtCodCliOrigem.
+        /// Controle txtFilialVeicCNH.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodCliOrigem;
+        protected global::System.Web.UI.WebControls.TextBox txtFilialVeicCNH;
 
         /// <summary>
-        /// Controle ddlRemetente.
+        /// Controle txtPlaca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlRemetente;
+        protected global::System.Web.UI.WebControls.TextBox txtPlaca;
 
         /// <summary>
-        /// Controle txtMunicOrigem.
+        /// Controle txtTipoVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMunicOrigem;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoVeiculo;
 
         /// <summary>
-        /// Controle txtUFOrigem.
+        /// Controle txtReboque1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFOrigem;
+        protected global::System.Web.UI.WebControls.TextBox txtReboque1;
 
         /// <summary>
-        /// Controle txtCodCliDestino.
+        /// Controle txtReboque2.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodCliDestino;
+        protected global::System.Web.UI.WebControls.TextBox txtReboque2;
 
         /// <summary>
-        /// Controle ddlDestinatario.
+        /// Controle txtCarreta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlDestinatario;
+        protected global::System.Web.UI.WebControls.TextBox txtCarreta;
 
         /// <summary>
-        /// Controle txtMunicDestinatario.
+        /// Controle txtTecnologia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMunicDestinatario;
+        protected global::System.Web.UI.WebControls.TextBox txtTecnologia;
 
         /// <summary>
-        /// Controle txtUFDestinatario.
+        /// Controle txtRastreamento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFDestinatario;
+        protected global::System.Web.UI.WebControls.TextBox txtRastreamento;
 
         /// <summary>
-        /// Controle txtNumPedido.
+        /// Controle txtConjunto.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumPedido;
+        protected global::System.Web.UI.WebControls.TextBox txtConjunto;
 
         /// <summary>
-        /// Controle btnCliente.
+        /// Controle txtCodProprietario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCliente;
+        protected global::System.Web.UI.WebControls.TextBox txtCodProprietario;
 
         /// <summary>
-        /// Controle ddlMaterial.
+        /// Controle txtProprietario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlMaterial;
+        protected global::System.Web.UI.WebControls.TextBox txtProprietario;
 
         /// <summary>
-        /// Controle txtPeso.
+        /// Controle txtCodFrota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPeso;
+        protected global::System.Web.UI.WebControls.TextBox txtCodFrota;
 
         /// <summary>
-        /// Controle ddlLocalCarreg.
+        /// Controle txtFoneCorp.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlLocalCarreg;
+        protected global::System.Web.UI.WebControls.TextBox txtFoneCorp;
 
         /// <summary>
-        /// Controle ddlSituacaoMaterial.
+        /// Controle txtColeta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSituacaoMaterial;
+        protected global::System.Web.UI.WebControls.TextBox txtColeta;
 
         /// <summary>
-        /// Controle txtControleCliente.
+        /// Controle bntColeta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtControleCliente;
+        protected global::System.Web.UI.WebControls.Button bntColeta;
 
         /// <summary>
-        /// Controle ddlEntrega.
+        /// Controle lblTipoViagem.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEntrega;
+        protected global::System.Web.UI.WebControls.Label lblTipoViagem;
 
         /// <summary>
-        /// Controle lblDtCadastro.
+        /// Controle lblRota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDtCadastro;
+        protected global::System.Web.UI.WebControls.Label lblRota;
 
         /// <summary>
-        /// Controle txtUsuCadastro.
+        /// Controle lblVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
+        protected global::System.Web.UI.WebControls.Label lblVeiculo;
 
         /// <summary>
-        /// Controle btnSalvar1.
+        /// Controle lblQuant.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvar1;
+        protected global::System.Web.UI.WebControls.Label lblQuant;
+
+        /// <summary>
+        /// Controle lblPeso.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPeso;
+
+        /// <summary>
+        /// Controle lblMetragem.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMetragem;
+
+        /// <summary>
+        /// Controle lblSolicitacao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSolicitacao;
+
+        /// <summary>
+        /// Controle lblEstRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEstRota;
+
+        /// <summary>
+        /// Controle lblRemessa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRemessa;
     }
 }
