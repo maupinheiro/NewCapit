@@ -342,7 +342,7 @@
                                                      <i class="fas fa-shipping-fast nav-icon"></i>
                                                      <p>Controle de Coletas</p>
                                                  </a>
-                                                 <a href="#modal-lg" class="nav-link">
+                                                 <a href="ImportarPlanejamento.aspx" class="nav-link">
                                                      <i class="fas fa-boxes nav-icon"></i>
                                                      <p>Importar Planejamento</p>
                                                  </a>
