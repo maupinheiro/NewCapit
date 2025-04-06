@@ -24,22 +24,49 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCodMotorista;
 
         /// <summary>
-        /// Controle btnPesquisar.
+        /// Controle btnPesquisarMotorista.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisar;
+        protected global::System.Web.UI.WebControls.Button btnPesquisarMotorista;
 
         /// <summary>
-        /// Controle txtFilialMotCNT.
+        /// Controle txtFilialMot.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFilialMotCNT;
+        protected global::System.Web.UI.WebControls.TextBox txtFilialMot;
+
+        /// <summary>
+        /// Controle txtExameToxic.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtExameToxic;
+
+        /// <summary>
+        /// Controle txtCNH.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNH;
+
+        /// <summary>
+        /// Controle txtLibGR.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLibGR;
 
         /// <summary>
         /// Controle txtNomMot.
@@ -51,6 +78,42 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtNomMot;
 
         /// <summary>
+        /// Controle txtCPF.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCPF;
+
+        /// <summary>
+        /// Controle txtCartao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCartao;
+
+        /// <summary>
+        /// Controle txtValCartao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtValCartao;
+
+        /// <summary>
+        /// Controle txtCelular.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCelular;
+
+        /// <summary>
         /// Controle txtCodVeiculo.
         /// </summary>
         /// <remarks>
@@ -60,22 +123,22 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCodVeiculo;
 
         /// <summary>
-        /// Controle btnPesqVeiculo.
+        /// Controle btnPesquisarVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesqVeiculo;
+        protected global::System.Web.UI.WebControls.Button btnPesquisarVeiculo;
 
         /// <summary>
-        /// Controle txtFilialVeicCNH.
+        /// Controle txtFilialVeicCNT.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFilialVeicCNH;
+        protected global::System.Web.UI.WebControls.TextBox txtFilialVeicCNT;
 
         /// <summary>
         /// Controle txtPlaca.
@@ -204,6 +267,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Button bntColeta;
 
         /// <summary>
+        /// Controle btnSalvarColeta.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSalvarColeta;
+
+        /// <summary>
         /// Controle lblTipoViagem.
         /// </summary>
         /// <remarks>
@@ -283,5 +355,68 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRemessa;
+
+        /// <summary>
+        /// Controle ddlStatus.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
+
+        /// <summary>
+        /// Controle btnAtualizarColeta.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAtualizarColeta;
+
+        /// <summary>
+        /// Controle lblDtCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDtCadastro;
+
+        /// <summary>
+        /// Controle txtUsuCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
+
+        /// <summary>
+        /// Controle lblAtualizadoEm.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAtualizadoEm;
+
+        /// <summary>
+        /// Controle txtAtualizadoPor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAtualizadoPor;
+
+        /// <summary>
+        /// Controle btnSalvar1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSalvar1;
     }
 }
