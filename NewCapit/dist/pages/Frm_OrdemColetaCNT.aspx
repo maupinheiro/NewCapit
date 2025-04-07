@@ -8,7 +8,7 @@
             <div class="container-fluid">
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA</h3>
+                        <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA - <asp:Label ID="novaColeta" runat="server" ></asp:Label></h3>
                     </div>
                 </div>
             </div>
@@ -17,20 +17,26 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">MOTORISTA:</span>
-                            <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                            <asp:TextBox ID="txtCodMotorista" runat="server" font-weight="bold" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <br />
                         <asp:Button ID="btnPesquisarMotorista" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarMotorista_Click" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <span class="details">FILIAL:</span>
                             <asp:TextBox ID="txtFilialMot" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">TIPO:</span>
+                            <asp:TextBox ID="txtTipoMot" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">EX.TOXIC.:</span>
@@ -57,7 +63,9 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <img src="/fotos/usuario.jpg" class="rounded float-right" alt="...">
+                            
+                                <img src="<%=fotoMotorista%>" class="rounded float-right" height="80" width="80" alt="User Image">  
+                            
                         </div>
                     </div>
                 </div>
@@ -110,7 +118,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:Button ID="btnPesquisarVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+                        <asp:Button ID="btnPesquisarVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarVeiculo_Click" />
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
@@ -118,20 +126,32 @@
                             <asp:TextBox ID="txtFilialVeicCNT" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">TIPO:</span>
+                            <asp:TextBox ID="txtVeiculoTipo" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">LICENÇA CET:</span>
                             <div class="input-group">
-                                <input type="text" id="txtCET" class="form-control" style="text-align: center">
+                                <asp:TextBox ID="txtCET" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">VAL. CRLV:</span>
+                            <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">VAL. CRLV REB.:</span>
                             <div class="input-group">
-                                <input type="text" id="txtCRLVVeiculo" class="form-control" style="text-align: center">
+                                <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -139,15 +159,7 @@
                         <div class="form-group">
                             <span class="details">VAL. CRLV REB.:</span>
                             <div class="input-group">
-                                <input type="text" id="txtCRLVReb1" class="form-control" style="text-align: center">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                        <div class="form-group">
-                            <span class="details">VAL. CRLV REB.:</span>
-                            <div class="input-group">
-                                <input type="text" id="txtCRLVReb2" class="form-control" style="text-align: center">
+                                <asp:TextBox id="txtCRLVReb2" runat="server" class="form-control" style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -329,7 +341,7 @@
                                                         <div class="form-group">
                                                             <span class="details">JANELA GATE:</span>
                                                             <div class="input-group">
-                                                                <input type="text" id="txtGate" class="form-control" style="text-align: center" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/MM/yyyy HH:mm" data-mask>
+                                                                <input type="text" id="txtGate" class="form-control" style="text-align: center">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -339,79 +351,79 @@
                                                             <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
                                                         </div>
                                                     </div>
-                                                 </div>
-                                                    <div class="row g-3">
-                                                        <div class="col-md-2">
-                                                            <div class="form-group">
-                                                                <span class="details">CHEGADA FORNECEDOR:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtChegadaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <div class="form-group">
-                                                                <span class="details">SAIDA FORNECEDOR:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtSaidaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <div class="form-group">
-                                                                <span class="details">ESPERA:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtAgCarreg" class="form-control" style="text-align: center">
-                                                                </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">CHEGADA FORNECEDOR:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtChegadaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row g-3">
-                                                        <div class="col-md-2">
-                                                            <div class="form-group">
-                                                                <span class="details">CHEGADA PLANTA:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtChegadaDestino" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                                </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">SAIDA FORNECEDOR:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtSaidaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <div class="form-group">
-                                                                <span class="details">ENTRADA:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtEntrada" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <div class="form-group">
-                                                                <span class="details">ESP.GATE:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtEsperaGate" class="form-control" style="text-align: center">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <div class="form-group">
-                                                                <span class="details">SAIDA PLANTA:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtSaidaPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <div class="form-group">
-                                                                <span class="details">TEMPO:</span>
-                                                                <div class="input-group">
-                                                                    <input type="text" id="txtDentroPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <br />
-                                                            <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" />
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <span class="details">ESPERA:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtAgCarreg" class="form-control" style="text-align: center">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">CHEGADA PLANTA:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtChegadaDestino" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">ENTRADA:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtEntrada" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <span class="details">ESP.GATE:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtEsperaGate" class="form-control" style="text-align: center">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">SAIDA PLANTA:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtSaidaPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <span class="details">TEMPO:</span>
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtDentroPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <br />
+                                                        <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" />
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
 

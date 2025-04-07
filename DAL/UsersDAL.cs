@@ -79,6 +79,24 @@ namespace DAL
                 return con.Query<ConsultaAgregado>(sqlQuery, obj).FirstOrDefault();
             }
         }
+        public static ConsultaVeiculo CheckVeiculo(ConsultaVeiculo obj)
+        {
+            string sqlQuery = "SELECT * FROM tbveiculos WHERE (codvei = @codvei)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaVeiculo>(sqlQuery, obj).FirstOrDefault();
+            }
+        }
+        public static ConsultaReboque CheckReboque(ConsultaReboque objReboque)
+        {
+            string sqlQuery = "SELECT * FROM tbcarretas WHERE (placacarreta = @placaCarreta)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaReboque>(sqlQuery, objReboque).FirstOrDefault();
+            }
+        }
     }
    
 }

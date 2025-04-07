@@ -21,5 +21,13 @@ namespace Domain
         public string venceti {  get; set; }
         public string caminhofoto { get; set; }
         public string fl_exclusao { get; set; }
+        public string tipomot { get; set; }
+
+        public string codvei { get; set; }  
+        public string placa { get; set; }
+        public string reboque1 { get; set; }
+        public string reboque2 { get; set; }
+        public string tipoveiculo { get; set; }
+
     }
 }

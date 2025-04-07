@@ -249,9 +249,11 @@ namespace NewCapit
             string composicao10 = "BITRUCK";
             string composicao11 = "BITREM";
             string composicao12 = "TOCO";
-            string composicao13 = "VEICULO 3/4";
+            string composicao13 = "VUC OU 3/4";
             string composicao14 = "CAVALO SIMPLES COM PRANCHA";
             string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+            string composicao16 = "UTILITÁRIO/FURGÃO";
+            string composicao17 = "FIORINO";            
 
             string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
             string tipoComposicao = selectedValue;
@@ -312,7 +314,140 @@ namespace NewCapit
                 int nCapacidade = 53000;
                 int nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;             
+            
+            }
+            else if (tipoComposicao.Equals(composicao6))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "48500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 48500;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao7))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "48500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 48500;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao8))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "53000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 53000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao9))
+            {
+                txtEixos.Text = "03";
+                txtCap.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao10))
+            {
+                txtEixos.Text = "04";
+                txtCap.Text = "29000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 29000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao11))
+            {
+                txtEixos.Text = "07";
+                txtCap.Text = "57000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 57000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao12))
+            {
+                txtEixos.Text = "02";
+                txtCap.Text = "16000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 16000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao13))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "3000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 3000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao14))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao15))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao16))
+            {
+                txtEixos.Text = "02";
+                txtCap.Text = "1200";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 1200;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao17))
+            {
+                txtEixos.Text = "02";
+                txtCap.Text = "630";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 630;
+                int nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
             }
         }
         protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
