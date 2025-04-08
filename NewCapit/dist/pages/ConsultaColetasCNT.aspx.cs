@@ -207,17 +207,13 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
-                    lblMensagem.ForeColor = System.Drawing.Color.Red;
+                    //lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
+                    //lblMensagem.ForeColor = System.Drawing.Color.Red;
                 }
             }
         }
 
-        protected void gvListCargas_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvListCargas.PageIndex = e.NewPageIndex;
-            PreencherColetas();  // Método para recarregar os dados no GridView
-        }
+       
         protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
 {
     if (e.Row.RowType == DataControlRowType.DataRow)

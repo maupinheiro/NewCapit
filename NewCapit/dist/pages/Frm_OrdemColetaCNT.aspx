@@ -8,7 +8,12 @@
             <div class="container-fluid">
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA - <asp:Label ID="novaColeta" runat="server" ></asp:Label></h3>
+                        <div class="d-sm-flex align-items-left justify-content-between mb-3">
+                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -
+    <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
+                            <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;
+                                <asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,9 +68,8 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            
-                                <img src="<%=fotoMotorista%>" class="rounded float-right" height="80" width="80" alt="User Image">  
-                            
+
+                            <img src="<%=fotoMotorista%>" class="rounded float-right" height="80" width="80" alt="User Image">
                         </div>
                     </div>
                 </div>
@@ -159,7 +163,7 @@
                         <div class="form-group">
                             <span class="details">VAL. CRLV REB.:</span>
                             <div class="input-group">
-                                <asp:TextBox id="txtCRLVReb2" runat="server" class="form-control" style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>

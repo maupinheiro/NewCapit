@@ -80,8 +80,8 @@
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 590px;">
                                 <table class="table table-head-fixed text-nowrap">
-                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" ShowHeaderWhenEmpty="True">
-                                        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
+                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" OnRowDataBound="gvListCargas_RowDataBound" >
+                                        
                                         <Columns>
                                             <asp:BoundField DataField="id" HeaderText="COLETA" />
                                             <asp:BoundField DataField="data_hora" HeaderText="DATA/HORA" />
