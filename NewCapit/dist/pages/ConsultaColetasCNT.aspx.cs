@@ -213,11 +213,7 @@ namespace NewCapit.dist.pages
             }
         }
 
-        protected void gvListCargas_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvListCargas.PageIndex = e.NewPageIndex;
-            PreencherColetas();  // Método para recarregar os dados no GridView
-        }
+       
         protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
 {
     if (e.Row.RowType == DataControlRowType.DataRow)
