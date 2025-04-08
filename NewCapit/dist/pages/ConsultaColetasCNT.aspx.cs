@@ -207,8 +207,8 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
-                    lblMensagem.ForeColor = System.Drawing.Color.Red;
+                    //lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
+                    //lblMensagem.ForeColor = System.Drawing.Color.Red;
                 }
             }
         }
@@ -246,7 +246,7 @@ namespace NewCapit.dist.pages
                 cell.BackColor = System.Drawing.Color.Red;
                 cell.ForeColor = System.Drawing.Color.White;
             }
-            else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && status == "Concluído")
+            else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "Concluído" || status == "Pendente"))
             {
                 cell.Text = "No Prazo";
                 cell.BackColor = System.Drawing.Color.Green;

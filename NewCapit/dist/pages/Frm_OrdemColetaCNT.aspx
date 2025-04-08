@@ -250,7 +250,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:Button ID="bntColeta" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+                        <asp:Button ID="bntPesquisaColeta" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="bntPesquisaColeta_Click"  />
                     </div>
                     <div class="col-md-1">
                         <br />
@@ -263,172 +263,349 @@
                             <!-- ./card-header -->
                             <div class="card-body">
                                 <table class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>COLETA</th>
-                                            <th>CVA</th>
-                                            <th>DATA COLETA</th>
-                                            <th>CODIGO</th>
-                                            <th>ORIGEM</th>
-                                            <th>CODIGO</th>
-                                            <th>DESTINO</th>
-                                            <th>ATENDIMENTO</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr data-widget="expandable-table" aria-expanded="false">
-                                            <td>382545</td>
-                                            <td>1013520</td>
-                                            <td>04/04/2025 11:00</td>
-                                            <td>3118/E81</td>
-                                            <td>GESTAMP (TAUBATE)</td>
-                                            <td>1020/11</td>
-                                            <td>VW ANCHIETA</td>
-                                            <td>NO PRAZO</td>
-                                        </tr>
-                                        <tr class="expandable-body">
-                                            <td colspan="12">
-                                                <div class="row g-3">
-                                                    <div class="col-md-2">
-                                                        <h3 class="card-title">TIPO DE VIAGEM:
-                                                            <asp:Label ID="lblTipoViagem" runat="server" ForeColor="Blue">FTL</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <h3 class="card-title">ROTA:
-                                                            <asp:Label ID="lblRota" runat="server" ForeColor="Blue">20.62</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <h3 class="card-title">VEICULO:
-                                                <asp:Label ID="lblVeiculo" runat="server" ForeColor="Blue">CARRETA REBAIXADA 2 EIXOS</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <h3 class="card-title">QUANT./PALLET´S:
-                                                <asp:Label ID="lblQuant" runat="server" ForeColor="Blue">1 PALLET 6 RAD0137 6 RBA0137</asp:Label></h3>
-                                                    </div>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <div class="col-md-2">
-                                                        <h3 class="card-title">PESO:
-                                                            <asp:Label ID="lblPeso" runat="server" ForeColor="Blue">18000</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <h3 class="card-title">M<sup>3</sup>:
-                                                            <asp:Label ID="lblMetragem" runat="server" ForeColor="Blue">19</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <h3 class="card-title">SOLICITAÇÃO:
-                                        <asp:Label ID="lblSolicitacao" runat="server" ForeColor="Blue">+2541252+8965896+87456989</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <h3 class="card-title">ESTUDO DE ROTA:
-                                        <asp:Label ID="lblEstRota" runat="server" ForeColor="Blue">11FTL554</asp:Label></h3>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <h3 class="card-title">REMESSA:
-                                                <asp:Label ID="lblRemessa" runat="server" ForeColor="Blue">12112221</asp:Label></h3>
-                                                    </div>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">Nº CVA:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtCVA" maxlength="11" class="form-control" style="text-align: center">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">JANELA GATE:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtGate" class="form-control" style="text-align: center">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="">STATUS:</span>
-                                                            <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">CHEGADA FORNECEDOR:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtChegadaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">SAIDA FORNECEDOR:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtSaidaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <div class="form-group">
-                                                            <span class="details">ESPERA:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtAgCarreg" class="form-control" style="text-align: center">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">CHEGADA PLANTA:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtChegadaDestino" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">ENTRADA:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtEntrada" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <div class="form-group">
-                                                            <span class="details">ESP.GATE:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtEsperaGate" class="form-control" style="text-align: center">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <span class="details">SAIDA PLANTA:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtSaidaPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <div class="form-group">
-                                                            <span class="details">TEMPO:</span>
-                                                            <div class="input-group">
-                                                                <input type="text" id="txtDentroPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <br />
-                                                        <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+    <thead>
+        <tr>
+            <th>COLETA</th>
+            <th>CVA</th>
+            <th>DATA COLETA</th>
+            <th>CODIGO</th>
+            <th>ORIGEM</th>
+            <th>CODIGO</th>
+            <th>DESTINO</th>
+            <th>ATENDIMENTO</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-widget="expandable-table" aria-expanded="false">
+            <td>382545</td>
+            <td>1013520</td>
+            <td>04/04/2025 11:00</td>
+            <td>3118/E81</td>
+            <td>GESTAMP (TAUBATE)</td>
+            <td>1020/11</td>
+            <td>VW ANCHIETA</td>
+            <td>NO PRAZO</td>
+        </tr>
+        <tr class="expandable-body">
+            <td colspan="12">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <h3 class="card-title">TIPO DE VIAGEM:
+                            <asp:Label ID="lblTipoViagem" runat="server" ForeColor="Blue">FTL</asp:Label></h3>
+                    </div>
+                    <div class="col-md-1">
+                        <h3 class="card-title">ROTA:
+                            <asp:Label ID="lblRota" runat="server" ForeColor="Blue">20.62</asp:Label></h3>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="card-title">VEICULO:
+                <asp:Label ID="lblVeiculo" runat="server" ForeColor="Blue">CARRETA REBAIXADA 2 EIXOS</asp:Label></h3>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="card-title">QUANT./PALLET´S:
+                <asp:Label ID="lblQuant" runat="server" ForeColor="Blue">1 PALLET 6 RAD0137 6 RBA0137</asp:Label></h3>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <h3 class="card-title">PESO:
+                            <asp:Label ID="lblPeso" runat="server" ForeColor="Blue">18000</asp:Label></h3>
+                    </div>
+                    <div class="col-md-1">
+                        <h3 class="card-title">M<sup>3</sup>:
+                            <asp:Label ID="lblMetragem" runat="server" ForeColor="Blue">19</asp:Label></h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="card-title">SOLICITAÇÃO:
+        <asp:Label ID="lblSolicitacao" runat="server" ForeColor="Blue">+2541252+8965896+87456989</asp:Label></h3>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="card-title">ESTUDO DE ROTA:
+        <asp:Label ID="lblEstRota" runat="server" ForeColor="Blue">11FTL554</asp:Label></h3>
+                    </div>
+                    <div class="col-md-2">
+                        <h3 class="card-title">REMESSA:
+                <asp:Label ID="lblRemessa" runat="server" ForeColor="Blue">12112221</asp:Label></h3>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">Nº CVA:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtCVA" maxlength="11" class="form-control" style="text-align: center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">JANELA GATE:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtGate" class="form-control" style="text-align: center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="">STATUS:</span>
+                            <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">CHEGADA FORNECEDOR:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtChegadaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">SAIDA FORNECEDOR:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtSaidaOrigem" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">ESPERA:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtAgCarreg" class="form-control" style="text-align: center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">CHEGADA PLANTA:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtChegadaDestino" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">ENTRADA:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtEntrada" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">ESP.GATE:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtEsperaGate" class="form-control" style="text-align: center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">SAIDA PLANTA:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtSaidaPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">TEMPO:</span>
+                            <div class="input-group">
+                                <input type="text" id="txtDentroPlanta" class="form-control" style="text-align: center" textmode="DateTimeLocal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <br />
+                        <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" />
+                    </div>
+                </div>
+            </td>
+        </tr>
 
+    </tbody>
+</table>
+                             <%-- <asp:Repeater ID="rptColetas" runat="server">
+                                <HeaderTemplate>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>COLETA</th>
+                                                <th>CVA</th>
+                                                <th>DATA COLETA</th>
+                                                <th>CODIGO</th>
+                                                <th>ORIGEM</th>
+                                                <th>CODIGO</th>
+                                                <th>DESTINO</th>
+                                                <th>ATENDIMENTO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <tr data-widget="expandable-table" aria-expanded="false">
+                                        <td><%# Eval("Coleta") %></td>
+                                        <td><%# Eval("CVA") %></td>
+                                        <td><%# Eval("DataColeta", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                        <td><%# Eval("Codigo1") %></td>
+                                        <td><%# Eval("Origem") %></td>
+                                        <td><%# Eval("Codigo2") %></td>
+                                        <td><%# Eval("Destino") %></td>
+                                        <td><%# Eval("Atendimento") %></td>
+                                    </tr>
+                                    <tr class="expandable-body">
+                                        <td colspan="12">
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <h3 class="card-title">TIPO DE VIAGEM:
+                                                        <asp:Label ID="lblTipoViagem" runat="server" Text='<%# Eval("TipoViagem") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <h3 class="card-title">ROTA:
+                                                        <asp:Label ID="lblRota" runat="server" Text='<%# Eval("Rota") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <h3 class="card-title">VEICULO:
+                                                        <asp:Label ID="lblVeiculo" runat="server" Text='<%# Eval("Veiculo") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h3 class="card-title">QUANT./PALLET´S:
+                                                        <asp:Label ID="lblQuant" runat="server" Text='<%# Eval("Quantidade") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <h3 class="card-title">PESO:
+                                                        <asp:Label ID="lblPeso" runat="server" Text='<%# Eval("Peso") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <h3 class="card-title">M<sup>3</sup>:
+                                                        <asp:Label ID="lblMetragem" runat="server" Text='<%# Eval("Metragem") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <h3 class="card-title">SOLICITAÇÃO:
+                                                        <asp:Label ID="lblSolicitacao" runat="server" Text='<%# Eval("Solicitacao") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <h3 class="card-title">ESTUDO DE ROTA:
+                                                        <asp:Label ID="lblEstRota" runat="server" Text='<%# Eval("EstudoRota") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <h3 class="card-title">REMESSA:
+                                                        <asp:Label ID="lblRemessa" runat="server" Text='<%# Eval("Remessa") %>' ForeColor="Blue" /></h3>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">Nº CVA:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtCVA" maxlength="11" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">JANELA GATE:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtGate" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="">STATUS:</span>
+                                                        <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control"></asp:DropDownList>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">CHEGADA FORNECEDOR:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtChegadaOrigem" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">SAIDA FORNECEDOR:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtSaidaOrigem" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <span class="details">ESPERA:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtAgCarreg" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">CHEGADA PLANTA:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtChegadaDestino" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">ENTRADA:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtEntrada" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <span class="details">ESP.GATE:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtEsperaGate" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">SAIDA PLANTA:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtSaidaPlanta" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <span class="details">TEMPO:</span>
+                                                        <div class="input-group">
+                                                            <input type="text" id="txtDentroPlanta" class="form-control" style="text-align: center" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <br />
+                                                    <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                                <FooterTemplate>
                                     </tbody>
-                                </table>
+                                    </table>
+                                </FooterTemplate>
+                            </asp:Repeater>--%>
+
+
+                                
                             </div>
                             <!-- /.card-body -->
                         </div>

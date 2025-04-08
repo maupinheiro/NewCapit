@@ -10,6 +10,8 @@ using System.IO;
 using Domain;
 using NPOI.SS.Formula.Functions;
 using static NPOI.HSSF.Util.HSSFColor;
+using System.Collections;
+using System.Data;
 
 namespace NewCapit.dist.pages
 {
@@ -327,6 +329,11 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void bntPesquisaColeta_Click(object sender, EventArgs e)
+        {
+
+        }
+
         protected void btnPesquisarVeiculo_Click(object sender, EventArgs e)
         {
             if (txtCodVeiculo.Text.Trim() == "")
@@ -463,5 +470,22 @@ namespace NewCapit.dist.pages
 
             }
         }
+
+        //private void CarregarColetas(string searchTerm = "")
+        //{
+        //    var dataTable = DAL.ConCargas.FetchDataTableColetas(); // você pode aplicar filtro aqui se quiser
+
+        //    if (dataTable.Rows.Count > 0)
+        //    {
+        //        rptColetas.DataSource = dataTable;
+        //        rptColetas.DataBind();
+        //    }
+        //    else
+        //    {
+        //        rptColetas.DataSource = null;
+        //        rptColetas.DataBind();
+        //    }
+        //}
+
     }
 }
