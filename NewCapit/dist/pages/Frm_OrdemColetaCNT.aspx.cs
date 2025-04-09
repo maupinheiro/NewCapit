@@ -38,7 +38,7 @@ namespace NewCapit.dist.pages
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 //PreencherComboStatus();
                 PreencherNumColeta();
-                fotoMotorista = "../../fotos/usuario.jpg";
+                CarregaFoto();
             }
 
 
@@ -175,9 +175,9 @@ namespace NewCapit.dist.pages
                 TextBox txtEntrada = (TextBox)e.Item.FindControl("txtEntrada");
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
-
+                TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
                 // continue com os demais campos que quiser atualizar...
-
+               
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
@@ -187,7 +187,7 @@ namespace NewCapit.dist.pages
                                 status = @status, 
                                 chegadaorigem = @chegadaorigem, 
                                 saidaorigem = @saidaorigem,
-                                tempoaqcarreg = @tempoaqcarreg,
+                                tempoagcarreg = @tempoagcarreg,
                                 chegadadestino = @chegadadestino,
                                 entradaplanta = @entradaplanta,
                                 saidaplanta = @saidaplanta,
@@ -195,35 +195,79 @@ namespace NewCapit.dist.pages
                                 idviagem=@idviagem,
                                 codmot=@codmot,
                                 frota=@frota,
+                                tempoesperagate=@tempoesperagate
                                 WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
                     cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                    cmd.Parameters.AddWithValue("@gate", txtGate.Text.Trim());
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedValue);
-                    cmd.Parameters.AddWithValue("@chegadaorigem", txtChegadaOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@saidaorigem", txtSaidaOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@tempoaqcarreg", txtAgCarreg.Text.Trim());
-                    cmd.Parameters.AddWithValue("@chegadadestino", txtChegadaDestino.Text.Trim());
-                    cmd.Parameters.AddWithValue("@entradaplanta", txtEntrada.Text.Trim());
-                    cmd.Parameters.AddWithValue("@saidaplanta", txtSaidaPlanta.Text.Trim());
+                    cmd.Parameters.AddWithValue("@gate", DateTime.Parse(txtGate.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
+                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@chegadaorigem", DateTime.Parse(txtChegadaOrigem.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
+                    cmd.Parameters.AddWithValue("@saidaorigem", DateTime.Parse(txtSaidaOrigem.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
+                    cmd.Parameters.AddWithValue("@tempoagcarreg", txtAgCarreg.Text.Trim());
+                    cmd.Parameters.AddWithValue("@chegadadestino", DateTime.Parse(txtChegadaDestino.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
+                    cmd.Parameters.AddWithValue("@entradaplanta", DateTime.Parse(txtEntrada.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
+                    cmd.Parameters.AddWithValue("@saidaplanta", DateTime.Parse(txtSaidaPlanta.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
                     cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
                     cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
+                    cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
                     // continue os parâmetros conforme seu banco
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
+
+                    
+                    string linha1 = "Coleta " + carga + ", cadastrado no sistema com sucesso.";
+                    //string linha3 = "Verifique o código digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 }
 
                 // Após atualizar, recarregar os dados no Repeater
                 AtualizarColetasVisiveis();
             }
         }
+        public void CarregaFoto()
+        {
+            var codigo = txtCodMotorista.Text.Trim();
+           
+            var obj = new Domain.ConsultaMotorista
+            {
+                codmot = codigo
+            };
+            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+            if (ConsultaMotorista != null)
+            {
+                if (txtCodMotorista.Text.Trim() != "")
+                {
+                    fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
-
+                    String path = Server.MapPath("../../fotos/");
+                    string file = fotoMotorista;
+                    if (File.Exists(path + file))
+                    {
+                        fotoMotorista = "../../fotos/" + file + "";
+                    }
+                    else
+                    {
+                        fotoMotorista = "../../fotos/usuario.jpg";
+                    }
+                }
+            }
+           
+        }
 
         protected void btnPesquisarMotorista_Click(object sender, EventArgs e)
         {
@@ -290,21 +334,7 @@ namespace NewCapit.dist.pages
                         txtCartao.Text = ConsultaMotorista.cartaomot;
                         txtValCartao.Text = ConsultaMotorista.venccartao;
                         txtCelular.Text = ConsultaMotorista.fone2;
-                        if (txtCodMotorista.Text.Trim() != "")
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-
-                            String path = Server.MapPath("../../fotos/");
-                            string file = fotoMotorista;
-                            if (File.Exists(path + file))
-                            {
-                                fotoMotorista = "../../fotos/" + file + "";
-                            }
-                            else
-                            {
-                                fotoMotorista = "../../fotos/usuario.jpg";
-                            }
-                        }
+                        
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
@@ -571,6 +601,101 @@ namespace NewCapit.dist.pages
             rptColetas.DataSource = dadosAtuais;
             rptColetas.DataBind();
         }
+
+        protected void btnSalvar1_Click(object sender, EventArgs e)
+        {
+            string query = @"INSERT INTO tbcarregamentos (
+                            num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf, 
+                            cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo, 
+                            valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento, 
+                            tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa
+                             ) VALUES (
+                            @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf, 
+                            @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo, 
+                            @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento, 
+                            @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa
+                             )";
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                cmd.Parameters.AddWithValue("@codmotorista", txtCodMotorista.Text);
+                cmd.Parameters.AddWithValue("@nucleo", txtFilialMot.Text);
+                cmd.Parameters.AddWithValue("@tipomot", txtTipoMot.Text);
+                cmd.Parameters.AddWithValue("@valtoxicologico", txtExameToxic.Text);
+                cmd.Parameters.AddWithValue("@venccnh", txtCNH.Text);
+                cmd.Parameters.AddWithValue("@valgr", txtLibGR.Text);
+                cmd.Parameters.AddWithValue("@foto", fotoMotorista); // se for um Upload, trate o arquivo separadamente
+                cmd.Parameters.AddWithValue("@nomemotorista", txtNomMot.Text);
+                cmd.Parameters.AddWithValue("@cpf", txtCPF.Text);
+                cmd.Parameters.AddWithValue("@cartaopedagio", txtCartao.Text);
+                cmd.Parameters.AddWithValue("@valcartao", txtValCartao.Text);
+                cmd.Parameters.AddWithValue("@foneparticular", txtCelular.Text);
+                cmd.Parameters.AddWithValue("@veiculo", txtCodVeiculo.Text);
+                cmd.Parameters.AddWithValue("@veiculotipo", txtVeiculoTipo.Text);
+                cmd.Parameters.AddWithValue("@filialveiculo", txtFilialVeicCNT.Text);
+                cmd.Parameters.AddWithValue("@valcet", txtCET.Text);
+                cmd.Parameters.AddWithValue("@valcrlvveiculo", txtCRLVVeiculo.Text);
+                cmd.Parameters.AddWithValue("@valcrlvreboque1", txtCRLVReb1.Text);
+                cmd.Parameters.AddWithValue("@valcrlvreboque2", txtCRLVReb2.Text);
+                cmd.Parameters.AddWithValue("@placa", txtPlaca.Text);
+                cmd.Parameters.AddWithValue("@tipoveiculo", txtTipoVeiculo.Text);
+                cmd.Parameters.AddWithValue("@reboque1", txtReboque1.Text);
+                cmd.Parameters.AddWithValue("@reboque2", txtReboque2.Text);
+                cmd.Parameters.AddWithValue("@carreta", txtCarreta.Text);
+                cmd.Parameters.AddWithValue("@tecnologia", txtTecnologia.Text);
+                cmd.Parameters.AddWithValue("@rastreamento", txtRastreamento.Text);
+                cmd.Parameters.AddWithValue("@tipocarreta", txtConjunto.Text);
+                cmd.Parameters.AddWithValue("@codtra", txtCodProprietario.Text);
+                cmd.Parameters.AddWithValue("@transportadora", txtProprietario.Text);
+                cmd.Parameters.AddWithValue("@codcontato", txtCodFrota.Text);
+                cmd.Parameters.AddWithValue("@fonecorporativo", txtFoneCorp.Text);
+                cmd.Parameters.AddWithValue("@empresa", txtFilial.Text);
+
+                try
+                {
+                    string nomeUsuario = txtUsuCadastro.Text;
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Carregamento cadastrado no sistema com sucesso.";
+                    //string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                }
+                catch (Exception ex)
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    string linha1 = "Erro ao salvar: " + ex.Message;
+                    //string linha2 = "Carregamento cadastrado no sistema com sucesso.";
+                    //string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    //lblMensagem.Text = "Erro ao salvar: " + ex.Message;
+                }
+            }
+        }
+
 
         private void AtualizarColetasVisiveis()
         {

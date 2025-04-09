@@ -3,6 +3,122 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <script>
+        function calcularTempoAgCarreg(item) {
+            const chegada = item.querySelector('.chegada').value;
+            const saida = item.querySelector('.saida').value;
+            const espera = item.querySelector('.espera');
+
+            if (chegada && saida) {
+                const dtChegada = new Date(chegada);
+                const dtSaida = new Date(saida);
+
+                if (!isNaN(dtChegada) && !isNaN(dtSaida)) {
+                    const diffMs = dtSaida - dtChegada;
+
+                    if (diffMs < 0) {
+                        espera.value = "Inválido";
+                        return;
+                    }
+
+                    const diffMin = Math.floor(diffMs / 60000);
+                    const horas = Math.floor(diffMin / 60);
+                    const minutos = diffMin % 60;
+
+                    espera.value = `${horas}h ${minutos}min`;
+                } else {
+                    espera.value = '';
+                }
+            }
+        }
+
+        function calcularTempoEsperaGate(item) {
+            const chegadaPlanta = item.querySelector('.chegada-planta').value;
+            const entrada = item.querySelector('.entrada-planta').value;
+            const esperaGate = item.querySelector('.espera-gate');
+
+            if (chegadaPlanta && entrada) {
+                const dtChegadaPlanta = new Date(chegadaPlanta);
+                const dtEntrada = new Date(entrada);
+
+                if (!isNaN(dtChegadaPlanta) && !isNaN(dtEntrada)) {
+                    const diffMs = dtEntrada - dtChegadaPlanta;
+
+                    if (diffMs < 0) {
+                        esperaGate.value = "Inválido";
+                        return;
+                    }
+
+                    const diffMin = Math.floor(diffMs / 60000);
+                    const horas = Math.floor(diffMin / 60);
+                    const minutos = diffMin % 60;
+
+                    esperaGate.value = `${horas}h ${minutos}min`;
+                } else {
+                    esperaGate.value = '';
+                }
+            }
+        }
+        function calcularTempoDentroPlanta(item) {
+            const entrada = item.querySelector('.entrada-planta')?.value;
+            const saida = item.querySelector('.saida-planta')?.value;
+            const dentro = item.querySelector('.dentro-planta');
+
+            if (entrada && saida) {
+                const dtEntrada = new Date(entrada);
+                const dtSaida = new Date(saida);
+
+                if (!isNaN(dtEntrada) && !isNaN(dtSaida)) {
+                    const diffMs = dtSaida - dtEntrada;
+
+                    if (diffMs < 0) {
+                        dentro.value = "Inválido";
+                        return;
+                    }
+
+                    const diffMin = Math.floor(diffMs / 60000);
+                    const horas = Math.floor(diffMin / 60);
+                    const minutos = diffMin % 60;
+
+                    dentro.value = `${horas}h ${minutos}min`;
+                } else {
+                    dentro.value = '';
+                }
+            }
+        }
+
+
+        function bindEventos() {
+            const itens = document.querySelectorAll('.item-coleta');
+            itens.forEach(item => {
+                // Parte 1: Espera fornecedor
+                const chegada = item.querySelector('.chegada');
+                const saida = item.querySelector('.saida');
+                chegada?.addEventListener('change', () => calcularTempoAgCarreg(item));
+                saida?.addEventListener('change', () => calcularTempoAgCarreg(item));
+
+                // Parte 2: Espera Gate
+                const chegadaPlanta = item.querySelector('.chegada-planta');
+                const entrada = item.querySelector('.entrada-planta');
+                chegadaPlanta?.addEventListener('change', () => calcularTempoEsperaGate(item));
+                entrada?.addEventListener('change', () => {
+                    calcularTempoEsperaGate(item);
+                    calcularTempoDentroPlanta(item); // atualiza também dentro da planta ao alterar entrada
+                });
+
+                // Parte 3: Dentro da Planta
+                const saidaPlanta = item.querySelector('.saida-planta');
+                saidaPlanta?.addEventListener('change', () => calcularTempoDentroPlanta(item));
+            });
+        }
+
+
+        window.addEventListener('load', bindEventos);
+    </script>
+
+
+
+
     <div class="container-xxl">
         <div class="content-wrapper">
             <div class="container-fluid">
@@ -351,7 +467,7 @@
                                                     <div class="form-group">
                                                         <span class="details">JANELA GATE:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtGate" runat="server" Text='<%# Eval("gate") %>' CssClass="form-control" style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtGate" runat="server" Text='<%# Eval("gate") %>' CssClass="form-control" TextMode="DateTimeLocal" style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
@@ -363,12 +479,14 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="item-coleta">
                                             <div class="row g-3">
+                                                
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <span class="details">CHEGADA FORNECEDOR:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtChegadaOrigem" runat="server" Text='<%# Eval("chegadaorigem") %>' TextMode="DateTimeLocal" CssClass="form-control"  style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtChegadaOrigem" runat="server" Text='<%# Eval("chegadaorigem") %>' TextMode="DateTimeLocal" CssClass="form-control chegada"  style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
@@ -377,7 +495,7 @@
                                                     <div class="form-group">
                                                         <span class="details">SAIDA FORNECEDOR:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtSaidaOrigem" runat="server" Text='<%# Eval("saidaorigem") %>' CssClass="form-control" TextMode="DateTimeLocal"  style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtSaidaOrigem" runat="server" Text='<%# Eval("saidaorigem") %>' CssClass="form-control saida" TextMode="DateTimeLocal"  style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
@@ -386,18 +504,20 @@
                                                     <div class="form-group">
                                                         <span class="details">ESPERA:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtAgCarreg" runat="server" Text='<%# Eval("tempoagcarreg") %>' CssClass="form-control"  style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtAgCarreg" runat="server" Text='<%# Eval("tempoagcarreg") %>' CssClass="form-control espera"  style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
                                                 </div>
+                                               
                                             </div>
+                                                
                                             <div class="row g-3">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <span class="details">CHEGADA PLANTA:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtChegadaDestino" runat="server" Text='<%# Eval("chegadadestino") %>' CssClass="form-control" TextMode="DateTimeLocal" style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtChegadaDestino" runat="server" Text='<%# Eval("chegadadestino") %>' CssClass="form-control chegada-planta" TextMode="DateTimeLocal" style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
@@ -406,7 +526,7 @@
                                                     <div class="form-group">
                                                         <span class="details">ENTRADA:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtEntrada" runat="server" Text='<%# Eval("entradaplanta") %>' CssClass="form-control" style="text-align: center" TextMode="DateTimeLocal"></asp:TextBox>
+                                                            <asp:TextBox ID="txtEntrada" runat="server" Text='<%# Eval("entradaplanta") %>' CssClass="form-control entrada-planta" style="text-align: center" TextMode="DateTimeLocal"></asp:TextBox>
                                                             
                                                         </div>
                                                     </div>
@@ -415,7 +535,7 @@
                                                     <div class="form-group">
                                                         <span class="details">ESP.GATE:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtEsperaGate" runat="server" Text="" CssClass="form-control" style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtEsperaGate" runat="server"  CssClass="form-control espera-gate" Text="" style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
@@ -424,7 +544,7 @@
                                                     <div class="form-group">
                                                         <span class="details">SAIDA PLANTA:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtSaidaPlanta" runat="server" Text='<%# Eval("saidaplanta") %>' CssClass="form-control" TextMode="DateTimeLocal"  style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtSaidaPlanta" runat="server" Text='<%# Eval("saidaplanta") %>' CssClass="form-control saida-planta" TextMode="DateTimeLocal"  style="text-align: center"></asp:TextBox>
                                                            
                                                         </div>
                                                     </div>
@@ -433,7 +553,7 @@
                                                     <div class="form-group">
                                                         <span class="details">TEMPO:</span>
                                                         <div class="input-group">
-                                                            <asp:TextBox ID="txtDentroPlanta" runat="server" Text='<%# Eval("tempodentroplanta") %>' CssClass="form-control"  style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtDentroPlanta" runat="server" Text='<%# Eval("tempodentroplanta") %>' CssClass="form-control dentro-planta"  style="text-align: center"></asp:TextBox>
                                                             
                                                         </div>
                                                     </div>
@@ -443,6 +563,7 @@
                                                     <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
                                                 </div>
                                             </div>
+                                                 </div>
                                         </td>
                                     </tr>
                                 </ItemTemplate>
@@ -488,7 +609,7 @@
                 <div class="row g-3">
                     <div class="col-md-1">
                         <br />
-                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" />
+                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
                     </div>
                     <div class="col-md-1">
                         <br />

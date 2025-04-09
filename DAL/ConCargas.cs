@@ -54,7 +54,7 @@ namespace DAL
         public static DataTable FetchDataTableColetas2(string searchTerm)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT carga,cva,data_hora,  (codvworigem + '/'+ codorigem) as CodigoO ,cliorigem, (codvwdestino+ '/'+ coddestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta FROM tbcargas WHERE status = 'Pendente' and empresa = 'CNT' and fl_exclusao is null and carga=@searchTerm";
+            string sql = "SELECT carga,cva,data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate FROM tbcargas WHERE status = 'Pendente' and empresa = 'CNT' and fl_exclusao is null and carga=@searchTerm";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -76,7 +76,7 @@ namespace DAL
         public static DataTable FetchDataTableColetasPorCargas(List<string> cargas)
         {
             string listaCargas = string.Join(",", cargas.Select(c => $"'{c}'"));
-            string query = $"SELECT * FROM tb_coletas WHERE carga IN ({listaCargas})";
+            string query = $"SELECT carga,cva,data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate FROM tbcargas WHERE status = 'Pendente' and empresa = 'CNT' and fl_exclusao is null and carga IN ({listaCargas})";
 
             using (var con = ConnectionUtil.GetConnection())
             {
