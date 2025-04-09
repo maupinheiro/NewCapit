@@ -11,7 +11,7 @@ namespace DAL
     {
         public static DataTable FetchDataTable()
         {
-            string sql = "SELECT id, codvei, tipvei, plavei, reboque1, venclicenciamento, venclicencacet, reboque2, rastreamento, rastreador, tipoveiculo, nucleo, codtra, transp,tiporeboque, tipocarreta, ativo_inativo FROM tbveiculos where fl_exclusao is null";
+            string sql = "SELECT id, codvei, tipvei, plavei, reboque1, venclicenciamento, venclicencacet, vencimentolaudofumaca, reboque2, rastreamento, rastreador, tipoveiculo, nucleo, codtra, transp,tiporeboque, tipocarreta, ativo_inativo FROM tbveiculos where fl_exclusao is null";
 
             using (var con = ConnectionUtil.GetConnection())
             {

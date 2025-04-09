@@ -50,6 +50,15 @@ namespace DAL
                 return con.Query<ConsultaCliente>(sqlQuery, obj).FirstOrDefault();
             }
         }
+        public static ConsultaContato CheckContato(ConsultaContato obj)
+        {
+            string sqlQuery = "SELECT * FROM tbfoneveiculos WHERE (veiculo = @veiculo)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaContato>(sqlQuery, obj).FirstOrDefault();
+            }
+        }
         public static ConsultaMotorista CheckMotorista(ConsultaMotorista obj)
         {
             string sqlQuery = "SELECT * FROM tbmotoristas WHERE (codmot = @codmot)";
