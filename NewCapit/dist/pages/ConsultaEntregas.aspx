@@ -11,48 +11,48 @@
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-2 text-gray-800">
                                 <i class="fas fa-shipping-fast"></i>&nbsp;Consulta Coletas/Entregas</h1>
-                            <a href="/dist/pages/Frm_CadCargas.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <a href="/dist/pages/Frm_OrdemColetaCNT.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                                 <i class="fas fa-shipping-fast"></i>&nbsp;Novo
                             </a>
                         </div>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="">Previsão Inicial:</span>
-                                <div class="input-group date" id="prevInicial" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#prevInicial" />
-                                    <div class="input-group-append" data-target="#prevInicial" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="">Previsão Final:</span>
-                                <div class="input-group date" id="prevFinal" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#prevFinal" />
-                                    <div class="input-group-append" data-target="#prevFinal" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="">Status:</span>
-                                <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <br />
-                            <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i>
-    Pesquisar</asp:LinkButton>
+                                <div class="row g-3">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <span class="">Coleta Inicial:</span>
+                        <div class="input-group date">
+                            <asp:TextBox ID="txtInicioData" CssClass="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <span class="">Coleta Final:</span>
+                        <div class="input-group date">
+                            <asp:TextBox ID="txtFimData" CssClass="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <span class="">Status:</span>
+                        <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form_group">
+                        <span class="details">VEÍCULO:</span>
+                        <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
+                        </asp:DropDownList>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <br />
+                    <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i>
+Pesquisar</asp:LinkButton>
+                </div>
+
+            </div>
                 </div>
                 <!-- /.container-fluid -->
             </section>
