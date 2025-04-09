@@ -36,7 +36,7 @@ namespace NewCapit.dist.pages
                 }
                 DateTime dataHoraAtual = DateTime.Now;
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-                PreencherComboStatus();
+                //PreencherComboStatus();
                 PreencherNumColeta();
                 fotoMotorista = "../../fotos/usuario.jpg";
             }
@@ -121,41 +121,110 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void PreencherComboStatus()
+        
+        protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT cod_status, ds_status FROM tb_status";
-
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                try
+                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+
+                if (ddlStatus != null)
                 {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+                    string query = "SELECT cod_status, ds_status FROM tb_status";
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+                    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
+                        try
+                        {
+                            conn.Open();
+                            SqlCommand cmd = new SqlCommand(query, conn);
+                            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+                            ddlStatus.DataSource = reader;
+                            ddlStatus.DataTextField = "ds_status";
+                            ddlStatus.DataValueField = "cod_status";
+                            ddlStatus.DataBind();
+                            ddlStatus.Items.Insert(0, new ListItem("", "0"));
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlStatus.DataSource = reader;
-                    ddlStatus.DataTextField = "ds_status";  // Campo que será mostrado no ComboBox
-                    ddlStatus.DataValueField = "cod_status";  // Campo que será o valor de cada item                    
-                    ddlStatus.DataBind();  // Realiza o binding dos dados                   
-                    ddlStatus.Items.Insert(0, new ListItem("", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
+                            reader.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            // você pode exibir esse erro em um label, se quiser
+                            Response.Write("Erro: " + ex.Message);
+                        }
+                    }
                 }
             }
         }
+
+        protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "Atualizar")
+            {
+                string carga = e.CommandArgument.ToString();
+
+                // Recuperar os controles de dentro do item
+                TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
+                TextBox txtGate = (TextBox)e.Item.FindControl("txtGate");
+                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+                TextBox txtChegadaOrigem = (TextBox)e.Item.FindControl("txtChegadaOrigem");
+                TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
+                TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
+                TextBox txtEntrada = (TextBox)e.Item.FindControl("txtEntrada");
+                TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
+                TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
+
+                // continue com os demais campos que quiser atualizar...
+
+                // Exemplo: atualizando no banco
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string query = @"UPDATE tbcargas SET 
+                                cva = @cva, 
+                                gate = @gate, 
+                                status = @status, 
+                                chegadaorigem = @chegadaorigem, 
+                                saidaorigem = @saidaorigem,
+                                tempoaqcarreg = @tempoaqcarreg,
+                                chegadadestino = @chegadadestino,
+                                entradaplanta = @entradaplanta,
+                                saidaplanta = @saidaplanta,
+                                tempodentroplanta = @tempodentroplanta,
+                                idviagem=@idviagem,
+                                codmot=@codmot,
+                                frota=@frota,
+                                WHERE carga = @carga";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", carga);
+                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                    cmd.Parameters.AddWithValue("@gate", txtGate.Text.Trim());
+                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedValue);
+                    cmd.Parameters.AddWithValue("@chegadaorigem", txtChegadaOrigem.Text.Trim());
+                    cmd.Parameters.AddWithValue("@saidaorigem", txtSaidaOrigem.Text.Trim());
+                    cmd.Parameters.AddWithValue("@tempoaqcarreg", txtAgCarreg.Text.Trim());
+                    cmd.Parameters.AddWithValue("@chegadadestino", txtChegadaDestino.Text.Trim());
+                    cmd.Parameters.AddWithValue("@entradaplanta", txtEntrada.Text.Trim());
+                    cmd.Parameters.AddWithValue("@saidaplanta", txtSaidaPlanta.Text.Trim());
+                    cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
+                    cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
+                    cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
+                    cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
+                    // continue os parâmetros conforme seu banco
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Após atualizar, recarregar os dados no Repeater
+                AtualizarColetasVisiveis();
+            }
+        }
+
+
+
         protected void btnPesquisarMotorista_Click(object sender, EventArgs e)
         {
             if (txtCodMotorista.Text.Trim() == "")
@@ -331,6 +400,10 @@ namespace NewCapit.dist.pages
 
         protected void bntPesquisaColeta_Click(object sender, EventArgs e)
         {
+            string searchTerm;
+            searchTerm = txtColeta.Text ;
+            CarregarColetas(searchTerm);
+            txtColeta.Text = string.Empty;
 
         }
 
@@ -471,21 +544,68 @@ namespace NewCapit.dist.pages
             }
         }
 
-        //private void CarregarColetas(string searchTerm = "")
-        //{
-        //    var dataTable = DAL.ConCargas.FetchDataTableColetas(); // você pode aplicar filtro aqui se quiser
+        private void CarregarColetas(string searchTerm = "")
+        {
+            // Obtem os dados atuais (novos dados)
+            var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);
 
-        //    if (dataTable.Rows.Count > 0)
-        //    {
-        //        rptColetas.DataSource = dataTable;
-        //        rptColetas.DataBind();
-        //    }
-        //    else
-        //    {
-        //        rptColetas.DataSource = null;
-        //        rptColetas.DataBind();
-        //    }
+            // Verifica se há dados anteriores no ViewState
+            DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
+
+            if (dadosAtuais == null)
+            {
+                // Se não havia dados, inicializa com os novos
+                dadosAtuais = novosDados.Clone(); // cria com a mesma estrutura
+            }
+
+            // Adiciona os novos dados aos dados atuais
+            foreach (DataRow row in novosDados.Rows)
+            {
+                dadosAtuais.ImportRow(row);
+            }
+
+            // Atualiza o ViewState
+            ViewState["Coletas"] = dadosAtuais;
+
+            // Alimenta o Repeater com todos os dados acumulados
+            rptColetas.DataSource = dadosAtuais;
+            rptColetas.DataBind();
+        }
+
+        private void AtualizarColetasVisiveis()
+        {
+            DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
+
+            if (dadosAtuais != null && dadosAtuais.Rows.Count > 0)
+            {
+                // Obtem os "carga" visíveis
+                var cargasVisiveis = dadosAtuais.AsEnumerable()
+                    .Select(r => r["carga"].ToString())
+                    .Distinct()
+                    .ToList();
+
+                // Consulta novamente apenas essas coletas no banco
+                var dadosAtualizados = DAL.ConCargas.FetchDataTableColetasPorCargas(cargasVisiveis);
+
+                // Atualiza o ViewState com os novos dados
+                ViewState["Coletas"] = dadosAtualizados;
+
+                // Atualiza o Repeater
+                rptColetas.DataSource = dadosAtualizados;
+                rptColetas.DataBind();
+            }
+        }
+        
+
+        //protected void LimparColetas_Click(object sender, EventArgs e)
+        //{
+        //    ViewState["Coletas"] = null;
+        //    rptColetas.DataSource = null;
+        //    rptColetas.DataBind();
         //}
 
     }
+
+
+
 }
