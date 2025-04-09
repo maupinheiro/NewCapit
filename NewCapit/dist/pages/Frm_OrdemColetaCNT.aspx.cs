@@ -40,10 +40,6 @@ namespace NewCapit.dist.pages
                 PreencherNumColeta();
                 CarregaFoto();
             }
-
-
-                      
-
         }
         private void PreencherNumColeta()
         {
@@ -355,7 +351,9 @@ namespace NewCapit.dist.pages
                             var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
                             if (ConsultaVeiculo != null)
                             {
+                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
                                 txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+                                txtCET.Text = ConsultaVeiculo.venclicencacet;
                                 txtCarreta.Text = ConsultaVeiculo.tiporeboque;
                                 txtTecnologia.Text = ConsultaVeiculo.rastreador;
                                 txtRastreamento.Text = ConsultaVeiculo.rastreamento;
@@ -365,7 +363,38 @@ namespace NewCapit.dist.pages
 
                             }
                         }
-                        // pesquisar primeiro reboque
+                        else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
+                        {
+                            txtCodVeiculo.Text = ConsultaMotorista.codvei;
+                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
+                            txtPlaca.Text = ConsultaMotorista.placa;
+                            txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+                            txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
+                            txtReboque1.Text = ConsultaMotorista.reboque1;
+                            txtReboque2.Text = ConsultaMotorista.reboque2;
+
+                            var codigoAgregado = txtCodVeiculo.Text.Trim();
+
+                            var objVeiculo = new Domain.ConsultaVeiculo
+                            {
+                                codvei = codigoAgregado
+                            };
+                            var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
+                            if (ConsultaVeiculo != null)
+                            {
+                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+                                txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+                                txtCET.Text = ConsultaVeiculo.venclicencacet;
+                                txtCarreta.Text = ConsultaVeiculo.tiporeboque;
+                                txtTecnologia.Text = ConsultaVeiculo.rastreador;
+                                txtRastreamento.Text = ConsultaVeiculo.rastreamento;
+                                txtConjunto.Text = ConsultaVeiculo.tipocarreta;
+                                txtCodProprietario.Text = ConsultaVeiculo.codtra;
+                                txtProprietario.Text = ConsultaVeiculo.transp;
+
+                            }
+                        }
+                            // pesquisar primeiro reboque
                         if (txtReboque1.Text.Trim() != "")
                         {
                             var placaReboque1 = txtReboque1.Text.Trim();
@@ -496,8 +525,10 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
+                        
                         txtFilialVeicCNT.Text = ConsultaVeiculo.nucleo;
                         txtVeiculoTipo.Text = ConsultaVeiculo.tipoveiculo;
+                        txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
                         txtCET.Text = ConsultaVeiculo.venclicencacet;
                         txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
                         txtPlaca.Text = ConsultaVeiculo.plavei;
@@ -568,6 +599,74 @@ namespace NewCapit.dist.pages
 
                     txtCodMotorista.Text = "";
                     txtCodMotorista.Focus();
+
+                }
+
+            }
+        }
+
+        protected void btnPesquisarContato_Click(object sender, EventArgs e)
+        {
+            if (txtCodFrota.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o código do contato corporativo.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodVeiculo.Focus();
+
+            }
+            else
+            {
+                var codigo = txtCodFrota.Text.Trim();
+
+                var obj = new Domain.ConsultaContato
+                {
+                    veiculo = codigo
+                };
+
+
+                var ConsultaContato = DAL.UsersDAL.CheckContato(obj);
+                if (ConsultaContato != null)
+                {
+                    txtCodFrota.Text = ConsultaContato.veiculo.ToString();
+                    txtFoneCorp.Text = ConsultaContato.numero.ToString();
+
+                    txtColeta.Text = "";
+                    txtColeta.Focus();
+                   
+                }
+                else
+                {
+
+                    string nomeUsuario = txtUsuCadastro.Text;
+
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Código " + codigo + ", não cadastrado no sistema.";
+                    string linha3 = "Verifique o código digitado: " + codigo + ".";                    
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                    txtCodFrota.Text = "";
+                    txtCodFrota.Focus();
 
                 }
 

@@ -25,6 +25,7 @@ namespace Domain
         public string fl_exclusao { get; set; }
         public string tipocarreta { get; set; }
         public string tiporeboque { get; set; } 
+        public string vencimentolaudofumaca { get; set; }
     }
     
 }
