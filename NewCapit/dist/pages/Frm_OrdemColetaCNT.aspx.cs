@@ -12,6 +12,7 @@ using NPOI.SS.Formula.Functions;
 using static NPOI.HSSF.Util.HSSFColor;
 using System.Collections;
 using System.Data;
+using System.Web.UI.HtmlControls;
 
 namespace NewCapit.dist.pages
 {
@@ -117,7 +118,7 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        
+
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -126,6 +127,9 @@ namespace NewCapit.dist.pages
 
                 if (ddlStatus != null)
                 {
+                    // Aqui pegamos o texto do status (ds_status) vindo do banco
+                    string statusTexto = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
                     string query = "SELECT cod_status, ds_status FROM tb_status";
 
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -134,25 +138,78 @@ namespace NewCapit.dist.pages
                         {
                             conn.Open();
                             SqlCommand cmd = new SqlCommand(query, conn);
-                            SqlDataReader reader = cmd.ExecuteReader();
+                            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                            DataTable dtStatus = new DataTable();
+                            adapter.Fill(dtStatus);
 
-                            ddlStatus.DataSource = reader;
+                            ddlStatus.DataSource = dtStatus;
                             ddlStatus.DataTextField = "ds_status";
                             ddlStatus.DataValueField = "cod_status";
                             ddlStatus.DataBind();
-                            ddlStatus.Items.Insert(0, new ListItem("", "0"));
 
-                            reader.Close();
+                            // Se o texto do status estiver presente na lista, seleciona
+                            ListItem itemSelecionado = ddlStatus.Items.FindByText(statusTexto);
+                            if (itemSelecionado != null)
+                            {
+                                itemSelecionado.Selected = true;
+                            }
+                            else if (!string.IsNullOrEmpty(statusTexto))
+                            {
+                                // Se não estiver na lista, adiciona ele no topo
+                                ddlStatus.Items.Insert(0, new ListItem(statusTexto, "0"));
+                                ddlStatus.SelectedIndex = 0;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            // você pode exibir esse erro em um label, se quiser
-                            Response.Write("Erro: " + ex.Message);
+                            Response.Write("Erro ao carregar status: " + ex.Message);
                         }
                     }
                 }
+
+
+                string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
+                string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
+                string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
+                Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
+                HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
+
+                DateTime previsao, dataHora;
+                DateTime agora = DateTime.Now;
+
+                if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                {
+                    DateTime dataPrevisao = previsao.Date;
+                    DateTime dataHoraComparacao = new DateTime(
+                        dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day,
+                        dataHora.Hour, dataHora.Minute, dataHora.Second
+                    );
+
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    {
+                        lblAtendimento.Text = "Atrasado";
+                        tdAtendimento.BgColor = "Red";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay
+                             && (status == "Concluído" || status == "Pendente"))
+                    {
+                        lblAtendimento.Text = "No Prazo";
+                        tdAtendimento.BgColor = "Green";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                    else if (dataHoraComparacao > agora && status == "Concluído")
+                    {
+                        lblAtendimento.Text = "Antecipado";
+                        tdAtendimento.BgColor = "Orange";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                }
             }
+           
         }
+
 
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
@@ -173,11 +230,12 @@ namespace NewCapit.dist.pages
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
                 TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
                 // continue com os demais campos que quiser atualizar...
-               
-                // Exemplo: atualizando no banco
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                if(txtCVA.Text != string.Empty)
                 {
-                    string query = @"UPDATE tbcargas SET 
+                    // Exemplo: atualizando no banco
+                    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
+                        string query = @"UPDATE tbcargas SET 
                                 cva = @cva, 
                                 gate = @gate, 
                                 status = @status, 
@@ -194,29 +252,49 @@ namespace NewCapit.dist.pages
                                 tempoesperagate=@tempoesperagate
                                 WHERE carga = @carga";
 
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                    cmd.Parameters.AddWithValue("@gate", DateTime.Parse(txtGate.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@chegadaorigem", DateTime.Parse(txtChegadaOrigem.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@saidaorigem", DateTime.Parse(txtSaidaOrigem.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@tempoagcarreg", txtAgCarreg.Text.Trim());
-                    cmd.Parameters.AddWithValue("@chegadadestino", DateTime.Parse(txtChegadaDestino.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@entradaplanta", DateTime.Parse(txtEntrada.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@saidaplanta", DateTime.Parse(txtSaidaPlanta.Text.Trim()).ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
-                    cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
-                    cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
-                    cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
-                    cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
-                    // continue os parâmetros conforme seu banco
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@carga", carga);
+                        cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                        cmd.Parameters.AddWithValue("@gate", DateTime.Parse(txtGate.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@chegadaorigem", DateTime.Parse(txtChegadaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@saidaorigem", DateTime.Parse(txtSaidaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@tempoagcarreg", txtAgCarreg.Text.Trim());
+                        cmd.Parameters.AddWithValue("@chegadadestino", DateTime.Parse(txtChegadaDestino.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@entradaplanta", DateTime.Parse(txtEntrada.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@saidaplanta", DateTime.Parse(txtSaidaPlanta.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
+                        cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
+                        cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
+                        cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
+                        // continue os parâmetros conforme seu banco
 
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
 
-                    
-                    string linha1 = "Coleta " + carga + ", cadastrado no sistema com sucesso.";
+
+                        string linha1 = "Coleta " + carga + ", cadastrado no sistema com sucesso.";
+                        //string linha3 = "Verifique o código digitado: " + codigo + ".";
+                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        //// Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        //// Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    }
+
+                    // Após atualizar, recarregar os dados no Repeater
+                    AtualizarColetasVisiveis();
+                }
+                else
+                {
+                    string linha1 = "Nao é possível atrelar a Coleta " + carga + " a esse Carregamento.";
                     //string linha3 = "Verifique o código digitado: " + codigo + ".";
                     //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
 
@@ -230,9 +308,7 @@ namespace NewCapit.dist.pages
                     //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 }
-
-                // Após atualizar, recarregar os dados no Repeater
-                AtualizarColetasVisiveis();
+                
             }
         }
         public void CarregaFoto()
@@ -675,31 +751,35 @@ namespace NewCapit.dist.pages
 
         private void CarregarColetas(string searchTerm = "")
         {
-            // Obtem os dados atuais (novos dados)
             var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);
 
-            // Verifica se há dados anteriores no ViewState
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
 
             if (dadosAtuais == null)
             {
-                // Se não havia dados, inicializa com os novos
-                dadosAtuais = novosDados.Clone(); // cria com a mesma estrutura
+                dadosAtuais = novosDados.Clone(); // estrutura idêntica
             }
 
-            // Adiciona os novos dados aos dados atuais
-            foreach (DataRow row in novosDados.Rows)
+            // Adiciona somente as coletas que ainda não estão em dadosAtuais
+            foreach (DataRow novaRow in novosDados.Rows)
             {
-                dadosAtuais.ImportRow(row);
+                string novaCarga = novaRow["carga"].ToString();
+
+                bool jaExiste = dadosAtuais.AsEnumerable()
+                    .Any(r => r["carga"].ToString() == novaCarga);
+
+                if (!jaExiste)
+                {
+                    dadosAtuais.ImportRow(novaRow);
+                }
             }
 
-            // Atualiza o ViewState
             ViewState["Coletas"] = dadosAtuais;
 
-            // Alimenta o Repeater com todos os dados acumulados
             rptColetas.DataSource = dadosAtuais;
             rptColetas.DataBind();
         }
+
 
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
