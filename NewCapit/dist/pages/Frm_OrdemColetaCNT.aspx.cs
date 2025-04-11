@@ -12,6 +12,7 @@ using NPOI.SS.Formula.Functions;
 using static NPOI.HSSF.Util.HSSFColor;
 using System.Collections;
 using System.Data;
+using System.Web.UI.HtmlControls;
 
 namespace NewCapit.dist.pages
 {
@@ -38,7 +39,7 @@ namespace NewCapit.dist.pages
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 //PreencherComboStatus();
                 PreencherNumColeta();
-                fotoMotorista = "../../fotos/usuario.jpg";
+                CarregaFoto();
             }
         }
         private void PreencherNumColeta()
@@ -117,7 +118,7 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        
+
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -126,6 +127,9 @@ namespace NewCapit.dist.pages
 
                 if (ddlStatus != null)
                 {
+                    // Aqui pegamos o texto do status (ds_status) vindo do banco
+                    string statusTexto = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
                     string query = "SELECT cod_status, ds_status FROM tb_status";
 
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -134,25 +138,78 @@ namespace NewCapit.dist.pages
                         {
                             conn.Open();
                             SqlCommand cmd = new SqlCommand(query, conn);
-                            SqlDataReader reader = cmd.ExecuteReader();
+                            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                            DataTable dtStatus = new DataTable();
+                            adapter.Fill(dtStatus);
 
-                            ddlStatus.DataSource = reader;
+                            ddlStatus.DataSource = dtStatus;
                             ddlStatus.DataTextField = "ds_status";
                             ddlStatus.DataValueField = "cod_status";
                             ddlStatus.DataBind();
-                            ddlStatus.Items.Insert(0, new ListItem("", "0"));
 
-                            reader.Close();
+                            // Se o texto do status estiver presente na lista, seleciona
+                            ListItem itemSelecionado = ddlStatus.Items.FindByText(statusTexto);
+                            if (itemSelecionado != null)
+                            {
+                                itemSelecionado.Selected = true;
+                            }
+                            else if (!string.IsNullOrEmpty(statusTexto))
+                            {
+                                // Se não estiver na lista, adiciona ele no topo
+                                ddlStatus.Items.Insert(0, new ListItem(statusTexto, "0"));
+                                ddlStatus.SelectedIndex = 0;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            // você pode exibir esse erro em um label, se quiser
-                            Response.Write("Erro: " + ex.Message);
+                            Response.Write("Erro ao carregar status: " + ex.Message);
                         }
                     }
                 }
+
+
+                string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
+                string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
+                string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
+                Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
+                HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
+
+                DateTime previsao, dataHora;
+                DateTime agora = DateTime.Now;
+
+                if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                {
+                    DateTime dataPrevisao = previsao.Date;
+                    DateTime dataHoraComparacao = new DateTime(
+                        dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day,
+                        dataHora.Hour, dataHora.Minute, dataHora.Second
+                    );
+
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    {
+                        lblAtendimento.Text = "Atrasado";
+                        tdAtendimento.BgColor = "Red";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay
+                             && (status == "Concluído" || status == "Pendente"))
+                    {
+                        lblAtendimento.Text = "No Prazo";
+                        tdAtendimento.BgColor = "Green";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                    else if (dataHoraComparacao > agora && status == "Concluído")
+                    {
+                        lblAtendimento.Text = "Antecipado";
+                        tdAtendimento.BgColor = "Orange";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                }
             }
+           
         }
+
 
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
@@ -171,19 +228,20 @@ namespace NewCapit.dist.pages
                 TextBox txtEntrada = (TextBox)e.Item.FindControl("txtEntrada");
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
-
+                TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
                 // continue com os demais campos que quiser atualizar...
-
-                // Exemplo: atualizando no banco
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                if(txtCVA.Text != string.Empty)
                 {
-                    string query = @"UPDATE tbcargas SET 
+                    // Exemplo: atualizando no banco
+                    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
+                        string query = @"UPDATE tbcargas SET 
                                 cva = @cva, 
                                 gate = @gate, 
                                 status = @status, 
                                 chegadaorigem = @chegadaorigem, 
                                 saidaorigem = @saidaorigem,
-                                tempoaqcarreg = @tempoaqcarreg,
+                                tempoagcarreg = @tempoagcarreg,
                                 chegadadestino = @chegadadestino,
                                 entradaplanta = @entradaplanta,
                                 saidaplanta = @saidaplanta,
@@ -191,32 +249,96 @@ namespace NewCapit.dist.pages
                                 idviagem=@idviagem,
                                 codmot=@codmot,
                                 frota=@frota,
+                                tempoesperagate=@tempoesperagate
                                 WHERE carga = @carga";
 
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                    cmd.Parameters.AddWithValue("@gate", txtGate.Text.Trim());
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedValue);
-                    cmd.Parameters.AddWithValue("@chegadaorigem", txtChegadaOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@saidaorigem", txtSaidaOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@tempoaqcarreg", txtAgCarreg.Text.Trim());
-                    cmd.Parameters.AddWithValue("@chegadadestino", txtChegadaDestino.Text.Trim());
-                    cmd.Parameters.AddWithValue("@entradaplanta", txtEntrada.Text.Trim());
-                    cmd.Parameters.AddWithValue("@saidaplanta", txtSaidaPlanta.Text.Trim());
-                    cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
-                    cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
-                    cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
-                    cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
-                    // continue os parâmetros conforme seu banco
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@carga", carga);
+                        cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                        cmd.Parameters.AddWithValue("@gate", DateTime.Parse(txtGate.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@chegadaorigem", DateTime.Parse(txtChegadaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@saidaorigem", DateTime.Parse(txtSaidaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@tempoagcarreg", txtAgCarreg.Text.Trim());
+                        cmd.Parameters.AddWithValue("@chegadadestino", DateTime.Parse(txtChegadaDestino.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@entradaplanta", DateTime.Parse(txtEntrada.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@saidaplanta", DateTime.Parse(txtSaidaPlanta.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+                        cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
+                        cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
+                        cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
+                        cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
+                        // continue os parâmetros conforme seu banco
 
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+
+                        string linha1 = "Coleta " + carga + ", cadastrado no sistema com sucesso.";
+                        //string linha3 = "Verifique o código digitado: " + codigo + ".";
+                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        //// Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        //// Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    }
+
+                    // Após atualizar, recarregar os dados no Repeater
+                    AtualizarColetasVisiveis();
                 }
+                else
+                {
+                    string linha1 = "Nao é possível atrelar a Coleta " + carga + " a esse Carregamento.";
+                    //string linha3 = "Verifique o código digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
 
-                // Após atualizar, recarregar os dados no Repeater
-                AtualizarColetasVisiveis();
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                }
+                
             }
+        }
+        public void CarregaFoto()
+        {
+            var codigo = txtCodMotorista.Text.Trim();
+           
+            var obj = new Domain.ConsultaMotorista
+            {
+                codmot = codigo
+            };
+            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+            if (ConsultaMotorista != null)
+            {
+                if (txtCodMotorista.Text.Trim() != "")
+                {
+                    fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                    String path = Server.MapPath("../../fotos/");
+                    string file = fotoMotorista;
+                    if (File.Exists(path + file))
+                    {
+                        fotoMotorista = "../../fotos/" + file + "";
+                    }
+                    else
+                    {
+                        fotoMotorista = "../../fotos/usuario.jpg";
+                    }
+                }
+            }
+           
         }
 
         protected void btnPesquisarMotorista_Click(object sender, EventArgs e)
@@ -284,21 +406,7 @@ namespace NewCapit.dist.pages
                         txtCartao.Text = ConsultaMotorista.cartaomot;
                         txtValCartao.Text = ConsultaMotorista.venccartao;
                         txtCelular.Text = ConsultaMotorista.fone2;
-                        if (txtCodMotorista.Text.Trim() != "")
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-
-                            String path = Server.MapPath("../../fotos/");
-                            string file = fotoMotorista;
-                            if (File.Exists(path + file))
-                            {
-                                fotoMotorista = "../../fotos/" + file + "";
-                            }
-                            else
-                            {
-                                fotoMotorista = "../../fotos/usuario.jpg";
-                            }
-                        }
+                        
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
@@ -643,31 +751,130 @@ namespace NewCapit.dist.pages
 
         private void CarregarColetas(string searchTerm = "")
         {
-            // Obtem os dados atuais (novos dados)
             var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);
 
-            // Verifica se há dados anteriores no ViewState
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
 
             if (dadosAtuais == null)
             {
-                // Se não havia dados, inicializa com os novos
-                dadosAtuais = novosDados.Clone(); // cria com a mesma estrutura
+                dadosAtuais = novosDados.Clone(); // estrutura idêntica
             }
 
-            // Adiciona os novos dados aos dados atuais
-            foreach (DataRow row in novosDados.Rows)
+            // Adiciona somente as coletas que ainda não estão em dadosAtuais
+            foreach (DataRow novaRow in novosDados.Rows)
             {
-                dadosAtuais.ImportRow(row);
+                string novaCarga = novaRow["carga"].ToString();
+
+                bool jaExiste = dadosAtuais.AsEnumerable()
+                    .Any(r => r["carga"].ToString() == novaCarga);
+
+                if (!jaExiste)
+                {
+                    dadosAtuais.ImportRow(novaRow);
+                }
             }
 
-            // Atualiza o ViewState
             ViewState["Coletas"] = dadosAtuais;
 
-            // Alimenta o Repeater com todos os dados acumulados
             rptColetas.DataSource = dadosAtuais;
             rptColetas.DataBind();
         }
+
+
+        protected void btnSalvar1_Click(object sender, EventArgs e)
+        {
+            string query = @"INSERT INTO tbcarregamentos (
+                            num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf, 
+                            cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo, 
+                            valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento, 
+                            tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa
+                             ) VALUES (
+                            @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf, 
+                            @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo, 
+                            @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento, 
+                            @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa
+                             )";
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                cmd.Parameters.AddWithValue("@codmotorista", txtCodMotorista.Text);
+                cmd.Parameters.AddWithValue("@nucleo", txtFilialMot.Text);
+                cmd.Parameters.AddWithValue("@tipomot", txtTipoMot.Text);
+                cmd.Parameters.AddWithValue("@valtoxicologico", txtExameToxic.Text);
+                cmd.Parameters.AddWithValue("@venccnh", txtCNH.Text);
+                cmd.Parameters.AddWithValue("@valgr", txtLibGR.Text);
+                cmd.Parameters.AddWithValue("@foto", fotoMotorista); // se for um Upload, trate o arquivo separadamente
+                cmd.Parameters.AddWithValue("@nomemotorista", txtNomMot.Text);
+                cmd.Parameters.AddWithValue("@cpf", txtCPF.Text);
+                cmd.Parameters.AddWithValue("@cartaopedagio", txtCartao.Text);
+                cmd.Parameters.AddWithValue("@valcartao", txtValCartao.Text);
+                cmd.Parameters.AddWithValue("@foneparticular", txtCelular.Text);
+                cmd.Parameters.AddWithValue("@veiculo", txtCodVeiculo.Text);
+                cmd.Parameters.AddWithValue("@veiculotipo", txtVeiculoTipo.Text);
+                cmd.Parameters.AddWithValue("@filialveiculo", txtFilialVeicCNT.Text);
+                cmd.Parameters.AddWithValue("@valcet", txtCET.Text);
+                cmd.Parameters.AddWithValue("@valcrlvveiculo", txtCRLVVeiculo.Text);
+                cmd.Parameters.AddWithValue("@valcrlvreboque1", txtCRLVReb1.Text);
+                cmd.Parameters.AddWithValue("@valcrlvreboque2", txtCRLVReb2.Text);
+                cmd.Parameters.AddWithValue("@placa", txtPlaca.Text);
+                cmd.Parameters.AddWithValue("@tipoveiculo", txtTipoVeiculo.Text);
+                cmd.Parameters.AddWithValue("@reboque1", txtReboque1.Text);
+                cmd.Parameters.AddWithValue("@reboque2", txtReboque2.Text);
+                cmd.Parameters.AddWithValue("@carreta", txtCarreta.Text);
+                cmd.Parameters.AddWithValue("@tecnologia", txtTecnologia.Text);
+                cmd.Parameters.AddWithValue("@rastreamento", txtRastreamento.Text);
+                cmd.Parameters.AddWithValue("@tipocarreta", txtConjunto.Text);
+                cmd.Parameters.AddWithValue("@codtra", txtCodProprietario.Text);
+                cmd.Parameters.AddWithValue("@transportadora", txtProprietario.Text);
+                cmd.Parameters.AddWithValue("@codcontato", txtCodFrota.Text);
+                cmd.Parameters.AddWithValue("@fonecorporativo", txtFoneCorp.Text);
+                cmd.Parameters.AddWithValue("@empresa", txtFilial.Text);
+
+                try
+                {
+                    string nomeUsuario = txtUsuCadastro.Text;
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Carregamento cadastrado no sistema com sucesso.";
+                    //string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                }
+                catch (Exception ex)
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    string linha1 = "Erro ao salvar: " + ex.Message;
+                    //string linha2 = "Carregamento cadastrado no sistema com sucesso.";
+                    //string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    //lblMensagem.Text = "Erro ao salvar: " + ex.Message;
+                }
+            }
+        }
+
 
         private void AtualizarColetasVisiveis()
         {
