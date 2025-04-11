@@ -117,7 +117,7 @@
     </script>
 
 
-
+    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
     <div class="container-xxl">
         <div class="content-wrapper">
@@ -162,7 +162,7 @@
                         <div class="form-group">
                             <span class="details">EX.TOXIC.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" TextMode="Date" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -170,7 +170,7 @@
                         <div class="form-group">
                             <span class="details">VAL. CNH:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCNH" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCNH" runat="server" class="form-control" TextMode="Date" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -216,7 +216,7 @@
                         <div class="form-group">
                             <span class="details">MÊS/ANO:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtValCartao" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtValCartao" runat="server"  class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -272,14 +272,14 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">VAL. CRLV:</span>
-                            <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCRLVVeiculo" runat="server" TextMode="Date" class="form-control" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">VAL. CRLV REB.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCRLVReb1" runat="server" TextMode="Date" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -287,7 +287,7 @@
                         <div class="form-group">
                             <span class="details">VAL. CRLV REB.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCRLVReb2" runat="server" TextMode="Date" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -373,6 +373,7 @@
                         <asp:Button ID="btnPesquisarContato" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarContato_Click" />
                     </div>
                 </div>
+
                 <div class="row g-3">
                     <div class="col-md-1">
                         <div class="form-group">
@@ -395,6 +396,8 @@
                             <!-- ./card-header -->
                             <div class="card-body">
                                 <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
+                                <asp:UpdatePanel ID="updColetas" runat="server">
+                                <ContentTemplate>
                                 <asp:Repeater ID="rptColetas" runat="server" OnItemDataBound="rptColetas_ItemDataBound" OnItemCommand="rptColetas_ItemCommand">
                                     <HeaderTemplate>
                                         <table class="table table-bordered table-hover">
@@ -583,7 +586,11 @@
                                     </table>
                                     </FooterTemplate>
                                 </asp:Repeater>
-
+                                    </ContentTemplate>
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="rptColetas" EventName="ItemCommand" />
+                                </Triggers>
+                            </asp:UpdatePanel>
 
 
                             </div>
@@ -620,7 +627,8 @@
                 <div class="row g-3">
                     <div class="col-md-2">
                         <br />
-                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" />
+                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
+                       
                     </div>
                     <div class="col-md-1">
                         <br />

@@ -39,8 +39,9 @@ namespace NewCapit.dist.pages
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 //PreencherComboStatus();
                 PreencherNumColeta();
-                CarregaFoto();
+                
             }
+            CarregaFoto();
         }
         private void PreencherNumColeta()
         {
@@ -118,6 +119,8 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+
 
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -286,7 +289,7 @@ namespace NewCapit.dist.pages
                         string script = $"alert('{mensagemCodificada}');";
 
                         //// Registrando o script para execução no lado do cliente
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "MensagemDeAlerta", script, true);
                     }
 
                     // Após atualizar, recarregar os dados no Repeater
@@ -322,21 +325,25 @@ namespace NewCapit.dist.pages
             var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
             if (ConsultaMotorista != null)
             {
-                if (txtCodMotorista.Text.Trim() != "")
+                if (ConsultaMotorista.status.Trim() != "INATIVO")
                 {
-                    fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+                    if (txtCodMotorista.Text.Trim() != "")
+                    {
+                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
-                    String path = Server.MapPath("../../fotos/");
-                    string file = fotoMotorista;
-                    if (File.Exists(path + file))
-                    {
-                        fotoMotorista = "../../fotos/" + file + "";
-                    }
-                    else
-                    {
-                        fotoMotorista = "../../fotos/usuario.jpg";
+                        String path = Server.MapPath("../../fotos/");
+                        string file = fotoMotorista;
+                        if (File.Exists(path + file))
+                        {
+                            fotoMotorista = "../../fotos/" + file + "";
+                        }
+                        else
+                        {
+                            fotoMotorista = "../../fotos/usuario.jpg";
+                        }
                     }
                 }
+                    
             }
            
         }
@@ -753,126 +760,152 @@ namespace NewCapit.dist.pages
         {
             var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);
 
+            
+
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
 
-            if (dadosAtuais == null)
+            var carga = new Domain.ConsultaCarga
             {
-                dadosAtuais = novosDados.Clone(); // estrutura idêntica
-            }
+               carga = searchTerm
+            };
+            var ConsultaCarga = DAL.ConCargas.CheckColetas(carga);
 
-            // Adiciona somente as coletas que ainda não estão em dadosAtuais
-            foreach (DataRow novaRow in novosDados.Rows)
-            {
-                string novaCarga = novaRow["carga"].ToString();
 
-                bool jaExiste = dadosAtuais.AsEnumerable()
-                    .Any(r => r["carga"].ToString() == novaCarga);
-
-                if (!jaExiste)
+            
+                if(ConsultaCarga != null)
                 {
-                    dadosAtuais.ImportRow(novaRow);
+                    if (ConsultaCarga.codmot == "" || ConsultaCarga.codmot == null)
+                    {
+                        if (dadosAtuais == null)
+                        {
+                            dadosAtuais = novosDados.Clone(); // estrutura idêntica
+                        }
+
+                        // Adiciona somente as coletas que ainda não estão em dadosAtuais
+                        foreach (DataRow novaRow in novosDados.Rows)
+                        {
+                            string novaCarga = novaRow["carga"].ToString();
+
+                            bool jaExiste = dadosAtuais.AsEnumerable()
+                                .Any(r => r["carga"].ToString() == novaCarga);
+
+                            if (!jaExiste)
+                            {
+                                dadosAtuais.ImportRow(novaRow);
+                            }
+                        }
+
+                        ViewState["Coletas"] = dadosAtuais;
+
+                        rptColetas.DataSource = dadosAtuais;
+                        rptColetas.DataBind();
+                        lblMensagem.Text = string.Empty;
+                    }
+                    else
+                    {
+                        lblMensagem.Text = "Coleta já atrelada a um motorista!";
+                    }
                 }
-            }
+                
+           
+                
 
-            ViewState["Coletas"] = dadosAtuais;
+            
 
-            rptColetas.DataSource = dadosAtuais;
-            rptColetas.DataBind();
+
+            
         }
 
 
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
             string query = @"INSERT INTO tbcarregamentos (
-                            num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf, 
-                            cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo, 
-                            valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento, 
-                            tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa
-                             ) VALUES (
-                            @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf, 
-                            @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo, 
-                            @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento, 
-                            @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa
-                             )";
+                        num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
+                        cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
+                        valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa
+                    ) VALUES (
+                        @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
+                        @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
+                        @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
+                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa
+                    )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
-                cmd.Parameters.AddWithValue("@codmotorista", txtCodMotorista.Text);
-                cmd.Parameters.AddWithValue("@nucleo", txtFilialMot.Text);
-                cmd.Parameters.AddWithValue("@tipomot", txtTipoMot.Text);
-                cmd.Parameters.AddWithValue("@valtoxicologico", txtExameToxic.Text);
-                cmd.Parameters.AddWithValue("@venccnh", txtCNH.Text);
-                cmd.Parameters.AddWithValue("@valgr", txtLibGR.Text);
-                cmd.Parameters.AddWithValue("@foto", fotoMotorista); // se for um Upload, trate o arquivo separadamente
-                cmd.Parameters.AddWithValue("@nomemotorista", txtNomMot.Text);
-                cmd.Parameters.AddWithValue("@cpf", txtCPF.Text);
-                cmd.Parameters.AddWithValue("@cartaopedagio", txtCartao.Text);
-                cmd.Parameters.AddWithValue("@valcartao", txtValCartao.Text);
-                cmd.Parameters.AddWithValue("@foneparticular", txtCelular.Text);
-                cmd.Parameters.AddWithValue("@veiculo", txtCodVeiculo.Text);
-                cmd.Parameters.AddWithValue("@veiculotipo", txtVeiculoTipo.Text);
-                cmd.Parameters.AddWithValue("@filialveiculo", txtFilialVeicCNT.Text);
-                cmd.Parameters.AddWithValue("@valcet", txtCET.Text);
-                cmd.Parameters.AddWithValue("@valcrlvveiculo", txtCRLVVeiculo.Text);
-                cmd.Parameters.AddWithValue("@valcrlvreboque1", txtCRLVReb1.Text);
-                cmd.Parameters.AddWithValue("@valcrlvreboque2", txtCRLVReb2.Text);
-                cmd.Parameters.AddWithValue("@placa", txtPlaca.Text);
-                cmd.Parameters.AddWithValue("@tipoveiculo", txtTipoVeiculo.Text);
-                cmd.Parameters.AddWithValue("@reboque1", txtReboque1.Text);
-                cmd.Parameters.AddWithValue("@reboque2", txtReboque2.Text);
-                cmd.Parameters.AddWithValue("@carreta", txtCarreta.Text);
-                cmd.Parameters.AddWithValue("@tecnologia", txtTecnologia.Text);
-                cmd.Parameters.AddWithValue("@rastreamento", txtRastreamento.Text);
-                cmd.Parameters.AddWithValue("@tipocarreta", txtConjunto.Text);
-                cmd.Parameters.AddWithValue("@codtra", txtCodProprietario.Text);
-                cmd.Parameters.AddWithValue("@transportadora", txtProprietario.Text);
-                cmd.Parameters.AddWithValue("@codcontato", txtCodFrota.Text);
-                cmd.Parameters.AddWithValue("@fonecorporativo", txtFoneCorp.Text);
-                cmd.Parameters.AddWithValue("@empresa", txtFilial.Text);
+                // Adiciona parâmetros com tratamento de vazio/nulo
+                cmd.Parameters.AddWithValue("@num_carregamento", SafeValue(novaColeta.Text));
+                cmd.Parameters.AddWithValue("@codmotorista", SafeValue(txtCodMotorista.Text));
+                cmd.Parameters.AddWithValue("@nucleo", SafeValue(txtFilialMot.Text));
+                cmd.Parameters.AddWithValue("@tipomot", SafeValue(txtTipoMot.Text));
+                cmd.Parameters.AddWithValue("@valtoxicologico", SafeDateValue(txtExameToxic.Text));
+                cmd.Parameters.AddWithValue("@venccnh", SafeDateValue(txtCNH.Text));
+                cmd.Parameters.AddWithValue("@valgr", SafeDateValue(txtLibGR.Text));
+                cmd.Parameters.AddWithValue("@foto", SafeValue(fotoMotorista)); // Se for byte[], troque tipo do parâmetro!
+                cmd.Parameters.AddWithValue("@nomemotorista", SafeValue(txtNomMot.Text));
+                cmd.Parameters.AddWithValue("@cpf", SafeValue(txtCPF.Text));
+                cmd.Parameters.AddWithValue("@cartaopedagio", SafeValue(txtCartao.Text));
+                cmd.Parameters.AddWithValue("@valcartao", SafeDateValue(txtValCartao.Text));
+                cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelular.Text));
+                cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
+                cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
+                cmd.Parameters.AddWithValue("@filialveiculo", SafeValue(txtFilialVeicCNT.Text));
+                cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
+                cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
+                cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
+                cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
+                cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
+                cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
+                cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
+                cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
+                cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
+                cmd.Parameters.AddWithValue("@tecnologia", SafeValue(txtTecnologia.Text));
+                cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
+                cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
+                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
+                cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
+                cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
+                cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
+                cmd.Parameters.AddWithValue("@empresa", SafeValue(txtFilial.Text));
 
                 try
                 {
-                    string nomeUsuario = txtUsuCadastro.Text;
                     conn.Open();
                     cmd.ExecuteNonQuery();
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Carregamento cadastrado no sistema com sucesso.";
-                    //string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
-                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
 
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}";
-
+                    string nomeUsuario = txtUsuCadastro.Text;
+                    string mensagem = $"Olá, {nomeUsuario}!\nCarregamento cadastrado no sistema com sucesso.";
                     string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    //// Gerando o script JavaScript para exibir o alerta
                     string script = $"alert('{mensagemCodificada}');";
-
-                    //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 }
                 catch (Exception ex)
                 {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                    string linha1 = "Erro ao salvar: " + ex.Message;
-                    //string linha2 = "Carregamento cadastrado no sistema com sucesso.";
-                    //string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
-                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    //// Gerando o script JavaScript para exibir o alerta
+                    string mensagemErro = $"Erro ao salvar: {ex.Message}";
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagemErro);
                     string script = $"alert('{mensagemCodificada}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
 
-                    //// Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                    //lblMensagem.Text = "Erro ao salvar: " + ex.Message;
+                    // Caso queira exibir também em um Label
+                    // lblMensagem.Text = mensagemErro;
                 }
             }
+        }
+
+        private object SafeValue(string input)
+        {
+            return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
+
+
+        }
+        private object SafeDateValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
         }
 
 
