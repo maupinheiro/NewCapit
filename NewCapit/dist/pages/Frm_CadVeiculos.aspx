@@ -1,20 +1,21 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadVeiculos.aspx.cs" Inherits="NewCapit.Frm_CadVeiculos" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-     
 
     <div class="content-wrapper">
-         <section class="content">
-             <div class="container-fluid">
-                 <br />
-                 <div class="card card-warning">
-                     <div class="card-header">
-                         <h3 class="card-title"><i class="fas fa-shipping-fast"></i> VEÍCULO - NOVO CADASTRO</h3>
-                     </div>
-                 </div>
-                 <div class="card-header">        
+        <section class="content">
+            <div class="container-fluid">
+                <br />
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>VEÍCULO - NOVO CADASTRO</h3>
+                    </div>
+                </div>
+                <div class="card-header">        
                       <!-- linha 1 -->
                       <div class="row g-3">
             <div class="col-md-1">
@@ -53,40 +54,10 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <span class="details">UF:</span>
-                    <asp:DropDownList ID="ddlUfPlaca" runat="server" class="form-control select2"
- Width="100px">
-                        <asp:ListItem Value=""></asp:ListItem>
-                        <asp:ListItem Value="AC">AC</asp:ListItem>
-                        <asp:ListItem Value="AL">AL</asp:ListItem>
-                        <asp:ListItem Value="AP">AP</asp:ListItem>
-                        <asp:ListItem Value="AM">AM</asp:ListItem>
-                        <asp:ListItem Value="BA">BA</asp:ListItem>
-                        <asp:ListItem Value="CE">CE</asp:ListItem>
-                        <asp:ListItem Value="DF">DF</asp:ListItem>
-                        <asp:ListItem Value="ES">ES</asp:ListItem>
-                        <asp:ListItem Value="GO">GO</asp:ListItem>
-                        <asp:ListItem Value="MA">MA</asp:ListItem>
-                        <asp:ListItem Value="MT">MT</asp:ListItem>
-                        <asp:ListItem Value="MS">MS</asp:ListItem>
-                        <asp:ListItem Value="MG">MG</asp:ListItem>
-                        <asp:ListItem Value="PA">PA</asp:ListItem>
-                        <asp:ListItem Value="PB">PB</asp:ListItem>
-                        <asp:ListItem Value="PR">PR</asp:ListItem>
-                        <asp:ListItem Value="PE">PE</asp:ListItem>
-                        <asp:ListItem Value="PI">PI</asp:ListItem>
-                        <asp:ListItem Value="RJ">RJ</asp:ListItem>
-                        <asp:ListItem Value="RN">RN</asp:ListItem>
-                        <asp:ListItem Value="RS">RS</asp:ListItem>
-                        <asp:ListItem Value="RO">RO</asp:ListItem>
-                        <asp:ListItem Value="RR">RR</asp:ListItem>
-                        <asp:ListItem Value="SC">SC</asp:ListItem>
-                        <asp:ListItem Value="SP">SP</asp:ListItem>
-                        <asp:ListItem Value="SE">SE</asp:ListItem>
-                        <asp:ListItem Value="TO">TO</asp:ListItem>
-                        <asp:ListItem Value="EX">EX</asp:ListItem>
+                    <asp:DropDownList ID="ddlUfPlaca" runat="server" class="form-control select2">                       
                     </asp:DropDownList>
                 </div>
-            </div>
+            </div>          
             <div class="col-md-4">
                 <div class="form_group">
                     <span class="details">MUNICIPIO:</span>
@@ -99,13 +70,13 @@
                     <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
                 </div>
             </div>            
-        </div>
-                      <!-- linha 2 -->
+            </div>
+            <!-- linha 2 -->
                       <div class="row g-3">
             <div class="col-md-1">
                  <div class="form_group">
                     <span class="details">FAB/MOD.:</span>
-                    <asp:TextBox ID="txtAno" runat="server" data-mask="0000/0000" Style="text-align: center" ForeColor="Blue" CssClass="form-control" placeholder="0000/0000" MaxLength="9"></asp:TextBox>
+                    <asp:TextBox ID="txtAno" runat="server"  Style="text-align: center" ForeColor="Blue" CssClass="form-control" placeholder="0000/0000" MaxLength="9"></asp:TextBox>
                 </div>
             </div>
             <div class="col-md-1">
@@ -319,19 +290,18 @@
         </div>
                  </div>
              </div>
-         </section>
+        </section>
 
-    </div>    
-    
-    
+    </div>
+
+
     <footer class="main-footer">
-       <div class="float-right d-none d-sm-block">
-           <b>Version</b> 2.1.0
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 2.1.0
  
-       </div>
-       <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-   </footer>
-     
+        </div>
+        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
+    </footer>
     <!-- Page specific script -->
     <script>
         $(function () {
@@ -354,8 +324,8 @@
             $('#reservationdate').datetimepicker({
                 format: 'L'
             });
-                      
-                        
+
+
             //Date range as a button
             $('#daterange-btn').daterangepicker(
                 {
@@ -375,10 +345,10 @@
                 }
             )
 
-           
+
         })
-       
-        
-</script>
-   
+
+
+    </script>
+
 </asp:Content>

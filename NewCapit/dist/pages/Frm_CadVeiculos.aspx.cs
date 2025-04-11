@@ -47,7 +47,43 @@ namespace NewCapit
                 PreencherComboMarcasVeiculos();
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
+                PreencherComboEstados();
 
+            }
+        }
+        private void PreencherComboEstados()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, SiglaUf FROM tbestadosbrasileiros";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlUfPlaca.DataSource = reader;
+                    ddlUfPlaca.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
+                    ddlUfPlaca.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlUfPlaca.DataBind();  // Realiza o binding dos dados                   
+                    ddlUfPlaca.Items.Insert(0, new ListItem("", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
             }
         }
         private void PreencherComboFiliais()
