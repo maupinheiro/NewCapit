@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dapper;
+using Domain;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -85,6 +87,17 @@ namespace DAL
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 return dt;
+            }
+        }
+
+        public static ConsultaCarga CheckColetas(ConsultaCarga carga)
+        {
+            // alterado a query para verifica a coluna exclusao para itens excluídos            
+            string sqlQuery = "SELECT * from tbcargas WHERE (carga=@carga)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaCarga>(sqlQuery, carga).FirstOrDefault();
             }
         }
 

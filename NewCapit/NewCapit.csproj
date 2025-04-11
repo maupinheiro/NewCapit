@@ -222,7 +222,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
-    <Content Include="fotos\1010.JPG" />
+    <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
     <Content Include="fotos\1823.JPG" />
