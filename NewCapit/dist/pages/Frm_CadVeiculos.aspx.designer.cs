@@ -51,22 +51,22 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtPlaca;
 
         /// <summary>
-        /// Controle ddlUfPlaca.
+        /// Controle ddlEstados.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlUfPlaca;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEstados;
 
         /// <summary>
-        /// Controle txtCidPlaca.
+        /// Controle ddlCidades.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCidPlaca;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCidades;
 
         /// <summary>
         /// Controle cbFiliais.
@@ -76,6 +76,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cbFiliais;
+
+        /// <summary>
+        /// Controle txtCodigo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodigo;
+
+        /// <summary>
+        /// Controle txtControlePatrimonio.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtControlePatrimonio;
 
         /// <summary>
         /// Controle txtAno.
@@ -121,6 +139,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLicenciamento;
+
+        /// <summary>
+        /// Controle txtOpacidade.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOpacidade;
+
+        /// <summary>
+        /// Controle txtCronotacografo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCronotacografo;
 
         /// <summary>
         /// Controle ddlTacografo.
@@ -292,24 +328,6 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
-
-        /// <summary>
-        /// Controle txtCodigo.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodigo;
-
-        /// <summary>
-        /// Controle txtControlePatrimonio.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtControlePatrimonio;
 
         /// <summary>
         /// Controle btnSalvar1.

@@ -36,7 +36,7 @@
 
 
         if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
-        if (txtCep) aplicarMascara(txtData, "00000-000");
+        if (txtCep) aplicarMascara(txtCep, "00000-000");
         if (txtTelefone) aplicarMascara(txtTelefone, "(00) 00000-0000");
     });
     </script>

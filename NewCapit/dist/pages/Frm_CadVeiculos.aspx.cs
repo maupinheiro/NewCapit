@@ -12,6 +12,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using Newtonsoft.Json;
 using System.Web.Services;
+using System.Configuration;
 
 
 namespace NewCapit
@@ -51,10 +52,67 @@ namespace NewCapit
 
             }
         }
+        protected void txtPlaca_TextChanged(object sender, EventArgs e)
+        {
+            string termo = txtPlaca.Text.ToUpper();            
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT TOP 1 plavei FROM tbveiculos WHERE plavei LIKE @termo";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                conn.Open();
+
+                object res = cmd.ExecuteScalar();
+                if (res != null)
+                {
+                    //resultado = "Resultado: " + res.ToString();
+                    string retorno = "Placa: " + res.ToString() + ", já cadastrado. " ;
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    sb.Append("<script type = 'text/javascript'>");
+                    sb.Append("window.onload=function(){");
+                    sb.Append("alert('");
+                    sb.Append(retorno);
+                    sb.Append("')};");
+                    sb.Append("</script>");
+                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    txtPlaca.Text = "";
+                    txtPlaca.Focus();
+                }
+            }
+
+            //lblResultado.Text = resultado;
+            txtPlaca.Text.ToUpper();
+            ddlEstados.Focus();
+        }
+
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int estadoId = int.Parse(ddlEstados.SelectedValue);
+            CarregarCidades(estadoId);
+        }
+        private void CarregarCidades(int estadoId)
+        {
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @EstadoId";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@EstadoId", estadoId);
+                conn.Open();
+                ddlCidades.DataSource = cmd.ExecuteReader();
+                ddlCidades.DataTextField = "nome_municipio";
+                ddlCidades.DataValueField = "uf";
+                ddlCidades.DataBind();
+
+                ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
+            }
+        }
         private void PreencherComboEstados()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, SiglaUf FROM tbestadosbrasileiros";
+            string query = "SELECT uf, SiglaUf FROM tbestadosbrasileiros";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -71,11 +129,11 @@ namespace NewCapit
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlUfPlaca.DataSource = reader;
-                    ddlUfPlaca.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
-                    ddlUfPlaca.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlUfPlaca.DataBind();  // Realiza o binding dos dados                   
-                    ddlUfPlaca.Items.Insert(0, new ListItem("", "0"));
+                    ddlEstados.DataSource = reader;
+                    ddlEstados.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
+                    ddlEstados.DataValueField = "uf";  // Campo que será o valor de cada item                    
+                    ddlEstados.DataBind();  // Realiza o binding dos dados                   
+                    ddlEstados.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -264,9 +322,9 @@ namespace NewCapit
         {
            //string[] cod_transp = ddlAgregados.SelectedItem.ToString().Split('-');
             
-            string sql = @"INSERT INTO tbveiculos (id, codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo)
+            string sql = @"INSERT INTO tbveiculos (id, codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca)
               VALUES
-              (@id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo)";
+              (@id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca)";
 
             try
             {
@@ -297,8 +355,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.ToString().Trim());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text.Trim());
-                    cmd.Parameters.AddWithValue("@ufplaca", ddlUfPlaca.SelectedItem.ToString().Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@cidplaca", txtCidPlaca.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text.Trim());
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text.Trim());
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text.Trim());
@@ -309,6 +367,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
                     cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text.Trim());
+                    cmd.Parameters.AddWithValue("@venccronotacografo", txtCronotacografo.Text.Trim());
+                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text.Trim());
                     cmd.Parameters.AddWithValue("@id", sequencia);
 
                     // Abrindo a conexão e executando a query
@@ -339,8 +399,8 @@ namespace NewCapit
                 string scriptErro = $"alert('{HttpUtility.JavaScriptStringEncode(mensagemErro)}');";
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", scriptErro, true);
             }
-        }
-               
+        }               
+
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
