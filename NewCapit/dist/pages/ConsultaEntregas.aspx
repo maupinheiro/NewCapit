@@ -121,7 +121,7 @@
                                         </tr>
                                         <tr class="detalhes d-none">
                                             <td colspan="11">
-                                                <asp:Repeater ID="rptColeta" runat="server">
+                                                <asp:Repeater ID="rptColeta" OnItemDataBound="rptColeta_ItemDataBound" runat="server">
                                                     <HeaderTemplate>
                                                         <table class="table table-bordered table-hover mb-0">
                                                             <thead>
@@ -147,7 +147,7 @@
                                                             <td><%# Eval("cliorigem") %></td>
                                                             <td><%# Eval("CodigoD") %></td>
                                                             <td><%# Eval("clidestino") %></td>
-                                                            <td>
+                                                            <td runat="server" id="tdAtendimento">
                                                                 <asp:Label ID="lblAtendimento" runat="server" Text='<%# Eval("atendimento") %>' />
                                                             </td>
                                                         </tr>

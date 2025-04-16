@@ -6,7 +6,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+
 
 namespace NewCapit.dist.pages
 {
@@ -123,6 +125,51 @@ namespace NewCapit.dist.pages
                     // Bind dos dados ao repeater interno
                     rptColeta.DataSource = dtColetas;
                     rptColeta.DataBind();
+                }
+            }
+        }
+
+        protected void rptColeta_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
+            string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
+            string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
+            Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
+            HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
+
+            if (lblAtendimento != null && tdAtendimento != null)
+            {
+                DateTime previsao, dataHora;
+                DateTime agora = DateTime.Now;
+
+                if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                {
+                    DateTime dataPrevisao = previsao.Date;
+                    DateTime dataHoraComparacao = new DateTime(
+                        dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day,
+                        dataHora.Hour, dataHora.Minute, dataHora.Second
+                    );
+
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    {
+                        lblAtendimento.Text = "Atrasado";
+                        tdAtendimento.BgColor = "Red";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay
+                             && (status == "Concluído" || status == "Pendente"))
+                    {
+                        lblAtendimento.Text = "No Prazo";
+                        tdAtendimento.BgColor = "Green";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
+                    else if (dataHoraComparacao > agora && status == "Concluído")
+                    {
+                        lblAtendimento.Text = "Antecipado";
+                        tdAtendimento.BgColor = "Orange";
+                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                    }
                 }
             }
         }
