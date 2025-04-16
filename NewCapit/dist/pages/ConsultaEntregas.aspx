@@ -3,6 +3,20 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <script>
+        function toggleDetalhes(row) {
+            const detalhesRow = row.nextElementSibling;
+            if (detalhesRow && detalhesRow.classList.contains('detalhes')) {
+                detalhesRow.classList.toggle('d-none');
+            }
+        }
+    </script>
+    <style>
+        .d-none { display: none; }
+     </style>
+    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+    
+    
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -48,8 +62,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i>
-Pesquisar</asp:LinkButton>
+                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
                     </div>
 
                 </div>
@@ -65,44 +78,96 @@ Pesquisar</asp:LinkButton>
                         <div class="card">
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" cssclass="table table-bordered table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Foto</th>
-                                            <th>Motorista</th>
-                                            <th>Veículo</th>
-                                            <th>Frota</th>
-                                            <th>Placa/Reboque</th>
-                                            <th>Coleta</th>
-                                            <th>CVA</th>
-                                            <th>Remetente</th>
-                                            <th>Destinatário</th>
-                                            <th>Situação</th>
-                                            <th>Material</th>
-                                            <th>Ação</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Foto</td>
-                                            <td>PAULO DOS SANTOS CALDEIRA</td>
-                                            <td>CARRETA REBAIXADA 3 EIXOS</td>
-                                            <td>256</td>
-                                            <td>FZY5E66/DTE9D42</td>
-                                            <td>2415856</td>
-                                            <td>TNG1012536</td>
-                                            <td>FORMTAP</td>
-                                            <td>VW ANCHIETA</td>
-                                            <td>Em Transito</td>
-                                            <td>CHAPA</td>
+                                <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
+                               <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
+                                    <HeaderTemplate>
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Foto</th>
+                                                    <th>Motorista</th>
+                                                    <th>Veículo</th>
+                                                    <th>Frota</th>
+                                                    <th>Placa/Reboque</th>
+                                                    <th>Coleta</th>
+                                                    <th>CVA</th>
+                                                    <th>Situação</th>
+                                                    <th>Material</th>
+                                                    <th>Cadastro</th>
+                                                    <th>Ação</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr onclick="toggleDetalhes(this)">
                                             <td>
-                                                <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-info" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-tasks"></i></asp:LinkButton></td>
+                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 60px;" />
+                                            </td>
+                                            <td><%# Eval("nomemotorista") %></td>
+                                            <td><%# Eval("tipoveiculo") %></td>
+                                            <td><%# Eval("veiculo") %></td>
+                                            <td><%# Eval("veiculo_reboques") %></td>
+                                            <td><%# Eval("carga") %></td>
+                                            <td><%# Eval("cva") %></td>
+                                            <td><%# Eval("situacao") %></td>
+                                            <td><%# Eval("material") %></td>
+                                            <td><%# Eval("dtcad") %></td>
+                                            <td>
+                                                <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-info">
+                                                    <i class="fas fa-tasks"></i>
+                                                </asp:LinkButton>
+                                            </td>
                                         </tr>
+                                        <tr class="detalhes d-none">
+                                            <td colspan="11">
+                                                <asp:Repeater ID="rptColeta" runat="server">
+                                                    <HeaderTemplate>
+                                                        <table class="table table-bordered table-hover mb-0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>COLETA</th>
+                                                                    <th>CVA</th>
+                                                                    <th>DATA COLETA</th>
+                                                                    <th>CODIGO</th>
+                                                                    <th>ORIGEM</th>
+                                                                    <th>CODIGO</th>
+                                                                    <th>DESTINO</th>
+                                                                    <th>ATENDIMENTO</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                    </HeaderTemplate>
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td><%# Eval("carga") %></td>
+                                                            <td><%# Eval("cva") %></td>
+                                                            <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                            <td><%# Eval("CodigoO") %></td>
+                                                            <td><%# Eval("cliorigem") %></td>
+                                                            <td><%# Eval("CodigoD") %></td>
+                                                            <td><%# Eval("clidestino") %></td>
+                                                            <td>
+                                                                <asp:Label ID="lblAtendimento" runat="server" Text='<%# Eval("atendimento") %>' />
+                                                            </td>
+                                                        </tr>
+                                                    </ItemTemplate>
+                                                    <FooterTemplate>
+                                                            </tbody>
+                                                        </table>
+                                                    </FooterTemplate>
+                                                </asp:Repeater>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                            </tbody>
+                                        </table>
+                                    </FooterTemplate>
+                                </asp:Repeater>
 
 
-                                    </tbody>
-
-                                </table>
+                                        
                             </div>
                             <!-- /.card-body -->
                         </div>

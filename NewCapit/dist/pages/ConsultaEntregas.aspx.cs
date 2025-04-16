@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -15,6 +16,11 @@ namespace NewCapit.dist.pages
         {
             PreencherComboStatus();
             PreencherVeiculosCNT();
+            if(!IsPostBack)
+            {
+                CarregarColetas();
+            }
+            
         }
         private void PreencherComboStatus()
         {
@@ -86,5 +92,40 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        private void CarregarColetas()
+        {
+            var novosDados = DAL.ConEntrega.FetchDataTable();
+
+            rptCarregamento.DataSource = novosDados;
+            rptCarregamento.DataBind();
+
+            // Armazena no ViewState, se necessário para outras operações
+            ViewState["rptCarregamento"] = novosDados;
+
+            lblMensagem.Text = string.Empty;
+        }
+        protected void rptCarregamento_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Pega o valor da carga ou do CVA do item atual
+                string cva = DataBinder.Eval(e.Item.DataItem, "cva").ToString();
+
+                // Pega o repeater interno
+                Repeater rptColeta = (Repeater)e.Item.FindControl("rptColeta");
+
+                if (rptColeta != null && !string.IsNullOrEmpty(cva))
+                {
+                    // Busca os dados de coletas relacionadas àquele CVA
+                    DataTable dtColetas = DAL.ConCargas.FetchDataTableColetas3(cva);
+
+                    // Bind dos dados ao repeater interno
+                    rptColeta.DataSource = dtColetas;
+                    rptColeta.DataBind();
+                }
+            }
+        }
+
     }
 }

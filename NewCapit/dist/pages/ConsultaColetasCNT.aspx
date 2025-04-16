@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="ConsultaColetasCNT.aspx.cs" Inherits="NewCapit.dist.pages.ConsultaColetasCNT" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="ConsultaColetasCNT.aspx.cs" Inherits="NewCapit.dist.pages.ConsultaColetasCNT" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -15,7 +15,8 @@
                         </div>
                         <div class="col-md-1 text-center">
                             <input type="text" class="knob" value="70" data-width="90" data-height="90" data-fgcolor="#f56954">
-                            <div class="knob-label">Atrasadas</div>
+                            <div class="knob-label
+                                ">Atrasadas</div>
                         </div>
                         <div class="col-md-1 text-center">
                             <input type="text" class="knob" value="80" data-width="90" data-height="90" data-fgcolor="#3c8dbc">

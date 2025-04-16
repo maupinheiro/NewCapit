@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsultaAgregado.cs" />
+    <Compile Include="ConsultaEntrega.cs" />
     <Compile Include="ConsultaCarga.cs" />
     <Compile Include="ConsultaCliente.cs" />
     <Compile Include="ConsultaContato.cs" />
