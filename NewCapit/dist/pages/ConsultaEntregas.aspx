@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
+                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
                     </div>
 
                 </div>
@@ -94,6 +94,7 @@
                                                     <th>Situação</th>
                                                     <th>Material</th>
                                                     <th>Cadastro</th>
+                                                    <th>Carregamento</th>
                                                     <th>Ação</th>
                                                 </tr>
                                             </thead>
@@ -113,6 +114,7 @@
                                             <td><%# Eval("situacao") %></td>
                                             <td><%# Eval("material") %></td>
                                             <td><%# Eval("dtcad") %></td>
+                                            <td><%# Eval("num_carregamento") %></td>
                                             <td>
                                                 <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-info">
                                                     <i class="fas fa-tasks"></i>

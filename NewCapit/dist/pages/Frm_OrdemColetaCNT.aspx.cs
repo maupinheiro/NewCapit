@@ -239,6 +239,7 @@ namespace NewCapit.dist.pages
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                     {
                         string query = @"UPDATE tbcargas SET 
+                                emissao=@emissao,
                                 cva = @cva, 
                                 gate = @gate, 
                                 status = @status, 
@@ -271,6 +272,9 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
                         cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
                         cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
+                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                       
+                        
                         // continue os parâmetros conforme seu banco
 
                         conn.Open();
@@ -312,6 +316,26 @@ namespace NewCapit.dist.pages
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 }
                 
+            }
+            else if (e.CommandName == "Remover")
+            {
+                string carga = e.CommandArgument.ToString();
+                DataTable dados = ViewState["Coletas"] as DataTable;
+
+                if (dados != null)
+                {
+                    DataRow[] linhas = dados.Select($"carga = '{carga}'");
+                    foreach (DataRow linha in linhas)
+                    {
+                        dados.Rows.Remove(linha);
+                    }
+
+                    dados.AcceptChanges();
+
+                    ViewState["Coletas"] = dados;
+                    rptColetas.DataSource = dados;
+                    rptColetas.DataBind();
+                }
             }
         }
         public void CarregaFoto()
@@ -823,12 +847,12 @@ namespace NewCapit.dist.pages
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,situacao
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
-                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa
+                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@situacao
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -868,6 +892,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
                 cmd.Parameters.AddWithValue("@empresa", SafeValue(txtFilial.Text));
+                cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                cmd.Parameters.AddWithValue("@situacao", "PENDENTE");
 
                 try
                 {

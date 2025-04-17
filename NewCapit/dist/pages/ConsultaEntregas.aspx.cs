@@ -107,12 +107,42 @@ namespace NewCapit.dist.pages
 
             lblMensagem.Text = string.Empty;
         }
+
+        private void CarregarColetas2()
+        {
+            DateTime? dtInicial = null;
+            DateTime? dtFinal = null;
+
+            string dataInicial = txtInicioData.Text.Trim();
+            string dataFinal = txtFimData.Text.Trim();
+            string status = (ddlStatus.SelectedValue != "0") ? ddlStatus.SelectedValue : null;
+            string veiculo = (ddlVeiculosCNT.SelectedValue != "0") ? ddlVeiculosCNT.SelectedValue : null;
+
+            if (!string.IsNullOrWhiteSpace(dataInicial) && DateTime.TryParse(dataInicial, out DateTime parsedDataInicial))
+            {
+                dtInicial = parsedDataInicial;
+            }
+
+            if (!string.IsNullOrWhiteSpace(dataFinal) && DateTime.TryParse(dataFinal, out DateTime parsedDataFinal))
+            {
+                dtFinal = parsedDataFinal;
+            }
+
+            var novosDados = DAL.ConEntrega.FetchDataTable2(dtInicial, dtFinal, status, veiculo);
+
+            rptCarregamento.DataSource = novosDados;
+            rptCarregamento.DataBind();
+
+            ViewState["rptCarregamento"] = novosDados;
+            lblMensagem.Text = string.Empty;
+        }
+
         protected void rptCarregamento_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 // Pega o valor da carga ou do CVA do item atual
-                string cva = DataBinder.Eval(e.Item.DataItem, "cva").ToString();
+                string cva = DataBinder.Eval(e.Item.DataItem, "num_carregamento").ToString();
 
                 // Pega o repeater interno
                 Repeater rptColeta = (Repeater)e.Item.FindControl("rptColeta");
@@ -174,5 +204,9 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void lnkPesquisar_Click(object sender, EventArgs e)
+        {
+            CarregarColetas2();
+        }
     }
 }

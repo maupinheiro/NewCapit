@@ -411,6 +411,7 @@
                                                     <th>CODIGO</th>
                                                     <th>DESTINO</th>
                                                     <th>ATENDIMENTO</th>
+                                                    <th>AÇÕES</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -426,6 +427,9 @@
                                             <td><%# Eval("clidestino") %></td>
                                             <td runat="server" id="tdAtendimento">
                                                 <asp:Label ID="lblAtendimento" runat="server" />
+                                            </td>
+                                            <td>
+                                                <asp:Button ID="btnRemoverColeta" runat="server" Text="Remover" CssClass="btn btn-outline-danger" CommandName="Remover" CommandArgument='<%# Eval("carga") %>' />
                                             </td>
                                         </tr>
                                         <tr class="expandable-body">
