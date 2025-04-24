@@ -205,8 +205,8 @@
                                         <i class="fas fa-map-marker-alt"></i>
                                         
                                     </a>--%>
-                                    <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
-                                  </asp:LinkButton>
+                                   <%-- <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
+                                  </asp:LinkButton>--%>
 
                                     <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
                                 <i class="fa fa-trash"></i>                                    

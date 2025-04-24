@@ -222,6 +222,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
+    <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4485,6 +4486,13 @@
     <Compile Include="dist\pages\ImportarPlanejamento.aspx.designer.cs">
       <DependentUpon>ImportarPlanejamento.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Ver_txt.aspx.cs">
+      <DependentUpon>Ver_txt.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Ver_txt.aspx.designer.cs">
+      <DependentUpon>Ver_txt.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -4635,6 +4643,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="plugin\bower_components\etc\" />
+    <Folder Include="TXT\" />
     <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>

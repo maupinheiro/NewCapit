@@ -65,11 +65,11 @@ namespace NewCapit.dist.pages
         {
             DataTable dt = new DataTable();
             List<string> colunasObrigatorias = new List<string>
-    {
-        "FILIAL", "CODDESTINO", "PLANTA DESTINO", "ROTA", "VEÍCULO", "CODORIGEM", "COLETA FORNECEDOR",
-        "Quant./ Pallet´s", "VIAGEM TIPO", "SOLICITAÇÃO Nº", "DATA /HORA",
-        "PESO", "M³", "ESTUDO / ROTA", "REMESSA", "PLANTA SOLICITANTE"
-    };
+            {
+                "FILIAL", "CODDESTINO", "PLANTA DESTINO", "ROTA", "VEÍCULO", "CODORIGEM", "COLETA FORNECEDOR",
+                "Quant./ Pallet´s", "VIAGEM TIPO", "SOLICITAÇÃO Nº", "DATA /HORA",
+                "PESO", "M³", "ESTUDO / ROTA", "REMESSA", "PLANTA SOLICITANTE"
+            };
 
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -165,7 +165,7 @@ namespace NewCapit.dist.pages
             foreach (GridViewRow row in gvListCargas.Rows)
             {
                 GerarNumero();
-                GerarNumero();
+                
                 int nr_carga = nrcarga;
 
                 string filial = LimparCelula(row.Cells[0].Text);
@@ -232,8 +232,8 @@ namespace NewCapit.dist.pages
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                //try
-                //{
+                try
+                {
                     SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", conn);
                     adpto.SelectCommand.Parameters.AddWithValue("@codvw", codOrigem);
                     DataTable dto = new DataTable();
@@ -252,55 +252,58 @@ namespace NewCapit.dist.pages
 
                     if (dto.Rows.Count > 0 && dtd.Rows.Count > 0)
                     {
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@carga", nr_carga);
-                            cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
-                            cmd.Parameters.AddWithValue("@status", "PENDENTE");
-                            cmd.Parameters.AddWithValue("@tomador", plantaSolicitante);
-                            cmd.Parameters.AddWithValue("@entrega", "NORMAL");
-                            cmd.Parameters.AddWithValue("@peso", peso);
-                            cmd.Parameters.AddWithValue("@material", "SOLICITAÇÃO");
-                            cmd.Parameters.AddWithValue("@portao", codDestino);
-                            cmd.Parameters.AddWithValue("@situacao", "PRONTO");
-                            cmd.Parameters.AddWithValue("@previsao",!string.IsNullOrEmpty(dataHora) && dataHora.Length >= 10 ? dataHora.Substring(0, 10): string.Empty);
-                         cmd.Parameters.AddWithValue("@codorigem", codOrigem);
-                            cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
-                            cmd.Parameters.AddWithValue("@coddestino", codDestino);
-                            cmd.Parameters.AddWithValue("@clidestino", dtd.Rows[0]["nomcli"].ToString());
-                            cmd.Parameters.AddWithValue("@idviagem", nr_carga);
-                            cmd.Parameters.AddWithValue("@ufcliorigem", dto.Rows[0]["estcli"].ToString());
-                            cmd.Parameters.AddWithValue("@ufclidestino", dtd.Rows[0]["estcli"].ToString());
-                            cmd.Parameters.AddWithValue("@pedidos", m3);
-                            cmd.Parameters.AddWithValue("@cidorigem", dto.Rows[0]["cidcli"].ToString());
-                            cmd.Parameters.AddWithValue("@ciddestino", dtd.Rows[0]["cidcli"].ToString());
-                            cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario);
-                            cmd.Parameters.AddWithValue("@solicitante", plantaSolicitante);
-                            cmd.Parameters.AddWithValue("@empresa", "CNT");
-                            cmd.Parameters.AddWithValue("@rota", rota);
-                            cmd.Parameters.AddWithValue("@veiculo", veiculo);
-                            cmd.Parameters.AddWithValue("@quant_palet", quantidadePallets);
-                            cmd.Parameters.AddWithValue("@tipo_viagem", viagemTipo);
-                            cmd.Parameters.AddWithValue("@solicitacoes", solicitacaoNumero);
-                            cmd.Parameters.AddWithValue("@data_hora", dataHora);
-                            cmd.Parameters.AddWithValue("@estudo_rota", rota);
-                            cmd.Parameters.AddWithValue("@remessa", remessa);
-                            cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
-                            cmd.Parameters.AddWithValue("@codvworigem", codOrigem);
-                            cmd.Parameters.AddWithValue("@codvwdestino", codDestino);
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@carga", nr_carga);
+                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+                        cmd.Parameters.AddWithValue("@status", "PENDENTE");
+                        cmd.Parameters.AddWithValue("@tomador", plantaSolicitante);
+                        cmd.Parameters.AddWithValue("@entrega", "NORMAL");
+                        cmd.Parameters.AddWithValue("@peso", peso);
+                        cmd.Parameters.AddWithValue("@material", "SOLICITAÇÃO");
+                        cmd.Parameters.AddWithValue("@portao", codDestino);
+                        cmd.Parameters.AddWithValue("@situacao", "PRONTO");
+                        cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
+                        cmd.Parameters.AddWithValue("@codorigem", codOrigem);
+                        cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
+                        cmd.Parameters.AddWithValue("@coddestino", codDestino);
+                        cmd.Parameters.AddWithValue("@clidestino", dtd.Rows[0]["nomcli"].ToString());
+                        cmd.Parameters.AddWithValue("@idviagem", nr_carga);
+                        cmd.Parameters.AddWithValue("@ufcliorigem", dto.Rows[0]["estcli"].ToString());
+                        cmd.Parameters.AddWithValue("@ufclidestino", dtd.Rows[0]["estcli"].ToString());
+                        cmd.Parameters.AddWithValue("@pedidos", m3);
+                        cmd.Parameters.AddWithValue("@cidorigem", dto.Rows[0]["cidcli"].ToString());
+                        cmd.Parameters.AddWithValue("@ciddestino", dtd.Rows[0]["cidcli"].ToString());
+                        cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario);
+                        cmd.Parameters.AddWithValue("@solicitante", plantaSolicitante);
+                        cmd.Parameters.AddWithValue("@empresa", "CNT");
+                        cmd.Parameters.AddWithValue("@rota", rota);
+                        cmd.Parameters.AddWithValue("@veiculo", veiculo);
+                        cmd.Parameters.AddWithValue("@quant_palet", quantidadePallets);
+                        cmd.Parameters.AddWithValue("@tipo_viagem", viagemTipo);
+                        cmd.Parameters.AddWithValue("@solicitacoes", solicitacaoNumero);
+                        cmd.Parameters.AddWithValue("@data_hora", dataHora.TrimEnd());
+                        cmd.Parameters.AddWithValue("@estudo_rota", rota);
+                        cmd.Parameters.AddWithValue("@remessa", remessa);
+                        cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
+                        cmd.Parameters.AddWithValue("@codvworigem", codOrigem);
+                        cmd.Parameters.AddWithValue("@codvwdestino", codDestino);
 
+                        
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             conn.Close();
-                        }
+                        
+
                     }
-                //}
-                //catch (Exception ex)
-                //{
-                //    string retorno = "Erro Sistêmico: " + ex.ToString() + " Por favor, contate o administrador de sistemas!";
-                //    string script = $"<script type='text/javascript'>alert('{retorno.Replace("'", "\\'")}');</script>";
-                //    ClientScript.RegisterClientScriptBlock(this.GetType(), "erro", script);
-                //}
+                  }
+                }
+                catch (Exception ex)
+                {
+                    string retorno = "Erro Sistêmico: " + ex.ToString() + " Por favor, contate o administrador de sistemas!";
+                    string script = $"<script type='text/javascript'>alert('{retorno.Replace("'", "\\'")}');</script>";
+                    ClientScript.RegisterClientScriptBlock(this.GetType(), "erro", script);
+                }
             }
         }
 

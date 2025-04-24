@@ -65,9 +65,34 @@
          height: 200px;
         }
     </style>
+          
+
     </asp:ContentPlaceHolder>
 </head>
-   
+   <script>
+       function ver_txt3() {
+           var width = 600;
+           var height = 500;
+           var left = (screen.width / 2) - (width / 2);
+           var top = (screen.height / 2) - (height / 2);
+
+           var msgWindow = window.open(
+               'Ver_txt.aspx',
+               'sMinuta',
+               'width=' + width +
+               ',height=' + height +
+               ',top=' + top +
+               ',left=' + left +
+               ',scrollbars=no,resizable=no,toolbar=no,menubar=no,status=no,location=no'
+           );
+
+           if (!msgWindow || msgWindow.closed || typeof msgWindow.closed == 'undefined') {
+               alert("Pop-up bloqueado. Habilite os pop-ups para este site.");
+           } else {
+               msgWindow.focus();
+           }
+       }
+   </script>
 <!-- layout-fixed -->
 <body class="hold-transition sidebar-mini layout-fixed">
     <form id="form1" runat="server">
@@ -533,10 +558,11 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/forms/validation.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Gera TXT Folha</p>
-                                        </a>
+                                      
+                                        <a href="javascript:void(0);" class="nav-link" onclick="ver_txt3();">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Gera TXT Folha</p>
+                                    </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="pages/forms/validation.html" class="nav-link">
