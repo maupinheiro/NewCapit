@@ -210,6 +210,7 @@
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
+    <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
@@ -4366,6 +4367,13 @@
     </Compile>
     <Compile Include="dist\pages\Consulta_Agregados.aspx.designer.cs">
       <DependentUpon>Consulta_Agregados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AltColetaCNT.aspx.cs">
+      <DependentUpon>Frm_AltColetaCNT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AltColetaCNT.aspx.designer.cs">
+      <DependentUpon>Frm_AltColetaCNT.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_AtualizaOrdemColeta.aspx.cs">
       <DependentUpon>Frm_AtualizaOrdemColeta.aspx</DependentUpon>

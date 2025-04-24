@@ -116,7 +116,7 @@ namespace NewCapit.dist.pages
 
         protected void lnkPesquisar_Click(object sender, EventArgs e)
         {
-            string sql = @"SELECT id, peso, status, cliorigem, clidestino, 
+            string sql = @"SELECT carga, peso, status, cliorigem, clidestino, 
                           CONVERT(varchar, previsao, 103) AS previsao, situacao, rota, 
                           andamento, data_hora, veiculo, tipo_viagem, solicitacoes 
                           FROM tbcargas 

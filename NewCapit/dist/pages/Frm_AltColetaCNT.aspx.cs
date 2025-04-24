@@ -14,9 +14,10 @@ using System.Collections;
 using System.Data;
 using System.Web.UI.HtmlControls;
 
+
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_OrdemColetaCNT : System.Web.UI.Page
+    public partial class Frm_AltColetaCNT : System.Web.UI.Page
     {
         public string fotoMotorista;
         string codmot, caminhofoto;
@@ -35,7 +36,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     txtUsuCadastro.Text = lblUsuario;
                 }
-                if (txtCodMotorista.Text == "")                 
+                if (txtCodMotorista.Text == "")
                 {
                     fotoMotorista = "../../fotos/usuario.JPG";
                 }
@@ -44,14 +45,9 @@ namespace NewCapit.dist.pages
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 //PreencherComboStatus();
                 PreencherNumColeta();
-                
+
             }
             CarregaFoto();
-            PreencherClienteInicial();
-            PreencherClienteFinal();
-            PreencherVeiculosCNT();
-            
-            
         }
         private void PreencherNumColeta()
         {
@@ -130,111 +126,7 @@ namespace NewCapit.dist.pages
             }
         }
 
-        private void PreencherVeiculosCNT()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, descricao FROM tbtiposveiculoscnt order by descricao";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
-
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlVeiculosCNT.DataSource = reader;
-                    ddlVeiculosCNT.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    ddlVeiculosCNT.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlVeiculosCNT.DataBind();  // Realiza o binding dos dados                   
-                    ddlVeiculosCNT.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
-        private void PreencherClienteInicial()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
-
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
-
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlCliInicial.DataSource = reader;
-                    ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliInicial.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
-                    ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
-        private void PreencherClienteFinal()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
-
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
-
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlCliFinal.DataSource = reader;
-                    ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliFinal.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
-                    ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
 
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -324,7 +216,7 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
-           
+
         }
 
 
@@ -347,7 +239,7 @@ namespace NewCapit.dist.pages
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
                 TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
                 // continue com os demais campos que quiser atualizar...
-                if(txtCVA.Text != string.Empty)
+                if (txtCVA.Text != string.Empty)
                 {
                     // Exemplo: atualizando no banco
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -387,8 +279,8 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
                         cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
                         cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                       
-                        
+
+
                         // continue os parâmetros conforme seu banco
 
                         conn.Open();
@@ -429,7 +321,7 @@ namespace NewCapit.dist.pages
                     //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 }
-                
+
             }
             else if (e.CommandName == "Remover")
             {
@@ -455,7 +347,7 @@ namespace NewCapit.dist.pages
         public void CarregaFoto()
         {
             var codigo = txtCodMotorista.Text.Trim();
-           
+
             var obj = new Domain.ConsultaMotorista
             {
                 codmot = codigo
@@ -480,11 +372,11 @@ namespace NewCapit.dist.pages
                             fotoMotorista = "../../fotos/usuario.JPG";
                         }
                     }
-                   
+
                 }
-                    
+
             }
-           
+
         }
 
         protected void btnPesquisarMotorista_Click(object sender, EventArgs e)
@@ -541,7 +433,8 @@ namespace NewCapit.dist.pages
                         txtCodMotorista.Text = "";
                         txtCodMotorista.Focus();
                     }
-                    else{
+                    else
+                    {
                         txtFilialMot.Text = ConsultaMotorista.nucleo;
                         txtTipoMot.Text = ConsultaMotorista.tipomot;
                         txtExameToxic.Text = ConsultaMotorista.venceti;
@@ -552,12 +445,12 @@ namespace NewCapit.dist.pages
                         txtCartao.Text = ConsultaMotorista.cartaomot;
                         txtValCartao.Text = ConsultaMotorista.venccartao;
                         txtCelular.Text = ConsultaMotorista.fone2;
-                        
+
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
                             txtCodVeiculo.Text = ConsultaMotorista.codvei;
-                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo; 
+                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
                             txtPlaca.Text = ConsultaMotorista.placa;
                             txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
                             txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
@@ -616,7 +509,7 @@ namespace NewCapit.dist.pages
 
                             }
                         }
-                            // pesquisar primeiro reboque
+                        // pesquisar primeiro reboque
                         if (txtReboque1.Text.Trim() != "")
                         {
                             var placaReboque1 = txtReboque1.Text.Trim();
@@ -627,7 +520,7 @@ namespace NewCapit.dist.pages
                             };
                             var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
                             if (ConsultaReboque != null)
-                            {                                 
+                            {
                                 txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
@@ -647,14 +540,14 @@ namespace NewCapit.dist.pages
                                 txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
-                                               
+
                         txtCodVeiculo.Focus();
                     }
                 }
                 else
                 {
-                   
-                    string nomeUsuario = txtUsuCadastro.Text;                   
+
+                    string nomeUsuario = txtUsuCadastro.Text;
 
                     string linha1 = "Olá, " + nomeUsuario + "!";
                     string linha2 = "Motorista " + codigo + ", não cadastrado no sistema.";
@@ -673,7 +566,7 @@ namespace NewCapit.dist.pages
 
                     txtCodMotorista.Text = "";
                     txtCodMotorista.Focus();
-                   
+
                 }
 
             }
@@ -682,7 +575,7 @@ namespace NewCapit.dist.pages
         protected void bntPesquisaColeta_Click(object sender, EventArgs e)
         {
             string searchTerm;
-            searchTerm = txtColeta.Text ;
+            searchTerm = txtColeta.Text;
             CarregarColetas(searchTerm);
             txtColeta.Text = string.Empty;
 
@@ -747,7 +640,7 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        
+
                         txtFilialVeicCNT.Text = ConsultaVeiculo.nucleo;
                         txtVeiculoTipo.Text = ConsultaVeiculo.tipoveiculo;
                         txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
@@ -866,7 +759,7 @@ namespace NewCapit.dist.pages
 
                     txtColeta.Text = "";
                     txtColeta.Focus();
-                   
+
                 }
                 else
                 {
@@ -875,7 +768,7 @@ namespace NewCapit.dist.pages
 
                     string linha1 = "Olá, " + nomeUsuario + "!";
                     string linha2 = "Código " + codigo + ", não cadastrado no sistema.";
-                    string linha3 = "Verifique o código digitado: " + codigo + ".";                    
+                    string linha3 = "Verifique o código digitado: " + codigo + ".";
 
                     // Concatenando as linhas com '\n' para criar a mensagem
                     string mensagem = $"{linha1}\n{linha2}\n{linha3}";
@@ -899,60 +792,60 @@ namespace NewCapit.dist.pages
         {
             var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);
 
-            
+
 
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
 
             var carga = new Domain.ConsultaCarga
             {
-               carga = searchTerm
+                carga = searchTerm
             };
             var ConsultaCarga = DAL.ConCargas.CheckColetas(carga);
 
 
-            
-                if(ConsultaCarga != null)
+
+            if (ConsultaCarga != null)
+            {
+                if (ConsultaCarga.codmot == "" || ConsultaCarga.codmot == null)
                 {
-                    if (ConsultaCarga.codmot == "" || ConsultaCarga.codmot == null)
+                    if (dadosAtuais == null)
                     {
-                        if (dadosAtuais == null)
-                        {
-                            dadosAtuais = novosDados.Clone(); // estrutura idêntica
-                        }
-
-                        // Adiciona somente as coletas que ainda não estão em dadosAtuais
-                        foreach (DataRow novaRow in novosDados.Rows)
-                        {
-                            string novaCarga = novaRow["carga"].ToString();
-
-                            bool jaExiste = dadosAtuais.AsEnumerable()
-                                .Any(r => r["carga"].ToString() == novaCarga);
-
-                            if (!jaExiste)
-                            {
-                                dadosAtuais.ImportRow(novaRow);
-                            }
-                        }
-
-                        ViewState["Coletas"] = dadosAtuais;
-
-                        rptColetas.DataSource = dadosAtuais;
-                        rptColetas.DataBind();
-                        lblMensagem.Text = string.Empty;
+                        dadosAtuais = novosDados.Clone(); // estrutura idêntica
                     }
-                    else
+
+                    // Adiciona somente as coletas que ainda não estão em dadosAtuais
+                    foreach (DataRow novaRow in novosDados.Rows)
                     {
-                        lblMensagem.Text = "Coleta já atrelada a um motorista!";
+                        string novaCarga = novaRow["carga"].ToString();
+
+                        bool jaExiste = dadosAtuais.AsEnumerable()
+                            .Any(r => r["carga"].ToString() == novaCarga);
+
+                        if (!jaExiste)
+                        {
+                            dadosAtuais.ImportRow(novaRow);
+                        }
                     }
+
+                    ViewState["Coletas"] = dadosAtuais;
+
+                    rptColetas.DataSource = dadosAtuais;
+                    rptColetas.DataBind();
+                    lblMensagem.Text = string.Empty;
                 }
-                
-           
-                
+                else
+                {
+                    lblMensagem.Text = "Coleta já atrelada a um motorista!";
+                }
+            }
 
-            
 
 
-            
+
+
+
+
+
         }
 
 
@@ -1006,7 +899,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
-                cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT"));
+                cmd.Parameters.AddWithValue("@empresa", SafeValue(txtFilial.Text));
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@situacao", "PENDENTE");
 
@@ -1073,17 +966,6 @@ namespace NewCapit.dist.pages
                 rptColetas.DataBind();
             }
         }
-        
-
-        //protected void LimparColetas_Click(object sender, EventArgs e)
-        //{
-        //    ViewState["Coletas"] = null;
-        //    rptColetas.DataSource = null;
-        //    rptColetas.DataBind();
-        //}
 
     }
-
-
-
 }

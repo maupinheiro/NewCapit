@@ -75,7 +75,7 @@ namespace DAL
                 }
             }
         }
-        public static DataTable FetchDataTableColetas3(string cva)
+        public static DataTable FetchDataTableColetas3(string idviagem)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
             string sql = "SELECT id, carga,cva,data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao FROM tbcargas WHERE status = 'Pendente' and empresa = 'CNT' and fl_exclusao is null and idviagem=@idviagem";
@@ -85,7 +85,7 @@ namespace DAL
                 using (var cmd = con.CreateCommand())
                 {
                     cmd.CommandText = sql;
-                    cmd.Parameters.AddWithValue("@idviagem", cva);
+                    cmd.Parameters.AddWithValue("@idviagem", idviagem);
 
                     using (var reader = cmd.ExecuteReader())
                     {

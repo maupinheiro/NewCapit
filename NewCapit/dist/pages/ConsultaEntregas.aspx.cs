@@ -141,16 +141,16 @@ namespace NewCapit.dist.pages
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                // Pega o valor da carga ou do CVA do item atual
-                string cva = DataBinder.Eval(e.Item.DataItem, "num_carregamento").ToString();
+                // Pega o valor da carga ou do idviagem do item atual
+                string idviagem = DataBinder.Eval(e.Item.DataItem, "num_carregamento").ToString();
 
                 // Pega o repeater interno
                 Repeater rptColeta = (Repeater)e.Item.FindControl("rptColeta");
 
-                if (rptColeta != null && !string.IsNullOrEmpty(cva))
+                if (rptColeta != null && !string.IsNullOrEmpty(idviagem))
                 {
                     // Busca os dados de coletas relacionadas àquele CVA
-                    DataTable dtColetas = DAL.ConCargas.FetchDataTableColetas3(cva);
+                    DataTable dtColetas = DAL.ConCargas.FetchDataTableColetas3(idviagem);
 
                     // Bind dos dados ao repeater interno
                     rptColeta.DataSource = dtColetas;

@@ -24,9 +24,9 @@
                 <div class="content-header">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-2 text-gray-800">
-                            <i class="fas fa-shipping-fast"></i>&nbsp;Acompanhamento de Coletas/Entregas</h1>
+                            <i class="fas fa-shipping-fast"></i>&nbsp;Controle de Coletas</h1>
                         <a href="/dist/pages/Frm_OrdemColetaCNT.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-shipping-fast"></i>&nbsp;Ordem de Coleta
+                            <i class="fas fa-shipping-fast"></i>&nbsp; Nova Ordem de Coleta
                         </a>
                     </div>
                 </div>
@@ -55,12 +55,12 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form_group">
-                            <span class="details">VEÍCULO:</span>
+                            <span class="details">Tipo de Veículo:</span>
                             <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
                             </asp:DropDownList>
                         </div>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                         <br />
                         <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
                     </div>
@@ -84,17 +84,15 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>Foto</th>
+                                                    <th>#</th>
                                                     <th>Motorista</th>
-                                                    <th>Veículo</th>
-                                                    <th>Frota</th>
-                                                    <th>Placa/Reboque</th>
-                                                    <th>Coleta</th>
+                                                    <th>O.Coleta</th>
+                                                    <th>Veículo</th>                                                    
+                                                    <th>Tipo de Veiculo</th>                                                    
                                                     <th>CVA</th>
+                                                    <th>Origem/Destino</th>                                                    
                                                     <th>Situação</th>
-                                                    <th>Material</th>
-                                                    <th>Cadastro</th>
-                                                    <th>Carregamento</th>
+                                                    <th>Atendimento</th>                                                    
                                                     <th>Ação</th>
                                                 </tr>
                                             </thead>
@@ -103,25 +101,45 @@
                                     <ItemTemplate>
                                         <tr onclick="toggleDetalhes(this)">
                                             <td>
-                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 60px;" />
+                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 50px;" />
                                             </td>
-                                            <td><%# Eval("nomemotorista") %></td>
-                                            <td><%# Eval("tipoveiculo") %></td>
-                                            <td><%# Eval("veiculo") %></td>
-                                            <td><%# Eval("veiculo_reboques") %></td>
-                                            <td><%# Eval("carga") %></td>
-                                            <td><%# Eval("cva") %></td>
-                                            <td><%# Eval("situacao") %></td>
-                                            <td><%# Eval("material") %></td>
-                                            <td><%# Eval("dtcad") %></td>
+                                            <td>
+                                                <%# Eval("nomemotorista") %>
+                                                <br />
+                                                <%# Eval("transportadora") %>   
+                                            </td>
                                             <td><%# Eval("num_carregamento") %></td>
+                                            <td>
+                                                <%# Eval("veiculo") %>
+                                                <br />
+                                                <%# Eval("placa") %>
+                                            </td>
+                                            <td>
+                                                <%# Eval("veiculotipo") %>
+                                                <br />
+                                                <%# Eval("placa") %>
+                                            </td>
+                                            <td>
+                                                <%# Eval("cva") %>
+                                                <br />
+                                                <%# Eval("carga") %>
+                                            </td>
+                                            <td>
+                                                <%# Eval("nomcliorigem") %>
+                                                <br />
+                                                <%# Eval("nomclidestino") %>
+                                            </td>                                            
+                                            <td><%# Eval("situacao") %></td>
+                                            
+                                            <td>NO PRAZO</td>
+                                            
                                             <td>
                                                 <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-info">
                                                     <i class="fas fa-tasks"></i>
                                                 </asp:LinkButton>
                                             </td>
                                         </tr>
-                                        <tr class="detalhes d-none">
+                                        <%--<tr class="detalhes d-none">
                                             <td colspan="11">
                                                 <asp:Repeater ID="rptColeta" OnItemDataBound="rptColeta_ItemDataBound" runat="server">
                                                     <HeaderTemplate>
@@ -160,7 +178,7 @@
                                                     </FooterTemplate>
                                                 </asp:Repeater>
                                             </td>
-                                        </tr>
+                                        </tr>--%>
                                     </ItemTemplate>
                                     <FooterTemplate>
                                             </tbody>
