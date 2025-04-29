@@ -345,5 +345,15 @@ namespace NewCapit
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
         }
+
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvListMotoristas.DataKeys[row.RowIndex].Value.ToString();
+
+                Response.Redirect("Frm_AltMotoristas.aspx?id=" + id);
+            }
+        }
     }
 }

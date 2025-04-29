@@ -384,7 +384,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <span class="details">INICIO DA PRESTAÇÃO:</span>
-                            <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" class="form-control select2" ></asp:DropDownList>                            
+                            <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2" ></asp:DropDownList>                            
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -396,7 +396,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <span class="details">TERMINO DA PRESTAÇÃO:</span>
-                            <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-control select2"></asp:DropDownList>                            
+                            <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>                            
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -455,7 +455,7 @@
                                             </HeaderTemplate>
                                             <ItemTemplate>
                                                 <tr data-widget="expandable-table" aria-expanded="false">
-                                                    <td><%# Eval("carga") %></td>
+                                                    <td><asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>' /></td>
                                                     <td><%# Eval("cva") %></td>
                                                     <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                     <td><%# Eval("CodigoO") %></td>

@@ -327,7 +327,7 @@
                      <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>
-                        <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="FOTO" ControlStyle-Width="45" ItemStyle-Width="45" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
+                        <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="45" ItemStyle-Width="45" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
                         <asp:TemplateField HeaderText="MOTORISTA">
                             <ItemTemplate>
                                 <!-- <%# Eval("codmot") + " - " + Eval("nommot")%> -->
@@ -383,10 +383,12 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
+
+
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                             <ItemTemplate>
                                 <br>
-                                <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
                               <%--  <a class="btn btn-danger btn-sm" href="#">
                                     <i class="fa fa-trash"></i>
                                     
@@ -399,12 +401,12 @@
             </div>
         </div>
     </div>
-    <%--<footer class="main-footer">
+    <footer class="main-footer">
        <div class="float-right d-none d-sm-block">
          <b>Version</b> 2.1.0
        </div>
        <strong>Copyright &copy; 2021-2024 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>--%>
+    </footer>
    
     <script>
         $(function () {

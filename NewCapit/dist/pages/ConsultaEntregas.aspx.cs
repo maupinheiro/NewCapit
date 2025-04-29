@@ -200,6 +200,11 @@ namespace NewCapit.dist.pages
                         tdAtendimento.BgColor = "Orange";
                         tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
                     }
+                    else
+                    {
+                        lblAtendimento.Text = status;
+
+                    }
                 }
             }
         }
@@ -208,5 +213,15 @@ namespace NewCapit.dist.pages
         {
             CarregarColetas2();
         }
+        protected void lnkEditar_Command(object sender, CommandEventArgs e)
+        {
+            if (e.CommandName == "Editar")
+            {
+                string numCarregamento = e.CommandArgument.ToString();
+                string url = $"Frm_AtualizaOrdemColeta.aspx?carregamento={numCarregamento}";
+                Response.Redirect(url);
+            }
+        }
+
     }
 }
