@@ -38,9 +38,9 @@ namespace NewCapit.dist.pages
                 PreencherComboFiliais();
 
                 DateTime dataHoraAtual = DateTime.Now;
-                txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                //txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
                 txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-                btnCnpj.Visible = false;
+               // btnCnpj.Visible = false;
             }
             
             CarregaDadosAgregado();
@@ -83,72 +83,7 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
-
-
-        protected void btnAgregado_Click(object sender, EventArgs e)
-        {
-            if (txtCodTra.Text.Trim() == "")
-            {
-                string nomeUsuario = txtUsuAltCadastro.Text;
-
-                string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Por favor, digite um código para cadastro.";
-
-                // Concatenando as linhas com '\n' para criar a mensagem
-                string mensagem = $"{linha1}\n{linha2}";
-
-                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                // Gerando o script JavaScript para exibir o alerta
-                string script = $"alert('{mensagemCodificada}');";
-
-                // Registrando o script para execução no lado do cliente
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                txtCodTra.Focus();
-
-            }
-            else
-            {
-                var codigo = txtCodTra.Text.Trim();
-                var obj = new ConsultaAgregado()
-                {
-                    codtra = codigo
-                };
-
-
-                var ConsultaAgregados = DAL.UsersDAL.CheckAgregado(obj);
-                if (ConsultaAgregados != null)
-                {
-                    string nomeUsuario = txtUsuAltCadastro.Text;
-                    string razaoSocial = ConsultaAgregados.fantra;
-                    string filial = ConsultaAgregados.filial;
-
-
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Código " + codigo + ", já cadastrado no sistema.";
-                    string linha3 = "Nome: " + razaoSocial + ".";
-                    string linha4 = "Filial: " + filial.Trim() + ". Por favor, verifique.";
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    // Gerando o script JavaScript para exibir o alerta
-                    string script = $"alert('{mensagemCodificada}');";
-
-                    // Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                    txtCodTra.Text = "";
-                    txtCodTra.Focus();
-                }
-                else
-                {
-                    cboPessoa.Focus();
-                }
-
-            }
-        }
+               
         protected void btnCnpj_Click(object sender, EventArgs e)
         {
             PesquisarCnpj();
@@ -374,8 +309,6 @@ namespace NewCapit.dist.pages
                 //pnlMot.Visible = false;
             }
         }
-
-
 
         public void CarregaDadosAgregado3()
         {

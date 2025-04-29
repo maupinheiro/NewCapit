@@ -275,23 +275,23 @@ namespace NewCapit.dist.pages
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     GerarNumero();
-                    command.Parameters.AddWithValue("@CodTra", txtCodTra.Text.Trim());
-                    command.Parameters.AddWithValue("@NomTra", txtRazCli.Text.Trim());
-                    command.Parameters.AddWithValue("@ConTra", txtContato.Text.Trim());
-                    command.Parameters.AddWithValue("@FanTra", txtFantasia.Text.Trim());
+                    command.Parameters.AddWithValue("@CodTra", txtCodTra.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@NomTra", txtRazCli.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@ConTra", txtContato.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@FanTra", txtFantasia.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@Fone1", txtFixo.Text.Trim());
                     command.Parameters.AddWithValue("@Fone2", txtCelular.Text.Trim());
-                    command.Parameters.AddWithValue("@EndTra", txtEndCli.Text.Trim());
+                    command.Parameters.AddWithValue("@EndTra", txtEndCli.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@CepTra", txtCepCli.Text.Trim());
-                    command.Parameters.AddWithValue("@BaiTra", txtBaiCli.Text.Trim());
-                    command.Parameters.AddWithValue("@CidTra", txtCidCli.Text.Trim());
-                    command.Parameters.AddWithValue("@UfTra", txtEstCli.Text.Trim());
+                    command.Parameters.AddWithValue("@BaiTra", txtBaiCli.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@CidTra", txtCidCli.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@UfTra", txtEstCli.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@AtivaInativa", ddlSituacao.SelectedValue);
                     command.Parameters.AddWithValue("@Pessoa", cboPessoa.SelectedItem.ToString());
                     command.Parameters.AddWithValue("@Cnpj", txtCpf_Cnpj.Text.Trim());
                     command.Parameters.AddWithValue("@InscEstadual", txtRg.Text.Trim());
                     command.Parameters.AddWithValue("@Numero", txtNumero.Text.Trim());
-                    command.Parameters.AddWithValue("@Complemento", txtComplemento.Text.Trim());
+                    command.Parameters.AddWithValue("@Complemento", txtComplemento.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@UsuCad", txtUsuCadastro.Text.Trim());
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text.Trim());
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
@@ -323,7 +323,7 @@ namespace NewCapit.dist.pages
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
                         // Redireciona para a página de consulta
-                        Response.Redirect("ConsultaAgregados.aspx");
+                        Response.Redirect("/dist/pages/Consulta_Agregados.aspx");
                     }
                     catch (Exception ex)
                     {

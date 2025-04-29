@@ -87,6 +87,15 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtCodigo;
 
         /// <summary>
+        /// Controle txtPlacaAnt.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPlacaAnt;
+
+        /// <summary>
         /// Controle txtControlePatrimonio.
         /// </summary>
         /// <remarks>
@@ -141,24 +150,6 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtLicenciamento;
 
         /// <summary>
-        /// Controle txtOpacidade.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtOpacidade;
-
-        /// <summary>
-        /// Controle txtCronotacografo.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCronotacografo;
-
-        /// <summary>
         /// Controle ddlTacografo.
         /// </summary>
         /// <remarks>
@@ -202,6 +193,42 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAltura;
+
+        /// <summary>
+        /// Controle txtProtocoloCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtProtocoloCET;
+
+        /// <summary>
+        /// Controle txtVencCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVencCET;
+
+        /// <summary>
+        /// Controle txtOpacidade.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOpacidade;
+
+        /// <summary>
+        /// Controle txtCronotacografo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCronotacografo;
 
         /// <summary>
         /// Controle ddlMarca.

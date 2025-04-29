@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -8,13 +9,16 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NPOI.SS.Formula.Functions;
 using static System.Net.Mime.MediaTypeNames;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit
 {
     public partial class Frm_AltVeiculos : System.Web.UI.Page
     {
         string id;
+       // string tara;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -41,7 +45,9 @@ namespace NewCapit
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
-
+                PreencherComboEstados();
+                DateTime dataHoraAtual = DateTime.Now;
+                txtDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
             }
             CarregaDadosDoVeiculo();
@@ -156,7 +162,28 @@ namespace NewCapit
                 }
             }
         }
+        private void CarregarCidades(int estadoId)
+        {
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT Uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @EstadoId";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@EstadoId", estadoId);
+                conn.Open();
+                ddlCidades.DataSource = cmd.ExecuteReader();
+                ddlCidades.DataTextField = "nome_municipio";
+                ddlCidades.DataValueField = "Uf";
+                ddlCidades.DataBind();
 
+                ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
+            }
+        }
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int estadoId = int.Parse(ddlEstados.SelectedValue);
+            CarregarCidades(estadoId);
+        }
         private void PreencherComboRastreadores()
         {
             // Consulta SQL que retorna os dados desejados
@@ -192,16 +219,50 @@ namespace NewCapit
                 }
             }
         }
+        private void PreencherComboEstados()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT Uf, SiglaUf FROM tbestadosbrasileiros";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlEstados.DataSource = reader;
+                    ddlEstados.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
+                    ddlEstados.DataValueField = "Uf";  // Campo que será o valor de cada item                    
+                    ddlEstados.DataBind();  // Realiza o binding dos dados                   
+                    ddlEstados.Items.Insert(0, new ListItem("", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
         }
-
         private void PreencherComboMotoristas()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao IS NULL AND status = 'ATIVO' ORDER BY nommot";
-
+            string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao is null AND status = 'ATIVO' ORDER BY nommot";
+            
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -257,14 +318,15 @@ namespace NewCapit
 
             string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
             string tipoComposicao = selectedValue;
-
+            string tara = txtTara.Text.Trim();
+            int nTara = 0;
             if (tipoComposicao.Equals(composicao1))
             {
                 txtEixos.Text = "05";
                 txtCap.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -276,7 +338,7 @@ namespace NewCapit
                 txtCap.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 41500;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -288,7 +350,7 @@ namespace NewCapit
                 txtCap.Text = "41500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -300,7 +362,7 @@ namespace NewCapit
                 txtCap.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -308,11 +370,12 @@ namespace NewCapit
             }
             else if (tipoComposicao.Equals(composicao5))
             {
+                
                 txtEixos.Text = "06";
                 txtCap.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = Int32.Parse(tara);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;             
             
@@ -323,7 +386,7 @@ namespace NewCapit
                 txtCap.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -334,7 +397,7 @@ namespace NewCapit
                 txtCap.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -345,7 +408,7 @@ namespace NewCapit
                 txtCap.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -356,7 +419,7 @@ namespace NewCapit
                 txtCap.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -367,7 +430,7 @@ namespace NewCapit
                 txtCap.Text = "29000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 29000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -378,7 +441,7 @@ namespace NewCapit
                 txtCap.Text = "57000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 57000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -389,7 +452,7 @@ namespace NewCapit
                 txtCap.Text = "16000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 16000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -400,7 +463,7 @@ namespace NewCapit
                 txtCap.Text = "3000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 3000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -411,7 +474,7 @@ namespace NewCapit
                 txtCap.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -422,7 +485,7 @@ namespace NewCapit
                 txtCap.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -433,7 +496,7 @@ namespace NewCapit
                 txtCap.Text = "1200";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 1200;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -444,7 +507,7 @@ namespace NewCapit
                 txtCap.Text = "630";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 630;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -452,22 +515,239 @@ namespace NewCapit
         }
         protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (txtTara.Text != string.Empty)
+            //if (txtTara.Text != string.Empty)
+            //{
+            //    cboTipoCarreta_Leave();
+            //}
+            //else
+            //{
+            //    string retorno = "É necessário digitar o valor no campo Tara!";
+            //    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            //    sb.Append("<script type = 'text/javascript'>");
+            //    sb.Append("window.onload=function(){");
+            //    sb.Append("alert('");
+            //    sb.Append(retorno);
+            //    sb.Append("')};");
+            //    sb.Append("</script>");
+            //    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+            //    ddlComposicao.SelectedValue = "";
+            //}
+            //cboTipoCarreta_Leave();
+
+            string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
+            string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
+            string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
+            string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
+            string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
+            string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
+            string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
+            string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
+            string composicao9 = "TRUCK";
+            string composicao10 = "BITRUCK";
+            string composicao11 = "BITREM";
+            string composicao12 = "TOCO";
+            string composicao13 = "VUC OU 3/4";
+            string composicao14 = "CAVALO SIMPLES COM PRANCHA";
+            string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+            string composicao16 = "UTILITÁRIO/FURGÃO";
+            string composicao17 = "FIORINO";
+
+            string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
+            string tipoComposicao = selectedValue;
+            string tara = txtTara.Text;
+            
+            int nTara = 0;
+            if (tipoComposicao.Equals(composicao1))
             {
-                cboTipoCarreta_Leave();
+                txtEixos.Text = "05";
+                txtCap.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
             }
-            else
+            else if (tipoComposicao.Equals(composicao2))
             {
-                string retorno = "É necessário digitar o valor no campo Tara!";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(retorno);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                ddlComposicao.SelectedValue = "";
+                txtEixos.Text = "05";
+                txtCap.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 41500;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao3))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "41500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao4))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao5))
+            {
+                tara = txtTara.Text.Trim();
+                txtEixos.Text = "06";
+                txtCap.Text = "53000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 53000;
+                nTara = int.Parse(tara);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao6))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "48500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 48500;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao7))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "48500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 48500;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao8))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "53000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 53000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao9))
+            {
+                txtEixos.Text = "03";
+                txtCap.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao10))
+            {
+                txtEixos.Text = "04";
+                txtCap.Text = "29000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 29000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao11))
+            {
+                txtEixos.Text = "07";
+                txtCap.Text = "57000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 57000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao12))
+            {
+                txtEixos.Text = "02";
+                txtCap.Text = "16000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 16000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao13))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "3000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 3000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao14))
+            {
+                txtEixos.Text = "05";
+                txtCap.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao15))
+            {
+                txtEixos.Text = "06";
+                txtCap.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao16))
+            {
+                txtEixos.Text = "02";
+                txtCap.Text = "1200";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 1200;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao17))
+            {
+                txtEixos.Text = "02";
+                txtCap.Text = "630";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 630;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
             }
 
         }
@@ -515,10 +795,10 @@ namespace NewCapit
                     cboTipo.Items.Insert(0, GetValue(row, 2));
                     ddlTipo.Items.Insert(0, GetValue(row, 3));
                     txtModelo.Text = GetValue(row, 4);
-                    txtAno.Text = GetValue(row, 5);
-                    txtCadastro.Text = GetValue(row, 6);
+                    txtAno.Text = GetValue(row, 5);                    
+                    txtDtcVei.Text = DateTime.Parse(dt.Rows[0][6].ToString()).ToString("dd/MM/yyyy");
                     cbFiliais.Items.Insert(0, GetValue(row, 7));
-                    status.Items.Insert(0, GetValue(row, 8));
+                    ddlSituacao.Items.Insert(0, GetValue(row, 8));
                     txtPlaca.Text = GetValue(row, 9);
                     txtReb1.Text = GetValue(row, 10);
                     txtReb2.Text = GetValue(row, 11);
@@ -540,24 +820,34 @@ namespace NewCapit
                     txtOpacidade.Text = GetValue(row, 31);
                     txtCadastradoPor.Text = GetValue(row, 32);
                     txtDtCadastro.Text = GetValue(row, 33);
-                    txtValCET.Text = GetValue(row, 36);
-                    txtProtocolo.Text = GetValue(row, 37);
+                    txtVencCET.Text = GetValue(row, 36);
+                    txtProtocoloCET.Text = GetValue(row, 37);
                     txtLicenciamento.Text = GetValue(row, 38);
-                    ddlMarca.Items.Insert(0, GetValue(row, 39));
-                    txtRenavam.Text = GetValue(row, 40);
-                    ddlCor.Items.Insert(0, GetValue(row, 41));
-                    ddlComunicacao.Items.Insert(0, GetValue(row, 42));
-                    txtAntt.Text = GetValue(row, 43);
-                    ddlUfPlaca.Items.Insert(0, GetValue(row, 46));
-                    txtCidPlaca.Text = GetValue(row, 47);
-                    txtComprimento.Text = GetValue(row, 49);
-                    txtLargura.Text = GetValue(row, 50);
-                    txtAltura.Text = GetValue(row, 51);
-                    txtTipoSeguro.Text = GetValue(row, 54);
-                    ddlTacografo.Items.Insert(0, GetValue(row, 59));
-                    ddlModeloTacografo.Items.Insert(0, GetValue(row, 60));
-                    txtDataAquisicao.Text = GetValue(row, 61);
-                    txtChassi.Text = GetValue(row, 63);
+                    txtCronotacografo.Text = DateTime.Parse(dt.Rows[0][39].ToString()).ToString("dd/MM/yyyy");
+                    ddlMarca.Items.Insert(0, GetValue(row, 40));
+                    txtRenavam.Text = GetValue(row, 41);
+                    ddlCor.Items.Insert(0, GetValue(row, 42));
+                    ddlComunicacao.Items.Insert(0, GetValue(row, 43));
+                    txtAntt.Text = GetValue(row, 44);
+                    // numeroReb1.Text = GetValue(row, 45);
+                    // numeroReb2.Text = GetValue(row, 46); 
+                    ddlEstados.Items.Insert(0, GetValue(row, 47));
+                    ddlCidades.Items.Insert(0, GetValue(row, 48));
+                    txtComprimento.Text = GetValue(row, 50);
+                    txtLargura.Text = GetValue(row, 51);
+                    txtAltura.Text = GetValue(row, 52);
+                    txtPlacaAnt.Text = GetValue(row, 53);
+                    txtCodigo.Text = GetValue(row, 54);
+                    txtTipoSeguro.Text = GetValue(row, 55);
+                    txtSeguradora.Text = GetValue(row, 56);
+                    txtApolice.Text = GetValue(row, 57);
+                    txtValidadeApolice.Text = GetValue(row, 58);
+                    txtValorFranquia.Text = GetValue(row, 59);
+                    ddlTacografo.Items.Insert(0, GetValue(row, 60));
+                    ddlModeloTacografo.Items.Insert(0, GetValue(row, 61));
+                    txtDataAquisicao.Text = GetValue(row, 62);
+                    txtControlePatrimonio.Text = GetValue(row, 63);
+                    txtChassi.Text = GetValue(row, 64);
                     
 
                 }
@@ -603,14 +893,13 @@ namespace NewCapit
         usualt = @usualt,
         dtcalt = @dtcalt,
         protocolocet = @protocolocet,
+        venclicencacet = @venclicencacet,
         venclicenciamento = @venclicenciamento,
         marca = @marca,
         renavan = @renavan,
         cor = @cor,
         comunicacao = @comunicacao,
         antt = @antt,
-        codreb1 = @codreb1,
-        codreb2 = @codreb2,
         ufplaca = @ufplaca,
         cidplaca = @cidplaca,        
         comprimento = @comprimento,
@@ -632,7 +921,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
                     cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
+                   // cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text);
                     cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text);
@@ -651,7 +940,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name.ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now); // Corrigido para DateTime
-                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocolo.Text);
+                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
+                    cmd.Parameters.AddWithValue("@venclicencacet", string.IsNullOrEmpty(txtVencCET.Text) ? (object)DBNull.Value : txtVencCET.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
                     cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
@@ -660,8 +950,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
                     //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
                     //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
-                    cmd.Parameters.AddWithValue("@ufplaca", ddlUfPlaca.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@cidplaca", txtCidPlaca.Text);                   
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.Text);                   
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text);
@@ -821,7 +1111,7 @@ namespace NewCapit
         protected void ddlAgregados_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idSelecionado = int.Parse(ddlAgregados.SelectedValue);
-
+            
             // Preencher os campos com base no valor selecionado
             if (idSelecionado > 0)
             {
@@ -847,7 +1137,9 @@ namespace NewCapit
                 if (reader.Read())
                 {
                     txtCodTra.Text = reader["codtra"].ToString();
-                    //ddlAgregados.Text = reader["fantra"].ToString();
+                 //   ddlAgregados.DataValueField = reader["ID"].ToString();
+                //    ddlAgregados.Text = reader["fantra"].ToString();
+                    
                     txtAntt.Text = reader["antt"].ToString();
                 }
             }

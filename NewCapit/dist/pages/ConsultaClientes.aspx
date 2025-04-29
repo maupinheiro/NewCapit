@@ -180,7 +180,7 @@
                     <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
-                            <asp:BoundField DataField="id" HeaderText="#ID" />
+                            <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
                             <asp:BoundField DataField="codcli" HeaderText="CÓDIGO" />
                             <asp:BoundField DataField="tipo" HeaderText="TIPO" />
                             <asp:BoundField DataField="nomcli" HeaderText="NOME FANTASIA" />
@@ -192,9 +192,9 @@
 
                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                                 <ItemTemplate>
-                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
+                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar 
                                  </asp:LinkButton>
-                                       <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i></i> 
+                                       <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i> Mapa 
                                            </asp:LinkButton>
                                     <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                 <i class="fa fa-edit"></i>

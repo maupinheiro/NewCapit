@@ -39,8 +39,7 @@ namespace NewCapit
                     txtUsuCadastro.Text = lblUsuario;
                 }
 
-                DateTime dataHoraAtual = DateTime.Now;
-                //txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                DateTime dataHoraAtual = DateTime.Now;               
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");                
                 CarregarDDLAgregados();
                 PreencherComboRastreadores();

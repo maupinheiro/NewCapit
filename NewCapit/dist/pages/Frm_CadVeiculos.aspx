@@ -36,13 +36,15 @@
             let txtLicenciamento = document.getElementById("<%= txtLicenciamento.ClientID %>");
             let txtOpacidade = document.getElementById("<%= txtOpacidade.ClientID %>");
             let txtCronotacografo = document.getElementById("<%= txtCronotacografo.ClientID %>");
-            
+            let txtVencCET = document.getElementById("<%= txtVencCET.ClientID %>");
+
             if (txtAno) aplicarMascara(txtAno, "0000/0000");
             if (txtDataAquisicao) aplicarMascara(txtDataAquisicao, "00/00/0000");
             if (txtLicenciamento) aplicarMascara(txtLicenciamento, "00/00/0000");
             if (txtOpacidade) aplicarMascara(txtOpacidade, "00/00/0000");
             if (txtCronotacografo) aplicarMascara(txtCronotacografo, "00/00/0000");
-    });
+            if (txtVencCET) aplicarMascara(txtVencCET, "00/00/0000");
+        });
     </script>
     <div class="content-wrapper">
         <section class="content">
@@ -99,7 +101,7 @@
                         <div class="col-md-4">
                             <div class="form_group">
                                 <span class="details">MUNICIPIO:</span>
-                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control select2" >
+                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control select2">
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -116,6 +118,12 @@
                             <div class="form-group">
                                 <span class="details">CÓDIGO:</span>
                                 <asp:TextBox ID="txtCodigo" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">PLACA ANT.:</span>
+                                <asp:TextBox ID="txtPlacaAnt" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -154,18 +162,7 @@
                                 <asp:TextBox ID="txtLicenciamento" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-1">
-                            <div class="form_group">
-                                <span class="details">OPACIDADE:</span>
-                                <asp:TextBox ID="txtOpacidade" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form_group">
-                                <span class="details">CRONO:</span>
-                                <asp:TextBox ID="txtCronotacografo" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                            </div>
-                        </div>
+
 
                     </div>
                     <div class="row g-3">
@@ -210,13 +207,37 @@
                                 <asp:TextBox ID="txtAltura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
                             </div>
                         </div>
+                        <div class="col-md-1">
+                            <div class="form_group">
+                                <span class="details">PROTOCOLO CET:</span>
+                                <asp:TextBox ID="txtProtocoloCET" runat="server" CssClass="form-control" MaxLength="25" Style="text-align: center"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form_group">
+                                <span class="details">VENCIMENTO:</span>
+                                <asp:TextBox ID="txtVencCET" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form_group">
+                                <span class="details">OPACIDADE:</span>
+                                <asp:TextBox ID="txtOpacidade" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form_group">
+                                <span class="details">CRONO:</span>
+                                <asp:TextBox ID="txtCronotacografo" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
+                            </div>
+                        </div>
                     </div>
                     <!-- linha 3 -->
                     <div class="row g-3">
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">MARCA:</span>
-                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" AutoPostBack="true" CssClass="form-control" ></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-5">

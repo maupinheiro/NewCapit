@@ -145,16 +145,17 @@
                      <asp:GridView ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListAgregados_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                      <Columns>
-                        <asp:BoundField DataField="id" HeaderText="#ID" />
+                        <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
                         <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
                         <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
+                        <asp:BoundField DataField="pessoa" HeaderText="PESSOA" />
                         <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
                         <asp:BoundField DataField="filial" HeaderText="FILIAL" />
                         <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
                             <ItemTemplate>
-                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
                                 <%--<asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i></asp:LinkButton>--%>
                             </ItemTemplate>
                         </asp:TemplateField>

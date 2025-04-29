@@ -60,6 +60,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList cbFiliais;
 
         /// <summary>
+        /// Controle fileUpload.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fileUpload;
+
+        /// <summary>
+        /// Controle fileUpload1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fileUpload1;
+
+        /// <summary>
         /// Controle txtNomMot.
         /// </summary>
         /// <remarks>
@@ -67,6 +85,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNomMot;
+
+        /// <summary>
+        /// Controle txtDtNasc.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDtNasc;
+
+        /// <summary>
+        /// Controle ddlRegiao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlRegiao;
 
         /// <summary>
         /// Controle ddlUF.
@@ -87,15 +123,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList ddlMunicipioNasc;
 
         /// <summary>
-        /// Controle txtRegiao.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRegiao;
-
-        /// <summary>
         /// Controle txtDtCad.
         /// </summary>
         /// <remarks>
@@ -105,13 +132,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDtCad;
 
         /// <summary>
-        /// Controle ddlTipo.
+        /// Controle txtCPF.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipo;
+        protected global::System.Web.UI.WebControls.TextBox txtCPF;
 
         /// <summary>
         /// Controle txtRG.
@@ -130,6 +157,33 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmissor;
+
+        /// <summary>
+        /// Controle txtDtEmissao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDtEmissao;
+
+        /// <summary>
+        /// Controle txtCartao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCartao;
+
+        /// <summary>
+        /// Controle txtValCartao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtValCartao;
 
         /// <summary>
         /// Controle txtINSS.
@@ -175,6 +229,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCat;
+
+        /// <summary>
+        /// Controle txtValCNH.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtValCNH;
 
         /// <summary>
         /// Controle ddlCNH.
@@ -247,6 +310,51 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCodLibRisco;
+
+        /// <summary>
+        /// Controle txtValLibRisco.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtValLibRisco;
+
+        /// <summary>
+        /// Controle txtVAlExameTox.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVAlExameTox;
+
+        /// <summary>
+        /// Controle txtVAlMoop.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVAlMoop;
+
+        /// <summary>
+        /// Controle txtFixo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFixo;
+
+        /// <summary>
+        /// Controle txtCelular.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCelular;
 
         /// <summary>
         /// Controle txtCracha.
