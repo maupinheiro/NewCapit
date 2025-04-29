@@ -134,12 +134,19 @@
                                             <td>NO PRAZO</td>
                                             
                                             <td>
-                                                <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-info">
+                                                <asp:LinkButton 
+                                                    ID="lnkEditar" 
+                                                    runat="server" 
+                                                    class="btn btn-info"
+                                                    CommandName="Editar"
+                                                    CommandArgument='<%# Eval("num_carregamento") %>' 
+                                                    OnCommand="lnkEditar_Command"
+                                                    OnClientClick="event.stopPropagation();">
                                                     <i class="fas fa-tasks"></i>
                                                 </asp:LinkButton>
                                             </td>
                                         </tr>
-                                        <%--<tr class="detalhes d-none">
+                                        <tr class="detalhes d-none">
                                             <td colspan="11">
                                                 <asp:Repeater ID="rptColeta" OnItemDataBound="rptColeta_ItemDataBound" runat="server">
                                                     <HeaderTemplate>
@@ -178,7 +185,7 @@
                                                     </FooterTemplate>
                                                 </asp:Repeater>
                                             </td>
-                                        </tr>--%>
+                                        </tr>
                                     </ItemTemplate>
                                     <FooterTemplate>
                                             </tbody>

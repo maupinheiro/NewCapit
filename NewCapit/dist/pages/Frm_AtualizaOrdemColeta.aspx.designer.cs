@@ -339,33 +339,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Button btnPesquisarContato;
 
         /// <summary>
-        /// Controle txtColeta.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtColeta;
-
-        /// <summary>
-        /// Controle bntPesquisaColeta.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button bntPesquisaColeta;
-
-        /// <summary>
-        /// Controle btnSalvarColeta.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvarColeta;
-
-        /// <summary>
         /// Controle rptColetas.
         /// </summary>
         /// <remarks>

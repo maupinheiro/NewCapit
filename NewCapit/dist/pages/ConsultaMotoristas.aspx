@@ -388,7 +388,7 @@
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                             <ItemTemplate>
                                 <br>
-                                <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
                               <%--  <a class="btn btn-danger btn-sm" href="#">
                                     <i class="fa fa-trash"></i>
                                     

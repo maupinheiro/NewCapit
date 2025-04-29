@@ -44,11 +44,11 @@ namespace NewCapit.dist.pages
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 //PreencherComboStatus();
                 PreencherNumColeta();
-                
+                PreencherClienteInicial();
+                PreencherClienteFinal();
             }
             CarregaFoto();
-            PreencherClienteInicial();
-            PreencherClienteFinal();
+            
             PreencherVeiculosCNT();
             
             
@@ -962,17 +962,18 @@ namespace NewCapit.dist.pages
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,situacao
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
-                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@situacao
+                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
                 // Adiciona parâmetros com tratamento de vazio/nulo
                 cmd.Parameters.AddWithValue("@num_carregamento", SafeValue(novaColeta.Text));
                 cmd.Parameters.AddWithValue("@codmotorista", SafeValue(txtCodMotorista.Text));
@@ -1008,6 +1009,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT"));
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
                 cmd.Parameters.AddWithValue("@situacao", "PENDENTE");
 
                 try
@@ -1015,22 +1017,61 @@ namespace NewCapit.dist.pages
                     conn.Open();
                     cmd.ExecuteNonQuery();
 
-                    string nomeUsuario = txtUsuCadastro.Text;
-                    string mensagem = $"Olá, {nomeUsuario}!\nCarregamento cadastrado no sistema com sucesso.";
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    string script = $"alert('{mensagemCodificada}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    
+
+                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
+                    //AtualizarColetasVisiveis();
+
+                    
                 }
                 catch (Exception ex)
                 {
                     string mensagemErro = $"Erro ao salvar: {ex.Message}";
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagemErro);
-                    string script = $"alert('{mensagemCodificada}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                    string mensagemCodificada1 = HttpUtility.JavaScriptStringEncode(mensagemErro);
+                    string script1 = $"alert('{mensagemCodificada1}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script1, true);
 
                     // Caso queira exibir também em um Label
                     // lblMensagem.Text = mensagemErro;
                 }
+                foreach (RepeaterItem item in rptColetas.Items)
+                {
+                    if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
+                    {
+                        // Recuperar os valores dos controles
+                        string carga = ((Label)item.FindControl("lblCarga"))?.Text; // ou Eval direto se não tiver Label
+                     
+
+                        if (!string.IsNullOrEmpty(carga))
+                        {
+                            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                            {
+                                string queryc = @"UPDATE tbcargas SET 
+                                                    emissao=@emissao,
+                                                    idviagem=@idviagem,
+                                                    codmot=@codmot,
+                                                    frota=@frota
+                                                    WHERE carga = @carga";
+
+                                SqlCommand cmdc = new SqlCommand(queryc, con);
+                                cmdc.Parameters.AddWithValue("@carga", carga);
+                                cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+
+                                con.Open();
+                                cmdc.ExecuteNonQuery();
+                                nomeUsuario = txtUsuCadastro.Text;
+                                string mensagem = $"Olá, {nomeUsuario}!\nCarregamento cadastrado no sistema com sucesso.";
+                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                string script = $"alert('{mensagemCodificada}');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                            }
+                        }
+                    }
+                }
+                
             }
         }
 
@@ -1049,6 +1090,15 @@ namespace NewCapit.dist.pages
                 return DBNull.Value;
         }
 
+        protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
+        {
+            codCliInicial.Text = ddlCliInicial.SelectedValue;
+        }
+
+        protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            codCliFinal.Text = ddlCliFinal.SelectedValue;
+        }
 
         private void AtualizarColetasVisiveis()
         {
@@ -1075,12 +1125,7 @@ namespace NewCapit.dist.pages
         }
         
 
-        //protected void LimparColetas_Click(object sender, EventArgs e)
-        //{
-        //    ViewState["Coletas"] = null;
-        //    rptColetas.DataSource = null;
-        //    rptColetas.DataBind();
-        //}
+        
 
     }
 
