@@ -46,11 +46,14 @@ namespace NewCapit
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
                 PreencherComboEstados();
+                CarregaDadosDoVeiculo();
+               
                 DateTime dataHoraAtual = DateTime.Now;
                 txtDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                
 
             }
-            CarregaDadosDoVeiculo();
+            
 
 
         }
@@ -162,18 +165,18 @@ namespace NewCapit
                 }
             }
         }
-        private void CarregarCidades(int estadoId)
+        private void CarregarCidades(string uf)
         {
             string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(strConn))
             {
-                string query = "SELECT Uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @EstadoId";
+                string query = "SELECT cod_municipio, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @UF";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@EstadoId", estadoId);
+                cmd.Parameters.AddWithValue("@UF", uf);
                 conn.Open();
                 ddlCidades.DataSource = cmd.ExecuteReader();
                 ddlCidades.DataTextField = "nome_municipio";
-                ddlCidades.DataValueField = "Uf";
+                ddlCidades.DataValueField = "cod_municipio"; // valor único
                 ddlCidades.DataBind();
 
                 ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
@@ -181,8 +184,18 @@ namespace NewCapit
         }
         protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int estadoId = int.Parse(ddlEstados.SelectedValue);
-            CarregarCidades(estadoId);
+            string uf = ddlEstados.SelectedValue;
+            CarregarCidades(uf);
+
+            // Restaurar cidade se estiver em ViewState
+            if (ViewState["CidadeSelecionada"] != null)
+            {
+                string cidadeId = ViewState["CidadeSelecionada"].ToString();
+                if (ddlCidades.Items.FindByValue(cidadeId) != null)
+                {
+                    ddlCidades.SelectedValue = cidadeId;
+                }
+            }
         }
         private void PreencherComboRastreadores()
         {
@@ -243,7 +256,7 @@ namespace NewCapit
                     ddlEstados.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
                     ddlEstados.DataValueField = "Uf";  // Campo que será o valor de cada item                    
                     ddlEstados.DataBind();  // Realiza o binding dos dados                   
-                    ddlEstados.Items.Insert(0, new ListItem("", "0"));
+                    //ddlEstados.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -831,8 +844,9 @@ namespace NewCapit
                     txtAntt.Text = GetValue(row, 44);
                     // numeroReb1.Text = GetValue(row, 45);
                     // numeroReb2.Text = GetValue(row, 46); 
-                    ddlEstados.Items.Insert(0, GetValue(row, 47));
-                    ddlCidades.Items.Insert(0, GetValue(row, 48));
+                    ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
+                    ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
+
                     txtComprimento.Text = GetValue(row, 50);
                     txtLargura.Text = GetValue(row, 51);
                     txtAltura.Text = GetValue(row, 52);
@@ -870,46 +884,46 @@ namespace NewCapit
             }
 
             string sql = @"UPDATE tbveiculos SET         
-        tipvei = @tipvei,
-        tipoveiculo = @tipoveiculo,
-        modelo = @modelo,
-        ano = @ano,
-        nucleo = @nucleo,
-        ativo_inativo = @ativo_inativo,
-        plavei = @plavei,
-        reboque1 = @reboque1,
-        reboque2 = @reboque2,
-        tipocarreta = @tipocarreta,
-        tiporeboque = @tiporeboque,
-        rastreamento = @rastreamento,
-        codrastreador = @codrastreador,
-        eixos = @eixos,
-        tara = @tara,
-        tolerancia = @tolerancia,
-        codmot = @codmot,
-        motorista = @motorista,
-        codtra = @codtra,
-        transp = @transp,
-        usualt = @usualt,
-        dtcalt = @dtcalt,
-        protocolocet = @protocolocet,
-        venclicencacet = @venclicencacet,
-        venclicenciamento = @venclicenciamento,
-        marca = @marca,
-        renavan = @renavan,
-        cor = @cor,
-        comunicacao = @comunicacao,
-        antt = @antt,
-        ufplaca = @ufplaca,
-        cidplaca = @cidplaca,        
-        comprimento = @comprimento,
-        largura = @largura,
-        altura = @altura,                
-        tacografo = @tacografo,
-        modelotacografo = @modelotacografo,
-        dataaquisicao = @dataaquisicao,        
-        chassi = @chassi
-    WHERE id = @id";
+                            tipvei = @tipvei,
+                            tipoveiculo = @tipoveiculo,
+                            modelo = @modelo,
+                            ano = @ano,
+                            nucleo = @nucleo,
+                            ativo_inativo = @ativo_inativo,
+                            plavei = @plavei,
+                            reboque1 = @reboque1,
+                            reboque2 = @reboque2,
+                            tipocarreta = @tipocarreta,
+                            tiporeboque = @tiporeboque,
+                            rastreamento = @rastreamento,
+                            codrastreador = @codrastreador,
+                            eixos = @eixos,
+                            tara = @tara,
+                            tolerancia = @tolerancia,
+                            codmot = @codmot,
+                            motorista = @motorista,
+                            codtra = @codtra,
+                            transp = @transp,
+                            usualt = @usualt,
+                            dtcalt = @dtcalt,
+                            protocolocet = @protocolocet,
+                            venclicencacet = @venclicencacet,
+                            venclicenciamento = @venclicenciamento,
+                            marca = @marca,
+                            renavan = @renavan,
+                            cor = @cor,
+                            comunicacao = @comunicacao,
+                            antt = @antt,
+                            ufplaca = @ufplaca,
+                            cidplaca = @cidplaca,        
+                            comprimento = @comprimento,
+                            largura = @largura,
+                            altura = @altura,                
+                            tacografo = @tacografo,
+                            modelotacografo = @modelotacografo,
+                            dataaquisicao = @dataaquisicao,        
+                            chassi = @chassi
+                        WHERE id = @id";
             try
             {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -921,7 +935,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
                     cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue.ToUpper());
-                   // cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@ativo_inativo", ddlSituacao.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text);
                     cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text);
@@ -950,8 +964,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
                     //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
                     //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
-                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.Text);                   
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.Text);                   
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text);

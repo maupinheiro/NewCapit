@@ -40,7 +40,8 @@ namespace NewCapit
                 }
 
                 DateTime dataHoraAtual = DateTime.Now;               
-                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");                
+                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+
                 CarregarDDLAgregados();
                 PreencherComboRastreadores();
                 PreencherComboFiliais();
@@ -48,8 +49,8 @@ namespace NewCapit
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboEstados();
-
             }
+            
         }
         protected void txtPlaca_TextChanged(object sender, EventArgs e)
         {
@@ -88,21 +89,31 @@ namespace NewCapit
 
         protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int estadoId = int.Parse(ddlEstados.SelectedValue);
-            CarregarCidades(estadoId);
+            string uf = ddlEstados.SelectedValue;
+            CarregarCidades(uf);
+
+            // Restaurar cidade se estiver em ViewState
+            if (ViewState["CidadeSelecionada"] != null)
+            {
+                string cidadeId = ViewState["CidadeSelecionada"].ToString();
+                if (ddlCidades.Items.FindByValue(cidadeId) != null)
+                {
+                    ddlCidades.SelectedValue = cidadeId;
+                }
+            }
         }
-        private void CarregarCidades(int estadoId)
+        private void CarregarCidades(string uf)
         {
             string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(strConn))
             {
-                string query = "SELECT uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @EstadoId";
+                string query = "SELECT cod_municipio, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @UF";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@EstadoId", estadoId);
+                cmd.Parameters.AddWithValue("@UF", uf);
                 conn.Open();
                 ddlCidades.DataSource = cmd.ExecuteReader();
                 ddlCidades.DataTextField = "nome_municipio";
-                ddlCidades.DataValueField = "uf";
+                ddlCidades.DataValueField = "cod_municipio"; // valor único
                 ddlCidades.DataBind();
 
                 ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
@@ -484,9 +495,9 @@ namespace NewCapit
             txtAntt.Text = string.Empty;
         }
 
-
-
-
-
+        protected void ddlCidades_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ViewState["CidadeSelecionada"] = ddlCidades.SelectedValue;
+        }
     }
 }

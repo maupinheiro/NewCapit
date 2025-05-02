@@ -42,8 +42,92 @@ namespace NewCapit.dist.pages
                 //PreencherComboStatus();
                 //PreencherNumColeta();
                 //fotoMotorista = "../../fotos/usuario.jpg";
+               
+            }
+           
+        }
+        private void PreencherClienteInicial()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlCliInicial.DataSource = reader;
+                    ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    ddlCliInicial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
+                    ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
             }
         }
+        private void PreencherClienteFinal()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlCliFinal.DataSource = reader;
+                    ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    ddlCliFinal.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
+                    ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
+        {
+            codCliInicial.Text = ddlCliInicial.SelectedValue;
+        }
+
+        protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            codCliFinal.Text = ddlCliFinal.SelectedValue;
+
+           
+        }
+       
         public void CarregaNumColeta()
         {
             if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
@@ -58,7 +142,7 @@ namespace NewCapit.dist.pages
             {
                 num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
             }
-            string sql = "select codmotorista,veiculo,dtcad,usucad from tbcarregamentos where num_carregamento='"+num_coleta+"'";
+            string sql = "select codmotorista,veiculo,dtcad,usucad,codcliorigem, nomcliorigem, codclidestino, nomclidestino, distancia,tipoveiculo from tbcarregamentos where num_carregamento='" + num_coleta+"'";
             SqlDataAdapter adtp = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
@@ -69,6 +153,17 @@ namespace NewCapit.dist.pages
             txtCodMotorista.Text = codigo;
             txtUsuCadastro.Text = dt.Rows[0][3].ToString();
             lblDtCadastro.Text = dt.Rows[0][2].ToString();
+            codCliInicial.Text = dt.Rows[0][4].ToString();
+            ddlCliInicial.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(),""));
+            codCliFinal.Text = dt.Rows[0][6].ToString();
+            ddlCliFinal.Items.Insert(0, new ListItem(dt.Rows[0][7].ToString(),""));
+            txtDistancia.Text = dt.Rows[0][8].ToString();
+            ddlVeiculosCNT.Items.Insert(0, new ListItem(dt.Rows[0][9].ToString(), ""));
+            var obje = new Domain.ConsultaMotorista
+            {
+                codmot = codigo
+            };
+          
             var obj = new Domain.ConsultaMotorista
             {
                 codmot = codigo
@@ -115,11 +210,11 @@ namespace NewCapit.dist.pages
                     {
                         fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
-                        String path = Server.MapPath("../../fotos/");
-                        string file = fotoMotorista;
-                        if (File.Exists(path + file))
+
+
+                        if (!File.Exists(fotoMotorista))
                         {
-                            fotoMotorista = "../../fotos/" + file + "";
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
                         }
                         else
                         {
@@ -361,18 +456,18 @@ namespace NewCapit.dist.pages
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
                     cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                    cmd.Parameters.AddWithValue("@gate", SafeDateValue(DateTime.Parse(txtGate.Text.Trim()).ToString("yyyy-MM-dd HH:mm")));
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@chegadaorigem", SafeDateValue(DateTime.Parse(txtChegadaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm")));
-                    cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(DateTime.Parse(txtSaidaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm")));
-                    cmd.Parameters.AddWithValue("@tempoagcarreg", txtAgCarreg.Text.Trim());
-                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(DateTime.Parse(txtChegadaDestino.Text.Trim()).ToString("yyyy-MM-dd HH:mm")));
-                    cmd.Parameters.AddWithValue("@entradaplanta", SafeDateValue(DateTime.Parse(txtEntrada.Text.Trim()).ToString("yyyy-MM-dd HH:mm")));
-                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(DateTime.Parse(txtSaidaPlanta.Text.Trim()).ToString("yyyy-MM-dd HH:mm")));
-                    cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
-                    cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
-                    cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
-                    cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
+                    cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGate.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@chegadaorigem", SafeDateValue(txtChegadaOrigem.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@entradaplanta", SafeDateValue(txtEntrada.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@tempodentroplanta", SafeValue(txtDentroPlanta.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@tempoesperagate", SafeValue(txtEsperaGate.Text.Trim()) );
+                    cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     // continue os parâmetros conforme seu banco
 
                     conn.Open();
@@ -976,9 +1071,9 @@ namespace NewCapit.dist.pages
             }
         }
 
-
-
         
+
+
 
     }
 

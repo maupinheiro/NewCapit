@@ -169,8 +169,7 @@ OnSelectedIndexChanged="ddlRegiao_SelectedIndexChanged">
             <div class="col-md-1">
                 <div class="form_group">
                     <span class="details">UF NASC.:</span>
-                    <asp:DropDownList ID="ddlUF" runat="server" class="form-control"  AutoPostBack="True"
-OnSelectedIndexChanged="ddlUF_SelectedIndexChanged" ></asp:DropDownList>
+                    <asp:DropDownList ID="ddlUF" runat="server" class="form-control"  AutoPostBack="True" OnSelectedIndexChanged="ddlUF_SelectedIndexChanged" ></asp:DropDownList>
                 </div>
             </div>
             <div class="col-md-3">

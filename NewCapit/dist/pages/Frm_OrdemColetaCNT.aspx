@@ -408,8 +408,9 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">Percuso:</span>
+                            <span class="details">Distância:</span>
                             <asp:TextBox ID="txtDistancia" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                            <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
                         </div>
                     </div>
 

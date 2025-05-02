@@ -71,7 +71,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TIPO DE VEÍCULO:</span>
-                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" AutoPostBack="true">
+                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="BITREM" Text="BITREM"></asp:ListItem>
                                     <asp:ListItem Value="BITRUCK" Text="BITRUCK"></asp:ListItem>
@@ -101,14 +101,14 @@
                         <div class="col-md-4">
                             <div class="form_group">
                                 <span class="details">MUNICIPIO:</span>
-                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control select2">
+                                <asp:DropDownList ID="ddlCidades"  runat="server" OnSelectedIndexChanged="ddlCidades_SelectedIndexChanged" class="form-control select2">
                                 </asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">FILIAL:</span>
-                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control" ></asp:DropDownList>
                             </div>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TACÓGRAFO:</span>
-                                <asp:DropDownList ID="ddlTacografo" runat="server" CssClass="form-control" AutoPostBack="true">
+                                <asp:DropDownList ID="ddlTacografo" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="DIARIO" Text="DIARIO"></asp:ListItem>
                                     <asp:ListItem Value="SEMANAL" Text="SEMANAL"></asp:ListItem>
@@ -181,7 +181,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">MODELO:</span>
-                                <asp:DropDownList ID="ddlModeloTacografo" runat="server" CssClass="form-control" AutoPostBack="true">
+                                <asp:DropDownList ID="ddlModeloTacografo" runat="server" CssClass="form-control" >
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="MECANICO" Text="MECANICO"></asp:ListItem>
                                     <asp:ListItem Value="ELETRONICO" Text="ELETRONICO"></asp:ListItem>
@@ -237,7 +237,7 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">MARCA:</span>
-                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server"  CssClass="form-control"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -249,7 +249,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">COR:</span>
-                                <asp:DropDownList ID="ddlCor" name="nomeFiliais" runat="server" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlCor" name="nomeFiliais" runat="server"  CssClass="form-control"></asp:DropDownList>
                             </div>
                         </div>
                     </div>
@@ -258,7 +258,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">MONITORAMENTO:</span>
-                                <asp:DropDownList ID="ddlMonitoramento" AutoPostBack="true" runat="server" CssClass="form-control">
+                                <asp:DropDownList ID="ddlMonitoramento"  runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="MONITORADO" Text="MONITORADO"></asp:ListItem>
                                     <asp:ListItem Value="RASTREADO" Text="RASTREADO"></asp:ListItem>
@@ -287,7 +287,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="">COMUNICAÇÃO:</span>
-                                <asp:DropDownList ID="ddlComunicacao" runat="server" AutoPostBack="true" CssClass="form-control">
+                                <asp:DropDownList ID="ddlComunicacao" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="GPS/DUPLO GPS" Text="GPS/DUPLO GPS"></asp:ListItem>
                                     <asp:ListItem Value="GPS/CRPS" Text="GPS/CRPS"></asp:ListItem>
@@ -306,7 +306,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">TIPO:</span>
-                                <asp:DropDownList ID="ddlTipo" runat="server" AutoPostBack="true" CssClass="form-control">
+                                <asp:DropDownList ID="ddlTipo" runat="server"  CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                                     <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>

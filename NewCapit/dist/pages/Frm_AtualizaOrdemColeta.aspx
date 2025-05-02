@@ -135,6 +135,7 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">MOTORISTA:</span>
+                            <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                             <asp:TextBox ID="txtCodMotorista" runat="server" font-weight="bold" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
@@ -370,7 +371,46 @@
                         <asp:Button ID="btnPesquisarContato" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarContato_Click" />
                     </div>
                 </div>
-                
+                 <div class="row g-3">
+                                 <div class="col-md-1">
+                                     <div class="form-group">
+                                         <span class="details">CÓDIGO:</span>
+                                         <asp:TextBox ID="codCliInicial" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-3">
+                                     <div class="form-group">
+                                         <span class="details">INICIO DA PRESTAÇÃO:</span>
+                                         <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2" ></asp:DropDownList>                            
+                                     </div>
+                                 </div>
+                                 <div class="col-md-1">
+                                     <div class="form-group">
+                                         <span class="details">CÓDIGO:</span>
+                                         <asp:TextBox ID="codCliFinal" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-3">
+                                     <div class="form-group">
+                                         <span class="details">TERMINO DA PRESTAÇÃO:</span>
+                                         <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>                            
+                                     </div>
+                                 </div>
+                                 <div class="col-md-3">
+                                     <div class="form_group">
+                                         <span class="details">Tipo de Veículo:</span>
+                                         <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
+                                         </asp:DropDownList>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-1">
+                                     <div class="form-group">
+                                         <span class="details">Distância:</span>
+                                         <asp:TextBox ID="txtDistancia" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                                     </div>
+                                 </div>
+
+                             </div>
                 <div class="row g-3">
                     <div class="col-md-12">
                         <div class="card">

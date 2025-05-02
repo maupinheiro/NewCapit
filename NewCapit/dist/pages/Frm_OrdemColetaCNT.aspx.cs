@@ -13,11 +13,14 @@ using static NPOI.HSSF.Util.HSSFColor;
 using System.Collections;
 using System.Data;
 using System.Web.UI.HtmlControls;
+using System.Drawing;
+using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
     public partial class Frm_OrdemColetaCNT : System.Web.UI.Page
     {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         public string fotoMotorista;
         string codmot, caminhofoto;
         protected void Page_Load(object sender, EventArgs e)
@@ -46,10 +49,11 @@ namespace NewCapit.dist.pages
                 PreencherNumColeta();
                 PreencherClienteInicial();
                 PreencherClienteFinal();
+                PreencherVeiculosCNT();
             }
             CarregaFoto();
             
-            PreencherVeiculosCNT();
+           
             
             
         }
@@ -187,7 +191,7 @@ namespace NewCapit.dist.pages
                     // Preencher o ComboBox com os dados do DataReader
                     ddlCliInicial.DataSource = reader;
                     ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliInicial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlCliInicial.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
                     ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
@@ -222,7 +226,7 @@ namespace NewCapit.dist.pages
                     // Preencher o ComboBox com os dados do DataReader
                     ddlCliFinal.DataSource = reader;
                     ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliFinal.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlCliFinal.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
                     ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
@@ -469,15 +473,13 @@ namespace NewCapit.dist.pages
                     {
                         fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
-                        String path = Server.MapPath("../../fotos/");
-                        string file = fotoMotorista;
-                        if (File.Exists(path + file))
+                        if (!File.Exists(fotoMotorista))
                         {
-                            fotoMotorista = "../../fotos/" + file + "";
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
                         }
                         else
                         {
-                            fotoMotorista = "../../fotos/usuario.JPG";
+                            fotoMotorista = "../../fotos/usuario.jpg";
                         }
                     }
                    
@@ -962,12 +964,14 @@ namespace NewCapit.dist.pages
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao,codcliorigem, 
+                        nomcliorigem, codclidestino, nomclidestino,distancia,tipoveiculo
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
-                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao
+                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@codcliorigem, 
+                        @nomcliorigem, @codclidestino, @nomclidestino,@distancia,@tipoveiculo
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1011,6 +1015,12 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
                 cmd.Parameters.AddWithValue("@situacao", "PENDENTE");
+                cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
+                cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
+                cmd.Parameters.AddWithValue("@nomclidestino", ddlCliFinal.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text);
+                cmd.Parameters.AddWithValue("@tipoveiculo", ddlVeiculosCNT.SelectedItem.Text);
 
                 try
                 {
@@ -1098,6 +1108,23 @@ namespace NewCapit.dist.pages
         protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
         {
             codCliFinal.Text = ddlCliFinal.SelectedValue;
+            string sql = "select Distancia from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adp.Fill(dt);
+            con.Close();
+            if(dt.Rows.Count > 0)
+            {
+                txtDistancia.Text = dt.Rows[0][0].ToString();
+                lblDistancia.Text = string.Empty;
+            }
+            else
+            {
+                lblDistancia.Text = "Não há distância cadastrada para essa origem e destino";
+            }
+
+           
         }
 
         private void AtualizarColetasVisiveis()

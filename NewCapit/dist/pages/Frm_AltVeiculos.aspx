@@ -64,6 +64,7 @@
                 <div class="card card-info">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;VEÍCULO - ATUALIZAÇÃO</h3>
+                        
                     </div>
                 </div>
                 <div class="card-header">
@@ -71,6 +72,7 @@
                     <div class="row g-3">
                         <div class="col-md-1">
                             <div class="form-group">
+                                
                                 <span class="details">FROTA:</span>
                                 <asp:TextBox ID="txtCodVei" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
                             </div>
@@ -95,20 +97,21 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PLACA:</span>
-                                <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="True"></asp:TextBox>
+                                <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">UF:</span>
-                                <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control select2" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
+                                <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
+                                    
                                 </asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form_group">
                                 <span class="details">MUNICIPIO:</span>
-                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control select2">
+                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control">
                                 </asp:DropDownList>
                             </div>
                         </div>
