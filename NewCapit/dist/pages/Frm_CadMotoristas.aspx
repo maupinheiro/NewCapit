@@ -469,10 +469,10 @@
             <!-- Linha 9 do formulário -->
             <div class="row g-3">
                 <div class="col-md-1">
-                    <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" />
+                    <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" />
                 </div>
                 <div class="col-md-1">
-                    <a href="ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                    <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Sair               
                     </a>
                 </div>
             </div>

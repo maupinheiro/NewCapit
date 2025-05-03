@@ -320,7 +320,7 @@
         <!-- Corpo da grid -->
         <div class="card shadow mb-4">
              <div class="card-header">
-           <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+           <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -365,10 +365,10 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="CPF">
+                        <asp:TemplateField HeaderText="CELULAR">
                             <ItemTemplate>
-                                <%# Eval("cpf")%>
-                                <br>
+                                <%# Eval("fone2")%>
+                                </br>
                                 <asp:Label ID="lblIdade" runat="server"></asp:Label>
                                 </br>
                             </ItemTemplate>
@@ -379,7 +379,7 @@
                                 <%# Eval("cadmot") + " - " + Eval("status")%> 
                                 <br>
                                 <asp:Label ID="lblTempoContrato" runat="server"></asp:Label>
-                                </br>
+                                </br>                                 
                             </ItemTemplate>
                         </asp:TemplateField>
 
@@ -388,7 +388,7 @@
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                             <ItemTemplate>
                                 <br>
-                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
                               <%--  <a class="btn btn-danger btn-sm" href="#">
                                     <i class="fa fa-trash"></i>
                                     

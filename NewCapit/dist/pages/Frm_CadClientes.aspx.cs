@@ -197,7 +197,7 @@ namespace NewCapit.dist.pages
                 // Registrando o script para execução no lado do cliente
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 //Chama a página de consulta clientes
-                Response.Redirect("ConsultaClientes.aspx");
+                Response.Redirect("/dist/pages/ConsultaClientes.aspx");
 
             }
             catch (Exception ex)
@@ -213,7 +213,7 @@ namespace NewCapit.dist.pages
                 sb.Append("</script>");
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                 //Chama a página de consulta clientes
-                Response.Redirect("ConsultaClientes.aspx");
+                Response.Redirect("/dist/pages/ConsultaClientes.aspx");
             }
 
             finally
@@ -277,7 +277,7 @@ namespace NewCapit.dist.pages
                 // Registrando o script para execução no lado do cliente
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
                 //Chama a página de consulta clientes
-                Response.Redirect("ConsultaClientes.aspx");
+                Response.Redirect("/dist/pages/ConsultaClientes.aspx");
 
             }
             catch (Exception ex)
@@ -293,7 +293,7 @@ namespace NewCapit.dist.pages
                 sb.Append("</script>");
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                 //Chama a página de consulta clientes
-                Response.Redirect("ConsultaClientes.aspx");
+                Response.Redirect("/dist/pages/ConsultaClientes.aspx");
             }
 
             finally

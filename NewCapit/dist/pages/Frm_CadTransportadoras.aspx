@@ -31,11 +31,11 @@
             // Pegando os elementos no ASP.NET
 
             let txtFixo = document.getElementById("<%= txtFixo.ClientID %>");
-    let txtCelular = document.getElementById("<%= txtCelular.ClientID %>");
+            let txtCelular = document.getElementById("<%= txtCelular.ClientID %>");
 
-        if (txtFixo) aplicarMascara(txtFixo, "(00) 0000-0000");
-        if (txtFixo) aplicarMascara(txtCelular, "(00) 0 0000-0000");
-    });
+            if (txtFixo) aplicarMascara(txtFixo, "(00) 0000-0000");
+            if (txtFixo) aplicarMascara(txtCelular, "(00) 0 0000-0000");
+        });
     </script>
     <div class="content-wrapper">
         <section class="content">
@@ -43,7 +43,8 @@
                 <br />
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title">AGREGADOS/TERCEIROS - NOVO CADASTRO</h3>
+                        <h3 class="card-title"><i
+                            class="fas fa-user-plus"></i>&nbsp;AGREGADOS/TERCEIROS - NOVO CADASTRO</h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -58,15 +59,29 @@
                             <br />
                             <asp:Button ID="btnAgregado" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnAgregado_Click" />
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">PESSOA:</span>
-                                <asp:DropDownList ID="cboPessoa" runat="server" CssClass="form-control" Width="250px" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChanged">
+                                <asp:DropDownList ID="cboPessoa" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChanged">
                                     <asp:ListItem Text="Selecione..." Value="0" />
                                     <asp:ListItem Value="FÍSICA" Text="FÍSICA"></asp:ListItem>
                                     <asp:ListItem Value="JURÍDICA" Text="JURÍDICA"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form_group">
+                                <span class="details">TIPO:</span>
+                                <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control"> 
+                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                    <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
+                                    <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
+                                    <asp:ListItem Value="EMPRESA" Text="EMPRESA"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
                         </div>
                         <div class="col-md-3">
                             <div class="form_group">
@@ -233,12 +248,12 @@
         </div>
         <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
     </footer>
-   
+
     <!-- Page specific script -->
     <script>
         $(function () {
             bsCustomFileInput.init();
         });
- </script>
+    </script>
 
 </asp:Content>

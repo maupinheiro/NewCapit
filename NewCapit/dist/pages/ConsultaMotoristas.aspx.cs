@@ -20,11 +20,11 @@ namespace NewCapit
         {
             if (!IsPostBack) {
 
-                ContagemMotorista();
+                
                 listarMotoristas();
 
             }
-            
+            ContagemMotorista();
         }
 
         private void listarMotoristas()
