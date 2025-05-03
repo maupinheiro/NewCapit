@@ -105,7 +105,7 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                var codigo = txtCodTra.Text.Trim();
+                var codigo = txtCodTra.Text.Trim().ToUpper();
                 var obj = new ConsultaAgregado()
                 {
                     codtra = codigo
@@ -177,6 +177,7 @@ namespace NewCapit.dist.pages
                     txtCidCli.Text = cnpj.municipio;
                     txtEstCli.Text = cnpj.uf;
                 }
+                btnCnpj.Visible = true;
                 //if (cnpj != null)
                 //{
                 //    if (cboPessoa.SelectedValue == "JURÍDICA")
@@ -225,6 +226,10 @@ namespace NewCapit.dist.pages
             {
                 btnCnpj.Visible = true;
             }
+            else
+            {
+                btnCnpj.Visible = false;
+            }
         }
         protected void validaCPF()
         {
@@ -268,9 +273,9 @@ namespace NewCapit.dist.pages
             {
                 string query = @"
             INSERT INTO tbtransportadoras 
-            (id,codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, dtccad, usucad, antt, filial) 
+            (id,codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, dtccad, usucad, antt, filial, tipo) 
             VALUES 
-            (@id,@CodTra, @DtCad, @NomTra, @ConTra, @FanTra, @Fone1, @Fone2, @EndTra, @CepTra, @BaiTra, @CidTra, @UfTra, @AtivaInativa, @Pessoa, @Cnpj, @InscEstadual, @Numero, @Complemento, @DtCCad, @UsuCad, @Antt, @Filial)";
+            (@id,@CodTra, @DtCad, @NomTra, @ConTra, @FanTra, @Fone1, @Fone2, @EndTra, @CepTra, @BaiTra, @CidTra, @UfTra, @AtivaInativa, @Pessoa, @Cnpj, @InscEstadual, @Numero, @Complemento, @DtcCad, @UsuCad, @Antt, @Filial, @Tipo)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -295,6 +300,7 @@ namespace NewCapit.dist.pages
                     command.Parameters.AddWithValue("@UsuCad", txtUsuCadastro.Text.Trim());
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text.Trim());
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
+                    command.Parameters.AddWithValue("@Tipo", ddlTipo.SelectedItem.ToString());
                     command.Parameters.AddWithValue("@id", sequencia);
 
                     // Tratamento de Datas (Evita erro de formato)
@@ -302,7 +308,7 @@ namespace NewCapit.dist.pages
                     if (DateTime.TryParse(txtDtCadastro.Text, out dtCadastro))
                     {
                         command.Parameters.AddWithValue("@DtCad", dtCadastro);
-                        command.Parameters.AddWithValue("@DtCCad", dtCadastro);
+                        command.Parameters.AddWithValue("@DtCCad", txtDtUsu.Text);
                     }
                     else
                     {

@@ -19,7 +19,10 @@ namespace NewCapit.dist.pages
         protected void Page_Load(object sender, EventArgs e)
         {
             ContagemAgregados();
-            AllDataAgregados();
+            if (!IsPostBack)
+            {
+                AllDataAgregados();
+            }
         }
         public void ContagemAgregados()
         {
@@ -169,7 +172,7 @@ namespace NewCapit.dist.pages
                 string id = gvListAgregados.DataKeys[row.RowIndex].Value.ToString();
 
                 Response.Redirect("Frm_AltTransportadoras.aspx?id=" + id);
-            }
+            }            
         }
         private void AllData(string searchTerm = "")
         {

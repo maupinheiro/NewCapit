@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+  
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -30,20 +31,31 @@
 
             // Pegando os elementos no ASP.NET
             
-        let txtFixo = document.getElementById("<%= txtFixo.ClientID %>");
-        let txtCelular = document.getElementById("<%= txtCelular.ClientID %>");
-        
-        if (txtFixo) aplicarMascara(txtFixo, "(00) 0000-0000");
-        if (txtFixo) aplicarMascara(txtCelular, "(00) 0 0000-0000");
+            let txtCpf_Cnpj = document.getElementById("<%= txtCpf_Cnpj.ClientID %>");
+            let txtFixo = document.getElementById("<%= txtFixo.ClientID %>");
+            let txtCelular = document.getElementById("<%= txtCelular.ClientID %>");
+            let txtCep = document.getElementById("<%= txtCepCli.ClientID %>");
+            if (txtFixo) aplicarMascara(txtFixo, "(00) 0000-0000");
+            if (txtFixo) aplicarMascara(txtCelular, "(00) 0 0000-0000");
+            if (txtCep) aplicarMascara(txtData, "00000-000");
+            if (cboPessoa.SelectValue = "JURÍDICA") {
+                if (txtCpf_Cnpj) aplicarMascara(txtData, "00.000.000/0000-00");
+            }
+            else if (cboPessoa.SelectValue = "FÍSICA")
+            {
+                if (txtCpf_Cnpj) aplicarMascara(txtData, "000.000.000-00");
+            }
     });
     </script>
+    
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
                 <br />
                 <div class="card card-warning">
                     <div class="card-header">
-                        <h3 class="card-title">AGREGADOS - ATUALIZAÇÃO DE DADOS</h3>
+                        <h3 class="card-title"><i
+                    class="fas fa-user-plus"></i>&nbsp;AGREGADOS - ATUALIZAÇÃO DE DADOS</h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -58,22 +70,25 @@
                             <div class="form_group">
                                 <span class="details">PESSOA:</span>
                                 <asp:DropDownList ID="cboPessoa" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChanged">
-                                    <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
+                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="FÍSICA" Text="FÍSICA"></asp:ListItem>
                                     <asp:ListItem Value="JURÍDICA" Text="JURÍDICA"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TIPO:</span>
-                                <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control" Width="250px">
-                                    <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
+                                <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control">
+                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                                     <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
                                     <asp:ListItem Value="EMPRESA" Text="EMPRESA"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+
                         </div>
                         <div class="col-md-3">
                             <div class="form_group">
@@ -235,10 +250,10 @@
                     <div class="row g-3">
                         <br />
                         <div class="col-md-1">
-                            <asp:Button ID="btnAtualizar" CssClass="btn btn-outline-success btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvar_Click" />
+                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg" runat="server"  OnClick="btnSalvar_Click" Text="Atualizar" />
                         </div>
                         <div class="col-md-1">
-                            <a href="Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                            <a href="/dist/pages/Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
                             </a>
                         </div>
                     </div>

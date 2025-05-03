@@ -113,6 +113,7 @@ namespace NewCapit.dist.pages
                 txtUsuAlteracao.Text = nomeUsuario;
                 DateTime dataHoraAtual = DateTime.Now;
                 lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+               
             }
             else
             {

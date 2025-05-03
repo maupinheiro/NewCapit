@@ -29,15 +29,16 @@
                 });
             }
 
-        // Pegando os elementos no ASP.NET
-        let txtCNPJ = document.getElementById("<%= txtCnpj.ClientID %>");
-        let txtCep = document.getElementById("<%= txtCepCli.ClientID %>");
-        let txtTelefone = document.getElementById("<%= txtTc1Cli.ClientID %>");
+            // Pegando os elementos no ASP.NET
+            let txtCNPJ = document.getElementById("<%= txtCnpj.ClientID %>");
+            let txtCep = document.getElementById("<%= txtCepCli.ClientID %>");
+            let txtTelefone = document.getElementById("<%= txtTc1Cli.ClientID %>");
+            let txtCelular = document.getElementById("<%= txtTc2Cli.ClientID %>");
 
-
-        if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
-        if (txtCep) aplicarMascara(txtCep, "00000-000");
-        if (txtTelefone) aplicarMascara(txtTelefone, "(00) 00000-0000");
+            if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
+            if (txtCep) aplicarMascara(txtCep, "00000-000");
+            if (txtTelefone) aplicarMascara(txtTelefone, "(00) 00000-0000");
+            if (txtCelular) aplicarMascara(txtTelefone, "(00) 0 00000-0000");
     });
     </script>
     <script>
@@ -92,7 +93,7 @@
               <br />
               <div class="card card-success">
                   <div class="card-header">
-                      <h3 class="card-title">CLIENTES - NOVO CADASTRO</h3>
+                      <h3 class="card-title"><i class="fas fa-warehouse"></i> &nbsp;CLIENTES - NOVO CADASTRO</h3>
                   </div>
               </div>
               <div class="card-header">
@@ -110,7 +111,7 @@
                       <div class="col-md-2">
                           <div class="form_group">
                               <span class="details">TIPO DE CLIENTE:</span>
-                              <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" Width="250px">
+                              <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" >
                                   <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                   <asp:ListItem Value="CLIENTE" Text="CLIENTE"></asp:ListItem>
                                   <asp:ListItem Value="EMBARCADOR" Text="EMBARCADOR"></asp:ListItem>
@@ -129,7 +130,7 @@
                       </div>
                       <div class="col-md-2">
                           <span class="">REGIÃO DO PAÍS:</span>
-                          <asp:DropDownList ID="cboRegiao" runat="server" CssClass="form-control" Width="250px">
+                          <asp:DropDownList ID="cboRegiao" runat="server" CssClass="form-control" >
                               <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                               <asp:ListItem Value="NORTE" Text="NORTE"></asp:ListItem>
                               <asp:ListItem Value="SUL" Text="SUL"></asp:ListItem>
@@ -166,7 +167,7 @@
                       <div class="col-md-2">
                           <div class="form-group">
                               <span class="details">CNPJ:</span>
-                              <asp:TextBox ID="txtCnpj" data-mask="00.000.000/0000-00" runat="server" class="form-control"></asp:TextBox>
+                              <asp:TextBox ID="txtCnpj" runat="server" class="form-control"></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-1">
@@ -176,25 +177,25 @@
                       <div class="col-md-6">
                           <div class="form-group">
                               <span class="details">RAZÃO SOCIAL:</span>
-                              <asp:TextBox ID="txtRazCli" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                              <asp:TextBox ID="txtRazCli" runat="server" CssClass="form-control" ></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-1">
                           <div class="form-group">
                               <span class="details">TIPO:</span>
-                              <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                              <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" ></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-1">
                           <div class="form-group">
                               <span class="details">ABERTURA:</span>
-                              <asp:TextBox ID="txtAbertura" runat="server" CssClass="form-control" Width="130px" value=""></asp:TextBox>
+                              <asp:TextBox ID="txtAbertura" runat="server" CssClass="form-control" ></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-1">
                           <div class="form-group">
                               <span class="details">SITUAÇÃO:</span>
-                              <asp:TextBox ID="txtSituacao" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                              <asp:TextBox ID="txtSituacao" runat="server" CssClass="form-control" ></asp:TextBox>
                           </div>
                       </div>
 
@@ -203,7 +204,7 @@
                       <div class="col-md-3">
                           <div class="form-group">
                               <span class="details">NOME FANTASIA:</span>
-                              <asp:TextBox ID="txtNomCli" runat="server" CssClass="form-control" placeholder="" MaxLength="50" ForeColor="Blue"></asp:TextBox>
+                              <asp:TextBox ID="txtNomCli" runat="server" CssClass="form-control" placeholder="" MaxLength="50" ></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-2">
@@ -221,7 +222,7 @@
                       <div class="col-md-2">
                           <div class="form-group">
                               <span class="details">FONE FIXO:</span>
-                              <asp:TextBox ID="txtTc1Cli" runat="server" CssClass="form-control" data-inputmask='"mask": "(99) 9999-9999"' data-mask MaxLength="15"></asp:TextBox>
+                              <asp:TextBox ID="txtTc1Cli" runat="server" CssClass="form-control" MaxLength="15"></asp:TextBox>
                           </div>
                       </div>
                       <div class="col-md-1">
@@ -233,7 +234,7 @@
                       <div class="col-md-2">
                           <div class="form-group">
                               <span class="details">CELULAR:</span>
-                              <asp:TextBox ID="txtTc2Cli" runat="server" CssClass="form-control" data-mask="(00) 0 0000-0000" MaxLength="16"></asp:TextBox>
+                              <asp:TextBox ID="txtTc2Cli" runat="server" CssClass="form-control" MaxLength="16"></asp:TextBox>
                           </div>
                       </div>
                   </div>
@@ -345,17 +346,17 @@
                       </div>
                   </div>
                   <div class="row g-3">
-                      <div class="col-md-1">
+                      <%--<div class="col-md-1">
                           <br />
                           <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
+                      </div>--%>
+                      <div class="col-md-1">
+                          <br />
+                          <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar_Click" Text="Cadastrar" />
                       </div>
                       <div class="col-md-1">
                           <br />
-                          <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar_Click" Text="Salvar" />
-                      </div>
-                      <div class="col-md-1">
-                          <br />
-                          <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                          <a href="/dist/pages/ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Sair               
                           </a>
                       </div>
                   </div>

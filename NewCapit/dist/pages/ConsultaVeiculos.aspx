@@ -307,7 +307,7 @@
      <!-- Grid -->
      <div class="card shadow mb-4"> 
         <div class="card-header">
-           <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+           <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
         </div>
         <div class="card-body">
             <div class="table-responsive">              
