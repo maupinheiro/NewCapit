@@ -37,6 +37,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     //txtAlteradoPor.Text = lblUsuario;
                 }
+                
                 PreencherComboCargo();
                 PreencherComboFiliais();
                 CarregarDDLEstadosBrasileiros();
@@ -47,7 +48,7 @@ namespace NewCapit.dist.pages
                 CarregarDDLAgregados();
                 CarregaDadosMotorista();
             }
-
+            
         }
         public void CarregaDadosMotorista()
         {
@@ -74,13 +75,13 @@ namespace NewCapit.dist.pages
                 ddlStatus.SelectedValue = dt.Rows[0][2].ToString();
                 txtDtEmissao.Text = dt.Rows[0][3].ToString();
                 txtRG.Text = dt.Rows[0][4].ToString();
-                ddlCargo.SelectedValue = dt.Rows[0][5].ToString();
-                cbFiliais.SelectedValue = dt.Rows[0][6].ToString();
+                ddlCargo.SelectedItem.Text = dt.Rows[0][5].ToString();
+                cbFiliais.SelectedItem.Text = dt.Rows[0][6].ToString();
                 txtEmissor.Text = dt.Rows[0][7].ToString();
                 txtCPF.Text = dt.Rows[0][8].ToString();
                 txtRegCNH.Text = dt.Rows[0][9].ToString();
                 txtCodSeguranca.Text = dt.Rows[0][10].ToString();
-                ddlCat.SelectedValue = dt.Rows[0][11].ToString();
+                ddlCat.SelectedItem.Text = dt.Rows[0][11].ToString();
                 txtValCNH.Text = dt.Rows[0][12].ToString();
                 txtCodLibRisco.Text = dt.Rows[0][13].ToString();
                 txtPIS.Text = dt.Rows[0][14].ToString();
@@ -93,13 +94,13 @@ namespace NewCapit.dist.pages
                 txtCelular.Text = dt.Rows[0][21].ToString();
                 txtValLibRisco.Text = dt.Rows[0][22].ToString();
                 txtDtNasc.Text = dt.Rows[0][23].ToString();
-                ddlEstCivil.SelectedValue = dt.Rows[0][24].ToString();
-                ddlSexo.SelectedValue = dt.Rows[0][25].ToString();
-                ddlJornada.SelectedValue = dt.Rows[0][26].ToString();
+                ddlEstCivil.SelectedItem.Text = dt.Rows[0][24].ToString();
+                ddlSexo.SelectedItem.Text = dt.Rows[0][25].ToString();
+                ddlJornada.SelectedItem.Text = dt.Rows[0][26].ToString();
                 txtNomeMae.Text = dt.Rows[0][27].ToString();
                 txtNomePai.Text = dt.Rows[0][28].ToString();
                 txtCodTra.Text = dt.Rows[0][29].ToString();
-                ddlAgregados.SelectedValue = dt.Rows[0][30].ToString();
+                //ddlAgregados.SelectedValue = dt.Rows[0][30].ToString();
                 txtDtCad.Text = dt.Rows[0][31].ToString();
                 if (dt.Rows[0][32].ToString() != string.Empty)
                 {
@@ -113,29 +114,33 @@ namespace NewCapit.dist.pages
                 txtAltCad.Text = dt.Rows[0][35].ToString();
                 lbDtAtualizacao.Text = dt.Rows[0][36].ToString();
                 txtCartao.Text = dt.Rows[0][37].ToString();
-                ddlMunicipioNasc.SelectedValue = dt.Rows[0][38].ToString();
+                ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
+                //ddlMunicipioNasc.SelectedItem.Text = dt.Rows[0][38].ToString();
                 txtNumero.Text = dt.Rows[0][39].ToString();
                 txtComplemento.Text = dt.Rows[0][40].ToString();
-                ddlTipoMot.SelectedValue = dt.Rows[0][41].ToString();
+                ddlTipoMot.SelectedItem.Text = dt.Rows[0][41].ToString();
                 txtCodProp.Text = dt.Rows[0][42].ToString() + "/" + dt.Rows[0][54].ToString();
                 txtPlaca.Text = dt.Rows[0][43].ToString();
                 txtReboque1.Text = dt.Rows[0][44].ToString();
                 txtReboque2.Text = dt.Rows[0][45].ToString();
                 txtTipoVeiculo.Text = dt.Rows[0][46].ToString();
                 txtValCartao.Text = dt.Rows[0][47].ToString();
-                ddlJornada.SelectedValue = dt.Rows[0][48].ToString();
-                ddlFuncao.SelectedValue = dt.Rows[0][49].ToString();
+                ddlJornada.SelectedItem.Text = dt.Rows[0][48].ToString();
+                ddlFuncao.SelectedItem.Text = dt.Rows[0][49].ToString();
                 txtFrota.Text = dt.Rows[0][50].ToString();
                 txtUsuCadastro.Text = dt.Rows[0][51].ToString();
                 lblDtCadastro.Text = dt.Rows[0][52].ToString();
                 txtVAlExameTox.Text = dt.Rows[0][53].ToString();
-                ddlUF.SelectedValue = dt.Rows[0][55].ToString();
+
+
+
+                ddlUF.SelectedItem.Text = dt.Rows[0][55].ToString();
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
-                ddlCNH.SelectedValue = dt.Rows[0][57].ToString();
-                ddlMunicCnh.SelectedValue = dt.Rows[0][58].ToString();
+                ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString(), "0"));
+                ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), "0"));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
-                ddlRegiao.SelectedValue = dt.Rows[0][61].ToString();
+                ddlRegiao.SelectedItem.Text = dt.Rows[0][61].ToString();
                 txtINSS.Text = dt.Rows[0][62].ToString();
                 txtCaminhoFoto.Text = dt.Rows[0][63].ToString();
                 fotoMotorista = dt.Rows[0][63].ToString();
