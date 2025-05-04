@@ -11,7 +11,6 @@ using System.Configuration;
 using NPOI.SS.Formula.Functions;
 using System.IO;
 using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
 
 namespace NewCapit.dist.pages
 {
@@ -43,14 +42,15 @@ namespace NewCapit.dist.pages
                 PreencherComboFiliais();
                 CarregarDDLEstadosBrasileiros();
                 PreencherComboUFCNH();
+
+
                 PreencherComboJornada();
                 CarregarDDLAgregados();
-                CarregaDadosDoMotorista();
-                fotoMotorista = txtCaminhoFoto.Text.Trim();
+                CarregaDadosMotorista();
             }
             
         }
-        public void CarregaDadosMotorista2()
+        public void CarregaDadosMotorista()
         {
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
@@ -72,16 +72,16 @@ namespace NewCapit.dist.pages
                     txtCodMot.Text = dt.Rows[0][0].ToString();
                 }
                 txtNomMot.Text = dt.Rows[0][1].ToString();
-                ddlStatus.Items.Insert(0, new ListItem(dt.Rows[0][2].ToString(), ""));
+                ddlStatus.SelectedValue = dt.Rows[0][2].ToString();
                 txtDtEmissao.Text = dt.Rows[0][3].ToString();
                 txtRG.Text = dt.Rows[0][4].ToString();
-                ddlCargo.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(), ""));
-                cbFiliais.Items.Insert(0, new ListItem(dt.Rows[0][6].ToString(), ""));
+                ddlCargo.SelectedItem.Text = dt.Rows[0][5].ToString();
+                cbFiliais.SelectedItem.Text = dt.Rows[0][6].ToString();
                 txtEmissor.Text = dt.Rows[0][7].ToString();
                 txtCPF.Text = dt.Rows[0][8].ToString();
                 txtRegCNH.Text = dt.Rows[0][9].ToString();
                 txtCodSeguranca.Text = dt.Rows[0][10].ToString();
-                ddlCat.Items.Insert(0, new ListItem(dt.Rows[0][11].ToString(), ""));
+                ddlCat.SelectedItem.Text = dt.Rows[0][11].ToString();
                 txtValCNH.Text = dt.Rows[0][12].ToString();
                 txtCodLibRisco.Text = dt.Rows[0][13].ToString();
                 txtPIS.Text = dt.Rows[0][14].ToString();
@@ -94,13 +94,13 @@ namespace NewCapit.dist.pages
                 txtCelular.Text = dt.Rows[0][21].ToString();
                 txtValLibRisco.Text = dt.Rows[0][22].ToString();
                 txtDtNasc.Text = dt.Rows[0][23].ToString();
-                ddlEstCivil.Items.Insert(0, new ListItem(dt.Rows[0][24].ToString(),"")) ;
-                ddlSexo.Items.Insert(0, new ListItem(dt.Rows[0][25].ToString(), ""));
-                ddlJornada.Items.Insert(0, new ListItem(dt.Rows[0][26].ToString(), ""));
+                ddlEstCivil.SelectedItem.Text = dt.Rows[0][24].ToString();
+                ddlSexo.SelectedItem.Text = dt.Rows[0][25].ToString();
+                ddlJornada.SelectedItem.Text = dt.Rows[0][26].ToString();
                 txtNomeMae.Text = dt.Rows[0][27].ToString();
                 txtNomePai.Text = dt.Rows[0][28].ToString();
                 txtCodTra.Text = dt.Rows[0][29].ToString();
-                ddlAgregados.Items.Insert(0, new ListItem(dt.Rows[0][30].ToString(), ""));               
+                //ddlAgregados.SelectedValue = dt.Rows[0][30].ToString();
                 txtDtCad.Text = dt.Rows[0][31].ToString();
                 if (dt.Rows[0][32].ToString() != string.Empty)
                 {
@@ -114,56 +114,33 @@ namespace NewCapit.dist.pages
                 txtAltCad.Text = dt.Rows[0][35].ToString();
                 lbDtAtualizacao.Text = dt.Rows[0][36].ToString();
                 txtCartao.Text = dt.Rows[0][37].ToString();
-                ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), ""));
+                ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
+                //ddlMunicipioNasc.SelectedItem.Text = dt.Rows[0][38].ToString();
                 txtNumero.Text = dt.Rows[0][39].ToString();
                 txtComplemento.Text = dt.Rows[0][40].ToString();
-                ddlTipoMot.Items.Insert(0, new ListItem(dt.Rows[0][41].ToString(), ""));
+                ddlTipoMot.SelectedItem.Text = dt.Rows[0][41].ToString();
                 txtCodProp.Text = dt.Rows[0][42].ToString() + "/" + dt.Rows[0][54].ToString();
                 txtPlaca.Text = dt.Rows[0][43].ToString();
                 txtReboque1.Text = dt.Rows[0][44].ToString();
                 txtReboque2.Text = dt.Rows[0][45].ToString();
                 txtTipoVeiculo.Text = dt.Rows[0][46].ToString();
                 txtValCartao.Text = dt.Rows[0][47].ToString();
-                ddlJornada.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(), ""));
-                ddlFuncao.Items.Insert(0, new ListItem(dt.Rows[0][49].ToString(), ""));
+                ddlJornada.SelectedItem.Text = dt.Rows[0][48].ToString();
+                ddlFuncao.SelectedItem.Text = dt.Rows[0][49].ToString();
                 txtFrota.Text = dt.Rows[0][50].ToString();
                 txtUsuCadastro.Text = dt.Rows[0][51].ToString();
                 lblDtCadastro.Text = dt.Rows[0][52].ToString();
                 txtVAlExameTox.Text = dt.Rows[0][53].ToString();
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                {
-                    string query1 = "SELECT Uf, SiglaUf FROM tbestadosbrasileiros ORDER BY SiglaUf";
-                    try
-                    {
 
-                        SqlDataAdapter da = new SqlDataAdapter(query1, conn);
-                        DataTable dte = new DataTable();
-                        conn.Open();
-                        da.Fill(dt);
-                        conn.Close();
-                        ddlUF.DataSource = dt;
-                        ddlUF.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
-                        ddlUF.DataValueField = "Uf";  // Campo que será o valor de cada item
-                        ddlUF.Items.Insert(0, new ListItem(dt.Rows[0][55].ToString(), ""));
-                        ddlUF.DataBind();  // Realiza o binding dos dados 
-                        
 
-                        // Feche o reader
 
-                    }
-                    catch (Exception ex)
-                    {
-                        // Trate exceções
-                        Response.Write("Erro: " + ex.Message);
-                    }
-                }
-                
+                ddlUF.SelectedItem.Text = dt.Rows[0][55].ToString();
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
-                ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString(), ""));
-                ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), ""));
+                ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString(), "0"));
+                ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), "0"));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
-                ddlRegiao.Items.Insert(0, new ListItem(dt.Rows[0][61].ToString(), ""));
+                ddlRegiao.SelectedItem.Text = dt.Rows[0][61].ToString();
                 txtINSS.Text = dt.Rows[0][62].ToString();
                 txtCaminhoFoto.Text = dt.Rows[0][63].ToString();
                 fotoMotorista = dt.Rows[0][63].ToString();
@@ -230,150 +207,33 @@ namespace NewCapit.dist.pages
 
     }
 }
-        public void CarregaDadosDoMotorista()
-        {
-            string id = HttpContext.Current.Request.QueryString["id"];
 
-            // Verifica se o ID está presente na query string
-            if (string.IsNullOrEmpty(id))
-            {
-                // Log ou mensagem indicando que o ID não foi informado
-                return;
-            }
-
-            string sql = @"SELECT * FROM tbmotoristas WHERE id = @id and fl_exclusao is null";
-
-            try
-            {
-                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                using (SqlCommand cmd = new SqlCommand(sql, con))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    DataTable dt = new DataTable();
-
-                    using (SqlDataAdapter adpt = new SqlDataAdapter(cmd))
-                    {
-                        con.Open();
-                        adpt.Fill(dt);
-                    }
-
-                    // Verifica se encontrou resultados
-                    if (dt.Rows.Count == 0)
-                    {
-                        // Log ou mensagem indicando que não encontrou o registro
-                        return;
-                    }
-
-                    DataRow row = dt.Rows[0];
-
-                    // Método auxiliar para evitar exceções de valores nulos
-                    string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
-
-                    txtCodMot.Text = GetValue(row, 1);
-                    txtNomMot.Text = GetValue(row, 2);
-                    ddlStatus.Items.Insert(0, GetValue(row, 3));
-                    txtDtEmissao.Text = DateTime.Parse(dt.Rows[0][4].ToString()).ToString("dd/MM/yyyy"); 
-                    txtRG.Text = GetValue(row, 5);
-                    ddlCargo.Items.Insert(0, GetValue(row, 6));
-                    cbFiliais.Items.Insert(0, GetValue(row, 7));
-                    txtEmissor.Text = GetValue(row, 8);
-                    txtCPF.Text = GetValue(row, 9);
-                    txtRegCNH.Text = GetValue(row, 10);
-                    txtCodSeguranca.Text = GetValue(row, 11);
-                    ddlCat.Items.Insert(0, GetValue(row, 12));
-                    txtValCNH.Text = DateTime.Parse(dt.Rows[0][13].ToString()).ToString("dd/MM/yyyy");
-                    txtCodLibRisco.Text = GetValue(row, 14);
-                    txtPIS.Text = GetValue(row, 15);
-                    txtEndCli.Text = GetValue(row, 16);
-                    txtBaiCli.Text = GetValue(row, 17);
-                    txtCidCli.Text = GetValue(row, 18);
-                    txtEstCli.Text = GetValue(row, 19);
-                    txtCepCli.Text = GetValue(row, 20);
-                    txtFixo.Text = GetValue(row, 21);
-                    txtCelular.Text = GetValue(row, 22);
-                    txtValLibRisco.Text = DateTime.Parse(dt.Rows[0][23].ToString()).ToString("dd/MM/yyyy");
-                    txtDtNasc.Text = DateTime.Parse(dt.Rows[0][24].ToString()).ToString("dd/MM/yyyy");
-                    ddlEstCivil.Items.Insert(0, GetValue(row, 25));
-                    ddlSexo.Items.Insert(0, GetValue(row, 26));
-                    ddlJornada.Items.Insert(0, GetValue(row, 27));
-                    txtNomePai.Text = GetValue(row, 27);
-                    txtNomeMae.Text = GetValue(row, 28);
-                    txtCodTra.Text = GetValue(row, 29);
-                    ddlAgregados.Items.Insert(0, GetValue(row, 30));
-                    txtDtCad.Text = DateTime.Parse(dt.Rows[0][32].ToString()).ToString("dd/MM/yyyy");
-                    if (GetValue(row, 31) != string.Empty)
-                    {
-                        txtMotivoInativo.Text = GetValue(row, 31);
-                        txtDtInativacao.Text = DateTime.Parse(dt.Rows[0][33].ToString()).ToString("dd/MM/yyyy");
-                    }
-                    if (GetValue(row, 54) != string.Empty)
-                    {
-                        txtHistorico.Text = GetValue(row, 54);
-                    }
-                    txtAltCad.Text = GetValue(row, 34);
-                    lbDtAtualizacao.Text = GetValue(row, 35);
-                    txtCartao.Text = GetValue(row, 38);
-                    ddlMunicipioNasc.Items.Insert(0, GetValue(row, 40));
-                    txtNumero.Text = GetValue(row, 41);
-                    txtComplemento.Text = GetValue(row, 42);
-                    ddlTipoMot.Items.Insert(0, GetValue(row, 44));
-                    txtCodProp.Text = GetValue(row, 45) + "/" + GetValue(row, 58);
-                    txtPlaca.Text = GetValue(row, 46);
-                    txtReboque1.Text = GetValue(row, 47);
-                    txtReboque2.Text = GetValue(row, 48);
-                    txtTipoVeiculo.Text = GetValue(row, 49);
-                    txtValCartao.Text = GetValue(row, 50);
-                    ddlJornada.Items.Insert(0, GetValue(row, 51));
-                    ddlFuncao.Items.Insert(0, GetValue(row, 52));
-                    txtFrota.Text = GetValue(row, 53);
-                    txtUsuCadastro.Text = GetValue(row, 55);
-                    lblDtCadastro.Text = GetValue(row, 56);
-                    txtVAlExameTox.Text = GetValue(row, 57);
-                    txtCaminhoFoto.Text = GetValue(row, 59);
-                    ddlUF.Items.Insert(0, GetValue(row, 60));
-                    txtFormCNH.Text = GetValue(row, 61);
-                    ddlCNH.Items.Insert(0, GetValue(row, 62));
-                    ddlMunicCnh.Items.Insert(0, GetValue(row, 63));                    
-                    txtVAlMoop.Text = GetValue(row, 64);
-                    txtCracha.Text = GetValue(row, 65);
-                    ddlRegiao.Items.Insert(0, GetValue(row, 66));
-                    txtINSS.Text = GetValue(row, 67);
-                    fotoMotorista = dt.Rows[0][59].ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log ou tratamento do erro
-                // Exemplo: ex.Message
-            }
-        }
         // Função para carregar os Estados Brasileiro
         private void CarregarDDLEstadosBrasileiros()
         {
             // Consulta SQL que retorna os dados desejados
-            
+            string query = "SELECT Uf, SiglaUf FROM tbestadosbrasileiros ORDER BY SiglaUf";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string query = "SELECT Uf, SiglaUf FROM tbestadosbrasileiros ORDER BY SiglaUf";
                 try
                 {
-                                     
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
+                    // Abra a conexão com o banco de dados
                     conn.Open();
-                    da.Fill(dt);
-                    conn.Close();
-                    ddlUF.DataSource = dt;
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlUF.DataSource = reader;
                     ddlUF.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
                     ddlUF.DataValueField = "Uf";  // Campo que será o valor de cada item                    
                     ddlUF.DataBind();  // Realiza o binding dos dados 
-                    //ddlUF.Items.Insert(0, new ListItem("", "0"));
+                    ddlUF.Items.Insert(0, new ListItem("", "0"));
 
                     // Feche o reader
-                    
+                    reader.Close();
                 }
                 catch (Exception ex)
                 {
@@ -401,7 +261,7 @@ namespace NewCapit.dist.pages
                 ddlMunicipioNasc.DataBind();
 
                 // Adiciona uma opção "Selecione" como primeira opção
-                //ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione o item", ""));
+                ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione o item", ""));
             }
         }
         protected void ddlRegiao_SelectedIndexChanged(object sender, EventArgs e)
@@ -433,7 +293,7 @@ namespace NewCapit.dist.pages
                     cbFiliais.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
                     cbFiliais.DataValueField = "Uf";  // Campo que será o valor de cada item                    
                     cbFiliais.DataBind();  // Realiza o binding dos dados                   
-                    //cbFiliais.Items.Insert(0, new ListItem("", "0"));
+                    cbFiliais.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -483,7 +343,7 @@ namespace NewCapit.dist.pages
                     ddlMunicipioNasc.DataTextField = "nome_municipio";
                     ddlMunicipioNasc.DataValueField = "Uf";
                     ddlMunicipioNasc.DataBind();
-                    //ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione", "0"));
+                    ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione", "0"));
                 }
 
 
@@ -542,7 +402,7 @@ namespace NewCapit.dist.pages
         ddlMunicipioNasc.DataBind();
 
         // Adicionar o item padrão
-        //ddlMunicipioNasc.Items.Insert(0, new ListItem("", "0"));
+        ddlMunicipioNasc.Items.Insert(0, new ListItem("", "0"));
     }
 }
 // Evento disparado quando o item do DropDownList é alterado
@@ -600,7 +460,7 @@ private void CarregarCargos()
         ddlCargo.DataBind();
 
         // Adicionar o item padrão
-        //ddlCargo.Items.Insert(0, new ListItem("", "0"));
+        ddlCargo.Items.Insert(0, new ListItem("", "0"));
     }
 }
 // Evento disparado quando o item do DropDownList é alterado
@@ -644,7 +504,7 @@ private void PreencherComboCargo()
             ddlCargo.DataValueField = "cod_funcao";  // Campo que será o valor de cada item                    
             ddlCargo.DataBind();  // Realiza o binding dos dados                   
                                   // Adicionar o item padrão
-            //ddlCargo.Items.Insert(0, new ListItem("", "0"));
+            ddlCargo.Items.Insert(0, new ListItem("", "0"));
             // Feche o reader
             reader.Close();
         }
@@ -686,7 +546,7 @@ private void PreencherComboFiliais()
             cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
             cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
             cbFiliais.DataBind();  // Realiza o binding dos dados                   
-            //cbFiliais.Items.Insert(0, new ListItem("", "0"));
+            cbFiliais.Items.Insert(0, new ListItem("", "0"));
             // Feche o reader
             reader.Close();
         }
@@ -722,7 +582,7 @@ private void PreencherComboUFCNH()
             ddlCNH.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
             ddlCNH.DataValueField = "Uf";  // Campo que será o valor de cada item                    
             ddlCNH.DataBind();  // Realiza o binding dos dados                   
-            //ddlCNH.Items.Insert(0, new ListItem("", "0"));
+            ddlCNH.Items.Insert(0, new ListItem("", "0"));
             // Feche o reader
             reader.Close();
         }
@@ -758,7 +618,7 @@ private void PreencherComboJornada()
             ddlJornada.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
             ddlJornada.DataValueField = "id";  // Campo que será o valor de cada item                    
             ddlJornada.DataBind();  // Realiza o binding dos dados                   
-            //ddlJornada.Items.Insert(0, new ListItem("", "0"));
+            ddlJornada.Items.Insert(0, new ListItem("", "0"));
             // Feche o reader
             reader.Close();
         }
@@ -784,7 +644,7 @@ private void CarregarDDLAgregados()
         ddlAgregados.DataBind();
 
         // Adicionar o item padrão
-        //ddlAgregados.Items.Insert(0, new ListItem("", "0"));
+        ddlAgregados.Items.Insert(0, new ListItem("", "0"));
     }
 }
 
