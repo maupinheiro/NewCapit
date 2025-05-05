@@ -36,17 +36,16 @@ namespace NewCapit
                 {
                     var lblUsuario = "<Usuário>";
                     txtAlteradoPor.Text = lblUsuario;
-                }
-
+                }              
+                
                 //PreencherComboAgregados();
-                PreencherComboEstados();
                 CarregarDDLAgregados();
                 PreencherComboFiliais();
                 PreencherComboMarcasVeiculos();
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
-               
+                PreencherComboEstados();
                 CarregaDadosDoVeiculo();
                
                 DateTime dataHoraAtual = DateTime.Now;
@@ -180,7 +179,7 @@ namespace NewCapit
                 ddlCidades.DataValueField = "cod_municipio"; // valor único
                 ddlCidades.DataBind();
 
-                ////ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
+                ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
             }
         }
         protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
@@ -253,11 +252,11 @@ namespace NewCapit
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    cbFiliais.DataSource = reader;
-                    cbFiliais.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
-                    cbFiliais.DataValueField = "Uf";  // Campo que será o valor de cada item                    
-                    cbFiliais.DataBind();  // Realiza o binding dos dados                   
-                    cbFiliais.Items.Insert(0, new ListItem("", "0"));
+                    ddlEstados.DataSource = reader;
+                    ddlEstados.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
+                    ddlEstados.DataValueField = "Uf";  // Campo que será o valor de cada item                    
+                    ddlEstados.DataBind();  // Realiza o binding dos dados                   
+                    //ddlEstados.Items.Insert(0, new ListItem("", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -806,21 +805,21 @@ namespace NewCapit
                     string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
 
                     txtCodVei.Text = GetValue(row, 1);
-                    cboTipo.SelectedItem.Text = GetValue(row, 2);
-                    ddlTipo.SelectedItem.Text = GetValue(row, 3);
+                    cboTipo.Items.Insert(0, GetValue(row, 2));
+                    ddlTipo.Items.Insert(0, GetValue(row, 3));
                     txtModelo.Text = GetValue(row, 4);
                     txtAno.Text = GetValue(row, 5);                    
                     txtDtcVei.Text = DateTime.Parse(dt.Rows[0][6].ToString()).ToString("dd/MM/yyyy");
-                    cbFiliais.SelectedItem.Text = GetValue(row, 7);
-                    ddlSituacao.SelectedItem.Text = GetValue(row, 8);
+                    cbFiliais.Items.Insert(0, GetValue(row, 7));
+                    ddlSituacao.Items.Insert(0, GetValue(row, 8));
                     txtPlaca.Text = GetValue(row, 9);
                     txtReb1.Text = GetValue(row, 10);
                     txtReb2.Text = GetValue(row, 11);
-                    ddlCarreta.SelectedItem.Text = GetValue(row, 13);
-                    ddlComposicao.SelectedItem.Text = GetValue(row, 12);
-                    ddlMonitoramento.SelectedItem.Text = GetValue(row, 14);
+                    ddlCarreta.Items.Insert(0, GetValue(row, 13));
+                    ddlComposicao.Items.Insert(0, GetValue(row, 12));
+                    ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
                     txtCodRastreador.Text = GetValue(row, 15);
-                    ddlTecnologia.SelectedItem.Text = GetValue(row, 16);
+                    ddlTecnologia.Items.Insert(0, GetValue(row, 16));
                     txtId.Text = GetValue(row, 17);
                     txtCap.Text = GetValue(row, 18);
                     txtEixos.Text = GetValue(row, 19);
@@ -828,9 +827,9 @@ namespace NewCapit
                     txtTolerancia.Text = GetValue(row, 21);
                     txtPBT.Text = GetValue(row, 22);
                     txtCodMot.Text = GetValue(row, 27);
-                    ddlMotorista.SelectedItem.Text = GetValue(row, 28);
+                    ddlMotorista.Items.Insert(0, GetValue(row, 28));
                     txtCodTra.Text = GetValue(row, 29);
-                    ddlAgregados.SelectedItem.Text = GetValue(row, 30);
+                    ddlAgregados.Items.Insert(0, GetValue(row, 30));
                     txtOpacidade.Text = GetValue(row, 31);
                     txtCadastradoPor.Text = GetValue(row, 32);
                     txtDtCadastro.Text = GetValue(row, 33);
@@ -838,16 +837,15 @@ namespace NewCapit
                     txtProtocoloCET.Text = GetValue(row, 37);
                     txtLicenciamento.Text = GetValue(row, 38);
                     txtCronotacografo.Text = DateTime.Parse(dt.Rows[0][39].ToString()).ToString("dd/MM/yyyy");
-                    ddlMarca.SelectedItem.Text = GetValue(row, 40);
+                    ddlMarca.Items.Insert(0, GetValue(row, 40));
                     txtRenavam.Text = GetValue(row, 41);
-                    ddlCor.SelectedItem.Text = GetValue(row, 42);
-                    ddlComunicacao.SelectedItem.Text = GetValue(row, 43);
+                    ddlCor.Items.Insert(0, GetValue(row, 42));
+                    ddlComunicacao.Items.Insert(0, GetValue(row, 43));
                     txtAntt.Text = GetValue(row, 44);
                     // numeroReb1.Text = GetValue(row, 45);
                     // numeroReb2.Text = GetValue(row, 46); 
-                    ddlEstados.SelectedItem.Text = dt.Rows[0][47].ToString();
+                    ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
                     ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
-
                     txtComprimento.Text = GetValue(row, 50);
                     txtLargura.Text = GetValue(row, 51);
                     txtAltura.Text = GetValue(row, 52);
@@ -858,8 +856,8 @@ namespace NewCapit
                     txtApolice.Text = GetValue(row, 57);
                     txtValidadeApolice.Text = GetValue(row, 58);
                     txtValorFranquia.Text = GetValue(row, 59);
-                    ddlTacografo.SelectedItem.Text = GetValue(row, 60);
-                    ddlModeloTacografo.SelectedItem.Text = GetValue(row, 61);
+                    ddlTacografo.Items.Insert(0, GetValue(row, 60));
+                    ddlModeloTacografo.Items.Insert(0, GetValue(row, 61));
                     txtDataAquisicao.Text = GetValue(row, 62);
                     txtControlePatrimonio.Text = GetValue(row, 63);
                     txtChassi.Text = GetValue(row, 64);
@@ -931,7 +929,7 @@ namespace NewCapit
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
                     // Adiciona os parâmetros                    
-                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
@@ -958,7 +956,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
                     cmd.Parameters.AddWithValue("@venclicencacet", string.IsNullOrEmpty(txtVencCET.Text) ? (object)DBNull.Value : txtVencCET.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
                     cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
@@ -971,7 +969,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text);
                     cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);                    
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text);                    
                     cmd.Parameters.AddWithValue("@id", idConvertido);
