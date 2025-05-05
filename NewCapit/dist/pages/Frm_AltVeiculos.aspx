@@ -262,7 +262,7 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">MARCA:</span>
-                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -274,7 +274,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">COR:</span>
-                                <asp:DropDownList ID="ddlCor" runat="server" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlCor" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                     </div>
@@ -283,7 +283,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">MONITORAMENTO:</span>
-                                <asp:DropDownList ID="ddlMonitoramento" runat="server" CssClass="form-control">
+                                <asp:DropDownList ID="ddlMonitoramento" runat="server" CssClass="form-control" AutoPostBack="true">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="MONITORADO" Text="MONITORADO"></asp:ListItem>
                                     <asp:ListItem Value="RASTREADO" Text="RASTREADO"></asp:ListItem>
@@ -458,13 +458,13 @@
 
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span id="numeroReb1" class="details">REB 999999:</span>
+                                <asp:Label id="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
                                 <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span id="numeroReb2" class="details">REB 999999:</span>
+                                <asp:Label id="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
                                 <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8"></asp:TextBox>
                             </div>
                         </div>

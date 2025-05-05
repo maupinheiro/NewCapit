@@ -62,10 +62,11 @@
 
                 reader.onload = function (e) {
                     var img = document.getElementById('preview');
-                    img.src = e.target.result;
+                    img.src = e.target.result;                    
                 };
 
-                reader.readAsDataURL(input.files[0]); // Lê como base64 para mostrar a imagem
+                reader.readAsDataURL(input.files[0]); // Lê como base64 para mostrar a imagem                
+
             }
         }
     </script>
@@ -80,6 +81,8 @@
                 </div>
             </div>
             <form>
+                
+                <asp:ScriptManager ID="asm" runat="server" />
                 <div class="card-header">
                     <!-- Linha 1 do formulario -->
                     <div class="row g-3">
@@ -131,7 +134,8 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="">STATUS:</span>
-                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
+                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" AutoPostBack="True"
+                                    OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
                                     <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
                                     <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
                                 </asp:DropDownList></>
@@ -166,29 +170,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2">                           
                             <div class="form-group">
                                 <span class="details">REGIÃO DO PAIS:</span>
-                                <asp:DropDownList ID="ddlRegiao" runat="server" CssClass="form-control" AutoPostBack="True"
-                                    OnSelectedIndexChanged="ddlRegiao_SelectedIndexChanged">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="CENTRO-OESTE" Text="CENTRO-OESTE"></asp:ListItem>
-                                    <asp:ListItem Value="NORDESTE" Text="NORDESTE"></asp:ListItem>
-                                    <asp:ListItem Value="NORTE" Text="NORTE"></asp:ListItem>
-                                    <asp:ListItem Value="SUDESTE" Text="SUDESTE"></asp:ListItem>
-                                    <asp:ListItem Value="SUL" Text="SUL"></asp:ListItem>
-                                </asp:DropDownList>
+                                <asp:DropDownList ID="ddlRegioes" runat="server" class="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlRegioes_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1">                            
                             <div class="form_group">
                                 <span class="details">UF NASC.:</span>
-                                <asp:DropDownList ID="ddlUF" runat="server" class="form-control" AutoPostBack="True"
-                                    OnSelectedIndexChanged="ddlUF_SelectedIndexChanged">
+                                <asp:DropDownList ID="ddlEstNasc" runat="server" class="form-control" AutoPostBack="True"
+                                    OnSelectedIndexChanged="ddlEstNasc_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3">                           
                             <div class="form_group">
                                 <span class="details">MUNICIPIO DE NASCIMENTO:</span>
                                 <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -218,7 +214,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <span class="details">foto:</span>
-                                <asp:TextBox ID="txtCaminhoFoto" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
+                                <div class="input-group">
+                                    <asp:TextBox ID="txtCaminhoFoto" runat="server" class="form-control"></asp:TextBox>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -379,7 +377,6 @@
                             <div class="form_group">
                                 <span class="details">PROPRIETÁRIO/TRANSPORTADORA:</span>
                                 <asp:DropDownList ID="ddlAgregados" class="form-control select2" runat="server" OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-<%--                                <asp:DropDownList ID="ddlAgregados" class="form-control select2" runat="server" OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>--%>
                             </div>
                         </div>
                     </div>
@@ -456,7 +453,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PLACA:</span>
-                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" Text=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -543,14 +540,15 @@
                     <div class="row g-3">
                         <div class="col-md-11">
                             <div class="form-group">
-                                <span class="details">MOTIVO DA INATIVAÇÃO:</span>
-                                <asp:Label ID="txtMotivoInativo" runat="server" CssClass="form-control" placeholder=""></asp:Label>
+                                <asp:Label id="motivoInativo" runat="server" class="details">MOTIVO DA INATIVAÇÃO:</asp:Label>
+                                <asp:TextBox ID="txtMotivoInativacao" runat="server" CssClass="form-control" placeholder="" MaxLength="60" ForeColor="Red"></asp:TextBox>
+                                
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="details">DATA:</span>
-                                <asp:TextBox ID="txtDtInativacao" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                                <asp:Label id="dataInativo" runat="server" class="details">DATA:</asp:Label>
+                                <asp:TextBox ID="txtDtInativacao" runat="server" CssClass="form-control" placeholder="" MaxLength="60" ForeColor="Red"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -585,7 +583,7 @@
                     <!-- Linha 9 do formulário -->
                     <div class="row g-3">
                         <div class="col-md-1">
-                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualizar" />
+                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvar1_Click" />
                         </div>
                         <div class="col-md-1">
                             <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Cancelar               

@@ -15,6 +15,15 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
+        /// Controle asm.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.ScriptManager asm;
+
+        /// <summary>
         /// Controle txtCodMot.
         /// </summary>
         /// <remarks>
@@ -96,22 +105,22 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDtNasc;
 
         /// <summary>
-        /// Controle ddlRegiao.
+        /// Controle ddlRegioes.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlRegiao;
+        protected global::System.Web.UI.WebControls.DropDownList ddlRegioes;
 
         /// <summary>
-        /// Controle ddlUF.
+        /// Controle ddlEstNasc.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlUF;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEstNasc;
 
         /// <summary>
         /// Controle ddlMunicipioNasc.
@@ -537,13 +546,31 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtHistorico;
 
         /// <summary>
-        /// Controle txtMotivoInativo.
+        /// Controle motivoInativo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtMotivoInativo;
+        protected global::System.Web.UI.WebControls.Label motivoInativo;
+
+        /// <summary>
+        /// Controle txtMotivoInativacao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMotivoInativacao;
+
+        /// <summary>
+        /// Controle dataInativo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label dataInativo;
 
         /// <summary>
         /// Controle txtDtInativacao.

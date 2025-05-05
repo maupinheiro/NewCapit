@@ -846,7 +846,6 @@ namespace NewCapit
                     // numeroReb2.Text = GetValue(row, 46); 
                     ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
                     ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
-
                     txtComprimento.Text = GetValue(row, 50);
                     txtLargura.Text = GetValue(row, 51);
                     txtAltura.Text = GetValue(row, 52);
@@ -931,17 +930,17 @@ namespace NewCapit
                 {
                     // Adiciona os parâmetros                    
                     cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
-                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@ativo_inativo", ddlSituacao.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@ativo_inativo", ddlSituacao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text);
                     cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text);
-                    cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
                     cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
                     cmd.Parameters.AddWithValue("@capacidade", txtCap.Text);
@@ -949,9 +948,9 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@tolerancia", txtTolerancia.Text);
                     cmd.Parameters.AddWithValue("@ptb", txtPBT.Text);
                     cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name.ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now); // Corrigido para DateTime
                     cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
@@ -959,8 +958,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
                     cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
-                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
                     //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
                     //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
@@ -969,8 +968,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text);
-                    cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);                    
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text);                    
                     cmd.Parameters.AddWithValue("@id", idConvertido);
