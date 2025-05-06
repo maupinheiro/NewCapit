@@ -16,6 +16,8 @@ namespace NewCapit.dist.pages
     
     public partial class Frm_CadMotoristas : System.Web.UI.Page
     {
+        string caminhoCompleto;
+        DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -34,112 +36,300 @@ namespace NewCapit.dist.pages
                     txtUsuCadastro.Text = lblUsuario;
                 }                
                 PreencherComboFiliais();
-                PreencherComboCargo();
-                PreencherComboUFCNH();                
+                PreencherComboCargo();                         
                 PreencherComboJornada();
                 CarregarDDLAgregados();
+
+
+                CarregarEstCNH();
+                CarregarRegioes();
+                CarregarEstadosNascimento();
+                CarregarMunicipioNasc();
+
+                
+               
 
             }
             DateTime dataHoraAtual = DateTime.Now;
             txtDtCad.Text = dataHoraAtual.ToString("dd/MM/yyyy");
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
+            string defaultImage = ResolveUrl("/fotos/usuario.jpg");
 
+            string base64 = hiddenImage.Value;
+
+            string script = $@"
+        window.onload = function() {{
+            var hidden = document.getElementById('{hiddenImage.ClientID}');
+            var img = document.getElementById('preview');
+
+            if (hidden && hidden.value) {{
+                img.src = hidden.value;                
+            }} else {{
+                img.src = '{defaultImage}';               
+            }}
+        }};";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "restoreImage", script, true);
         }
-        protected void ddlRegiao_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int regiaoId = int.Parse(ddlRegiao.SelectedValue);
-            CarregarEstados(regiaoId);
-        }
-        private void CarregarEstados(int regiaoId)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT Uf,idRegiao, SiglaUf FROM tbestadosbrasileiros WHERE IdRegiao = @CategoriaId", conn);
-                cmd.Parameters.AddWithValue("@CategoriaId", regiaoId);
-                conn.Open();
-                ddlUF.DataSource = cmd.ExecuteReader();
-                ddlUF.DataTextField = "SiglaUf";
-                ddlUF.DataValueField = "Uf";
-                ddlUF.DataBind();
-
-                ddlUF.Items.Insert(0, new ListItem("Selecione", "0"));
-            }
-        }
-        protected void ddlUF_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int municipioId = int.Parse(ddlUF.SelectedValue);
-            CarregarMunicipios(municipioId); 
-        }
-        
-        private void CarregarMunicipios(int municipioId)
-        {            
-            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT id, Uf,IdRegiao, Sigla, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @MunicipioId", conn);
-                cmd.Parameters.AddWithValue("@MunicipioId", municipioId);
-                conn.Open();
-                ddlMunicipioNasc.DataSource = cmd.ExecuteReader();
-
-
-                //ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione", "0"));
-
-                string cidadeSelecionada = ddlMunicipioNasc.SelectedValue;
-                if (ViewState["cidadeSelecionada"] != null && ddlMunicipioNasc.Items.Count > 0)
-                {
-                    
-                    ddlMunicipioNasc.SelectedValue = ViewState["cidadeSelecionada"].ToString();
-                }
-                else
-                {
-                    ddlMunicipioNasc.DataTextField = "nome_municipio";
-                    ddlMunicipioNasc.DataValueField = "Uf";
-                    ddlMunicipioNasc.DataBind();
-                    ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione", "0"));                    
-                }
-
-
-
-            }
-        }
-        protected void ddlMunicipioNasc_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idSelecionado = int.Parse(ddlMunicipioNasc.SelectedValue);
-
-            // Preencher os campos com base no valor selecionado
-            if (idSelecionado > 0)
-            {
-                PreencherCamposCidNasc(idSelecionado);
-            }
-            else
-            {
-                LimparCamposCidNasc();
-            }
-        }
-        private void PreencherCamposCidNasc(int id)
+        private void CarregarRegioes()
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
+                SqlCommand cmd = new SqlCommand("SELECT id, regiao FROM tbregioesdopais", conn);
                 conn.Open();
-                string query = "SELECT id, nome_municipio FROM tbmunicipiosbrasileiros WHERE id = @ID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ID", id);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    ddlMunicipioNasc.Text = reader["nome_municipio"].ToString();                    
-
-                }
+                ddlRegioes.DataSource = cmd.ExecuteReader();
+                ddlRegioes.DataTextField = "regiao";
+                ddlRegioes.DataValueField = "id";
+                ddlRegioes.DataBind();
+                ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
             }
         }
-        // Função para limpar os campos
-        private void LimparCamposCidNasc()
+        private void CarregarEstadosNascimento()
         {
-            ddlMunicipioNasc.Text = "Selecione";
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT Uf, IdRegiao, SiglaUf FROM tbestadosbrasileiros WHERE IdRegiao = @RegiaoId", conn);
+                cmd.Parameters.AddWithValue("@RegiaoId", ddlRegioes.SelectedValue);
+                conn.Open();
+                ddlEstNasc.DataSource = cmd.ExecuteReader();
+                ddlEstNasc.DataTextField = "SiglaUf";
+                ddlEstNasc.DataValueField = "Uf";
+                ddlEstNasc.DataBind();
+                ddlEstNasc.Items.Insert(0, new ListItem("Selecione", "0"));
+            }
         }
+        private void CarregarMunicipioNasc()
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT nome_municipio FROM tbmunicipiosbrasileiros WHERE IdRegiao = @RegiaoId AND Uf = @Uf", conn);
+                cmd.Parameters.AddWithValue("@RegiaoId", ddlRegioes.SelectedValue);
+                cmd.Parameters.AddWithValue("@Uf", ddlEstNasc.SelectedValue);
+                conn.Open();
+                ddlMunicipioNasc.DataSource = cmd.ExecuteReader();
+                ddlMunicipioNasc.DataTextField = "nome_municipio";
+                ddlMunicipioNasc.DataValueField = "nome_municipio";
+                ddlMunicipioNasc.DataBind();
+                ddlMunicipioNasc.Items.Insert(0, new ListItem("Selecione", "0"));
+            }
+        }
+        protected void ddlRegioes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CarregarEstadosNascimento(); // Atualiza subcategorias com base na categoria
+            CarregarMunicipioNasc();         // Atualiza itens com base na nova subcategoria
+        }
+        protected void ddlEstNasc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CarregarMunicipioNasc(); // Atualiza itens com base na nova subcategoria
+        }
+        private void CarregarEstCNH()
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT Uf, SiglaUf FROM tbestadosbrasileiros", conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                ddlCNH.DataSource = reader;
+                ddlCNH.DataTextField = "SiglaUf";
+                ddlCNH.DataValueField = "Uf";
+                ddlCNH.DataBind();
+
+                ddlCNH.Items.Insert(0, new ListItem("Selecione", "0"));
+            }
+        }
+        protected void ddlCNH_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int cidadeId = int.Parse(ddlCNH.SelectedValue);
+            CarregarMunicipioCNH(cidadeId);
+        }
+        private void CarregarMunicipioCNH(int cidadeId)
+        {
+            ddlMunicCnh.Items.Clear();
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT Uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @cidadeId", conn);
+                cmd.Parameters.AddWithValue("@cidadeId", cidadeId);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                ddlMunicCnh.DataSource = reader;
+                ddlMunicCnh.DataTextField = "nome_municipio";
+                ddlMunicCnh.DataValueField = "Uf";
+                ddlMunicCnh.DataBind();
+
+                ddlMunicCnh.Items.Insert(0, new ListItem("Selecione uma cidade ...", "0"));
+            }
+        }
+        protected void btnCep_Click(object sender, EventArgs e)
+        {
+            WebCEP cep = new WebCEP(txtCepCli.Text);
+            txtBaiCli.Text = cep.Bairro.ToString();
+            txtCidCli.Text = cep.Cidade.ToString();
+            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
+            txtEstCli.Text = cep.UF.ToString();
+            txtNumero.Focus();
+        }
+        protected void btnSalvar1_Click(object sender, EventArgs e)
+        {
+            string sql = @"INSERT INTO tbmotoristas (codmot, nommot, status, emissaorg, numrg, cargo, nucleo, orgaorg, cpf, numregcnh, codsegurancacnh, catcnh, venccnh, codliberacao, numpis, endmot, baimot, cidmot, ufmot, cepmot, fone3, fone2, validade, dtnasc, estcivil, sexo, nomepai, nomemae, codtra, transp, cadmot, cartaomot, naturalmot, numero, complemento, tipomot, venccartao, horario, funcao, frota, usucad, dtccad, venceti, caminhofoto, ufnascimento, formulariocnh, ufcnh, municipiocnh, vencmoop, cracha, regiao, numinss)
+              VALUES
+              (@codmot, @nommot, @status, @emissaorg, @numrg, @cargo, @nucleo, @orgaorg, @cpf, @numregcnh, @codsegurancacnh, @catcnh,@venccnh, @codliberacao, @numpis, @endmot, @baimot, @cidmot, @ufmot, @cepmot, @fone3, @fone2, @validade, @dtnasc, @estcivil, @sexo, @nomepai, @nomemae, @codtra, @transp, @cadmot, @cartaomot, @naturalmot, @numero, @complemento, @tipomot, @venccartao, @horario, @funcao, @frota, @usucad, @dtccad, @venceti, @caminhofoto, @ufnascimento, @formulariocnh, @ufcnh, @municipiocnh, @vencmoop, @cracha, @regiao, @numinss)";
+
+            try
+            {
+                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    // Adicionando os parâmetros da inserção
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@nommot", txtNomMot.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@status", "ATIVO");
+                    cmd.Parameters.AddWithValue("@emissaorg", DateTime.Parse(txtDtEmissao.Text).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@numrg", txtRG.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@cargo", ddlCargo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@orgaorg", txtEmissor.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@cpf", txtCPF.Text);
+                    cmd.Parameters.AddWithValue("@numregcnh", txtRegCNH.Text.ToUpper().Trim());
+                    cmd.Parameters.AddWithValue("@codsegurancacnh", txtCodSeguranca.Text.ToUpper().Trim());
+                    cmd.Parameters.AddWithValue("@catcnh", ddlCat.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@venccnh", DateTime.Parse(txtValCNH.Text.ToUpper()).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@codliberacao", txtCodLibRisco.Text.Trim());
+                    cmd.Parameters.AddWithValue("@numpis", txtPIS.Text);
+                    cmd.Parameters.AddWithValue("@endmot", txtEndCli.Text.ToUpper().Trim());
+                    cmd.Parameters.AddWithValue("@baimot", txtBaiCli.Text.ToUpper().Trim());
+                    cmd.Parameters.AddWithValue("@cidmot", txtCidCli.Text.ToUpper().Trim());
+                    cmd.Parameters.AddWithValue("@ufmot", txtEstCli.Text.ToUpper().Trim());
+                    cmd.Parameters.AddWithValue("@cepmot", txtCepCli.Text.Trim());
+                    cmd.Parameters.AddWithValue("@fone3", txtFixo.Text);
+                    cmd.Parameters.AddWithValue("@fone2", txtCelular.Text);
+                    cmd.Parameters.AddWithValue("@validade", txtValLibRisco.Text);
+                    cmd.Parameters.AddWithValue("@dtnasc", DateTime.Parse(txtDtNasc.Text).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@estcivil", ddlEstCivil.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@sexo", ddlSexo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@nomepai", txtNomePai.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@nomemae", txtNomeMae.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.Trim());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@cadmot", DateTime.Parse(txtDtCad.Text).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@cartaomot", txtCartao.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@naturalmot", ddlMunicipioNasc.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@numero", txtNumero.Text.Trim());
+                    cmd.Parameters.AddWithValue("@complemento", txtComplemento.Text.Trim());
+                    cmd.Parameters.AddWithValue("@tipomot", ddlTipoMot.SelectedItem.ToString().Trim().ToUpper());  
+                    cmd.Parameters.AddWithValue("@venccartao", txtValCartao.Text);
+                    cmd.Parameters.AddWithValue("@horario", ddlJornada.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@funcao", ddlFuncao.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@frota", txtFrota.Text.Trim());
+                    cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@dtccad", dataHoraAtual.ToString("dd/MM/yyyy HH:mm"));
+                    cmd.Parameters.AddWithValue("@venceti", txtVAlExameTox.Text);
+                    if (FileUpload1.HasFile)
+                    {
+                        try
+                        {
+                            // Nome original
+                            string originalName = Path.GetFileName(FileUpload1.FileName);
+
+                            // Novo nome (por exemplo, com timestamp)
+                            //string novoNome = "img_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + Path.GetExtension(originalName);
+                            string novoNome = txtCodMot.Text.Trim().ToUpper() + Path.GetExtension(originalName);
+
+                            // Caminho da nova pasta (por exemplo: ~/FotosSalvas/)
+                            string pastaDestino = Server.MapPath("~/fotos/");
+
+                            // Cria a pasta se não existir
+                            if (!Directory.Exists(pastaDestino))
+                            {
+                                Directory.CreateDirectory(pastaDestino);
+                            }
+
+                            // Caminho completo para salvar a cópia
+                            string caminhoCompleto = Path.Combine(pastaDestino, novoNome);
+
+                            // Salva o arquivo com novo nome na nova pasta
+                            FileUpload1.SaveAs(caminhoCompleto);
+                            cmd.Parameters.AddWithValue("@caminhofoto", caminhoCompleto);
+                            //lblMensagem.Text = "Imagem salva com sucesso como " + novoNome;
+                        }
+                        catch (Exception ex)
+                        {
+                            Response.Write("Erro ao salvar foto: " + ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@caminhofoto", caminhoCompleto);
+                        //cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
+                    }
+                    cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.Trim());
+                    cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@municipiocnh", ddlMunicCnh.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@vencmoop", txtVAlMoop.Text);
+                    cmd.Parameters.AddWithValue("@cracha", txtCracha.Text.Trim());
+                    cmd.Parameters.AddWithValue("@regiao", ddlRegioes.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@numinss", txtINSS.Text.Trim());
+                    
+                    
+
+
+                    try
+                        {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        string nomeUsuario = txtUsuCadastro.Text;
+                        string mensagem = $"Olá, {nomeUsuario}!\nMotorista com código {txtCodMot.Text} cadastrado com sucesso.";
+                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                        // Redirecionar para a página de consulta
+                        Response.Redirect("/dist/pages/ConsultaMotoristas.aspx");
+                    }
+                    catch (Exception ex)
+                    {
+                        Response.Write("Erro ao salvar: " + ex.Message);
+                    }
+
+                    // Abrindo a conexão e executando a query
+                    //conn.Open();
+                    //int rowsInserted = cmd.ExecuteNonQuery();
+
+                    //if (rowsInserted > 0)
+                    //{
+                    //    string nomeUsuario = txtUsuCadastro.Text;
+                    //    string mensagem = $"Olá, {nomeUsuario}!\nMotorista com código {txtCodMot.Text} cadastrado com sucesso.";
+                    //    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    //    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                    //    // Redirecionar para a página de consulta
+                    //    Response.Redirect("/dist/pages/ConsultaMotoristas.aspx");
+                    //}
+                    //else
+                    //{
+                    //    string mensagem = "Falha ao cadastrar o veículo. Tente novamente.";
+                    //    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    //    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensagemErro = "Erro ao cadastrar o motorista: " + ex.Message;
+                string scriptErro = $"alert('{HttpUtility.JavaScriptStringEncode(mensagemErro)}');";
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", scriptErro, true);
+            }
+        }
+
+
+
+
+
 
 
 
@@ -237,62 +427,7 @@ namespace NewCapit.dist.pages
             txtCodTra.Text = string.Empty;
             
         }
-        private void PreencherComboUFCNH()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT Uf, SiglaUf FROM tbestadosbrasileiros ORDER BY SiglaUf";
-
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
-
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlCNH.DataSource = reader;
-                    ddlCNH.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
-                    ddlCNH.DataValueField = "Uf";  // Campo que será o valor de cada item                    
-                    ddlCNH.DataBind();  // Realiza o binding dos dados                   
-                    ddlCNH.Items.Insert(0, new ListItem("", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
-        private void CarregarMunicipiosCNH(int municipioCNHId)
-        {           
-            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT Uf,IdRegiao, Sigla, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @MunicipioCNHId", conn);
-                cmd.Parameters.AddWithValue("@MunicipioCNHId", municipioCNHId);
-                conn.Open();
-                ddlMunicCnh.DataSource = cmd.ExecuteReader();
-                ddlMunicCnh.DataTextField = "nome_municipio";
-                ddlMunicCnh.DataValueField = "Uf";
-                ddlMunicCnh.DataBind();
-
-                ddlMunicCnh.Items.Insert(0, new ListItem("Selecione", "0"));
-            }
-        }
-        protected void ddlCNH_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int municipioCNHId = int.Parse(ddlCNH.SelectedValue);
-            CarregarMunicipiosCNH(municipioCNHId);
-        }              
+       
         private void CarregarCargos()
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
