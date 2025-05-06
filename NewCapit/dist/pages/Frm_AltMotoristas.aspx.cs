@@ -393,8 +393,8 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@cidmot", txtCidCli.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ufmot", txtEstCli.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@cepmot", txtCepCli.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@fone3", txtCepCli.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@fone2", txtFixo.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@fone3", txtFixo.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@fone2", txtCelular.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@validade", txtValLibRisco.Text);
                     cmd.Parameters.AddWithValue("@dtnasc", DateTime.Parse(txtDtNasc.Text).ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@estcivil", ddlEstCivil.SelectedItem.Text.ToUpper());

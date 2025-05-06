@@ -42,7 +42,10 @@
             let txtValCartao = document.getElementById("<%= txtValCartao.ClientID %>");
             let txtFixo = document.getElementById("<%= txtFixo.ClientID %>");
             let txtCelular = document.getElementById("<%= txtCelular.ClientID %>");
+
+
             
+            if (txtVAlExameTox) aplicarMascara(txtVAlExameTox, "00/00/0000");
             if (txtDtNasc) aplicarMascara(txtDtNasc, "00/00/0000");
             if (txtDtEmissao) aplicarMascara(txtDtEmissao, "00/00/0000");
             if (txtValCNH) aplicarMascara(txtValCNH, "00/00/0000");
@@ -55,7 +58,23 @@
             if (txtFixo) aplicarMascara(txtCelular, "(00) 0 0000-0000");
         });
     </script>
+    <script type="text/javascript">
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
+                reader.onload = function (e) {
+                    var img = document.getElementById('preview');
+                    img.src = e.target.result;
+
+                    // Salva o base64 no campo hidden
+                    document.getElementById('<%= hiddenImage.ClientID %>').value = e.target.result;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
     <div class="content-wrapper">
 
         <div class="container-fluid">
@@ -85,7 +104,7 @@
                             <asp:ListItem Value="FUNCIONÁRIO" Text="FUNCIONÁRIO"></asp:ListItem>
                             <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
                             <asp:ListItem Value="FUNCIONÁRIO TERCEIRO" Text="FUNCIONÁRIO TERCEIRO"></asp:ListItem>
-                            
+
                         </asp:DropDownList>
                     </div>
                 </div>
@@ -115,21 +134,16 @@
                     </div>
                 </div>
                 <div class="col-md-2"></div>
-                <div class="col-md-1" id="nomeArquivo" >
-                    <asp:FileUpload ID="fileUpload" runat="server" Style="display: none;" />
+                <div class="col-md-1">
+                    <!-- FileUpload oculto -->
+                    <asp:FileUpload ID="FileUpload1" runat="server" Style="display: none;" onchange="previewImage(this)" />
+
                     <!-- Imagem clicável -->
-                    <img src="/fotos/usuario.jpg"
-                        class="rounded float-right"
-                        alt="Clique para selecionar arquivo"
-                        style="cursor: pointer; width: 80px;"
-                        onclick="document.getElementById('<%= fileUpload.ClientID %>').click();" />
-
-                    <asp:FileUpload ID="fileUpload1" runat="server"
-                        Style="display: none;"
-                        onchange="mostrarNomeArquivo(this)" />
-
-                    <%--<div id="nomeArquivo" style="margin-top:10px; font-weight:bold;"></div>--%>
-                </div>               
+                    <img id="preview" src='<%= ResolveUrl("/fotos/usuario.JPG") %>' alt="Selecione a foto"
+                        onclick="document.getElementById('<%= FileUpload1.ClientID %>').click();"
+                        style="cursor: pointer; width: 80px; height: 80px" />
+                    <input type="hidden" id="hiddenImage" name="hiddenImage" runat="server" />
+                </div>
             </div>
             <!-- Linha 2 do formulario -->
             <div class="row g-3">
@@ -149,23 +163,18 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <span class="details">REGIÃO DO PAIS:</span>
-                        <asp:DropDownList ID="ddlRegiao" runat="server" CssClass="form-control" AutoPostBack="True" 
-    OnSelectedIndexChanged="ddlRegiao_SelectedIndexChanged">
-                            <asp:ListItem Value="" Text=""></asp:ListItem>
-                            <asp:ListItem Value="1" Text="CENTRO-OESTE"></asp:ListItem>
-                            <asp:ListItem Value="2" Text="NORDESTE"></asp:ListItem>
-                            <asp:ListItem Value="3" Text="NORTE"></asp:ListItem>
-                            <asp:ListItem Value="4" Text="SUDESTE"></asp:ListItem>
-                            <asp:ListItem Value="5" Text="SUL"></asp:ListItem>
-                        </asp:DropDownList>
+                        <div class="form-group">
+                            <span class="details">REGIÃO DO PAIS:</span>
+                            <asp:DropDownList ID="ddlRegioes" runat="server" class="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlRegioes_SelectedIndexChanged"></asp:DropDownList>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form_group">
                         <span class="details">UF NASC.:</span>
-                        <asp:DropDownList ID="ddlUF" runat="server" class="form-control"  AutoPostBack="True"
-    OnSelectedIndexChanged="ddlUF_SelectedIndexChanged" ></asp:DropDownList>
+                        <asp:DropDownList ID="ddlEstNasc" runat="server" class="form-control" AutoPostBack="True"
+                            OnSelectedIndexChanged="ddlEstNasc_SelectedIndexChanged">
+                        </asp:DropDownList>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -181,6 +190,21 @@
                     </div>
                 </div>
 
+            </div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="details">NOME DA MÃE:</span>
+                        <asp:TextBox ID="txtNomeMae" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="details">NOME DO PAI:</span>
+                        <asp:TextBox ID="txtNomePai" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
+                    </div>
+                </div>
+                
             </div>
             <!-- Linha 3 do formulario -->
             <div class="row g-3">
@@ -208,7 +232,7 @@
                     <div class="form-group">
                         <span class="details">EMISSÃO:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtDtEmissao" runat="server" class="form-control" ></asp:TextBox>
+                            <asp:TextBox ID="txtDtEmissao" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -216,7 +240,7 @@
                     <div class="form-group">
                         <span class="details">CARTÃO PAMCARD:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtCartao" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtCartao" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -224,7 +248,7 @@
                     <div class="form-group">
                         <span class="details">MÊS/ANO:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtValCartao" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtValCartao" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -238,7 +262,7 @@
                     <div class="form-group">
                         <span class="details">Nº PIS:</span>
                         <div class="input-group">
-                            <input type="text" id="txtPIS" class="form-control">
+                            <asp:TextBox ID="txtPIS" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -278,7 +302,7 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">VALIDADE CNH:</span>
-                        <asp:TextBox id="txtValCNH" runat="server" class="form-control"></asp:TextBox>
+                        <asp:TextBox ID="txtValCNH" runat="server" class="form-control"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -290,7 +314,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <span class="details">MUNICIPIO DA CNH:</span>
-                        <asp:DropDownList ID="ddlMunicCnh" class="form-control select2"  runat="server"></asp:DropDownList>
+                        <asp:DropDownList ID="ddlMunicCnh" class="form-control select2" runat="server"></asp:DropDownList>
                     </div>
                 </div>
 
@@ -332,7 +356,7 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CÓDIGO:</span>
-                        <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder=""  AutoPostBack="true"></asp:TextBox>
+                        <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-5">
@@ -354,15 +378,15 @@
                     <div class="form-group">
                         <span class="details">VALIDADE:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtValLibRisco" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtValLibRisco" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <span class="details">EXAME:</span>
+                        <span class="details">EXAME TOX.:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtVAlExameTox" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtVAlExameTox" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -370,7 +394,7 @@
                     <div class="form-group">
                         <span class="details">MOOP:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtVAlMoop" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtVAlMoop" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -378,7 +402,7 @@
                     <div class="form-group">
                         <span class="details">FIXO:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtFixo" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtFixo" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -386,14 +410,20 @@
                     <div class="form-group">
                         <span class="details">CELULAR:</span>
                         <div class="input-group">
-                            <asp:TextBox id="txtCelular" runat="server" class="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtCelular" runat="server" class="form-control"></asp:TextBox>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CRACHÁ:</span>
-                        <asp:TextBox ID="txtCracha" runat="server" ForeColor="Blue" CssClass="form-control" value=""></asp:TextBox>
+                        <asp:TextBox ID="txtCracha" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">FROTA:</span>
+                        <asp:TextBox ID="txtFrota" runat="server" CssClass="form-control" value=""></asp:TextBox>
                     </div>
                 </div>
 
@@ -408,7 +438,7 @@
                 </div>
                 <div class="col-md-1">
                     <br />
-                    <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+                    <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCep_Click" UseSubmitBehavior="false" />
                 </div>
                 <div class="col-md-7">
                     <div class="form-group">
@@ -469,7 +499,7 @@
             <!-- Linha 9 do formulário -->
             <div class="row g-3">
                 <div class="col-md-1">
-                    <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" />
+                    <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" OnClick="btnSalvar1_Click" />
                 </div>
                 <div class="col-md-1">
                     <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Sair               
@@ -480,63 +510,63 @@
 
     </div>
 
-   <%-- <footer class="main-footer">
+    <%-- <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 2.1.0  
         </div>
         <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
     </footer>--%>
-     <script>
-         $(function () {
-             //Initialize Select2 Elements
-             $('.select2').select2()
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-             //Initialize Select2 Elements
-             $('.select2bs4').select2({
-                 theme: 'bootstrap4'
-             })
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
 
-             //Datemask dd/mm/yyyy
-             $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-             //Datemask2 mm/dd/yyyy
-             $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-             //Money Euro
-             $('[data-mask]').inputmask()
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
 
-             //Date picker
-             $('#reservationdate').datetimepicker({
-                 format: 'L'
-             });
-
-
-             //Date range as a button
-             $('#daterange-btn').daterangepicker(
-                 {
-                     ranges: {
-                         'Today': [moment(), moment()],
-                         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                         'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                         'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                         'This Month': [moment().startOf('month'), moment().endOf('month')],
-                         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                     },
-                     startDate: moment().subtract(29, 'days'),
-                     endDate: moment()
-                 },
-                 function (start, end) {
-                     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-                 }
-             )
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
 
 
-         })
-     </script>
-     <script>
-         function mostrarNomeArquivo(input) {
-             if (input.files.length > 0) {
-                 const nomeArquivo = input.files[0].name;
-                 document.getElementById('nomeArquivo').innerText = nomeArquivo;
-             }
-         }
-     </script>
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+
+        })
+    </script>
+    <script>
+        function mostrarNomeArquivo(input) {
+            if (input.files.length > 0) {
+                const nomeArquivo = input.files[0].name;
+                document.getElementById('nomeArquivo').innerText = nomeArquivo;
+            }
+        }
+    </script>
 </asp:Content>
