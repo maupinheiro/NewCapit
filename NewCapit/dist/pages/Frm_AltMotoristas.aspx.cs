@@ -367,7 +367,8 @@ namespace NewCapit.dist.pages
                          vencmoop = @vencmoop,
                          cracha = @cracha,
                          regiao = @regiao,
-                         numinss = @numinss                         
+                         numinss = @numinss,
+                         caminhofoto = @caminhofoto
                         WHERE id = @id";
             try
             {
@@ -434,6 +435,46 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@regiao", ddlRegioes.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@numinss", txtINSS.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@id", idConvertido);
+                    if (FileUpload1.HasFile)
+                    {
+                        try
+                        {
+                            // Nome original
+                            string originalName = Path.GetFileName(FileUpload1.FileName);
+
+                            // Novo nome (por exemplo, com timestamp)
+                            //string novoNome = "img_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + Path.GetExtension(originalName);
+                            string novoNome = txtCodMot.Text.Trim().ToUpper() + Path.GetExtension(originalName);
+
+                            // Caminho da nova pasta (por exemplo: ~/FotosSalvas/)
+                            string pastaDestino = Server.MapPath("~/fotos/");
+
+                            // Cria a pasta se não existir
+                            if (!Directory.Exists(pastaDestino))
+                            {
+                                Directory.CreateDirectory(pastaDestino);
+                            }
+
+                            // Caminho completo para salvar a cópia
+                            string caminhoCompleto = Path.Combine(pastaDestino, novoNome);
+
+                            // Salva o arquivo com novo nome na nova pasta
+                            FileUpload1.SaveAs(caminhoCompleto);
+
+
+
+                            //lblMensagem.Text = "Imagem salva com sucesso como " + novoNome;
+                        }
+                        catch (Exception ex)
+                        {
+                            Response.Write("Erro ao salvar foto: " + ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        //cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/");
+                    }
+                    cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
 
                     con.Open();
                     int rowsAffected = cmd.ExecuteNonQuery();
