@@ -309,6 +309,8 @@ namespace NewCapit
             var dataTable = DAL.ConVeiculos.FetchDataTable();
             if (dataTable.Rows.Count <= 0)
             {
+                gvVeiculos.DataSource = null;
+                gvVeiculos.DataBind();
                 return;
             }
             gvVeiculos.DataSource = dataTable;
@@ -326,12 +328,10 @@ namespace NewCapit
         }
         protected void Editar(object sender, EventArgs e)
         {
-            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-            {
-                string id = gvVeiculos.DataKeys[row.RowIndex].Value.ToString();
+            LinkButton btn = (LinkButton)sender;
+            string id = btn.CommandArgument;
 
-                Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
-            }
+            Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
         }
         //protected void Excluir(object sender, EventArgs e)
         //{

@@ -16,8 +16,9 @@ namespace NewCapit.dist.pages
     
     public partial class Frm_CadMotoristas : System.Web.UI.Page
     {
-        
+        string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
+        string  caminhoFoto;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -71,6 +72,10 @@ namespace NewCapit.dist.pages
         }};";
 
             ClientScript.RegisterStartupScript(this.GetType(), "restoreImage", script, true);
+
+
+
+
         }
         private void CarregarRegioes()
         {
@@ -226,7 +231,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@horario", ddlJornada.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@funcao", ddlFuncao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@frota", txtFrota.Text.Trim());
-                    cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@usucad", nomeUsuario.Trim().ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtccad", dataHoraAtual.ToString("dd/MM/yyyy HH:mm"));
                     cmd.Parameters.AddWithValue("@venceti", txtVAlExameTox.Text);
                     if (FileUpload1.HasFile)
@@ -254,7 +259,9 @@ namespace NewCapit.dist.pages
 
                             // Salva o arquivo com novo nome na nova pasta
                             FileUpload1.SaveAs(caminhoCompleto);
-                            cmd.Parameters.AddWithValue("@caminhofoto", caminhoCompleto);
+
+                           
+
                             //lblMensagem.Text = "Imagem salva com sucesso como " + novoNome;
                         }
                         catch (Exception ex)
@@ -264,9 +271,9 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        //cmd.Parameters.AddWithValue("@caminhofoto", caminhoCompleto);
-                        cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
+                        //cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/");
                     }
+                    cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/"+ txtCodMot.Text.Trim().ToUpper()+".jpg");
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.Trim());
                     cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
