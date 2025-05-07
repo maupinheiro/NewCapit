@@ -16,7 +16,7 @@ namespace NewCapit.dist.pages
     
     public partial class Frm_CadMotoristas : System.Web.UI.Page
     {
-        string caminhoCompleto;
+        
         DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -264,8 +264,8 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@caminhofoto", caminhoCompleto);
-                        //cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
+                        //cmd.Parameters.AddWithValue("@caminhofoto", caminhoCompleto);
+                        cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
                     }
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.Trim());
