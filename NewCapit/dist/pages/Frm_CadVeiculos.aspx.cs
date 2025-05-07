@@ -332,16 +332,16 @@ namespace NewCapit
         {
            //string[] cod_transp = ddlAgregados.SelectedItem.ToString().Split('-');
             
-            string sql = @"INSERT INTO tbveiculos (id, codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca)
+            string sql = @"INSERT INTO tbveiculos (codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca)
               VALUES
-              (@id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca)";
+              (@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca)";
 
             try
             {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    GerarNumero();
+                    
                     // Adicionando os parâmetros da inserção
                     cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.Trim().ToUpper());                    
@@ -377,9 +377,9 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
                     cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text.Trim());
-                    cmd.Parameters.AddWithValue("@venccronotacografo", txtCronotacografo.Text.Trim());
+                    cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(txtCronotacografo.Text.Trim()).ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text.Trim());
-                    cmd.Parameters.AddWithValue("@id", sequencia);
+                  
 
                     // Abrindo a conexão e executando a query
                     con.Open();
@@ -415,22 +415,22 @@ namespace NewCapit
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
         }
-        public void GerarNumero()
-        {
-            string sql_sequncia = " select isnull(max(id+1),1) as id from tbveiculos";
+        //public void GerarNumero()
+        //{
+        //    string sql_sequncia = " select isnull(max(id+1),1) as id from tbveiculos";
 
-            con.Open();
+        //    con.Open();
 
-            SqlDataAdapter da = new SqlDataAdapter(sql_sequncia, con);
+        //    SqlDataAdapter da = new SqlDataAdapter(sql_sequncia, con);
 
-            DataTable dt2 = new DataTable();
+        //    DataTable dt2 = new DataTable();
 
-            da.Fill(dt2);
+        //    da.Fill(dt2);
 
-            sequencia = int.Parse(dt2.Rows[0][0].ToString());
+        //    sequencia = int.Parse(dt2.Rows[0][0].ToString());
 
-            con.Close();
-        }
+        //    con.Close();
+        //}
 
         // Função para carregar o DropDownList com dados dos agregados
         private void CarregarDDLAgregados()
@@ -499,5 +499,6 @@ namespace NewCapit
         {
             ViewState["CidadeSelecionada"] = ddlCidades.SelectedValue;
         }
+
     }
 }

@@ -18,6 +18,7 @@ namespace NewCapit.dist.pages
     {
         string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
+        string  caminhoFoto;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -258,7 +259,9 @@ namespace NewCapit.dist.pages
 
                             // Salva o arquivo com novo nome na nova pasta
                             FileUpload1.SaveAs(caminhoCompleto);
-                            cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper());
+
+                           
+
                             //lblMensagem.Text = "Imagem salva com sucesso como " + novoNome;
                         }
                         catch (Exception ex)
@@ -268,8 +271,9 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/");
+                        //cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/");
                     }
+                    cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/"+ txtCodMot.Text.Trim().ToUpper()+".jpg");
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.Trim());
                     cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
