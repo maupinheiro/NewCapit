@@ -217,8 +217,16 @@ namespace NewCapit.dist.pages
                 {
                     txtHistorico.Text = dt.Rows[0][34].ToString();
                 }
-                txtAltCad.Text = dt.Rows[0][35].ToString();
-                lbDtAtualizacao.Text = dt.Rows[0][36].ToString();
+                if (dt.Rows[0][35].ToString() != string.Empty)
+                {
+                    txtAltCad.Text = dt.Rows[0][35].ToString();
+                }
+                else
+                {
+                    txtAltCad.Text = Session["UsuarioLogado"].ToString();
+                }
+               
+                lbDtAtualizacao.Text = DateTime.Parse(dt.Rows[0][36].ToString()).ToString("dd/MM/yyyy HH:mm");
                 txtCartao.Text = dt.Rows[0][37].ToString();
                 ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
                 txtNumero.Text = dt.Rows[0][39].ToString();
@@ -236,17 +244,17 @@ namespace NewCapit.dist.pages
                 txtUsuCadastro.Text = dt.Rows[0][51].ToString();
                 lblDtCadastro.Text = dt.Rows[0][52].ToString();
                 txtVAlExameTox.Text = dt.Rows[0][53].ToString();
-                ddlEstNasc.Items.Insert(0, new ListItem(dt.Rows[0][55].ToString(), "0"));
+                ddlEstNasc.SelectedItem.Text = dt.Rows[0][55].ToString();
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
                 ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString(), "0"));
                 ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), "0"));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
-                ddlRegioes.Items.Insert(0, new ListItem(dt.Rows[0][61].ToString(), "0"));
+                ddlRegioes.SelectedItem.Text = dt.Rows[0][61].ToString();
                 txtINSS.Text = dt.Rows[0][62].ToString();
                 txtCaminhoFoto.Text = dt.Rows[0][63].ToString();
                 fotoMotorista = dt.Rows[0][63].ToString();
-
+                
 
                 //SALVAR A FOTO DO MOTORISTA
                 // aspx
@@ -409,7 +417,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@inativo", txtMotivoInativacao.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@dtinativo", txtDtInativacao.Text);
                     cmd.Parameters.AddWithValue("@historico", txtHistorico.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@alterado", HttpContext.Current.User.Identity.Name.ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@alterado", txtUsuCadastro.Text.ToUpper());
                     cmd.Parameters.Add("@dataalteracao", SqlDbType.DateTime2).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     cmd.Parameters.AddWithValue("@cartaomot", txtCartao.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@naturalmot", ddlAgregados.SelectedItem.Text.ToUpper());
