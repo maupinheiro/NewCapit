@@ -231,7 +231,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@horario", ddlJornada.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@funcao", ddlFuncao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@frota", txtFrota.Text.Trim());
-                    cmd.Parameters.AddWithValue("@usucad", nomeUsuario.Trim().ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtccad", dataHoraAtual.ToString("dd/MM/yyyy HH:mm"));
                     cmd.Parameters.AddWithValue("@venceti", txtVAlExameTox.Text);
                     if (FileUpload1.HasFile)
