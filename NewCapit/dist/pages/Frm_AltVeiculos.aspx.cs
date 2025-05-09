@@ -18,7 +18,7 @@ namespace NewCapit
     public partial class Frm_AltVeiculos : System.Web.UI.Page
     {
         string id;
-       // string tara;
+        
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -30,7 +30,7 @@ namespace NewCapit
                     var lblUsuario = nomeUsuario;
 
                     txtAlteradoPor.Text = nomeUsuario;
-
+                    txtUsuarioAtual.Text = nomeUsuario;
                 }
                 else
                 {
@@ -336,7 +336,7 @@ namespace NewCapit
             if (tipoComposicao.Equals(composicao1))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
                 nTara = int.Parse(txtTara.Text);
@@ -348,7 +348,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao2))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 41500;
                 nTara = int.Parse(txtTara.Text);
@@ -360,7 +360,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao3))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "41500";
+                txtLotacao.Text = "41500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
                 nTara = int.Parse(txtTara.Text);
@@ -372,7 +372,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao4))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
                 nTara = int.Parse(txtTara.Text);
@@ -385,7 +385,7 @@ namespace NewCapit
             {
                 
                 txtEixos.Text = "06";
-                txtCap.Text = "53000";
+                txtLotacao.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
                 nTara = Int32.Parse(tara);
@@ -396,7 +396,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao6))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "48500";
+                txtLotacao.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
                 nTara = int.Parse(txtTara.Text);
@@ -407,7 +407,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao7))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "48500";
+                txtLotacao.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
                 nTara = int.Parse(txtTara.Text);
@@ -418,7 +418,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao8))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "53000";
+                txtLotacao.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
                 nTara = int.Parse(txtTara.Text);
@@ -429,7 +429,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao9))
             {
                 txtEixos.Text = "03";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
                 nTara = int.Parse(txtTara.Text);
@@ -440,7 +440,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao10))
             {
                 txtEixos.Text = "04";
-                txtCap.Text = "29000";
+                txtLotacao.Text = "29000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 29000;
                 nTara = int.Parse(txtTara.Text);
@@ -451,7 +451,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao11))
             {
                 txtEixos.Text = "07";
-                txtCap.Text = "57000";
+                txtLotacao.Text = "57000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 57000;
                 nTara = int.Parse(txtTara.Text);
@@ -462,7 +462,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao12))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "16000";
+                txtLotacao.Text = "16000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 16000;
                 nTara = int.Parse(txtTara.Text);
@@ -473,7 +473,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao13))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "3000";
+                txtLotacao.Text = "3000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 3000;
                 nTara = int.Parse(txtTara.Text);
@@ -484,7 +484,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao14))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
                 nTara = int.Parse(txtTara.Text);
@@ -495,7 +495,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao15))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
                 nTara = int.Parse(txtTara.Text);
@@ -506,7 +506,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao16))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "1200";
+                txtLotacao.Text = "1200";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 1200;
                 nTara = int.Parse(txtTara.Text);
@@ -517,7 +517,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao17))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "630";
+                txtLotacao.Text = "630";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 630;
                 nTara = int.Parse(txtTara.Text);
@@ -573,7 +573,7 @@ namespace NewCapit
             if (tipoComposicao.Equals(composicao1))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
                 nTara = int.Parse(txtTara.Text);
@@ -585,7 +585,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao2))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 41500;
                 nTara = int.Parse(txtTara.Text);
@@ -597,7 +597,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao3))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "41500";
+                txtLotacao.Text = "41500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
                 nTara = int.Parse(txtTara.Text);
@@ -609,7 +609,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao4))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
                 nTara = int.Parse(txtTara.Text);
@@ -622,7 +622,7 @@ namespace NewCapit
             {
                 tara = txtTara.Text.Trim();
                 txtEixos.Text = "06";
-                txtCap.Text = "53000";
+                txtLotacao.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
                 nTara = int.Parse(tara);
@@ -633,7 +633,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao6))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "48500";
+                txtLotacao.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
                 nTara = int.Parse(txtTara.Text);
@@ -644,7 +644,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao7))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "48500";
+                txtLotacao.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
                 nTara = int.Parse(txtTara.Text);
@@ -655,7 +655,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao8))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "53000";
+                txtLotacao.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
                 nTara = int.Parse(txtTara.Text);
@@ -666,7 +666,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao9))
             {
                 txtEixos.Text = "03";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
                 nTara = int.Parse(txtTara.Text);
@@ -677,7 +677,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao10))
             {
                 txtEixos.Text = "04";
-                txtCap.Text = "29000";
+                txtLotacao.Text = "29000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 29000;
                 nTara = int.Parse(txtTara.Text);
@@ -688,7 +688,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao11))
             {
                 txtEixos.Text = "07";
-                txtCap.Text = "57000";
+                txtLotacao.Text = "57000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 57000;
                 nTara = int.Parse(txtTara.Text);
@@ -699,7 +699,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao12))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "16000";
+                txtLotacao.Text = "16000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 16000;
                 nTara = int.Parse(txtTara.Text);
@@ -710,7 +710,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao13))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "3000";
+                txtLotacao.Text = "3000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 3000;
                 nTara = int.Parse(txtTara.Text);
@@ -721,7 +721,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao14))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
                 nTara = int.Parse(txtTara.Text);
@@ -732,7 +732,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao15))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
                 nTara = int.Parse(txtTara.Text);
@@ -743,7 +743,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao16))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "1200";
+                txtLotacao.Text = "1200";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 1200;
                 nTara = int.Parse(txtTara.Text);
@@ -754,7 +754,7 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao17))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "630";
+                txtLotacao.Text = "630";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 630;
                 nTara = int.Parse(txtTara.Text);
@@ -815,13 +815,13 @@ namespace NewCapit
                     txtPlaca.Text = GetValue(row, 9);
                     txtReb1.Text = GetValue(row, 10);
                     txtReb2.Text = GetValue(row, 11);
-                    ddlCarreta.Items.Insert(0, GetValue(row, 13));
                     ddlComposicao.Items.Insert(0, GetValue(row, 12));
+                    ddlCarreta.Items.Insert(0, GetValue(row, 13));                    
                     ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
                     txtCodRastreador.Text = GetValue(row, 15);
                     ddlTecnologia.Items.Insert(0, GetValue(row, 16));
                     txtId.Text = GetValue(row, 17);
-                    txtCap.Text = GetValue(row, 18);
+                    txtLotacao.Text = GetValue(row, 18);
                     txtEixos.Text = GetValue(row, 19);
                     txtTara.Text = GetValue(row, 20);
                     txtTolerancia.Text = GetValue(row, 21);
@@ -844,8 +844,10 @@ namespace NewCapit
                     txtAntt.Text = GetValue(row, 44);
                     // numeroReb1.Text = GetValue(row, 45);
                     // numeroReb2.Text = GetValue(row, 46); 
-                    ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
-                    ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
+                    //ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
+                    //ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
+                    ddlEstados.Items.Insert(0, GetValue(row, 47));
+                    ddlCidades.Items.Insert(0, GetValue(row, 48));
                     txtComprimento.Text = GetValue(row, 50);
                     txtLargura.Text = GetValue(row, 51);
                     txtAltura.Text = GetValue(row, 52);
@@ -897,30 +899,37 @@ namespace NewCapit
                             rastreamento = @rastreamento,
                             codrastreador = @codrastreador,
                             eixos = @eixos,
+                            cap = @cap, 
                             tara = @tara,
                             tolerancia = @tolerancia,
+                            pbt = @pbt,                            
                             codmot = @codmot,
                             motorista = @motorista,
                             codtra = @codtra,
                             transp = @transp,
+                            vencimentolaudofumaca = @vencimentolaudofumaca;
                             usualt = @usualt,
                             dtcalt = @dtcalt,
                             protocolocet = @protocolocet,
                             venclicencacet = @venclicencacet,
                             venclicenciamento = @venclicenciamento,
+                            venccronotacografo = @venccronotacografo,
                             marca = @marca,
                             renavan = @renavan,
                             cor = @cor,
                             comunicacao = @comunicacao,
                             antt = @antt,
                             ufplaca = @ufplaca,
-                            cidplaca = @cidplaca,        
+                            cidplaca = @cidplaca,  
+                            lotacao = @lotacao,
                             comprimento = @comprimento,
                             largura = @largura,
-                            altura = @altura,                
+                            altura = @altura, 
+                            placaant = @placaant,
                             tacografo = @tacografo,
                             modelotacografo = @modelotacografo,
-                            dataaquisicao = @dataaquisicao,        
+                            dataaquisicao = @dataaquisicao, 
+                            controlepatrimonio = @controlepatrimonio,
                             chassi = @chassi
                         WHERE id = @id";
             try
@@ -943,20 +952,22 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
                     cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
-                    cmd.Parameters.AddWithValue("@capacidade", txtCap.Text);
+                    cmd.Parameters.AddWithValue("@cap", txtLotacao.Text);
                     cmd.Parameters.AddWithValue("@tara", txtTara.Text);
                     cmd.Parameters.AddWithValue("@tolerancia", txtTolerancia.Text);
-                    cmd.Parameters.AddWithValue("@ptb", txtPBT.Text);
+                    cmd.Parameters.AddWithValue("@pbt", txtPBT.Text);
                     cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name.ToUpper()); // Usuário atual
-                    cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now); // Corrigido para DateTime
+                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text);
+                    cmd.Parameters.AddWithValue("@usualt", txtUsuarioAtual.Text.Trim().ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now.ToString("dd/MM/yyyy HH:mm")); // Corrigido para DateTime
                     cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
                     cmd.Parameters.AddWithValue("@venclicencacet", string.IsNullOrEmpty(txtVencCET.Text) ? (object)DBNull.Value : txtVencCET.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(txtCronotacografo.Text).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
                     cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
@@ -964,13 +975,16 @@ namespace NewCapit
                     //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
                     //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
                     cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.Text);                   
+                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text);
+                    cmd.Parameters.AddWithValue("@placaant", txtPlacaAnt.Text);
                     cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);                    
+                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);
+                    cmd.Parameters.AddWithValue("@controlepatrimonio", txtControlePatrimonio.Text);
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text);                    
                     cmd.Parameters.AddWithValue("@id", idConvertido);
 

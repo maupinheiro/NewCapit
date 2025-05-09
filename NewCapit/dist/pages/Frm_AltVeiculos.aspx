@@ -64,7 +64,7 @@
                 <div class="card card-info">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;VEÍCULO - ATUALIZAÇÃO</h3>
-                        
+
                     </div>
                 </div>
                 <div class="card-header">
@@ -72,11 +72,11 @@
                     <div class="row g-3">
                         <div class="col-md-1">
                             <div class="form-group">
-                                
+
                                 <span class="details">FROTA:</span>
                                 <asp:TextBox ID="txtCodVei" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TIPO DE VEÍCULO:</span>
@@ -104,7 +104,6 @@
                             <div class="form-group">
                                 <span class="details">UF:</span>
                                 <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
-                                    
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -187,14 +186,14 @@
                                 <asp:TextBox ID="txtLicenciamento" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
-                        
+
 
                     </div>
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TACÓGRAFO:</span>
-                                <asp:DropDownList ID="ddlTacografo" runat="server" CssClass="form-control" >
+                                <asp:DropDownList ID="ddlTacografo" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="" Text=""></asp:ListItem>
                                     <asp:ListItem Value="DIARIO" Text="DIARIO"></asp:ListItem>
                                     <asp:ListItem Value="SEMANAL" Text="SEMANAL"></asp:ListItem>
@@ -359,24 +358,24 @@
                                 <span class="details">ANTT/RNTRC:</span>
                                 <asp:TextBox ID="txtAntt" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="15"></asp:TextBox>
                             </div>
-                       </div>
                         </div>
-                       <div class="row g-3"> 
-                            <div class="col-md-1">
-                                <div class="form-group">
-                                    <span class="details">MOTORISTA:</span>
-                                    <asp:TextBox ID="txtCodMot" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form_group">
-                                    <span class="details">NOME COMPLETO:</span>
-                                    <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                </div>
-                                <asp:HiddenField ID="txtconformmessageValue" runat="server" />
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">MOTORISTA:</span>
+                                <asp:TextBox ID="txtCodMot" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
                             </div>
                         </div>
-                    
+                        <div class="col-md-4">
+                            <div class="form_group">
+                                <span class="details">NOME COMPLETO:</span>
+                                <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                            </div>
+                            <asp:HiddenField ID="txtconformmessageValue" runat="server" />
+                        </div>
+                    </div>
+
                     <!-- linha 6 do formulario -->
                     <div class="row g-3">
                         <div class="col-md-1">
@@ -388,7 +387,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">LOTAÇÃO:</span>
-                                <asp:TextBox ID="txtCap" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtLotacao" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
                             </div>
                         </div>
 
@@ -444,7 +443,7 @@
                     </div>
                     <!-- Linha 7 do formulario -->
                     <div class="row g-3">
-                        
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">CARRETA:</span>
@@ -458,20 +457,20 @@
 
                         <div class="col-md-1">
                             <div class="form-group">
-                                <asp:Label id="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
+                                <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
                                 <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <asp:Label id="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
+                                <asp:Label ID="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
                                 <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <span class="">COMPOSIÇÃO:</span>
-                                <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true" >
+                                <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true">
                                     <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                                     <asp:ListItem Value="CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA" Text="SELECIONE">CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA</asp:ListItem>
                                     <asp:ListItem Value="CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER" Text="">CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER</asp:ListItem>
@@ -493,14 +492,19 @@
                                 </asp:DropDownList></>
                             </div>
                         </div>
-
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <asp:Label ID="Label1" runat="server" class="details" Visible ="false">usuario</asp:Label>
+                                <asp:TextBox ID="txtUsuarioAtual" runat="server" CssClass="form-control" Visible="false"></asp:TextBox>
+                            </div>
+                        </div>
                     </div>
                     <!-- Linha 8 do formulario -->
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">CADASTRADO EM:</span>
-                                <asp:Label ID="txtDtCadastro" runat="server" Style="text-align: center"  CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
+                                <asp:Label ID="txtDtCadastro" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -518,7 +522,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <span class="details">POR:</span>
-                                <asp:TextBox ID="txtAlteradoPor" runat="server" Style="text-align: left"  CssClass="form-control" placeholder="" MaxLength="20"></asp:TextBox>
+                                <asp:TextBox ID="txtAlteradoPor" runat="server" Style="text-align: left" CssClass="form-control" placeholder="" MaxLength="20"></asp:TextBox>
                             </div>
                         </div>
                     </div>

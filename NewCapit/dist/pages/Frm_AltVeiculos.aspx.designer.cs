@@ -384,13 +384,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtEixos;
 
         /// <summary>
-        /// Controle txtCap.
+        /// Controle txtLotacao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCap;
+        protected global::System.Web.UI.WebControls.TextBox txtLotacao;
 
         /// <summary>
         /// Controle txtTara.
@@ -517,6 +517,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlComposicao;
+
+        /// <summary>
+        /// Controle Label1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
+
+        /// <summary>
+        /// Controle txtUsuarioAtual.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUsuarioAtual;
 
         /// <summary>
         /// Controle txtDtCadastro.
