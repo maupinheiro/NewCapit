@@ -97,7 +97,9 @@
 
                                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-primary" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-tasks"></i></asp:LinkButton>
+                                                    <asp:LinkButton ID="lnkView" runat="server" class="btn btn-info" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-tasks"></i></asp:LinkButton>
+                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fas fa-edit"></i> </asp:LinkButton>
+                                                    <asp:LinkButton ID="lnkExcluir" runat="server" class="btn btn-danger" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-trash-alt"></i></asp:LinkButton>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
                                         </Columns>
@@ -118,7 +120,7 @@
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Detalhes da Ordem de Coleta</h4>
+                            <h4 class="modal-title">Detalhes da Coleta</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

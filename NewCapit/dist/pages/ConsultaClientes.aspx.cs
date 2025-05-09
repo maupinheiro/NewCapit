@@ -114,8 +114,8 @@ namespace NewCapit
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
             {
                 string id = gvList.DataKeys[row.RowIndex].Value.ToString();
-
-                Response.Redirect("Frm_AltClientes.aspx?id=" + id);
+                
+                Response.Redirect("/dist/pages/Frm_AltClientes.aspx?id=" + id);
             }
         }
         protected void Mapa(object sender, EventArgs e)

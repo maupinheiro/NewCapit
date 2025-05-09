@@ -113,7 +113,6 @@ namespace NewCapit.dist.pages
             //gvListCargas.HeaderRow.TableSection = TableRowSection.TableHeader;
             //gvListCargas.FooterRow.TableSection = TableRowSection.TableFooter;
         }
-
         protected void lnkPesquisar_Click(object sender, EventArgs e)
         {
             string sql = @"SELECT carga, peso, status, cliorigem, clidestino, 
@@ -211,9 +210,7 @@ namespace NewCapit.dist.pages
                     //lblMensagem.ForeColor = System.Drawing.Color.Red;
                 }
             }
-        }
-
-       
+        }       
         protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -257,7 +254,15 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvListCargas.DataKeys[row.RowIndex].Value.ToString();
 
+                Response.Redirect("/dist/pages/Frm_EditarColeta.aspx?id=" + id);
+            }
+        }
 
 
 
