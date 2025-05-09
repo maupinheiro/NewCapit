@@ -75,7 +75,7 @@ namespace NewCapit.dist.pages
                 ddlRegioes.DataTextField = "regiao";
                 ddlRegioes.DataValueField = "id";
                 ddlRegioes.DataBind();
-                ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
+                //ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
             }
         }
         private void CarregarEstadosNascimento()
@@ -225,8 +225,16 @@ namespace NewCapit.dist.pages
                 {
                     txtAltCad.Text = Session["UsuarioLogado"].ToString();
                 }
-               
-                lbDtAtualizacao.Text = DateTime.Parse(dt.Rows[0][36].ToString()).ToString("dd/MM/yyyy HH:mm");
+
+                if(dt.Rows[0][36].ToString() != string.Empty)
+                {
+                    lbDtAtualizacao.Text = DateTime.Parse(dt.Rows[0][36].ToString()).ToString("dd/MM/yyyy HH:mm");
+                }
+                else
+                {
+                    lbDtAtualizacao.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                }
+                
                 txtCartao.Text = dt.Rows[0][37].ToString();
                 ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
                 txtNumero.Text = dt.Rows[0][39].ToString();
@@ -238,7 +246,7 @@ namespace NewCapit.dist.pages
                 txtReboque2.Text = dt.Rows[0][45].ToString();
                 txtTipoVeiculo.Text = dt.Rows[0][46].ToString();
                 txtValCartao.Text = dt.Rows[0][47].ToString();
-                ddlJornada.SelectedItem.Text = dt.Rows[0][48].ToString();
+                //ddlJornada.SelectedItem.Text = dt.Rows[0][48].ToString();
                 ddlFuncao.SelectedItem.Text = dt.Rows[0][49].ToString();
                 txtFrota.Text = dt.Rows[0][50].ToString();
                 txtUsuCadastro.Text = dt.Rows[0][51].ToString();
@@ -412,7 +420,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@nomepai", txtNomePai.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@nomemae", txtNomeMae.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@transp", ddlJornada.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@cadmot", DateTime.Parse(txtDtCad.Text).ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@inativo", txtMotivoInativacao.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@dtinativo", txtDtInativacao.Text);
@@ -420,7 +428,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@alterado", txtUsuCadastro.Text.ToUpper());
                     cmd.Parameters.Add("@dataalteracao", SqlDbType.DateTime2).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     cmd.Parameters.AddWithValue("@cartaomot", txtCartao.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@naturalmot", ddlAgregados.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@naturalmot", ddlMunicipioNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@tipomot", ddlTipoMot.SelectedItem.Text.ToUpper());
