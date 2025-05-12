@@ -57,7 +57,8 @@
 <link rel="stylesheet" href="../../plugins/dropzone/min/dropzone.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
-        
+
+      
     <asp:ContentPlaceHolder ID="head" runat="server">
     <style>
         .img-custom {
