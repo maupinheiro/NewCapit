@@ -12,11 +12,10 @@
         }
     </script>
     <style>
-        .d-none { display: none; }
-     </style>
-    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-    
-    
+        .d-none {
+            display: none;
+        }
+    </style>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -53,16 +52,24 @@
                             <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form_group">
                             <span class="details">Tipo de Veículo:</span>
                             <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
                             </asp:DropDownList>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <br />
-                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
+                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
+                    </div>
+                    <div class="col-md-1">
+                        <br />
+                        <%--<asp:LinkButton ID="lnkColetas" runat="server" CssClass="btn btn-info"><i class='fas fa-shipping-fast' ></i> Coletas</asp:LinkButton>--%>
+                        <a href="/dist/pages/ConsultaColetasPopUpCNT.aspx" class="d-none d-sm-inline-block btn btn-info shadow-sm">
+    <i class="fas fa-shipping-fast"></i>&nbsp; Coletas
+
+</a>
                     </div>
 
                 </div>
@@ -79,7 +86,7 @@
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
-                               <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
+                                <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
                                     <HeaderTemplate>
                                         <table class="table table-bordered table-hover">
                                             <thead>
@@ -87,12 +94,12 @@
                                                     <th>#</th>
                                                     <th>Motorista</th>
                                                     <th>O.Coleta</th>
-                                                    <th>Veículo</th>                                                    
-                                                    <th>Tipo de Veiculo</th>                                                    
+                                                    <th>Veículo</th>
+                                                    <th>Tipo de Veiculo</th>
                                                     <th>CVA</th>
-                                                    <th>Origem/Destino</th>                                                    
+                                                    <th>Origem/Destino</th>
                                                     <th>Situação</th>
-                                                    <th>Atendimento</th>                                                    
+                                                    <th>Atendimento</th>
                                                     <th>Ação</th>
                                                 </tr>
                                             </thead>
@@ -128,18 +135,18 @@
                                                 <%# Eval("nomcliorigem") %>
                                                 <br />
                                                 <%# Eval("nomclidestino") %>
-                                            </td>                                            
+                                            </td>
                                             <td><%# Eval("situacao") %></td>
-                                            
+
                                             <td>NO PRAZO</td>
-                                            
+
                                             <td>
-                                                <asp:LinkButton 
-                                                    ID="lnkEditar" 
-                                                    runat="server" 
+                                                <asp:LinkButton
+                                                    ID="lnkEditar"
+                                                    runat="server"
                                                     class="btn btn-info"
                                                     CommandName="Editar"
-                                                    CommandArgument='<%# Eval("num_carregamento") %>' 
+                                                    CommandArgument='<%# Eval("num_carregamento") %>'
                                                     OnCommand="lnkEditar_Command"
                                                     OnClientClick="event.stopPropagation();">
                                                     <i class="fas fa-tasks"></i>
@@ -180,7 +187,7 @@
                                                         </tr>
                                                     </ItemTemplate>
                                                     <FooterTemplate>
-                                                            </tbody>
+                                                        </tbody>
                                                         </table>
                                                     </FooterTemplate>
                                                 </asp:Repeater>
@@ -188,13 +195,13 @@
                                         </tr>
                                     </ItemTemplate>
                                     <FooterTemplate>
-                                            </tbody>
+                                        </tbody>
                                         </table>
                                     </FooterTemplate>
                                 </asp:Repeater>
 
 
-                                        
+
                             </div>
                             <!-- /.card-body -->
                         </div>

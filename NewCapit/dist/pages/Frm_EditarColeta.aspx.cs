@@ -156,7 +156,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo";
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -167,6 +167,7 @@ namespace NewCapit.dist.pages
                         {
                             if (reader.Read())
                             {
+                                txtCodRemetente.Text = reader["codcli"].ToString();
                                 txtNomRemetente.Text = reader["nomcli"].ToString();
                                 txtMunicipioRemetente.Text = reader["cidcli"].ToString();
                                 txtUFRemetente.Text = reader["estcli"].ToString();
@@ -201,7 +202,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo";
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -212,6 +213,7 @@ namespace NewCapit.dist.pages
                         {
                             if (reader.Read())
                             {
+                                txtCodDestinatario.Text = reader["codcli"].ToString();
                                 txtNomDestinatario.Text = reader["nomcli"].ToString();
                                 txtMunicipioDestinatario.Text = reader["cidcli"].ToString();
                                 txtUFDestinatario.Text = reader["estcli"].ToString();
