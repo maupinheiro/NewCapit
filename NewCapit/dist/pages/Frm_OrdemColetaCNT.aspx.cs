@@ -307,7 +307,7 @@ namespace NewCapit.dist.pages
                         dataHora.Hour, dataHora.Minute, dataHora.Second
                     );
 
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "PENDENTE"))
                     {
                         lblAtendimento.Text = "Atrasado";
                         tdAtendimento.BgColor = "Red";
@@ -1000,7 +1000,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
-                cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
+                //cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
                 cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
                 cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
@@ -1014,7 +1014,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT"));
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
-                cmd.Parameters.AddWithValue("@situacao", "PENDENTE");
+                cmd.Parameters.AddWithValue("@situacao", "ANDAMENTO");
                 cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
                 cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
                 cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
@@ -1073,7 +1073,7 @@ namespace NewCapit.dist.pages
                                 con.Open();
                                 cmdc.ExecuteNonQuery();
                                 nomeUsuario = txtUsuCadastro.Text;
-                                string mensagem = $"Olá, {nomeUsuario}!\nCarregamento cadastrado no sistema com sucesso.";
+                                string mensagem = $"Olá, {nomeUsuario}!\nOrdem de Coleta, cadastrada com sucesso!";
                                 string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
                                 string script = $"alert('{mensagemCodificada}');";
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);

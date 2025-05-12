@@ -381,14 +381,14 @@ namespace NewCapit.dist.pages
                         dataHora.Hour, dataHora.Minute, dataHora.Second
                     );
 
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "PENDENTE"))
                     {
                         lblAtendimento.Text = "Atrasado";
                         tdAtendimento.BgColor = "Red";
                         tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
                     }
                     else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay
-                             && (status == "Concluído" || status == "Pendente"))
+                             && (status == "Concluído" || status == "PENDENTE"))
                     {
                         lblAtendimento.Text = "No Prazo";
                         tdAtendimento.BgColor = "Green";

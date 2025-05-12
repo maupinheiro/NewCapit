@@ -1,8 +1,21 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="ConsultaColetasCNT.aspx.cs" Inherits="NewCapit.dist.pages.ConsultaColetasCNT" %>
-
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <style>
+.modalContent {
+    background-color: white;
+    border: solid 1px #ccc;
+    padding: 20px;
+    width: 400px;
+}
+.modalBackground {
+    background-color: rgba(0,0,0,0.7);
+}
+</style>
+    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -81,7 +94,7 @@
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 590px;">
                                 <table class="table table-head-fixed text-nowrap">
-                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="carga" OnRowDataBound="gvListCargas_RowDataBound" >
+                                    <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="carga" OnRowCommand="gvProdutos_RowCommand" OnRowDataBound="gvListCargas_RowDataBound" >
                                         
                                         <Columns>
                                             <asp:BoundField DataField="carga" HeaderText="COLETA" />
@@ -97,8 +110,12 @@
 
                                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="lnkView" runat="server" class="btn btn-info" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-tasks"></i></asp:LinkButton>
-                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fas fa-edit"></i> </asp:LinkButton>
+                                                     <asp:LinkButton ID="lnkAbrir" runat="server" 
+                                                                        CommandName="AbrirModal" 
+                                                                        CommandArgument='<%# Eval("Id") %>' 
+                                                                        CssClass="btn btn-info"><i class="fas fa-list"></i>
+                                                                    </asp:LinkButton>
+                                                     <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary"><i class="fas fa-edit"></i> </asp:LinkButton>
                                                     <asp:LinkButton ID="lnkExcluir" runat="server" class="btn btn-danger" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-trash-alt"></i></asp:LinkButton>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
@@ -116,173 +133,184 @@
             </div>
             <!-- /.container-fluid -->
             <!-- MODAL DETALHES -->
+            <!-- Painel do modal -->
+    <asp:Panel ID="pnlModal" runat="server" CssClass="modalContent">
+                       
+    <div class="modal-body">
+        <div class="card-header">
+            <!-- Linha 2 do formulario -->
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <div class="form_group">
+                        <span class="details">COLETA:</span>
+                        <asp:Label ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <span class="">FILIAL:</span>
+                        <asp:Label ID="ddlSolicitante" runat="server" class="form-control">  
+                        </asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <span class="">PLANTA:</span>
+                        <asp:Label ID="ddlTomador" runat="server" CssClass="form-control"></asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="details">TIPO DE VEÍCULO:</span>
+                        <asp:TextBox ID="txtGr" runat="server" class="form-control" placeholder="" ></asp:TextBox>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- Linha 3 do formulario -->
+            <div class="row g-3">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">CÓDIGO:</span>
+                        <asp:TextBox ID="txtCodCliOrigem" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form_group">
+                        <span class="details">ORIGEM:</span>
+                        <asp:Label ID="lblRemetente" CssClass="form-control" runat="server" AutoPostBack="true"></asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <span class="details">MUNICÍPIO:</span>
+                        <asp:TextBox ID="txtMunicOrigem" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">UF:</span>
+                        <asp:TextBox ID="txtUFOrigem" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Linha 4 do formulario -->
+            <div class="row g-3">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">CÓDIGO:</span>
+                        <asp:TextBox ID="txtCodCliDestino" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form_group">
+                        <span class="details">DESTINO:</span>
+                        <asp:DropDownList ID="ddlDestinatario" class="form-control" runat="server" AutoPostBack="true"></asp:DropDownList>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <span class="details">MUNICÍPIO:</span>
+                        <asp:TextBox ID="txtMunicDestinatario" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">UF:</span>
+                        <asp:TextBox ID="txtUFDestinatario" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Linha 5 do formulário -->
+            <div class="row g-3">                                                                      
+                <div class="col-md-2">
+                    <div class="form_group">
+                        <span class="details">DATA COLETA:</span>
+                        <asp:Label ID="lblDataColeta" runat="server" CssClass="form-control">
+                        </asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form_group">
+                        <span class="details">SOLICITAÇÃO(ÕES):</span>
+                        <asp:Label ID="lblSolicitacoes" runat="server" CssClass="form-control">
+                        </asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">ROTA:</span>
+                        <asp:TextBox ID="txtRota" runat="server" class="form-control" placeholder="" ></asp:TextBox>
+                    </div>
+                </div> 
+                <div class="col-md-1">
+                    <div class="form_group">
+                        <span class="details">VIAGEM:</span>
+                        <asp:Label ID="lblTipoViagem" runat="server" CssClass="form-control">
+                        </asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">PESO:</span>
+                        <asp:TextBox ID="txtPeso" runat="server" class="form-control" placeholder="" ></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form_group">
+                        <span class="details">MET<sup>3</sup>:</span>
+                        <asp:Label ID="lblMetragem" runat="server" CssClass="form-control">    
+                        </asp:Label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">EST.ROTA:</span>
+                        <asp:TextBox ID="txtEstudoRota" runat="server" class="form-control" placeholder="" ></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <span class="details">REMESSA:</span>
+                        <asp:TextBox ID="txtRemessa" runat="server" class="form-control" placeholder="" ></asp:TextBox>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- Linha 5 do formulário -->
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <div class="form_group">
+                        <span class="details">QUANTIDADE/PALLET´S:</span>
+                        <textarea class="form-control" rows="4"  placeholder="Quant./Pallet´s">
+                            '<%=pallet %>'
+                        </textarea>
+                    </div>
+                </div>
+            </div>                                
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+    </div>
+
+                    </asp:Panel>
+
+<!-- ModalPopupExtender -->
+                        <ajaxToolkit:ModalPopupExtender ID="mpeModal" runat="server"
+                            TargetControlID="btnDummy"
+                            PopupControlID="pnlModal"
+                            BackgroundCssClass="modalBackground"
+                            CancelControlID="btnFechar" />
+
+                        <!-- Botão falso só para ativar o Modal -->
+                        <asp:Button ID="btnDummy" runat="server" Style="display: none;" />
+
             <div class="modal fade" id="modal-xl">
                 <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Detalhes da Coleta</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card-header">
-                                <!-- Linha 2 do formulario -->
-                                <div class="row g-3">
-                                    <div class="col-md-2">
-                                        <div class="form_group">
-                                            <span class="details">COLETA:</span>
-                                            <asp:Label ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <span class="">FILIAL:</span>
-                                            <asp:Label ID="ddlSolicitante" runat="server" class="form-control">  
-                                            </asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <span class="">PLANTA:</span>
-                                            <asp:Label ID="ddlTomador" runat="server" CssClass="form-control"></asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <span class="details">TIPO DE VEÍCULO:</span>
-                                            <asp:TextBox ID="txtGr" runat="server" class="form-control" placeholder="" ></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <!-- Linha 3 do formulario -->
-                                <div class="row g-3">
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">CÓDIGO:</span>
-                                            <asp:TextBox ID="txtCodCliOrigem" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form_group">
-                                            <span class="details">ORIGEM:</span>
-                                            <asp:Label ID="lblRemetente" CssClass="form-control" runat="server" AutoPostBack="true"></asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <span class="details">MUNICÍPIO:</span>
-                                            <asp:TextBox ID="txtMunicOrigem" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">UF:</span>
-                                            <asp:TextBox ID="txtUFOrigem" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- Linha 4 do formulario -->
-                                <div class="row g-3">
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">CÓDIGO:</span>
-                                            <asp:TextBox ID="txtCodCliDestino" runat="server" class="form-control" placeholder="" MaxLength="5"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form_group">
-                                            <span class="details">DESTINO:</span>
-                                            <asp:DropDownList ID="ddlDestinatario" class="form-control" runat="server" AutoPostBack="true"></asp:DropDownList>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <span class="details">MUNICÍPIO:</span>
-                                            <asp:TextBox ID="txtMunicDestinatario" runat="server" class="form-control" placeholder="" MaxLength="45"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">UF:</span>
-                                            <asp:TextBox ID="txtUFDestinatario" runat="server" class="form-control" Style="text-align: center" placeholder="" MaxLength="2"></asp:TextBox>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- Linha 5 do formulário -->
-                                <div class="row g-3">                                                                      
-                                    <div class="col-md-2">
-                                        <div class="form_group">
-                                            <span class="details">DATA COLETA:</span>
-                                            <asp:Label ID="lblDataColeta" runat="server" CssClass="form-control">
-                                            </asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form_group">
-                                            <span class="details">SOLICITAÇÃO(ÕES):</span>
-                                            <asp:Label ID="lblSolicitacoes" runat="server" CssClass="form-control">
-                                            </asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">ROTA:</span>
-                                            <asp:TextBox ID="txtRota" runat="server" class="form-control" placeholder="" ></asp:TextBox>
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-1">
-                                        <div class="form_group">
-                                            <span class="details">VIAGEM:</span>
-                                            <asp:Label ID="lblTipoViagem" runat="server" CssClass="form-control">
-                                            </asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">PESO:</span>
-                                            <asp:TextBox ID="txtPeso" runat="server" class="form-control" placeholder="" ></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form_group">
-                                            <span class="details">MET<sup>3</sup>:</span>
-                                            <asp:Label ID="lblMetragem" runat="server" CssClass="form-control">    
-                                            </asp:Label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <span class="details">EST.ROTA:</span>
-                                            <asp:TextBox ID="txtEstudoRota" runat="server" class="form-control" placeholder="" ></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <span class="details">REMESSA:</span>
-                                            <asp:TextBox ID="txtRemessa" runat="server" class="form-control" placeholder="" ></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <!-- Linha 5 do formulário -->
-                                <div class="row g-3">
-                                    <div class="col-md-12">
-                                        <div class="form_group">
-                                            <span class="details">QUANTIDADE/PALLET´S:</span>
-                                            <textarea class="form-control" rows="4" placeholder="Quant./Pallet´s"></textarea>
-                                        </div>
-                                    </div>
-                                </div>                                
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
-                        </div>
-                    </div>
+                    
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
