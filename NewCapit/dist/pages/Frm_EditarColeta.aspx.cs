@@ -371,7 +371,7 @@ namespace NewCapit.dist.pages
                 tomador = @tomador,
                 veiculo = @veiculo,
                 codvworigem =@codvworigem,
-                codvwdestino=@codvwdestino
+                codvwdestino=@codvwdestino,
                 atualizacao = @atualizacao
             WHERE carga = @carga";
 
@@ -387,12 +387,12 @@ namespace NewCapit.dist.pages
                     DataTable dtd = new DataTable();
                     adptd.Fill(dtd);
                     cmd.Parameters.AddWithValue("@status", txtSituacao.Text);
-                    cmd.Parameters.AddWithValue("@codRemetente", dto.Rows[0][3].ToString());
+                    cmd.Parameters.AddWithValue("@codRemetente", txtCodRemetente.Text.Trim());
                     cmd.Parameters.AddWithValue("@nomRemetente", dto.Rows[0][0].ToString());
                     cmd.Parameters.AddWithValue("@municipioRemetente", dto.Rows[0][1].ToString());
                     cmd.Parameters.AddWithValue("@codvworigem", dto.Rows[0][3].ToString());
 
-                    cmd.Parameters.AddWithValue("@codDestinatario", dtd.Rows[0][3].ToString());
+                    cmd.Parameters.AddWithValue("@codDestinatario", txtCodDestinatario.Text.Trim());
                     cmd.Parameters.AddWithValue("@nomDestinatario", dtd.Rows[0][0].ToString());
                     cmd.Parameters.AddWithValue("@municipioDestinatario", dtd.Rows[0][1].ToString());
                     cmd.Parameters.AddWithValue("@codvwdestino", dtd.Rows[0][3].ToString());

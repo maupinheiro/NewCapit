@@ -224,7 +224,7 @@ namespace NewCapit.dist.pages
                 string status = DataBinder.Eval(e.Row.DataItem, "status")?.ToString();
 
                 // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
-                int colunaAtendimentoIndex = 3; // Ajustar conforme a posição real da coluna no GridView
+                int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
                 TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
 
                 DateTime previsao, dataHora;
@@ -236,21 +236,21 @@ namespace NewCapit.dist.pages
                     DateTime dataPrevisao = previsao.Date;
                     DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
 
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    if (dataHoraComparacao < agora && (status == "CONCLUIDO" || status == "PENDENTE"))
                     {
-                        cell.Text = "Atrasado";
+                        cell.Text = "ATRASADO";
                         cell.BackColor = System.Drawing.Color.Red;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "Concluído" || status == "Pendente"))
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "CONCLUIDO" || status == "PENDENTE"))
                     {
-                        cell.Text = "No Prazo";
+                        cell.Text = "NO PRAZO";
                         cell.BackColor = System.Drawing.Color.Green;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao > agora && status == "Concluído")
+                    else if (dataHoraComparacao > agora && status == "CONCLUIDO")
                     {
-                        cell.Text = "Antecipado";
+                        cell.Text = "ANTECIPADO";
                         cell.BackColor = System.Drawing.Color.Orange;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
