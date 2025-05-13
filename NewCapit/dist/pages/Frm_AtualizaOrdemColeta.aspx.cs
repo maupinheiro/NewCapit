@@ -1046,6 +1046,10 @@ namespace NewCapit.dist.pages
                 return DBNull.Value;
         }
 
+        protected void btnImprimir_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("OrdemColetaImpressao.aspx");
+        }
 
         private void AtualizarColetasVisiveis()
         {

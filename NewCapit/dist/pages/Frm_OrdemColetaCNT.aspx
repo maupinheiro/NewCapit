@@ -129,8 +129,7 @@
                 <div class="card card-info">
                     <div class="card-header">
                         <div class="d-sm-flex align-items-left justify-content-between mb-3">
-                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -
-    <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
+                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -  <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
                             <%--<h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;--%>
                             <%--<asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>--%>
                         </div>
@@ -567,6 +566,7 @@
                         <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
 
                     </div>
+                   
                     <div class="col-md-1">
                         <br />
                         <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               

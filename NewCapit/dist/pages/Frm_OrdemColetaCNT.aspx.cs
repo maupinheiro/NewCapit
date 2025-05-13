@@ -965,13 +965,13 @@ namespace NewCapit.dist.pages
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
                         tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao,codcliorigem, 
-                        nomcliorigem, codclidestino, nomclidestino,distancia,tipoveiculo
+                        nomcliorigem, codclidestino, nomclidestino,distancia
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
                         @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@codcliorigem, 
-                        @nomcliorigem, @codclidestino, @nomclidestino,@distancia,@tipoveiculo
+                        @nomcliorigem, @codclidestino, @nomclidestino,@distancia
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1000,7 +1000,6 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
-                //cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
                 cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
                 cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
@@ -1077,6 +1076,7 @@ namespace NewCapit.dist.pages
                                 string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
                                 string script = $"alert('{mensagemCodificada}');";
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
                             }
                         }
                     }

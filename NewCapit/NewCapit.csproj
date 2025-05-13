@@ -229,6 +229,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
+    <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
@@ -536,6 +537,7 @@
     <Content Include="img\caminhao.png" />
     <Content Include="img\caminhoes.png" />
     <Content Include="img\logo.png" />
+    <Content Include="img\logo_transnovag.png" />
     <Content Include="img\percentualAgregados.png" />
     <Content Include="img\regiao-centro-oeste.jpg" />
     <Content Include="img\regiao-nordeste.jpg" />
@@ -4513,6 +4515,13 @@
     </Compile>
     <Compile Include="dist\pages\ImportarPlanejamento.aspx.designer.cs">
       <DependentUpon>ImportarPlanejamento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\OrdemColetaImpressao.aspx.cs">
+      <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\OrdemColetaImpressao.aspx.designer.cs">
+      <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>
