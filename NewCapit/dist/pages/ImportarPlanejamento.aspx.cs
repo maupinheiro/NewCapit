@@ -264,10 +264,10 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@portao", codDestino);
                         cmd.Parameters.AddWithValue("@situacao", "PRONTO");
                         cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
-                        cmd.Parameters.AddWithValue("@codorigem", codOrigem);
+                        cmd.Parameters.AddWithValue("@codorigem", dto.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
-                        cmd.Parameters.AddWithValue("@coddestino", codDestino);
-                        cmd.Parameters.AddWithValue("@clidestino", dtd.Rows[0]["nomcli"].ToString());
+                        cmd.Parameters.AddWithValue("@coddestino", dtd.Rows[0]["nomcli"].ToString());
+                        cmd.Parameters.AddWithValue("@clidestino", dtd.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@idviagem", nr_carga);
                         cmd.Parameters.AddWithValue("@ufcliorigem", dto.Rows[0]["estcli"].ToString());
                         cmd.Parameters.AddWithValue("@ufclidestino", dtd.Rows[0]["estcli"].ToString());
@@ -283,7 +283,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@tipo_viagem", viagemTipo);
                         cmd.Parameters.AddWithValue("@solicitacoes", solicitacaoNumero);
                         cmd.Parameters.AddWithValue("@data_hora", dataHora.TrimEnd());
-                        cmd.Parameters.AddWithValue("@estudo_rota", rota);
+                        cmd.Parameters.AddWithValue("@estudo_rota", estudoRota);
                         cmd.Parameters.AddWithValue("@remessa", remessa);
                         cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
                         cmd.Parameters.AddWithValue("@codvworigem", codOrigem);

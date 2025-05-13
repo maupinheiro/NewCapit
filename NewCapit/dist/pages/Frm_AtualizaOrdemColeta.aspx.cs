@@ -1048,7 +1048,15 @@ namespace NewCapit.dist.pages
 
         protected void btnImprimir_Click(object sender, EventArgs e)
         {
-            Response.Redirect("OrdemColetaImpressao.aspx");
+            if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
+            {
+                num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
+            }
+            string idCarga = num_coleta; // esse valor viria da lógica do seu código
+
+            string url = $"OrdemColetaImpressao.aspx?id={idCarga}";
+            string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
+            ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
         }
 
         private void AtualizarColetasVisiveis()
