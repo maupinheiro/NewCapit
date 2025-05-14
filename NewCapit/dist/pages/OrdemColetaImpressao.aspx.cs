@@ -40,6 +40,8 @@ namespace NewCapit.dist.pages
             public string Placa { get; set; }
             public string Contato { get; set; }
             public string Pedido { get; set; }
+            public string QuanPallet { get; set; }
+            public string Controle { get; set; }
         }
 
         public class GrupoFormularios
@@ -104,6 +106,8 @@ namespace NewCapit.dist.pages
                     Motorista = row["nommot"].ToString(),
                     Placa = row["plavei"].ToString(),
                     Pedido = row["pedidos"].ToString(),
+                    QuanPallet = row["quant_palet"].ToString(),
+                    Controle = row["carga"].ToString(),
                     Contato = "" // adicionar se houver campo
                 };
 
@@ -118,7 +122,9 @@ namespace NewCapit.dist.pages
                     Motorista = formularioOriginal.Motorista,
                     Placa = formularioOriginal.Placa,
                     Contato = formularioOriginal.Contato,
-                    Pedido = formularioOriginal.Pedido
+                    Pedido = formularioOriginal.Pedido,
+                    Controle = formularioOriginal.Controle,
+                    QuanPallet = formularioOriginal.QuanPallet
                 };
 
                 // Adicionar os dois formulários no mesmo grupo (duas vias)

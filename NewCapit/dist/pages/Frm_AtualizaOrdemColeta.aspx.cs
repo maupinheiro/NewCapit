@@ -44,7 +44,40 @@ namespace NewCapit.dist.pages
                 //fotoMotorista = "../../fotos/usuario.jpg";
                
             }
-           
+            CarregaFoto();
+        }
+
+        public void CarregaFoto()
+        {
+            var codigo = txtCodMotorista.Text.Trim();
+
+            var obj = new Domain.ConsultaMotorista
+            {
+                codmot = codigo
+            };
+            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+            if (ConsultaMotorista != null)
+            {
+                if (ConsultaMotorista.status.Trim() != "INATIVO")
+                {
+                    if (txtCodMotorista.Text.Trim() != "")
+                    {
+                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                        if (!File.Exists(fotoMotorista))
+                        {
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+                        }
+                        else
+                        {
+                            fotoMotorista = "../../fotos/usuario.jpg";
+                        }
+                    }
+
+                }
+
+            }
+
         }
         private void PreencherClienteInicial()
         {
