@@ -46,9 +46,10 @@ namespace NewCapit.dist.pages
                 CarregarEstCNH();
                 CarregarRegioes();
                 CarregarEstadosNascimento();
-                CarregarMunicipioNasc();
+                //CarregarMunicipioNasc();
                 CarregaDadosMotorista();
             }
+           
             fotoMotorista = txtCaminhoFoto.Text.Trim();
             if (ddlStatus.SelectedItem.Text == "ATIVO")
             {
@@ -75,7 +76,19 @@ namespace NewCapit.dist.pages
                 ddlRegioes.DataTextField = "regiao";
                 ddlRegioes.DataValueField = "id";
                 ddlRegioes.DataBind();
-                //ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
+                if (hdfRegiao.Value != string.Empty)
+                {
+                    SqlCommand cmde = new SqlCommand("SELECT id, regiao FROM tbregioesdopais where regiao='" + hdfRegiao.Value + "'", conn);
+                    conn.Open();
+                    ddlRegioes.DataSource = cmde.ExecuteReader();
+                    ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
+                }
+                else
+                {
+
+                }
+
+
             }
         }
         private void CarregarEstadosNascimento()
@@ -89,7 +102,7 @@ namespace NewCapit.dist.pages
                 ddlEstNasc.DataTextField = "SiglaUf";
                 ddlEstNasc.DataValueField = "Uf";
                 ddlEstNasc.DataBind();
-                ddlEstNasc.Items.Insert(0, new ListItem("Selecione", "0"));
+                //ddlEstNasc.Items.Insert(0, new ListItem("Selecione", "0"));
             }
         }
         private void CarregarMunicipioNasc()
@@ -129,7 +142,7 @@ namespace NewCapit.dist.pages
                 ddlCNH.DataValueField = "Uf";
                 ddlCNH.DataBind();
 
-                ddlCNH.Items.Insert(0, new ListItem("Selecione", "0"));
+                //ddlCNH.Items.Insert(0, new ListItem("Selecione", "0"));
             }
         }
         protected void ddlCNH_SelectedIndexChanged(object sender, EventArgs e)
@@ -252,9 +265,10 @@ namespace NewCapit.dist.pages
                 txtUsuCadastro.Text = dt.Rows[0][51].ToString();
                 lblDtCadastro.Text = dt.Rows[0][52].ToString();
                 txtVAlExameTox.Text = dt.Rows[0][53].ToString();
-                ddlEstNasc.SelectedItem.Text = dt.Rows[0][55].ToString();
+                hdfRegiao.Value = dt.Rows[0][55].ToString();
+                ddlEstNasc.Items.Insert(0, new ListItem(dt.Rows[0][55].ToString()));
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
-                ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString(), "0"));
+                ddlCNH.SelectedItem.Text= dt.Rows[0][57].ToString();
                 ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), "0"));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
@@ -432,7 +446,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@tipomot", ddlTipoMot.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@codprop", txtCodProp.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@codprop", txtCodProp.Text.Split('/')[0].ToUpper());
                     cmd.Parameters.AddWithValue("@placa", txtPlaca.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReboque1.Text.ToUpper()) ? (object)DBNull.Value : txtReboque1.Text);
                     cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReboque2.Text.ToUpper()) ? (object)DBNull.Value : txtReboque2.Text);

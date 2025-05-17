@@ -174,7 +174,8 @@
                             <div class="form-group">
                                 <span class="details">REGIÃO DO PAIS:</span>
                                 <asp:DropDownList ID="ddlRegioes" runat="server" class="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlRegioes_SelectedIndexChanged"></asp:DropDownList>
-                            </div>
+                                <asp:HiddenField ID="hdfRegiao" runat="server" />
+                                </div>
                         </div>
                         <div class="col-md-1">                            
                             <div class="form_group">
@@ -187,7 +188,7 @@
                         <div class="col-md-3">                           
                             <div class="form_group">
                                 <span class="details">MUNICIPIO DE NASCIMENTO:</span>
-                                <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMunicipioNasc" runat="server" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-1">

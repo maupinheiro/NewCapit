@@ -797,7 +797,7 @@ namespace NewCapit.dist.pages
                                 txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
-                        txtCodFrota.Text = "";
+                        //txtCodFrota.Text = "";
                         txtCodFrota.Focus();
                     }
                 }
