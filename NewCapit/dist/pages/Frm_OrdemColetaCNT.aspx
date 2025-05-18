@@ -164,7 +164,7 @@
                         <div class="form-group">
                             <span class="details">EX.TOXIC.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" TextMode="Date" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <div class="form-group">
                             <span class="details">VAL. CNH:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCNH" runat="server" class="form-control" TextMode="Date" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCNH" runat="server" class="form-control"  Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>

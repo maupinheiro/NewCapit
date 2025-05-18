@@ -13,11 +13,14 @@ using System.Drawing;
 using System.Web.Script.Serialization;
 using System.Configuration;
 using System.Globalization;
+using DAL;
+using NPOI.SS.Formula.Functions;
 
 namespace NewCapit.dist.pages
 {
     public partial class ConsultaColetasCNT : System.Web.UI.Page
     {
+        public string pallet;
         protected void Page_Load(object sender, EventArgs e)
         {
             if(!IsPostBack)
@@ -233,13 +236,13 @@ namespace NewCapit.dist.pages
                     DateTime dataPrevisao = previsao.Date;
                     DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
             
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "PENDENTE"))
                     {
                         cell.Text = "Atrasado";
                         cell.BackColor = System.Drawing.Color.Red;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "Concluído" || status == "Pendente"))
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "Concluído" || status == "PENDENTE"))
                     {
                         cell.Text = "No Prazo";
                         cell.BackColor = System.Drawing.Color.Green;
@@ -264,8 +267,148 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void gvProdutos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "AbrirModal")
+            {
+                string id = e.CommandArgument.ToString();
+
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+
+                DataTable dt = ConCargas.FetchDataTableColetas2(id);
+                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        DataRow row = dt.Rows[0];
+                        SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
+                        adpto.SelectCommand.Parameters.AddWithValue("@codvw", row["codvworigem"].ToString());
+                        DataTable dto = new DataTable();
+                        adpto.Fill(dto);
+
+                        SqlDataAdapter adptd = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
+                        adptd.SelectCommand.Parameters.AddWithValue("@codvw", row["codvwdestino"].ToString());
+                        DataTable dtd = new DataTable();
+                        adptd.Fill(dtd);
 
 
+
+                        ddlSolicitante.Text = row["solicitante"].ToString();
+                        txtCodCliOrigem.Text = dto.Rows[0][3].ToString();
+                        lblRemetente.Text = dto.Rows[0][0].ToString();
+                        txtMunicOrigem.Text = dto.Rows[0][1].ToString();
+                        txtUFOrigem.Text = dto.Rows[0][2].ToString();
+
+                        txtCodCliDestino.Text = dtd.Rows[0][3].ToString();
+                        ddlDestinatario.Text = dtd.Rows[0][0].ToString();
+                        txtMunicDestinatario.Text = dtd.Rows[0][1].ToString();
+                        txtUFDestinatario.Text = dtd.Rows[0][2].ToString();
+
+                        lblDataColeta.Text = row["emissao"].ToString();
+                        lblSolicitacoes.Text = row["solicitacoes"].ToString();
+                        txtPeso.Text = row["peso"].ToString();
+                        lblMetragem.Text = row["pedidos"].ToString();
+
+                        lblTipoViagem.Text = row["tipo_viagem"].ToString();
+                        txtRota.Text = row["rota"].ToString();
+                        txtEstudoRota.Text = row["estudo_rota"].ToString();
+                        txtRemessa.Text = row["remessa"].ToString();
+
+                        pallet = row["quant_palet"].ToString();
+
+
+
+
+
+
+                        // DropDownLists (exemplo com dados fictícios)
+
+                        cbFiliais.Text = row["empresa"].ToString();
+
+
+
+                        ddlTomador.Text = row["tomador"].ToString();
+                        //ddlPlanta.Items.Add(new ListItem("Planta A", "A"));
+                        //ddlPlanta.Items.Add(new ListItem("Planta B", "B"));
+
+
+                        txtGr.Text = row["veiculo"].ToString();
+
+                    }
+                }
+
+                // Exibe o modal
+                mpeModal.Show();
+            }
+        }
+        public void CarregaDados(string id)
+        {
+            string nomeUsuario = Session["UsuarioLogado"].ToString();
+           
+            DataTable dt = ConCargas.FetchDataTableColetas2(id);
+            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    DataRow row = dt.Rows[0];
+                    SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
+                    adpto.SelectCommand.Parameters.AddWithValue("@codvw", row["codvworigem"].ToString());
+                    DataTable dto = new DataTable();
+                    adpto.Fill(dto);
+
+                    SqlDataAdapter adptd = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
+                    adptd.SelectCommand.Parameters.AddWithValue("@codvw", row["codvwdestino"].ToString());
+                    DataTable dtd = new DataTable();
+                    adptd.Fill(dtd);
+
+
+
+                    ddlSolicitante.Text = row["solicitante"].ToString();
+                    txtCodCliOrigem.Text = dto.Rows[0][3].ToString();
+                    lblRemetente.Text = dto.Rows[0][0].ToString();
+                    txtMunicOrigem.Text = dto.Rows[0][1].ToString();
+                    txtUFOrigem.Text = dto.Rows[0][2].ToString();
+
+                    txtCodCliDestino.Text = dtd.Rows[0][3].ToString();
+                    ddlDestinatario.Text = dtd.Rows[0][0].ToString();
+                    txtMunicDestinatario.Text = dtd.Rows[0][1].ToString();
+                    txtUFDestinatario.Text = dtd.Rows[0][2].ToString();
+
+                    lblDataColeta.Text = row["emissao"].ToString();
+                    lblSolicitacoes.Text = row["solicitacoes"].ToString();
+                    txtPeso.Text = row["peso"].ToString();
+                    lblMetragem.Text = row["pedidos"].ToString();
+
+                    lblTipoViagem.Text = row["tipo_viagem"].ToString();
+                    txtRota.Text = row["rota"].ToString();
+                    txtEstudoRota.Text = row["estudo_rota"].ToString();
+                    txtRemessa.Text = row["remessa"].ToString();
+
+                    pallet = row["quant_palet"].ToString();
+
+
+
+
+
+
+                    // DropDownLists (exemplo com dados fictícios)
+
+                    cbFiliais.Text = row["empresa"].ToString();
+
+
+
+                    ddlTomador.Text = row["tomador"].ToString();
+                    //ddlPlanta.Items.Add(new ListItem("Planta A", "A"));
+                    //ddlPlanta.Items.Add(new ListItem("Planta B", "B"));
+
+
+                    txtGr.Text = row["veiculo"].ToString();
+
+                }
+            }
+            
+
+        }
 
 
     }
