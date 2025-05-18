@@ -56,22 +56,21 @@ namespace NewCapit.dist.pages
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
             string defaultImage = ResolveUrl("/fotos/usuario.jpg");
-
             string base64 = hiddenImage.Value;
 
+            // Validar se a imagem em base64 não é muito grande (por exemplo, maior que 1.3MB em texto base64)
+            bool imagemValida = !string.IsNullOrEmpty(base64) && base64.Length < 1_300_000;
+
             string script = $@"
-        window.onload = function() {{
-            var hidden = document.getElementById('{hiddenImage.ClientID}');
-            var img = document.getElementById('preview');
+        <script type='text/javascript'>
+            document.addEventListener('DOMContentLoaded', function() {{
+                var img = document.getElementById('preview');
+                img.src = {(imagemValida ? $"'{base64}'" : $"'{defaultImage}'")};
+            }});
+        </script>";
 
-            if (hidden && hidden.value) {{
-                img.src = hidden.value;                
-            }} else {{
-                img.src = '{defaultImage}';               
-            }}
-        }};";
+            ClientScript.RegisterStartupScript(this.GetType(), "restoreImage", script, false);
 
-            ClientScript.RegisterStartupScript(this.GetType(), "restoreImage", script, true);
 
 
 
@@ -360,14 +359,14 @@ namespace NewCapit.dist.pages
                     string retorno = "Código: " + res.ToString() + ", já cadastrado. ";
                     System.Text.StringBuilder sb = new System.Text.StringBuilder();
                     sb.Append("<script type = 'text/javascript'>");
-                    sb.Append("window.onload=function(){");
+                    sb.Append("document.addEventListener('DOMContentLoaded', function() {");
                     sb.Append("alert('");
                     sb.Append(retorno);
-                    sb.Append("')};");
+                    sb.Append("');");
+                    sb.Append("});");
                     sb.Append("</script>");
                     ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                    txtCodMot.Text = "";
-                    txtCodMot.Focus();
+
                 }
             }
 

@@ -797,7 +797,7 @@ namespace NewCapit.dist.pages
                                 txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
-                        txtCodFrota.Text = "";
+                        //txtCodFrota.Text = "";
                         txtCodFrota.Focus();
                     }
                 }
@@ -965,13 +965,13 @@ namespace NewCapit.dist.pages
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
                         tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao,codcliorigem, 
-                        nomcliorigem, codclidestino, nomclidestino,distancia,tipoveiculo
+                        nomcliorigem, codclidestino, nomclidestino,distancia
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
                         @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@codcliorigem, 
-                        @nomcliorigem, @codclidestino, @nomclidestino,@distancia,@tipoveiculo
+                        @nomcliorigem, @codclidestino, @nomclidestino,@distancia
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1000,7 +1000,6 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
-                //cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
                 cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
                 cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
@@ -1077,6 +1076,7 @@ namespace NewCapit.dist.pages
                                 string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
                                 string script = $"alert('{mensagemCodificada}');";
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
                             }
                         }
                     }
@@ -1125,6 +1125,88 @@ namespace NewCapit.dist.pages
             }
 
            
+        }
+
+        protected void codCliInicial_TextChanged(object sender, EventArgs e)
+        {
+            if (codCliInicial.Text != "")
+            {
+
+                string codigoRemetente = codCliInicial.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                codCliInicial.Text = reader["codcli"].ToString();
+                                ddlCliInicial.SelectedItem.Text = reader["nomcli"].ToString();
+                                codCliFinal.Focus();
+                            }
+                            else
+                            {
+                                ddlCliInicial.SelectedItem.Text = "Selecione...";                                
+                                codCliInicial.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                codCliInicial.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        protected void codCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            if (codCliFinal.Text != "")
+            {
+
+                string codigoRemetente = codCliFinal.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                codCliFinal.Text = reader["codcli"].ToString();
+                                ddlCliFinal.SelectedItem.Text = reader["nomcli"].ToString();
+                                ddlVeiculosCNT.Focus();
+                            }
+                            else
+                            {
+                                ddlCliFinal.SelectedItem.Text = "Selecione...";
+                                codCliFinal.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                codCliInicial.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
         }
 
         private void AtualizarColetasVisiveis()

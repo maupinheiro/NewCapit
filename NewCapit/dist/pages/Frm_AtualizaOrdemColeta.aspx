@@ -675,6 +675,14 @@
                         <br />
                         <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar Ordem de Coleta" />
                     </div>
+                     <div class="col-md-2">
+                         <br />
+                         <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
+                     </div>
+                     <div class="col-md-2">
+                         <br />
+                         <asp:Button ID="btnGeraOcorrencia" runat="server" CssClass="btn btn-outline-info  btn-lg" Text="Gerar Ocorrência" />
+                      </div>
                     <div class="col-md-1">
                         <br />
                         <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               

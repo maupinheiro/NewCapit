@@ -161,7 +161,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo";
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -172,6 +172,7 @@ namespace NewCapit.dist.pages
                         {
                             if (reader.Read())
                             {
+                                txtCodRemetente.Text = reader["codcli"].ToString();
                                 txtNomRemetente.Text = reader["nomcli"].ToString();
                                 txtMunicipioRemetente.Text = reader["cidcli"].ToString();
                                 txtUFRemetente.Text = reader["estcli"].ToString();
@@ -206,7 +207,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo";
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -217,6 +218,7 @@ namespace NewCapit.dist.pages
                         {
                             if (reader.Read())
                             {
+                                txtCodDestinatario.Text = reader["codcli"].ToString();
                                 txtNomDestinatario.Text = reader["nomcli"].ToString();
                                 txtMunicipioDestinatario.Text = reader["cidcli"].ToString();
                                 txtUFDestinatario.Text = reader["estcli"].ToString();
@@ -369,7 +371,7 @@ namespace NewCapit.dist.pages
                 tomador = @tomador,
                 veiculo = @veiculo,
                 codvworigem =@codvworigem,
-                codvwdestino=@codvwdestino
+                codvwdestino=@codvwdestino,
                 atualizacao = @atualizacao
             WHERE carga = @carga";
 
@@ -385,12 +387,12 @@ namespace NewCapit.dist.pages
                     DataTable dtd = new DataTable();
                     adptd.Fill(dtd);
                     cmd.Parameters.AddWithValue("@status", txtSituacao.Text);
-                    cmd.Parameters.AddWithValue("@codRemetente", dto.Rows[0][3].ToString());
+                    cmd.Parameters.AddWithValue("@codRemetente", txtCodRemetente.Text.Trim());
                     cmd.Parameters.AddWithValue("@nomRemetente", dto.Rows[0][0].ToString());
                     cmd.Parameters.AddWithValue("@municipioRemetente", dto.Rows[0][1].ToString());
                     cmd.Parameters.AddWithValue("@codvworigem", dto.Rows[0][3].ToString());
 
-                    cmd.Parameters.AddWithValue("@codDestinatario", dtd.Rows[0][3].ToString());
+                    cmd.Parameters.AddWithValue("@codDestinatario", txtCodDestinatario.Text.Trim());
                     cmd.Parameters.AddWithValue("@nomDestinatario", dtd.Rows[0][0].ToString());
                     cmd.Parameters.AddWithValue("@municipioDestinatario", dtd.Rows[0][1].ToString());
                     cmd.Parameters.AddWithValue("@codvwdestino", dtd.Rows[0][3].ToString());

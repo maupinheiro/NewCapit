@@ -151,6 +151,7 @@
     <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaColetasCNT.aspx" />
+    <Content Include="dist\pages\ConsultaColetasPopUpCNT.aspx" />
     <Content Include="dist\pages\ConsultaEntregas.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
@@ -219,6 +220,7 @@
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
+    <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Home.aspx" />
@@ -228,6 +230,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
+    <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
@@ -535,6 +538,7 @@
     <Content Include="img\caminhao.png" />
     <Content Include="img\caminhoes.png" />
     <Content Include="img\logo.png" />
+    <Content Include="img\logo_transnovag.png" />
     <Content Include="img\percentualAgregados.png" />
     <Content Include="img\regiao-centro-oeste.jpg" />
     <Content Include="img\regiao-nordeste.jpg" />
@@ -4338,6 +4342,13 @@
     <Compile Include="dist\pages\ConsultaColetasCNT.aspx.designer.cs">
       <DependentUpon>ConsultaColetasCNT.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ConsultaColetasPopUpCNT.aspx.cs">
+      <DependentUpon>ConsultaColetasPopUpCNT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaColetasPopUpCNT.aspx.designer.cs">
+      <DependentUpon>ConsultaColetasPopUpCNT.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\ConsultaEntregas.aspx.cs">
       <DependentUpon>ConsultaEntregas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4407,6 +4418,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.designer.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_DiarioDeBordo.aspx.cs">
+      <DependentUpon>Frm_DiarioDeBordo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_DiarioDeBordo.aspx.designer.cs">
+      <DependentUpon>Frm_DiarioDeBordo.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_EditarColeta.aspx.cs">
       <DependentUpon>Frm_EditarColeta.aspx</DependentUpon>
@@ -4505,6 +4523,13 @@
     </Compile>
     <Compile Include="dist\pages\ImportarPlanejamento.aspx.designer.cs">
       <DependentUpon>ImportarPlanejamento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\OrdemColetaImpressao.aspx.cs">
+      <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\OrdemColetaImpressao.aspx.designer.cs">
+      <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>

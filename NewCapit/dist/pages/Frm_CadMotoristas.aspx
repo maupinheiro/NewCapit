@@ -75,6 +75,42 @@
             }
         }
     </script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const fileInput = document.getElementById('<%= FileUpload1.ClientID %>');
+        const preview = document.getElementById('preview');
+        const hidden = document.getElementById('<%= hiddenImage.ClientID %>');
+        const maxSize = 1 * 1024 * 1024; // 1MB
+
+        // Intercepta a mudança no input
+        fileInput.addEventListener("change", function (e) {
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            if (file.size > maxSize) {
+                alert("Imagem muito grande. Tamanho máximo permitido: 1MB.");
+                fileInput.value = "";
+                hidden.value = "";
+                preview.src = '<%= ResolveUrl("/fotos/usuario.jpg") %>';
+                e.preventDefault(); // <--- bloqueia envio (só por segurança extra)
+                return false;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                const base64 = evt.target.result;
+                hidden.value = base64;
+                preview.src = base64;
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+  </script>
+
+
+
+
     <div class="content-wrapper">
 
         <div class="container-fluid">
@@ -139,10 +175,13 @@
                     <asp:FileUpload ID="FileUpload1" runat="server" Style="display: none;" onchange="previewImage(this)" />
 
                     <!-- Imagem clicável -->
-                    <img id="preview" src='<%= ResolveUrl("/fotos/usuario.JPG") %>' alt="Selecione a foto"
-                        onclick="document.getElementById('<%= FileUpload1.ClientID %>').click();"
-                        style="cursor: pointer; width: 80px; height: 80px" />
-                    <input type="hidden" id="hiddenImage" name="hiddenImage" runat="server" />
+                  <asp:FileUpload ID="FileUpload2" runat="server" Style="display: none;" />
+                        <asp:HiddenField ID="hiddenImage" runat="server" />
+                        <img id="preview" 
+                             src='<%= ResolveUrl("/fotos/usuario.jpg") %>' 
+                             alt="Selecione a foto"
+                             onclick="document.getElementById('<%= FileUpload1.ClientID %>').click();"
+                             style="cursor: pointer; width: 80px; height: 80px;" />
                 </div>
             </div>
             <!-- Linha 2 do formulario -->

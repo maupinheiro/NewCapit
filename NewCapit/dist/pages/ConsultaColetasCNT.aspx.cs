@@ -13,23 +13,23 @@ using System.Drawing;
 using System.Web.Script.Serialization;
 using System.Configuration;
 using System.Globalization;
-using DAL;
 using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
 
 namespace NewCapit.dist.pages
 {
     public partial class ConsultaColetasCNT : System.Web.UI.Page
     {
-        public string pallet;
+        string idCarga;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 PreencherComboStatus();
                 PreencherColetas();
                 PreencherComboVeiculos();
             }
-            
+
         }
         private void PreencherComboStatus()
         {
@@ -156,28 +156,28 @@ namespace NewCapit.dist.pages
                         //{
                         //    dtFinal = parsedDataFinal;
                         //}
-                        
+
                         // Adicionando os filtros de data apenas se existirem valores válidos
-                        if (txtInicioData.Text != string.Empty && txtFimData.Text!= string.Empty)
+                        if (txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
                         {
-                        
+
 
                             sql += " AND data_hora BETWEEN @dataInicial AND @dataFinal";
                             cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
                             cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
 
-                        //cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy");
-                        //    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy");
+                            //cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy");
+                            //    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy");
                         }
                         else if (txtInicioData.Text != string.Empty)
                         {
                             sql += " AND data_hora >= @dataInicial";
-                        cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
+                            cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
                         }
                         else if (txtFimData.Text != string.Empty)
                         {
                             sql += " AND data_hora <= @dataFinal";
-                          cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
+                            cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
                         }
 
                         // Filtrando status, se necessário
@@ -204,7 +204,7 @@ namespace NewCapit.dist.pages
                             gvListCargas.DataSource = dataTable;
                             gvListCargas.DataBind();
                         }
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -213,7 +213,7 @@ namespace NewCapit.dist.pages
                     //lblMensagem.ForeColor = System.Drawing.Color.Red;
                 }
             }
-        }       
+        }
         protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -224,9 +224,9 @@ namespace NewCapit.dist.pages
                 string status = DataBinder.Eval(e.Row.DataItem, "status")?.ToString();
 
                 // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
-                int colunaAtendimentoIndex = 3; // Ajustar conforme a posição real da coluna no GridView
+                int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
                 TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
-        
+
                 DateTime previsao, dataHora;
                 DateTime agora = DateTime.Now;
 
@@ -235,22 +235,22 @@ namespace NewCapit.dist.pages
                     // Mantendo apenas a data para a comparação principal
                     DateTime dataPrevisao = previsao.Date;
                     DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
-            
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "PENDENTE"))
+
+                    if (dataHoraComparacao < agora && (status == "CONCLUIDO" || status == "PENDENTE"))
                     {
-                        cell.Text = "Atrasado";
+                        cell.Text = "ATRASADO";
                         cell.BackColor = System.Drawing.Color.Red;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "Concluído" || status == "PENDENTE"))
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "CONCLUIDO" || status == "PENDENTE"))
                     {
-                        cell.Text = "No Prazo";
+                        cell.Text = "NO PRAZO";
                         cell.BackColor = System.Drawing.Color.Green;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao > agora && status == "Concluído")
+                    else if (dataHoraComparacao > agora && status == "CONCLUIDO")
                     {
-                        cell.Text = "Antecipado";
+                        cell.Text = "ANTECIPADO";
                         cell.BackColor = System.Drawing.Color.Orange;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
@@ -266,151 +266,120 @@ namespace NewCapit.dist.pages
                 Response.Redirect("/dist/pages/Frm_EditarColeta.aspx?id=" + id);
             }
         }
-
-        protected void gvProdutos_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "AbrirModal")
+        protected void gvListCargas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {     
+            if (e.CommandName == "MostrarDetalhes")
             {
-                string id = e.CommandArgument.ToString();
+                int id = Convert.ToInt32(e.CommandArgument);
 
-                string nomeUsuario = Session["UsuarioLogado"].ToString();
-
-                DataTable dt = ConCargas.FetchDataTableColetas2(id);
-                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    if (dt.Rows.Count > 0)
+                    conn.Open();
+
+                    // Tab 1
+                    SqlCommand cmd1 = new SqlCommand("SELECT carga, empresa, tomador, veiculo, codorigem, codvworigem,cliorigem, cidorigem, ufcliorigem, coddestino, codvwdestino, clidestino, ciddestino, ufclidestino, data_hora, solicitacoes, rota, tipo_viagem, peso, pedidos, estudo_rota, remessa, quant_palet, andamento, observacao FROM tbcargas WHERE Id = @Id", conn);
+                    cmd1.Parameters.AddWithValue("@Id", id);
+                    SqlDataReader reader1 = cmd1.ExecuteReader();
+                    if (reader1.Read())
                     {
-                        DataRow row = dt.Rows[0];
-                        SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
-                        adpto.SelectCommand.Parameters.AddWithValue("@codvw", row["codvworigem"].ToString());
-                        DataTable dto = new DataTable();
-                        adpto.Fill(dto);
+                        // Tab 1 dados da coleta
+                        txtColeta.Text = reader1["carga"].ToString();
+                        txtFilial.Text = reader1["empresa"].ToString();
+                        txtPlanta.Text = reader1["tomador"].ToString();
+                        txtTipoVeiculo.Text = reader1["veiculo"].ToString();
+                        txtCodCliOrigem.Text = reader1["codorigem"].ToString() + "/" + reader1["codvworigem"].ToString();
+                        txtRemetente.Text = reader1["cliorigem"].ToString();
+                        txtMunicOrigem.Text = reader1["cidorigem"].ToString();
+                        txtUFOrigem.Text = reader1["ufcliorigem"].ToString();
+                        txtCodCliDestino.Text = reader1["coddestino"].ToString() + "/" + reader1["codvwdestino"].ToString();
+                        txtDestinatario.Text = reader1["clidestino"].ToString();
+                        txtMunicDestinatario.Text = reader1["ciddestino"].ToString();
+                        txtUFDestinatario.Text = reader1["ufclidestino"].ToString();
+                        lblDataColeta.Text = reader1["data_hora"].ToString();
+                        lblSolicitacoes.Text = reader1["solicitacoes"].ToString();
+                        txtRota.Text = reader1["rota"].ToString();
+                        lblTipoViagem.Text = reader1["tipo_viagem"].ToString();
+                        txtPeso.Text = reader1["peso"].ToString();
+                        lblMetragem.Text = reader1["pedidos"].ToString();
+                        txtEstudoRota.Text = reader1["estudo_rota"].ToString();
+                        txtRemessa.Text = reader1["remessa"].ToString();
+                        quantPallet.Text = reader1["quant_palet"].ToString();
+                       
+                        if (reader1["andamento"].ToString() == "CONCLUIDO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightGreen;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "PENDENTE")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Yellow;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "ANDAMENTO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightCoral;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Black;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        
+                        // Tab 3 dados do carregamento
+                        txtObservacao.Text = reader1["observacao"].ToString();
+                        // Tab 4 Ocorrências
+                        txtObservacao.Text = reader1["observacao"].ToString();
+                        string idColeta = reader1["carga"].ToString();
+                        reader1.Close();
+                        
+                        // Tab 2 dados do motorista e veiculo vindos da tabela tbcarregamentos
+                        SqlCommand cmd2 = new SqlCommand("SELECT codtra, transportadora, tipoveiculo, veiculo, placa, reboque1, reboque2, codmotorista, nomemotorista, num_carregamento, nucleo, carreta, tipomot  FROM tbcarregamentos WHERE carga = @idColeta", conn);
+                        cmd2.Parameters.AddWithValue("@idColeta", idColeta);
+                        SqlDataReader readerCarregamento = cmd2.ExecuteReader();
+                        if (readerCarregamento.Read())
+                        {
+                            txtOrdemColeta.Text = reader1["num_carregamento"].ToString();
+                            txtFilialMot.Text = reader1["nucleo"].ToString();
+                            txtTipoMot.Text = readerCarregamento["tipomot"].ToString();
+                            txtCodMotorista.Text = readerCarregamento["codmotorista"].ToString();
+                            txtNomMot.Text = readerCarregamento["nomemotorista"].ToString();
+                            txtCodTra.Text = readerCarregamento["codtra"].ToString();
+                            txtTransp.Text = readerCarregamento["transportadora"].ToString();
+                            txtVeiculoTipo.Text = readerCarregamento["tipoveiculo"].ToString();
+                            txtCodVeiculo.Text = readerCarregamento["veiculo"].ToString();
+                            txtPlaca.Text = readerCarregamento["placa"].ToString();
+                            txtReboque1.Text = readerCarregamento["reboque1"].ToString();
+                            txtReboque2.Text = readerCarregamento["reboque2"].ToString();
+                            txtCarreta.Text = readerCarregamento["carreta"].ToString();
+                        }
+                        else 
+                        {
+                            txtFilialMot.Text = "";
+                            txtTipoMot.Text = "";
+                            txtCodMotorista.Text = "";
+                            txtNomMot.Text = "";
+                            txtCodTra.Text = "";
+                            txtTransp.Text = "";
+                            txtVeiculoTipo.Text = "";
+                            txtCodVeiculo.Text = "";
+                            txtPlaca.Text = "";
+                            txtReboque1.Text = "";
+                            txtReboque2.Text = "";
+                            txtCarreta.Text = "";
 
-                        SqlDataAdapter adptd = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
-                        adptd.SelectCommand.Parameters.AddWithValue("@codvw", row["codvwdestino"].ToString());
-                        DataTable dtd = new DataTable();
-                        adptd.Fill(dtd);
+                        }
+                        readerCarregamento.Close();
 
 
-
-                        ddlSolicitante.Text = row["solicitante"].ToString();
-                        txtCodCliOrigem.Text = dto.Rows[0][3].ToString();
-                        lblRemetente.Text = dto.Rows[0][0].ToString();
-                        txtMunicOrigem.Text = dto.Rows[0][1].ToString();
-                        txtUFOrigem.Text = dto.Rows[0][2].ToString();
-
-                        txtCodCliDestino.Text = dtd.Rows[0][3].ToString();
-                        ddlDestinatario.Text = dtd.Rows[0][0].ToString();
-                        txtMunicDestinatario.Text = dtd.Rows[0][1].ToString();
-                        txtUFDestinatario.Text = dtd.Rows[0][2].ToString();
-
-                        lblDataColeta.Text = row["emissao"].ToString();
-                        lblSolicitacoes.Text = row["solicitacoes"].ToString();
-                        txtPeso.Text = row["peso"].ToString();
-                        lblMetragem.Text = row["pedidos"].ToString();
-
-                        lblTipoViagem.Text = row["tipo_viagem"].ToString();
-                        txtRota.Text = row["rota"].ToString();
-                        txtEstudoRota.Text = row["estudo_rota"].ToString();
-                        txtRemessa.Text = row["remessa"].ToString();
-
-                        pallet = row["quant_palet"].ToString();
-
-
-
-
-
-
-                        // DropDownLists (exemplo com dados fictícios)
-
-                        cbFiliais.Text = row["empresa"].ToString();
-
-
-
-                        ddlTomador.Text = row["tomador"].ToString();
-                        //ddlPlanta.Items.Add(new ListItem("Planta A", "A"));
-                        //ddlPlanta.Items.Add(new ListItem("Planta B", "B"));
-
-
-                        txtGr.Text = row["veiculo"].ToString();
-
+                        ////Exibir o modal                        
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "$('#infoModal').modal('show');", true);
+                        //ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "$('#detalhesModal').modal('show');", true);
                     }
                 }
-
-                // Exibe o modal
-                mpeModal.Show();
+               
             }
         }
-        public void CarregaDados(string id)
-        {
-            string nomeUsuario = Session["UsuarioLogado"].ToString();
-           
-            DataTable dt = ConCargas.FetchDataTableColetas2(id);
-            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                if (dt.Rows.Count > 0)
-                {
-                    DataRow row = dt.Rows[0];
-                    SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
-                    adpto.SelectCommand.Parameters.AddWithValue("@codvw", row["codvworigem"].ToString());
-                    DataTable dto = new DataTable();
-                    adpto.Fill(dto);
-
-                    SqlDataAdapter adptd = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", con);
-                    adptd.SelectCommand.Parameters.AddWithValue("@codvw", row["codvwdestino"].ToString());
-                    DataTable dtd = new DataTable();
-                    adptd.Fill(dtd);
-
-
-
-                    ddlSolicitante.Text = row["solicitante"].ToString();
-                    txtCodCliOrigem.Text = dto.Rows[0][3].ToString();
-                    lblRemetente.Text = dto.Rows[0][0].ToString();
-                    txtMunicOrigem.Text = dto.Rows[0][1].ToString();
-                    txtUFOrigem.Text = dto.Rows[0][2].ToString();
-
-                    txtCodCliDestino.Text = dtd.Rows[0][3].ToString();
-                    ddlDestinatario.Text = dtd.Rows[0][0].ToString();
-                    txtMunicDestinatario.Text = dtd.Rows[0][1].ToString();
-                    txtUFDestinatario.Text = dtd.Rows[0][2].ToString();
-
-                    lblDataColeta.Text = row["emissao"].ToString();
-                    lblSolicitacoes.Text = row["solicitacoes"].ToString();
-                    txtPeso.Text = row["peso"].ToString();
-                    lblMetragem.Text = row["pedidos"].ToString();
-
-                    lblTipoViagem.Text = row["tipo_viagem"].ToString();
-                    txtRota.Text = row["rota"].ToString();
-                    txtEstudoRota.Text = row["estudo_rota"].ToString();
-                    txtRemessa.Text = row["remessa"].ToString();
-
-                    pallet = row["quant_palet"].ToString();
-
-
-
-
-
-
-                    // DropDownLists (exemplo com dados fictícios)
-
-                    cbFiliais.Text = row["empresa"].ToString();
-
-
-
-                    ddlTomador.Text = row["tomador"].ToString();
-                    //ddlPlanta.Items.Add(new ListItem("Planta A", "A"));
-                    //ddlPlanta.Items.Add(new ListItem("Planta B", "B"));
-
-
-                    txtGr.Text = row["veiculo"].ToString();
-
-                }
-            }
-            
-
-        }
-
-
     }
-
 }

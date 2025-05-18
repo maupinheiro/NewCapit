@@ -46,9 +46,10 @@ namespace NewCapit.dist.pages
                 CarregarEstCNH();
                 CarregarRegioes();
                 CarregarEstadosNascimento();
-                CarregarMunicipioNasc();
+                //CarregarMunicipioNasc();
                 CarregaDadosMotorista();
             }
+           
             fotoMotorista = txtCaminhoFoto.Text.Trim();
             if (ddlStatus.SelectedItem.Text == "ATIVO")
             {
@@ -75,7 +76,19 @@ namespace NewCapit.dist.pages
                 ddlRegioes.DataTextField = "regiao";
                 ddlRegioes.DataValueField = "id";
                 ddlRegioes.DataBind();
-                ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
+                if (hdfRegiao.Value != string.Empty)
+                {
+                    SqlCommand cmde = new SqlCommand("SELECT id, regiao FROM tbregioesdopais where regiao='" + hdfRegiao.Value + "'", conn);
+                    conn.Open();
+                    ddlRegioes.DataSource = cmde.ExecuteReader();
+                    ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
+                }
+                else
+                {
+
+                }
+
+
             }
         }
         private void CarregarEstadosNascimento()
@@ -89,7 +102,7 @@ namespace NewCapit.dist.pages
                 ddlEstNasc.DataTextField = "SiglaUf";
                 ddlEstNasc.DataValueField = "Uf";
                 ddlEstNasc.DataBind();
-                ddlEstNasc.Items.Insert(0, new ListItem("Selecione", "0"));
+                //ddlEstNasc.Items.Insert(0, new ListItem("Selecione", "0"));
             }
         }
         private void CarregarMunicipioNasc()
@@ -129,7 +142,7 @@ namespace NewCapit.dist.pages
                 ddlCNH.DataValueField = "Uf";
                 ddlCNH.DataBind();
 
-                ddlCNH.Items.Insert(0, new ListItem("Selecione", "0"));
+                //ddlCNH.Items.Insert(0, new ListItem("Selecione", "0"));
             }
         }
         protected void ddlCNH_SelectedIndexChanged(object sender, EventArgs e)
@@ -225,8 +238,16 @@ namespace NewCapit.dist.pages
                 {
                     txtAltCad.Text = Session["UsuarioLogado"].ToString();
                 }
-               
-                lbDtAtualizacao.Text = DateTime.Parse(dt.Rows[0][36].ToString()).ToString("dd/MM/yyyy HH:mm");
+
+                if(dt.Rows[0][36].ToString() != string.Empty)
+                {
+                    lbDtAtualizacao.Text = DateTime.Parse(dt.Rows[0][36].ToString()).ToString("dd/MM/yyyy HH:mm");
+                }
+                else
+                {
+                    lbDtAtualizacao.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                }
+                
                 txtCartao.Text = dt.Rows[0][37].ToString();
                 ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
                 txtNumero.Text = dt.Rows[0][39].ToString();
@@ -238,15 +259,16 @@ namespace NewCapit.dist.pages
                 txtReboque2.Text = dt.Rows[0][45].ToString();
                 txtTipoVeiculo.Text = dt.Rows[0][46].ToString();
                 txtValCartao.Text = dt.Rows[0][47].ToString();
-                ddlJornada.SelectedItem.Text = dt.Rows[0][48].ToString();
+                //ddlJornada.SelectedItem.Text = dt.Rows[0][48].ToString();
                 ddlFuncao.SelectedItem.Text = dt.Rows[0][49].ToString();
                 txtFrota.Text = dt.Rows[0][50].ToString();
                 txtUsuCadastro.Text = dt.Rows[0][51].ToString();
                 lblDtCadastro.Text = dt.Rows[0][52].ToString();
                 txtVAlExameTox.Text = dt.Rows[0][53].ToString();
-                ddlEstNasc.SelectedItem.Text = dt.Rows[0][55].ToString();
+                hdfRegiao.Value = dt.Rows[0][55].ToString();
+                ddlEstNasc.Items.Insert(0, new ListItem(dt.Rows[0][55].ToString()));
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
-                ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString(), "0"));
+                ddlCNH.SelectedItem.Text= dt.Rows[0][57].ToString();
                 ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), "0"));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
@@ -412,7 +434,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@nomepai", txtNomePai.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@nomemae", txtNomeMae.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@transp", ddlJornada.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@cadmot", DateTime.Parse(txtDtCad.Text).ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@inativo", txtMotivoInativacao.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@dtinativo", txtDtInativacao.Text);
@@ -420,11 +442,11 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@alterado", txtUsuCadastro.Text.ToUpper());
                     cmd.Parameters.Add("@dataalteracao", SqlDbType.DateTime2).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     cmd.Parameters.AddWithValue("@cartaomot", txtCartao.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@naturalmot", ddlAgregados.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@naturalmot", ddlMunicipioNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@tipomot", ddlTipoMot.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@codprop", txtCodProp.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@codprop", txtCodProp.Text.Split('/')[0].ToUpper());
                     cmd.Parameters.AddWithValue("@placa", txtPlaca.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReboque1.Text.ToUpper()) ? (object)DBNull.Value : txtReboque1.Text);
                     cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReboque2.Text.ToUpper()) ? (object)DBNull.Value : txtReboque2.Text);

@@ -3,8 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <%--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>--%>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function calcularTempoAgCarreg(item) {
             const chegada = item.querySelector('.chegada').value;
@@ -127,10 +129,9 @@
                 <div class="card card-info">
                     <div class="card-header">
                         <div class="d-sm-flex align-items-left justify-content-between mb-3">
-                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -
-    <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
+                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -  <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
                             <%--<h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;--%>
-                                <%--<asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>--%>
+                            <%--<asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>--%>
                         </div>
                     </div>
                 </div>
@@ -164,7 +165,7 @@
                         <div class="form-group">
                             <span class="details">EX.TOXIC.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control"  Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -273,14 +274,14 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">VAL. CRLV:</span>
-                            <asp:TextBox ID="txtCRLVVeiculo" runat="server" TextMode="Date" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">VAL.CRLVREB1.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCRLVReb1" runat="server" TextMode="Date" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -288,7 +289,7 @@
                         <div class="form-group">
                             <span class="details">VAL.CRLVREB2.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCRLVReb2" runat="server" TextMode="Date" class="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -378,25 +379,25 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">CÓDIGO:</span>
-                            <asp:TextBox ID="codCliInicial" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                            <asp:TextBox ID="codCliInicial" runat="server" class="form-control" OnTextChanged="codCliInicial_TextChanged" AutoPostBack="true"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <span class="details">INICIO DA PRESTAÇÃO:</span>
-                            <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2" ></asp:DropDownList>                            
+                            <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">CÓDIGO:</span>
-                            <asp:TextBox ID="codCliFinal" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                            <asp:TextBox ID="codCliFinal" runat="server" class="form-control" OnTextChanged="codCliFinal_TextChanged" AutoPostBack="true"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <span class="details">TERMINO DA PRESTAÇÃO:</span>
-                            <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>                            
+                            <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -456,7 +457,8 @@
                                             </HeaderTemplate>
                                             <ItemTemplate>
                                                 <tr data-widget="expandable-table" aria-expanded="false">
-                                                    <td><asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>' /></td>
+                                                    <td>
+                                                        <asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>' /></td>
                                                     <td><%# Eval("cva") %></td>
                                                     <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                     <td><%# Eval("CodigoO") %></td>
@@ -511,7 +513,7 @@
                                                                 <h3 class="card-title">REMESSA:
                                                         <asp:Label ID="lblRemessa" runat="server" Text='<%# Eval("remessa") %>' ForeColor="Blue" /></h3>
                                                             </div>
-                                                        </div>                                                       
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </ItemTemplate>
@@ -564,6 +566,7 @@
                         <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
 
                     </div>
+                   
                     <div class="col-md-1">
                         <br />
                         <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               
@@ -572,28 +575,47 @@
                 </div>
             </div>
         </div>
-    </div>
-    <%-- <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 2.1.0 
+        <!-- Mensagens de erro toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Cliente não encontrado. Verifique o código digitado.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>--%>
-     <script>
-         $(function () {
-             //Initialize Select2 Elements
-             $('.select2').select2()
+    </div>
+</div>
+    </div>
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 3.1.0 
+        </div>
+        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
+    </footer>
 
-             //Initialize Select2 Elements
-             $('.select2bs4').select2({
-                 theme: 'bootstrap4'
-             })
+    <script>
+        function mostrarToastNaoEncontrado() {
+            var toastEl = document.getElementById('toastNotFound');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    </script>
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-             
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
 
-         })
 
 
-     </script>
+        })
+
+
+    </script>
 
 </asp:Content>
