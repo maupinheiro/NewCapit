@@ -16,6 +16,15 @@
             display: none;
         }
     </style>
+    <script>
+        function abrirPopup() {
+            window.open(
+                '/dist/pages/ConsultaColetasPopUpCNT.aspx',
+                'PopupColetas',
+                'width=1020,height=600,scrollbars=yes,resizable=no,toolbar=no,menubar=no,location=no,status=no'
+            );
+        }
+    </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -66,10 +75,13 @@
                     <div class="col-md-1">
                         <br />
                         <%--<asp:LinkButton ID="lnkColetas" runat="server" CssClass="btn btn-info"><i class='fas fa-shipping-fast' ></i> Coletas</asp:LinkButton>--%>
-                        <a href="/dist/pages/ConsultaColetasPopUpCNT.aspx" class="d-none d-sm-inline-block btn btn-info shadow-sm">
-    <i class="fas fa-shipping-fast"></i>&nbsp; Coletas
+                      <a href="javascript:void(0);" 
+                               onclick="abrirPopup();" 
+                               class="d-none d-sm-inline-block btn btn-info shadow-sm">
+                              <i class="fas fa-shipping-fast"></i>&nbsp; Coletas
+                            </a>
 
-</a>
+
                     </div>
 
                 </div>

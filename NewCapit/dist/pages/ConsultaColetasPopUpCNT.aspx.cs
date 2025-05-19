@@ -16,6 +16,7 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
+         
                 CarregarGrid();
             }
         }
@@ -33,6 +34,17 @@ namespace NewCapit.dist.pages
                 GVColetas.DataSource = dataTable;
                 GVColetas.DataBind();
             }
+        }
+
+        protected void timerAtualiza_Tick(object sender, EventArgs e)
+        {
+            CarregarGrid();
+        }
+
+
+        protected void btnAtualizar_Click(object sender, EventArgs e)
+        {
+            CarregarGrid();
         }
     }
 }

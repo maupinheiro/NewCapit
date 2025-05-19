@@ -8,7 +8,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
+    
     <form id="form1" runat="server" class="p-3">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+       
+        <asp:Timer ID="timerAtualiza" runat="server" OnTick="timerAtualiza_Tick" Interval="30000"></asp:Timer>
+        <br />
+        <div>
+            <asp:Button ID="btnAtualizar" runat="server" CssClass="btn btn-success" Text="Atualizar" OnClick="btnAtualizar_Click" />
+        </div>
+        <br />
         <asp:GridView ID="GVColetas" runat="server" CssClass="table table-bordered table-striped" AutoGenerateColumns="true"></asp:GridView>
         <columns>
             <asp:BoundField DataField="id" HeaderText="ID" Visible="false" />
