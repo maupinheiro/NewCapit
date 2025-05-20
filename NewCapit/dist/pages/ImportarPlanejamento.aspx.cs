@@ -181,7 +181,7 @@ namespace NewCapit.dist.pages
 
                 string dataHora = row.Cells[10].Text;
 
-                string peso = LimparCelula(row.Cells[11].Text).Replace(",", "");
+                string peso = LimparCelula(row.Cells[11].Text); //.Replace(",", "");
                 string m3 = LimparCelula(row.Cells[12].Text);
                 string estudoRota = LimparCelula(row.Cells[13].Text);
                 string remessa = LimparCelula(row.Cells[14].Text);
@@ -287,9 +287,8 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@remessa", remessa);
                         cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
                         cmd.Parameters.AddWithValue("@codvworigem", codOrigem);
-                        cmd.Parameters.AddWithValue("@codvwdestino", codDestino);
+                        cmd.Parameters.AddWithValue("@codvwdestino", codDestino);                        
 
-                        
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             conn.Close();

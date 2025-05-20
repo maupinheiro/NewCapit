@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Ordem de Coleta de Carga</title>
+    <title>Impressão da Ordem de Coleta</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -184,6 +184,7 @@
                                         <td><%# Eval("Placa") %></td>
                                         <td>&nbsp;</td>
                                         <td><%# Eval("Contato") %></td>
+                                        <td><%# Eval("Controle") %></td>
                                     </tr>
                                 </table>
 
