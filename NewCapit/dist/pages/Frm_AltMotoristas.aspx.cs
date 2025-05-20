@@ -19,6 +19,7 @@ namespace NewCapit.dist.pages
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
+        string id_uf;
         public string fotoMotorista;
         DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
@@ -43,13 +44,14 @@ namespace NewCapit.dist.pages
                 PreencherComboFiliais();              
                 PreencherComboJornada();
                 CarregarDDLAgregados();
-                CarregarEstCNH();
                 CarregarRegioes();
                 CarregarEstadosNascimento();
-                //CarregarMunicipioNasc();
+                CarregarEstCNH();
+                CarregarMunicipioCNH();
                 CarregaDadosMotorista();
+                
             }
-           
+            
             fotoMotorista = txtCaminhoFoto.Text.Trim();
             if (ddlStatus.SelectedItem.Text == "ATIVO")
             {
@@ -76,17 +78,15 @@ namespace NewCapit.dist.pages
                 ddlRegioes.DataTextField = "regiao";
                 ddlRegioes.DataValueField = "id";
                 ddlRegioes.DataBind();
+
                 if (hdfRegiao.Value != string.Empty)
                 {
                     SqlCommand cmde = new SqlCommand("SELECT id, regiao FROM tbregioesdopais where regiao='" + hdfRegiao.Value + "'", conn);
                     conn.Open();
                     ddlRegioes.DataSource = cmde.ExecuteReader();
-                    ddlRegioes.Items.Insert(0, new ListItem("Selecione", "0"));
+                    ddlRegioes.Items.Insert(0, new ListItem("regiao", "id"));
                 }
-                else
-                {
-
-                }
+                
 
 
             }
@@ -108,7 +108,10 @@ namespace NewCapit.dist.pages
         private void CarregarMunicipioNasc()
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
+            {              
+
+
+
                 SqlCommand cmd = new SqlCommand("SELECT nome_municipio FROM tbmunicipiosbrasileiros WHERE IdRegiao = @RegiaoId AND Uf = @Uf", conn);
                 cmd.Parameters.AddWithValue("@RegiaoId", ddlRegioes.SelectedValue);
                 cmd.Parameters.AddWithValue("@Uf", ddlEstNasc.SelectedValue);
@@ -142,22 +145,36 @@ namespace NewCapit.dist.pages
                 ddlCNH.DataValueField = "Uf";
                 ddlCNH.DataBind();
 
-                //ddlCNH.Items.Insert(0, new ListItem("Selecione", "0"));
+
+                if (hdfCnh.Value != string.Empty)
+                {
+                    SqlCommand cmdc = new SqlCommand("SELECT Uf, SiglaUf FROM tbestadosbrasileiros where SiglaUf=@SiglaUf", conn);
+                    cmd.Parameters.AddWithValue("@SiglaUf", hdfCnh.Value);
+                    conn.Open();
+                    SqlDataReader readerc = cmdc.ExecuteReader();
+
+                    ddlCNH.Items.Insert(0, new ListItem("SiglaUf", "Uf"));
+                }
+                
+
+
+                
             }
         }
         protected void ddlCNH_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int cidadeId = int.Parse(ddlCNH.SelectedValue);
-            CarregarMunicipioCNH(cidadeId);
+            //int cidadeId = int.Parse(ddlCNH.SelectedValue);
+            CarregarMunicipioCNH();
+            updCnh.Update();
         }
-        private void CarregarMunicipioCNH(int cidadeId)
+        private void CarregarMunicipioCNH()
         {
-            //ddlMunicCnh.Items.Clear();
+            ddlMunicCnh.Items.Clear();
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 SqlCommand cmd = new SqlCommand("SELECT Uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @cidadeId", conn);
-                cmd.Parameters.AddWithValue("@cidadeId", cidadeId);
+                cmd.Parameters.AddWithValue("@cidadeId", ddlCNH.SelectedValue);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -166,7 +183,7 @@ namespace NewCapit.dist.pages
                 ddlMunicCnh.DataValueField = "Uf";
                 ddlMunicCnh.DataBind();
 
-                ddlMunicCnh.Items.Insert(0, new ListItem("Selecione uma cidade ...", "0"));
+                //ddlMunicCnh.Items.Insert(0, new ListItem("Selecione uma cidade ...", "0"));
             }
         }
         public void CarregaDadosMotorista()
@@ -268,8 +285,9 @@ namespace NewCapit.dist.pages
                 hdfRegiao.Value = dt.Rows[0][55].ToString();
                 ddlEstNasc.Items.Insert(0, new ListItem(dt.Rows[0][55].ToString()));
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
-                ddlCNH.SelectedItem.Text= dt.Rows[0][57].ToString();
-                ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString(), "0"));
+                //ddlCNH.SelectedItem.Text= dt.Rows[0][57].ToString();
+                hdfCnh.Value = dt.Rows[0][57].ToString();
+                ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString()));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
                 ddlRegioes.SelectedItem.Text = dt.Rows[0][61].ToString();
@@ -405,7 +423,8 @@ namespace NewCapit.dist.pages
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    // Adiciona os parâmetros                    
+                    // Adiciona os parâmetros
+                   
                     cmd.Parameters.AddWithValue("@nommot", txtNomMot.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedValue.ToUpper());
                     cmd.Parameters.AddWithValue("@emissaorg", DateTime.Parse(txtDtEmissao.Text).ToString("yyyy-MM-dd"));
@@ -511,9 +530,9 @@ namespace NewCapit.dist.pages
 
                     if (rowsAffected > 0)
                     {
-                        string mensagem = $"Olá, {txtAltCad.Text}! Código {txtCodMot.Text} atualizado com sucesso.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        //string mensagem = $"Olá, {txtAltCad.Text}! Código {txtCodMot.Text} atualizado com sucesso. {ddlMunicCnh.SelectedItem.Text.ToUpper()}";
+                        //string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
                         Response.Redirect("/dist/pages/ConsultaMotoristas.aspx");
                     }

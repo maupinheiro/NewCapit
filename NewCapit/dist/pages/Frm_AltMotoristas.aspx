@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltMotoristas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AltMotoristas" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltMotoristas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AltMotoristas" EnableEventValidation="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -155,6 +155,8 @@
                         </div>                        
                     </div>
                     <!-- Linha 2 do formulario -->
+                     <asp:UpdatePanel ID="updNasc" runat="server">
+                         <ContentTemplate>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -170,6 +172,7 @@
                                 </div>
                             </div>
                         </div>
+                       
                         <div class="col-md-2">                           
                             <div class="form-group">
                                 <span class="details">REGIÃO DO PAIS:</span>
@@ -188,9 +191,10 @@
                         <div class="col-md-3">                           
                             <div class="form_group">
                                 <span class="details">MUNICIPIO DE NASCIMENTO:</span>
-                                <asp:DropDownList ID="ddlMunicipioNasc" runat="server" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control"></asp:DropDownList>
                             </div>
                         </div>
+                               
                         <div class="col-md-1">
                             <div class="form_group">
                                 <span class="details">ADM./CAD.:</span>
@@ -199,6 +203,11 @@
                         </div>
 
                     </div>
+                                    </ContentTemplate>
+                         <Triggers>
+                             <asp:AsyncPostBackTrigger ControlID="ddlEstNasc" />
+                         </Triggers>
+                        </asp:UpdatePanel>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -283,6 +292,8 @@
 
                     </div>
                     <!-- Linha 4 do formulário -->
+                      <asp:UpdatePanel ID="updCnh" UpdateMode="Conditional" runat="server">
+                      <ContentTemplate>
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -319,21 +330,28 @@
                                 <asp:TextBox ID="txtValCNH" runat="server" class="form-control"></asp:TextBox>
                             </div>
                         </div>
+                      
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">UF CNH:</span>
                                 <asp:DropDownList ID="ddlCNH" name="ufCNH" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCNH_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                <asp:HiddenField ID="hdfCnh" runat="server" />
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">MUNICIPIO DA CNH:</span>
-                                <asp:DropDownList ID="ddlMunicCnh" class="form-control select2" runat="server"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMunicCnh"  class="form-control select2" runat="server"></asp:DropDownList>
                             </div>
                         </div>
-
+                              
 
                     </div>
+                              </ContentTemplate>
+                          <Triggers>
+                                <asp:AsyncPostBackTrigger ControlID="ddlCNH" />
+                            </Triggers>
+                    </asp:UpdatePanel>
                     <!-- Linha 5 do formulário -->
                     <div class="row g-3">
                         <div class="col-md-2">

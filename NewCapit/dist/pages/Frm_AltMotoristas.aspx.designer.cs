@@ -87,6 +87,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.FileUpload FileUpload1;
 
         /// <summary>
+        /// Controle updNasc.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updNasc;
+
+        /// <summary>
         /// Controle txtNomMot.
         /// </summary>
         /// <remarks>
@@ -249,6 +258,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPIS;
 
         /// <summary>
+        /// Controle updCnh.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updCnh;
+
+        /// <summary>
         /// Controle txtRegCNH.
         /// </summary>
         /// <remarks>
@@ -301,6 +319,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCNH;
+
+        /// <summary>
+        /// Controle hdfCnh.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdfCnh;
 
         /// <summary>
         /// Controle ddlMunicCnh.
