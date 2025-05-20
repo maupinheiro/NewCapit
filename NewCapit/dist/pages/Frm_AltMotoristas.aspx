@@ -213,10 +213,9 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">foto:</span>
+                            <div class="form-group">                                
                                 <div class="input-group">
-                                    <asp:TextBox ID="txtCaminhoFoto" runat="server" class="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtCaminhoFoto" runat="server" class="form-control" Visible="false"></asp:TextBox>
                                 </div>
                             </div>
                         </div>

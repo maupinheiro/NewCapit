@@ -152,7 +152,7 @@ namespace NewCapit.dist.pages
         }
         private void CarregarMunicipioCNH(int cidadeId)
         {
-            ddlMunicCnh.Items.Clear();
+            //ddlMunicCnh.Items.Clear();
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -215,9 +215,9 @@ namespace NewCapit.dist.pages
                 txtDtNasc.Text = dt.Rows[0][23].ToString();
                 ddlEstCivil.SelectedItem.Text = dt.Rows[0][24].ToString();
                 ddlSexo.SelectedItem.Text = dt.Rows[0][25].ToString();
-                ddlJornada.SelectedItem.Text = dt.Rows[0][26].ToString();
-                txtNomeMae.Text = dt.Rows[0][27].ToString();
-                txtNomePai.Text = dt.Rows[0][28].ToString();
+                ddlJornada.SelectedItem.Text = dt.Rows[0][26].ToString();                
+                txtNomePai.Text = dt.Rows[0][27].ToString();
+                txtNomeMae.Text = dt.Rows[0][28].ToString();
                 txtCodTra.Text = dt.Rows[0][29].ToString();
                 ddlAgregados.Items.Insert(0, new ListItem(dt.Rows[0][30].ToString(), "0"));
                 txtDtCad.Text = dt.Rows[0][31].ToString();
@@ -459,7 +459,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@municipiocnh", ddlMunicipioNasc.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@municipiocnh", ddlMunicCnh.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@vencmoop", txtVAlMoop.Text);
                     cmd.Parameters.AddWithValue("@cracha", txtCracha.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@regiao", ddlRegioes.SelectedItem.Text.ToUpper());

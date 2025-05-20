@@ -417,7 +417,7 @@
                                             </li>--%>
                                 </ul>
                             </li>
-                            
+
                             <%--<li class="nav-item">
                                         <a href="./index3.html" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
@@ -537,7 +537,7 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="far fa-id-card nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
                                     </li>
@@ -555,7 +555,7 @@
                                     </li>--%>
                                     <li class="nav-item">
                                         <a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="far fa-edit nav-icon"></i>
                                             <p>Conferir Jornada</p>
                                         </a>
                                     </li>
@@ -566,10 +566,9 @@
                                         </a>
                                     </li>--%>
                                     <li class="nav-item">
-
-                                        <a href="javascript:void(0);" class="nav-link" onclick="ver_txt3();">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Gerar TXT Folha</p>
+                                        <a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link">
+                                            <i class="fas fa-file-export nav-icon"></i>
+                                            <p>Gerar TXT da Jornada</p>
                                         </a>
                                     </li>
                                     <%--<li class="nav-item">
