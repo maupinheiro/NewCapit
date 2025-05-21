@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaOrdemColeta.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaOrdemColeta" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -371,46 +372,46 @@
                         <asp:Button ID="btnPesquisarContato" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarContato_Click" />
                     </div>
                 </div>
-                 <div class="row g-3">
-                                 <div class="col-md-1">
-                                     <div class="form-group">
-                                         <span class="details">CÓDIGO:</span>
-                                         <asp:TextBox ID="codCliInicial" runat="server" class="form-control" placeholder=""></asp:TextBox>
-                                     </div>
-                                 </div>
-                                 <div class="col-md-3">
-                                     <div class="form-group">
-                                         <span class="details">INICIO DA PRESTAÇÃO:</span>
-                                         <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2" ></asp:DropDownList>                            
-                                     </div>
-                                 </div>
-                                 <div class="col-md-1">
-                                     <div class="form-group">
-                                         <span class="details">CÓDIGO:</span>
-                                         <asp:TextBox ID="codCliFinal" runat="server" class="form-control" placeholder=""></asp:TextBox>
-                                     </div>
-                                 </div>
-                                 <div class="col-md-3">
-                                     <div class="form-group">
-                                         <span class="details">TERMINO DA PRESTAÇÃO:</span>
-                                         <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>                            
-                                     </div>
-                                 </div>
-                                 <div class="col-md-3">
-                                     <div class="form_group">
-                                         <span class="details">Tipo de Veículo:</span>
-                                         <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
-                                         </asp:DropDownList>
-                                     </div>
-                                 </div>
-                                 <div class="col-md-1">
-                                     <div class="form-group">
-                                         <span class="details">Distância:</span>
-                                         <asp:TextBox ID="txtDistancia" runat="server" class="form-control" placeholder=""></asp:TextBox>
-                                     </div>
-                                 </div>
+                <div class="row g-3">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">CÓDIGO:</span>
+                            <asp:TextBox ID="codCliInicial" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="details">INICIO DA PRESTAÇÃO:</span>
+                            <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">CÓDIGO:</span>
+                            <asp:TextBox ID="codCliFinal" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="details">TERMINO DA PRESTAÇÃO:</span>
+                            <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form_group">
+                            <span class="details">Tipo de Veículo:</span>
+                            <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <span class="details">Distância:</span>
+                            <asp:TextBox ID="txtDistancia" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
 
-                             </div>
+                </div>
                 <div class="row g-3">
                     <div class="col-md-12">
                         <div class="card">
@@ -450,7 +451,7 @@
                                         <tr class="expandable-body">
                                             <td colspan="12">
                                                 <div class="row g-3">
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <h3 class="card-title">TIPO DE VIAGEM:
                                                         <asp:Label ID="lblTipoViagem" runat="server" Text='<%# Eval("tipo_viagem") %>' ForeColor="Blue" /></h3>
                                                     </div>
@@ -462,7 +463,7 @@
                                                         <h3 class="card-title">VEICULO:
                                                         <asp:Label ID="lblVeiculo" runat="server" Text='<%# Eval("veiculo") %>' ForeColor="Blue" /></h3>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <h3 class="card-title">QUANT./PALLET´S:
                                                         <asp:Label ID="lblQuant" runat="server" Text='<%# Eval("quant_palet") %>' ForeColor="Blue" /></h3>
                                                     </div>
@@ -513,121 +514,132 @@
                                                             <span class="">STATUS:</span>
                                                             <asp:HiddenField ID="hdfStatus" Value='<%# Eval("status") %>' runat="server" />
                                                             <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
-                                                               
                                                             </asp:DropDownList>
                                                         </div>
                                                     </div>
                                                 </div>
-                                               <div class="item-coleta">
-                                                                <div class="row g-3">
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <span class="details">CHEGADA FORNECEDOR:</span>
-                                                                            <div class="input-group">
-                                                                                <asp:TextBox ID="txtChegadaOrigem" runat="server"
-                                                                                             CssClass="form-control chegada"
-                                                                                             Text='<%# Eval("chegadaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                             TextMode="DateTimeLocal"
-                                                                                             Style="text-align: center" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <span class="details">SAÍDA FORNECEDOR:</span>
-                                                                            <div class="input-group">
-                                                                                <asp:TextBox ID="txtSaidaOrigem" runat="server"
-                                                                                             CssClass="form-control saida"
-                                                                                             Text='<%# Eval("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                             TextMode="DateTimeLocal"
-                                                                                             Style="text-align: center" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="col-md-1">
-                                                                        <div class="form-group">
-                                                                            <span class="details">ESPERA:</span>
-                                                                            <div class="input-group">
-                                                                                <asp:TextBox ID="txtAgCarreg" runat="server"
-                                                                                             CssClass="form-control espera"
-                                                                                             Text='<%# Eval("tempoagcarreg") %>'
-                                                                                             Style="text-align: center" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                <div class="item-coleta">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <span class="details">CHEGADA FORNECEDOR:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtChegadaOrigem" runat="server"
+                                                                        CssClass="form-control chegada"
+                                                                        Text='<%# Eval("chegadaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                        TextMode="DateTimeLocal"
+                                                                        Style="text-align: center" />
                                                                 </div>
-                                                   <div class="row g-3">
-                                                            <div class="col-md-2">
-                                                                <div class="form-group">
-                                                                    <span class="details">CHEGADA PLANTA:</span>
-                                                                    <div class="input-group">
-                                                                         <asp:TextBox ID="txtChegadaDestino" runat="server"
-                                                                                         Text='<%# Eval("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                         CssClass="form-control chegada-planta"
-                                                                                         TextMode="DateTimeLocal"
-                                                                                         Style="text-align: center" />
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <div class="form-group">
-                                                                    <span class="details">ENTRADA:</span>
-                                                                    <div class="input-group">
-                                                                        <asp:TextBox ID="txtEntrada" runat="server"
-                                                                                         Text='<%# Eval("entradaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                         CssClass="form-control entrada-planta"
-                                                                                         TextMode="DateTimeLocal"
-                                                                                         Style="text-align: center" />
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <span class="details">ESP.GATE:</span>
-                                                                    <div class="input-group">
-                                                                         <asp:TextBox ID="txtEsperaGate" runat="server" Text='<%# Eval("tempoesperagate") %>'
-                                                                                         CssClass="form-control espera-gate"
-                                                                                         Style="text-align: center" />
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <div class="form-group">
-                                                                    <span class="details">SAIDA PLANTA:</span>
-                                                                    <div class="input-group">
-                                                                        <asp:TextBox ID="txtSaidaPlanta" runat="server"
-                                                                                         Text='<%# Eval("saidaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                         CssClass="form-control saida-planta"
-                                                                                         TextMode="DateTimeLocal"
-                                                                                         style="text-align: center" />
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <span class="details">TEMPO:</span>
-                                                                    <div class="input-group">
-                                                                        <asp:TextBox ID="txtDentroPlanta" runat="server"
-                                                                                         Text='<%# Eval("tempodentroplanta") %>'
-                                                                                         CssClass="form-control dentro-planta"
-                                                                                         style="text-align: center" />
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <br />
-                                                                <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
                                                             </div>
                                                         </div>
+
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <span class="details">SAÍDA FORNECEDOR:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtSaidaOrigem" runat="server"
+                                                                        CssClass="form-control saida"
+                                                                        Text='<%# Eval("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                        TextMode="DateTimeLocal"
+                                                                        Style="text-align: center" />
+                                                                </div>
                                                             </div>
-                                                
+                                                        </div>
+
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <span class="details">ESPERA:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtAgCarreg" runat="server"
+                                                                        CssClass="form-control espera"
+                                                                        Text='<%# Eval("tempoagcarreg") %>'
+                                                                        Style="text-align: center" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <span class="details">CHEGADA PLANTA:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtChegadaDestino" runat="server"
+                                                                        Text='<%# Eval("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                        CssClass="form-control chegada-planta"
+                                                                        TextMode="DateTimeLocal"
+                                                                        Style="text-align: center" />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <span class="details">ENTRADA:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtEntrada" runat="server"
+                                                                        Text='<%# Eval("entradaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                        CssClass="form-control entrada-planta"
+                                                                        TextMode="DateTimeLocal"
+                                                                        Style="text-align: center" />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <span class="details">ESP.GATE:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtEsperaGate" runat="server" Text='<%# Eval("tempoesperagate") %>'
+                                                                        CssClass="form-control espera-gate"
+                                                                        Style="text-align: center" />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <span class="details">SAIDA PLANTA:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtSaidaPlanta" runat="server"
+                                                                        Text='<%# Eval("saidaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                        CssClass="form-control saida-planta"
+                                                                        TextMode="DateTimeLocal"
+                                                                        Style="text-align: center" />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <span class="details">TEMPO:</span>
+                                                                <div class="input-group">
+                                                                    <asp:TextBox ID="txtDentroPlanta" runat="server"
+                                                                        Text='<%# Eval("tempodentroplanta") %>'
+                                                                        CssClass="form-control dentro-planta"
+                                                                        Style="text-align: center" />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <br />
+                                                            <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <br />
+                                                            <asp:Button ID="ImprimirOC" runat="server" Text="Imprimir" CssClass="btn btn-outline-primary" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <br />
+                                                            <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <br />
+                                                            <asp:Button ID="Ocorrencia" runat="server" Text="Ocorrências" CssClass="btn btn-outline-danger" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </ItemTemplate>
@@ -675,14 +687,14 @@
                         <br />
                         <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar Ordem de Coleta" />
                     </div>
-                     <div class="col-md-2">
-                         <br />
-                         <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
-                     </div>
-                     <div class="col-md-2">
-                         <br />
-                         <asp:Button ID="btnGeraOcorrencia" runat="server" CssClass="btn btn-outline-info  btn-lg" Text="Gerar Ocorrência" />
-                      </div>
+                    <div class="col-md-2">
+                        <br />
+                        <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
+                    </div>
+                    <div class="col-md-2">
+                        <br />
+                        <asp:Button ID="btnGeraOcorrencia" runat="server" CssClass="btn btn-outline-info  btn-lg" Text="Gerar Ocorrência" />
+                    </div>
                     <div class="col-md-1">
                         <br />
                         <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               

@@ -266,8 +266,8 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
                         cmd.Parameters.AddWithValue("@codorigem", dto.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
-                        cmd.Parameters.AddWithValue("@coddestino", dtd.Rows[0]["nomcli"].ToString());
-                        cmd.Parameters.AddWithValue("@clidestino", dtd.Rows[0]["codcli"].ToString());
+                        cmd.Parameters.AddWithValue("@coddestino", dtd.Rows[0]["codcli"].ToString());
+                        cmd.Parameters.AddWithValue("@clidestino", dtd.Rows[0]["nomcli"].ToString());
                         cmd.Parameters.AddWithValue("@idviagem", nr_carga);
                         cmd.Parameters.AddWithValue("@ufcliorigem", dto.Rows[0]["estcli"].ToString());
                         cmd.Parameters.AddWithValue("@ufclidestino", dtd.Rows[0]["estcli"].ToString());

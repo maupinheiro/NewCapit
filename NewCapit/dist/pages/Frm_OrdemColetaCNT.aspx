@@ -569,7 +569,7 @@
                    
                     <div class="col-md-1">
                         <br />
-                        <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                        <a href="ConsultaEntregas.aspx" class="btn btn-outline-danger btn-lg">Sair               
                         </a>
                     </div>
                 </div>
