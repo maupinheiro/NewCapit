@@ -32,7 +32,7 @@
                 <div class="content-header">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-2 text-gray-800">
-                            <i class="fas fa-shipping-fast"></i>&nbsp;Controle de Coletas</h1>
+                            <i class="fas fa-shipping-fast"></i>&nbsp;Controle de Solicitações</h1>
                         <a href="/dist/pages/Frm_OrdemColetaCNT.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                             <i class="fas fa-shipping-fast"></i>&nbsp; Nova Ordem de Coleta
                         </a>
@@ -104,15 +104,13 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Motorista</th>
-                                                    <th>O.Coleta</th>
-                                                    <th>Veículo</th>
-                                                    <th>Tipo de Veiculo</th>
-                                                    <th>CVA</th>
-                                                    <th>Origem/Destino</th>
-                                                    <th>Situação</th>
-                                                    <th>Atendimento</th>
-                                                    <th>Ação</th>
+                                                    <th>MOTORISTA/PROPRIETÁRIO</th>
+                                                    <th>ORD.COLETA</th>
+                                                    <th>VEÍCULO</th>
+                                                    <th>TIPO DE VEÍCULO</th>                                                    
+                                                    <th>SITUAÇÃO</th>
+                                                    <th>ATENDIMENTO</th>
+                                                    <th>AÇÃO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -120,12 +118,12 @@
                                     <ItemTemplate>
                                         <tr onclick="toggleDetalhes(this)">
                                             <td>
-                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 50px;" />
+                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 50px;" text-align: center/>
                                             </td>
-                                            <td>
-                                                <%# Eval("nomemotorista") %>
+                                            <td>                                                
+                                                <%# Eval("codmotorista") + " - " + Eval("nomemotorista") %>
                                                 <br />
-                                                <%# Eval("transportadora") %>   
+                                                <%# Eval("codtra") + " - " + Eval("transportadora")%>  
                                             </td>
                                             <td><%# Eval("num_carregamento") %></td>
                                             <td>
@@ -138,16 +136,16 @@
                                                 <br />
                                                 <%# Eval("placa") %>
                                             </td>
-                                            <td>
+                                            <%--<td>
                                                 <%# Eval("cva") %>
                                                 <br />
                                                 <%# Eval("carga") %>
-                                            </td>
-                                            <td>
+                                            </td>--%>
+                                            <%--<td>
                                                 <%# Eval("nomcliorigem") %>
                                                 <br />
                                                 <%# Eval("nomclidestino") %>
-                                            </td>
+                                            </td>--%>
                                             <td><%# Eval("situacao") %></td>
 
                                             <td>NO PRAZO</td>

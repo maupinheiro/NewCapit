@@ -120,9 +120,9 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Navbar Search -->
                     <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                        <%--<a class="nav-link" data-widget="navbar-search" href="#" role="button">
                             <i class="fas fa-search"></i>
-                        </a>
+                        </a>--%>
                         <div class="navbar-search-block">
                             <%--  <form class="form-inline">
                                 <div class="input-group input-group-sm">
@@ -137,6 +137,7 @@
                                     </div>
                                 </div>
                             </form>--%>
+
                         </div>
                     </li>
 
@@ -307,7 +308,7 @@
                                             <li class="nav-item">
                                                 <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
                                                     <i class="fas fa-shipping-fast nav-icon"></i>
-                                                    <p>Controle de Coletas</p>
+                                                    <p>Controle de Solicitações</p>
                                                 </a>
                                                 <a href="ImportarPlanejamento.aspx" class="nav-link">
                                                     <i class="fas fa-boxes nav-icon"></i>

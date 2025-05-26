@@ -11,6 +11,9 @@ using System.IO;
 using System.Configuration;
 using System.Web.UI.HtmlControls;
 using System.Collections;
+using Org.BouncyCastle.Asn1.Cmp;
+using NPOI.SS.Formula.Functions;
+using Domain;
 
 namespace NewCapit.dist.pages
 {
@@ -39,10 +42,13 @@ namespace NewCapit.dist.pages
                 lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 CarregaDados();
                 CarregaNumColeta();
+                PreencherComboResponsavel();
+                PreencherComboipoOcorrencia();
+
                 //PreencherComboStatus();
                 //PreencherNumColeta();
                 //fotoMotorista = "../../fotos/usuario.jpg";
-               
+
             }
             CarregaFoto();
         }
@@ -99,11 +105,11 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlCliInicial.DataSource = reader;
-                    ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliInicial.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
-                    ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    //ddlCliInicial.DataSource = reader;
+                    //ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    //ddlCliInicial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    //ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
+                    //ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -134,11 +140,11 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlCliFinal.DataSource = reader;
-                    ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliFinal.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
-                    ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    //ddlCliFinal.DataSource = reader;
+                    //ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    //ddlCliFinal.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    //ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
+                    //ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -151,12 +157,12 @@ namespace NewCapit.dist.pages
         }
         protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
         {
-            codCliInicial.Text = ddlCliInicial.SelectedValue;
+            //codCliInicial.Text = ddlCliInicial.SelectedValue;
         }
 
         protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
         {
-            codCliFinal.Text = ddlCliFinal.SelectedValue;
+            //codCliFinal.Text = ddlCliFinal.SelectedValue;
 
            
         }
@@ -186,12 +192,12 @@ namespace NewCapit.dist.pages
             txtCodMotorista.Text = codigo;
             txtUsuCadastro.Text = dt.Rows[0][3].ToString();
             lblDtCadastro.Text = dt.Rows[0][2].ToString();
-            codCliInicial.Text = dt.Rows[0][4].ToString();
-            ddlCliInicial.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(),""));
-            codCliFinal.Text = dt.Rows[0][6].ToString();
-            ddlCliFinal.Items.Insert(0, new ListItem(dt.Rows[0][7].ToString(),""));
-            txtDistancia.Text = dt.Rows[0][8].ToString();
-            ddlVeiculosCNT.Items.Insert(0, new ListItem(dt.Rows[0][9].ToString(), ""));
+            //codCliInicial.Text = dt.Rows[0][4].ToString();
+            //ddlCliInicial.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(),""));
+            //codCliFinal.Text = dt.Rows[0][6].ToString();
+            //ddlCliFinal.Items.Insert(0, new ListItem(dt.Rows[0][7].ToString(),""));
+            //txtDistancia.Text = dt.Rows[0][8].ToString();
+            //ddlVeiculosCNT.Items.Insert(0, new ListItem(dt.Rows[0][9].ToString(), ""));
             var obje = new Domain.ConsultaMotorista
             {
                 codmot = codigo
@@ -498,7 +504,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@entradaplanta", SafeDateValue(txtEntrada.Text.Trim()));
                     cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempodentroplanta", SafeValue(txtDentroPlanta.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@tempoesperagate", SafeValue(txtEsperaGate.Text.Trim()) );
+                    cmd.Parameters.AddWithValue("@tempoesperagate", SafeValue(txtEsperaGate.Text.Trim()));
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     // continue os parâmetros conforme seu banco
@@ -509,6 +515,67 @@ namespace NewCapit.dist.pages
 
                 // Após atualizar, recarregar os dados no Repeater
                 AtualizarColetasVisiveis();
+            }
+            if (e.CommandName == "Ocorrencias")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+
+                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd1 = new SqlCommand("SELECT carga, andamento FROM tbcargas WHERE carga = @Id", conn);
+                    cmd1.Parameters.AddWithValue("@Id", id);
+                    SqlDataReader reader1 = cmd1.ExecuteReader();
+                    if (reader1.Read())
+                    {
+
+                        lblColeta.BackColor = System.Drawing.Color.LightGreen;
+                        lblColeta.Text = reader1["carga"].ToString();
+
+                        if (reader1["andamento"].ToString() == "CONCLUIDO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightGreen;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "PENDENTE")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Yellow;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "ANDAMENTO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightCoral;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Black;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+
+                        using (SqlConnection con = new SqlConnection(connStr))
+                        {
+                            string query = "SELECT id, responsavel, motivo, observacao, data_inclusao, usuario_inclusao FROM tbocorrencias WHERE carga = @numeroCarga";
+
+                            SqlCommand cmd = new SqlCommand(query, con);
+                            cmd.Parameters.AddWithValue("@numeroCarga", id);
+
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+
+                            GridViewCarga.DataSource = dt;
+                            GridViewCarga.DataBind();
+                        }
+
+
+                        // Exibe o modal com JavaScript
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#exampleModalCenter').modal('show');", true);
+
+                    }
+                }
             }
         }
 
@@ -717,8 +784,7 @@ namespace NewCapit.dist.pages
                 }
 
             }
-        }
-              
+        }            
 
         protected void btnPesquisarVeiculo_Click(object sender, EventArgs e)
         {
@@ -1064,12 +1130,14 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
         private object SafeValue(string input)
         {
             return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
 
 
         }
+
         private object SafeDateValue(string input)
         {
             DateTime dt;
@@ -1116,13 +1184,109 @@ namespace NewCapit.dist.pages
             }
         }
 
-        
+        private void PreencherComboResponsavel()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbresponsavelocorrencia ORDER BY descricao ASC";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
 
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
 
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboResponsavel.DataSource = reader;
+                    cboResponsavel.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboResponsavel.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboResponsavel.DataBind();  // Realiza o binding dos dados                   
+                    cboResponsavel.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+
+        private void PreencherComboipoOcorrencia()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbtipodeocorrencias ORDER BY descricao ASC";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboMotivo.DataSource = reader;
+                    cboMotivo.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboMotivo.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboMotivo.DataBind();  // Realiza o binding dos dados                   
+                    cboMotivo.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+
+        protected void btnSalvarOcorrencia_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            int numColeta = int.Parse(lblColeta.Text.Trim());
+            string responsavel = cboResponsavel.SelectedItem.ToString().Trim().ToUpper();
+            string motivo = cboMotivo.SelectedItem.ToString().Trim().ToUpper();
+            string ocorrencia = txtObservacao.Text.Trim();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbocorrencias (carga, responsavel, motivo, observacao, data, usuario_inclusao, data_inclusao) VALUES (@Carga, @Responsavel, @Motivo, @Observacao, GETDATE(), @Usuario_Inclusao, GETDATE())";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Carga", numColeta);
+                cmd.Parameters.AddWithValue("@Responsavel", responsavel);
+                cmd.Parameters.AddWithValue("@Motivo", motivo);
+                cmd.Parameters.AddWithValue("@Observacao", ocorrencia);
+                cmd.Parameters.AddWithValue("@Usuario_Inclusao", Session["UsuarioLogado"].ToString());
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    // Opcional: limpar ou fechar modal                    
+                    ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
+                }
+                catch (Exception ex)
+                {
+                    // Logar ou exibir erro
+                    Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                }
+            }
+        }
     }
-
-
-
-
 }
