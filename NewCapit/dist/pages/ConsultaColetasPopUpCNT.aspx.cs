@@ -46,6 +46,16 @@ namespace NewCapit.dist.pages
         {
             CarregarGrid();
         }
+
+        protected void GVColetas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void GVColetas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
+        }
     }
 }
 
