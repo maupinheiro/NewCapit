@@ -154,11 +154,11 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlVeiculosCNT.DataSource = reader;
-                    ddlVeiculosCNT.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    ddlVeiculosCNT.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlVeiculosCNT.DataBind();  // Realiza o binding dos dados                   
-                    ddlVeiculosCNT.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    //ddlVeiculosCNT.DataSource = reader;
+                    //ddlVeiculosCNT.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    //ddlVeiculosCNT.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    //ddlVeiculosCNT.DataBind();  // Realiza o binding dos dados                   
+                    //ddlVeiculosCNT.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -189,11 +189,11 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlCliInicial.DataSource = reader;
-                    ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliInicial.DataValueField = "codcli";  // Campo que será o valor de cada item                    
-                    ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
-                    ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    //ddlCliInicial.DataSource = reader;
+                    //ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    //ddlCliInicial.DataValueField = "codcli";  // Campo que será o valor de cada item                    
+                    //ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
+                    //ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -224,11 +224,11 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    ddlCliFinal.DataSource = reader;
-                    ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
-                    ddlCliFinal.DataValueField = "codcli";  // Campo que será o valor de cada item                    
-                    ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
-                    ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    //ddlCliFinal.DataSource = reader;
+                    //ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    //ddlCliFinal.DataValueField = "codcli";  // Campo que será o valor de cada item                    
+                    //ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
+                    //ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -554,7 +554,7 @@ namespace NewCapit.dist.pages
                         txtCartao.Text = ConsultaMotorista.cartaomot;
                         txtValCartao.Text = ConsultaMotorista.venccartao;
                         txtCelular.Text = ConsultaMotorista.fone2;
-                        
+                        txtFuncao.Text = ConsultaMotorista.cargo;
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
@@ -592,7 +592,7 @@ namespace NewCapit.dist.pages
                             txtCodVeiculo.Text = ConsultaMotorista.codvei;
                             txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
                             txtPlaca.Text = ConsultaMotorista.placa;
-                            txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+                            txtVeiculoTipo.Text = "FROTA"; // ConsultaMotorista.tipomot;
                             txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
                             txtReboque1.Text = ConsultaMotorista.reboque1;
                             txtReboque2.Text = ConsultaMotorista.reboque2;
@@ -683,11 +683,32 @@ namespace NewCapit.dist.pages
 
         protected void bntPesquisaColeta_Click(object sender, EventArgs e)
         {
-            string searchTerm;
-            searchTerm = txtColeta.Text ;
-            CarregarColetas(searchTerm);
-            txtColeta.Text = string.Empty;
+            if (txtColeta.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
 
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o número da coleta.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodVeiculo.Focus();
+
+            }
+            else
+            {
+                string searchTerm;
+                searchTerm = txtColeta.Text.Trim();
+                CarregarColetas(searchTerm);
+                txtColeta.Text = string.Empty;
+            }
         }
 
         protected void btnPesquisarVeiculo_Click(object sender, EventArgs e)
@@ -708,6 +729,7 @@ namespace NewCapit.dist.pages
 
                 // Registrando o script para execução no lado do cliente
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodVeiculo.Text = "";
                 txtCodVeiculo.Focus();
 
             }
@@ -821,8 +843,8 @@ namespace NewCapit.dist.pages
                     //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
+                    txtCodVeiculo.Text = "";
+                    txtCodVeiculo.Focus();
 
                 }
 
@@ -1014,12 +1036,12 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
                 cmd.Parameters.AddWithValue("@situacao", "ANDAMENTO");
-                cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
-                cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
-                cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
-                cmd.Parameters.AddWithValue("@nomclidestino", ddlCliFinal.SelectedItem.Text);
-                cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text);
-                cmd.Parameters.AddWithValue("@tipoveiculo", ddlVeiculosCNT.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
+                //cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
+                //cmd.Parameters.AddWithValue("@nomclidestino", ddlCliFinal.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text);
+                //cmd.Parameters.AddWithValue("@tipoveiculo", ddlVeiculosCNT.SelectedItem.Text);
 
                 try
                 {
@@ -1100,114 +1122,114 @@ namespace NewCapit.dist.pages
                 return DBNull.Value;
         }
 
-        protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
-        {
-            codCliInicial.Text = ddlCliInicial.SelectedValue;
-        }
+        //protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
+        //{
+        //    //codCliInicial.Text = ddlCliInicial.SelectedValue;
+        //}
 
-        protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
-        {
-            codCliFinal.Text = ddlCliFinal.SelectedValue;
-            string sql = "select Distancia from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
-            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            adp.Fill(dt);
-            con.Close();
-            if(dt.Rows.Count > 0)
-            {
-                txtDistancia.Text = dt.Rows[0][0].ToString();
-                lblDistancia.Text = string.Empty;
-            }
-            else
-            {
-                lblDistancia.Text = "Não há distância cadastrada para essa origem e destino";
-            }
+        //protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
+        //{
+        //    codCliFinal.Text = ddlCliFinal.SelectedValue;
+        //    string sql = "select Distancia from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+        //    SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+        //    DataTable dt = new DataTable();
+        //    con.Open();
+        //    adp.Fill(dt);
+        //    con.Close();
+        //    if(dt.Rows.Count > 0)
+        //    {
+        //        txtDistancia.Text = dt.Rows[0][0].ToString();
+        //        lblDistancia.Text = string.Empty;
+        //    }
+        //    else
+        //    {
+        //        lblDistancia.Text = "Não há distância cadastrada para essa origem e destino";
+        //    }
 
            
-        }
+        //}
 
-        protected void codCliInicial_TextChanged(object sender, EventArgs e)
-        {
-            if (codCliInicial.Text != "")
-            {
+        //protected void codCliInicial_TextChanged(object sender, EventArgs e)
+        //{
+        //    if (codCliInicial.Text != "")
+        //    {
 
-                string codigoRemetente = codCliInicial.Text.Trim();
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+        //        string codigoRemetente = codCliInicial.Text.Trim();
+        //        string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+        //        using (SqlConnection conn = new SqlConnection(strConn))
+        //        {
+        //            string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
-                        conn.Open();
+        //            using (SqlCommand cmd = new SqlCommand(query, conn))
+        //            {
+        //                cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+        //                conn.Open();
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                codCliInicial.Text = reader["codcli"].ToString();
-                                ddlCliInicial.SelectedItem.Text = reader["nomcli"].ToString();
-                                codCliFinal.Focus();
-                            }
-                            else
-                            {
-                                ddlCliInicial.SelectedItem.Text = "Selecione...";                                
-                                codCliInicial.Text = "";
-                                // Aciona o Toast via JavaScript
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-                                codCliInicial.Focus();
-                                // Opcional: exibir mensagem ao usuário
-                            }
-                        }
-                    }
+        //                using (SqlDataReader reader = cmd.ExecuteReader())
+        //                {
+        //                    if (reader.Read())
+        //                    {
+        //                        codCliInicial.Text = reader["codcli"].ToString();
+        //                        ddlCliInicial.SelectedItem.Text = reader["nomcli"].ToString();
+        //                        codCliFinal.Focus();
+        //                    }
+        //                    else
+        //                    {
+        //                        ddlCliInicial.SelectedItem.Text = "Selecione...";                                
+        //                        codCliInicial.Text = "";
+        //                        // Aciona o Toast via JavaScript
+        //                        ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+        //                        codCliInicial.Focus();
+        //                        // Opcional: exibir mensagem ao usuário
+        //                    }
+        //                }
+        //            }
 
-                }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
-        protected void codCliFinal_TextChanged(object sender, EventArgs e)
-        {
-            if (codCliFinal.Text != "")
-            {
+        //protected void codCliFinal_TextChanged(object sender, EventArgs e)
+        //{
+        //    if (codCliFinal.Text != "")
+        //    {
 
-                string codigoRemetente = codCliFinal.Text.Trim();
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+        //        string codigoRemetente = codCliFinal.Text.Trim();
+        //        string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+        //        using (SqlConnection conn = new SqlConnection(strConn))
+        //        {
+        //            string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
-                        conn.Open();
+        //            using (SqlCommand cmd = new SqlCommand(query, conn))
+        //            {
+        //                cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+        //                conn.Open();
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                codCliFinal.Text = reader["codcli"].ToString();
-                                ddlCliFinal.SelectedItem.Text = reader["nomcli"].ToString();
-                                ddlVeiculosCNT.Focus();
-                            }
-                            else
-                            {
-                                ddlCliFinal.SelectedItem.Text = "Selecione...";
-                                codCliFinal.Text = "";
-                                // Aciona o Toast via JavaScript
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-                                codCliInicial.Focus();
-                                // Opcional: exibir mensagem ao usuário
-                            }
-                        }
-                    }
+        //                using (SqlDataReader reader = cmd.ExecuteReader())
+        //                {
+        //                    if (reader.Read())
+        //                    {
+        //                        codCliFinal.Text = reader["codcli"].ToString();
+        //                        ddlCliFinal.SelectedItem.Text = reader["nomcli"].ToString();
+        //                        ddlVeiculosCNT.Focus();
+        //                    }
+        //                    else
+        //                    {
+        //                        ddlCliFinal.SelectedItem.Text = "Selecione...";
+        //                        codCliFinal.Text = "";
+        //                        // Aciona o Toast via JavaScript
+        //                        ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+        //                        codCliInicial.Focus();
+        //                        // Opcional: exibir mensagem ao usuário
+        //                    }
+        //                }
+        //            }
 
-                }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         private void AtualizarColetasVisiveis()
         {

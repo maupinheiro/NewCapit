@@ -24,7 +24,7 @@
                             <h1 class="h3 mb-2 text-gray-800">
                                 <i class="fas fa-shipping-fast"></i>&nbsp;Coletas</h1>
                         </div>
-                        <div class="col-md-1 text-center">
+                       <%-- <div class="col-md-1 text-center">
                             <input type="text" class="knob" value="70" data-width="90" data-height="90" data-fgcolor="#f56954">
                             <div class="knob-label
                                 ">
@@ -38,7 +38,7 @@
                         <div class="col-1 text-center">
                             <input type="text" class="knob" value="90" data-width="90" data-height="90" data-fgcolor="#932ab6">
                             <div class="knob-label">Antecipadas</div>
-                        </div>
+                        </div>--%>
 
                     </div>
                 </div>

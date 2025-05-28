@@ -28,6 +28,7 @@ namespace Domain
         public string reboque1 { get; set; }
         public string reboque2 { get; set; }
         public string tipoveiculo { get; set; }
+        public string cargo { get; set; }
 
     }
 }

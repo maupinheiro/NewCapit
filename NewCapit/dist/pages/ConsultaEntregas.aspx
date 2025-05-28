@@ -107,7 +107,7 @@
                                                     <th>MOTORISTA/PROPRIETÁRIO</th>
                                                     <th>ORD.COLETA</th>
                                                     <th>VEÍCULO</th>
-                                                    <th>TIPO DE VEÍCULO</th> 
+                                                    <th>TIPO DE VEÍCULO</th>                                                    
                                                     <th>SITUAÇÃO</th>
                                                     <th>ATENDIMENTO</th>
                                                     <th>AÇÃO</th>

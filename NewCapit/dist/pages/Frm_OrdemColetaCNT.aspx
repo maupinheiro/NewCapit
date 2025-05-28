@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <%--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>--%>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function calcularTempoAgCarreg(item) {
@@ -129,7 +129,8 @@
                 <div class="card card-info">
                     <div class="card-header">
                         <div class="d-sm-flex align-items-left justify-content-between mb-3">
-                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -  <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
+                            <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA - 
+                                <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
                             <%--<h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;--%>
                             <%--<asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>--%>
                         </div>
@@ -148,24 +149,29 @@
                         <br />
                         <asp:Button ID="btnPesquisarMotorista" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarMotorista_Click" />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <span class="details">FILIAL:</span>
-                            <asp:TextBox ID="txtFilialMot" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                            <asp:TextBox ID="txtFilialMot" runat="server" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <span class="details">TIPO:</span>
-                            <asp:TextBox ID="txtTipoMot" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                            <span class="details">TIPO DE MOTORISTA:</span>
+                            <asp:TextBox ID="txtTipoMot" runat="server" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">FUNÇÃO:</span>
+                            <asp:TextBox ID="txtFuncao" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">EX.TOXIC.:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control"  Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -173,7 +179,7 @@
                         <div class="form-group">
                             <span class="details">VAL. CNH:</span>
                             <div class="input-group">
-                                <asp:TextBox ID="txtCNH" runat="server" class="form-control"  Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCNH" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -234,7 +240,7 @@
                 <div class="row g-3">
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">VEICULO:</span>
+                            <span class="details">CÓD./FROTA:</span>
                             <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
@@ -250,7 +256,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <span class="details">TIPO:</span>
+                            <span class="details">TIPO DE VEÍCULO:</span>
                             <asp:TextBox ID="txtVeiculoTipo" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
@@ -303,7 +309,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <span class="details">TIPO VEICULO:</span>
+                            <span class="details">VEICULO:</span>
                             <asp:TextBox ID="txtTipoVeiculo" runat="server" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
@@ -360,7 +366,7 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">VEÍCULO:</span>
+                            <span class="details">CONTATO:</span>
                             <asp:TextBox ID="txtCodFrota" runat="server" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
@@ -375,7 +381,7 @@
                         <asp:Button ID="btnPesquisarContato" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarContato_Click" />
                     </div>
                 </div>
-                <div class="row g-3">
+                <%--<div class="row g-3">
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">CÓDIGO:</span>
@@ -415,7 +421,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div>--%>
 
                 <div class="row g-3">
                     <div class="col-md-1">
@@ -566,7 +572,7 @@
                         <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" OnClick="btnSalvar1_Click" />
 
                     </div>
-                   
+
                     <div class="col-md-1">
                         <br />
                         <a href="ConsultaEntregas.aspx" class="btn btn-outline-danger btn-lg">Sair               
@@ -576,16 +582,16 @@
             </div>
         </div>
         <!-- Mensagens de erro toast -->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                Cliente não encontrado. Verifique o código digitado.
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        Cliente não encontrado. Verifique o código digitado.
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-    </div>
-</div>
     </div>
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
