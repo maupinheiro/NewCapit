@@ -24,15 +24,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Label novaColeta;
 
         /// <summary>
-        /// Controle txtFilial.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtFilial;
-
-        /// <summary>
         /// Controle lblMsg.
         /// </summary>
         /// <remarks>
@@ -418,15 +409,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnImprimir;
-
-        /// <summary>
-        /// Controle btnGeraOcorrencia.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGeraOcorrencia;
 
         /// <summary>
         /// Controle lblColeta.

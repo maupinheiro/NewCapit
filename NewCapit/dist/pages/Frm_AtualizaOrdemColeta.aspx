@@ -129,16 +129,14 @@
 
         window.addEventListener('load', bindEventos);
     </script>
-    <div class="content-wrapper">
-        <%--<asp:ScriptManager ID="ScriptManager2" runat="server" />--%>
+    <div class="content-wrapper">        
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
                     <div class="d-sm-flex align-items-left justify-content-between mb-3">
-                        <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -
-                                 <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
-                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;
-                                <asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>
+                        <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -                              <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
+                        <%--<h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;
+                                <asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>--%>
                     </div>
                 </div>
             </div>
@@ -156,10 +154,10 @@
                     <br />
                     <asp:Button ID="btnPesquisarMotorista" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarMotorista_Click" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FILIAL:</span>
-                        <asp:TextBox ID="txtFilialMot" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtFilialMot" runat="server" class="form-control" placeholder=""></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -639,11 +637,7 @@
                                                     <div class="col-md-1">
                                                         <br />
                                                         <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <br />
-                                                        <asp:Button ID="ImprimirOC" runat="server" Text="Imprimir" CssClass="btn btn-outline-primary" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
-                                                    </div>
+                                                    </div>                                                    
                                                     <div class="col-md-1">
                                                         <br />
                                                         <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
@@ -705,11 +699,7 @@
                 <div class="col-md-2">
                     <br />
                     <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
-                </div>
-                <div class="col-md-2">
-                    <br />
-                    <asp:Button ID="btnGeraOcorrencia" runat="server" CssClass="btn btn-outline-info  btn-lg" Text="Gerar Ocorrência" />
-                </div>
+                </div>               
                 <div class="col-md-1">
                     <br />
                     <a href="ConsultaEntregas.aspx" class="btn btn-outline-danger btn-lg">Sair               

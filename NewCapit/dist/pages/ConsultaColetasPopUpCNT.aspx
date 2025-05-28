@@ -45,11 +45,110 @@
 
                 <asp:TemplateField HeaderText="AÇÃO" ShowHeader="True">
                     <ItemTemplate>
-                        <asp:LinkButton ID="btnDetalhes" runat="server" Text="" CommandName="MostrarDetalhes" CommandArgument='<%# Eval("Id") %>' class="btn btn-danger"><i class="fas fa-list"></i></asp:LinkButton>
+                        <asp:LinkButton ID="btnDetalhes" runat="server" Text="Ocorrencias" CommandName="Ocorrencias" CommandArgument='<%# Eval("carga") %>' class="btn btn-danger"></asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>
+
+        <!-- Modal -->
+<div class="modal fade bd-example-modal-xl" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Ocorrências</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <asp:Label ID="lblColeta" runat="server" class="form-control font-weight-bold" Style="text-align: center">  
+                            </asp:Label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <asp:Label ID="lblStatus" runat="server" class="form-control font-weight-bold" Style="text-align: center">  
+                            </asp:Label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="form_group">
+                            <span class="details">RESPONSÁVEL:</span>
+                            <asp:DropDownList ID="cboResponsavel" runat="server" CssClass="form-control">
+                            </asp:DropDownList><br />
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <div class="form_group">
+                            <span class="details">OCORRÊNCIA:</span>
+                            <asp:DropDownList ID="cboMotivo" runat="server" CssClass="form-control">
+                            </asp:DropDownList><br />
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="form_group">
+                            <span class="details">OBSERVAÇÃO:</span>
+                            <asp:TextBox ID="txtObservacao" runat="server" class="form-control font-weight-bold" Rows="3" TextMode="MultiLine" placeholder="Ocorrências ..."></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0" style="height: 200px;">
+                            <table class="table table-head-fixed text-nowrap">
+                                <asp:GridView runat="server" ID="GridViewCarga" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False">
+                                    <Columns>
+                                        <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
+                                        <asp:BoundField DataField="responsavel" HeaderText="RESPONSÁVEL" />
+                                        <asp:BoundField DataField="motivo" HeaderText="OCORRÊNCIA" />
+                                        <asp:BoundField DataField="observacao" HeaderText="OBSERVAÇÃO" />
+                                        <asp:BoundField DataField="data_inclusao" HeaderText="DATA   " />
+                                        <asp:BoundField DataField="usuario_inclusao" HeaderText="USUÁRIO" />
+
+                                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
+                                            <ItemTemplate>
+                                                <asp:LinkButton ID="lnkExcluir" runat="server" class="btn btn-danger"><i class="fas fa-trash-alt"></i></asp:LinkButton>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+                            </table>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <asp:Button ID="btnSalvarOcorrencia" runat="server" Text="Salvar" OnClick="btnSalvarOcorrencia_Click" class="btn btn-primary" />
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<footer class="main-footer">
+    <div class="float-right d-none d-sm-block">
+        <b>Version</b> 3.1.0 
+    </div>
+    <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
+</footer>
+
+
     </form>
 </body>
 </html>

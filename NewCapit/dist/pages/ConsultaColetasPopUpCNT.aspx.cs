@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web.Configuration;
 
 namespace NewCapit.dist.pages
 {
@@ -19,6 +20,8 @@ namespace NewCapit.dist.pages
          
                 CarregarGrid();
             }
+            PreencherComboResponsavel();
+            PreencherComboipoOcorrencia();
         }
 
         private void CarregarGrid()
@@ -47,14 +50,174 @@ namespace NewCapit.dist.pages
             CarregarGrid();
         }
 
-        protected void GVColetas_RowCommand(object sender, GridViewCommandEventArgs e)
+        private void PreencherComboResponsavel()
         {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbresponsavelocorrencia ORDER BY descricao ASC";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboResponsavel.DataSource = reader;
+                    cboResponsavel.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboResponsavel.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboResponsavel.DataBind();  // Realiza o binding dos dados                   
+                    cboResponsavel.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
         }
 
-        protected void GVColetas_RowDataBound(object sender, GridViewRowEventArgs e)
+        private void PreencherComboipoOcorrencia()
         {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbtipodeocorrencias ORDER BY descricao ASC";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboMotivo.DataSource = reader;
+                    cboMotivo.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboMotivo.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboMotivo.DataBind();  // Realiza o binding dos dados                   
+                    cboMotivo.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+
+        protected void btnSalvarOcorrencia_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            int numColeta = int.Parse(lblColeta.Text.Trim());
+            string responsavel = cboResponsavel.SelectedItem.ToString().Trim().ToUpper();
+            string motivo = cboMotivo.SelectedItem.ToString().Trim().ToUpper();
+            string ocorrencia = txtObservacao.Text.Trim();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbocorrencias (carga, responsavel, motivo, observacao, data, usuario_inclusao, data_inclusao) VALUES (@Carga, @Responsavel, @Motivo, @Observacao, GETDATE(), @Usuario_Inclusao, GETDATE())";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Carga", numColeta);
+                cmd.Parameters.AddWithValue("@Responsavel", responsavel);
+                cmd.Parameters.AddWithValue("@Motivo", motivo);
+                cmd.Parameters.AddWithValue("@Observacao", ocorrencia);
+                cmd.Parameters.AddWithValue("@Usuario_Inclusao", Session["UsuarioLogado"].ToString());
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    // Opcional: limpar ou fechar modal                    
+                    ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
+                }
+                catch (Exception ex)
+                {
+                    // Logar ou exibir erro
+                    Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                }
+            }
+        }
+
+        protected void GVColetas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Ocorrencias")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+
+                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd1 = new SqlCommand("SELECT carga, andamento FROM tbcargas WHERE carga = @Id", conn);
+                    cmd1.Parameters.AddWithValue("@Id", id);
+                    SqlDataReader reader1 = cmd1.ExecuteReader();
+                    if (reader1.Read())
+                    {
+
+                        lblColeta.BackColor = System.Drawing.Color.LightGreen;
+                        lblColeta.Text = reader1["carga"].ToString();
+
+                        if (reader1["andamento"].ToString() == "CONCLUIDO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightGreen;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "PENDENTE")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Yellow;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "ANDAMENTO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightCoral;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Black;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+
+                        using (SqlConnection con = new SqlConnection(connStr))
+                        {
+                            string query = "SELECT id, responsavel, motivo, observacao, data_inclusao, usuario_inclusao FROM tbocorrencias WHERE carga = @numeroCarga";
+
+                            SqlCommand cmd = new SqlCommand(query, con);
+                            cmd.Parameters.AddWithValue("@numeroCarga", id);
+
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+
+                            GridViewCarga.DataSource = dt;
+                            GridViewCarga.DataBind();
+                        }
+
+
+                        // Exibe o modal com JavaScript
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#exampleModalCenter').modal('show');", true);
+
+                    }
+                }
+            }
         }
     }
 }
