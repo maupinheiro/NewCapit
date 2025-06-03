@@ -25,11 +25,15 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-                PreencherComboStatus();
+                
+               
                 PreencherColetas();
                 PreencherComboVeiculos();
-            }
+                PreencherComboStatus();
 
+            }
+           
+           
         }
         private void PreencherComboStatus()
         {
@@ -118,11 +122,11 @@ namespace NewCapit.dist.pages
         }
         protected void lnkPesquisar_Click(object sender, EventArgs e)
         {
-            string sql = @"SELECT carga, peso, status, cliorigem, clidestino, 
-                          CONVERT(varchar, previsao, 103) AS previsao, situacao, rota, 
-                          andamento, data_hora, veiculo, tipo_viagem, solicitacoes 
-                          FROM tbcargas 
-                          WHERE empresa = 'CNT' AND fl_exclusao IS NULL ";
+            string sql = "SELECT id, carga, peso, status, cliorigem, clidestino, ";
+                   sql += "CONVERT(varchar, previsao, 103) AS previsao, situacao, rota,  ";
+                   sql += "andamento, data_hora, veiculo, tipo_viagem, solicitacoes ";
+                   sql += "FROM tbcargas ";
+                   sql += "WHERE empresa = 'CNT' AND fl_exclusao IS NULL ";
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -137,25 +141,25 @@ namespace NewCapit.dist.pages
 
                         string dataInicial = txtInicioData.Text.Trim();
                         string dataFinal = txtFimData.Text.Trim();
-                        string status = ddlStatus.SelectedItem.Text;
-                        string veiculos = ddlVeiculos.SelectedItem.Text;
+                        string status = ddlStatus.SelectedItem.Text.Trim();
+                        string veiculos = ddlVeiculos.SelectedItem.Text.Trim();
 
                         //// Verificando e convertendo as datas corretamente
-                        //if (!string.IsNullOrWhiteSpace(dataInicial) &&
-                        //    DateTime.TryParseExact(dataInicial, "dd/MM/yyyy hh:mm",
-                        //                           CultureInfo.InvariantCulture, DateTimeStyles.None,
-                        //                           out DateTime parsedDataInicial))
-                        //{
-                        //    dtInicial = parsedDataInicial;
-                        //}
+                        if (!string.IsNullOrWhiteSpace(dataInicial) &&
+                            DateTime.TryParseExact(dataInicial, "dd/MM/yyyy hh:mm",
+                                                   CultureInfo.InvariantCulture, DateTimeStyles.None,
+                                                   out DateTime parsedDataInicial))
+                        {
+                            dtInicial = parsedDataInicial;
+                        }
 
-                        //if (!string.IsNullOrWhiteSpace(dataFinal) &&
-                        //    DateTime.TryParseExact(dataFinal, "dd/MM/yyyy hh:mm",
-                        //                           CultureInfo.InvariantCulture, DateTimeStyles.None,
-                        //                           out DateTime parsedDataFinal))
-                        //{
-                        //    dtFinal = parsedDataFinal;
-                        //}
+                        if (!string.IsNullOrWhiteSpace(dataFinal) &&
+                            DateTime.TryParseExact(dataFinal, "dd/MM/yyyy hh:mm",
+                                                   CultureInfo.InvariantCulture, DateTimeStyles.None,
+                                                   out DateTime parsedDataFinal))
+                        {
+                            dtFinal = parsedDataFinal;
+                        }
 
                         // Adicionando os filtros de data apenas se existirem valores válidos
                         if (txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
@@ -181,14 +185,14 @@ namespace NewCapit.dist.pages
                         }
 
                         // Filtrando status, se necessário
-                        if (!string.IsNullOrEmpty(status) && status != "Selecione...")
+                        if (/*!string.IsNullOrEmpty(status) && */status != "Selecione...")
                         {
                             sql += " AND status = @status";
                             cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
                         }
 
                         // Filtrando veículo, se necessário
-                        if (!string.IsNullOrEmpty(veiculos) && veiculos != "Selecione...")
+                        if (/*!string.IsNullOrEmpty(veiculos) &&*/ veiculos != "Selecione...")
                         {
                             sql += " AND veiculo = @veiculo";
                             cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 50).Value = veiculos;
@@ -381,5 +385,7 @@ namespace NewCapit.dist.pages
                
             }
         }
+
+        
     }
 }

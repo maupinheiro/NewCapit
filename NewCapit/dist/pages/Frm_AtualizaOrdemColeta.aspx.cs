@@ -1058,8 +1058,7 @@ namespace NewCapit.dist.pages
                             empresa = @empresa,
                             dtalt = @dtalt,
                             usualt = @usualt
-                           
-                        WHERE num_carregamento = @num_carregamento";
+                            WHERE num_carregamento = @num_carregamento";
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
@@ -1070,13 +1069,13 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@nucleo", SafeValue(txtFilialMot.Text));
                 cmd.Parameters.AddWithValue("@tipomot", SafeValue(txtTipoMot.Text));
                 cmd.Parameters.AddWithValue("@valtoxicologico", SafeDateValue(txtExameToxic.Text));
-                cmd.Parameters.AddWithValue("@venccnh", SafeDateValue(txtCNH.Text));
+                cmd.Parameters.AddWithValue("@venccnh", SafeDateCNH(txtCNH.Text));
                 cmd.Parameters.AddWithValue("@valgr", SafeDateValue(txtLibGR.Text));
                 cmd.Parameters.AddWithValue("@foto", SafeValue(fotoMotorista)); // Se for byte[], troque tipo do parâmetro!
                 cmd.Parameters.AddWithValue("@nomemotorista", SafeValue(txtNomMot.Text));
                 cmd.Parameters.AddWithValue("@cpf", SafeValue(txtCPF.Text));
                 cmd.Parameters.AddWithValue("@cartaopedagio", SafeValue(txtCartao.Text));
-                cmd.Parameters.AddWithValue("@valcartao", SafeDateValue(txtValCartao.Text));
+                cmd.Parameters.AddWithValue("@valcartao",txtValCartao.Text);
                 cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelular.Text));
                 cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
                 cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
@@ -1100,7 +1099,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT"));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usualt", nomeUsuario);
-                //cmd.Parameters.AddWithValue("@situacao", "PENDENTE");
+
 
                 try
                 {
@@ -1143,6 +1142,14 @@ namespace NewCapit.dist.pages
             DateTime dt;
             if (DateTime.TryParse(input, out dt))
                 return dt.ToString("yyyy-MM-dd HH:mm");
+            else
+                return DBNull.Value;
+        }
+        private object SafeDateCNH(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
             else
                 return DBNull.Value;
         }

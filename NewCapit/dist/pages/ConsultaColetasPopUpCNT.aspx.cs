@@ -19,9 +19,10 @@ namespace NewCapit.dist.pages
             {
          
                 CarregarGrid();
+                PreencherComboResponsavel();
+                PreencherComboipoOcorrencia();
             }
-            PreencherComboResponsavel();
-            PreencherComboipoOcorrencia();
+           
         }
 
         private void CarregarGrid()
