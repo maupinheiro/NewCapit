@@ -986,14 +986,12 @@ namespace NewCapit.dist.pages
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao,codcliorigem, 
-                        nomcliorigem, codclidestino, nomclidestino,distancia
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao,tipoveiculo
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
-                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@codcliorigem, 
-                        @nomcliorigem, @codclidestino, @nomclidestino,@distancia
+                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@tipoveiculo
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1017,6 +1015,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
                 cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
                 cmd.Parameters.AddWithValue("@filialveiculo", SafeValue(txtFilialVeicCNT.Text));
+                cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
                 cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
@@ -1081,7 +1080,9 @@ namespace NewCapit.dist.pages
                                                     emissao=@emissao,
                                                     idviagem=@idviagem,
                                                     codmot=@codmot,
-                                                    frota=@frota
+                                                    frota=@frota,
+                                                    status=@status,
+                                                    funcaomot=@funcaomot
                                                     WHERE carga = @carga";
 
                                 SqlCommand cmdc = new SqlCommand(queryc, con);
@@ -1089,6 +1090,8 @@ namespace NewCapit.dist.pages
                                 cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@status", "ANDAMENTO");
+                                cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());
                                 cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
                                 con.Open();

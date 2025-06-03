@@ -63,7 +63,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <span class="">Status:</span>
-                            <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
+                            <asp:DropDownList ID="ddlStatus" name="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -73,10 +73,9 @@
                             </asp:DropDownList>
                         </div>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                         <br />
-                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning"><i class='fas fa-search' ></i>
-    Pesquisar</asp:LinkButton>
+                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i>  Pesquisar</asp:LinkButton>
                     </div>
 
                 </div>

@@ -15,22 +15,22 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
-        /// Controle txtDataInicila.
+        /// Controle txtDtInicial.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDataInicila;
+        protected global::System.Web.UI.WebControls.TextBox txtDtInicial;
 
         /// <summary>
-        /// Controle txtDataFinal.
+        /// Controle txtDtFinal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDataFinal;
+        protected global::System.Web.UI.WebControls.TextBox txtDtFinal;
 
         /// <summary>
         /// Controle txtCodMot.
@@ -58,6 +58,51 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnPesquisarMotorista;
+
+        /// <summary>
+        /// Controle chkCadiriri.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkCadiriri;
+
+        /// <summary>
+        /// Controle chkDiadema.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDiadema;
+
+        /// <summary>
+        /// Controle chkIpiranda.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIpiranda;
+
+        /// <summary>
+        /// Controle chkMinas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkMinas;
+
+        /// <summary>
+        /// Controle txtconformmessageValue4.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField txtconformmessageValue4;
 
         /// <summary>
         /// Controle btnLimpar.
