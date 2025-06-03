@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CAPIT | Logístia</title>
+    <title>NewCAPIT | Logístia</title>
 
     <!-- Google Font: Source Sans Pro 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -440,7 +440,7 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaClientes.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-warehouse nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
                                         <%-- <a href="#" class="nav-link">
@@ -466,7 +466,7 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-users nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
                                     </li>
@@ -490,7 +490,7 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-shipping-fast nav-icon"></i>
                                             <p>Consulta</p>
                                         </a>
                                     </li>
@@ -560,12 +560,12 @@
                                             <p>Conferir Jornada</p>
                                         </a>
                                     </li>
-                                    <%--<li class="nav-item">
-                                        <a href="pages/forms/validation.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Fechamento do Ponto</p>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/Frm_Comissoes.aspx" class="nav-link">
+                                            <i class="fas fa-dollar-sign nav-icon"></i>
+                                            <p>Comissões</p>
                                         </a>
-                                    </li>--%>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link">
                                             <i class="fas fa-file-export nav-icon"></i>

@@ -220,6 +220,7 @@
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
+    <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
@@ -4419,6 +4420,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.designer.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Comissoes.aspx.cs">
+      <DependentUpon>Frm_Comissoes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Comissoes.aspx.designer.cs">
+      <DependentUpon>Frm_Comissoes.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_DiarioDeBordo.aspx.cs">
       <DependentUpon>Frm_DiarioDeBordo.aspx</DependentUpon>
