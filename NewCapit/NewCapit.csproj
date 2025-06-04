@@ -148,6 +148,7 @@
     <Content Include="dist\img\credit\entregas.png" />
     <Content Include="dist\img\credit\veiculo.png" />
     <Content Include="dist\img\icon_loc.png" />
+    <Content Include="dist\img\logo_transnovag.png" />
     <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />
     <Content Include="dist\pages\ConsultaColetasCNT.aspx" />
@@ -215,6 +216,8 @@
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
+    <Content Include="dist\pages\demo_motorista.aspx" />
+    <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
@@ -4385,6 +4388,20 @@
     </Compile>
     <Compile Include="dist\pages\Consulta_Agregados.aspx.designer.cs">
       <DependentUpon>Consulta_Agregados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\demo_motorista.aspx.cs">
+      <DependentUpon>demo_motorista.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\demo_motorista.aspx.designer.cs">
+      <DependentUpon>demo_motorista.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\demo_motorista21.aspx.cs">
+      <DependentUpon>demo_motorista21.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\demo_motorista21.aspx.designer.cs">
+      <DependentUpon>demo_motorista21.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_AltColetaCNT.aspx.cs">
       <DependentUpon>Frm_AltColetaCNT.aspx</DependentUpon>
