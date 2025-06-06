@@ -328,10 +328,19 @@ namespace NewCapit
         }
         protected void Editar(object sender, EventArgs e)
         {
-            LinkButton btn = (LinkButton)sender;
-            string id = btn.CommandArgument;
+            //LinkButton btn = (LinkButton)sender;
+            //string id = btn.CommandArgument;
 
-            Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
+            //Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
+
+
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvVeiculos.DataKeys[row.RowIndex].Value.ToString();
+
+                Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
+            }
+
         }
         //protected void Excluir(object sender, EventArgs e)
         //{

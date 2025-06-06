@@ -314,7 +314,7 @@
                 <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>                        
-                        <asp:BoundField DataField="id" HeaderText="#ID" Visible="false"/>
+                       <%-- <asp:BoundField DataField="id" HeaderText="#ID" Visible="false"/>--%>
                         <asp:BoundField DataField="codvei" HeaderText="FROTA" />
                         <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
                         <asp:BoundField DataField="plavei" HeaderText="PLACA" />
@@ -326,12 +326,15 @@
                  
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                              <ItemTemplate >                              
-                                  <asp:LinkButton ID="lnkEditar" runat="server" 
+                                  <%--<asp:LinkButton ID="lnkEditar" runat="server" 
                                     OnClick="Editar" 
                                     CssClass="btn btn-primary btn-sm"
                                     CommandArgument='<%# Eval("id") %>'>
                                     <i class="fa fa-edit"></i> Editar
-                                </asp:LinkButton>
+                                </asp:LinkButton>--%>
+
+                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
+
                                <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                     <i class="fa fa-edit"></i>
                                     Editar
