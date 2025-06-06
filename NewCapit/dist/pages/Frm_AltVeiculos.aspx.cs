@@ -16,9 +16,11 @@ using static NPOI.HSSF.Util.HSSFColor;
 namespace NewCapit
 {
     public partial class Frm_AltVeiculos : System.Web.UI.Page
-    {
+    {       
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
-        
+        string id_uf;        
+        DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -766,16 +768,105 @@ namespace NewCapit
         }
         public void CarregaDadosDoVeiculo()
         {
-            string id = HttpContext.Current.Request.QueryString["id"];
-
-            // Verifica se o ID está presente na query string
-            if (string.IsNullOrEmpty(id))
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
-                // Log ou mensagem indicando que o ID não foi informado
-                return;
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            string sql = "SELECT codvei, tipvei, tipoveiculo, modelo, ano,  CONVERT(varchar, dtcvei, 103) as dtcvei, nucleo, ativo_inativo, plavei, reboque1, reboque2, tipocarreta, tiporeboque, rastreamento, codrastreador, terminal, cap, eixos, tara, tolerancia, pbt, medidaconj, servico, dtserv, stavei, codmot, motorista, codtra, transp, vencimentolaudofumaca, usucad, dtccad, usualt, dtcalt, venclicencacet, protocolocet, venclicenciamento,  CONVERT(varchar, venccronotacografo, 103) as venccronotacografo, marca, renavan, cor, comunicacao, antt, codreb1, codreb2, ufplaca, cidplaca, lotacao, comprimento, largura, altura, placaant, codigo, tiposeguro, seguradora, apolice, validadeapolice, valorfranquia, tacografo, modelotacografo, dataaquisicao, controlepatrimonio, chassi FROM tbveiculos WHERE id = " + id;
+
+            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adpt.Fill(dt);
+            con.Close();
+
+            if (dt.Rows.Count > 0)
+            {
+                // Preenchendo os TextBoxes com valores do DataTable
+                if (dt.Rows[0][1].ToString() != string.Empty)
+                {
+                    txtCodVei.Text = dt.Rows[0][1].ToString();
+                }
+               
+                cboTipo.SelectedValue = dt.Rows[0][2].ToString();
+                ddlTipo.SelectedValue = dt.Rows[0][3].ToString();
+                txtModelo.Text = dt.Rows[0][4].ToString();
+                txtAno.Text = dt.Rows[0][5].ToString();
+                txtDtcVei.Text = dt.Rows[0][6].ToString();   
+                cbFiliais.SelectedValue = dt.Rows[0][7].ToString();
+                ddlSituacao.SelectedValue = dt.Rows[0][8].ToString();
+                txtPlaca.Text = dt.Rows[0][9].ToString();
+                txtReb1.Text = dt.Rows[0][10].ToString();
+                txtReb2.Text = dt.Rows[0][11].ToString();
+                ddlComposicao.SelectedValue = dt.Rows[0][12].ToString();
+                ddlCarreta.SelectedValue = dt.Rows[0][13].ToString();
+                ddlMonitoramento.SelectedValue = dt.Rows[0][14].ToString();
+                txtCodRastreador.Text = dt.Rows[0][15].ToString();
+                ddlTecnologia.SelectedValue = dt.Rows[0][16].ToString();
+                txtId.Text = dt.Rows[0][17].ToString();
+                txtLotacao.Text = dt.Rows[0][18].ToString();
+                txtEixos.Text = dt.Rows[0][19].ToString();
+                txtTara.Text = dt.Rows[0][20].ToString();
+                txtTolerancia.Text = dt.Rows[0][21].ToString();
+                txtPBT.Text = dt.Rows[0][22].ToString();
+                
+                txtCodMot.Text = dt.Rows[0][23].ToString();
+                ddlMotorista.SelectedValue = dt.Rows[0][24].ToString();
+                txtCodTra.Text = dt.Rows[0][25].ToString();
+                ddlAgregados.SelectedValue = dt.Rows[0][26].ToString();
+                txtOpacidade.Text = dt.Rows[0][27].ToString();
+                txtCadastradoPor.Text = dt.Rows[0][28].ToString();
+                txtDtCadastro.Text = dt.Rows[0][29].ToString();
+                txtVencCET.Text = dt.Rows[0][30].ToString();
+                txtProtocoloCET.Text = dt.Rows[0][31].ToString();
+                txtLicenciamento.Text = dt.Rows[0][32].ToString();
+                txtCronotacografo.Text = dt.Rows[0][33].ToString();
+                ddlMarca.SelectedValue = dt.Rows[0][34].ToString();
+                txtRenavam.Text = dt.Rows[0][35].ToString();
+                ddlCor.SelectedValue = dt.Rows[0][36].ToString();
+                ddlComunicacao.SelectedValue = dt.Rows[0][37].ToString();
+                txtAntt.Text = dt.Rows[0][38].ToString();
+                // numeroReb1.Text = GetValue(row, 45);
+                // numeroReb2.Text = GetValue(row, 46); 
+                //ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
+                //ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
+                ddlEstados.SelectedValue = dt.Rows[0][41].ToString();
+                ddlCidades.SelectedValue = dt.Rows[0][42].ToString();
+                txtComprimento.Text = dt.Rows[0][43].ToString();
+                txtLargura.Text = dt.Rows[0][44].ToString();
+                txtAltura.Text = dt.Rows[0][45].ToString();
+                txtPlacaAnt.Text = dt.Rows[0][46].ToString();
+                txtCodigo.Text = dt.Rows[0][47].ToString();
+                txtTipoSeguro.Text = dt.Rows[0][48].ToString();
+                txtSeguradora.Text = dt.Rows[0][49].ToString();
+                txtApolice.Text = dt.Rows[0][50].ToString();
+                txtValidadeApolice.Text = dt.Rows[0][51].ToString();
+                txtValorFranquia.Text = dt.Rows[0][52].ToString();
+                ddlTacografo.SelectedValue = dt.Rows[0][53].ToString();
+                ddlModeloTacografo.SelectedValue = dt.Rows[0][54].ToString();
+                txtDataAquisicao.Text = dt.Rows[0][55].ToString();
+                txtControlePatrimonio.Text = dt.Rows[0][56].ToString();
+                txtChassi.Text = dt.Rows[0][57].ToString();
+            }
+        }
+        public void CarregaDadosDoVeiculo2()
+        {
+            //string id = HttpContext.Current.Request.QueryString["id"];
+
+            //// Verifica se o ID está presente na query string
+            //if (string.IsNullOrEmpty(id))
+            //{
+            //    // Log ou mensagem indicando que o ID não foi informado
+            //    return;
+            //}
+
+
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+            {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
 
-            string sql = @"SELECT * FROM tbveiculos WHERE id = @id and fl_exclusao is null";
+            string sql = "SELECT * FROM tbveiculos WHERE id = @id";
 
             try
             {
