@@ -383,8 +383,6 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-
-
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                             <ItemTemplate>
                                 <br>
@@ -401,12 +399,12 @@
             </div>
         </div>
     </div>
-    <footer class="main-footer">
+   <%-- <footer class="main-footer">
        <div class="float-right d-none d-sm-block">
          <b>Version</b> 2.1.0
        </div>
        <strong>Copyright &copy; 2021-2024 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>
+    </footer>--%>
    
     <script>
         $(function () {

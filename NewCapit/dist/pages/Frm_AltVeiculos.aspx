@@ -504,7 +504,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">CADASTRADO EM:</span>
-                                <asp:Label ID="txtDtCadastro" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" maxlength="20"></asp:Label>
+                                <asp:Label ID="txtDtCadastro" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" ></asp:Label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -516,13 +516,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">ATUALIZADO EM:</span>
-                                <asp:TextBox ID="txtDtAlteracao" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                                <asp:TextBox ID="txtDtAlteracao" runat="server" Style="text-align: center" CssClass="form-control" placeholder=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <span class="details">POR:</span>
-                                <asp:TextBox ID="txtAlteradoPor" runat="server" Style="text-align: left" CssClass="form-control" placeholder="" MaxLength="20"></asp:TextBox>
+                                <asp:TextBox ID="txtAlteradoPor" runat="server" Style="text-align: left" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -530,7 +530,7 @@
                     <div class="row g-3">
                         <div class="col-md-1">
 
-                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualiza" OnClick="btnSalvar1_Click" />
+                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvar1_Click" />
                         </div>
                         <div class="col-md-1">
                             <a href="ConsultaVeiculos.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
