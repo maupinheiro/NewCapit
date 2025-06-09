@@ -313,12 +313,12 @@
             <div class="table-responsive">              
                 <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
-                    <Columns>                        
-                       <%-- <asp:BoundField DataField="id" HeaderText="#ID" Visible="false"/>--%>
+                    <Columns>   
                         <asp:BoundField DataField="codvei" HeaderText="FROTA" />
                         <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
                         <asp:BoundField DataField="plavei" HeaderText="PLACA" />
-                        <asp:BoundField DataField="reboque1" HeaderText="REBOQUE" />
+                        <asp:BoundField DataField="reboque1" HeaderText="REB1" />
+                        <asp:BoundField DataField="reboque2" HeaderText="REB2" />
                         <asp:BoundField DataField="tipoveiculo" HeaderText="TIPO" />
                         <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
                         <asp:BoundField DataField="transp" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />                             
@@ -363,20 +363,11 @@
         </div>
     </div>
  </div>    
- 
-    <!-- JavaScript 
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="src/javascript/script.js"></script>
-    <!--
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"     crossorigin="anonymous" />
-    
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"        crossorigin="anonymous"></script>
-    -->
 <footer class="main-footer">
-   <div class="float-right d-none d-sm-block">
-     <b>Version</b> 2.1.0
-   </div>
-   <strong>Copyright &copy; 2021-2024 Capit Logística.</strong> Todos os direitos reservados.
+    <div class="float-right d-none d-sm-block">
+        <b>Version</b> 3.1.0 
+    </div>
+    <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
 </footer>
 
 <!-- Page specific script -->

@@ -19,12 +19,15 @@ namespace NewCapit
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+
+            if (!IsPostBack)
             {
                 ContagemVeiculo();
                 AllDataVeiculos();
             }
-            
+
+
+
         }
         public void ContagemVeiculo()
         {
@@ -328,11 +331,11 @@ namespace NewCapit
         }
         protected void gvVeiculos_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            ////gvVeiculos.PageIndex = e.NewPageIndex;
-            ////AllDataVeiculos();  // Método para recarregar os dados no GridView
+            gvVeiculos.PageIndex = e.NewPageIndex;
+            AllDataVeiculos();  // Método para recarregar os dados no GridView
 
-            string searchTerm = myInput.Text.Trim();
-            AllDataVeiculos(searchTerm);
+            //string searchTerm = myInput.Text.Trim();
+            //AllDataVeiculos(searchTerm);
 
         }
         protected void Editar(object sender, EventArgs e)
@@ -405,7 +408,7 @@ namespace NewCapit
 
         //}
 
-        private void AllData(string searchTerm = "")
+        private void AllData(string searchTerm)
         {
             var dataTable = DAL.ConVeiculos.FetchDataTable2(searchTerm);
             if (dataTable.Rows.Count <= 0)

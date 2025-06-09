@@ -5,6 +5,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -64,7 +68,11 @@
                 <div class="card card-info">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;VEÍCULO - ATUALIZAÇÃO</h3>
-
+                    </div>
+                </div>
+                <div class="card card-danger" id="miDiv" runat="server" visible="false">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;<asp:Label ID="lblErro" runat="server" ></asp:Label></h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -233,7 +241,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
-                                <span class="details">PROTOCOLO CET:</span>
+                                <span class="details">PROT.CET:</span>
                                 <asp:TextBox ID="txtProtocoloCET" runat="server" CssClass="form-control" MaxLength="25" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
@@ -292,7 +300,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="details">CÓDIGO:</span>
+                                <span class="details">CÓD.TEC.:</span>
                                 <asp:TextBox ID="txtCodRastreador" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4"></asp:TextBox>
                             </div>
                         </div>
@@ -340,8 +348,8 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="details">CÓDIGO:</span>
-                                <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true"></asp:TextBox>
+                                <span class="details">CÓD.PROP.:</span>
+                                <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true" OnTextChanged="txtCodTra_TextChanged"></asp:TextBox>
 
                             </div>
                         </div>
@@ -360,28 +368,75 @@
                             </div>
                         </div>
                     </div>
+                    <!-- linha 6 -->
                     <div class="row g-3">
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">MOTORISTA:</span>
-                                <asp:TextBox ID="txtCodMot" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="9"></asp:TextBox>
+                                <asp:TextBox ID="txtCodMot" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="9" OnTextChanged="txtCodMot_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">NOME COMPLETO:</span>
                                 <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                             </div>
                             <asp:HiddenField ID="txtconformmessageValue" runat="server" />
                         </div>
-                    </div>
 
-                    <!-- linha 6 do formulario -->
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <span class="">CARRETA:</span>
+                                <asp:DropDownList ID="ddlCarreta" runat="server" CssClass="form-control">
+                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="PROPRIA" Text="PROPRIA"></asp:ListItem>
+                                    <asp:ListItem Value="TRANSNOVAG" Text="TRANSNOVAG"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
+                                <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <asp:Label ID="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
+                                <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- linha 7 do formulario -->
                     <div class="row g-3">
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">TARA:</span>
+                                <asp:TextBox ID="txtTara" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <span class="">COMPOSIÇÃO:</span>
+                            <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                        </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">EIXOS:</span>
                                 <asp:TextBox ID="txtEixos" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">TOL. %:</span>
+                                <asp:TextBox ID="txtTolerancia" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">PBT:</span>
+                                <asp:TextBox ID="txtPBT" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -393,22 +448,14 @@
 
                         <div class="col-md-1">
                             <div class="form-group">
-                                <span class="details">TARA:</span>
-                                <asp:TextBox ID="txtTara" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">TOL. %:</span>
-                                <asp:TextBox ID="txtTolerancia" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
                                 <span class="details">CARGA LIQ.:</span>
-                                <asp:TextBox ID="txtPBT" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtCargaLiq" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
                             </div>
                         </div>
+                    </div>
+                    <!-- linha 8 -->
+                    <div class="row g-3">
+
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">TIPO SEGURO:</span>
@@ -444,57 +491,10 @@
                     <!-- Linha 7 do formulario -->
                     <div class="row g-3">
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="">CARRETA:</span>
-                                <asp:DropDownList ID="ddlCarreta" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="PROPRIA" Text="PROPRIA"></asp:ListItem>
-                                    <asp:ListItem Value="TRANSNOVAG" Text="TRANSNOVAG"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
 
                         <div class="col-md-1">
                             <div class="form-group">
-                                <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
-                                <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <asp:Label ID="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
-                                <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <span class="">COMPOSIÇÃO:</span>
-                                <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true">
-                                    <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA" Text="SELECIONE">CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER" Text="">CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA" Text="">CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER" Text="">CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA" Text="">CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER" Text="">CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA" Text="">CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER" Text="">CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER</asp:ListItem>
-                                    <asp:ListItem Value="TRUCK" Text="">TRUCK</asp:ListItem>
-                                    <asp:ListItem Value="BITRUCK" Text="">BITRUCK</asp:ListItem>
-                                    <asp:ListItem Value="BITREM" Text="">BITREM</asp:ListItem>
-                                    <asp:ListItem Value="TOCO" Text="">TOCO</asp:ListItem>
-                                    <asp:ListItem Value="VEICULO 3/4" Text="">VEICULO 3/4</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES COM PRANCHA" Text="">CAVALO SIMPLES COM PRANCHA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM PRANCHA" Text="">CAVALO TRUCADO COM PRANCHA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA LS TOTAL SIDER PRANCHA" Text="">CAVALO TRUCADO COM CARRETA LS TOTAL SIDER LISA</asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO COM CARRETA LS TOTAL SIDER PRANCHA" Text="">CAVALO SIMPLES COM CARRETA LS TOTAL SIDER LISA</asp:ListItem>
-                                </asp:DropDownList></>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <asp:Label ID="Label1" runat="server" class="details" Visible ="false">usuario</asp:Label>
+                                <asp:Label ID="Label1" runat="server" class="details" Visible="false">usuario</asp:Label>
                                 <asp:TextBox ID="txtUsuarioAtual" runat="server" CssClass="form-control" Visible="false"></asp:TextBox>
                             </div>
                         </div>
@@ -504,7 +504,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">CADASTRADO EM:</span>
-                                <asp:Label ID="txtDtCadastro" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" ></asp:Label>
+                                <asp:Label ID="txtDtCadastro" runat="server" Style="text-align: center" CssClass="form-control" placeholder=""></asp:Label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -543,17 +543,27 @@
                 </div>
             </div>
         </section>
+        <!-- Mensagens de erro toast -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="mensagem">
+                        Código, não encontrado no sistema. Verifique o número digitado. 
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
 
     </div>
 
 
-    <%--<footer class="main-footer">
+    <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-            <b>Version</b> 2.1.0
- 
+            <b>Version</b> 3.1.0 
         </div>
-        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>--%>
+        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
+    </footer>
     <!-- Page specific script -->
     <script>
         $(function () {
@@ -602,6 +612,12 @@
 
 
     </script>
-
+    <script>
+        function mostrarToastNaoEncontrado() {
+            var toastEl = document.getElementById('toastNotFound');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    </script>
 
 </asp:Content>
