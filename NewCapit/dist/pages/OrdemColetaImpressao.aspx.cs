@@ -70,12 +70,12 @@ namespace NewCapit.dist.pages
                         o.pedidos,
                         o.quant_palet,
                         m.nommot,
-                        v.plavei 
+                        m.placa 
                     FROM tbcargas AS o 
-                    INNER JOIN tbclientes AS c ON o.codorigem = c.codvw 
+                    INNER JOIN tbclientes AS c ON o.codorigem = c.codcli 
                     INNER JOIN tbmotoristas AS m ON m.codmot = o.codmot 
-                    INNER JOIN tbveiculos AS v ON v.codvei = o.frota 
-                    WHERE o.idviagem = @idviagem";
+
+                    WHERE o.idviagem= @idviagem";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -104,7 +104,7 @@ namespace NewCapit.dist.pages
                     Endereco = $"{row["endcli"]}, {row["numero"]} - {row["baicli"]} - {row["cidcli"]}/{row["estcli"]}",
                     CNPJ = row["cnpj"].ToString(),
                     Motorista = row["nommot"].ToString(),
-                    Placa = row["plavei"].ToString(),
+                    Placa = row["placa"].ToString(),
                     Pedido = row["pedidos"].ToString(),
                     QuanPallet = row["quant_palet"].ToString(),
                     Controle = row["carga"].ToString(),
