@@ -220,6 +220,48 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        protected void GVColetas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Obtendo os valores das colunas
+                
+                string andamento = DataBinder.Eval(e.Row.DataItem, "andamento")?.ToString();
+
+                // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
+                int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
+                TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
+
+               
+                if (andamento == "CONCLUIDO")
+                {
+                    cell.BackColor = System.Drawing.Color.LightGreen;
+                    cell.ForeColor = System.Drawing.Color.Black;
+                    cell.Text = andamento;
+                }
+                else if (andamento == "PENDENTE")
+                {
+                    cell.BackColor = System.Drawing.Color.Yellow;
+                    cell.ForeColor = System.Drawing.Color.Black;
+                    cell.Text = andamento;
+                }
+                else if (andamento == "ANDAMENTO")
+                {
+                    cell.BackColor = System.Drawing.Color.LightCoral;
+                    cell.ForeColor = System.Drawing.Color.Black;
+                    cell.Text = andamento;
+                }
+                else
+                {
+                    cell.BackColor = System.Drawing.Color.Black;
+                    cell.ForeColor = System.Drawing.Color.Black;
+                    cell.Text = andamento;
+                }
+                
+                
+            }
+        }
     }
 }
 

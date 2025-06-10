@@ -163,7 +163,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <span class="details">FUNÇÃO:</span>
+                            <span class="details">CARGO:</span>
                             <asp:TextBox ID="txtFuncao" runat="server" class="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>

@@ -30,7 +30,7 @@
         </div>
         <br />
         <%--<asp:GridView ID="GVColetas" runat="server" CssClass="table table-bordered table-striped" AutoGenerateColumns="false" OnRowCommand="GVColetas_RowCommand">--%>
-        <asp:GridView ID="GVColetas" runat="server" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" OnRowCommand="GVColetas_RowCommand">
+        <asp:GridView ID="GVColetas" runat="server" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" OnRowCommand="GVColetas_RowCommand" OnRowDataBound="GVColetas_RowDataBound">
             <Columns>
                 <asp:BoundField DataField="id" HeaderText="ID" Visible="false" />
                 <asp:BoundField DataField="carga" HeaderText="COLETA" />

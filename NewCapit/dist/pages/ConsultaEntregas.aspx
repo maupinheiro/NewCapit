@@ -68,7 +68,7 @@
                             </asp:DropDownList>
                         </div>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                         <br />
                         <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
                     </div>
@@ -108,7 +108,7 @@
                                                     <th>ORD.COLETA</th>
                                                     <th>VEÍCULO</th>
                                                     <th>TIPO DE VEÍCULO</th>                                                    
-                                                    <th>SITUAÇÃO</th>
+                                                    <th>STATUS</th>
                                                     <th>ATENDIMENTO</th>
                                                     <th>AÇÃO</th>
                                                 </tr>

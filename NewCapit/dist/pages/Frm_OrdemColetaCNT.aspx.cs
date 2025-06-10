@@ -986,12 +986,12 @@ namespace NewCapit.dist.pages
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao, funcao
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
                         @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
-                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao
+                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@funcao
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1035,6 +1035,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
                 cmd.Parameters.AddWithValue("@situacao", "ANDAMENTO");
+                cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
                 //cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
                 //cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
                 //cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
@@ -1082,6 +1083,7 @@ namespace NewCapit.dist.pages
                                                     codmot=@codmot,
                                                     frota=@frota,
                                                     status=@status,
+                                                    andamento=@andamento,
                                                     funcaomot=@funcaomot
                                                     WHERE carga = @carga";
 
@@ -1091,16 +1093,18 @@ namespace NewCapit.dist.pages
                                 cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@status", "ANDAMENTO");
+                                cmdc.Parameters.AddWithValue("@andamento", "ANDAMENTO");
                                 cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());
                                 cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
                                 con.Open();
                                 cmdc.ExecuteNonQuery();
-                                nomeUsuario = txtUsuCadastro.Text;
-                                string mensagem = $"Olá, {nomeUsuario}!\nOrdem de Coleta, cadastrada com sucesso!";
-                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                string script = $"alert('{mensagemCodificada}');";
-                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                //nomeUsuario = txtUsuCadastro.Text;
+                                //string mensagem = $"Olá, {nomeUsuario}!\nOrdem de Coleta, cadastrada com sucesso!";
+                                //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                //string script = $"alert('{mensagemCodificada}');";
+                                //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
                             }
                         }

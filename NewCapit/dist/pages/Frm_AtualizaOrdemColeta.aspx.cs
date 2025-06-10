@@ -181,7 +181,7 @@ namespace NewCapit.dist.pages
             {
                 num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
             }
-            string sql = "select codmotorista,veiculo,dtcad,usucad,codcliorigem, nomcliorigem, codclidestino, nomclidestino, distancia,tipoveiculo from tbcarregamentos where num_carregamento='" + num_coleta+"'";
+            string sql = "select codmotorista,veiculo,dtcad,usucad,codcontato,fonecorporativo,codcliorigem, nomcliorigem, codclidestino, nomclidestino, distancia,tipoveiculo from tbcarregamentos where num_carregamento='" + num_coleta+"'";
             SqlDataAdapter adtp = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
@@ -192,6 +192,8 @@ namespace NewCapit.dist.pages
             txtCodMotorista.Text = codigo;
             txtUsuCadastro.Text = dt.Rows[0][3].ToString();
             lblDtCadastro.Text = dt.Rows[0][2].ToString();
+            txtCodFrota.Text = dt.Rows[0][4].ToString();
+            txtFoneCorp.Text = dt.Rows[0][5].ToString();
             //codCliInicial.Text = dt.Rows[0][4].ToString();
             //ddlCliInicial.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(),""));
             //codCliFinal.Text = dt.Rows[0][6].ToString();
@@ -245,6 +247,7 @@ namespace NewCapit.dist.pages
                     txtCartao.Text = ConsultaMotorista.cartaomot;
                     txtValCartao.Text = ConsultaMotorista.venccartao;
                     txtCelular.Text = ConsultaMotorista.fone2;
+                    txtFuncao.Text = ConsultaMotorista.cargo.Trim().ToString();
                     if (txtCodMotorista.Text.Trim() != "")
                     {
                         fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
