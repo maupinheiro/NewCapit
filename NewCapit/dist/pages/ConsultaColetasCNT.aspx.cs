@@ -240,19 +240,19 @@ namespace NewCapit.dist.pages
                     DateTime dataPrevisao = previsao.Date;
                     DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
 
-                    if (dataHoraComparacao < agora && (status == "CONCLUIDO" || status == "PENDENTE"))
+                    if (dataHoraComparacao < agora/* && (status == "CONCLUIDO" || status == "PENDENTE")*/)
                     {
                         cell.Text = "ATRASADO";
                         cell.BackColor = System.Drawing.Color.Red;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "CONCLUIDO" || status == "PENDENTE"))
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay /*&& (status == "CONCLUIDO" || status == "PENDENTE")*/)
                     {
                         cell.Text = "NO PRAZO";
                         cell.BackColor = System.Drawing.Color.Green;
                         cell.ForeColor = System.Drawing.Color.White;
                     }
-                    else if (dataHoraComparacao > agora && status == "CONCLUIDO")
+                    else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
                     {
                         cell.Text = "ANTECIPADO";
                         cell.BackColor = System.Drawing.Color.Orange;
