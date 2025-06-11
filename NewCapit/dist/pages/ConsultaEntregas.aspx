@@ -105,7 +105,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>MOTORISTA/PROPRIETÁRIO</th>
-                                                    <th>ORD.COLETA</th>
+                                                    <th>ORD. COLETA</th>
                                                     <th>VEÍCULO</th>
                                                     <th>TIPO DE VEÍCULO</th>                                                    
                                                     <th>STATUS</th>
@@ -132,9 +132,9 @@
                                                 <%# Eval("placa") %>
                                             </td>
                                             <td>
-                                                <%# Eval("veiculotipo") %>
+                                                <%# Eval("tipoveiculo") %>
                                                 <br />
-                                                <%# Eval("placa") %>
+                                                <%# Eval("reboque1") %>
                                             </td>
                                             <%--<td>
                                                 <%# Eval("cva") %>
@@ -146,7 +146,7 @@
                                                 <br />
                                                 <%# Eval("nomclidestino") %>
                                             </td>--%>
-                                            <td><%# Eval("situacao") %></td>
+                                            <td><%# Eval("status") %></td>
 
                                             <td>NO PRAZO</td>
 

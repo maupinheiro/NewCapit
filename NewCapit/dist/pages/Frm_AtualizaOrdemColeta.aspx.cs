@@ -194,6 +194,7 @@ namespace NewCapit.dist.pages
             lblDtCadastro.Text = dt.Rows[0][2].ToString();
             txtCodFrota.Text = dt.Rows[0][4].ToString();
             txtFoneCorp.Text = dt.Rows[0][5].ToString();
+            txtVeiculoTipo.Text = dt.Rows[0][5].ToString();
             //codCliInicial.Text = dt.Rows[0][4].ToString();
             //ddlCliInicial.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(),""));
             //codCliFinal.Text = dt.Rows[0][6].ToString();
@@ -269,7 +270,7 @@ namespace NewCapit.dist.pages
                         txtCodVeiculo.Text = ConsultaMotorista.codvei;
                         txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
                         txtPlaca.Text = ConsultaMotorista.placa;
-                        txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+                        txtVeiculoTipo.Text = ConsultaMotorista.veiculotipo;
                         txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
                         txtReboque1.Text = ConsultaMotorista.reboque1;
                         txtReboque2.Text = ConsultaMotorista.reboque2;
@@ -1081,7 +1082,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@valcartao",txtValCartao.Text);
                 cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelular.Text));
                 cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
-                cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
+                cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text)); 
                 cmd.Parameters.AddWithValue("@filialveiculo", SafeValue(txtFilialVeicCNT.Text));
                 cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
                 cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));

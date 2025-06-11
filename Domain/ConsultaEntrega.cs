@@ -20,5 +20,9 @@ namespace Domain
         public string situacao { get; set; }
         public string material { get; set; }
         public string dtcad { get; set; }
+        public string reboque1 { get; set; }
+        public string reboque2 { get; set; }
+        public string status { get; set; }
+        public string veiculotipo { get; set; }
     }
 }
