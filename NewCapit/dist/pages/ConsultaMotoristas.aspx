@@ -4,15 +4,14 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
      <style>
-     .pagination-centered {
-      text-align: center;
-     }
+         .pagination-centered {
+             text-align: center;
+         }
 
-     .pagination-centered table {
-     margin: 0 auto; /* Isso centraliza a tabela da paginação */
-     }
-
- </style>
+             .pagination-centered table {
+                 margin: 0 auto; /* Isso centraliza a tabela da paginação */
+             }
+     </style>
        <!-- Page Heading -->
     <div class="content-wrapper">
         <div class="content-header">
@@ -92,13 +91,13 @@
                                           </>                               
                                           <ul class="dropdown-menu dropdown-usermenu pull-right">
                                               <li>
-                                                  <span>CNT: </span> 
+                                                  <span>CNT (CC): </span> 
                                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                     <asp:Label ID="FrotaCNT" runat="server" Text=""></asp:Label>
                                                   </span>
                                               </li>
                                               <li>
-                                                  <span>SBC: </span> 
+                                                  <span>ANCHIETA: </span> 
                                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                                     <asp:Label ID="FrotaSBC" runat="server" Text=""></asp:Label>
                                                   </span>
@@ -173,13 +172,13 @@
                                           </>                               
                                           <ul class="dropdown-menu dropdown-usermenu pull-right">
                                               <li>
-                                                  <span>CNT: </span> 
+                                                  <span>CNT (CC): </span> 
                                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                     <asp:Label ID="AgCNT" runat="server" Text=""></asp:Label>
                                                   </span>
                                               </li>
                                               <li>
-                                                  <span>SBC: </span> 
+                                                  <span>ANCHIETA: </span> 
                                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                                     <asp:Label ID="AgSBC" runat="server" Text=""></asp:Label>
                                                   </span>
@@ -257,13 +256,13 @@
                                            </>                               
                                            <ul class="dropdown-menu dropdown-usermenu pull-right">
                                                <li>
-                                                   <span>CNT: </span> 
+                                                   <span>CNT (CC): </span> 
                                                    <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                      <asp:Label ID="TCNT" runat="server" Text=""></asp:Label>
                                                    </span>
                                                </li>
                                                <li>
-                                                   <span>SBC: </span> 
+                                                   <span>ANCHIETA: </span> 
                                                    <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                                      <asp:Label ID="TSBC" runat="server" Text=""></asp:Label>
                                                    </span>
@@ -338,11 +337,11 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="CARGO" HeaderStyle-Width="1">
-                            <ItemTemplate>
-                                <%# Eval("cargo") %>
-                                <br>
+                        <asp:TemplateField HeaderText="CARGO">
+                            <ItemTemplate>                                
                                 <%# Eval("tipomot") %>
+                                <br>
+                                <%# Eval("cargo") %>
                                 </br>
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -399,13 +398,12 @@
             </div>
         </div>
     </div>
-   <%-- <footer class="main-footer">
-       <div class="float-right d-none d-sm-block">
-         <b>Version</b> 2.1.0
-       </div>
-       <strong>Copyright &copy; 2021-2024 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>--%>
-   
+    <footer class="main-footer">
+    <div class="float-right d-none d-sm-block">
+        <b>Version</b> 3.1.0 
+    </div>
+    <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
+    </footer>
     <script>
         $(function () {
             $("#example1").DataTable({

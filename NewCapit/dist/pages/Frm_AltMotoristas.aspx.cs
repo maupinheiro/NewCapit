@@ -46,12 +46,12 @@ namespace NewCapit.dist.pages
                 CarregarDDLAgregados();
                 CarregarRegioes();
                 CarregarEstadosNascimento();
-                CarregarEstCNH();
-                CarregarMunicipioCNH();
+                CarregarEstCNH();              
                 CarregaDadosMotorista();
                 
             }
-            
+              
+
             fotoMotorista = txtCaminhoFoto.Text.Trim();
             if (ddlStatus.SelectedItem.Text == "ATIVO")
             {
@@ -164,27 +164,42 @@ namespace NewCapit.dist.pages
         protected void ddlCNH_SelectedIndexChanged(object sender, EventArgs e)
         {
             //int cidadeId = int.Parse(ddlCNH.SelectedValue);
-            CarregarMunicipioCNH();
-            updCnh.Update();
-        }
-        private void CarregarMunicipioCNH()
-        {
-            ddlMunicCnh.Items.Clear();
+            // CarregarMunicipioCNH();
+            //updCnh.Update();
+            string uf = ddlCNH.SelectedValue;
+            CarregarMunicipioCNH(uf);
 
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            // Restaurar cidade se estiver em ViewState
+            if (ViewState["CidadeSelecionada"] != null)
             {
-                SqlCommand cmd = new SqlCommand("SELECT Uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE Uf = @cidadeId", conn);
-                cmd.Parameters.AddWithValue("@cidadeId", ddlCNH.SelectedValue);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                string cidadeId = ViewState["CidadeSelecionada"].ToString();
+                if (ddlMunicCnh.Items.FindByValue(cidadeId) != null)
+                {
+                    ddlMunicCnh.SelectedValue = cidadeId;
+                }
+            }
 
-                ddlMunicCnh.DataSource = reader;
+
+        }
+        private void CarregarMunicipioCNH(string uf)
+        {            
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT cod_municipio, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @UF";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UF", uf);
+                conn.Open();
+                ddlMunicCnh.DataSource = cmd.ExecuteReader();
                 ddlMunicCnh.DataTextField = "nome_municipio";
-                ddlMunicCnh.DataValueField = "Uf";
+                ddlMunicCnh.DataValueField = "cod_municipio"; // valor único
                 ddlMunicCnh.DataBind();
 
-                //ddlMunicCnh.Items.Insert(0, new ListItem("Selecione uma cidade ...", "0"));
+                ddlMunicCnh.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
             }
+
+
+
         }
         public void CarregaDadosMotorista()
         {
@@ -192,7 +207,7 @@ namespace NewCapit.dist.pages
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sql = "SELECT codmot, nommot, status, CONVERT(varchar, emissaorg, 103) as emissaorg, numrg, cargo, nucleo, orgaorg, cpf, numregcnh, codsegurancacnh, catcnh, CONVERT(varchar, venccnh, 103) as venccnh, codliberacao, numpis, endmot, baimot, cidmot, ufmot, cepmot, fone3, fone2, validade, CONVERT(varchar, dtnasc, 103) as dtnasc, estcivil, sexo, horario, nomepai, nomemae, codtra, transp, CONVERT(varchar, cadmot, 103) as cadmot, inativo, CONVERT(varchar, dtinativo, 103) as dtinativo, historico, alterado, dataalteracao, cartaomot, naturalmot, numero, complemento, tipomot, codprop, placa, reboque1, reboque2, tipoveiculo, venccartao, horario, funcao, frota, usucad, dtccad, venceti, codvei, ufnascimento, formulariocnh, ufcnh, municipiocnh, vencmoop, cracha, regiao, numinss, caminhofoto FROM tbmotoristas WHERE id = " + id;
+            string sql = "SELECT codmot, nommot, status, CONVERT(varchar, emissaorg, 103) as emissaorg, numrg, cargo, nucleo, orgaorg, cpf, numregcnh, codsegurancacnh, catcnh, CONVERT(varchar, venccnh, 103) as venccnh, codliberacao, numpis, endmot, baimot, cidmot, ufmot, cepmot, fone3, fone2, validade, CONVERT(varchar, dtnasc, 103) as dtnasc, estcivil, sexo, horario, nomepai, nomemae, codtra, transp, CONVERT(varchar, cadmot, 103) as cadmot, inativo, CONVERT(varchar, dtinativo, 103) as dtinativo, historico, alterado, dataalteracao, cartaomot, naturalmot, numero, complemento, tipomot, codprop, placa, reboque1, reboque2, tipoveiculo, venccartao, horario, funcao, frota, usucad, CONVERT(varchar, dtccad, 103) as dtccad, venceti, codvei, ufnascimento, formulariocnh, ufcnh, municipiocnh, vencmoop, cracha, regiao, numinss, caminhofoto FROM tbmotoristas WHERE id = " + id;
 
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
@@ -285,8 +300,8 @@ namespace NewCapit.dist.pages
                 hdfRegiao.Value = dt.Rows[0][55].ToString();
                 ddlEstNasc.Items.Insert(0, new ListItem(dt.Rows[0][55].ToString()));
                 txtFormCNH.Text = dt.Rows[0][56].ToString();
-                //ddlCNH.SelectedItem.Text= dt.Rows[0][57].ToString();
-                hdfCnh.Value = dt.Rows[0][57].ToString();
+                ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString()));
+                //hdfCnh.Value = dt.Rows[0][57].ToString();
                 ddlMunicCnh.Items.Insert(0, new ListItem(dt.Rows[0][58].ToString()));
                 txtVAlMoop.Text = dt.Rows[0][59].ToString();
                 txtCracha.Text = dt.Rows[0][60].ToString();
@@ -458,7 +473,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@inativo", txtMotivoInativacao.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@dtinativo", txtDtInativacao.Text);
                     cmd.Parameters.AddWithValue("@historico", txtHistorico.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@alterado", txtUsuCadastro.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@alterado", Session["UsuarioLogado"].ToString().ToUpper());
                     cmd.Parameters.Add("@dataalteracao", SqlDbType.DateTime2).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     cmd.Parameters.AddWithValue("@cartaomot", txtCartao.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@naturalmot", ddlMunicipioNasc.SelectedItem.Text.ToUpper());
@@ -762,6 +777,81 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        // Função para preencher os campos com os dados do banco
+        private void PreencherCamposProp(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
 
+                if (reader.Read())
+                {
+                    txtCodTra.Text = reader["codtra"].ToString();
+                    //ddlAgregados.Text = reader["fantra"].ToString();
+                    //txtAntt.Text = reader["antt"].ToString();
+                }
+            }
+        }
+
+        // Função para limpar os campos
+        private void LimparCamposProp()
+        {
+            txtCodTra.Text = string.Empty;
+            //txtAntt.Text = string.Empty;
+        }
+
+        protected void txtCodTra_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodTra.Text != "")
+            {
+
+                string codigoRemetente = txtCodTra.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE codtra = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlAgregados.SelectedItem.Text = reader["fantra"].ToString();                                
+                                txtCodMot.Focus();
+                            }
+                            else
+                            {
+                                ddlAgregados.ClearSelection();                                
+                                txtCodTra.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodTra.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+        protected void btnCep_Click(object sender, EventArgs e)
+        {
+            WebCEP cep = new WebCEP(txtCepCli.Text);
+            txtBaiCli.Text = cep.Bairro.ToString();
+            txtCidCli.Text = cep.Cidade.ToString();
+            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
+            txtEstCli.Text = cep.UF.ToString();
+            txtNumero.Focus();
+        }
     }
 }

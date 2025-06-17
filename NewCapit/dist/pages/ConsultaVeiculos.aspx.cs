@@ -87,7 +87,7 @@ namespace NewCapit
             TotalTerceiros.Text = dt4.Rows[0][0].ToString();
 
             // Distribuição da frota por nucleo
-            string sqlDistCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='FROTA' and nucleo = 'CNT' and fl_exclusao is null ";
+            string sqlDistCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='FROTA' and nucleo = 'CNT (CC)' and fl_exclusao is null ";
             SqlDataAdapter adptDistCNT = new SqlDataAdapter(sqlDistCNT, con);
             DataTable dtDistCNT = new DataTable();
             con.Open();
@@ -127,7 +127,7 @@ namespace NewCapit
             con.Close();
             FrotaPE.Text = dtDistPE.Rows[0][0].ToString();
 
-            string sqlDistSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'FROTA' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'FROTA' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistSBC = new SqlDataAdapter(sqlDistSBC, con);
             DataTable dtDistSBC = new DataTable();
             con.Open();
@@ -161,7 +161,7 @@ namespace NewCapit
 
 
             // Distribuição de terceiros por nucleo
-            string sqlDistTerCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='TERCEIRO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistTerCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='TERCEIRO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistTerCNT = new SqlDataAdapter(sqlDistTerCNT, con);
             DataTable dtDistTerCNT = new DataTable();
             con.Open();
@@ -201,7 +201,7 @@ namespace NewCapit
             con.Close();
             lbTerPE.Text = dtDistTerPE.Rows[0][0].ToString();
 
-            string sqlDistTerSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistTerSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistTerSBC = new SqlDataAdapter(sqlDistTerSBC, con);
             DataTable dtDistTerSBC = new DataTable();
             con.Open();
@@ -235,7 +235,7 @@ namespace NewCapit
 
 
             // Distribuição de agregados por nucleo
-            string sqlDistAgCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='AGREGADO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistAgCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='AGREGADO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistAgCNT = new SqlDataAdapter(sqlDistAgCNT, con);
             DataTable dtDistAgCNT = new DataTable();
             con.Open();
@@ -275,7 +275,7 @@ namespace NewCapit
             con.Close();
             AgPE.Text = dtDistAgPE.Rows[0][0].ToString();
 
-            string sqlDistAgSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'AGREGADO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistAgSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'AGREGADO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistAgSBC = new SqlDataAdapter(sqlDistAgSBC, con);
             DataTable dtDistAgSBC = new DataTable();
             con.Open();

@@ -91,13 +91,13 @@
                                   </>                               
                                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                                       <li>
-                                          <span>CNT: </span> 
+                                          <span>CNT (CC): </span> 
                                           <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                             <asp:Label ID="FrotaCNT" runat="server" Text=""></asp:Label>
                                           </span>
                                       </li>
                                       <li>
-                                          <span>SBC: </span> 
+                                          <span>ANCHIETA: </span> 
                                           <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                             <asp:Label ID="FrotaSBC" runat="server" Text=""></asp:Label>
                                           </span>
@@ -169,13 +169,13 @@
                           </>                               
                           <ul class="dropdown-menu dropdown-usermenu pull-right">
                               <li>
-                                  <span>CNT: </span> 
+                                  <span>CNT (CC): </span> 
                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     <asp:Label ID="AgCNT" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                               <li>
-                                  <span>SBC: </span> 
+                                  <span>ANCHIETA: </span> 
                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                     <asp:Label ID="AgSBC" runat="server" Text=""></asp:Label>
                                   </span>
@@ -247,13 +247,13 @@
                           </>                               
                           <ul class="dropdown-menu dropdown-usermenu pull-right">
                               <li>
-                                  <span>CNT: </span> 
+                                  <span>CNT (CC): </span> 
                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     <asp:Label ID="lbTerCNT" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                               <li>
-                                  <span>SBC: </span> 
+                                  <span>ANCHIETA: </span> 
                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                     <asp:Label ID="lbTerSBC" runat="server" Text=""></asp:Label>
                                   </span>

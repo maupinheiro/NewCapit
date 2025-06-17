@@ -273,9 +273,9 @@ namespace NewCapit.dist.pages
             {
                 string query = @"
             INSERT INTO tbtransportadoras 
-            (id,codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, dtccad, usucad, antt, filial, tipo) 
+            (codtra, dtcad, nomtra, contra, fantra, fone1, fone2, endtra, ceptra, baitra, cidtra, uftra, ativa_inativa, pessoa, cnpj, inscestadual, numero, complemento, dtccad, usucad, antt, filial, tipo) 
             VALUES 
-            (@id,@CodTra, @DtCad, @NomTra, @ConTra, @FanTra, @Fone1, @Fone2, @EndTra, @CepTra, @BaiTra, @CidTra, @UfTra, @AtivaInativa, @Pessoa, @Cnpj, @InscEstadual, @Numero, @Complemento, @DtcCad, @UsuCad, @Antt, @Filial, @Tipo)";
+            (@CodTra, @DtCad, @NomTra, @ConTra, @FanTra, @Fone1, @Fone2, @EndTra, @CepTra, @BaiTra, @CidTra, @UfTra, @AtivaInativa, @Pessoa, @Cnpj, @InscEstadual, @Numero, @Complemento, @DtcCad, @UsuCad, @Antt, @Filial, @Tipo)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -301,7 +301,7 @@ namespace NewCapit.dist.pages
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text.Trim());
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
                     command.Parameters.AddWithValue("@Tipo", ddlTipo.SelectedItem.ToString());
-                    command.Parameters.AddWithValue("@id", sequencia);
+                    //command.Parameters.AddWithValue("@id", sequencia);
 
                     // Tratamento de Datas (Evita erro de formato)
                     DateTime dtCadastro;

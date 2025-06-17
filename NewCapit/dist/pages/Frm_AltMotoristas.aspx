@@ -3,6 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -62,7 +64,7 @@
 
                 reader.onload = function (e) {
                     var img = document.getElementById('preview');
-                    img.src = e.target.result;                    
+                    img.src = e.target.result;
                 };
 
                 reader.readAsDataURL(input.files[0]); // Lê como base64 para mostrar a imagem                
@@ -81,7 +83,7 @@
                 </div>
             </div>
             <form>
-                
+
                 <asp:ScriptManager ID="asm" runat="server" />
                 <div class="card-header">
                     <!-- Linha 1 do formulario -->
@@ -147,67 +149,67 @@
                             <!-- FileUpload oculto -->
                             <asp:FileUpload ID="FileUpload1" runat="server" Style="display: none;" onchange="previewImage(this)" />
 
-                            <!-- Imagem clicável -->     
-                            
+                            <!-- Imagem clicável -->
+
                             <img id="preview" src="<%=fotoMotorista%>" alt="Clique para selecionar imagem"
                                 onclick="document.getElementById('<%= FileUpload1.ClientID %>').click();"
                                 style="cursor: pointer; width: 80px; height: 80px" />
-                        </div>                        
+                        </div>
                     </div>
                     <!-- Linha 2 do formulario -->
-                     <asp:UpdatePanel ID="updNasc" runat="server">
-                         <ContentTemplate>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">NOME COMPLETO:</span>
-                                <asp:TextBox ID="txtNomMot" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">DATA NASC.:</span>
-                                <div class="input-group">
-                                    <asp:TextBox ID="txtDtNasc" runat="server" class="form-control"></asp:TextBox>
+                    <asp:UpdatePanel ID="updNasc" runat="server">
+                        <ContentTemplate>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="details">NOME COMPLETO:</span>
+                                        <asp:TextBox ID="txtNomMot" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                       
-                        <div class="col-md-2">                           
-                            <div class="form-group">
-                                <span class="details">REGIÃO DO PAIS:</span>
-                                <asp:DropDownList ID="ddlRegioes" runat="server" class="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlRegioes_SelectedIndexChanged"></asp:DropDownList>
-                                <asp:HiddenField ID="hdfRegiao" runat="server" />
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <span class="details">DATA NASC.:</span>
+                                        <div class="input-group">
+                                            <asp:TextBox ID="txtDtNasc" runat="server" class="form-control"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
-                        </div>
-                        <div class="col-md-1">                            
-                            <div class="form_group">
-                                <span class="details">UF NASC.:</span>
-                                <asp:DropDownList ID="ddlEstNasc" runat="server" class="form-control" AutoPostBack="True"
-                                    OnSelectedIndexChanged="ddlEstNasc_SelectedIndexChanged">
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-3">                           
-                            <div class="form_group">
-                                <span class="details">MUNICIPIO DE NASCIMENTO:</span>
-                                <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control"></asp:DropDownList>
-                            </div>
-                        </div>
-                               
-                        <div class="col-md-1">
-                            <div class="form_group">
-                                <span class="details">ADM./CAD.:</span>
-                                <asp:TextBox ID="txtDtCad" runat="server" Style="text-align: left" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
-                            </div>
-                        </div>
 
-                    </div>
-                                    </ContentTemplate>
-                         <Triggers>
-                             <asp:AsyncPostBackTrigger ControlID="ddlEstNasc" />
-                         </Triggers>
-                        </asp:UpdatePanel>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <span class="details">REGIÃO DO PAIS:</span>
+                                        <asp:DropDownList ID="ddlRegioes" runat="server" class="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlRegioes_SelectedIndexChanged"></asp:DropDownList>
+                                        <asp:HiddenField ID="hdfRegiao" runat="server" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form_group">
+                                        <span class="details">UF NASC.:</span>
+                                        <asp:DropDownList ID="ddlEstNasc" runat="server" class="form-control" AutoPostBack="True"
+                                            OnSelectedIndexChanged="ddlEstNasc_SelectedIndexChanged">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form_group">
+                                        <span class="details">MUNICIPIO DE NASCIMENTO:</span>
+                                        <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control"></asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <div class="form_group">
+                                        <span class="details">ADM./CAD.:</span>
+                                        <asp:TextBox ID="txtDtCad" runat="server" Style="text-align: left" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="ddlEstNasc" />
+                        </Triggers>
+                    </asp:UpdatePanel>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -222,7 +224,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">                                
+                            <div class="form-group">
                                 <div class="input-group">
                                     <asp:TextBox ID="txtCaminhoFoto" runat="server" class="form-control" Visible="false"></asp:TextBox>
                                 </div>
@@ -292,65 +294,66 @@
 
                     </div>
                     <!-- Linha 4 do formulário -->
-                      <asp:UpdatePanel ID="updCnh" UpdateMode="Conditional" runat="server">
-                      <ContentTemplate>
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">Nº CNH:</span>
-                                <asp:TextBox ID="txtRegCNH" runat="server" Style="text-align: center" CssClass="form-control"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">Nº FORM DA CNH:</span>
-                                <asp:TextBox ID="txtFormCNH" runat="server" Style="text-align: center" CssClass="form-control"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">CÓDIGO DE SEGURANÇA:</span>
-                                <asp:TextBox ID="txtCodSeguranca" runat="server" Style="text-align: center" CssClass="form-control"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="">CATEGORIA:</span>
-                                <asp:DropDownList ID="ddlCat" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="AE" Text="AE"></asp:ListItem>
-                                    <asp:ListItem Value="D" Text="D"></asp:ListItem>
-                                    <asp:ListItem Value="E" Text="E"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">VALIDADE CNH:</span>
-                                <asp:TextBox ID="txtValCNH" runat="server" class="form-control"></asp:TextBox>
-                            </div>
-                        </div>
-                      
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">UF CNH:</span>
-                                <asp:DropDownList ID="ddlCNH" name="ufCNH" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCNH_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                <asp:HiddenField ID="hdfCnh" runat="server" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <span class="details">MUNICIPIO DA CNH:</span>
-                                <asp:DropDownList ID="ddlMunicCnh"  class="form-control select2" runat="server"></asp:DropDownList>
-                            </div>
-                        </div>
-                              
+                    <asp:UpdatePanel ID="updCnh" UpdateMode="Conditional" runat="server">
+                        <ContentTemplate>
+                            <div class="row g-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <span class="details">Nº CNH:</span>
+                                        <asp:TextBox ID="txtRegCNH" runat="server" Style="text-align: center" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <span class="details">Nº FORM DA CNH:</span>
+                                        <asp:TextBox ID="txtFormCNH" runat="server" Style="text-align: center" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <span class="details">CÓDIGO DE SEGURANÇA:</span>
+                                        <asp:TextBox ID="txtCodSeguranca" runat="server" Style="text-align: center" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <span class="">CATEGORIA:</span>
+                                        <asp:DropDownList ID="ddlCat" runat="server" CssClass="form-control">
+                                            <asp:ListItem Value="" Text=""></asp:ListItem>
+                                            <asp:ListItem Value="AE" Text="AE"></asp:ListItem>
+                                            <asp:ListItem Value="C" Text="C"></asp:ListItem>
+                                            <asp:ListItem Value="D" Text="D"></asp:ListItem>
+                                            <asp:ListItem Value="E" Text="E"></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <span class="details">VALIDADE CNH:</span>
+                                        <asp:TextBox ID="txtValCNH" runat="server" class="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
 
-                    </div>
-                              </ContentTemplate>
-                          <Triggers>
-                                <asp:AsyncPostBackTrigger ControlID="ddlCNH" />
-                            </Triggers>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <span class="details">UF CNH:</span>
+                                        <asp:DropDownList ID="ddlCNH" name="ufCNH" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCNH_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                        <asp:HiddenField ID="hdfCnh" runat="server" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <span class="details">MUNICIPIO DA CNH:</span>
+                                        <asp:DropDownList ID="ddlMunicCnh" class="form-control select2" runat="server"></asp:DropDownList>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="ddlCNH" />
+                        </Triggers>
                     </asp:UpdatePanel>
                     <!-- Linha 5 do formulário -->
                     <div class="row g-3">
@@ -388,7 +391,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CÓDIGO:</span>
-                                <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" AutoPostBack="true"></asp:TextBox>
+                                <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" AutoPostBack="true" OnTextChanged="txtCodTra_TextChanged"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -504,7 +507,7 @@
                         </div>
                         <div class="col-md-1">
                             <br />
-                            <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" />
+                           <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCep_Click" UseSubmitBehavior="false" />
                         </div>
                         <div class="col-md-7">
                             <div class="form-group">
@@ -558,14 +561,14 @@
                     <div class="row g-3">
                         <div class="col-md-11">
                             <div class="form-group">
-                                <asp:Label id="motivoInativo" runat="server" class="details">MOTIVO DA INATIVAÇÃO:</asp:Label>
+                                <asp:Label ID="motivoInativo" runat="server" class="details">MOTIVO DA INATIVAÇÃO:</asp:Label>
                                 <asp:TextBox ID="txtMotivoInativacao" runat="server" CssClass="form-control" placeholder="" MaxLength="60" ForeColor="Red"></asp:TextBox>
-                                
+
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <asp:Label id="dataInativo" runat="server" class="details">DATA:</asp:Label>
+                                <asp:Label ID="dataInativo" runat="server" class="details">DATA:</asp:Label>
                                 <asp:TextBox ID="txtDtInativacao" runat="server" CssClass="form-control" placeholder="" MaxLength="60" ForeColor="Red"></asp:TextBox>
                             </div>
                         </div>
@@ -611,6 +614,17 @@
                 </div>
             </form>
         </section>
+        <!-- Mensagens de erro toast -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="mensagem">
+                        Código, não encontrado no sistema. Verifique o número digitado. 
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="main-footer">
@@ -619,8 +633,13 @@
         </div>
         <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
     </footer>
-
-
+    <script>
+        function mostrarToastNaoEncontrado() {
+            var toastEl = document.getElementById('toastNotFound');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    </script>
     <script>
         $(function () {
             //Initialize Select2 Elements

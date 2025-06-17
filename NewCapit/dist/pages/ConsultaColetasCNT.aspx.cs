@@ -126,7 +126,7 @@ namespace NewCapit.dist.pages
                    sql += "CONVERT(varchar, previsao, 103) AS previsao, situacao, rota,  ";
                    sql += "andamento, data_hora, veiculo, tipo_viagem, solicitacoes ";
                    sql += "FROM tbcargas ";
-                   sql += "WHERE empresa = 'CNT' AND fl_exclusao IS NULL ";
+                   sql += "WHERE empresa = 'CNT (CC)' AND fl_exclusao IS NULL ";
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {

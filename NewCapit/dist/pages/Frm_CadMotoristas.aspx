@@ -333,6 +333,7 @@
                         <asp:DropDownList ID="ddlCat" runat="server" CssClass="form-control">
                             <asp:ListItem Value="" Text=""></asp:ListItem>
                             <asp:ListItem Value="AE" Text="AE"></asp:ListItem>
+                            <asp:ListItem Value="C" Text="C"></asp:ListItem>
                             <asp:ListItem Value="D" Text="D"></asp:ListItem>
                             <asp:ListItem Value="E" Text="E"></asp:ListItem>
                         </asp:DropDownList>

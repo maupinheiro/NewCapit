@@ -2324,10 +2324,10 @@ namespace NewCapit.dist.pages
         }
         public void CarregaCusto()
         {
-            txtAlmoco.Text = "0,00";
-            txtCafe.Text = "0,00";
-            txtJantar.Text = "0,00";
-            txtPernoite.Text = "0,00";
+            //txtAlmoco.Text = "0,00";
+            //txtCafe.Text = "0,00";
+            //txtJantar.Text = "0,00";
+            //txtPernoite.Text = "0,00";
             //txtPremio.Text = "0,00";
             string sql = "select  cod_custo, ISNULL(vl_cafe, 0) AS cafe,ISNULL(vl_almoco, 0) AS almoco,ISNULL(vl_jantar, 0) AS jantar,ISNULL(vl_pernoite, 0) AS pernoite,ISNULL(vl_premio, 0) AS premio,ISNULL(vl_engate_des, 0) AS engatedes,";
             sql += " SUM(ISNULL(vl_cafe, 0) + ISNULL(vl_almoco, 0) + ISNULL(vl_jantar, 0) + ISNULL(vl_pernoite, 0) + ISNULL(vl_premio, 0) + ISNULL(vl_engate_des, 0)) AS total,ds_rel1, ds_rel2, ds_rel3, ds_rel4 from tb_custo_motorista ";

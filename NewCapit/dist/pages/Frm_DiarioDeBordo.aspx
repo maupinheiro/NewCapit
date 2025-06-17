@@ -5,30 +5,42 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-       <script language="javascript">
 
-           function ConfirmMessage1() {
-               var selectedvalue = confirm("Deseja inserir marcação?");
-               if (selectedvalue) {
-                   document.getElementById('<%=txtconformmessageValue1.ClientID %>').value = "Yes";
-           } else {
-               document.getElementById('<%=txtconformmessageValue1.ClientID %>').value = "No";
-               }
-           }
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- jQuery e Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap CSS + JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-       </script>
-   <script language="javascript">
+    <script language="javascript">
 
-       function ConfirmMessage3() {
-           var selectedvalue = confirm("Deseja inserir valores?");
-           if (selectedvalue) {
-               document.getElementById('<%=txtconformmessageValue2.ClientID %>').value = "Yes";
-           } else {
-               document.getElementById('<%=txtconformmessageValue2.ClientID %>').value = "No";
-           }
-       }
+        function ConfirmMessage1() {
+            var selectedvalue = confirm("Deseja inserir marcação?");
+            if (selectedvalue) {
+                document.getElementById('<%=txtconformmessageValue1.ClientID %>').value = "Yes";
+            } else {
+                document.getElementById('<%=txtconformmessageValue1.ClientID %>').value = "No";
+            }
+        }
 
-   </script>
+    </script>
+    <script language="javascript">
+
+        function ConfirmMessage3() {
+            var selectedvalue = confirm("Deseja inserir valores?");
+            if (selectedvalue) {
+                document.getElementById('<%=txtconformmessageValue2.ClientID %>').value = "Yes";
+            } else {
+                document.getElementById('<%=txtconformmessageValue2.ClientID %>').value = "No";
+            }
+        }
+
+    </script>
     <script language="javascript">
 
         function ConfirmMessage4() {
@@ -53,62 +65,62 @@
         }
 
     </script>
-     <script language="javascript">
+    <script language="javascript">
 
-         function ConfirmMessage6() {
-             var selectedvalue = confirm("Deseja excluir as marcações selecionadas?");
-             if (selectedvalue) {
-                 document.getElementById('<%=txtconformmessageValue6.ClientID %>').value = "Yes";
-             } else {
-                 document.getElementById('<%=txtconformmessageValue6.ClientID %>').value = "No";
-             }
-         }
+        function ConfirmMessage6() {
+            var selectedvalue = confirm("Deseja excluir as marcações selecionadas?");
+            if (selectedvalue) {
+                document.getElementById('<%=txtconformmessageValue6.ClientID %>').value = "Yes";
+            } else {
+                document.getElementById('<%=txtconformmessageValue6.ClientID %>').value = "No";
+            }
+        }
 
-   </script>
-   <script language="javascript">
-       function ConfirmMessage2() {
-           var selectedvalue = alert("Senha alterada com sucesso!");
+    </script>
+    <script language="javascript">
+        function ConfirmMessage2() {
+            var selectedvalue = alert("Senha alterada com sucesso!");
 
-       }
-   </script>
-  <script>
-      function ver_txt() {
-          var Janela = window;
-          msgWindow = Janela.open("ver_excel.aspx", "sMinuta", "width=600,height=500,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
-          msgWindow.moveTo(screen.width / 2 - 600 / 2, screen.height / 2 - 500 / 2 - 20);
-      }
-</script>
-   <script>
-       function ver_txt2() {
-           var Janela = window;
-           msgWindow = Janela.open("ver_txt4.aspx", "sMinuta", "width=600,height=500,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
-           msgWindow.moveTo(screen.width / 2 - 600 / 2, screen.height / 2 - 500 / 2 - 20);
-       }
-</script>
-   <script>
-       function ver_txt3() {
-           var Janela = window;
-           msgWindow = Janela.open("ver_txt5.aspx", "sMinuta", "width=600,height=500,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
-           msgWindow.moveTo(screen.width / 2 - 600 / 2, screen.height / 2 - 500 / 2 - 20);
-       }
-</script>
- <script>
-     function ver_demo(cracha, data1,data2,hr) {
-         var Janela = window;
-         msgWindow = Janela.open("demo_motorista.aspx?cracha=" + cracha + "&data1=" + data1 + "&data2=" + data2 + "&hr=" + hr + "", "sMinuta", "width=1000,height=730,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
-         msgWindow.moveTo(screen.width / 2 - 1100 / 2, screen.height / 2 - 900 / 2 - 20);
-     }
-</script>
-   <script>
-       function ver_demo2(cracha, data1, data2, hr_1, hr_2) {
-           var cva = cva;
-           var evento = evento;
-           var Janela = window;
-           msgWindow = Janela.open("demo_motorista21.aspx?cracha=" + cracha + "&data1=" + data1 + "&data2=" + data2 + "&hr_1=" + hr_1 + "&hr_2=" + hr_2 + "", "sMinuta", "width=1000,height=730,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
-           msgWindow.moveTo(screen.width / 2 - 1100 / 2, screen.height / 2 - 900 / 2 - 20);
-       }
-   </script>
-    
+        }
+    </script>
+    <script>
+        function ver_txt() {
+            var Janela = window;
+            msgWindow = Janela.open("ver_excel.aspx", "sMinuta", "width=600,height=500,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
+            msgWindow.moveTo(screen.width / 2 - 600 / 2, screen.height / 2 - 500 / 2 - 20);
+        }
+    </script>
+    <script>
+        function ver_txt2() {
+            var Janela = window;
+            msgWindow = Janela.open("ver_txt4.aspx", "sMinuta", "width=600,height=500,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
+            msgWindow.moveTo(screen.width / 2 - 600 / 2, screen.height / 2 - 500 / 2 - 20);
+        }
+    </script>
+    <script>
+        function ver_txt3() {
+            var Janela = window;
+            msgWindow = Janela.open("ver_txt5.aspx", "sMinuta", "width=600,height=500,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
+            msgWindow.moveTo(screen.width / 2 - 600 / 2, screen.height / 2 - 500 / 2 - 20);
+        }
+    </script>
+    <script>
+        function ver_demo(cracha, data1, data2, hr) {
+            var Janela = window;
+            msgWindow = Janela.open("demo_motorista.aspx?cracha=" + cracha + "&data1=" + data1 + "&data2=" + data2 + "&hr=" + hr + "", "sMinuta", "width=1000,height=730,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
+            msgWindow.moveTo(screen.width / 2 - 1100 / 2, screen.height / 2 - 900 / 2 - 20);
+        }
+    </script>
+    <script>
+        function ver_demo2(cracha, data1, data2, hr_1, hr_2) {
+            var cva = cva;
+            var evento = evento;
+            var Janela = window;
+            msgWindow = Janela.open("demo_motorista21.aspx?cracha=" + cracha + "&data1=" + data1 + "&data2=" + data2 + "&hr_1=" + hr_1 + "&hr_2=" + hr_2 + "", "sMinuta", "width=1000,height=730,scrollbars=no,resizable=no,navegation=no,status=0,location=0,top=0,left=0");
+            msgWindow.moveTo(screen.width / 2 - 1100 / 2, screen.height / 2 - 900 / 2 - 20);
+        }
+    </script>
+
     <script type="text/javascript">
 
         function abre_relatorio(url, w, h) {
@@ -135,21 +147,21 @@
             }
         }
     </script>
-<script>
-    function keypressed(obj, e) {
-        var tecla = (window.event) ? e.keyCode : e.which;
-        var texto = document.getElementById("numeros").value
-        var indexvir = texto.indexOf(",")
-        var indexpon = texto.indexOf(".")
+    <script>
+        function keypressed(obj, e) {
+            var tecla = (window.event) ? e.keyCode : e.which;
+            var texto = document.getElementById("numeros").value
+            var indexvir = texto.indexOf(",")
+            var indexpon = texto.indexOf(".")
 
-        if (tecla == 8 || tecla == 0)
-            return true;
-        if (tecla != 44 && tecla != 46 && tecla < 48 || tecla > 57)
-            return false;
-        if (tecla == 44) { if (indexvir !== -1 || indexpon !== -1) { return false } }
-        if (tecla == 46) { if (indexvir !== -1 || indexpon !== -1) { return false } }
-    }
-</script>
+            if (tecla == 8 || tecla == 0)
+                return true;
+            if (tecla != 44 && tecla != 46 && tecla < 48 || tecla > 57)
+                return false;
+            if (tecla == 44) { if (indexvir !== -1 || indexpon !== -1) { return false } }
+            if (tecla == 46) { if (indexvir !== -1 || indexpon !== -1) { return false } }
+        }
+    </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -197,8 +209,8 @@
                             <div class="form-group">
                                 <span class="details">NÚCLEO:</span>
                                 <asp:TextBox ID="txtNucleo" runat="server" CssClass="form-control"></asp:TextBox>
-                                  <asp:HiddenField ID="txtconformmessageValue4" runat="server" />
-                                  
+                                <asp:HiddenField ID="txtconformmessageValue4" runat="server" />
+
                             </div>
                         </div>
 
@@ -264,35 +276,36 @@
                                 <asp:TextBox ID="txtRel4" runat="server" CssClass="form-control" MaxLength="10"></asp:TextBox>
                             </div>
                         </div>
-                         <div class="card-body">
-   <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-   <asp:GridView ID="grdCusto" runat="server"  AutoGenerateColumns="false" Width="970px"     Font-Size="12px" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand" >
-    <Columns>
-        <asp:BoundField DataField="cafe" HeaderText="CAFÉ DA MANHÃ" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="almoco" HeaderText="ALMOÇO"  ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="jantar" HeaderText="JANTAR" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="pernoite" HeaderText="PERNOITE" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="premio" HeaderText="PRÊMIO" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="engatedes" HeaderText="ENGATE/DES" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="ds_rel1" HeaderText="Relatório 1" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="ds_rel2" HeaderText="Relatório 2" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="ds_rel3" HeaderText="Relatório 3" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="ds_rel4" HeaderText="Relatório 4" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="total" HeaderText="TOTAL" ItemStyle-HorizontalAlign="Center"/>
-        
-        <asp:ButtonField ButtonType="Link" CommandName="Select" Text="Excluir"  />
-        
-
-
-    </Columns>
-</asp:GridView>
-       </table>
-                        </div>
                         <div class="col-md-1">
                             <br />
                             <asp:HiddenField ID="txtconformmessageValue2" runat="server" />
                             <asp:Button ID="btnValor" runat="server" Text="Inserir" CssClass="btn btn-outline-info" OnClick="btnValor_Click" />
                         </div>
+                        <div class="card-body">
+                            <%--<table id="example1" class="table table-bordered table-striped table-hover table-responsive">
+                                <asp:GridView ID="grdCusto" runat="server" AutoGenerateColumns="false" Width="970px" Font-Size="12px" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">--%>
+                            <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
+                                <asp:GridView ID="grdCusto" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" Font-Size="12px" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">
+
+                                    <Columns>
+                                        <asp:BoundField DataField="cafe" HeaderText="CAFÉ DA MANHÃ" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="almoco" HeaderText="ALMOÇO" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="jantar" HeaderText="JANTAR" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="pernoite" HeaderText="PERNOITE" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="premio" HeaderText="PRÊMIO" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="engatedes" HeaderText="ENGATE/DES" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="ds_rel1" HeaderText="Relatório 1" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="ds_rel2" HeaderText="Relatório 2" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="ds_rel3" HeaderText="Relatório 3" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="ds_rel4" HeaderText="Relatório 4" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="total" HeaderText="TOTAL" ItemStyle-HorizontalAlign="Center" />
+
+                                        <asp:ButtonField ButtonType="Link" CommandName="Select" Text="Excluir" />
+                                    </Columns>
+                                </asp:GridView>
+                            </table>
+                        </div>
+
                     </div>
                     <div class="row g-3">
                         <div class="col-md-3">
@@ -348,85 +361,88 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">DESCRIÇÃO:</span>
-                                 <asp:HiddenField ID="txtconformmessageValue1" runat="server" />
+                                <asp:HiddenField ID="txtconformmessageValue1" runat="server" />
                                 <asp:TextBox ID="txtTipoMarcacao" runat="server" CssClass="form-control font-weight-bold"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <br />
-                            <asp:Button ID="btnMacromanual" runat="server" CssClass="btn btn-outline-info" Text="Inserir" ValidationGroup="Cadastro" OnClientClick="javascript:ConfirmMessage1();" Width="139px" OnClick="btnMacromanual_Click" />
-                           
+                            <asp:Button ID="btnMacromanual" runat="server" CssClass="btn btn-outline-info" Text="Inserir" ValidationGroup="Cadastro" OnClientClick="javascript:ConfirmMessage1();" OnClick="btnMacromanual_Click" />
+
                         </div>
 
-                            
-                            <div class="col-md-1" id="button" runat="server">
+
+                        <div class="col-md-1" id="button" runat="server" CssClass="btn btn-outline-danger">
+                            <br />
+                        </div>
+
+
+
+                        <asp:Label ID="lblBloco" runat="server" Text=""></asp:Label><br />
+                        <b>
+                            <asp:Label ID="lblAlerta" runat="server" Text="" ForeColor="Red"></asp:Label></b>
+                        <div class="card-body">
+                            <table id="example2" CssClass="table table-bordered table-striped table-hover table-responsive">
+                                <%--<table id="example1" class="table table-bordered table-striped table-hover table-responsive">--%>
+                                <asp:GridView ID="grdMotoristas" runat="server" AutoGenerateColumns="false" Width="970px" HeaderStyle-BackColor="Silver"
+                                    AlternatingRowStyle-BackColor="#e7e7e7" Font-Size="12px" CssClass="mGrid" DataKeyNames="cod_parada" OnRowCommand="grdMotoristas_RowCommand">
+                                    <Columns>
+                                        <asp:TemplateField>
+                                            <ItemTemplate>
+                                                <asp:CheckBox ID="chkM" runat="server" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:BoundField DataField="ds_macro" HeaderText="Tipo de Marcação" />
+                                        <asp:BoundField DataField="ds_tipo" HeaderText="Descrição" />
+                                        <asp:BoundField DataField="data" HeaderText="Data" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="Hora1" HeaderText="Hora Inicial" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="Hora2" HeaderText="Hora Final" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="Total" HeaderText="Total" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:ButtonField ButtonType="Link" CommandName="Select" Text="Excluir" />
+
+
+
+                                    </Columns>
+                                </asp:GridView>
                                 <br />
-                            </div>
-                          
+                            </table>
+                        </div>
+                        <div class="col-md-1">
+                            <asp:HiddenField ID="txtconformmessageValue5" runat="server" />
+                            <asp:Button ID="btnExcluiMotoristas" runat="server" CssClass="btn btn-outline-danger" Text="Excluir" OnClientClick="javascript:ConfirmMessage5();" Width="139px" />
+                        </div>
+                        <br />
+                        <asp:Label ID="lblTodas" runat="server" Text=""></asp:Label>
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
+                                <asp:GridView ID="grdTodas" runat="server" AutoGenerateColumns="false" Width="970px" HeaderStyle-BackColor="Silver"
+                                    AlternatingRowStyle-BackColor="#e7e7e7" Font-Size="12px" CssClass="mGrid" DataKeyNames="cod_parada" OnRowCommand="grdTodas_RowCommand">
+                                    <Columns>
+                                        <asp:TemplateField>
+                                            <ItemTemplate>
+                                                <asp:CheckBox ID="chkT" runat="server" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:BoundField DataField="ds_macro" HeaderText="Tipo de Marcação" />
+                                        <asp:BoundField DataField="ds_tipo" HeaderText="Descrição" />
+                                        <asp:BoundField DataField="data" HeaderText="Data" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="Hora1" HeaderText="Hora Inicial" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="Hora2" HeaderText="Hora Final" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:BoundField DataField="Total" HeaderText="Total" ItemStyle-HorizontalAlign="Center" />
+                                        <asp:ButtonField ButtonType="Link" CommandName="Select" Text="Excluir" />
 
 
-           <asp:Label ID="lblBloco" runat="server" Text=""></asp:Label><br />
-            <b><asp:Label ID="lblAlerta" runat="server" Text="" ForeColor="Red"></asp:Label></b> 
-             <div class="card-body">
-               <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-               <asp:GridView ID="grdMotoristas" runat="server"  AutoGenerateColumns="false" Width="970px" HeaderStyle-BackColor="Silver" 
-                AlternatingRowStyle-BackColor="#e7e7e7"    Font-Size="12px" CssClass="mGrid" DataKeyNames="cod_parada" OnRowCommand="grdMotoristas_RowCommand">
-    <Columns>
-         <asp:TemplateField >
-            <ItemTemplate >
-                <asp:CheckBox ID="chkM" runat ="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:BoundField DataField="ds_macro" HeaderText="Tipo de Marcação"  />
-        <asp:BoundField DataField="ds_tipo" HeaderText="Descrição" />
-        <asp:BoundField DataField="data" HeaderText="Data" ItemStyle-HorizontalAlign="Center" />
-        <asp:BoundField DataField="Hora1" HeaderText="Hora Inicial" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="Hora2" HeaderText="Hora Final" ItemStyle-HorizontalAlign="Center"/>
-        <asp:BoundField DataField="Total" HeaderText="Total" ItemStyle-HorizontalAlign="Center"/>
-        <asp:ButtonField ButtonType="Link" CommandName="Select" Text="Excluir"  />
-        
 
-
-    </Columns>
-</asp:GridView><br />  
-                </table>
-                 </div>
-                         <div class="col-md-1">
-             <asp:HiddenField ID="txtconformmessageValue5" runat="server" />
-  <asp:Button ID="btnExcluiMotoristas" runat="server" CssClass="btn btn-outline-danger" Text="Excluir"  OnClientClick="javascript:ConfirmMessage5();" Width="139px"/>
-            </div>
-            <br/>
-             <asp:Label ID="lblTodas" runat="server" Text=""></asp:Label> 
-                 <div class="card-body">
-                    <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                    <asp:GridView ID="grdTodas" runat="server"  AutoGenerateColumns="false" Width="970px" HeaderStyle-BackColor="Silver" 
-                                    AlternatingRowStyle-BackColor="#e7e7e7"    Font-Size="12px" CssClass="mGrid" DataKeyNames="cod_parada" OnRowCommand="grdTodas_RowCommand" >
-                        <Columns>
-                            <asp:TemplateField >
-                                <ItemTemplate >
-                                    <asp:CheckBox ID="chkT" runat ="server" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:BoundField DataField="ds_macro" HeaderText="Tipo de Marcação"  />
-                            <asp:BoundField DataField="ds_tipo" HeaderText="Descrição" />
-                            <asp:BoundField DataField="data" HeaderText="Data" ItemStyle-HorizontalAlign="Center"/>
-                            <asp:BoundField DataField="Hora1" HeaderText="Hora Inicial" ItemStyle-HorizontalAlign="Center"/>
-                            <asp:BoundField DataField="Hora2" HeaderText="Hora Final" ItemStyle-HorizontalAlign="Center"/>
-                            <asp:BoundField DataField="Total" HeaderText="Total" ItemStyle-HorizontalAlign="Center"/>
-                            <asp:ButtonField ButtonType="Link" CommandName="Select" Text="Excluir"  />
-        
-
-
-                        </Columns>
-                    </asp:GridView>
-                     </table>
-                     </div>
-                       <br />  
-            <div class="col-md-1">
-              <asp:HiddenField ID="txtconformmessageValue6" runat="server" />
-              <asp:Button ID="btnExcluiTodas" runat="server" CssClass="btn btn-outline-danger" Text="Excluir"  OnClientClick="javascript:ConfirmMessage6();" Width="139px" OnClick="btnExcluiTodas_Click" />
-             <br />
-              </div>
+                                    </Columns>
+                                </asp:GridView>
+                            </table>
+                        </div>
+                        <br />
+                        <div class="col-md-1">
+                            <asp:HiddenField ID="txtconformmessageValue6" runat="server" />
+                            <asp:Button ID="btnExcluiTodas" runat="server" CssClass="btn btn-outline-danger" Text="Excluir" OnClientClick="javascript:ConfirmMessage6();" Width="139px" OnClick="btnExcluiTodas_Click" />
+                            <br />
+                        </div>
 
                     </div>
 
