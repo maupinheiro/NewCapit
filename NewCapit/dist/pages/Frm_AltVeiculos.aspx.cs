@@ -40,6 +40,7 @@ namespace NewCapit
                     txtAlteradoPor.Text = lblUsuario;
                 }
 
+                PreencherComboEstados();
                 PreencherComboComposicao();
                 CarregarDDLAgregados();
                 PreencherComboFiliais();
@@ -47,7 +48,7 @@ namespace NewCapit
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
-                PreencherComboEstados();
+                
                 CarregaDadosDoVeiculo();
 
                 DateTime dataHoraAtual = DateTime.Now;
@@ -836,68 +837,232 @@ namespace NewCapit
                     string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
 
                     txtCodVei.Text = GetValue(row, 1);
-                    cboTipo.Items.Insert(0, GetValue(row, 2));
-                    ddlTipo.Items.Insert(0, GetValue(row, 3));
-                    txtModelo.Text = GetValue(row, 4);
-                    txtAno.Text = GetValue(row, 5);                    
-                    txtDtcVei.Text = DateTime.Parse(dt.Rows[0][6].ToString()).ToString("dd/MM/yyyy");
-                    cbFiliais.Items.Insert(0, GetValue(row, 7));
-                    ddlSituacao.Items.Insert(0, GetValue(row, 8));
-                    txtPlaca.Text = GetValue(row, 9);
-                    txtReb1.Text = GetValue(row, 10);
-                    txtReb2.Text = GetValue(row, 11);
-                    //ddlComposicao.Items.Insert(0, GetValue(row, 12));
-                    ddlComposicao.Items.Insert(0, GetValue(row, 12));
-                    ddlCarreta.Items.Insert(0, GetValue(row, 13));                    
-                    ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
-                    txtCodRastreador.Text = GetValue(row, 15);
-                    ddlTecnologia.Items.Insert(0, GetValue(row, 16));
-                    txtId.Text = GetValue(row, 17);
-                    txtCargaLiq.Text = GetValue(row, 18);
-                    txtEixos.Text = GetValue(row, 19);
-                    txtTara.Text = GetValue(row, 20);
-                    txtTolerancia.Text = GetValue(row, 21);
-                    txtPBT.Text = GetValue(row, 22);
-                    txtCodMot.Text = GetValue(row, 27);
-                    ddlMotorista.Items.Insert(0, GetValue(row, 28));
-                    txtCodTra.Text = GetValue(row, 29);
-                    ddlAgregados.Items.Insert(0, GetValue(row, 30));
-                    txtOpacidade.Text = GetValue(row, 31);
-                    txtCadastradoPor.Text = GetValue(row, 32);
-                    txtDtCadastro.Text = GetValue(row, 33);
-                    txtVencCET.Text = GetValue(row, 36);
-                    txtProtocoloCET.Text = GetValue(row, 37);
-                    txtLicenciamento.Text = GetValue(row, 38);
-                    txtCronotacografo.Text = DateTime.Parse(dt.Rows[0][39].ToString()).ToString("dd/MM/yyyy");
-                    ddlMarca.Items.Insert(0, GetValue(row, 40));
-                    txtRenavam.Text = GetValue(row, 41);
-                    ddlCor.Items.Insert(0, GetValue(row, 42));
-                    ddlComunicacao.Items.Insert(0, GetValue(row, 43));
-                    txtAntt.Text = GetValue(row, 44);
+
+                   // cboTipo.Items.Insert(0, GetValue(row, 2));
+                    if (dt.Rows[0][2].ToString() != string.Empty)
+                    {
+                        cboTipo.Items.Insert(0, GetValue(row, 2));
+                    }
+                    
+                    if (dt.Rows[0][3].ToString() != string.Empty)
+                    {
+                        ddlTipo.Items.Insert(0, GetValue(row, 3));
+                    }                    
+                    if (dt.Rows[0][4].ToString() != string.Empty)
+                    {
+                        txtModelo.Text = GetValue(row, 4);
+                    }                    
+                    if (dt.Rows[0][5].ToString() != string.Empty)
+                    {
+                        txtAno.Text = GetValue(row, 5);
+                    }                    
+                    if (dt.Rows[0][6].ToString() != string.Empty)
+                    {
+                        txtDtcVei.Text = DateTime.Parse(dt.Rows[0][6].ToString()).ToString("dd/MM/yyyy");
+                    }                    
+                    if (dt.Rows[0][7].ToString() != string.Empty)
+                    {
+                        cbFiliais.Items.Insert(0, GetValue(row, 7));
+                    }                    
+                    if (dt.Rows[0][8].ToString() != string.Empty)
+                    {
+                        ddlSituacao.Items.Insert(0, GetValue(row, 8));
+                    }                    
+                    if (dt.Rows[0][9].ToString() != string.Empty)
+                    {
+                        txtPlaca.Text = GetValue(row, 9);
+                    }
+                    // txtReb1.Text = GetValue(row, 10);
+                    // txtReb2.Text = GetValue(row, 11);                    
+                    
+                    if (dt.Rows[0][12].ToString() != string.Empty)
+                    {
+                        ddlComposicao.Items.Insert(0, GetValue(row, 12));
+                    }                    
+                    if (dt.Rows[0][13].ToString() != string.Empty)
+                    {
+                        ddlCarreta.Items.Insert(0, GetValue(row, 13));
+                    }                    
+                    if (dt.Rows[0][14].ToString() != string.Empty)
+                    {
+                        ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
+                    }                    
+                    if (dt.Rows[0][15].ToString() != string.Empty)
+                    {
+                        txtCodRastreador.Text = GetValue(row, 15);
+                    }                    
+                    if (dt.Rows[0][16].ToString() != string.Empty)
+                    {
+                        ddlTecnologia.Items.Insert(0, GetValue(row, 16));
+                    }                    
+                    if (dt.Rows[0][17].ToString() != string.Empty)
+                    {
+                        txtId.Text = GetValue(row, 17);
+                    }                    
+                    if (dt.Rows[0][18].ToString() != string.Empty)
+                    {
+                        txtCargaLiq.Text = GetValue(row, 18);
+                    }                    
+                    if (dt.Rows[0][19].ToString() != string.Empty)
+                    {
+                        txtEixos.Text = GetValue(row, 19);
+                    }                    
+                    if (dt.Rows[0][20].ToString() != string.Empty)
+                    {
+                        txtTara.Text = GetValue(row, 20);
+                    }                    
+                    if (dt.Rows[0][21].ToString() != string.Empty)
+                    {
+                        txtTolerancia.Text = GetValue(row, 21);
+                    }                    
+                    if (dt.Rows[0][22].ToString() != string.Empty)
+                    {
+                        txtPBT.Text = GetValue(row, 22);
+                    }                    
+                    if (dt.Rows[0][27].ToString() != string.Empty)
+                    {
+                        txtCodMot.Text = GetValue(row, 27);
+                    }                    
+                    if (dt.Rows[0][28].ToString() != string.Empty)
+                    {
+                        ddlMotorista.Items.Insert(0, GetValue(row, 28));
+                    }                    
+                    if (dt.Rows[0][29].ToString() != string.Empty)
+                    {
+                        txtCodTra.Text = GetValue(row, 29);
+                    }                    
+                    if (dt.Rows[0][30].ToString() != string.Empty)
+                    {
+                        ddlAgregados.Items.Insert(0, GetValue(row, 30));
+                    }                    
+                    if (dt.Rows[0][31].ToString() != string.Empty)
+                    {
+                        txtOpacidade.Text = GetValue(row, 31);
+                    }                    
+                    if (dt.Rows[0][32].ToString() != string.Empty)
+                    {
+                        txtCadastradoPor.Text = GetValue(row, 32);
+                    }                    
+                    if (dt.Rows[0][33].ToString() != string.Empty)
+                    {
+                        txtDtCadastro.Text = GetValue(row, 33);
+                    }                    
+                    if (dt.Rows[0][36].ToString() != string.Empty)
+                    {
+                        txtVencCET.Text = GetValue(row, 36);
+                    }                    
+                    if (dt.Rows[0][37].ToString() != string.Empty)
+                    {
+                        txtProtocoloCET.Text = GetValue(row, 37);
+                    }                    
+                    if (dt.Rows[0][38].ToString() != string.Empty)
+                    {
+                        txtLicenciamento.Text = GetValue(row, 38);
+                    }                    
+                    if (dt.Rows[0][39].ToString() != string.Empty)
+                    {
+                        txtCronotacografo.Text = DateTime.Parse(dt.Rows[0][39].ToString()).ToString("dd/MM/yyyy");
+                    }                    
+                    if (dt.Rows[0][40].ToString() != string.Empty)
+                    {
+                        ddlMarca.Items.Insert(0, GetValue(row, 40));
+                    }                    
+                    if (dt.Rows[0][41].ToString() != string.Empty)
+                    {
+                        txtRenavam.Text = GetValue(row, 41);
+                    }                    
+                    if (dt.Rows[0][42].ToString() != string.Empty)
+                    {
+                        ddlCor.Items.Insert(0, GetValue(row, 42));
+                    }                    
+                    if (dt.Rows[0][43].ToString() != string.Empty)
+                    {
+                        ddlComunicacao.Items.Insert(0, GetValue(row, 43));
+                    }                    
+                    if (dt.Rows[0][44].ToString() != string.Empty)
+                    {
+                        txtAntt.Text = GetValue(row, 44);
+                    }
                     // numeroReb1.Text = GetValue(row, 45);
                     // numeroReb2.Text = GetValue(row, 46); 
                     //ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
                     //ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
-                    ddlEstados.Items.Insert(0, GetValue(row, 47));
-                    ddlCidades.Items.Insert(0, GetValue(row, 48));
-                    txtLotacao.Text = GetValue(row, 49);
-                    txtComprimento.Text = GetValue(row, 50);
-                    txtLargura.Text = GetValue(row, 51);
-                    txtAltura.Text = GetValue(row, 52);
-                    txtPlacaAnt.Text = GetValue(row, 53);
-                    txtCodigo.Text = GetValue(row, 54);
-                    txtTipoSeguro.Text = GetValue(row, 55);
-                    txtSeguradora.Text = GetValue(row, 56);
-                    txtApolice.Text = GetValue(row, 57);
-                    txtValidadeApolice.Text = GetValue(row, 58);
-                    txtValorFranquia.Text = GetValue(row, 59);
-                    ddlTacografo.Items.Insert(0, GetValue(row, 60));
-                    ddlModeloTacografo.Items.Insert(0, GetValue(row, 61));
-                    txtDataAquisicao.Text = GetValue(row, 62);
-                    txtControlePatrimonio.Text = GetValue(row, 63);
-                    txtChassi.Text = GetValue(row, 64);
+                    //ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString()));
+                    //ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
                     
-
+                    
+                    if (dt.Rows[0][47].ToString() != string.Empty)
+                    {
+                        ddlEstados.Items.Insert(0, new ListItem(GetValue(row, 47).ToString(), "0"));
+                    }                    
+                    if (dt.Rows[0][48].ToString() != string.Empty)
+                    {
+                        ddlCidades.Items.Insert(0, new ListItem(GetValue(row, 48)));
+                    }                    
+                    if (dt.Rows[0][49].ToString() != string.Empty)
+                    {
+                        txtLotacao.Text = GetValue(row, 49);
+                    }                   
+                    if (dt.Rows[0][50].ToString() != string.Empty)
+                    {
+                        txtComprimento.Text = GetValue(row, 50);
+                    }                    
+                    if (dt.Rows[0][51].ToString() != string.Empty)
+                    {
+                        txtLargura.Text = GetValue(row, 51);
+                    }                    
+                    if (dt.Rows[0][52].ToString() != string.Empty)
+                    {
+                        txtAltura.Text = GetValue(row, 52);
+                    }                    
+                    if (dt.Rows[0][53].ToString() != string.Empty)
+                    {
+                        txtPlacaAnt.Text = GetValue(row, 53);
+                    }                    
+                    if (dt.Rows[0][54].ToString() != string.Empty)
+                    {
+                        txtCodigo.Text = GetValue(row, 54);
+                    }                    
+                    if (dt.Rows[0][55].ToString() != string.Empty)
+                    {
+                        txtTipoSeguro.Text = GetValue(row, 55);
+                    }                    
+                    if (dt.Rows[0][56].ToString() != string.Empty)
+                    {
+                        txtSeguradora.Text = GetValue(row, 56);
+                    }                    
+                    if (dt.Rows[0][57].ToString() != string.Empty)
+                    {
+                        txtApolice.Text = GetValue(row, 57);
+                    }                    
+                    if (dt.Rows[0][58].ToString() != string.Empty)
+                    {
+                        txtValidadeApolice.Text = GetValue(row, 58);
+                    }                    
+                    if (dt.Rows[0][59].ToString() != string.Empty)
+                    {
+                        txtValorFranquia.Text = GetValue(row, 59);
+                    }                    
+                    if (dt.Rows[0][60].ToString() != string.Empty)
+                    {
+                        ddlTacografo.Items.Insert(0, GetValue(row, 60));
+                    }                    
+                    if (dt.Rows[0][61].ToString() != string.Empty)
+                    {
+                        ddlModeloTacografo.Items.Insert(0, GetValue(row, 61));
+                    }                    
+                    if (dt.Rows[0][62].ToString() != string.Empty)
+                    {
+                        txtDataAquisicao.Text = GetValue(row, 62);
+                    }                    
+                    if (dt.Rows[0][63].ToString() != string.Empty)
+                    {
+                        txtControlePatrimonio.Text = GetValue(row, 63);
+                    }
+                    if (dt.Rows[0][64].ToString() != string.Empty)
+                    {
+                        txtChassi.Text = GetValue(row, 64);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1080,7 +1245,7 @@ namespace NewCapit
                 erroDetalhado += $"\nprotocolocet = {txtProtocoloCET.Text}";
                 erroDetalhado += $"\nvenclicencacet = {txtVencCET.Text}";
                 erroDetalhado += $"\nvenclicenciamento = {txtLicenciamento.Text}";
-                erroDetalhado += $"\nvenccronotacografo = {DateTime.Parse(txtCronotacografo.Text).ToString("yyyy-MM-dd")}";
+                erroDetalhado += $"\nvenccronotacografo = {txtCronotacografo.Text}";
                 erroDetalhado += $"\nmarca = {ddlMarca.SelectedItem.Text.ToUpper()}";
                 erroDetalhado += $"\nrenavan = {txtRenavam.Text}";
                 erroDetalhado += $"\ncor = {ddlCor.SelectedItem.Text.ToUpper()}";
@@ -1434,6 +1599,48 @@ namespace NewCapit
                 }
 
             }
+        }
+
+        protected void txtCodRastreador_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodRastreador.Text != "")
+            {
+
+                string codigoRastreador = txtCodRastreador.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codRastreador, nomRastreador FROM tbrastreadores WHERE codRastreador = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRastreador);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlTecnologia.SelectedItem.Text = reader["nomRastreador"].ToString();
+                            }
+                            else
+                            {
+                                ddlTecnologia.ClearSelection();
+                                txtCodRastreador.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodRastreador.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+
         }
     }
 }

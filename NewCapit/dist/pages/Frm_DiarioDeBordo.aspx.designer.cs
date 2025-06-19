@@ -258,15 +258,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl button;
 
         /// <summary>
-        /// Controle lblBloco.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBloco;
-
-        /// <summary>
         /// Controle lblAlerta.
         /// </summary>
         /// <remarks>
@@ -274,6 +265,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAlerta;
+
+        /// <summary>
+        /// Controle lblBloco.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBloco;
 
         /// <summary>
         /// Controle grdMotoristas.

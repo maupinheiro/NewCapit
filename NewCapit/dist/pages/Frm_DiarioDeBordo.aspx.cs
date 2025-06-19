@@ -416,12 +416,12 @@ namespace NewCapit.dist.pages
             {
                 grdTodas.DataSource = dt;
                 grdTodas.DataBind();
-                lblTodas.Text = "Todas as Marcações";
+                lblTodas.Text = "Todas as Marcações do Motorista";
                 btnExcluiTodas.Visible = true;
             }
             else
             {
-                lblTodas.Text = "Não existem marcações do motorista solicitado!";
+                lblTodas.Text = "Não existem marcações para o motorista solicitado!";
             }
 
             //string message = DateTime.Parse(data).ToString("yyyy-MM-dd");

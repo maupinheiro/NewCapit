@@ -95,6 +95,9 @@
                                     <asp:ListItem Value="CAVALO SIMPLES" Text="CAVALO SIMPLES"></asp:ListItem>
                                     <asp:ListItem Value="CAVALO TRUCADO" Text="CAVALO TRUCADO"></asp:ListItem>
                                     <asp:ListItem Value="CAVALO 4 EIXOS" Text="CAVALO 4 EIXOS"></asp:ListItem>
+                                    <asp:ListItem Value="FURGAO" Text="FURGAO"></asp:ListItem>
+                                    <asp:ListItem Value="LEVE" Text="LEVE"></asp:ListItem>
+                                    <asp:ListItem Value="SAVEIRO" Text="SAVEIRO"></asp:ListItem>
                                     <asp:ListItem Value="TOCO" Text="TOCO"></asp:ListItem>
                                     <asp:ListItem Value="TRUCK" Text="TRUCK"></asp:ListItem>
                                     <asp:ListItem Value="VEICULO 3/4" Text="VEICULO 3/4"></asp:ListItem>
@@ -301,7 +304,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CÓD.TEC.:</span>
-                                <asp:TextBox ID="txtCodRastreador" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4"></asp:TextBox>
+                                <asp:TextBox ID="txtCodRastreador" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4" OnTextChanged="txtCodRastreador_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -456,7 +459,7 @@
                     <!-- linha 8 -->
                     <div class="row g-3">
 
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">TIPO SEGURO:</span>
                                 <asp:TextBox ID="txtTipoSeguro" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="30" disabled></asp:TextBox>
@@ -468,10 +471,10 @@
                                 <asp:TextBox ID="txtSeguradora" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="50" disabled></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">APOLICE:</span>
-                                <asp:TextBox ID="txtApolice" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="30" disabled></asp:TextBox>
+                                <asp:TextBox ID="txtApolice" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" disabled></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
