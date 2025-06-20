@@ -710,7 +710,8 @@ namespace NewCapit.dist.pages
                                 //JORNADA NORMAL INICIO DE JORNADA
                                 grdMotoristas.DataSource = dt;
                                 grdMotoristas.DataBind();
-                                html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='icon_profile' title='Ver Demonstrativo'></i></a>";
+                                html = "<br/>";
+                                html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='icon_profile' title='Ver Demonstrativo'></i></a>";
                                 HtmlGenericControl table = this.button;
                                 table.InnerHtml = html;
                                 lblBloco.Text = "BLOCO1A";
@@ -746,7 +747,8 @@ namespace NewCapit.dist.pages
 
                                     grdMotoristas.DataSource = dt4;
                                     grdMotoristas.DataBind();
-                                    html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                    html = "<br/>";
+                                    html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                     HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO1B";
@@ -785,7 +787,8 @@ namespace NewCapit.dist.pages
                                         //JORNADA NORMAL REINICIO DE VIAGEM
                                         grdMotoristas.DataSource = dt;
                                         grdMotoristas.DataBind();
-                                        html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='icon_profile' title='Ver Demonstrativo'></i></a>";
+                                        html = "<br/>";
+                                        html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='icon_profile' title='Ver Demonstrativo'></i></a>";
                                         HtmlGenericControl table = this.button;
                                         table.InnerHtml = html;
                                         lblBloco.Text = "BLOCO2A";
@@ -822,7 +825,8 @@ namespace NewCapit.dist.pages
 
                                             grdMotoristas.DataSource = dt4;
                                             grdMotoristas.DataBind();
-                                            html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                            html = "<br/>";
+                                            html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                             HtmlGenericControl table = this.button;
                                             table.InnerHtml = html;
                                             lblBloco.Text = "BLOCO2B";
@@ -869,7 +873,8 @@ namespace NewCapit.dist.pages
                                             con.Close();
                                             grdMotoristas.DataSource = dtx;
                                             grdMotoristas.DataBind();
-                                            html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + dtd.Rows[0][1].ToString() + "');><i class='fa-edit'></i></a>";
+                                            html = "<br/>";
+                                            html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + dtd.Rows[0][1].ToString() + "');>Imprimir Diário</a>";
                                             HtmlGenericControl table = this.button;
                                             table.InnerHtml = html;
                                             lblBloco.Text = "BLOCO3a";
@@ -913,7 +918,8 @@ namespace NewCapit.dist.pages
 
                                             grdMotoristas.DataSource = dt4;
                                             grdMotoristas.DataBind();
-                                            html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                            html = "<br/>";
+                                            html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                             HtmlGenericControl table = this.button;
                                             table.InnerHtml = html;
                                             lblBloco.Text = "BLOCO3c";
@@ -961,7 +967,8 @@ namespace NewCapit.dist.pages
                                     con.Close();
                                     grdMotoristas.DataSource = dtx;
                                     grdMotoristas.DataBind();
-                                    html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + dtd.Rows[0][1].ToString() + "');><i class='fa-edit'></i></a>";
+                                    html = "<br/>";
+                                    html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + login + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + dtd.Rows[0][1].ToString() + "');>Imprimir Diário</a>";
                                     HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO3a";
@@ -1005,7 +1012,8 @@ namespace NewCapit.dist.pages
 
                                     grdMotoristas.DataSource = dt4;
                                     grdMotoristas.DataBind();
-                                    html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                    html = "<br/>";
+                                    html += "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO3c";
@@ -1125,7 +1133,7 @@ namespace NewCapit.dist.pages
                             grdMotoristas.DataSource = dt;
                             grdMotoristas.DataBind();
 
-                            string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                            string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                              HtmlGenericControl table = this.button;
                             table.InnerHtml = html;
                             lblBloco.Text = "BLOCO1";
@@ -1177,7 +1185,7 @@ namespace NewCapit.dist.pages
 
                                     grdMotoristas.DataSource = dt4;
                                     grdMotoristas.DataBind();
-                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO2a";
@@ -1193,7 +1201,7 @@ namespace NewCapit.dist.pages
                                     con.Close();
                                     grdMotoristas.DataSource = dtx;
                                     grdMotoristas.DataBind();
-                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO2b";
@@ -1215,7 +1223,7 @@ namespace NewCapit.dist.pages
                                 con.Close();
                                 grdMotoristas.DataSource = dtx;
                                 grdMotoristas.DataBind();
-                                string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                                string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                                  HtmlGenericControl table = this.button;
                                 table.InnerHtml = html;
                                 lblBloco.Text = "BLOCO2c";
@@ -1285,7 +1293,7 @@ namespace NewCapit.dist.pages
 
                                     grdMotoristas.DataSource = dt4;
                                     grdMotoristas.DataBind();
-                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO3a";
@@ -1295,7 +1303,7 @@ namespace NewCapit.dist.pages
                                 {
                                     grdMotoristas.DataSource = dt;
                                     grdMotoristas.DataBind();
-                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO3b";
@@ -1331,7 +1339,7 @@ namespace NewCapit.dist.pages
 
                                     grdMotoristas.DataSource = dt4;
                                     grdMotoristas.DataBind();
-                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO3C";
@@ -1341,7 +1349,7 @@ namespace NewCapit.dist.pages
                                 { 
                                     grdMotoristas.DataSource = dt;
                                     grdMotoristas.DataBind();
-                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                                      HtmlGenericControl table = this.button;
                                     table.InnerHtml = html;
                                     lblBloco.Text = "BLOCO3D";
@@ -1357,7 +1365,7 @@ namespace NewCapit.dist.pages
 
                             //grdMotoristas.DataSource = dt;
                             //grdMotoristas.DataBind();
-                            //string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + data + "','" + data + "');><i class='fa-edit'></i></a>";
+                            //string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + data + "','" + data + "');>Imprimir Diário</a>";
                             // HtmlGenericControl table = this.button;
                             //table.InnerHtml = html;
                             //lblBloco.Text = "BLOCO3";
@@ -1391,7 +1399,7 @@ namespace NewCapit.dist.pages
 
                                 grdMotoristas.DataSource = dt4;
                                 grdMotoristas.DataBind();
-                                string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                                string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                                  HtmlGenericControl table = this.button;
                                 table.InnerHtml = html;
                                 lblBloco.Text = "BLOCO5";
@@ -1401,7 +1409,7 @@ namespace NewCapit.dist.pages
                             {
                                 grdMotoristas.DataSource = dt;
                                 grdMotoristas.DataBind();
-                                string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                                string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                                  HtmlGenericControl table = this.button;
                                 table.InnerHtml = html;
                                 lblBloco.Text = "BLOCO6";
@@ -1422,7 +1430,7 @@ namespace NewCapit.dist.pages
                     grdMotoristas.DataSource = dt;
                     grdMotoristas.DataBind();
 
-                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                    string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                      HtmlGenericControl table = this.button;
                     table.InnerHtml = html;
                     lblBloco.Text = "BLOCO4";
@@ -1459,7 +1467,7 @@ namespace NewCapit.dist.pages
 
                         grdMotoristas.DataSource = dt4;
                         grdMotoristas.DataBind();
-                        string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');><i class='fa-edit'></i></a>";
+                        string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo2('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).AddDays(1).ToString("yyyy-MM-dd") + "','" + dti.Rows[0][0].ToString() + "','" + dtf.Rows[0][0].ToString() + "');>Imprimir Diário</a>";
                          HtmlGenericControl table = this.button;
                         table.InnerHtml = html;
                         lblBloco.Text = "BLOCO5";
@@ -1469,7 +1477,7 @@ namespace NewCapit.dist.pages
                     {
                         grdMotoristas.DataSource = dt;
                         grdMotoristas.DataBind();
-                        string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');><i class='fa-edit'></i></a>";
+                        string html = "<a class='btn btn-outline-info' href=JavaScript:ver_demo('" + dt2.Rows[0][1].ToString() + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "');>Imprimir Diário</a>";
                          HtmlGenericControl table = this.button;
                         table.InnerHtml = html;
                         lblBloco.Text = "BLOCO6";
