@@ -15,7 +15,7 @@ namespace DAL
         public static DataTable FetchDataTable()
         {
             // alterado a query para verificar a coluna exclusao para itens excluídos            
-            string sql = "select cva,  '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.veiculo, c.placa, c.reboque1, c.reboque2, c.status, c.carga,c.cva,c.nomcliorigem,c.nomclidestino,c.situacao, c.veiculotipo, c.tipoveiculo, c.num_carregamento from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='CNT' and situacao <> 'VIAGEM CONCLUIDA' order by c.dtcad desc ";
+            string sql = "select cva,  '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.veiculo, c.placa, c.reboque1, c.reboque2, c.status, c.carga,c.cva,c.nomcliorigem,c.nomclidestino,c.situacao, c.veiculotipo, c.tipoveiculo, c.num_carregamento from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='CNT (CC)' and situacao <> 'VIAGEM CONCLUIDA' order by c.dtcad desc ";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -43,7 +43,7 @@ namespace DAL
             c.situacao, c.material, c.dtcad, c.num_carregamento
         FROM tbcarregamentos AS c
         INNER JOIN tbmotoristas AS m ON c.codmotorista = m.codmot
-        WHERE empresa = 'CNT' AND situacao <> 'VIAGEM CONCLUIDA'";
+        WHERE empresa = 'CNT (CC)' AND situacao <> 'VIAGEM CONCLUIDA'";
 
             if (dataInicio.HasValue && dataFim.HasValue)
             {

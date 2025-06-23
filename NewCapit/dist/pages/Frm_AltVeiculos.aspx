@@ -108,7 +108,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PLACA:</span>
-                                <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                                <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="True" OnTextChanged="txtPlaca_TextChanged"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">

@@ -12,6 +12,7 @@ using NPOI.SS.Formula.Functions;
 using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit.dist.pages
 {
@@ -489,7 +490,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@funcao", ddlFuncao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@frota", txtFrota.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@venceti", txtVAlExameTox.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@codvei", txtCodTra.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@codvei", txtFrota.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
@@ -852,6 +853,73 @@ namespace NewCapit.dist.pages
             txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
             txtEstCli.Text = cep.UF.ToString();
             txtNumero.Focus();
+        }
+
+        protected void txtPlaca_TextChanged(object sender, EventArgs e)
+        {
+            if (txtPlaca.Text != "")
+            {
+
+                string codigoPlaca = txtPlaca.Text.ToUpper().Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codvei, tipvei, plavei, motorista FROM tbveiculos WHERE plavei = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoPlaca);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                if (reader["motorista"].ToString() == string.Empty)
+                                {
+                                    txtTipoVeiculo.Text = reader["tipvei"].ToString();
+                                    txtFrota.Text = reader["codvei"].ToString();
+                                    txtReboque1.Focus();
+                                }
+                                else 
+                                {
+                                    string nomeUsuario = txtUsuCadastro.Text;
+
+                                    string linha1 = "Olá, " + nomeUsuario + "!";
+                                    string linha2 = "Veículo com o motorista: " + reader["tipvei"].ToString() + ".";
+                                    string linha3 = "Escolha outro veículo, ou retire o motorista atrelado.";
+                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    txtPlaca.Text = "";
+                                    txtPlaca.Focus();
+                                }
+
+                            }
+                            else
+                            {
+                                txtPlaca.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodTra.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Domain
         public string fl_exclusao { get; set; }
         public string tipomot { get; set; }
 
+        public string frota { get; set; }
         public string codvei { get; set; }  
         public string placa { get; set; }
         public string reboque1 { get; set; }

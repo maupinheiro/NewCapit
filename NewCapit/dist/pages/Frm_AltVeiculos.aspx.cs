@@ -31,13 +31,13 @@ namespace NewCapit
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
 
-                    txtAlteradoPor.Text = nomeUsuario;
+                   // txtAlteradoPor.Text = nomeUsuario;
                     txtUsuarioAtual.Text = nomeUsuario;
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                    txtAlteradoPor.Text = lblUsuario;
+                   // txtAlteradoPor.Text = lblUsuario;
                 }
 
                 PreencherComboEstados();
@@ -51,8 +51,8 @@ namespace NewCapit
                 
                 CarregaDadosDoVeiculo();
 
-                DateTime dataHoraAtual = DateTime.Now;
-                txtDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                //DateTime dataHoraAtual = DateTime.Now;
+               // txtDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
             }
 
@@ -871,10 +871,16 @@ namespace NewCapit
                     if (dt.Rows[0][9].ToString() != string.Empty)
                     {
                         txtPlaca.Text = GetValue(row, 9);
+                    }                    
+                    if (dt.Rows[0][10].ToString() != string.Empty)
+                    {
+                        txtReb1.Text = GetValue(row, 10);
                     }
-                    // txtReb1.Text = GetValue(row, 10);
-                    // txtReb2.Text = GetValue(row, 11);                    
-                    
+                    if (dt.Rows[0][11].ToString() != string.Empty)
+                    {
+                        txtReb2.Text = GetValue(row, 11);
+                    }
+
                     if (dt.Rows[0][12].ToString() != string.Empty)
                     {
                         ddlComposicao.Items.Insert(0, GetValue(row, 12));
@@ -946,7 +952,15 @@ namespace NewCapit
                     if (dt.Rows[0][33].ToString() != string.Empty)
                     {
                         txtDtCadastro.Text = GetValue(row, 33);
-                    }                    
+                    }
+                    if (dt.Rows[0][34].ToString() != string.Empty)
+                    {
+                        txtAlteradoPor.Text = GetValue(row, 34);
+                    }
+                    if (dt.Rows[0][35].ToString() != string.Empty)
+                    {
+                        txtDtAlteracao.Text = GetValue(row, 35);
+                    }
                     if (dt.Rows[0][36].ToString() != string.Empty)
                     {
                         txtVencCET.Text = GetValue(row, 36);
@@ -1159,8 +1173,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text);
-                    cmd.Parameters.AddWithValue("@usualt", txtAlteradoPor.Text.Trim().ToUpper()); // Usuário atual
-                    cmd.Parameters.AddWithValue("@dtcalt", txtDtAlteracao.Text); // Corrigido para DateTime
+                    cmd.Parameters.AddWithValue("@usualt", txtUsuarioAtual.Text.Trim().ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@dtcalt", dataHoraAtual.ToString("dd/MM/yyyy HH:mm")); // Corrigido para DateTime
                     cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
                     cmd.Parameters.AddWithValue("@venclicencacet", string.IsNullOrEmpty(txtVencCET.Text) ? (object)DBNull.Value : txtVencCET.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
@@ -1641,6 +1655,41 @@ namespace NewCapit
 
             }
 
+        }
+
+        protected void txtPlaca_TextChanged(object sender, EventArgs e)
+        {
+            string termo = txtPlaca.Text.ToUpper();
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT TOP 1 plavei,codvei FROM tbveiculos WHERE plavei LIKE @termo";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                conn.Open();
+
+                object res = cmd.ExecuteScalar();
+                if (res != null)
+                {
+                    //resultado = "Resultado: " + res.ToString();
+                    string retorno = "Placa: " + res.ToString() + ", já cadastrado. ";
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    sb.Append("<script type = 'text/javascript'>");
+                    sb.Append("window.onload=function(){");
+                    sb.Append("alert('");
+                    sb.Append(retorno);
+                    sb.Append("')};");
+                    sb.Append("</script>");
+                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    txtPlaca.Text = "";
+                    txtPlaca.Focus();
+                }
+            }
+
+           
+            txtPlaca.Text.ToUpper();
+            ddlEstados.Focus();
         }
     }
 }

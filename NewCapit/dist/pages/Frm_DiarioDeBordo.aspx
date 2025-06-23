@@ -196,19 +196,19 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <span class="details">NOME COMPLETO:</span>
-                                <asp:TextBox ID="txtNome" runat="server" CssClass="form-control"></asp:TextBox>
+                                <asp:TextBox ID="txtNome" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">FUNÇÃO:</span>
-                                <asp:TextBox ID="txtFuncao" runat="server" CssClass="form-control" MaxLength="10"></asp:TextBox>
+                                <asp:TextBox ID="txtFuncao" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true" MaxLength="10"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">NÚCLEO:</span>
-                                <asp:TextBox ID="txtNucleo" runat="server" CssClass="form-control"></asp:TextBox>
+                                <asp:TextBox ID="txtNucleo" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                 <asp:HiddenField ID="txtconformmessageValue4" runat="server" />
 
                             </div>
@@ -287,7 +287,7 @@
                             <%--<table id="example1" class="table table-bordered table-striped table-hover table-responsive">
                                 <asp:GridView ID="grdCusto" runat="server" AutoGenerateColumns="false" Width="970px" Font-Size="12px" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">--%>
                             <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                <asp:GridView ID="grdCusto" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" Font-Size="12px" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">
+                                <asp:GridView ID="grdCusto" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">
                                     <Columns>
                                         <asp:BoundField DataField="cafe" HeaderText="CAFÉ DA MANHÃ" ItemStyle-HorizontalAlign="Center" />
                                         <asp:BoundField DataField="almoco" HeaderText="ALMOÇO" ItemStyle-HorizontalAlign="Center" />
@@ -380,7 +380,7 @@
                     </div>
 
                     <b>
-                        <asp:Label ID="lblAlerta" runat="server" Text="" ForeColor="Red"></asp:Label></b>
+                    <asp:Label ID="lblAlerta" runat="server" Text="" ForeColor="Red"></asp:Label></b>
                     <div class="card card-success">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -399,7 +399,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                        <asp:GridView ID="grdMotoristas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" Font-Size="12px" DataKeyNames="cod_parada" OnRowCommand="grdMotoristas_RowCommand">
+                                        <asp:GridView ID="grdMotoristas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_parada" OnRowCommand="grdMotoristas_RowCommand">
                                             <Columns>
                                                 <%--<asp:TemplateField>
                                                 <ItemTemplate>
@@ -427,8 +427,7 @@
                     <div class="col-md-1">
                         <asp:HiddenField ID="txtconformmessageValue5" runat="server" />
                         <asp:Button ID="btnExcluiMotoristas" runat="server" CssClass="btn btn-outline-danger" Text="Excluir" OnClientClick="javascript:ConfirmMessage5();" Width="139px" />
-                    </div>
-                    
+                    </div>                    
                     <div class="card card-warning">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -445,9 +444,9 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="card-body">
+                                    <%--<div class="card-body">--%>
                                         <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                            <asp:GridView ID="grdTodas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" Font-Size="12px" DataKeyNames="cod_parada" OnRowCommand="grdTodas_RowCommand">
+                                            <asp:GridView ID="grdTodas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_parada" OnRowCommand="grdTodas_RowCommand">
                                                 <Columns>
                                                     <asp:TemplateField>
                                                         <ItemTemplate>
@@ -464,7 +463,7 @@
                                                 </Columns>
                                             </asp:GridView>
                                         </table>
-                                    </div>
+                                    <%--</div>--%>
                                 </div>
                             </div>
                         </div>

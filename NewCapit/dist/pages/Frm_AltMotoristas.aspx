@@ -474,7 +474,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PLACA:</span>
-                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" Text=""></asp:TextBox>
+                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtPlaca_TextChanged" ></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">

@@ -45,7 +45,6 @@ namespace NewCapit.dist.pages
             CarregarGrid();
         }
 
-
         protected void btnAtualizar_Click(object sender, EventArgs e)
         {
             CarregarGrid();

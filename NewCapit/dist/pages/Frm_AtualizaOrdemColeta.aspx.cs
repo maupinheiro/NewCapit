@@ -181,191 +181,247 @@ namespace NewCapit.dist.pages
             {
                 num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
             }
-            string sql = "select codmotorista,veiculo,dtcad,usucad,codcontato,fonecorporativo,codcliorigem, nomcliorigem, codclidestino, nomclidestino, distancia,tipoveiculo from tbcarregamentos where num_carregamento='" + num_coleta+"'";
+            //string sql = "select codmotorista,veiculo,dtcad,usucad,codcontato,fonecorporativo,codcliorigem, nomcliorigem, codclidestino, nomclidestino, distancia,tipoveiculo from tbcarregamentos where num_carregamento='" + num_coleta + "'";
+
+            string sql = "select * from tbcarregamentos where num_carregamento='" + num_coleta+"'";
+            
             SqlDataAdapter adtp = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
             adtp.Fill(dt);
             con.Close();
             //Carrega Motorista
-            var codigo = dt.Rows[0][0].ToString();
+            var codigo = dt.Rows[0][6].ToString();
             txtCodMotorista.Text = codigo;
-            txtUsuCadastro.Text = dt.Rows[0][3].ToString();
-            lblDtCadastro.Text = dt.Rows[0][2].ToString();
-            txtCodFrota.Text = dt.Rows[0][4].ToString();
-            txtFoneCorp.Text = dt.Rows[0][5].ToString();
-            txtVeiculoTipo.Text = dt.Rows[0][5].ToString();
+            txtFilialMot.Text = dt.Rows[0][38].ToString();
+            txtTipoMot.Text = dt.Rows[0][128].ToString();
+            txtExameToxic.Text = dt.Rows[0][129].ToString();
+            txtCNH.Text = dt.Rows[0][86].ToString();
+            txtLibGR.Text = dt.Rows[0][130].ToString();
+            txtNomMot.Text = dt.Rows[0][5].ToString();
+            txtCPF.Text = dt.Rows[0][80].ToString();
+            txtCartao.Text = dt.Rows[0][81].ToString();
+            txtValCartao.Text = dt.Rows[0][131].ToString();
+            txtCelular.Text = dt.Rows[0][10].ToString();
+            txtFuncao.Text = dt.Rows[0][143].ToString();
+            if (txtCodMotorista.Text.Trim() != "")
+            {
+                fotoMotorista = dt.Rows[0][87].ToString();
+
+                if (!File.Exists(fotoMotorista))
+                {
+                    fotoMotorista = dt.Rows[0][87].ToString();
+                }
+                else
+                {
+                    fotoMotorista = "../../fotos/usuario.jpg";
+                }
+            }
+            txtUsuCadastro.Text = dt.Rows[0][76].ToString();
+            lblDtCadastro.Text = dt.Rows[0][77].ToString();
+            txtCodFrota.Text = dt.Rows[0][7].ToString();
+            txtFoneCorp.Text = dt.Rows[0][9].ToString();
+            txtCodVeiculo.Text = dt.Rows[0][15].ToString(); //+ "/" + dt.Rows[0][13].ToString();
+            txtFilialVeicCNT.Text = dt.Rows[0][133].ToString();
+            txtPlaca.Text = dt.Rows[0][16].ToString();
+            txtVeiculoTipo.Text = dt.Rows[0][132].ToString();
+            txtTipoVeiculo.Text = dt.Rows[0][14].ToString();
+            txtReboque1.Text = dt.Rows[0][17].ToString();
+            txtReboque2.Text = dt.Rows[0][18].ToString();
+            txtOpacidade.Text = dt.Rows[0][135].ToString();
+            txtCRLVVeiculo.Text = dt.Rows[0][137].ToString();
+            txtCET.Text = dt.Rows[0][136].ToString();
+            txtCRLVReb1.Text = dt.Rows[0][138].ToString();
+            txtCRLVReb2.Text = dt.Rows[0][139].ToString();
+            txtCarreta.Text = dt.Rows[0][104].ToString();
+            txtTecnologia.Text = dt.Rows[0][84].ToString();
+            txtRastreamento.Text = dt.Rows[0][82].ToString();
+            txtConjunto.Text = dt.Rows[0][90].ToString();
+            txtCodProprietario.Text = dt.Rows[0][12].ToString();
+            txtProprietario.Text = dt.Rows[0][13].ToString();
+
+
+            string idviagem;
+            idviagem = num_coleta;
+            CarregarColetas(idviagem);
+
+
             //codCliInicial.Text = dt.Rows[0][4].ToString();
             //ddlCliInicial.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(),""));
             //codCliFinal.Text = dt.Rows[0][6].ToString();
             //ddlCliFinal.Items.Insert(0, new ListItem(dt.Rows[0][7].ToString(),""));
             //txtDistancia.Text = dt.Rows[0][8].ToString();
             //ddlVeiculosCNT.Items.Insert(0, new ListItem(dt.Rows[0][9].ToString(), ""));
-            var obje = new Domain.ConsultaMotorista
-            {
-                codmot = codigo
-            };
-          
-            var obj = new Domain.ConsultaMotorista
-            {
-                codmot = codigo
-            };
-            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
-            if (ConsultaMotorista != null)
-            {
-                if (ConsultaMotorista.status.Trim() == "INATIVO")
-                {
-                    string nomeUsuario = txtUsuCadastro.Text;
-                    string razaoSocial = ConsultaMotorista.nommot;
-                    string unidade = ConsultaMotorista.nucleo;
-
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Código " + codigo + ", excluido ou inativo no sistema.";
-                    string linha3 = "Motorista: " + razaoSocial + ".";
-                    string linha4 = "Filial: " + unidade + ". Por favor, verifique.";
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    // Gerando o script JavaScript para exibir o alerta
-                    string script = $"alert('{mensagemCodificada}');";
-
-                    // Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-                }
-                else
-                {
-                    txtFilialMot.Text = ConsultaMotorista.nucleo;
-                    txtTipoMot.Text = ConsultaMotorista.tipomot;
-                    txtExameToxic.Text = ConsultaMotorista.venceti;
-                    txtCNH.Text = ConsultaMotorista.venccnh.ToString();
-                    txtLibGR.Text = ConsultaMotorista.validade;
-                    txtNomMot.Text = ConsultaMotorista.nommot;
-                    txtCPF.Text = ConsultaMotorista.cpf;
-                    txtCartao.Text = ConsultaMotorista.cartaomot;
-                    txtValCartao.Text = ConsultaMotorista.venccartao;
-                    txtCelular.Text = ConsultaMotorista.fone2;
-                    txtFuncao.Text = ConsultaMotorista.cargo.Trim().ToString();
-                    if (txtCodMotorista.Text.Trim() != "")
-                    {
-                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
 
 
-                        if (!File.Exists(fotoMotorista))
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-                        }
-                        else
-                        {
-                            fotoMotorista = "../../fotos/usuario.jpg";
-                        }
-                    }
+            //var obje = new Domain.ConsultaMotorista
+            //{
+            //    codmot = codigo
+            //};
 
-                    if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
-                    {
-                        txtCodVeiculo.Text = ConsultaMotorista.codvei;
-                        txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
-                        txtPlaca.Text = ConsultaMotorista.placa;
-                        txtVeiculoTipo.Text = ConsultaMotorista.veiculotipo;
-                        txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
-                        txtReboque1.Text = ConsultaMotorista.reboque1;
-                        txtReboque2.Text = ConsultaMotorista.reboque2;
+            //var obj = new Domain.ConsultaMotorista
+            //{
+            //    codmot = codigo
+            //};
+            //var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+            //if (ConsultaMotorista != null)
+            //{
+            //    if (ConsultaMotorista.status.Trim() == "INATIVO")
+            //    {
+            //        string nomeUsuario = txtUsuCadastro.Text;
+            //        string razaoSocial = ConsultaMotorista.nommot;
+            //        string unidade = ConsultaMotorista.nucleo;
 
-                        var codigoAgregado = dt.Rows[0][1].ToString();
+            //        string linha1 = "Olá, " + nomeUsuario + "!";
+            //        string linha2 = "Código " + codigo + ", excluido ou inativo no sistema.";
+            //        string linha3 = "Motorista: " + razaoSocial + ".";
+            //        string linha4 = "Filial: " + unidade + ". Por favor, verifique.";
 
-                        var objVeiculo = new Domain.ConsultaVeiculo
-                        {
-                            codvei = codigoAgregado
-                        };
-                        var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
-                        if (ConsultaVeiculo != null)
-                        {
-                            txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
-                            txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
-                            txtCET.Text = ConsultaVeiculo.venclicencacet;
-                            txtCarreta.Text = ConsultaVeiculo.tiporeboque;
-                            txtTecnologia.Text = ConsultaVeiculo.rastreador;
-                            txtRastreamento.Text = ConsultaVeiculo.rastreamento;
-                            txtConjunto.Text = ConsultaVeiculo.tipocarreta;
-                            txtCodProprietario.Text = ConsultaVeiculo.codtra;
-                            txtProprietario.Text = ConsultaVeiculo.transp;
+            //        // Concatenando as linhas com '\n' para criar a mensagem
+            //        string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
 
-                        }
-                    }
-                    else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
-                    {
-                        txtCodVeiculo.Text = ConsultaMotorista.codvei;
-                        txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
-                        txtPlaca.Text = ConsultaMotorista.placa;
-                        txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
-                        txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
-                        txtReboque1.Text = ConsultaMotorista.reboque1;
-                        txtReboque2.Text = ConsultaMotorista.reboque2;
+            //        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+            //        // Gerando o script JavaScript para exibir o alerta
+            //        string script = $"alert('{mensagemCodificada}');";
 
-                        var codigoAgregado = txtCodVeiculo.Text.Trim();
+            //        // Registrando o script para execução no lado do cliente
+            //        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+            //        txtCodMotorista.Text = "";
+            //        txtCodMotorista.Focus();
+            //    }
+            //    else
+            //    {
+            //        txtFilialMot.Text = ConsultaMotorista.nucleo;
+            //        txtTipoMot.Text = ConsultaMotorista.tipomot;
+            //        txtExameToxic.Text = ConsultaMotorista.venceti;
+            //        txtCNH.Text = ConsultaMotorista.venccnh.ToString();
+            //        txtLibGR.Text = ConsultaMotorista.validade;
+            //        txtNomMot.Text = ConsultaMotorista.nommot;
+            //        txtCPF.Text = ConsultaMotorista.cpf;
+            //        txtCartao.Text = ConsultaMotorista.cartaomot;
+            //        txtValCartao.Text = ConsultaMotorista.venccartao;
+            //        txtCelular.Text = ConsultaMotorista.fone2;
+            //        txtFuncao.Text = ConsultaMotorista.cargo.Trim().ToString();
+            //        if (txtCodMotorista.Text.Trim() != "")
+            //        {
+            //            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
-                        var objVeiculo = new Domain.ConsultaVeiculo
-                        {
-                            codvei = codigoAgregado
-                        };
-                        var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
-                        if (ConsultaVeiculo != null)
-                        {
-                            txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
-                            txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
-                            txtCET.Text = ConsultaVeiculo.venclicencacet;
-                            txtCarreta.Text = ConsultaVeiculo.tiporeboque;
-                            txtTecnologia.Text = ConsultaVeiculo.rastreador;
-                            txtRastreamento.Text = ConsultaVeiculo.rastreamento;
-                            txtConjunto.Text = ConsultaVeiculo.tipocarreta;
-                            txtCodProprietario.Text = ConsultaVeiculo.codtra;
-                            txtProprietario.Text = ConsultaVeiculo.transp;
 
-                        }
-                    }
-                    // pesquisar primeiro reboque
-                    if (txtReboque1.Text.Trim() != "")
-                    {
-                        var placaReboque1 = txtReboque1.Text.Trim();
 
-                        var objCarreta = new Domain.ConsultaReboque
-                        {
-                            placacarreta = placaReboque1
-                        };
-                        var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
-                        if (ConsultaReboque != null)
-                        {
-                            txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
-                        }
-                    }
+            //            if (!File.Exists(fotoMotorista))
+            //            {
+            //                fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+            //            }
+            //            else
+            //            {
+            //                fotoMotorista = "../../fotos/usuario.jpg";
+            //            }
+            //        }
 
-                    // pesquisar segundo reboque
-                    if (txtReboque2.Text.Trim() != "")
-                    {
-                        var placaReboque2 = txtReboque2.Text.Trim();
 
-                        var objCarreta = new Domain.ConsultaReboque
-                        {
-                            placacarreta = placaReboque2
-                        };
-                        var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
-                        if (ConsultaReboque != null)
-                        {
-                            txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
-                        }
-                    }
 
-                    string idviagem;
-                    idviagem = num_coleta;
-                    CarregarColetas(idviagem);
-                    
-                }
-                
-            }
+            //        //if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
+            //        //{
+            //        //    txtCodVeiculo.Text = ConsultaMotorista.codvei;
+            //        //    txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
+            //        //    txtPlaca.Text = ConsultaMotorista.placa;
+            //        //    txtVeiculoTipo.Text = ConsultaMotorista.veiculotipo;
+            //        //    txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
+            //        //    txtReboque1.Text = ConsultaMotorista.reboque1;
+            //        //    txtReboque2.Text = ConsultaMotorista.reboque2;
+
+            //        //    var codigoAgregado = dt.Rows[0][1].ToString();
+
+            //        //    var objVeiculo = new Domain.ConsultaVeiculo
+            //        //    {
+            //        //        codvei = codigoAgregado
+            //        //    };
+            //        //    var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
+            //        //    if (ConsultaVeiculo != null)
+            //        //    {
+            //        //        txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+            //        //        txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+            //        //        txtCET.Text = ConsultaVeiculo.venclicencacet;
+            //        //        txtCarreta.Text = ConsultaVeiculo.tiporeboque;
+            //        //        txtTecnologia.Text = ConsultaVeiculo.rastreador;
+            //        //        txtRastreamento.Text = ConsultaVeiculo.rastreamento;
+            //        //        txtConjunto.Text = ConsultaVeiculo.tipocarreta;
+            //        //        txtCodProprietario.Text = ConsultaVeiculo.codtra;
+            //        //        txtProprietario.Text = ConsultaVeiculo.transp;
+
+            //        //    }
+            //        //}
+            //        //else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
+            //        //{
+            //        //    txtCodVeiculo.Text = ConsultaMotorista.frota;
+            //        //    txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
+            //        //    txtPlaca.Text = ConsultaMotorista.placa;
+            //        //    txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+            //        //    txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
+            //        //    txtReboque1.Text = ConsultaMotorista.reboque1;
+            //        //    txtReboque2.Text = ConsultaMotorista.reboque2;
+
+            //        //    var codigoAgregado = txtCodVeiculo.Text.Trim();
+
+            //        //    var objVeiculo = new Domain.ConsultaVeiculo
+            //        //    {
+            //        //        codvei = codigoAgregado
+            //        //    };
+            //        //    var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
+            //        //    if (ConsultaVeiculo != null)
+            //        //    {
+            //        //        txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+            //        //        txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+            //        //        txtCET.Text = ConsultaVeiculo.venclicencacet;
+            //        //        txtCarreta.Text = ConsultaVeiculo.tiporeboque;
+            //        //        txtTecnologia.Text = ConsultaVeiculo.rastreador;
+            //        //        txtRastreamento.Text = ConsultaVeiculo.rastreamento;
+            //        //        txtConjunto.Text = ConsultaVeiculo.tipocarreta;
+            //        //        txtCodProprietario.Text = ConsultaVeiculo.codtra;
+            //        //        txtProprietario.Text = ConsultaVeiculo.transp;
+
+            //        //    }
+            //        //}
+            //        //// pesquisar primeiro reboque
+            //        //if (txtReboque1.Text.Trim() != "")
+            //        //{
+            //        //    var placaReboque1 = txtReboque1.Text.Trim();
+
+            //        //    var objCarreta = new Domain.ConsultaReboque
+            //        //    {
+            //        //        placacarreta = placaReboque1
+            //        //    };
+            //        //    var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
+            //        //    if (ConsultaReboque != null)
+            //        //    {
+            //        //        txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
+            //        //    }
+            //        //}
+
+            //        //// pesquisar segundo reboque
+            //        //if (txtReboque2.Text.Trim() != "")
+            //        //{
+            //        //    var placaReboque2 = txtReboque2.Text.Trim();
+
+            //        //    var objCarreta = new Domain.ConsultaReboque
+            //        //    {
+            //        //        placacarreta = placaReboque2
+            //        //    };
+            //        //    var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
+            //        //    if (ConsultaReboque != null)
+            //        //    {
+            //        //        txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
+            //        //    }
+            //        //}
+
+            //        string idviagem;
+            //        idviagem = num_coleta;
+            //        CarregarColetas(idviagem);
+
+            //    }
+
+            //}
         }
 
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -698,10 +754,10 @@ namespace NewCapit.dist.pages
                         }
                         else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
                         {
-                            txtCodVeiculo.Text = ConsultaMotorista.codvei;
+                            txtCodVeiculo.Text = ConsultaMotorista.frota;
                             txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
                             txtPlaca.Text = ConsultaMotorista.placa;
-                            txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+                            txtVeiculoTipo.Text = "FROTA";
                             txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
                             txtReboque1.Text = ConsultaMotorista.reboque1;
                             txtReboque2.Text = ConsultaMotorista.reboque2;
@@ -1047,6 +1103,7 @@ namespace NewCapit.dist.pages
                             valcrlvveiculo = @valcrlvveiculo,
                             valcrlvreboque1 = @valcrlvreboque1,
                             valcrlvreboque2 = @valcrlvreboque2,
+                            valopacidade = @valopacidade,
                             placa = @placa,
                             tipoveiculo = @tipoveiculo,
                             reboque1 = @reboque1,
@@ -1088,6 +1145,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
+                cmd.Parameters.AddWithValue("@valopacidade", SafeDateValue(txtOpacidade.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
                 cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
@@ -1100,7 +1158,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
-                cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT"));
+                cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT (CC)"));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usualt", nomeUsuario);
 
@@ -1265,6 +1323,214 @@ namespace NewCapit.dist.pages
                     Response.Write("Erro: " + ex.Message);
                 }
             }
+        }
+
+        protected void txtCodMotorista_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodMotorista.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o código do motorista.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodMotorista.Focus();
+
+            }
+            else
+            {
+                var codigo = txtCodMotorista.Text.Trim();
+                var obj = new Domain.ConsultaMotorista
+                {
+                    codmot = codigo
+                };
+                var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+                if (ConsultaMotorista != null)
+                {
+                    if (ConsultaMotorista.status.Trim() == "INATIVO")
+                    {
+                        string nomeUsuario = txtUsuCadastro.Text;
+                        string razaoSocial = ConsultaMotorista.nommot;
+                        string unidade = ConsultaMotorista.nucleo;
+
+                        string linha1 = "Olá, " + nomeUsuario + "!";
+                        string linha2 = "Código " + codigo + ", excluido ou inativo no sistema.";
+                        string linha3 = "Motorista: " + razaoSocial + ".";
+                        string linha4 = "Filial: " + unidade + ". Por favor, verifique.";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        // Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        // Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        txtFilialMot.Text = ConsultaMotorista.nucleo;
+                        txtTipoMot.Text = ConsultaMotorista.tipomot;
+                        txtExameToxic.Text = ConsultaMotorista.venceti;
+                        txtCNH.Text = ConsultaMotorista.venccnh.ToString();
+                        txtLibGR.Text = ConsultaMotorista.validade;
+                        txtNomMot.Text = ConsultaMotorista.nommot;
+                        txtCPF.Text = ConsultaMotorista.cpf;
+                        txtCartao.Text = ConsultaMotorista.cartaomot;
+                        txtValCartao.Text = ConsultaMotorista.venccartao;
+                        txtCelular.Text = ConsultaMotorista.fone2;
+                        if (txtCodMotorista.Text.Trim() != "")
+                        {
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                            String path = Server.MapPath("../../fotos/");
+                            string file = fotoMotorista;
+                            if (File.Exists(path + file))
+                            {
+                                fotoMotorista = "../../fotos/" + file + "";
+                            }
+                            else
+                            {
+                                fotoMotorista = "../../fotos/usuario.jpg";
+                            }
+                        }
+
+                        if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
+                        {
+                            txtCodVeiculo.Text = ConsultaMotorista.codvei;
+                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
+                            txtPlaca.Text = ConsultaMotorista.placa;
+                            txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+                            txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
+                            txtReboque1.Text = ConsultaMotorista.reboque1;
+                            txtReboque2.Text = ConsultaMotorista.reboque2;
+
+                            var codigoAgregado = txtCodVeiculo.Text.Trim();
+
+                            var objVeiculo = new Domain.ConsultaVeiculo
+                            {
+                                codvei = codigoAgregado
+                            };
+                            var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
+                            if (ConsultaVeiculo != null)
+                            {
+                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+                                txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+                                txtCET.Text = ConsultaVeiculo.venclicencacet;
+                                txtCarreta.Text = ConsultaVeiculo.tiporeboque;
+                                txtTecnologia.Text = ConsultaVeiculo.rastreador;
+                                txtRastreamento.Text = ConsultaVeiculo.rastreamento;
+                                txtConjunto.Text = ConsultaVeiculo.tipocarreta;
+                                txtCodProprietario.Text = ConsultaVeiculo.codtra;
+                                txtProprietario.Text = ConsultaVeiculo.transp;
+
+                            }
+                        }
+                        else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
+                        {
+                            txtCodVeiculo.Text = ConsultaMotorista.frota;
+                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
+                            txtPlaca.Text = ConsultaMotorista.placa;
+                            txtVeiculoTipo.Text = "FROTA";
+                            txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
+                            txtReboque1.Text = ConsultaMotorista.reboque1;
+                            txtReboque2.Text = ConsultaMotorista.reboque2;
+
+                            var codigoAgregado = txtCodVeiculo.Text.Trim();
+
+                            var objVeiculo = new Domain.ConsultaVeiculo
+                            {
+                                codvei = codigoAgregado
+                            };
+                            var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
+                            if (ConsultaVeiculo != null)
+                            {
+                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+                                txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+                                txtCET.Text = ConsultaVeiculo.venclicencacet;
+                                txtCarreta.Text = ConsultaVeiculo.tiporeboque;
+                                txtTecnologia.Text = ConsultaVeiculo.rastreador;
+                                txtRastreamento.Text = ConsultaVeiculo.rastreamento;
+                                txtConjunto.Text = ConsultaVeiculo.tipocarreta;
+                                txtCodProprietario.Text = ConsultaVeiculo.codtra;
+                                txtProprietario.Text = ConsultaVeiculo.transp;
+
+                            }
+                        }
+                        // pesquisar primeiro reboque
+                        if (txtReboque1.Text.Trim() != "")
+                        {
+                            var placaReboque1 = txtReboque1.Text.Trim();
+
+                            var objCarreta = new Domain.ConsultaReboque
+                            {
+                                placacarreta = placaReboque1
+                            };
+                            var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
+                            if (ConsultaReboque != null)
+                            {
+                                txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
+                            }
+                        }
+
+                        // pesquisar segundo reboque
+                        if (txtReboque2.Text.Trim() != "")
+                        {
+                            var placaReboque2 = txtReboque2.Text.Trim();
+
+                            var objCarreta = new Domain.ConsultaReboque
+                            {
+                                placacarreta = placaReboque2
+                            };
+                            var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
+                            if (ConsultaReboque != null)
+                            {
+                                txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
+                            }
+                        }
+
+                        txtCodVeiculo.Focus();
+                    }
+                }
+                else
+                {
+
+                    string nomeUsuario = txtUsuCadastro.Text;
+
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Motorista " + codigo + ", não cadastrado no sistema.";
+                    string linha3 = "Verifique o código digitado: " + codigo + ".";
+                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+
+                }
+
+            }
+
         }
 
         protected void btnSalvarOcorrencia_Click(object sender, EventArgs e)

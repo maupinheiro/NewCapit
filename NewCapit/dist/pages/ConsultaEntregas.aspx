@@ -173,10 +173,10 @@
                                                                     <th>COLETA</th>
                                                                     <th>CVA</th>
                                                                     <th>DATA COLETA</th>
-                                                                    <th>CODIGO</th>
-                                                                    <th>ORIGEM</th>
-                                                                    <th>CODIGO</th>
-                                                                    <th>DESTINO</th>
+                                                                    <%--<th>CODIGO</th>--%>
+                                                                    <th>LOCAL DA COLETA</th>
+                                                                    <%--<th>CODIGO</th>--%>
+                                                                    <th>LOCAL DE ENTREGA</th>
                                                                     <th>ATENDIMENTO</th>
                                                                 </tr>
                                                             </thead>
@@ -187,9 +187,9 @@
                                                             <td><%# Eval("carga") %></td>
                                                             <td><%# Eval("cva") %></td>
                                                             <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                            <td><%# Eval("CodigoO") %></td>
+                                                           <%-- <td><%# Eval("CodigoO") %></td>--%>
                                                             <td><%# Eval("cliorigem") %></td>
-                                                            <td><%# Eval("CodigoD") %></td>
+                                                            <%--<td><%# Eval("CodigoD") %></td>--%>
                                                             <td><%# Eval("clidestino") %></td>
                                                             <td runat="server" id="tdAtendimento">
                                                                 <asp:Label ID="lblAtendimento" runat="server" Text='<%# Eval("atendimento") %>' />

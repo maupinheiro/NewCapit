@@ -131,16 +131,12 @@
     </script>
     <div class="content-wrapper">
         <div class="container-fluid">
+            </br>
             <div class="card card-info">
                 <div class="card-header">
-                    <div class="d-sm-flex align-items-left justify-content-between mb-3">
-                        <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -                             
-                            <asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
-                        <%--<h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;
-                                <asp:Label ID="txtFilial" runat="server">CNT</asp:Label></h3>--%>
-                    </div>
+                    <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA - <asp:Label ID="novaColeta" runat="server"></asp:Label> </h3>
                 </div>
-            </div>
+            </div>            
         </div>
         <div class="card-header">
             <div class="row g-3">
@@ -148,36 +144,32 @@
                     <div class="form-group">
                         <span class="details">MOTORISTA:</span>
                         <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
-                        <asp:TextBox ID="txtCodMotorista" runat="server" font-weight="bold" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" OnTextChanged="txtCodMotorista_TextChanged" AutoPostBack="true" ></asp:TextBox>
                     </div>
-                </div>
-                <div class="col-md-1">
-                    <br />
-                    <asp:Button ID="btnPesquisarMotorista" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarMotorista_Click" />
-                </div>
+                </div>                
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FILIAL:</span>
-                        <asp:TextBox ID="txtFilialMot" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtFilialMot" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">TIPO DE MOTORISTA:</span>
-                        <asp:TextBox ID="txtTipoMot" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtTipoMot" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FUNÇÃO:</span>
-                        <asp:TextBox ID="txtFuncao" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtFuncao" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">EX.TOXIC.:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtExameToxic" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtExameToxic" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -185,7 +177,7 @@
                     <div class="form-group">
                         <span class="details">VAL. CNH:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCNH" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCNH" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -193,13 +185,12 @@
                     <div class="form-group">
                         <span class="details">VAL. GR.:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtLibGR" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtLibGR" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-
                         <img src="<%=fotoMotorista%>" class="rounded float-right" height="80" width="80" alt="User Image">
                     </div>
                 </div>
@@ -208,14 +199,14 @@
                 <div class="col-md-5">
                     <div class="form-group">
                         <span class="details">NOME COMPLETO:</span>
-                        <asp:TextBox ID="txtNomMot" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtNomMot" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">CPF:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCPF" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCPF" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -223,7 +214,7 @@
                     <div class="form-group">
                         <span class="details">CARTÃO PAMCARD:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCartao" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCartao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -231,7 +222,7 @@
                     <div class="form-group">
                         <span class="details">MÊS/ANO:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtValCartao" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtValCartao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -239,7 +230,7 @@
                     <div class="form-group">
                         <span class="details">CELULAR:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCelular" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCelular" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -248,7 +239,7 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CÓD./FROTA:</span>
-                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" ></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -258,13 +249,13 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FILIAL:</span>
-                        <asp:TextBox ID="txtFilialVeicCNT" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtFilialVeicCNT" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">TIPO DE VEÍCULO:</span>
-                        <asp:TextBox ID="txtVeiculoTipo" runat="server" Style="text-align: center" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtVeiculoTipo" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
@@ -272,7 +263,7 @@
                     <div class="form-group">
                         <span class="details">OPACIDADE:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtOpacidade" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtOpacidade" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -280,29 +271,29 @@
                     <div class="form-group">
                         <span class="details">LICENÇA CET:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCET" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCET" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">VAL. CRLV:</span>
-                        <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                        <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <span class="details">VAL. CRLV REB.:</span>
+                        <span class="details">CRLV REB1:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <span class="details">VAL. CRLV REB.:</span>
+                        <span class="details">CRLV REB2:</span>
                         <div class="input-group">
-                            <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                            <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -311,49 +302,49 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">PLACA:</span>
-                        <asp:TextBox ID="txtPlaca" runat="server" class="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                        <asp:TextBox ID="txtPlaca" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">VEICULO:</span>
-                        <asp:TextBox ID="txtTipoVeiculo" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtTipoVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">REBOQUE:</span>
-                        <asp:TextBox ID="txtReboque1" runat="server" class="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                        <asp:TextBox ID="txtReboque1" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">REBOQUE:</span>
-                        <asp:TextBox ID="txtReboque2" runat="server" class="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                        <asp:TextBox ID="txtReboque2" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CARRETA(S):</span>
-                        <asp:TextBox ID="txtCarreta" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCarreta" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">TECNOLOGIA:</span>
-                        <asp:TextBox ID="txtTecnologia" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtTecnologia" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">RASTREAMENTO:</span>
-                        <asp:TextBox ID="txtRastreamento" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtRastreamento" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <span class="details">CONJUNTO:</span>
-                        <asp:TextBox ID="txtConjunto" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtConjunto" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
 
@@ -362,25 +353,25 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CÓDIGO:</span>
-                        <asp:TextBox ID="txtCodProprietario" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCodProprietario" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-7">
                     <div class="form-group">
                         <span class="details">PROPRIETÁRIO:</span>
-                        <asp:TextBox ID="txtProprietario" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtProprietario" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <span class="details">VEÍCULO:</span>
-                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <span class="details">CONTATO:</span>
+                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" ></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FONE CORPORATIVO:</span>
-                        <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -388,46 +379,7 @@
                     <asp:Button ID="btnPesquisarContato" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarContato_Click" />
                 </div>
             </div>
-            <%--<div class="row g-3">
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <span class="details">CÓDIGO:</span>
-                        <asp:TextBox ID="codCliInicial" runat="server" class="form-control" placeholder=""></asp:TextBox>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <span class="details">INICIO DA PRESTAÇÃO:</span>
-                        <asp:DropDownList ID="ddlCliInicial" runat="server" OnTextChanged="ddlCliInicial_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <span class="details">CÓDIGO:</span>
-                        <asp:TextBox ID="codCliFinal" runat="server" class="form-control" placeholder=""></asp:TextBox>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <span class="details">TERMINO DA PRESTAÇÃO:</span>
-                        <asp:DropDownList ID="ddlCliFinal" runat="server" OnTextChanged="ddlCliFinal_TextChanged" AutoPostBack="True" class="form-control select2"></asp:DropDownList>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form_group">
-                        <span class="details">Tipo de Veículo:</span>
-                        <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
-                        </asp:DropDownList>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <span class="details">Distância:</span>
-                        <asp:TextBox ID="txtDistancia" runat="server" class="form-control" placeholder=""></asp:TextBox>
-                    </div>
-                </div>
 
-            </div>--%>
             <div class="row g-3">
                 <div class="col-md-12">
                     <div class="card">
@@ -442,10 +394,11 @@
                                                 <th>COLETA</th>
                                                 <th>CVA</th>
                                                 <th>DATA COLETA</th>
-                                                <th>CODIGO</th>
-                                                <th>ORIGEM</th>
-                                                <th>CODIGO</th>
-                                                <th>DESTINO</th>
+                                                <%--<th>CODIGO</th>--%>
+                                                <th>LOCAL DA COLETA</th>
+                                                <%--<th>CODIGO</th>--%>
+                                                <th>LOCAL DA ENTREGA</th>
+                                                <th>STATUS</th>
                                                 <th>ATENDIMENTO</th>
                                             </tr>
                                         </thead>
@@ -456,10 +409,11 @@
                                         <td><%# Eval("carga") %></td>
                                         <td><%# Eval("cva") %></td>
                                         <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                        <td><%# Eval("CodigoO") %></td>
+                                        <%--<td><%# Eval("CodigoO") %></td>--%>
                                         <td><%# Eval("cliorigem") %></td>
-                                        <td><%# Eval("CodigoD") %></td>
+                                        <%--<td><%# Eval("CodigoD") %></td>--%>
                                         <td><%# Eval("clidestino") %></td>
+                                        <td><%# Eval("status") %></td>
                                         <td runat="server" id="tdAtendimento">
                                             <asp:Label ID="lblAtendimento" runat="server" />
                                         </td>
@@ -523,7 +477,7 @@
                                                 </div>
                                                 <!-- /.card-body -->
                                             </div>
-                                            
+
                                             <div class="card card-success">
                                                 <div class="card-header">
                                                     <h3 class="card-title">Atendimento da Coleta</h3>
