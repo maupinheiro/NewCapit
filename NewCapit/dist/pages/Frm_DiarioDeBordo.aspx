@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
+﻿    <%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -373,8 +373,8 @@
                             <asp:Button ID="btnMacromanual" runat="server" CssClass="btn btn-outline-info" Text="Inserir" ValidationGroup="Cadastro" OnClientClick="javascript:ConfirmMessage1();" OnClick="btnMacromanual_Click" />
 
                         </div>
-
-                        <div class="col-md-1" id="button" runat="server" cssclass="btn btn-outline-danger">
+                        <br />
+                        <div class="col-md-2" id="button" runat="server" cssclass="btn btn-outline-danger">
                             <br />
                         </div>
                     </div>
@@ -503,4 +503,4 @@
             toast.show();
         }
     </script>
-</asp:Content>
+    </asp:Content>
