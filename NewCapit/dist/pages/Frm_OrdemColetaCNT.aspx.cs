@@ -970,26 +970,9 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-
-                    string nomeUsuario = txtUsuCadastro.Text;
-
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Código " + codigo + ", não cadastrado no sistema.";
-                    string linha3 = "Verifique o código digitado: " + codigo + ".";                    
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    //// Gerando o script JavaScript para exibir o alerta
-                    string script = $"alert('{mensagemCodificada}');";
-
-                    //// Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                    txtCodFrota.Text = "";
-                    txtCodFrota.Focus();
-
+                   
+                    // Exemplo: abrir o modal ao carregar a página
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModalTelefone", "abrirModalTelefone();", true);
                 }
 
             }
@@ -1094,7 +1077,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT (CC)"));
                 cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
-                cmd.Parameters.AddWithValue("@situacao", "Pendente");
+                cmd.Parameters.AddWithValue("@situacao", "EM ANDAMENTO");
                 cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
                // cmd.Parameters.AddWithValue("@tipoveiculocnt", SafeValue(lblVeiculo));
                 //cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
@@ -1132,7 +1115,9 @@ namespace NewCapit.dist.pages
                     {
                         // Recuperar os valores dos controles
                         string carga = ((Label)item.FindControl("lblCarga"))?.Text; // ou Eval direto se não tiver Label
-                     
+                        string atendimento = ((Label)item.FindControl("lblAtendimento"))?.Text;
+
+
 
                         if (!string.IsNullOrEmpty(carga))
                         {
@@ -1145,6 +1130,7 @@ namespace NewCapit.dist.pages
                                                     frota=@frota,
                                                     status=@status,
                                                     andamento=@andamento,
+                                                    atendimento=@atendimento,
                                                     funcaomot=@funcaomot
                                                     WHERE carga = @carga";
 
@@ -1153,8 +1139,9 @@ namespace NewCapit.dist.pages
                                 cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
-                                cmdc.Parameters.AddWithValue("@status", "ANDAMENTO");
-                                cmdc.Parameters.AddWithValue("@andamento", "ANDAMENTO");
+                                cmdc.Parameters.AddWithValue("@status", "Pendente");
+                                cmdc.Parameters.AddWithValue("@andamento", "EM ANDAMENTO"); 
+                                    cmdc.Parameters.AddWithValue("@atendimento", atendimento);
                                 cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());
                                 cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
@@ -1395,12 +1382,13 @@ namespace NewCapit.dist.pages
             string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
             string ufDestino = txtUfDestino.Text.Trim().ToUpper();
+            int distancia = int.Parse(txtDistancia.Text.Trim());
 
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
@@ -1420,6 +1408,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
                 cmd.Parameters.AddWithValue("@empresa", "CNT (CC)"); // ou valor padrão
                 cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
+                cmd.Parameters.AddWithValue("@distancia", distancia);
 
                 // Abrindo a conexão e executando a query
                 conn.Open();
@@ -1437,6 +1426,44 @@ namespace NewCapit.dist.pages
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
                 }
             }
+
+        }
+
+        protected void btnCadContato_Click(object sender, EventArgs e)
+        {
+
+            
+            string codigoTelefone = txtCodContato.Text.Trim();
+            string numeroTelefone = txtCadCelular.Text;            
+
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbfoneveiculos (veiculo, numero)" +
+                  "VALUES (@veiculo,  @numero)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                
+                cmd.Parameters.AddWithValue("@veiculo", codigoTelefone);               
+                cmd.Parameters.AddWithValue("@numero", numeroTelefone);
+
+                // Abrindo a conexão e executando a query
+                conn.Open();
+                int rowsInserted = cmd.ExecuteNonQuery();
+
+                if (rowsInserted > 0)
+                {
+                    txtCodFrota.Text = txtCodContato.Text.Trim();
+                    txtFoneCorp.Text = txtCadCelular.Text;
+                }
+                else
+                {
+                    string mensagem = "Falha ao cadastrar telefone do motorista.";
+                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                }
+            }
+
+
 
         }
 

@@ -107,8 +107,7 @@
                                                     <th>MOTORISTA/PROPRIETÁRIO</th>
                                                     <th>ORD. COLETA</th>
                                                     <th>VEÍCULO</th>
-                                                    <th>TIPO DE VEÍCULO</th>                                                    
-                                                    <th>STATUS</th>
+                                                    <th>TIPO DE VEÍCULO</th> 
                                                     <th>ATENDIMENTO</th>
                                                     <th>AÇÃO</th>
                                                 </tr>
@@ -146,9 +145,9 @@
                                                 <br />
                                                 <%# Eval("nomclidestino") %>
                                             </td>--%>
-                                            <td><%# Eval("status") %></td>
+                                            <td><%# Eval("situacao") %></td>
 
-                                            <td>NO PRAZO</td>
+                                            
 
                                             <td>
                                                 <asp:LinkButton
@@ -177,6 +176,7 @@
                                                                     <th>LOCAL DA COLETA</th>
                                                                     <%--<th>CODIGO</th>--%>
                                                                     <th>LOCAL DE ENTREGA</th>
+                                                                    <th>STATUS</th>
                                                                     <th>ATENDIMENTO</th>
                                                                 </tr>
                                                             </thead>
@@ -191,6 +191,7 @@
                                                             <td><%# Eval("cliorigem") %></td>
                                                             <%--<td><%# Eval("CodigoD") %></td>--%>
                                                             <td><%# Eval("clidestino") %></td>
+                                                            <td><%# Eval("status") %></td>
                                                             <td runat="server" id="tdAtendimento">
                                                                 <asp:Label ID="lblAtendimento" runat="server" Text='<%# Eval("atendimento") %>' />
                                                             </td>

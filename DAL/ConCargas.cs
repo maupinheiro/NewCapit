@@ -57,7 +57,7 @@ namespace DAL
         public static DataTable FetchDataTableColetas2(string searchTerm)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT id, carga,cva,data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,emissao,empresa,codvworigem,codvwdestino,cadastro,tomador, atualizacao,cliorigem,cidorigem,clidestino,ciddestino, solicitante FROM tbcargas WHERE codmot is null and status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and carga=@searchTerm";
+            string sql = "SELECT id, carga,cva,data_hora,  (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,emissao,empresa,codvworigem,codvwdestino,cadastro,tomador, atualizacao,cliorigem,cidorigem,clidestino,ciddestino, solicitante FROM tbcargas WHERE codmot is null and status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and carga=@searchTerm";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -78,7 +78,7 @@ namespace DAL
         public static DataTable FetchDataTableColetas3(string idviagem)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT id, carga,cva,data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao FROM tbcargas WHERE  empresa = 'CNT (CC)' and fl_exclusao is null and idviagem=@idviagem";
+            string sql = "SELECT id, carga,cva,data_hora,  (select top 1  codvw+ '/' + codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao FROM tbcargas WHERE  empresa = 'CNT (CC)' and fl_exclusao is null and idviagem=@idviagem";
 
             using (var con = ConnectionUtil.GetConnection())
             {

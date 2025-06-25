@@ -18,6 +18,49 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function aplicarMascara(input, mascara) {
+                input.addEventListener("input", function () {
+                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+                    let resultado = "";
+                    let posicao = 0;
+
+                    for (let i = 0; i < mascara.length; i++) {
+                        if (mascara[i] === "0") {
+                            if (valor[posicao]) {
+                                resultado += valor[posicao];
+                                posicao++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            resultado += mascara[i];
+                        }
+                    }
+
+                    input.value = resultado;
+                });
+            }
+
+            // Pegando os elementos no ASP.NET            
+            let txtCadCelular = document.getElementById("<%= txtCadCelular.ClientID %>");
+            if (txtCadCelular) aplicarMascara(txtCadCelular, "(00) 0 0000-0000");
+        });
+    </script>
+    <script type="text/javascript">
+        function abrirModalTelefone() {
+            // Pega valor do TextBox do Web Forms            
+            var codigoFrota = document.getElementById('<%= txtCodFrota.ClientID %>').value;
+
+            // Define o valor no TextBox do modal
+            document.getElementById('<%= txtCodContato.ClientID %>').value = codigoFrota;
+
+            //$('#telefoneModal').modal('show');
+            $('#telefoneModal').modal({ backdrop: 'static', keyboard: false });
+        }
+    </script>
+
+    <script>
         function calcularTempoAgCarreg(item) {
             const chegada = item.querySelector('.chegada').value;
             const saida = item.querySelector('.saida').value;
@@ -129,14 +172,17 @@
 
         window.addEventListener('load', bindEventos);
     </script>
+    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
     <div class="content-wrapper">
         <div class="container-fluid">
             </br>
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA - <asp:Label ID="novaColeta" runat="server"></asp:Label> </h3>
+                    <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -
+                        <asp:Label ID="novaColeta" runat="server"></asp:Label>
+                    </h3>
                 </div>
-            </div>            
+            </div>
         </div>
         <div class="card-header">
             <div class="row g-3">
@@ -144,9 +190,9 @@
                     <div class="form-group">
                         <span class="details">MOTORISTA:</span>
                         <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
-                        <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" OnTextChanged="txtCodMotorista_TextChanged" AutoPostBack="true" ></asp:TextBox>
+                        <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" OnTextChanged="txtCodMotorista_TextChanged" AutoPostBack="true"></asp:TextBox>
                     </div>
-                </div>                
+                </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FILIAL:</span>
@@ -239,7 +285,7 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CÓD./FROTA:</span>
-                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" ></asp:TextBox>
+                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -269,7 +315,7 @@
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <span class="details">LICENÇA CET:</span>
+                        <span class="details">CET:</span>
                         <div class="input-group">
                             <asp:TextBox ID="txtCET" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                         </div>
@@ -277,7 +323,7 @@
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <span class="details">VAL. CRLV:</span>
+                        <span class="details">CRLV:</span>
                         <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                     </div>
                 </div>
@@ -365,7 +411,7 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CONTATO:</span>
-                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" ></asp:TextBox>
+                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -414,6 +460,7 @@
                                         <%--<td><%# Eval("CodigoD") %></td>--%>
                                         <td><%# Eval("clidestino") %></td>
                                         <td><%# Eval("status") %></td>
+                                        <%--<td><%# Eval("atendimento") %></td>--%>
                                         <td runat="server" id="tdAtendimento">
                                             <asp:Label ID="lblAtendimento" runat="server" />
                                         </td>
@@ -701,6 +748,52 @@
 
 
     </div>
+    <!-- Modal Bootstrap Cadastro de Telefone -->
+    <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                    <ContentTemplate>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="telefoneModalLabel">Cadastrar Contato</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="details">CÓDIGO:</span>
+                                        <asp:TextBox ID="txtCodContato" runat="server" class="form-control font-weight-bold"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <span class="details">CELULAR:</span>
+                                        <div class="input-group">
+                                            <asp:TextBox ID="txtCadCelular" runat="server" class="form-control font-weight-bold"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnCadContato_Click" />
+                        </div>
+                    </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="btnCadContato" EventName="Click" />
+                    </Triggers>
+                </asp:UpdatePanel>
+
+
+            </div>
+        </div>
+    </div>
+
+
     <!-- Modal -->
     <div class="modal fade bd-example-modal-xl" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">

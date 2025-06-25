@@ -11,11 +11,52 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function aplicarMascara(input, mascara) {
+                input.addEventListener("input", function () {
+                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+                    let resultado = "";
+                    let posicao = 0;
 
+                    for (let i = 0; i < mascara.length; i++) {
+                        if (mascara[i] === "0") {
+                            if (valor[posicao]) {
+                                resultado += valor[posicao];
+                                posicao++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            resultado += mascara[i];
+                        }
+                    }
+
+                    input.value = resultado;
+                });
+            }
+
+            // Pegando os elementos no ASP.NET            
+            let txtCadCelular = document.getElementById("<%= txtCadCelular.ClientID %>");
+            if (txtCadCelular) aplicarMascara(txtCadCelular, "(00) 0 0000-0000");
+        });
+    </script>
     <script type="text/javascript">
         function abrirModal() {
             //$('#meuModal').modal('show');
             $('#meuModal').modal({ backdrop: 'static', keyboard: false });
+        }
+    </script>
+    <script type="text/javascript">
+        function abrirModalTelefone() {
+            // Pega valor do TextBox do Web Forms            
+            var codigoFrota = document.getElementById('<%= txtCodFrota.ClientID %>').value;
+
+            // Define o valor no TextBox do modal
+            document.getElementById('<%= txtCodContato.ClientID %>').value = codigoFrota;
+
+            //$('#telefoneModal').modal('show');
+            $('#telefoneModal').modal({ backdrop: 'static', keyboard: false });
         }
     </script>
     <script>
@@ -282,7 +323,7 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">LICENÇA CET:</span>
+                            <span class="details">CET:</span>
                             <div class="input-group">
                                 <asp:TextBox ID="txtCET" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                             </div>
@@ -290,13 +331,13 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">VAL. CRLV:</span>
+                            <span class="details">CRLV:</span>
                             <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">VAL.CRLVREB1.:</span>
+                            <span class="details">CRLVREB1.:</span>
                             <div class="input-group">
                                 <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                             </div>
@@ -304,7 +345,7 @@
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <span class="details">VAL.CRLVREB2.:</span>
+                            <span class="details">CRLVREB2.:</span>
                             <div class="input-group">
                                 <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                             </div>
@@ -428,6 +469,7 @@
                                                             <th>LOCAL DA COLETA</th>
                                                             <%--<th>CODIGO</th>--%>
                                                             <th>LOCAL DE ENTREGA</th>
+                                                            <th>STATUS</th>
                                                             <th>ATENDIMENTO</th>
                                                             <th>AÇÕES</th>
                                                         </tr>
@@ -440,10 +482,11 @@
                                                         <asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>' /></td>
                                                     <td><%# Eval("cva") %></td>
                                                     <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                   <%-- <td><%# Eval("CodigoO") %></td>--%>
+                                                    <%-- <td><%# Eval("CodigoO") %></td>--%>
                                                     <td><%# Eval("cliorigem") %></td>
                                                     <%--<td><%# Eval("CodigoD") %></td>--%>
                                                     <td><%# Eval("clidestino") %></td>
+                                                    <td><%# Eval("status") %></td>
                                                     <td runat="server" id="tdAtendimento">
                                                         <asp:Label ID="lblAtendimento" runat="server" />
                                                     </td>
@@ -612,15 +655,15 @@
                                 <!-- colunas ocultas -->
                                 <div class="row g-3">
                                     <div class="col-md-10">
-                                        <div class="form-group">                                            
-                                            <asp:TextBox ID="txtMunicipioOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" ></asp:TextBox>
+                                        <div class="form-group">
+                                            <asp:TextBox ID="txtMunicipioOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <div class="form-group">                                            
-                                            <asp:TextBox ID="txtUfOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" ></asp:TextBox>
+                                        <div class="form-group">
+                                            <asp:TextBox ID="txtUfOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                                 <!-- fim das colunas ocultas -->
                                 <div class="row g-3">
@@ -648,21 +691,65 @@
                                 <!-- colunas ocultas -->
                                 <div class="row g-3">
                                     <div class="col-md-10">
-                                        <div class="form-group">                                            
-                                            <asp:TextBox ID="txtMunicipioDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" ></asp:TextBox>
+                                        <div class="form-group">
+                                            <asp:TextBox ID="txtMunicipioDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <div class="form-group">                                            
-                                            <asp:TextBox ID="txtUfDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" ></asp:TextBox>
+                                        <div class="form-group">
+                                            <asp:TextBox ID="txtUfDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                                 <!-- fim das colunas ocultas -->
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                                 <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnSalvarColeta_Click" />
+                            </div>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="btnSalvarColeta" EventName="Click" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Modal Bootstrap Cadastro de Telefone -->
+        <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                        <ContentTemplate>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="telefoneModalLabel">Cadastrar Contato</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <span class="details">CÓDIGO:</span>
+                                            <asp:TextBox ID="txtCodContato" runat="server" class="form-control font-weight-bold"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <span class="details">CELULAR:</span>
+                                            <div class="input-group">
+                                                <asp:TextBox ID="txtCadCelular" runat="server" class="form-control font-weight-bold"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnCadContato_Click" />
                             </div>
                         </ContentTemplate>
                         <Triggers>

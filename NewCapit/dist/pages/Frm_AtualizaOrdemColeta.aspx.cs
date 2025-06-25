@@ -1565,5 +1565,43 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        protected void btnCadContato_Click(object sender, EventArgs e)
+        {
+
+
+            string codigoTelefone = txtCodContato.Text.Trim();
+            string numeroTelefone = txtCadCelular.Text;
+
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbfoneveiculos (veiculo, numero)" +
+                  "VALUES (@veiculo,  @numero)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@veiculo", codigoTelefone);
+                cmd.Parameters.AddWithValue("@numero", numeroTelefone);
+
+                // Abrindo a conexão e executando a query
+                conn.Open();
+                int rowsInserted = cmd.ExecuteNonQuery();
+
+                if (rowsInserted > 0)
+                {
+                    txtCodFrota.Text = txtCodContato.Text.Trim();
+                    txtFoneCorp.Text = txtCadCelular.Text;
+                }
+                else
+                {
+                    string mensagem = "Falha ao cadastrar telefone do motorista.";
+                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                }
+            }
+
+
+
+        }
     }
 }
