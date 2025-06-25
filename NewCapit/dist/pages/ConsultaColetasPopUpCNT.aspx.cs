@@ -229,7 +229,7 @@ namespace NewCapit.dist.pages
                 string andamento = DataBinder.Eval(e.Row.DataItem, "andamento")?.ToString();
 
                 // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
-                int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
+                int colunaAtendimentoIndex = 3; // Ajustar conforme a posição real da coluna no GridView
                 TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
 
                
