@@ -244,6 +244,8 @@ namespace NewCapit.dist.pages
                     DataTable dtd = new DataTable();
                     adptd.Fill(dtd);
 
+                    
+
                     if (dto.Rows.Count == 0)
                         codigosNaoEncontrados.Add($"Cod Origem: {codOrigem} Nome:{coleta} ");
 
@@ -252,7 +254,14 @@ namespace NewCapit.dist.pages
 
                     if (dto.Rows.Count > 0 && dtd.Rows.Count > 0)
                     {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                        SqlDataAdapter adpta = new SqlDataAdapter("select Distancia from tbdistanciapremio where Origem=@Origem and UF_Origem=@UF_Origem and UF_Destino=@UF_Destino and Destino=@Destino", conn);
+                        adpta.SelectCommand.Parameters.AddWithValue("@UF_Origem", dto.Rows[0]["estcli"].ToString());
+                        adpta.SelectCommand.Parameters.AddWithValue("@Origem", dto.Rows[0]["cidcli"].ToString());
+                        adpta.SelectCommand.Parameters.AddWithValue("@UF_Destino", dtd.Rows[0]["cidcli"].ToString());
+                        adpta.SelectCommand.Parameters.AddWithValue("@Destino", dtd.Rows[0]["cidcli"].ToString());
+                        DataTable dta = new DataTable();
+                        adptd.Fill(dta);
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@carga", nr_carga);
                         cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
@@ -287,15 +296,16 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@remessa", remessa);
                         cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
                         cmd.Parameters.AddWithValue("@codvworigem", codOrigem);
-                        cmd.Parameters.AddWithValue("@codvwdestino", codDestino);                        
+                        cmd.Parameters.AddWithValue("@codvwdestino", codDestino);
+                        cmd.Parameters.AddWithValue("@distancia", dta.Rows[0]["Distancia"].ToString());
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             conn.Close();
                         
 
+                        }
                     }
-                  }
                 }
                 catch (Exception ex)
                 {
