@@ -94,6 +94,15 @@
         }
     }
 </script>
+    <script type="text/javascript">
+        function confirmarLogout(e) {
+            e.preventDefault(); // impede o redirecionamento imediato
+            if (confirm("Deseja realmente sair do sistema?")) {
+                window.location.href = "Login.aspx"; // redireciona se clicar em "OK"
+            }
+            // se clicar em "Cancelar", nada acontece
+        }
+    </script>
 <!-- layout-fixed -->
 <body class="hold-transition sidebar-mini layout-fixed">
     <form id="form1" runat="server">
@@ -580,6 +589,17 @@
                                     </li>--%>
                                 </ul>
                             </li>
+
+                           <li class="nav-item">
+                                <a href="#" class="nav-link" onclick="confirmarLogout(event)">
+                                    <i class="nav-icon fas fa-power-off"></i>
+                                    <p>
+                                        Sair
+                                    </p>
+                                </a>
+                            </li>
+
+                           
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->
