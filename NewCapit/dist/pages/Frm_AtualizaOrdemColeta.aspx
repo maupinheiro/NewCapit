@@ -145,37 +145,102 @@
         }
 
 
+        function validarDatas(item) {
+            const agora = new Date();
+
+            const chegadaOrigemInput = item.querySelector('.chegada');
+            const saidaOrigemInput = item.querySelector('.saida');
+            const chegadaDestinoInput = item.querySelector('.chegada-planta');
+            const entradaInput = item.querySelector('.entrada-planta');
+            const saidaPlantaInput = item.querySelector('.saida-planta');
+
+            const v1 = new Date(chegadaOrigemInput.value);
+            const v2 = new Date(saidaOrigemInput.value);
+            const v3 = new Date(chegadaDestinoInput.value);
+            const v4 = new Date(entradaInput.value);
+            const v5 = new Date(saidaPlantaInput.value);
+
+            // Limpa bordas
+            [chegadaOrigemInput, saidaOrigemInput, chegadaDestinoInput, entradaInput, saidaPlantaInput].forEach(campo => {
+                campo.style.border = "";
+            });
+
+            if (v1 > agora) {
+                chegadaOrigemInput.style.border = "2px solid red";
+                alert("Chegada do fornecedor não pode ser maior que a data e hora atuais.");
+                return;
+            }
+
+            if (v2 < v1 || v2 > agora) {
+                saidaOrigemInput.style.border = "2px solid red";
+                alert("Saída do fornecedor não pode ser anterior a chegada nem maior que a data e hora atuais.");
+                return;
+            }
+
+            if (v3 < v2 || v3 > agora) {
+                chegadaDestinoInput.style.border = "2px solid red";
+                alert("Chegada na planta não pode ser anterior a saída do fornecedor nem maior que a data e hora atuais.");
+                return;
+            }
+
+            if (v4 < v3 || v4 > agora) {
+                entradaInput.style.border = "2px solid red";
+                alert("Entrada na planta não pode ser anterior a chegada nem maior que a data e hora atuais.");
+                return;
+            }
+
+            if (v5 < v4 || v5 > agora) {
+                saidaPlantaInput.style.border = "2px solid red";
+                alert("Saída da planta não pode ser anterior a entrada nem maior que a data e hora atuais.");
+                return;
+            }
+        }
+
         function bindEventos() {
             const itens = document.querySelectorAll('.item-coleta');
             itens.forEach(item => {
                 // Parte 1: Espera fornecedor
                 const chegada = item.querySelector('.chegada');
                 const saida = item.querySelector('.saida');
-                chegada?.addEventListener('change', () => calcularTempoAgCarreg(item));
-                saida?.addEventListener('change', () => calcularTempoAgCarreg(item));
+                chegada?.addEventListener('change', () => {
+                    calcularTempoAgCarreg(item);
+                    validarDatas(item);
+                });
+                saida?.addEventListener('change', () => {
+                    calcularTempoAgCarreg(item);
+                    validarDatas(item);
+                });
 
                 // Parte 2: Espera Gate
                 const chegadaPlanta = item.querySelector('.chegada-planta');
                 const entrada = item.querySelector('.entrada-planta');
-                chegadaPlanta?.addEventListener('change', () => calcularTempoEsperaGate(item));
+                chegadaPlanta?.addEventListener('change', () => {
+                    calcularTempoEsperaGate(item);
+                    validarDatas(item);
+                });
                 entrada?.addEventListener('change', () => {
                     calcularTempoEsperaGate(item);
-                    calcularTempoDentroPlanta(item); // atualiza também dentro da planta ao alterar entrada
+                    calcularTempoDentroPlanta(item);
+                    validarDatas(item);
                 });
 
                 // Parte 3: Dentro da Planta
                 const saidaPlanta = item.querySelector('.saida-planta');
-                saidaPlanta?.addEventListener('change', () => calcularTempoDentroPlanta(item));
+                saidaPlanta?.addEventListener('change', () => {
+                    calcularTempoDentroPlanta(item);
+                    validarDatas(item);
+                });
             });
         }
 
-
         window.addEventListener('load', bindEventos);
     </script>
+    
+
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
     <div class="content-wrapper">
         <div class="container-fluid">
-            </br>
+            <br/>
             <div class="card card-info">
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-pallet"></i>&nbsp;ORDEM DE COLETA -
@@ -576,7 +641,7 @@
                                                                             CssClass="form-control chegada"
                                                                             Text='<%# Eval("chegadaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                             TextMode="DateTimeLocal"
-                                                                            Style="text-align: center" />
+                                                                            Style="text-align: center" onChange="validarDatas(item)"  />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -588,7 +653,7 @@
                                                                             CssClass="form-control saida"
                                                                             Text='<%# Eval("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                             TextMode="DateTimeLocal"
-                                                                            Style="text-align: center" />
+                                                                            Style="text-align: center" onChange="validarDatas(item)"  />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -613,7 +678,7 @@
                                                                             Text='<%# Eval("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                             CssClass="form-control chegada-planta"
                                                                             TextMode="DateTimeLocal"
-                                                                            Style="text-align: center" />
+                                                                            Style="text-align: center" onChange="validarDatas(item)"  />
 
                                                                     </div>
                                                                 </div>
@@ -626,7 +691,7 @@
                                                                             Text='<%# Eval("entradaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                             CssClass="form-control entrada-planta"
                                                                             TextMode="DateTimeLocal"
-                                                                            Style="text-align: center" />
+                                                                            Style="text-align: center" onChange="validarDatas(item)"  />
 
                                                                     </div>
                                                                 </div>
@@ -650,7 +715,7 @@
                                                                             Text='<%# Eval("saidaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                             CssClass="form-control saida-planta"
                                                                             TextMode="DateTimeLocal"
-                                                                            Style="text-align: center" />
+                                                                            Style="text-align: center" onChange="validarDatas(item)"  />
 
                                                                     </div>
                                                                 </div>

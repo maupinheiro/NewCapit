@@ -245,10 +245,10 @@ namespace NewCapit.dist.pages
                     adptd.Fill(dtd);
 
                     if (dto.Rows.Count == 0)
-                        codigosNaoEncontrados.Add($"Origem: {codOrigem}");
+                        codigosNaoEncontrados.Add($"Cod Origem: {codOrigem} Nome:{coleta} ");
 
                     if (dtd.Rows.Count == 0)
-                        codigosNaoEncontrados.Add($"Destino: {codDestino}");
+                        codigosNaoEncontrados.Add($"Destino: {codDestino} Nome:{plantaDestino}");
 
                     if (dto.Rows.Count > 0 && dtd.Rows.Count > 0)
                     {
