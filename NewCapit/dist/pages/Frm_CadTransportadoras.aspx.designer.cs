@@ -42,6 +42,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList cboPessoa;
 
         /// <summary>
+        /// Controle rfvcboPessoa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvcboPessoa;
+
+        /// <summary>
         /// Controle ddlTipo.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipo;
+
+        /// <summary>
+        /// Controle rfvddlTipo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvddlTipo;
 
         /// <summary>
         /// Controle cbFiliais.
@@ -69,6 +87,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCpf_Cnpj;
 
         /// <summary>
+        /// Controle rftxtCpf_Cnpj.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rftxtCpf_Cnpj;
+
+        /// <summary>
         /// Controle btnCnpj.
         /// </summary>
         /// <remarks>
@@ -87,6 +114,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtRazCli;
 
         /// <summary>
+        /// Controle rfvtxtRazCli.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtRazCli;
+
+        /// <summary>
         /// Controle txtAntt.
         /// </summary>
         /// <remarks>
@@ -94,6 +130,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAntt;
+
+        /// <summary>
+        /// Controle rfvtxtAntt.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtAntt;
 
         /// <summary>
         /// Controle txtDtCadastro.
@@ -123,6 +168,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtRg;
 
         /// <summary>
+        /// Controle rfvtxtRg.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtRg;
+
+        /// <summary>
         /// Controle txtFantasia.
         /// </summary>
         /// <remarks>
@@ -130,6 +184,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFantasia;
+
+        /// <summary>
+        /// Controle rfvtxtFantasia.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtFantasia;
 
         /// <summary>
         /// Controle txtContato.
@@ -168,6 +231,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCepCli;
 
         /// <summary>
+        /// Controle rfvtxtCepCli.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtCepCli;
+
+        /// <summary>
         /// Controle btnCep.
         /// </summary>
         /// <remarks>
@@ -186,6 +258,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtEndCli;
 
         /// <summary>
+        /// Controle rfvtxtEndCli.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtEndCli;
+
+        /// <summary>
         /// Controle txtNumero.
         /// </summary>
         /// <remarks>
@@ -193,6 +274,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumero;
+
+        /// <summary>
+        /// Controle rfvtxtNumero.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtNumero;
 
         /// <summary>
         /// Controle txtComplemento.
@@ -213,6 +303,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtBaiCli;
 
         /// <summary>
+        /// Controle rfvtxtBaiCli.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtBaiCli;
+
+        /// <summary>
         /// Controle txtCidCli.
         /// </summary>
         /// <remarks>
@@ -222,6 +321,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCidCli;
 
         /// <summary>
+        /// Controle rfvtxtCidCli.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtCidCli;
+
+        /// <summary>
         /// Controle txtEstCli.
         /// </summary>
         /// <remarks>
@@ -229,6 +337,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEstCli;
+
+        /// <summary>
+        /// Controle rfvtxtEstCli.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtEstCli;
 
         /// <summary>
         /// Controle txtDtUsu.

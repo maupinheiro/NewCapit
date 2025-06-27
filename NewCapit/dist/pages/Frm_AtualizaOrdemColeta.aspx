@@ -146,94 +146,126 @@
 
 
         function validarDatas(item) {
-            const agora = new Date();
+        const agora = new Date();
 
-            const chegadaOrigemInput = item.querySelector('.chegada');
-            const saidaOrigemInput = item.querySelector('.saida');
-            const chegadaDestinoInput = item.querySelector('.chegada-planta');
-            const entradaInput = item.querySelector('.entrada-planta');
-            const saidaPlantaInput = item.querySelector('.saida-planta');
+        const chegadaOrigemInput = item.querySelector('.chegada');
+        const saidaOrigemInput = item.querySelector('.saida');
+        const chegadaDestinoInput = item.querySelector('.chegada-planta');
+        const entradaInput = item.querySelector('.entrada-planta');
+        const saidaPlantaInput = item.querySelector('.saida-planta');
 
-            const v1 = new Date(chegadaOrigemInput.value);
-            const v2 = new Date(saidaOrigemInput.value);
-            const v3 = new Date(chegadaDestinoInput.value);
-            const v4 = new Date(entradaInput.value);
-            const v5 = new Date(saidaPlantaInput.value);
+        const v1 = new Date(chegadaOrigemInput.value);
+        const v2 = new Date(saidaOrigemInput.value);
+        const v3 = new Date(chegadaDestinoInput.value);
+        const v4 = new Date(entradaInput.value);
+        const v5 = new Date(saidaPlantaInput.value);
 
-            // Limpa bordas
-            [chegadaOrigemInput, saidaOrigemInput, chegadaDestinoInput, entradaInput, saidaPlantaInput].forEach(campo => {
-                campo.style.border = "";
-            });
+        // Limpa bordas
+        [chegadaOrigemInput, saidaOrigemInput, chegadaDestinoInput, entradaInput, saidaPlantaInput].forEach(campo => {
+            campo.style.border = "";
+        });
 
-            if (v1 > agora) {
-                chegadaOrigemInput.style.border = "2px solid red";
-                alert("Chegada do fornecedor não pode ser maior que a data e hora atuais.");
-                return;
-            }
+        // 🔒 Bloqueios de sequência obrigatória
+       
 
-            if (v2 < v1 || v2 > agora) {
-                saidaOrigemInput.style.border = "2px solid red";
-                alert("Saída do fornecedor não pode ser anterior a chegada nem maior que a data e hora atuais.");
-                return;
-            }
-
-            if (v3 < v2 || v3 > agora) {
-                chegadaDestinoInput.style.border = "2px solid red";
-                alert("Chegada na planta não pode ser anterior a saída do fornecedor nem maior que a data e hora atuais.");
-                return;
-            }
-
-            if (v4 < v3 || v4 > agora) {
-                entradaInput.style.border = "2px solid red";
-                alert("Entrada na planta não pode ser anterior a chegada nem maior que a data e hora atuais.");
-                return;
-            }
-
-            if (v5 < v4 || v5 > agora) {
-                saidaPlantaInput.style.border = "2px solid red";
-                alert("Saída da planta não pode ser anterior a entrada nem maior que a data e hora atuais.");
-                return;
-            }
+        if (!chegadaOrigemInput.value && saidaOrigemInput.value) {
+            saidaOrigemInput.style.border = "2px solid red";
+            alert("Preencha a chegada do fornecedor antes de preencher a saída.");
+            saidaOrigemInput.value = "";
+            return;
         }
 
-        function bindEventos() {
-            const itens = document.querySelectorAll('.item-coleta');
-            itens.forEach(item => {
-                // Parte 1: Espera fornecedor
-                const chegada = item.querySelector('.chegada');
-                const saida = item.querySelector('.saida');
-                chegada?.addEventListener('change', () => {
-                    calcularTempoAgCarreg(item);
-                    validarDatas(item);
-                });
-                saida?.addEventListener('change', () => {
-                    calcularTempoAgCarreg(item);
-                    validarDatas(item);
-                });
-
-                // Parte 2: Espera Gate
-                const chegadaPlanta = item.querySelector('.chegada-planta');
-                const entrada = item.querySelector('.entrada-planta');
-                chegadaPlanta?.addEventListener('change', () => {
-                    calcularTempoEsperaGate(item);
-                    validarDatas(item);
-                });
-                entrada?.addEventListener('change', () => {
-                    calcularTempoEsperaGate(item);
-                    calcularTempoDentroPlanta(item);
-                    validarDatas(item);
-                });
-
-                // Parte 3: Dentro da Planta
-                const saidaPlanta = item.querySelector('.saida-planta');
-                saidaPlanta?.addEventListener('change', () => {
-                    calcularTempoDentroPlanta(item);
-                    validarDatas(item);
-                });
-            });
+        if (!saidaOrigemInput.value && chegadaDestinoInput.value) {
+            chegadaDestinoInput.style.border = "2px solid red";
+            alert("Preencha a saída do fornecedor antes de preencher a chegada na planta.");
+            chegadaDestinoInput.value = "";
+            return;
         }
 
-        window.addEventListener('load', bindEventos);
+        if (!chegadaDestinoInput.value && entradaInput.value) {
+            entradaInput.style.border = "2px solid red";
+            alert("Preencha a chegada na planta antes de preencher a entrada.");
+            entradaInput.value = "";
+            return;
+        }
+
+        if (!entradaInput.value && saidaPlantaInput.value) {
+            saidaPlantaInput.style.border = "2px solid red";
+            alert("Preencha a entrada na planta antes de preencher a saída.");
+            saidaPlantaInput.value = "";
+            return;
+        }
+
+        // 📌 Validações de data e hora
+        if (v1 > agora) {
+            chegadaOrigemInput.style.border = "2px solid red";
+            alert("Chegada do fornecedor não pode ser no futuro.");
+            return;
+        }
+
+        if (v2 < v1 || v2 > agora) {
+            saidaOrigemInput.style.border = "2px solid red";
+            alert("Saída do fornecedor não pode ser antes da chegada nem no futuro.");
+            return;
+        }
+
+        if (v3 < v2 || v3 > agora) {
+            chegadaDestinoInput.style.border = "2px solid red";
+            alert("Chegada na planta não pode ser antes da saída do fornecedor nem no futuro.");
+            return;
+        }
+
+        if (v4 < v3 || v4 > agora) {
+            entradaInput.style.border = "2px solid red";
+            alert("Entrada na planta não pode ser antes da chegada nem no futuro.");
+            return;
+        }
+
+        if (v5 < v4 || v5 > agora) {
+            saidaPlantaInput.style.border = "2px solid red";
+            alert("Saída da planta não pode ser antes da entrada nem no futuro.");
+            return;
+        }
+    }
+
+    function bindEventos() {
+        const itens = document.querySelectorAll('.item-coleta');
+        itens.forEach(item => {
+            const chegada = item.querySelector('.chegada');
+            const saida = item.querySelector('.saida');
+            const chegadaPlanta = item.querySelector('.chegada-planta');
+            const entrada = item.querySelector('.entrada-planta');
+            const saidaPlanta = item.querySelector('.saida-planta');
+
+            chegada?.addEventListener('change', () => {
+                calcularTempoAgCarreg(item);
+                validarDatas(item);
+            });
+
+            saida?.addEventListener('change', () => {
+                calcularTempoAgCarreg(item);
+                validarDatas(item);
+            });
+
+            chegadaPlanta?.addEventListener('change', () => {
+                calcularTempoEsperaGate(item);
+                validarDatas(item);
+            });
+
+            entrada?.addEventListener('change', () => {
+                calcularTempoEsperaGate(item);
+                calcularTempoDentroPlanta(item);
+                validarDatas(item);
+            });
+
+            saidaPlanta?.addEventListener('change', () => {
+                calcularTempoDentroPlanta(item);
+                validarDatas(item);
+            });
+        });
+    }
+
+    window.addEventListener('load', bindEventos);
     </script>
     
 
@@ -608,7 +640,8 @@
                                                             <div class="form-group">
                                                                 <span class="details">Nº CVA:</span>
                                                                 <div class="input-group">
-                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Eval("cva") %>' CssClass="form-control" MaxLength="11" Style="text-align: center"></asp:TextBox>
+                                                                   <asp:TextBox ID="txtCVA" runat="server" CssClass="form-control" MaxLength="11" Text='<%# Bind("cva") %>' Style="text-align: center"></asp:TextBox>
+
 
                                                                 </div>
                                                             </div>
