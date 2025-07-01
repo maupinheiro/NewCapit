@@ -23,6 +23,7 @@ namespace NewCapit.dist.pages
         public string fotoMotorista;
         string codmot, caminhofoto;
         string num_coleta;
+        string status;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -196,27 +197,26 @@ namespace NewCapit.dist.pages
             txtFilialMot.Text = dt.Rows[0][38].ToString();
             txtTipoMot.Text = dt.Rows[0][128].ToString();
             txtExameToxic.Text = dt.Rows[0][129].ToString();
-            txtCNH.Text = dt.Rows[0][86].ToString();
+            txtCNH.Text = DateTime.Parse(dt.Rows[0][86].ToString()).ToString("dd/MM/yyyy");
             txtLibGR.Text = dt.Rows[0][130].ToString();
             txtNomMot.Text = dt.Rows[0][5].ToString();
             txtCPF.Text = dt.Rows[0][80].ToString();
             txtCartao.Text = dt.Rows[0][81].ToString();
-            txtValCartao.Text = dt.Rows[0][131].ToString();
+            txtValCartao.Text = DateTime.Parse(dt.Rows[0][131].ToString()).ToString("dd/MM/yyyy");
             txtCelular.Text = dt.Rows[0][10].ToString();
             txtFuncao.Text = dt.Rows[0][143].ToString();
-            if (txtCodMotorista.Text.Trim() != "")
-            {
+           
                 fotoMotorista = dt.Rows[0][87].ToString();
 
                 if (!File.Exists(fotoMotorista))
                 {
-                    fotoMotorista = dt.Rows[0][87].ToString();
+                    fotoMotorista ="../.."+ dt.Rows[0][87].ToString();
                 }
                 else
                 {
                     fotoMotorista = "../../fotos/usuario.jpg";
                 }
-            }
+           
             txtUsuCadastro.Text = dt.Rows[0][76].ToString();
             lblDtCadastro.Text = dt.Rows[0][77].ToString();
             txtCodFrota.Text = dt.Rows[0][7].ToString();
@@ -516,6 +516,7 @@ namespace NewCapit.dist.pages
             if (e.CommandName == "Atualizar")
             {
                 string carga = e.CommandArgument.ToString();
+                
 
                 // Recuperar os controles de dentro do item
                 TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
@@ -530,12 +531,30 @@ namespace NewCapit.dist.pages
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
                 TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
 
-
+               
                 // continue com os demais campos que quiser atualizar...
 
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
+                    
+                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null)
+                    {
+                        status = "Ag. Carreg.";
+                    }
+                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null && SafeDateValue(txtSaidaOrigem.Text.Trim()) != null)
+                    {
+                        status = "Em Transito";
+                    }
+                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null && SafeDateValue(txtSaidaOrigem.Text.Trim()) != null && SafeDateValue(txtEntrada.Text.Trim()) != null)
+                    {
+                        status = "Ag. Descarga.";
+                    }
+                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null && SafeDateValue(txtSaidaOrigem.Text.Trim()) != null && SafeDateValue(txtEntrada.Text.Trim()) != null && SafeDateValue(txtSaidaPlanta.Text.Trim()) != null)
+                    {
+                        status = "Concluido";
+                    }
+                    
                     string query = @"UPDATE tbcargas SET 
                                 cva = @cva, 
                                 gate = @gate, 
@@ -556,7 +575,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@carga", carga);
                     cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGate.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@status", status);
                     cmd.Parameters.AddWithValue("@chegadaorigem", SafeDateValue(txtChegadaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
@@ -636,6 +655,15 @@ namespace NewCapit.dist.pages
 
                     }
                 }
+            }
+            if (e.CommandName == "Coletas")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+                string idCarga = id.ToString(); // esse valor viria da lógica do seu código
+
+                string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
+                string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
+                ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
             }
         }
 

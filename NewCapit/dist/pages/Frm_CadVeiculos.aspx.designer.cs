@@ -591,13 +591,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtAntt;
 
         /// <summary>
-        /// Controle RequiredFieldValidator27.
+        /// Controle rfvtxtAntt.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator27;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtAntt;
 
         /// <summary>
         /// Controle lblDtCadastro.
