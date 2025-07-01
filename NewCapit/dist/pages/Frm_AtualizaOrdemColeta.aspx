@@ -777,7 +777,13 @@
                                                             <div class="col-md-1">
                                                                 <br />
                                                                 <asp:Button ID="btnAbrirModal" runat="server" Text="Ocorrência" CommandName="Ocorrencias" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-danger" />
+
                                                             </div>
+                                                              <div class="col-md-1">
+                                                                  <br />
+                                                                  <asp:Button ID="btnOrdemColeta" runat="server" Text="Impr. O.C." CommandName="Coletas" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-warning" />
+
+                                                              </div>
 
 
                                                         </div>

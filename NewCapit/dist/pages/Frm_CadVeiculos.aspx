@@ -363,7 +363,7 @@
                             <div class="form-group">
                                 <span class="details">ANTT/RNTRC:</span>
                                 <asp:TextBox ID="txtAntt" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
-                                 <asp:RequiredFieldValidator  ID="RequiredFieldValidator27" runat="server" ControlToValidate="txtAntt " InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                 <asp:RequiredFieldValidator  ID="rfvtxtAntt" runat="server" ControlToValidate="txtAntt" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                     </div>
