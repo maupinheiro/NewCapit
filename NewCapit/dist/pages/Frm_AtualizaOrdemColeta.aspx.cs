@@ -14,6 +14,7 @@ using System.Collections;
 using Org.BouncyCastle.Asn1.Cmp;
 using NPOI.SS.Formula.Functions;
 using Domain;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit.dist.pages
 {
@@ -202,7 +203,13 @@ namespace NewCapit.dist.pages
             txtNomMot.Text = dt.Rows[0][5].ToString();
             txtCPF.Text = dt.Rows[0][80].ToString();
             txtCartao.Text = dt.Rows[0][81].ToString();
-            txtValCartao.Text = DateTime.Parse(dt.Rows[0][131].ToString()).ToString("dd/MM/yyyy");
+            string val = dt.Rows[0][131].ToString();
+
+            if (!string.IsNullOrEmpty(val) && val != "NULL")
+            {
+                txtValCartao.Text = DateTime.Parse(val).ToString("dd/MM/yyyy");
+            }
+
             txtCelular.Text = dt.Rows[0][10].ToString();
             txtFuncao.Text = dt.Rows[0][143].ToString();
            
@@ -530,6 +537,7 @@ namespace NewCapit.dist.pages
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
                 TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
+                Label   lblMensagem = (Label)e.Item.FindControl("lblMensagem");
 
                
                 // continue com os demais campos que quiser atualizar...
@@ -537,24 +545,37 @@ namespace NewCapit.dist.pages
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
-                    
-                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null)
-                    {
-                        status = "Ag. Carreg.";
-                    }
-                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null && SafeDateValue(txtSaidaOrigem.Text.Trim()) != null)
-                    {
-                        status = "Em Transito";
-                    }
-                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null && SafeDateValue(txtSaidaOrigem.Text.Trim()) != null && SafeDateValue(txtEntrada.Text.Trim()) != null)
-                    {
-                        status = "Ag. Descarga.";
-                    }
-                    if (SafeDateValue(txtChegadaOrigem.Text.Trim()) != null && SafeDateValue(txtSaidaOrigem.Text.Trim()) != null && SafeDateValue(txtEntrada.Text.Trim()) != null && SafeDateValue(txtSaidaPlanta.Text.Trim()) != null)
+                    // Extrai os valores uma única vez
+                    var chegada = SafeDateValue2(txtChegadaOrigem.Text.Trim());
+                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
+                    var entrada = SafeDateValue2(txtEntrada.Text.Trim());
+                    var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
+
+                    if (chegada != null && saida != null && entrada != null && saidaPlanta != null)
                     {
                         status = "Concluido";
                     }
-                    
+                    else if (chegada != null && saida != null && entrada != null)
+                    {
+                        status = "Ag. Descarga.";
+                    }
+                    else if (chegada != null && saida != null)
+                    {
+                        status = "Em Transito";
+                    }
+                    else if (chegada != null)
+                    {
+                        status = "Ag. Carreg.";
+                    }
+                    else
+                    {
+                        status = "Pendente";
+                    }
+
+
+
+
+
                     string query = @"UPDATE tbcargas SET 
                                 cva = @cva, 
                                 gate = @gate, 
@@ -573,7 +594,7 @@ namespace NewCapit.dist.pages
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                   
                     cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGate.Text.Trim()));
                     cmd.Parameters.AddWithValue("@status", status);
                     cmd.Parameters.AddWithValue("@chegadaorigem", SafeDateValue(txtChegadaOrigem.Text.Trim()));
@@ -587,7 +608,38 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     // continue os parâmetros conforme seu banco
+                    string valorDigitado = txtCVA.Text.Trim();
 
+                    // Chama método que verifica no banco
+                    if (ExisteCarga(valorDigitado))
+                    {
+                       
+                        string linha1 = "CVA ja cadastrado em uma coleta!";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        // Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        // Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                        txtCVA.Text = "";
+                        txtCVA.Focus();
+                        cmd.Parameters.AddWithValue("@cva", "");
+                        
+
+                    }
+                    else
+                    {
+
+                        cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                        txtCVA.BackColor = System.Drawing.Color.LightGreen;
+
+                        // Ou exibir uma label de erro, etc.
+                    }
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -1226,6 +1278,17 @@ namespace NewCapit.dist.pages
 
 
         }
+        private DateTime? SafeDateValue2(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt;
+
+            return null;
+        }
 
         private object SafeDateValue(string input)
         {
@@ -1593,6 +1656,29 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        
+        private bool ExisteCarga(string numeroCarga)
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = "SELECT COUNT(*) FROM tbcargas WHERE cva = @numero";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@numero", numeroCarga);
+                    conn.Open();
+
+                    int count = (int)cmd.ExecuteScalar();
+                    existe = (count > 0);
+                }
+            }
+
+            return existe;
+        }
+
 
         protected void btnCadContato_Click(object sender, EventArgs e)
         {
