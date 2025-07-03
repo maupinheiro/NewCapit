@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="ConsultaVeiculos.aspx.cs" Inherits="NewCapit.ConsultaVeiculos" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="ControleCarretas.aspx.cs" Inherits="NewCapit.dist.pages.ControleCarretas" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -28,7 +27,7 @@
      <div class="content-header">
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-2 text-gray-800">
-                <i class="fas fa-shipping-fast"></i> &nbsp;Controle de Veículos</h1>
+                <i class="fa fa-truck"></i> &nbsp;Controle de Carretas</h1>
             <a href="/dist/pages/Frm_CadVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro
             </a>
@@ -42,7 +41,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                        Total de Veículos
+                                        Total de Carretas
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         <asp:Label ID="TotalVeiculos" runat="server" Text=""></asp:Label>
@@ -311,50 +310,25 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">              
-                <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                <asp:GridView runat="server" ID="gvCarretas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="idcarreta" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvCarretas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>   
-                        <asp:BoundField DataField="codvei" HeaderText="FROTA" />
-                        <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
-                        <asp:BoundField DataField="plavei" HeaderText="PLACA" />
-                        <asp:BoundField DataField="reboque1" HeaderText="REB1" />
-                        <asp:BoundField DataField="reboque2" HeaderText="REB2" />
-                        <asp:BoundField DataField="tipoveiculo" HeaderText="TIPO" />
+                        <asp:BoundField DataField="codcarreta" HeaderText="FROTA" />
+                        <asp:BoundField DataField="placacarreta" HeaderText="PLACA" />
+                        <asp:BoundField DataField="licenciamento" HeaderText="EXERCICIO" />
+                        <asp:BoundField DataField="modelo" HeaderText="MODELO" />
+                        <asp:BoundField DataField="anocarreta" HeaderText="ANO" />                        
+                        <asp:BoundField DataField="tiporeboque" HeaderText="TIPO" />
+                        <asp:BoundField DataField="descprop" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />
                         <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
-                        <asp:BoundField DataField="transp" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />                             
-                        <asp:BoundField DataField="ativo_inativo" HeaderText="STATUS"/> 
-                 
-                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
-                             <ItemTemplate >                              
-                                  <%--<asp:LinkButton ID="lnkEditar" runat="server" 
-                                    OnClick="Editar" 
-                                    CssClass="btn btn-primary btn-sm"
-                                    CommandArgument='<%# Eval("id") %>'>
-                                    <i class="fa fa-edit"></i> Editar
-                                </asp:LinkButton>--%>
-
-                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
-
-                               <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
-                                    <i class="fa fa-edit"></i>
-                                    Editar
-                                 </a> --%>
-                         
-                                 <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
-                                    <i class="fas fa-map-marker-alt"></i> Mapa
-                                 </a> 
-                                <%--  <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="ConfirmMessage();" ><i class="fa fa-trash"></i></i>
-                                      </asp:LinkButton>--%>
-                        
-                                 <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
-                                    <i class="fa fa-trash"></i>                                    
-                                    Excluir
-                                 </a> --%>
-                         
+                        <asp:BoundField DataField="frota" HeaderText="ATRELADA" />
+                        <asp:BoundField DataField="placa" HeaderText="CAVALO" />
+                        <asp:BoundField DataField="ativo_inativo" HeaderText="STATUS"/>                  
+                        <asp:TemplateField HeaderText="AÇÃO" ShowHeader="True">
+                             <ItemTemplate > 
+                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>  
                              </ItemTemplate>
                         </asp:TemplateField>
-
-               
                     </Columns>
                 </asp:GridView>
          
@@ -370,23 +344,5 @@
     <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
 </footer>
 
-<!-- Page specific script -->
-<script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-</script>
 
 </asp:Content>

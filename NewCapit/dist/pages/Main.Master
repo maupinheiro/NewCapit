@@ -500,13 +500,13 @@
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link">
                                             <i class="fas fa-shipping-fast nav-icon"></i>
-                                            <p>Consulta</p>
+                                            <p>Controle de Veículos</p>
                                         </a>
                                     </li>
-                                    <%--<li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Consulta Carretas</p>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ControleCarretas.aspx" class="nav-link">
+                                            <i class="fa fa-truck"></i>
+                                            <p> Controle de Carretas</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -532,7 +532,7 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Atualizar CRLV</p>
                                         </a>
-                                    </li>--%>
+                                    </li>
                                 </ul>
                             </li>
 

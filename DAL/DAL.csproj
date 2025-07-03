@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Clientes.cs" />
     <Compile Include="ConAgregados.cs" />
+    <Compile Include="ConCarretas.cs" />
     <Compile Include="ConEntrega.cs" />
     <Compile Include="ConCargas.cs" />
     <Compile Include="ConMotoristas.cs" />
