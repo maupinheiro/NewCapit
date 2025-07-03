@@ -236,6 +236,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
+    <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="fotos\1010.jpg" />
@@ -4564,6 +4565,13 @@
     </Compile>
     <Compile Include="dist\pages\ImportarPlanejamento.aspx.designer.cs">
       <DependentUpon>ImportarPlanejamento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\OrdemColetaImpressaoIndividual.aspx.cs">
+      <DependentUpon>OrdemColetaImpressaoIndividual.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\OrdemColetaImpressaoIndividual.aspx.designer.cs">
+      <DependentUpon>OrdemColetaImpressaoIndividual.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\OrdemColetaImpressao.aspx.cs">
       <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>

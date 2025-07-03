@@ -14,6 +14,7 @@ using System.Collections;
 using Org.BouncyCastle.Asn1.Cmp;
 using NPOI.SS.Formula.Functions;
 using Domain;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit.dist.pages
 {
@@ -23,6 +24,7 @@ namespace NewCapit.dist.pages
         public string fotoMotorista;
         string codmot, caminhofoto;
         string num_coleta;
+        string status;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -196,27 +198,32 @@ namespace NewCapit.dist.pages
             txtFilialMot.Text = dt.Rows[0][38].ToString();
             txtTipoMot.Text = dt.Rows[0][128].ToString();
             txtExameToxic.Text = dt.Rows[0][129].ToString();
-            txtCNH.Text = dt.Rows[0][86].ToString();
+            txtCNH.Text = DateTime.Parse(dt.Rows[0][86].ToString()).ToString("dd/MM/yyyy");
             txtLibGR.Text = dt.Rows[0][130].ToString();
             txtNomMot.Text = dt.Rows[0][5].ToString();
             txtCPF.Text = dt.Rows[0][80].ToString();
             txtCartao.Text = dt.Rows[0][81].ToString();
-            txtValCartao.Text = dt.Rows[0][131].ToString();
+            string val = dt.Rows[0][131].ToString();
+
+            if (!string.IsNullOrEmpty(val) && val != "NULL")
+            {
+                txtValCartao.Text = DateTime.Parse(val).ToString("dd/MM/yyyy");
+            }
+
             txtCelular.Text = dt.Rows[0][10].ToString();
             txtFuncao.Text = dt.Rows[0][143].ToString();
-            if (txtCodMotorista.Text.Trim() != "")
-            {
+           
                 fotoMotorista = dt.Rows[0][87].ToString();
 
                 if (!File.Exists(fotoMotorista))
                 {
-                    fotoMotorista = dt.Rows[0][87].ToString();
+                    fotoMotorista ="../.."+ dt.Rows[0][87].ToString();
                 }
                 else
                 {
                     fotoMotorista = "../../fotos/usuario.jpg";
                 }
-            }
+           
             txtUsuCadastro.Text = dt.Rows[0][76].ToString();
             lblDtCadastro.Text = dt.Rows[0][77].ToString();
             txtCodFrota.Text = dt.Rows[0][7].ToString();
@@ -516,6 +523,7 @@ namespace NewCapit.dist.pages
             if (e.CommandName == "Atualizar")
             {
                 string carga = e.CommandArgument.ToString();
+                
 
                 // Recuperar os controles de dentro do item
                 TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
@@ -529,13 +537,45 @@ namespace NewCapit.dist.pages
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
                 TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
+                Label   lblMensagem = (Label)e.Item.FindControl("lblMensagem");
 
-
+               
                 // continue com os demais campos que quiser atualizar...
 
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
+                    // Extrai os valores uma única vez
+                    var chegada = SafeDateValue2(txtChegadaOrigem.Text.Trim());
+                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
+                    var entrada = SafeDateValue2(txtEntrada.Text.Trim());
+                    var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
+
+                    if (chegada != null && saida != null && entrada != null && saidaPlanta != null)
+                    {
+                        status = "Concluido";
+                    }
+                    else if (chegada != null && saida != null && entrada != null)
+                    {
+                        status = "Ag. Descarga.";
+                    }
+                    else if (chegada != null && saida != null)
+                    {
+                        status = "Em Transito";
+                    }
+                    else if (chegada != null)
+                    {
+                        status = "Ag. Carreg.";
+                    }
+                    else
+                    {
+                        status = "Pendente";
+                    }
+
+
+
+
+
                     string query = @"UPDATE tbcargas SET 
                                 cva = @cva, 
                                 gate = @gate, 
@@ -554,9 +594,9 @@ namespace NewCapit.dist.pages
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                   
                     cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGate.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@status", status);
                     cmd.Parameters.AddWithValue("@chegadaorigem", SafeDateValue(txtChegadaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
@@ -568,7 +608,38 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     // continue os parâmetros conforme seu banco
+                    string valorDigitado = txtCVA.Text.Trim();
 
+                    // Chama método que verifica no banco
+                    if (ExisteCarga(valorDigitado))
+                    {
+                       
+                        string linha1 = "CVA ja cadastrado em uma coleta!";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        // Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        // Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                        txtCVA.Text = "";
+                        txtCVA.Focus();
+                        cmd.Parameters.AddWithValue("@cva", "");
+                        
+
+                    }
+                    else
+                    {
+
+                        cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                        txtCVA.BackColor = System.Drawing.Color.LightGreen;
+
+                        // Ou exibir uma label de erro, etc.
+                    }
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -636,6 +707,15 @@ namespace NewCapit.dist.pages
 
                     }
                 }
+            }
+            if (e.CommandName == "Coletas")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+                string idCarga = id.ToString(); // esse valor viria da lógica do seu código
+
+                string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
+                string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
+                ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
             }
         }
 
@@ -1198,6 +1278,17 @@ namespace NewCapit.dist.pages
 
 
         }
+        private DateTime? SafeDateValue2(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt;
+
+            return null;
+        }
 
         private object SafeDateValue(string input)
         {
@@ -1565,6 +1656,29 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        
+        private bool ExisteCarga(string numeroCarga)
+        {
+            bool existe = false;
+
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = "SELECT COUNT(*) FROM tbcargas WHERE cva = @numero";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@numero", numeroCarga);
+                    conn.Open();
+
+                    int count = (int)cmd.ExecuteScalar();
+                    existe = (count > 0);
+                }
+            }
+
+            return existe;
+        }
+
 
         protected void btnCadContato_Click(object sender, EventArgs e)
         {

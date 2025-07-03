@@ -33,6 +33,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoMot;
 
         /// <summary>
+        /// Controle rfddlTipoMot.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfddlTipoMot;
+
+        /// <summary>
         /// Controle ddlCargo.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlFuncao;
+
+        /// <summary>
+        /// Controle rfvddlFuncao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvddlFuncao;
 
         /// <summary>
         /// Controle cbFiliais.

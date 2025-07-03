@@ -61,13 +61,13 @@
                             <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                  <%--  <div class="col-md-2">
                         <div class="form_group">
                             <span class="details">Tipo de Veículo:</span>
                             <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
                             </asp:DropDownList>
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="col-md-2">
                         <br />
                         <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>

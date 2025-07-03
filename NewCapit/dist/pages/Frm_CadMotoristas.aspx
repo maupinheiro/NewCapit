@@ -142,6 +142,7 @@
                             <asp:ListItem Value="FUNCIONÁRIO TERCEIRO" Text="FUNCIONÁRIO TERCEIRO"></asp:ListItem>
 
                         </asp:DropDownList>
+                         <asp:RequiredFieldValidator  ID="rfddlTipoMot" runat="server" ControlToValidate="ddlTipoMot" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -161,12 +162,14 @@
                             <asp:ListItem Value="TERM. IPIRANGA" Text="TERM. IPIRANGA"></asp:ListItem>
                             <asp:ListItem Value="OUTRO" Text="OUTRO"></asp:ListItem>
                         </asp:DropDownList>
+                         <asp:RequiredFieldValidator  ID="rfvddlFuncao" runat="server" ControlToValidate="ddlFuncao" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form_group">
                         <span class="details">FILIAL:</span>
                         <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
+
                     </div>
                 </div>
                 <div class="col-md-2"></div>
@@ -190,6 +193,7 @@
                     <div class="form-group">
                         <span class="details">NOME COMPLETO:</span>
                         <asp:TextBox ID="txtNomMot" runat="server" class="form-control" placeholder="" MaxLength="50"></asp:TextBox>
+
                     </div>
                 </div>
                 <div class="col-md-1">

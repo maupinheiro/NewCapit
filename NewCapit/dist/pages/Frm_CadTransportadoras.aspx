@@ -66,7 +66,9 @@
                                     <asp:ListItem Text="Selecione..." Value="0" />
                                     <asp:ListItem Value="FÍSICA" Text="FÍSICA"></asp:ListItem>
                                     <asp:ListItem Value="JURÍDICA" Text="JURÍDICA"></asp:ListItem>
+
                                 </asp:DropDownList>
+                                <asp:RequiredFieldValidator  ID="rfvcboPessoa" runat="server" ControlToValidate="cboPessoa" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -78,6 +80,7 @@
                                     <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
                                     <asp:ListItem Value="EMPRESA" Text="EMPRESA"></asp:ListItem>
                                 </asp:DropDownList>
+                                <asp:RequiredFieldValidator  ID="rfvddlTipo" runat="server" ControlToValidate="ddlTipo" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -95,6 +98,7 @@
                             <div class="form-group">
                                 <span class="details">CPF/CNPJ:</span>
                                 <asp:TextBox ID="txtCpf_Cnpj" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rftxtCpf_Cnpj" ControlToValidate="txtCpf_Cnpj" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -105,12 +109,14 @@
                             <div class="form-group">
                                 <span class="details">PROPRIETÁRIO/RAZÃO SOCIAL:</span>
                                 <asp:TextBox ID="txtRazCli" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtRazCli" ControlToValidate="txtRazCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">ANTT/RNTRC:</span>
                                 <asp:TextBox ID="txtAntt" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtAntt" ControlToValidate="txtAntt" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -134,12 +140,14 @@
                             <div class="form-group">
                                 <span class="details">RG/INSC. ESTADUAL:</span>
                                 <asp:TextBox ID="txtRg" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtRg" ControlToValidate="txtRg" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <span class="details">NOME FANTASIA:</span>
                                 <asp:TextBox ID="txtFantasia" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtFantasia" ControlToValidate="txtFantasia" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -166,6 +174,7 @@
                             <div class="form-group">
                                 <span class="details">CEP:</span>
                                 <asp:TextBox ID="txtCepCli" runat="server" CssClass="form-control" placeholder="99999-999" MaxLength="9"></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtCepCli" ControlToValidate="txtCepCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -178,12 +187,14 @@
                             <div class="form-group">
                                 <span class="details">ENDEREÇO:</span>
                                 <asp:TextBox ID="txtEndCli" runat="server" CssClass="form-control" MaxLength="60"></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtEndCli" ControlToValidate="txtEndCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">Nº:</span>
                                 <asp:TextBox ID="txtNumero" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtNumero" ControlToValidate="txtNumero" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -198,18 +209,21 @@
                             <div class="form-group">
                                 <span class="details">BAIRRO:</span>
                                 <asp:TextBox ID="txtBaiCli" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtBaiCli" ControlToValidate="txtBaiCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">MUNICIPIO:</span>
                                 <asp:TextBox ID="txtCidCli" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtCidCli" ControlToValidate="txtCidCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">UF:</span>
                                 <asp:TextBox ID="txtEstCli" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="2"></asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" id="rfvtxtEstCli" ControlToValidate="txtEstCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -229,7 +243,7 @@
                     <div class="row g-3">
                         <div class="col-md-1">
                             <br />
-                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" OnClick="btnSalvar_Click" />
+                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" Text="Cadastrar" OnClick="btnSalvar_Click" />
                         </div>
                         <div class="col-md-1">
                             <br />

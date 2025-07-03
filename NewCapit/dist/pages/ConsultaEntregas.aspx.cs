@@ -16,10 +16,11 @@ namespace NewCapit.dist.pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            PreencherComboStatus();
-            PreencherVeiculosCNT();
+           
             if(!IsPostBack)
             {
+                PreencherComboStatus();
+                //PreencherVeiculosCNT();
                 CarregarColetas();
             }
             
@@ -59,41 +60,41 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void PreencherVeiculosCNT()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, descricao FROM tbtiposveiculoscnt order by descricao";
+        //private void PreencherVeiculosCNT()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT id, descricao FROM tbtiposveiculoscnt order by descricao";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlVeiculosCNT.DataSource = reader;
-                    ddlVeiculosCNT.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    ddlVeiculosCNT.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlVeiculosCNT.DataBind();  // Realiza o binding dos dados                   
-                    ddlVeiculosCNT.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            ddlVeiculosCNT.DataSource = reader;
+        //            ddlVeiculosCNT.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+        //            ddlVeiculosCNT.DataValueField = "id";  // Campo que será o valor de cada item                    
+        //            ddlVeiculosCNT.DataBind();  // Realiza o binding dos dados                   
+        //            ddlVeiculosCNT.Items.Insert(0, new ListItem("Selecione...", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
 
         private void CarregarColetas()
         {
@@ -116,7 +117,7 @@ namespace NewCapit.dist.pages
             string dataInicial = txtInicioData.Text.Trim();
             string dataFinal = txtFimData.Text.Trim();
             string status = (ddlStatus.SelectedValue != "0") ? ddlStatus.SelectedValue : null;
-            string veiculo = (ddlVeiculosCNT.SelectedValue != "0") ? ddlVeiculosCNT.SelectedValue : null;
+            //string veiculo = (ddlVeiculosCNT.SelectedValue != "0") ? ddlVeiculosCNT.SelectedValue : null;
 
             if (!string.IsNullOrWhiteSpace(dataInicial) && DateTime.TryParse(dataInicial, out DateTime parsedDataInicial))
             {
@@ -128,7 +129,7 @@ namespace NewCapit.dist.pages
                 dtFinal = parsedDataFinal;
             }
 
-            var novosDados = DAL.ConEntrega.FetchDataTable2(dtInicial, dtFinal, status, veiculo);
+            var novosDados = DAL.ConEntrega.FetchDataTable2(dtInicial, dtFinal, status);
 
             rptCarregamento.DataSource = novosDados;
             rptCarregamento.DataBind();
