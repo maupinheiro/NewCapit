@@ -226,7 +226,13 @@ namespace NewCapit.dist.pages
                 string previsaoStr = DataBinder.Eval(e.Row.DataItem, "previsao")?.ToString();
                 string dataHoraStr = DataBinder.Eval(e.Row.DataItem, "data_hora")?.ToString();
                 string status = DataBinder.Eval(e.Row.DataItem, "status")?.ToString();
-
+                string andamento = DataBinder.Eval(e.Row.DataItem, "andamento")?.ToString();
+                string atendeu = DataBinder.Eval(e.Row.DataItem, "atendimento")?.ToString();
+                // Verifica se os valores são nulos ou vazios
+                if (string.IsNullOrEmpty(previsaoStr) || string.IsNullOrEmpty(dataHoraStr) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(andamento))
+                {
+                    return; // Se algum valor for nulo ou vazio, não faz nada
+                }
                 // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
                 int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
                 TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
@@ -234,31 +240,43 @@ namespace NewCapit.dist.pages
                 DateTime previsao, dataHora;
                 DateTime agora = DateTime.Now;
 
-                if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                if (andamento == "PENDENTE")
                 {
-                    // Mantendo apenas a data para a comparação principal
-                    DateTime dataPrevisao = previsao.Date;
-                    DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
+                    if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                    {
+                        // Mantendo apenas a data para a comparação principal
+                        DateTime dataPrevisao = previsao.Date;
+                        DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
 
-                    if (dataHoraComparacao < agora/* && (status == "CONCLUIDO" || status == "PENDENTE")*/)
-                    {
-                        cell.Text = "ATRASADO";
-                        cell.BackColor = System.Drawing.Color.Red;
-                        cell.ForeColor = System.Drawing.Color.White;
-                    }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay /*&& (status == "CONCLUIDO" || status == "PENDENTE")*/)
-                    {
-                        cell.Text = "NO PRAZO";
-                        cell.BackColor = System.Drawing.Color.Green;
-                        cell.ForeColor = System.Drawing.Color.White;
-                    }
-                    else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
-                    {
-                        cell.Text = "ANTECIPADO";
-                        cell.BackColor = System.Drawing.Color.Orange;
-                        cell.ForeColor = System.Drawing.Color.White;
+                        if (dataHoraComparacao < agora /* && (status == "CONCLUIDO" || status == "PENDENTE")*/)
+                        {
+                            cell.Text = "ATRASADO";
+                            cell.BackColor = System.Drawing.Color.Red;
+                            cell.ForeColor = System.Drawing.Color.White;
+                        }
+                        else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay /*&& (status == "CONCLUIDO" || status == "PENDENTE")*/)
+                        {
+                            cell.Text = "NO PRAZO";
+                            cell.BackColor = System.Drawing.Color.Green;
+                            cell.ForeColor = System.Drawing.Color.White;
+                        }
+                        //else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
+                        //{
+                        //    cell.Text = "ANTECIPADO";
+                        //    cell.BackColor = System.Drawing.Color.Orange;
+                        //    cell.ForeColor = System.Drawing.Color.White;
+
+                        //}
                     }
                 }
+                else 
+                {
+                    cell.Text = atendeu;
+                    cell.BackColor = System.Drawing.Color.CadetBlue;
+                    cell.ForeColor = System.Drawing.Color.White;
+                }
+
+                
             }
         }
         protected void Editar(object sender, EventArgs e)

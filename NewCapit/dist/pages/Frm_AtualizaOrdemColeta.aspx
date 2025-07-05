@@ -923,8 +923,6 @@
             </div>
         </div>
 
-
-
     </div>
     <!-- Modal Bootstrap Cadastro de Telefone -->
     <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">

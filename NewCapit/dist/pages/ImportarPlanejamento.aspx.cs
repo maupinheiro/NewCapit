@@ -272,7 +272,8 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@material", "SOLICITAÇÃO");
                         cmd.Parameters.AddWithValue("@portao", codDestino);
                         cmd.Parameters.AddWithValue("@situacao", "PRONTO");
-                        cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
+                        //cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
+                        cmd.Parameters.AddWithValue("@previsao", dataHora.TrimEnd());
                         cmd.Parameters.AddWithValue("@codorigem", dto.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
                         cmd.Parameters.AddWithValue("@coddestino", dtd.Rows[0]["codcli"].ToString());

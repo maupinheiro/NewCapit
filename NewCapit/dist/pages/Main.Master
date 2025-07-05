@@ -505,34 +505,34 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/ControleCarretas.aspx" class="nav-link">
-                                            <i class="fa fa-truck"></i>
-                                            <p> Controle de Carretas</p>
+                                            <i class="fa fa-truck nav-icon"></i>
+                                            <p>Controle de Carretas</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    <%--<li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Controle de Multas</p>
                                         </a>
-                                    </li>
-                                    <li class="nav-item">
+                                    </li>--%>
+                                    <%--<li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Laudo Opacidade</p>
                                         </a>
-                                    </li>
-                                    <li class="nav-item">
+                                    </li>--%>
+                                    <%--<li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Licença CET</p>
                                         </a>
-                                    </li>
-                                    <li class="nav-item">
+                                    </li>--%>
+                                    <%--<li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Atualizar CRLV</p>
                                         </a>
-                                    </li>
+                                    </li>--%>
                                 </ul>
                             </li>
 
