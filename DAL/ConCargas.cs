@@ -15,7 +15,7 @@ namespace DAL
         public static DataTable FetchDataTable()
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT id, carga,cva,data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao, situacao FROM tbcargas WHERE status = 'Pendente' and fl_exclusao is null ";
+            string sql = "SELECT c.id, c.carga, c.cva, c.data_hora, cliOrigem.codvw + '/' + cliOrigem.codcli AS CodigoO, c.cliorigem, cliDestino.codvw + '/' + cliDestino.codcli AS CodigoD, c.clidestino, c.atendimento, c.tipo_viagem, c.rota, c.veiculo, c.quant_palet, c.peso, c.pedidos, c.solicitacoes, c.estudo_rota, c.remessa, c.cva, c.gate, c.status, c.chegadaorigem, c.saidaorigem, c.tempoagcarreg, c.chegadadestino, c.entradaplanta, c.saidaplanta, c.tempodentroplanta, c.tempoesperagate, c.previsao, c.situacao FROM tbcargas c LEFT JOIN tbclientes cliOrigem ON cliOrigem.codvw = c.codvworigem LEFT JOIN tbclientes cliDestino ON cliDestino.codvw = c.codvwdestino WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL ";
 
             using (var con = ConnectionUtil.GetConnection())
             {
