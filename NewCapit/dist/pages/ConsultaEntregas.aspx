@@ -21,7 +21,7 @@
             window.open(
                 '/dist/pages/ConsultaColetasPopUpCNT.aspx',
                 'PopupColetas',
-                'width=1150,height=600,scrollbars=yes,resizable=no,toolbar=no,menubar=no,location=no,status=no'
+                'width=1850,height=600,scrollbars=yes,resizable=no,toolbar=no,menubar=no,location=no,status=no'
             );
         }
     </script>

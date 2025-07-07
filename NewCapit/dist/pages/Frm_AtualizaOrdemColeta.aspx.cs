@@ -607,39 +607,12 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@tempoesperagate", SafeValue(txtEsperaGate.Text.Trim()));
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     // continue os parâmetros conforme seu banco
                     string valorDigitado = txtCVA.Text.Trim();
 
                     // Chama método que verifica no banco
-                    if (ExisteCarga(valorDigitado))
-                    {
-                       
-                        string linha1 = "CVA ja cadastrado em uma coleta!";
-
-                        // Concatenando as linhas com '\n' para criar a mensagem
-                        string mensagem = $"{linha1}";
-
-                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                        // Gerando o script JavaScript para exibir o alerta
-                        string script = $"alert('{mensagemCodificada}');";
-
-                        // Registrando o script para execução no lado do cliente
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                        txtCVA.Text = "";
-                        txtCVA.Focus();
-                        cmd.Parameters.AddWithValue("@cva", "");
-                        
-
-                    }
-                    else
-                    {
-
-                        cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                        txtCVA.BackColor = System.Drawing.Color.LightGreen;
-
-                        // Ou exibir uma label de erro, etc.
-                    }
+                  
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -1657,8 +1630,30 @@ namespace NewCapit.dist.pages
             }
         }
 
-        
-        private bool ExisteCarga(string numeroCarga)
+
+        //private bool ExisteCarga(string numeroCarga)
+        //{
+        //    bool existe = false;
+
+        //    string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        string sql = "SELECT COUNT(*) FROM tbcargas WHERE cva = @numero";
+        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@numero", numeroCarga);
+        //            conn.Open();
+
+        //            int count = (int)cmd.ExecuteScalar();
+        //            existe = (count > 0);
+        //        }
+        //    }
+
+        //    return existe;
+        //}
+
+        [System.Web.Services.WebMethod]
+        public static bool VerificarCVA(string numeroCVA)
         {
             bool existe = false;
 
@@ -1668,9 +1663,8 @@ namespace NewCapit.dist.pages
                 string sql = "SELECT COUNT(*) FROM tbcargas WHERE cva = @numero";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@numero", numeroCarga);
+                    cmd.Parameters.AddWithValue("@numero", numeroCVA);
                     conn.Open();
-
                     int count = (int)cmd.ExecuteScalar();
                     existe = (count > 0);
                 }
@@ -1678,6 +1672,7 @@ namespace NewCapit.dist.pages
 
             return existe;
         }
+
 
 
         protected void btnCadContato_Click(object sender, EventArgs e)

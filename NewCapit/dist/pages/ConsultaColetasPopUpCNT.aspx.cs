@@ -30,7 +30,7 @@ namespace NewCapit.dist.pages
             string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT id, carga, data_hora, cliorigem, clidestino, veiculo, tipo_viagem, rota, andamento FROM tbcargas WHERE andamento = 'PENDENTE'";
+                string query = "SELECT id, carga, data_hora, cliorigem, clidestino, veiculo, tipo_viagem, solicitacoes,peso,pedidos, andamento FROM tbcargas WHERE andamento = 'PENDENTE'";
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();

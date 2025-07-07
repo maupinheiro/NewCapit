@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
@@ -253,7 +254,7 @@ namespace NewCapit.dist.pages
                 txtNomeMae.Text = dt.Rows[0][28].ToString();
                 txtCodTra.Text = dt.Rows[0][29].ToString();
                 ddlAgregados.Items.Insert(0, new ListItem(dt.Rows[0][30].ToString(), "0"));
-                txtDtCad.Text = dt.Rows[0][31].ToString();
+                txtDtCad.Text = DateTime.Parse(dt.Rows[0][31].ToString()).ToString("dd/MM/yyyy");
                 if (dt.Rows[0][32].ToString() != string.Empty)
                 {
                     txtMotivoInativacao.Text = dt.Rows[0][32].ToString();
