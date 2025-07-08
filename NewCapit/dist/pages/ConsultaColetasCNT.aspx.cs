@@ -246,7 +246,7 @@ namespace NewCapit.dist.pages
                     {
                         // Mantendo apenas a data para a comparação principal
                         DateTime dataPrevisao = previsao.Date;
-                        DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
+                        DateTime dataHoraComparacao = new DateTime(dataHora.Year, dataHora.Month, dataHora.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
 
                         if (dataHoraComparacao < agora /* && (status == "CONCLUIDO" || status == "PENDENTE")*/)
                         {
@@ -260,23 +260,23 @@ namespace NewCapit.dist.pages
                             cell.BackColor = System.Drawing.Color.Green;
                             cell.ForeColor = System.Drawing.Color.White;
                         }
-                        //else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
-                        //{
-                        //    cell.Text = "ANTECIPADO";
-                        //    cell.BackColor = System.Drawing.Color.Orange;
-                        //    cell.ForeColor = System.Drawing.Color.White;
+                        else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
+                        {
+                            cell.Text = "ANTECIPADO";
+                            cell.BackColor = System.Drawing.Color.Orange;
+                            cell.ForeColor = System.Drawing.Color.White;
 
-                        //}
+                        }
                     }
                 }
-                else 
+                else
                 {
                     cell.Text = atendeu;
                     cell.BackColor = System.Drawing.Color.CadetBlue;
                     cell.ForeColor = System.Drawing.Color.White;
                 }
 
-                
+
             }
         }
         protected void Editar(object sender, EventArgs e)

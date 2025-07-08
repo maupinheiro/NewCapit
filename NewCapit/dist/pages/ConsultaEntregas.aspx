@@ -56,10 +56,10 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="form-group">
+                        <%--<div class="form-group">
                             <span class="">Status:</span>
                             <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
-                        </div>
+                        </div>--%>
                     </div>
                   <%--  <div class="col-md-2">
                         <div class="form_group">

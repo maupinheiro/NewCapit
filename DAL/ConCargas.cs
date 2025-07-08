@@ -35,7 +35,28 @@ namespace DAL
         public static DataTable FetchDataTableColetas()
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT c.id, c.carga, c.cva, c.data_hora, (co.codvw + '/' + co.codcli) AS CodigoO, c.cliorigem, (cd.codvw + '/' + cd.codcli) AS CodigoD, c.clidestino, c.atendimento, c.tipo_viagem, c.rota, c.veiculo, c.quant_palet, c.peso, c.pedidos, c.solicitacoes, c.estudo_rota, c.remessa, c.cva, c.gate, c.status, c.chegadaorigem, c.saidaorigem, c.tempoagcarreg, c.chegadadestino, c.entradaplanta, c.saidaplanta, c.tempodentroplanta, c.tempoesperagate, c.previsao,c.andamento FROM tbcargas c LEFT JOIN tbclientes co ON co.codvw = c.codvworigem LEFT JOIN tbclientes cd ON cd.codvw = c.codvwdestino WHERE  c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL";
+            string sql = @"SELECT 
+                                c.id, c.carga, c.cva, c.data_hora,
+                                (co.codvw + '/' + co.codcli) AS CodigoO,
+                                c.cliorigem,
+                                (cd.codvw + '/' + cd.codcli) AS CodigoD,
+                                c.clidestino,
+                                c.atendimento, c.tipo_viagem, c.rota, c.veiculo,
+                                c.quant_palet, c.peso, c.pedidos, c.solicitacoes,
+                                c.estudo_rota, c.remessa, c.cva, c.gate, c.status,
+                                c.chegadaorigem, c.saidaorigem, c.tempoagcarreg,
+                                c.chegadadestino, c.entradaplanta, c.saidaplanta,
+                                c.tempodentroplanta, c.tempoesperagate,
+                                c.previsao, c.andamento
+                            FROM tbcargas c
+                            OUTER APPLY (
+                                SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvworigem
+                            ) co
+                            OUTER APPLY (
+                                SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvwdestino
+                            ) cd
+                            WHERE c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL
+                            ";
 
 
             using (var con = ConnectionUtil.GetConnection())
