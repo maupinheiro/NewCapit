@@ -1,47 +1,37 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="ControleCarretas.aspx.cs" Inherits="NewCapit.dist.pages.ControleCarretas" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">   
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <link rel="stylesheet" href="/css/styleTabela.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script language="javascript">
-    function ConfirmMessage() {
-        var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-        if (selectedvalue) {
-            document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
-       } else {
-           document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-       }
-    }
-</script>
-     <style>
-     .pagination-centered {
-      text-align: center;
-     }
+    <script language="javascript">
+            function ConfirmMessage() {
+                var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+                if (selectedvalue) {
+                    document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+                } else {
+                    document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
+                }
+            }
+        </script>
+    <style>
+             .pagination-centered {
+                 text-align: center;
+             }
 
-     .pagination-centered table {
-     margin: 0 auto; /* Isso centraliza a tabela da paginação */
-     }
-
- </style>
-    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+                 .pagination-centered table {
+                     margin: 0 auto; /* Isso centraliza a tabela da paginação */
+                 }
+         </style>   
+    
     <div class="container-xxl">
-         <div class="content-wrapper">
+        <div class="content-wrapper">
              <div class="content-header">
                  <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-2 text-gray-800">
                         <i class="fa fa-truck"></i> &nbsp;Controle de Carretas</h1>
-                    <a href="/dist/pages/Frm_CadVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                        <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro
-                    </a>
-
-                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                      <i class="fas fa-shipping-fast"></i>&nbsp;Novo Cadastro
-                    </button>
-
+                    <a href="/dist/pages/FrmCadCarreta.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                        <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro  </a>
                 </div> 
                  <!-- Content Row -->
                  <div class="row">
@@ -316,10 +306,10 @@
              </div>
              <!-- Grid -->
              <div class="card shadow mb-4"> 
-        <div class="card-header">
-           <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
-        </div>
-        <div class="card-body">
+                    <div class="card-header">
+                       <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+                    </div>
+                    <div class="card-body">
             <div class="table-responsive">              
                 <asp:GridView runat="server" ID="gvCarretas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="idcarreta" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvCarretas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
@@ -342,40 +332,16 @@
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
-
-
-                    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-         
             </div>
             <asp:HiddenField ID="txtconformmessageValue" runat="server" />                   
         </div>
-    </div> 
+             </div> 
         </div>
-   </div> 
-    
-   
+    </div> 
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 3.1.0 
         </div>
         <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>
+    </footer>     
 </asp:Content>

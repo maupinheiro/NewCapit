@@ -219,10 +219,12 @@
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
+    <Content Include="dist\pages\FrmCadCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
+    <Content Include="dist\pages\Frm_CadCarreta.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
@@ -4412,6 +4414,13 @@
     <Compile Include="dist\pages\demo_motorista21.aspx.designer.cs">
       <DependentUpon>demo_motorista21.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\FrmCadCarreta.aspx.cs">
+      <DependentUpon>FrmCadCarreta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\FrmCadCarreta.aspx.designer.cs">
+      <DependentUpon>FrmCadCarreta.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Frm_AltColetaCNT.aspx.cs">
       <DependentUpon>Frm_AltColetaCNT.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4439,6 +4448,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_AltMotoristas.aspx.designer.cs">
       <DependentUpon>Frm_AltMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadCarreta.aspx.cs">
+      <DependentUpon>Frm_CadCarreta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadCarreta.aspx.designer.cs">
+      <DependentUpon>Frm_CadCarreta.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>

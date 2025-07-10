@@ -424,5 +424,10 @@ namespace NewCapit.dist.pages
             AllData(searchTerm);
         }
 
+        protected void bntNovaCarreta_Click(object sender, EventArgs e)
+        {
+            // Exemplo: abrir o modal ao carregar a página
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModalNovaCarreta", "abrirModalNovaCarreta();", true);
+        }
     }
 }
