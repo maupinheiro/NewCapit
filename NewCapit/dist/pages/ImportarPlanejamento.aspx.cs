@@ -222,18 +222,18 @@ namespace NewCapit.dist.pages
                          codorigem, cliorigem, coddestino, clidestino, idviagem, ufcliorigem, 
                          ufclidestino, pedidos, cidorigem, ciddestino, cadastro,  
                          solicitante, empresa, rota, veiculo, quant_palet, tipo_viagem, solicitacoes, data_hora, 
-                         estudo_rota, remessa, andamento, codvworigem, codvwdestino)
+                         estudo_rota, remessa, andamento, codvworigem, codvwdestino, distancia)
                      VALUES (
                          @carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, 
                          @codorigem, @cliorigem, @coddestino, @clidestino, @idviagem, @ufcliorigem, 
                          @ufclidestino, @pedidos, @cidorigem, @ciddestino, @cadastro,  
                          @solicitante, @empresa, @rota, @veiculo, @quant_palet, @tipo_viagem, @solicitacoes, @data_hora, 
-                         @estudo_rota, @remessa, @andamento, @codvworigem, @codvwdestino)";
+                         @estudo_rota, @remessa, @andamento, @codvworigem, @codvwdestino,@distancia)";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                try
-                {
+                //try
+                //{
                     SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", conn);
                     adpto.SelectCommand.Parameters.AddWithValue("@codvw", codOrigem);
                     DataTable dto = new DataTable();
@@ -247,24 +247,24 @@ namespace NewCapit.dist.pages
                     
 
                     if (dto.Rows.Count == 0)
-                        codigosNaoEncontrados.Add($"Cod Origem: {codOrigem} Nome:{coleta} ");
+                        codigosNaoEncontrados.Add($"Cod Origem: {codOrigem} Nome: {coleta} ");
 
                     if (dtd.Rows.Count == 0)
-                        codigosNaoEncontrados.Add($"Destino: {codDestino} Nome:{plantaDestino}");
+                        codigosNaoEncontrados.Add($"Destino: {codDestino} Nome: {plantaDestino}");
 
                     if (dto.Rows.Count > 0 && dtd.Rows.Count > 0)
                     {
                         SqlDataAdapter adpta = new SqlDataAdapter("select Distancia from tbdistanciapremio where Origem=@Origem and UF_Origem=@UF_Origem and UF_Destino=@UF_Destino and Destino=@Destino", conn);
                         adpta.SelectCommand.Parameters.AddWithValue("@UF_Origem", dto.Rows[0]["estcli"].ToString());
                         adpta.SelectCommand.Parameters.AddWithValue("@Origem", dto.Rows[0]["cidcli"].ToString());
-                        adpta.SelectCommand.Parameters.AddWithValue("@UF_Destino", dtd.Rows[0]["cidcli"].ToString());
+                        adpta.SelectCommand.Parameters.AddWithValue("@UF_Destino", dtd.Rows[0]["estcli"].ToString());
                         adpta.SelectCommand.Parameters.AddWithValue("@Destino", dtd.Rows[0]["cidcli"].ToString());
                         DataTable dta = new DataTable();
-                        adptd.Fill(dta);
+                        adpta.Fill(dta);
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@carga", nr_carga);
-                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("dd/MM/yyyy HH:mm").ToString());
                         cmd.Parameters.AddWithValue("@status", "PENDENTE");
                         cmd.Parameters.AddWithValue("@tomador", plantaSolicitante);
                         cmd.Parameters.AddWithValue("@entrega", "NORMAL");
@@ -273,7 +273,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@portao", codDestino);
                         cmd.Parameters.AddWithValue("@situacao", "PRONTO");
                         //cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
-                        cmd.Parameters.AddWithValue("@previsao", dataHora.TrimEnd());
+                        cmd.Parameters.AddWithValue("@previsao", SafeDateValue(dataHora.TrimEnd()));
                         cmd.Parameters.AddWithValue("@codorigem", dto.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
                         cmd.Parameters.AddWithValue("@coddestino", dtd.Rows[0]["codcli"].ToString());
@@ -286,19 +286,29 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@ciddestino", dtd.Rows[0]["cidcli"].ToString());
                         cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario);
                         cmd.Parameters.AddWithValue("@solicitante", plantaSolicitante);
-                        cmd.Parameters.AddWithValue("@empresa", "CNT");
+                        cmd.Parameters.AddWithValue("@empresa", "CNT (CC)");
                         cmd.Parameters.AddWithValue("@rota", rota);
                         cmd.Parameters.AddWithValue("@veiculo", veiculo);
                         cmd.Parameters.AddWithValue("@quant_palet", quantidadePallets);
                         cmd.Parameters.AddWithValue("@tipo_viagem", viagemTipo);
                         cmd.Parameters.AddWithValue("@solicitacoes", solicitacaoNumero);
-                        cmd.Parameters.AddWithValue("@data_hora", dataHora.TrimEnd());
+                        cmd.Parameters.AddWithValue("@data_hora", SafeDateValue(dataHora.TrimEnd()));
                         cmd.Parameters.AddWithValue("@estudo_rota", estudoRota);
                         cmd.Parameters.AddWithValue("@remessa", remessa);
                         cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
                         cmd.Parameters.AddWithValue("@codvworigem", codOrigem);
                         cmd.Parameters.AddWithValue("@codvwdestino", codDestino);
-                        cmd.Parameters.AddWithValue("@distancia", dta.Rows[0]["Distancia"].ToString());
+                        if (dta.Rows.Count > 0)
+                        {
+                            cmd.Parameters.AddWithValue("@distancia", dta.Rows[0]["Distancia"].ToString());
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@distancia", DBNull.Value);
+                        }
+
+
+                        
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
@@ -307,16 +317,23 @@ namespace NewCapit.dist.pages
 
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    string retorno = "Erro Sistêmico: " + ex.ToString() + " Por favor, contate o administrador de sistemas!";
-                    string script = $"<script type='text/javascript'>alert('{retorno.Replace("'", "\\'")}');</script>";
-                    ClientScript.RegisterClientScriptBlock(this.GetType(), "erro", script);
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    string retorno = "Erro Sistêmico: " + ex.ToString() + " Por favor, contate o administrador de sistemas!";
+                //    string script = $"<script type='text/javascript'>alert('{retorno.Replace("'", "\\'")}');</script>";
+                //    ClientScript.RegisterClientScriptBlock(this.GetType(), "erro", script);
+                //}
             }
         }
-
+        private object SafeDateValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd HH:mm");
+            else
+                return DBNull.Value;
+        }
 
         public void GerarNumero()
         {

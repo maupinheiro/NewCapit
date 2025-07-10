@@ -21,7 +21,7 @@
             window.open(
                 '/dist/pages/ConsultaColetasPopUpCNT.aspx',
                 'PopupColetas',
-                'width=1150,height=600,scrollbars=yes,resizable=no,toolbar=no,menubar=no,location=no,status=no'
+                'width=1850,height=600,scrollbars=yes,resizable=no,toolbar=no,menubar=no,location=no,status=no'
             );
         }
     </script>
@@ -56,10 +56,10 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="form-group">
+                        <%--<div class="form-group">
                             <span class="">Status:</span>
                             <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
-                        </div>
+                        </div>--%>
                     </div>
                   <%--  <div class="col-md-2">
                         <div class="form_group">

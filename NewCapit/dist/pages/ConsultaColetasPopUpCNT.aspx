@@ -40,7 +40,9 @@
                 <asp:BoundField DataField="clidestino" HeaderText="DESTINO" />
                 <asp:BoundField DataField="veiculo" HeaderText="VEICULO" />
                 <asp:BoundField DataField="tipo_viagem" HeaderText="VIAGEM" />
-                <asp:BoundField DataField="rota" HeaderText="ROTA" />
+                <asp:BoundField DataField="solicitacoes" HeaderText="SOLICITAÇÕES" />
+                <asp:BoundField DataField="peso" HeaderText="PESO" />
+                <asp:BoundField DataField="pedidos" HeaderText="METRAGEM" />
                 <asp:BoundField DataField="andamento" HeaderText="SITUAÇÃO" />
 
                 <asp:TemplateField HeaderText="AÇÃO" ShowHeader="True">

@@ -1139,7 +1139,7 @@ namespace NewCapit.dist.pages
                                 cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
                                 cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
-                                cmdc.Parameters.AddWithValue("@status", "EM ANDAMENTO");
+                                cmdc.Parameters.AddWithValue("@status", "PENDENTE");
                                 cmdc.Parameters.AddWithValue("@andamento", "EM ANDAMENTO"); 
                                 cmdc.Parameters.AddWithValue("@atendimento", atendimento);
                                 cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());

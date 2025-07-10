@@ -32,7 +32,7 @@ namespace DAL
                 }
             }
         }
-        public static DataTable FetchDataTable2(DateTime? dataInicio, DateTime? dataFim, string status)
+        public static DataTable FetchDataTable2(DateTime? dataInicio, DateTime? dataFim)
         {
             string sql = @"
         SELECT 
@@ -51,8 +51,7 @@ namespace DAL
                
             }
 
-            if (!string.IsNullOrEmpty(status))
-                sql += " AND c.situacao = @status";
+          
           
 
             sql += " ORDER BY c.dtcad DESC";
@@ -68,8 +67,7 @@ namespace DAL
                     cmd.Parameters.Add("@dataFim", SqlDbType.DateTime).Value = dataFim.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 
-                if (!string.IsNullOrEmpty(status))
-                    cmd.Parameters.AddWithValue("@status", status);
+               
                
 
                 using (var reader = cmd.ExecuteReader())

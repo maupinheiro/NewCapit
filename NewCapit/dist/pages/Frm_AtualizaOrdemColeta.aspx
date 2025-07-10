@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -332,7 +332,35 @@
 
     window.addEventListener('load', bindEventos);
     </script>
-    
+    <script>
+        $(document).ready(function () {
+            // Escuta mudança em qualquer txtCVA dentro do Repeater
+            $(document).on('blur', '.cva', function () {
+                var txt = $(this);
+                var valor = txt.val().trim();
+
+                if (valor.length > 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: '<%= ResolveUrl("Frm_AtualizaOrdemColeta.aspx/VerificarCVA") %>', // ajuste para o nome da sua página
+                    data: JSON.stringify({ numeroCVA: valor }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d === true) {
+                            alert("Já existe uma carga com esse número de CVA!");
+                            txt.val(""); // limpa o campo
+                            txt.focus();
+                        }
+                    },
+                    error: function (err) {
+                        console.error("Erro na verificação do CVA", err);
+                    }
+                });
+            }
+        });
+    });
+    </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
     <div class="content-wrapper">
