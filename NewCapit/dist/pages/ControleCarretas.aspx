@@ -323,7 +323,7 @@
                         <asp:BoundField DataField="descprop" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />
                         <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
                         <asp:BoundField DataField="frota" HeaderText="ATRELADA" />
-                        <asp:BoundField DataField="placa" HeaderText="CAVALO" />
+                        <asp:BoundField DataField="placa_cavalo" HeaderText="CAVALO" />
                         <asp:BoundField DataField="ativo_inativo" HeaderText="STATUS"/>                  
                         <asp:TemplateField HeaderText="AÇÃO" ShowHeader="True">
                              <ItemTemplate > 
