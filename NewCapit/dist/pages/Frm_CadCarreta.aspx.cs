@@ -8,7 +8,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NewCapit.dist.pages
+namespace NewCapit
 {
     public partial class Frm_CadCarreta : System.Web.UI.Page
     {
