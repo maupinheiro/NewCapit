@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadCarreta.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadCarreta" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadCarreta.aspx.cs" Inherits="NewCapit.Frm_CadCarreta" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -413,7 +413,7 @@
     </script>
     <script>
         function mostrarToastNaoEncontrado() {
-            var toastEl = document.getElementById('toastNotFound');
+            //var toastEl = document.getElementById('toastNotFound');
             var toast = new bootstrap.Toast(toastEl);
             toast.show();
         }

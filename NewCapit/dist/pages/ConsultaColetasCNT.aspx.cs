@@ -262,7 +262,7 @@ namespace NewCapit.dist.pages
                         }
                         else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
                         {
-                            cell.Text = "ANTECIPADO";
+                            cell.Text = "NO PRAZO";
                             cell.BackColor = System.Drawing.Color.Orange;
                             cell.ForeColor = System.Drawing.Color.White;
 
