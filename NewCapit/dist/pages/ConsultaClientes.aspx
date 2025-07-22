@@ -172,7 +172,7 @@
         <!-- DataTales Grid -->
         <div class="card shadow mb-4">
             <div class="card-header">
-                <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+                <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
               <%--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">--%>
             </div>
             <div class="card-body">
@@ -180,7 +180,7 @@
                     <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
-                            <asp:BoundField DataField="id" HeaderText="#ID" />
+                            <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
                             <asp:BoundField DataField="codcli" HeaderText="CÓDIGO" />
                             <asp:BoundField DataField="tipo" HeaderText="TIPO" />
                             <asp:BoundField DataField="nomcli" HeaderText="NOME FANTASIA" />
@@ -192,9 +192,9 @@
 
                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
                                 <ItemTemplate>
-                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
+                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar 
                                  </asp:LinkButton>
-                                       <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i></i> 
+                                       <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i> Mapa 
                                            </asp:LinkButton>
                                     <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                 <i class="fa fa-edit"></i>
@@ -205,8 +205,8 @@
                                         <i class="fas fa-map-marker-alt"></i>
                                         
                                     </a>--%>
-                                    <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
-                                  </asp:LinkButton>
+                                   <%-- <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
+                                  </asp:LinkButton>--%>
 
                                     <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
                                 <i class="fa fa-trash"></i>                                    

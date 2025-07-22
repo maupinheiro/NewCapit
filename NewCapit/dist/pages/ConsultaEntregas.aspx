@@ -3,6 +3,28 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <script>
+        function toggleDetalhes(row) {
+            const detalhesRow = row.nextElementSibling;
+            if (detalhesRow && detalhesRow.classList.contains('detalhes')) {
+                detalhesRow.classList.toggle('d-none');
+            }
+        }
+    </script>
+    <style>
+        .d-none {
+            display: none;
+        }
+    </style>
+    <script>
+        function abrirPopup() {
+            window.open(
+                '/dist/pages/ConsultaColetasPopUpCNT.aspx',
+                'PopupColetas',
+                'width=1850,height=600,scrollbars=yes,resizable=no,toolbar=no,menubar=no,location=no,status=no'
+            );
+        }
+    </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -10,9 +32,9 @@
                 <div class="content-header">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-2 text-gray-800">
-                            <i class="fas fa-shipping-fast"></i>&nbsp;Acompanhamento de Coletas/Entregas</h1>
+                            <i class="fas fa-shipping-fast"></i>&nbsp;Controle de Solicitações</h1>
                         <a href="/dist/pages/Frm_OrdemColetaCNT.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-shipping-fast"></i>&nbsp;Ordem de Coleta
+                            <i class="fas fa-shipping-fast"></i>&nbsp; Nova Ordem de Coleta
                         </a>
                     </div>
                 </div>
@@ -34,22 +56,32 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="form-group">
+                        <%--<div class="form-group">
                             <span class="">Status:</span>
                             <asp:DropDownList ID="ddlStatus" ame="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
-                        </div>
+                        </div>--%>
                     </div>
-                    <div class="col-md-3">
+                  <%--  <div class="col-md-2">
                         <div class="form_group">
-                            <span class="details">VEÍCULO:</span>
+                            <span class="details">Tipo de Veículo:</span>
                             <asp:DropDownList ID="ddlVeiculosCNT" runat="server" CssClass="form-control">
                             </asp:DropDownList>
                         </div>
+                    </div>--%>
+                    <div class="col-md-2">
+                        <br />
+                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i> Pesquisar</asp:LinkButton>
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-info"><i class='fas fa-search' ></i>
-Pesquisar</asp:LinkButton>
+                        <%--<asp:LinkButton ID="lnkColetas" runat="server" CssClass="btn btn-info"><i class='fas fa-shipping-fast' ></i> Coletas</asp:LinkButton>--%>
+                      <a href="javascript:void(0);" 
+                               onclick="abrirPopup();" 
+                               class="d-none d-sm-inline-block btn btn-info shadow-sm">
+                              <i class="fas fa-shipping-fast"></i>&nbsp; Coletas
+                            </a>
+
+
                     </div>
 
                 </div>
@@ -65,44 +97,122 @@ Pesquisar</asp:LinkButton>
                         <div class="card">
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" cssclass="table table-bordered table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Foto</th>
-                                            <th>Motorista</th>
-                                            <th>Veículo</th>
-                                            <th>Frota</th>
-                                            <th>Placa/Reboque</th>
-                                            <th>Coleta</th>
-                                            <th>CVA</th>
-                                            <th>Remetente</th>
-                                            <th>Destinatário</th>
-                                            <th>Situação</th>
-                                            <th>Material</th>
-                                            <th>Ação</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Foto</td>
-                                            <td>PAULO DOS SANTOS CALDEIRA</td>
-                                            <td>CARRETA REBAIXADA 3 EIXOS</td>
-                                            <td>256</td>
-                                            <td>FZY5E66/DTE9D42</td>
-                                            <td>2415856</td>
-                                            <td>TNG1012536</td>
-                                            <td>FORMTAP</td>
-                                            <td>VW ANCHIETA</td>
-                                            <td>Em Transito</td>
-                                            <td>CHAPA</td>
+                                <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
+                                <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
+                                    <HeaderTemplate>
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>MOTORISTA/PROPRIETÁRIO</th>
+                                                    <th>ORD. COLETA</th>
+                                                    <th>VEÍCULO</th>
+                                                    <th>TIPO DE VEÍCULO</th> 
+                                                    <th>ATENDIMENTO</th>
+                                                    <th>AÇÃO</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr onclick="toggleDetalhes(this)">
                                             <td>
-                                                <asp:LinkButton ID="lnkEditar" runat="server" class="btn btn-info" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-tasks"></i></asp:LinkButton></td>
+                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 50px;" text-align: center/>
+                                            </td>
+                                            <td>                                                
+                                                <%# Eval("codmotorista") + " - " + Eval("nomemotorista") %>
+                                                <br />
+                                                <%# Eval("codtra") + " - " + Eval("transportadora")%>  
+                                            </td>
+                                            <td><%# Eval("num_carregamento") %></td>
+                                            <td>
+                                                <%# Eval("veiculo") %>
+                                                <br />
+                                                <%# Eval("placa") %>
+                                            </td>
+                                            <td>
+                                                <%# Eval("tipoveiculo") %>
+                                                <br />
+                                                <%# Eval("reboque1") %>
+                                            </td>
+                                            <%--<td>
+                                                <%# Eval("cva") %>
+                                                <br />
+                                                <%# Eval("carga") %>
+                                            </td>--%>
+                                            <%--<td>
+                                                <%# Eval("nomcliorigem") %>
+                                                <br />
+                                                <%# Eval("nomclidestino") %>
+                                            </td>--%>
+                                            <td><%# Eval("situacao") %></td>
+
+                                            
+
+                                            <td>
+                                                <asp:LinkButton
+                                                    ID="lnkEditar"
+                                                    runat="server"
+                                                    class="btn btn-info"
+                                                    CommandName="Editar"
+                                                    CommandArgument='<%# Eval("num_carregamento") %>'
+                                                    OnCommand="lnkEditar_Command"
+                                                    OnClientClick="event.stopPropagation();">
+                                                    <i class="fas fa-tasks"></i>
+                                                </asp:LinkButton>
+                                            </td>
                                         </tr>
+                                        <tr class="detalhes d-none">
+                                            <td colspan="11">
+                                                <asp:Repeater ID="rptColeta" OnItemDataBound="rptColeta_ItemDataBound" runat="server">
+                                                    <HeaderTemplate>
+                                                        <table class="table table-bordered table-hover mb-0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>COLETA</th>
+                                                                    <th>CVA</th>
+                                                                    <th>DATA COLETA</th>
+                                                                    <%--<th>CODIGO</th>--%>
+                                                                    <th>LOCAL DA COLETA</th>
+                                                                    <%--<th>CODIGO</th>--%>
+                                                                    <th>LOCAL DE ENTREGA</th>
+                                                                    <th>STATUS</th>
+                                                                    <th>ATENDIMENTO</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                    </HeaderTemplate>
+                                                    <ItemTemplate>
+                                                        <tr>
+                                                            <td><%# Eval("carga") %></td>
+                                                            <td><%# Eval("cva") %></td>
+                                                            <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                           <%-- <td><%# Eval("CodigoO") %></td>--%>
+                                                            <td><%# Eval("cliorigem") %></td>
+                                                            <%--<td><%# Eval("CodigoD") %></td>--%>
+                                                            <td><%# Eval("clidestino") %></td>
+                                                            <td><%# Eval("status") %></td>
+                                                            <td runat="server" id="tdAtendimento">
+                                                                <asp:Label ID="lblAtendimento" runat="server" Text='<%# Eval("atendimento") %>' />
+                                                            </td>
+                                                        </tr>
+                                                    </ItemTemplate>
+                                                    <FooterTemplate>
+                                                        </tbody>
+                                                        </table>
+                                                    </FooterTemplate>
+                                                </asp:Repeater>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        </tbody>
+                                        </table>
+                                    </FooterTemplate>
+                                </asp:Repeater>
 
 
-                                    </tbody>
 
-                                </table>
                             </div>
                             <!-- /.card-body -->
                         </div>

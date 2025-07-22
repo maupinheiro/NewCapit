@@ -55,7 +55,7 @@ namespace NewCapit.dist.pages
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sql = "select codcli, razcli, nomcli,tc1cli,tc2cli,endcli,cepcli,numero,complemento,baicli,cidcli,estcli,cnpj,inscestadual,programador,contato,email,codvw,unidade,codsapiens,longitude,latitude,ativo_inativo,usucad,CONVERT(varchar, dtccad, 103) as dtccad,usualt,CONVERT(varchar, dtcalt, 103) as dtcalt,tipo,raio,regiao,abertura,situacao,tipoempresa,ramal from tbclientes where id=" + id;
+            string sql = "select codcli, razcli, nomcli,tc1cli,tc2cli,endcli,cepcli,numero,complemento,baicli,cidcli,estcli,cnpj,inscestadual,programador,contato,email,codvw,unidade,codsapiens,longitude,latitude,ativo_inativo,usucad,CONVERT(varchar, dtccad, 103) as dtccad,usualt,CONVERT(varchar, dtcalt, 103) as dtcalt,tipo,raio,regiao,abertura,situacao,tipoempresa,ramal from tbclientes where id = " + id;
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
@@ -113,6 +113,7 @@ namespace NewCapit.dist.pages
                 txtUsuAlteracao.Text = nomeUsuario;
                 DateTime dataHoraAtual = DateTime.Now;
                 lblDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+               
             }
             else
             {

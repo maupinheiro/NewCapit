@@ -13,20 +13,27 @@ using System.Drawing;
 using System.Web.Script.Serialization;
 using System.Configuration;
 using System.Globalization;
+using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
 
 namespace NewCapit.dist.pages
 {
     public partial class ConsultaColetasCNT : System.Web.UI.Page
     {
+        string idCarga;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
-                PreencherComboStatus();
+                
+               
                 PreencherColetas();
                 PreencherComboVeiculos();
+                PreencherComboStatus();
+
             }
-            
+           
+           
         }
         private void PreencherComboStatus()
         {
@@ -113,14 +120,13 @@ namespace NewCapit.dist.pages
             //gvListCargas.HeaderRow.TableSection = TableRowSection.TableHeader;
             //gvListCargas.FooterRow.TableSection = TableRowSection.TableFooter;
         }
-
         protected void lnkPesquisar_Click(object sender, EventArgs e)
         {
-            string sql = @"SELECT id, peso, status, cliorigem, clidestino, 
-                          CONVERT(varchar, previsao, 103) AS previsao, situacao, rota, 
-                          andamento, data_hora, veiculo, tipo_viagem, solicitacoes 
-                          FROM tbcargas 
-                          WHERE empresa = 'CNT' AND fl_exclusao IS NULL ";
+            string sql = "SELECT id, carga, peso, status, cliorigem, clidestino, ";
+                   sql += "CONVERT(varchar, previsao, 103) AS previsao, situacao, rota,  ";
+                   sql += "andamento, data_hora, veiculo, tipo_viagem, solicitacoes ";
+                   sql += "FROM tbcargas ";
+                   sql += "WHERE empresa = 'CNT (CC)' AND fl_exclusao IS NULL ";
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -135,58 +141,58 @@ namespace NewCapit.dist.pages
 
                         string dataInicial = txtInicioData.Text.Trim();
                         string dataFinal = txtFimData.Text.Trim();
-                        string status = ddlStatus.SelectedItem.Text;
-                        string veiculos = ddlVeiculos.SelectedItem.Text;
+                        string status = ddlStatus.SelectedItem.Text.Trim();
+                        string veiculos = ddlVeiculos.SelectedItem.Text.Trim();
 
                         //// Verificando e convertendo as datas corretamente
-                        //if (!string.IsNullOrWhiteSpace(dataInicial) &&
-                        //    DateTime.TryParseExact(dataInicial, "dd/MM/yyyy hh:mm",
-                        //                           CultureInfo.InvariantCulture, DateTimeStyles.None,
-                        //                           out DateTime parsedDataInicial))
-                        //{
-                        //    dtInicial = parsedDataInicial;
-                        //}
-
-                        //if (!string.IsNullOrWhiteSpace(dataFinal) &&
-                        //    DateTime.TryParseExact(dataFinal, "dd/MM/yyyy hh:mm",
-                        //                           CultureInfo.InvariantCulture, DateTimeStyles.None,
-                        //                           out DateTime parsedDataFinal))
-                        //{
-                        //    dtFinal = parsedDataFinal;
-                        //}
-                        
-                        // Adicionando os filtros de data apenas se existirem valores válidos
-                        if (txtInicioData.Text != string.Empty && txtFimData.Text!= string.Empty)
+                        if (!string.IsNullOrWhiteSpace(dataInicial) &&
+                            DateTime.TryParseExact(dataInicial, "dd/MM/yyyy hh:mm",
+                                                   CultureInfo.InvariantCulture, DateTimeStyles.None,
+                                                   out DateTime parsedDataInicial))
                         {
-                        
+                            dtInicial = parsedDataInicial;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(dataFinal) &&
+                            DateTime.TryParseExact(dataFinal, "dd/MM/yyyy hh:mm",
+                                                   CultureInfo.InvariantCulture, DateTimeStyles.None,
+                                                   out DateTime parsedDataFinal))
+                        {
+                            dtFinal = parsedDataFinal;
+                        }
+
+                        // Adicionando os filtros de data apenas se existirem valores válidos
+                        if (txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
+                        {
+
 
                             sql += " AND data_hora BETWEEN @dataInicial AND @dataFinal";
                             cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
                             cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
 
-                        //cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy");
-                        //    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy");
+                            //cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy");
+                            //    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy");
                         }
                         else if (txtInicioData.Text != string.Empty)
                         {
                             sql += " AND data_hora >= @dataInicial";
-                        cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
+                            cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
                         }
                         else if (txtFimData.Text != string.Empty)
                         {
                             sql += " AND data_hora <= @dataFinal";
-                          cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
+                            cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
                         }
 
                         // Filtrando status, se necessário
-                        if (!string.IsNullOrEmpty(status) && status != "Selecione...")
+                        if (/*!string.IsNullOrEmpty(status) && */status != "Selecione...")
                         {
                             sql += " AND status = @status";
                             cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
                         }
 
                         // Filtrando veículo, se necessário
-                        if (!string.IsNullOrEmpty(veiculos) && veiculos != "Selecione...")
+                        if (/*!string.IsNullOrEmpty(veiculos) &&*/ veiculos != "Selecione...")
                         {
                             sql += " AND veiculo = @veiculo";
                             cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 50).Value = veiculos;
@@ -202,7 +208,7 @@ namespace NewCapit.dist.pages
                             gvListCargas.DataSource = dataTable;
                             gvListCargas.DataBind();
                         }
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -212,8 +218,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
-       
         protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -222,47 +226,184 @@ namespace NewCapit.dist.pages
                 string previsaoStr = DataBinder.Eval(e.Row.DataItem, "previsao")?.ToString();
                 string dataHoraStr = DataBinder.Eval(e.Row.DataItem, "data_hora")?.ToString();
                 string status = DataBinder.Eval(e.Row.DataItem, "status")?.ToString();
-
+                string andamento = DataBinder.Eval(e.Row.DataItem, "andamento")?.ToString();
+                string atendeu = DataBinder.Eval(e.Row.DataItem, "atendimento")?.ToString();
+                // Verifica se os valores são nulos ou vazios
+                if (string.IsNullOrEmpty(previsaoStr) || string.IsNullOrEmpty(dataHoraStr) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(andamento))
+                {
+                    return; // Se algum valor for nulo ou vazio, não faz nada
+                }
                 // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
-                int colunaAtendimentoIndex = 3; // Ajustar conforme a posição real da coluna no GridView
+                int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
                 TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
-        
+
                 DateTime previsao, dataHora;
                 DateTime agora = DateTime.Now;
 
-                if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                if (andamento == "PENDENTE")
                 {
-                    // Mantendo apenas a data para a comparação principal
-                    DateTime dataPrevisao = previsao.Date;
-                    DateTime dataHoraComparacao = new DateTime(dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
-            
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
                     {
-                        cell.Text = "Atrasado";
-                        cell.BackColor = System.Drawing.Color.Red;
-                        cell.ForeColor = System.Drawing.Color.White;
-                    }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay && (status == "Concluído" || status == "Pendente"))
-                    {
-                        cell.Text = "No Prazo";
-                        cell.BackColor = System.Drawing.Color.Green;
-                        cell.ForeColor = System.Drawing.Color.White;
-                    }
-                    else if (dataHoraComparacao > agora && status == "Concluído")
-                    {
-                        cell.Text = "Antecipado";
-                        cell.BackColor = System.Drawing.Color.Orange;
-                        cell.ForeColor = System.Drawing.Color.White;
+                        // Mantendo apenas a data para a comparação principal
+                        DateTime dataPrevisao = previsao.Date;
+                        DateTime dataHoraComparacao = new DateTime(dataHora.Year, dataHora.Month, dataHora.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
+
+                        if (dataHoraComparacao < agora /* && (status == "CONCLUIDO" || status == "PENDENTE")*/)
+                        {
+                            cell.Text = "ATRASADO";
+                            cell.BackColor = System.Drawing.Color.Red;
+                            cell.ForeColor = System.Drawing.Color.White;
+                        }
+                        else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay /*&& (status == "CONCLUIDO" || status == "PENDENTE")*/)
+                        {
+                            cell.Text = "NO PRAZO";
+                            cell.BackColor = System.Drawing.Color.Green;
+                            cell.ForeColor = System.Drawing.Color.White;
+                        }
+                        else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
+                        {
+                            cell.Text = "NO PRAZO";
+                            cell.BackColor = System.Drawing.Color.Orange;
+                            cell.ForeColor = System.Drawing.Color.White;
+
+                        }
                     }
                 }
+                else
+                {
+                    cell.Text = atendeu;
+                    cell.BackColor = System.Drawing.Color.CadetBlue;
+                    cell.ForeColor = System.Drawing.Color.White;
+                }
+
+
+            }
+        }
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvListCargas.DataKeys[row.RowIndex].Value.ToString();
+
+                Response.Redirect("/dist/pages/Frm_EditarColeta.aspx?id=" + id);
+            }
+        }
+        protected void gvListCargas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {     
+            if (e.CommandName == "MostrarDetalhes")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+
+                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+
+                    // Tab 1
+                    SqlCommand cmd1 = new SqlCommand("SELECT carga, empresa, tomador, veiculo, codorigem, codvworigem,cliorigem, cidorigem, ufcliorigem, coddestino, codvwdestino, clidestino, ciddestino, ufclidestino, data_hora, solicitacoes, rota, tipo_viagem, peso, pedidos, estudo_rota, remessa, quant_palet, andamento, observacao FROM tbcargas WHERE Id = @Id", conn);
+                    cmd1.Parameters.AddWithValue("@Id", id);
+                    SqlDataReader reader1 = cmd1.ExecuteReader();
+                    if (reader1.Read())
+                    {
+                        // Tab 1 dados da coleta
+                        txtColeta.Text = reader1["carga"].ToString();
+                        txtFilial.Text = reader1["empresa"].ToString();
+                        txtPlanta.Text = reader1["tomador"].ToString();
+                        txtTipoVeiculo.Text = reader1["veiculo"].ToString();
+                        txtCodCliOrigem.Text = reader1["codorigem"].ToString() + "/" + reader1["codvworigem"].ToString();
+                        txtRemetente.Text = reader1["cliorigem"].ToString();
+                        txtMunicOrigem.Text = reader1["cidorigem"].ToString();
+                        txtUFOrigem.Text = reader1["ufcliorigem"].ToString();
+                        txtCodCliDestino.Text = reader1["coddestino"].ToString() + "/" + reader1["codvwdestino"].ToString();
+                        txtDestinatario.Text = reader1["clidestino"].ToString();
+                        txtMunicDestinatario.Text = reader1["ciddestino"].ToString();
+                        txtUFDestinatario.Text = reader1["ufclidestino"].ToString();
+                        lblDataColeta.Text = reader1["data_hora"].ToString();
+                        lblSolicitacoes.Text = reader1["solicitacoes"].ToString();
+                        txtRota.Text = reader1["rota"].ToString();
+                        lblTipoViagem.Text = reader1["tipo_viagem"].ToString();
+                        txtPeso.Text = reader1["peso"].ToString();
+                        lblMetragem.Text = reader1["pedidos"].ToString();
+                        txtEstudoRota.Text = reader1["estudo_rota"].ToString();
+                        txtRemessa.Text = reader1["remessa"].ToString();
+                        quantPallet.Text = reader1["quant_palet"].ToString();
+                       
+                        if (reader1["andamento"].ToString() == "CONCLUIDO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightGreen;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "PENDENTE")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Yellow;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else if (reader1["andamento"].ToString() == "ANDAMENTO")
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.LightCoral;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        else
+                        {
+                            lblStatus.BackColor = System.Drawing.Color.Black;
+                            lblStatus.Text = reader1["andamento"].ToString();
+                        }
+                        
+                        // Tab 3 dados do carregamento
+                        txtObservacao.Text = reader1["observacao"].ToString();
+                        // Tab 4 Ocorrências
+                        txtObservacao.Text = reader1["observacao"].ToString();
+                        string idColeta = reader1["carga"].ToString();
+                        reader1.Close();
+                        
+                        // Tab 2 dados do motorista e veiculo vindos da tabela tbcarregamentos
+                        SqlCommand cmd2 = new SqlCommand("SELECT codtra, transportadora, tipoveiculo, veiculo, placa, reboque1, reboque2, codmotorista, nomemotorista, num_carregamento, nucleo, carreta, tipomot  FROM tbcarregamentos WHERE carga = @idColeta", conn);
+                        cmd2.Parameters.AddWithValue("@idColeta", idColeta);
+                        SqlDataReader readerCarregamento = cmd2.ExecuteReader();
+                        if (readerCarregamento.Read())
+                        {
+                            txtOrdemColeta.Text = reader1["num_carregamento"].ToString();
+                            txtFilialMot.Text = reader1["nucleo"].ToString();
+                            txtTipoMot.Text = readerCarregamento["tipomot"].ToString();
+                            txtCodMotorista.Text = readerCarregamento["codmotorista"].ToString();
+                            txtNomMot.Text = readerCarregamento["nomemotorista"].ToString();
+                            txtCodTra.Text = readerCarregamento["codtra"].ToString();
+                            txtTransp.Text = readerCarregamento["transportadora"].ToString();
+                            txtVeiculoTipo.Text = readerCarregamento["tipoveiculo"].ToString();
+                            txtCodVeiculo.Text = readerCarregamento["veiculo"].ToString();
+                            txtPlaca.Text = readerCarregamento["placa"].ToString();
+                            txtReboque1.Text = readerCarregamento["reboque1"].ToString();
+                            txtReboque2.Text = readerCarregamento["reboque2"].ToString();
+                            txtCarreta.Text = readerCarregamento["carreta"].ToString();
+                        }
+                        else 
+                        {
+                            txtFilialMot.Text = "";
+                            txtTipoMot.Text = "";
+                            txtCodMotorista.Text = "";
+                            txtNomMot.Text = "";
+                            txtCodTra.Text = "";
+                            txtTransp.Text = "";
+                            txtVeiculoTipo.Text = "";
+                            txtCodVeiculo.Text = "";
+                            txtPlaca.Text = "";
+                            txtReboque1.Text = "";
+                            txtReboque2.Text = "";
+                            txtCarreta.Text = "";
+
+                        }
+                        readerCarregamento.Close();
+
+
+                        ////Exibir o modal                        
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "$('#infoModal').modal('show');", true);
+                        //ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "$('#detalhesModal').modal('show');", true);
+                    }
+                }
+               
             }
         }
 
-
-
-
-
-
+        
     }
-
 }

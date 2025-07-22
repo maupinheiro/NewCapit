@@ -13,13 +13,18 @@ using static NPOI.HSSF.Util.HSSFColor;
 using System.Collections;
 using System.Data;
 using System.Web.UI.HtmlControls;
+using System.Drawing;
+using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
     public partial class Frm_OrdemColetaCNT : System.Web.UI.Page
     {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         public string fotoMotorista;
         string codmot, caminhofoto;
+        private object lblVeiculo;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -35,11 +40,19 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     txtUsuCadastro.Text = lblUsuario;
                 }
+                if (txtCodMotorista.Text == "")                 
+                {
+                    fotoMotorista = "../../fotos/usuario.JPG";
+                }
+
                 DateTime dataHoraAtual = DateTime.Now;
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 //PreencherComboStatus();
                 PreencherNumColeta();
-                
+                PreencherNumCargaVazia();
+                PreencherClienteInicial();
+                PreencherClienteFinal();
+                PreencherVeiculosCNT();
             }
             CarregaFoto();
         }
@@ -119,9 +132,111 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        private void PreencherVeiculosCNT()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbtiposveiculoscnt order by descricao";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
 
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
 
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    //ddlVeiculosCNT.DataSource = reader;
+                    //ddlVeiculosCNT.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    //ddlVeiculosCNT.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    //ddlVeiculosCNT.DataBind();  // Realiza o binding dos dados                   
+                    //ddlVeiculosCNT.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        private void PreencherClienteInicial()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlCliInicial.DataSource = reader;
+                    ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    ddlCliInicial.DataValueField = "codcli";  // Campo que será o valor de cada item                    
+                    ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
+                    ddlCliInicial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        private void PreencherClienteFinal()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlCliFinal.DataSource = reader;
+                    ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    ddlCliFinal.DataValueField = "codcli";  // Campo que será o valor de cada item                    
+                    ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
+                    ddlCliFinal.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -189,7 +304,7 @@ namespace NewCapit.dist.pages
                         dataHora.Hour, dataHora.Minute, dataHora.Second
                     );
 
-                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+                    if (dataHoraComparacao < agora && (status == "Concluído" || status == "PENDENTE"))
                     {
                         lblAtendimento.Text = "Atrasado";
                         tdAtendimento.BgColor = "Red";
@@ -212,8 +327,6 @@ namespace NewCapit.dist.pages
             }
            
         }
-
-
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Atualizar")
@@ -239,6 +352,7 @@ namespace NewCapit.dist.pages
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                     {
                         string query = @"UPDATE tbcargas SET 
+                                emissao=@emissao,
                                 cva = @cva, 
                                 gate = @gate, 
                                 status = @status, 
@@ -271,6 +385,9 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
                         cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
                         cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
+                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                       
+                        
                         // continue os parâmetros conforme seu banco
 
                         conn.Open();
@@ -313,6 +430,26 @@ namespace NewCapit.dist.pages
                 }
                 
             }
+            else if (e.CommandName == "Remover")
+            {
+                string carga = e.CommandArgument.ToString();
+                DataTable dados = ViewState["Coletas"] as DataTable;
+
+                if (dados != null)
+                {
+                    DataRow[] linhas = dados.Select($"carga = '{carga}'");
+                    foreach (DataRow linha in linhas)
+                    {
+                        dados.Rows.Remove(linha);
+                    }
+
+                    dados.AcceptChanges();
+
+                    ViewState["Coletas"] = dados;
+                    rptColetas.DataSource = dados;
+                    rptColetas.DataBind();
+                }
+            }
         }
         public void CarregaFoto()
         {
@@ -331,23 +468,21 @@ namespace NewCapit.dist.pages
                     {
                         fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
-                        String path = Server.MapPath("../../fotos/");
-                        string file = fotoMotorista;
-                        if (File.Exists(path + file))
+                        if (!File.Exists(fotoMotorista))
                         {
-                            fotoMotorista = "../../fotos/" + file + "";
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
                         }
                         else
                         {
                             fotoMotorista = "../../fotos/usuario.jpg";
                         }
                     }
+                   
                 }
                     
             }
            
         }
-
         protected void btnPesquisarMotorista_Click(object sender, EventArgs e)
         {
             if (txtCodMotorista.Text.Trim() == "")
@@ -413,7 +548,7 @@ namespace NewCapit.dist.pages
                         txtCartao.Text = ConsultaMotorista.cartaomot;
                         txtValCartao.Text = ConsultaMotorista.venccartao;
                         txtCelular.Text = ConsultaMotorista.fone2;
-                        
+                        txtFuncao.Text = ConsultaMotorista.cargo;
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
@@ -448,10 +583,10 @@ namespace NewCapit.dist.pages
                         }
                         else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
                         {
-                            txtCodVeiculo.Text = ConsultaMotorista.codvei;
+                            txtCodVeiculo.Text = ConsultaMotorista.frota;
                             txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
                             txtPlaca.Text = ConsultaMotorista.placa;
-                            txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
+                            txtVeiculoTipo.Text = "FROTA"; // ConsultaMotorista.tipomot;
                             txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
                             txtReboque1.Text = ConsultaMotorista.reboque1;
                             txtReboque2.Text = ConsultaMotorista.reboque2;
@@ -539,16 +674,120 @@ namespace NewCapit.dist.pages
 
             }
         }
-
         protected void bntPesquisaColeta_Click(object sender, EventArgs e)
         {
-            string searchTerm;
-            searchTerm = txtColeta.Text ;
-            CarregarColetas(searchTerm);
-            txtColeta.Text = string.Empty;
+            if (txtColeta.Text.Trim() == "")
+            {
+                string nomeUsuario = txtUsuCadastro.Text;
 
+                string linha1 = "Olá, " + nomeUsuario + "!";
+                string linha2 = "Por favor, digite o número da coleta.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodVeiculo.Focus();
+
+            }
+            else
+            {
+
+                string codigoPlaca = txtColeta.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT carga, cliorigem, clidestino, status FROM tbcargas WHERE carga = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoPlaca);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                if (reader["status"].ToString() == "PENDENTE" || reader["status"].ToString() == "Pendente")
+                                {
+                                    string searchTerm;
+                                    searchTerm = txtColeta.Text.Trim();
+                                    CarregarColetas(searchTerm);
+                                    txtColeta.Text = string.Empty;
+                                }
+                                else
+                                {
+                                    string nomeUsuario = txtUsuCadastro.Text;
+
+                                    string linha1 = "Olá, " + nomeUsuario + "!";
+                                    string linha2 = "Situação da coleta: " + reader["carga"].ToString() + " (" + reader["status"].ToString() + ").";
+                                    string linha3 = "Local de Coleta: " + reader["cliorigem"].ToString() + " - Local de Entrega: " + reader["clidestino"].ToString() + ".";
+                                    string linha4 = "Não permite inclusão. Verifique o número digitado.";
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    txtColeta.Text = "";
+                                    txtColeta.Focus();
+                                }
+
+                            }
+                            else
+                            {
+                                // se a coleta for = 1 abre o modal para colocar origem e destino
+
+                                if (txtColeta.Text == "1")
+                                {
+                                    // Exemplo: abrir o modal ao carregar a página
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "abrirModal();", true);
+                                }
+                                else
+                                {
+                                    string nomeUsuario = txtUsuCadastro.Text;
+
+                                    string linha1 = "Olá, " + nomeUsuario + "!";
+                                    string linha2 = "Coleta " +txtColeta.Text.Trim() + ", não encontrada. Verifique o número digitado.";
+
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}";
+
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    txtColeta.Text = "";
+                                    txtColeta.Focus();
+                                }
+
+
+                            }
+                        }
+                    }
+
+                }
+
+
+
+
+
+
+                
+            }
         }
-
         protected void btnPesquisarVeiculo_Click(object sender, EventArgs e)
         {
             if (txtCodVeiculo.Text.Trim() == "")
@@ -567,6 +806,7 @@ namespace NewCapit.dist.pages
 
                 // Registrando o script para execução no lado do cliente
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodVeiculo.Text = "";
                 txtCodVeiculo.Focus();
 
             }
@@ -656,7 +896,7 @@ namespace NewCapit.dist.pages
                                 txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
-                        txtCodFrota.Text = "";
+                        //txtCodFrota.Text = "";
                         txtCodFrota.Focus();
                     }
                 }
@@ -680,14 +920,13 @@ namespace NewCapit.dist.pages
                     //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
+                    txtCodVeiculo.Text = "";
+                    txtCodVeiculo.Focus();
 
                 }
 
             }
         }
-
         protected void btnPesquisarContato_Click(object sender, EventArgs e)
         {
             if (txtCodFrota.Text.Trim() == "")
@@ -731,36 +970,16 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-
-                    string nomeUsuario = txtUsuCadastro.Text;
-
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Código " + codigo + ", não cadastrado no sistema.";
-                    string linha3 = "Verifique o código digitado: " + codigo + ".";                    
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    //// Gerando o script JavaScript para exibir o alerta
-                    string script = $"alert('{mensagemCodificada}');";
-
-                    //// Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                    txtCodFrota.Text = "";
-                    txtCodFrota.Focus();
-
+                   
+                    // Exemplo: abrir o modal ao carregar a página
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModalTelefone", "abrirModalTelefone();", true);
                 }
 
             }
         }
-
         private void CarregarColetas(string searchTerm = "")
         {
-            var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);
-
-            
+            var novosDados = DAL.ConCargas.FetchDataTableColetas2(searchTerm);            
 
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
 
@@ -769,8 +988,6 @@ namespace NewCapit.dist.pages
                carga = searchTerm
             };
             var ConsultaCarga = DAL.ConCargas.CheckColetas(carga);
-
-
             
                 if(ConsultaCarga != null)
                 {
@@ -803,37 +1020,27 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        lblMensagem.Text = "Coleta já atrelada a um motorista!";
+                        lblMensagem.Text = "Coleta em andamento ou já concluida!";
                     }
                 }
-                
-           
-                
-
-            
-
-
-            
         }
-
-
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
             string query = @"INSERT INTO tbcarregamentos (
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao, funcao
                     ) VALUES (
-                        @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
+                        @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto,@nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
-                        @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
-                        @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa
+                        @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,@tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@funcao
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
                 // Adiciona parâmetros com tratamento de vazio/nulo
                 cmd.Parameters.AddWithValue("@num_carregamento", SafeValue(novaColeta.Text));
                 cmd.Parameters.AddWithValue("@codmotorista", SafeValue(txtCodMotorista.Text));
@@ -851,12 +1058,12 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
                 cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
                 cmd.Parameters.AddWithValue("@filialveiculo", SafeValue(txtFilialVeicCNT.Text));
+                cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
                 cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
-                cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
                 cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
                 cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
@@ -867,32 +1074,93 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
-                cmd.Parameters.AddWithValue("@empresa", SafeValue(txtFilial.Text));
+                cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT (CC)"));
+                cmd.Parameters.AddWithValue("@dtcad", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
+                cmd.Parameters.AddWithValue("@situacao", "EM ANDAMENTO");
+                cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
+               // cmd.Parameters.AddWithValue("@tipoveiculocnt", SafeValue(lblVeiculo));
+                //cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
+                //cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
+                //cmd.Parameters.AddWithValue("@nomclidestino", ddlCliFinal.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text);
+                //cmd.Parameters.AddWithValue("@tipoveiculo", ddlVeiculosCNT.SelectedItem.Text);
 
                 try
                 {
                     conn.Open();
                     cmd.ExecuteNonQuery();
 
-                    string nomeUsuario = txtUsuCadastro.Text;
-                    string mensagem = $"Olá, {nomeUsuario}!\nCarregamento cadastrado no sistema com sucesso.";
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    string script = $"alert('{mensagemCodificada}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                    
+
+                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
+                    //AtualizarColetasVisiveis();
+
+                    
                 }
                 catch (Exception ex)
                 {
                     string mensagemErro = $"Erro ao salvar: {ex.Message}";
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagemErro);
-                    string script = $"alert('{mensagemCodificada}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                    string mensagemCodificada1 = HttpUtility.JavaScriptStringEncode(mensagemErro);
+                    string script1 = $"alert('{mensagemCodificada1}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script1, true);
 
                     // Caso queira exibir também em um Label
                     // lblMensagem.Text = mensagemErro;
                 }
+                foreach (RepeaterItem item in rptColetas.Items)
+                {
+                    if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
+                    {
+                        // Recuperar os valores dos controles
+                        string carga = ((Label)item.FindControl("lblCarga"))?.Text; // ou Eval direto se não tiver Label
+                        string atendimento = ((Label)item.FindControl("lblAtendimento"))?.Text;
+
+
+
+                        if (!string.IsNullOrEmpty(carga))
+                        {
+                            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                            {
+                                string queryc = @"UPDATE tbcargas SET 
+                                                    emissao=@emissao,
+                                                    idviagem=@idviagem,
+                                                    codmot=@codmot,
+                                                    frota=@frota,
+                                                    status=@status,
+                                                    andamento=@andamento,
+                                                    atendimento=@atendimento,
+                                                    funcaomot=@funcaomot
+                                                    WHERE carga = @carga";
+
+                                SqlCommand cmdc = new SqlCommand(queryc, con);
+                                cmdc.Parameters.AddWithValue("@carga", carga);
+                                cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
+                                cmdc.Parameters.AddWithValue("@status", "PENDENTE");
+                                cmdc.Parameters.AddWithValue("@andamento", "EM ANDAMENTO"); 
+                                cmdc.Parameters.AddWithValue("@atendimento", atendimento);
+                                cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());
+                                cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+
+                                con.Open();
+                                cmdc.ExecuteNonQuery();
+
+                                //nomeUsuario = txtUsuCadastro.Text;
+                                //string mensagem = $"Olá, {nomeUsuario}!\nOrdem de Coleta, cadastrada com sucesso!";
+                                //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                //string script = $"alert('{mensagemCodificada}');";
+                                //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                            }
+                        }
+                    }
+                }
+                
             }
         }
-
         private object SafeValue(string input)
         {
             return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
@@ -908,6 +1176,296 @@ namespace NewCapit.dist.pages
                 return DBNull.Value;
         }
 
+        protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
+        {
+            codCliInicial.Text = ddlCliInicial.SelectedValue;
+        }
+
+        protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            codCliFinal.Text = ddlCliFinal.SelectedValue;
+            string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adp.Fill(dt);
+            con.Close();
+            if (dt.Rows.Count > 0)
+            {
+                txtDistancia.Text = dt.Rows[0][0].ToString();
+                txtUfOrigem.Text = dt.Rows[0][1].ToString();
+                txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
+                txtUfDestino.Text = dt.Rows[0][3].ToString();
+                txtMunicipioDestino.Text = dt.Rows[0][4].ToString();               
+                lblDistancia.Text = string.Empty;
+            }
+            else
+            {
+                lblDistancia.Text = "Não há distância cadastrada para essa origem e destino";
+            }
+
+
+        }
+
+        protected void codCliInicial_TextChanged(object sender, EventArgs e)
+        {
+            if (codCliInicial.Text != "")
+            {
+
+                string codigoRemetente = codCliInicial.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                codCliInicial.Text = reader["codcli"].ToString();
+                                ddlCliInicial.SelectedItem.Text = reader["nomcli"].ToString();
+                                txtMunicipioOrigem.Text = reader["cidcli"].ToString();
+                                txtUfOrigem.Text = reader["estcli"].ToString();
+                                codCliFinal.Focus();
+                            }
+                            else
+                            {
+                                ddlCliInicial.SelectedItem.Text = "Selecione...";
+                                codCliInicial.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                codCliInicial.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        protected void codCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            if (codCliFinal.Text != "")
+            {
+
+
+                string codigoRemetente = codCliFinal.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                codCliFinal.Text = reader["codcli"].ToString();
+                                ddlCliFinal.SelectedItem.Text = reader["nomcli"].ToString();
+                                txtMunicipioDestino.Text = reader["cidcli"].ToString();
+                                txtUfDestino.Text = reader["estcli"].ToString();
+                            }
+                            else
+                            {
+                                ddlCliFinal.SelectedItem.Text = "Selecione...";
+                                codCliFinal.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                codCliInicial.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        private void PreencherNumCargaVazia()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT (carga + incremento) as ProximaCarga FROM tbcontadores";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Crie o comando SQL
+                        //SqlCommand cmd = new SqlCommand(query, conn);
+
+                        // Execute o comando e obtenha os dados em um DataReader
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // Preencher o TextBox com o nome encontrado 
+                                novaCarga.Text = reader["ProximaCarga"].ToString();
+                            }
+                        }
+
+                    }
+                    string id = "1";
+
+                    // Verifica se o ID foi fornecido e é um número válido
+                    if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idConvertido))
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('ID inválido ou não fornecido.');", true);
+                        return;
+                    }
+                    string sql = @"UPDATE tbcontadores SET carga = @carga WHERE id = @id";
+                    try
+                    {
+                        using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                        using (SqlCommand cmd = new SqlCommand(sql, con))
+                        {
+                            cmd.Parameters.AddWithValue("@carga", novaCarga.Text);
+                            cmd.Parameters.AddWithValue("@id", idConvertido);
+
+                            con.Open();
+                            int rowsAffected = cmd.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                // atualiza  
+                            }
+                            else
+                            {
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Erro ao atualizar o número da viagem.');", true);
+                            }
+
+                        }
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                        string script = $"alert('{mensagemErro}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Tratar erro
+                    //txtResultado.Text = "Erro: " + ex.Message;
+                }
+            }
+        }
+        protected void btnSalvarColeta_Click(object sender, EventArgs e)
+        {
+            txtColeta.Text = novaCarga.Text.Trim();
+            
+            int numCarga = int.Parse(novaCarga.Text.Trim());
+            string codigoOrigem = codCliInicial.Text.Trim();
+            string nomeOrigem = ddlCliInicial.SelectedItem.Text.Trim().ToUpper();
+            string codigoDestino = codCliFinal.Text.Trim();
+            string nomeDestino = ddlCliFinal.SelectedItem.Text.Trim().ToUpper();
+            string municipioOrigem = txtMunicipioOrigem.Text.Trim().ToUpper();
+            string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
+            string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
+            string ufDestino = txtUfDestino.Text.Trim().ToUpper();
+            int distancia = int.Parse(txtDistancia.Text.Trim());
+
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@carga", numCarga);
+                cmd.Parameters.AddWithValue("@status", "Pendente");
+                cmd.Parameters.AddWithValue("@entrega", "NORMAL");
+                cmd.Parameters.AddWithValue("@peso", "0"); // ou valor padrão
+                cmd.Parameters.AddWithValue("@material", "Vazio"); // ou valor padrão
+                cmd.Parameters.AddWithValue("@portao", "vz"); // ou valor padrão
+                cmd.Parameters.AddWithValue("@situacao", "Pendente");
+                cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
+                cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
+                cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
+                cmd.Parameters.AddWithValue("@coddestino", codigoDestino);
+                cmd.Parameters.AddWithValue("@clidestino", nomeDestino);
+                cmd.Parameters.AddWithValue("@ufcliorigem", ufOrigem);
+                cmd.Parameters.AddWithValue("@ufclidestino", ufDestino);
+                cmd.Parameters.AddWithValue("@cidorigem", municipioOrigem);
+                cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
+                cmd.Parameters.AddWithValue("@empresa", "CNT (CC)"); // ou valor padrão
+                cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
+                cmd.Parameters.AddWithValue("@distancia", distancia);
+
+                // Abrindo a conexão e executando a query
+                conn.Open();
+                int rowsInserted = cmd.ExecuteNonQuery();
+
+                if (rowsInserted > 0)
+                {
+                    txtColeta.Text = novaCarga.Text.Trim();
+                    PreencherNumCargaVazia(); // Atualiza o número da coleta para o próximo valor
+                }
+                else
+                {
+                    string mensagem = "Falha ao cadastrar a viagem. Tente novamente.";
+                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                }
+            }
+
+        }
+
+        protected void btnCadContato_Click(object sender, EventArgs e)
+        {
+
+            
+            string codigoTelefone = txtCodContato.Text.Trim();
+            string numeroTelefone = txtCadCelular.Text;            
+
+            string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbfoneveiculos (veiculo, numero)" +
+                  "VALUES (@veiculo,  @numero)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                
+                cmd.Parameters.AddWithValue("@veiculo", codigoTelefone);               
+                cmd.Parameters.AddWithValue("@numero", numeroTelefone);
+
+                // Abrindo a conexão e executando a query
+                conn.Open();
+                int rowsInserted = cmd.ExecuteNonQuery();
+
+                if (rowsInserted > 0)
+                {
+                    txtCodFrota.Text = txtCodContato.Text.Trim();
+                    txtFoneCorp.Text = txtCadCelular.Text;
+                }
+                else
+                {
+                    string mensagem = "Falha ao cadastrar telefone do motorista.";
+                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                }
+            }
+
+
+
+        }
 
         private void AtualizarColetasVisiveis()
         {
@@ -934,12 +1492,7 @@ namespace NewCapit.dist.pages
         }
         
 
-        //protected void LimparColetas_Click(object sender, EventArgs e)
-        //{
-        //    ViewState["Coletas"] = null;
-        //    rptColetas.DataSource = null;
-        //    rptColetas.DataBind();
-        //}
+        
 
     }
 

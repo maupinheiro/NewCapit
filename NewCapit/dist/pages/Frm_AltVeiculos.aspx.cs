@@ -10,7 +10,9 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NPOI.SS.Formula.Functions;
 using static System.Net.Mime.MediaTypeNames;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit
 {
@@ -52,6 +54,8 @@ namespace NewCapit
 
                 //DateTime dataHoraAtual = DateTime.Now;
                 // txtDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+
+            }
 
             }
 
@@ -1446,7 +1450,7 @@ namespace NewCapit
         protected void ddlAgregados_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idSelecionado = int.Parse(ddlAgregados.SelectedValue);
-
+            
             // Preencher os campos com base no valor selecionado
             if (idSelecionado > 0)
             {
@@ -1485,6 +1489,229 @@ namespace NewCapit
         {
             txtCodTra.Text = string.Empty;
             txtAntt.Text = string.Empty;
+        }
+
+       
+
+        protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(ddlComposicao.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherCamposComposicao(idSelecionado);
+            }
+            else
+            {
+                LimparCamposComposicao();
+            }
+        }
+
+        private void PreencherCamposComposicao(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT composicao, eixos, pbt, tolerancia FROM tbcomposicaoveiculo WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {                    
+                    txtEixos.Text = reader["eixos"].ToString();
+                    txtPBT.Text = reader["pbt"].ToString();
+                    txtTolerancia.Text = reader["tolerancia"].ToString();
+
+                    double sPBT, sTara;
+                    if (double.TryParse(txtPBT.Text, out sPBT) && double.TryParse(txtTara.Text, out sTara))
+                    {
+                        double resultado = sPBT - sTara;
+                        txtLotacao.Text = resultado.ToString("N0"); // casas decimais
+                    }                    
+
+                    double sTolerancia, sLotacao;
+                    if (double.TryParse(txtLotacao.Text, out sLotacao) && double.TryParse(txtTolerancia.Text, out sTolerancia))
+                    {
+                        double resultado2 = ((sLotacao * 5) / 100) + sLotacao;
+                       
+                        txtCargaLiq.Text = resultado2.ToString("N0"); // N0 = casas decimais 
+                    }
+                    
+                }
+            }
+        }
+
+        // Função para limpar os campos
+        private void LimparCamposComposicao()
+        {
+            txtTolerancia.Text = string.Empty;
+            txtPBT.Text = string.Empty;
+            txtLotacao.Text = string.Empty;
+            txtEixos.Text = string.Empty;
+        }
+
+        protected void txtCodTra_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodTra.Text != "")
+            {
+
+                string codigoRemetente = txtCodTra.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE codtra = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlAgregados.SelectedItem.Text = reader["fantra"].ToString();
+                                txtAntt.Text = reader["antt"].ToString();
+                                txtCodMot.Focus();
+                            }
+                            else
+                            {
+                                ddlAgregados.ClearSelection();
+                                txtAntt.Text = string.Empty;
+                                txtCodTra.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+                                
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodTra.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        protected void txtCodMot_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodMot.Text != "")
+            {
+
+                string codigoMotorista = txtCodMot.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codmot, nommot FROM tbmotoristas WHERE codmot = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoMotorista);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlMotorista.SelectedItem.Text = reader["nommot"].ToString();
+                            }
+                            else
+                            {
+                                ddlMotorista.ClearSelection();
+                                txtCodMot.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodMot.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }                            
+                            
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        protected void txtCodRastreador_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodRastreador.Text != "")
+            {
+
+                string codigoRastreador = txtCodRastreador.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codRastreador, nomRastreador FROM tbrastreadores WHERE codRastreador = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRastreador);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlTecnologia.SelectedItem.Text = reader["nomRastreador"].ToString();
+                            }
+                            else
+                            {
+                                ddlTecnologia.ClearSelection();
+                                txtCodRastreador.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodRastreador.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        protected void txtPlaca_TextChanged(object sender, EventArgs e)
+        {
+            string termo = txtPlaca.Text.ToUpper();
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT TOP 1 plavei,codvei FROM tbveiculos WHERE plavei LIKE @termo";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                conn.Open();
+
+                object res = cmd.ExecuteScalar();
+                if (res != null)
+                {
+                    //resultado = "Resultado: " + res.ToString();
+                    string retorno = "Placa: " + res.ToString() + ", já cadastrado. ";
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    sb.Append("<script type = 'text/javascript'>");
+                    sb.Append("window.onload=function(){");
+                    sb.Append("alert('");
+                    sb.Append(retorno);
+                    sb.Append("')};");
+                    sb.Append("</script>");
+                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    txtPlaca.Text = "";
+                    txtPlaca.Focus();
+                }
+            }
+
+           
+            txtPlaca.Text.ToUpper();
+            ddlEstados.Focus();
         }
 
         protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)

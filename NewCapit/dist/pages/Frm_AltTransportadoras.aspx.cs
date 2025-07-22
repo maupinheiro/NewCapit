@@ -37,15 +37,10 @@ namespace NewCapit.dist.pages
 
                 PreencherComboFiliais();
 
-                DateTime dataHoraAtual = DateTime.Now;
-                txtDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
-                txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-                btnCnpj.Visible = false;
+                DateTime dataHoraAtual = DateTime.Now;                
+                txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");               
+                CarregaDadosAgregado();
             }
-            
-            CarregaDadosAgregado();
-
-
         }
 
         private void PreencherComboFiliais()
@@ -84,74 +79,18 @@ namespace NewCapit.dist.pages
             }
         }
 
-
-
-        protected void btnAgregado_Click(object sender, EventArgs e)
-        {
-            if (txtCodTra.Text.Trim() == "")
-            {
-                string nomeUsuario = txtUsuAltCadastro.Text;
-
-                string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Por favor, digite um código para cadastro.";
-
-                // Concatenando as linhas com '\n' para criar a mensagem
-                string mensagem = $"{linha1}\n{linha2}";
-
-                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                // Gerando o script JavaScript para exibir o alerta
-                string script = $"alert('{mensagemCodificada}');";
-
-                // Registrando o script para execução no lado do cliente
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                txtCodTra.Focus();
-
-            }
-            else
-            {
-                var codigo = txtCodTra.Text.Trim();
-                var obj = new ConsultaAgregado()
-                {
-                    codtra = codigo
-                };
-
-
-                var ConsultaAgregados = DAL.UsersDAL.CheckAgregado(obj);
-                if (ConsultaAgregados != null)
-                {
-                    string nomeUsuario = txtUsuAltCadastro.Text;
-                    string razaoSocial = ConsultaAgregados.fantra;
-                    string filial = ConsultaAgregados.filial;
-
-
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Código " + codigo + ", já cadastrado no sistema.";
-                    string linha3 = "Nome: " + razaoSocial + ".";
-                    string linha4 = "Filial: " + filial.Trim() + ". Por favor, verifique.";
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    // Gerando o script JavaScript para exibir o alerta
-                    string script = $"alert('{mensagemCodificada}');";
-
-                    // Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                    txtCodTra.Text = "";
-                    txtCodTra.Focus();
-                }
-                else
-                {
-                    cboPessoa.Focus();
-                }
-
-            }
-        }
         protected void btnCnpj_Click(object sender, EventArgs e)
         {
             PesquisarCnpj();
+        }
+        protected void btnCep_Click(object sender, EventArgs e)
+        {
+            WebCEP cep = new WebCEP(txtCepCli.Text);
+            txtBaiCli.Text = cep.Bairro.ToString();
+            txtCidCli.Text = cep.Cidade.ToString();
+            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
+            txtEstCli.Text = cep.UF.ToString();
+            txtNumero.Focus();
         }
         private string RemoverMascaraCNPJ(string cnpj)
         {
@@ -166,62 +105,32 @@ namespace NewCapit.dist.pages
         private void PesquisarCnpj()
         {
             string cnpjSemMascara = RemoverMascaraCNPJ(txtCpf_Cnpj.Text);
-            if (cnpjSemMascara.Length == 14)
+            var cnpj = Empresa.ObterCnpj(cnpjSemMascara);
+            if (cnpj != null)
             {
-                // string cnpjSemMascara = RemoverMascaraCNPJ(txtCpf_Cnpj.Text);
-                var cnpj = Empresa.ObterCnpj(cnpjSemMascara);
-                if (cnpj != null)
-                {
-                    var cep = RemoverMascaraCep(cnpj.cep);
-                    txtRazCli.Text = cnpj.nome;
-                    txtDtCadastro.Text = cnpj.abertura;
-                    txtCepCli.Text = cep;
-                    txtEndCli.Text = cnpj.logradouro;
-                    txtNumero.Text = cnpj.numero;
-                    txtComplemento.Text = cnpj.complemento;
-                    txtBaiCli.Text = cnpj.bairro;
-                    txtCidCli.Text = cnpj.municipio;
-                    txtEstCli.Text = cnpj.uf;
-                }
-            }
-            else
-            {
-                string nomeUsuario = txtUsuAltCadastro.Text;
-                string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Quantidade de números digistados, não correspondem a um CNPJ válido.";
-                string linha3 = "Por favor, verifique e tente novamente.";
+                var cep = RemoverMascaraCep(cnpj.cep);
+                txtRazCli.Text = cnpj.nome;
+                txtCepCli.Text = cep;
+                txtEndCli.Text = cnpj.logradouro;
+                txtNumero.Text = cnpj.numero;
+                txtComplemento.Text = cnpj.complemento;
+                txtBaiCli.Text = cnpj.bairro;
+                txtCidCli.Text = cnpj.municipio;
+                txtEstCli.Text = cnpj.uf;
 
-                // Concatenando as linhas com '\n' para criar a mensagem
-                string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-
-                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                // Gerando o script JavaScript para exibir o alerta
-                string script = $"alert('{mensagemCodificada}');";
-
-                // Registrando o script para execução no lado do cliente
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                txtCpf_Cnpj.Text = "";
-                txtCpf_Cnpj.Focus();
-                btnCnpj.Visible = true;
             }
 
 
-        }
-        protected void btnCep_Click(object sender, EventArgs e)
-        {
-            WebCEP cep = new WebCEP(txtCepCli.Text);
-            txtBaiCli.Text = cep.Bairro.ToString();
-            txtCidCli.Text = cep.Cidade.ToString();
-            txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
-            txtEstCli.Text = cep.UF.ToString();
-            txtNumero.Focus();
         }
         protected void OnSelectedIndexChanged(object sender, EventArgs e)
         {
             if (cboPessoa.SelectedValue == "JURÍDICA")
             {
                 btnCnpj.Visible = true;
+            }
+            else 
+            {
+                btnCnpj.Visible = false;
             }
         }
 
@@ -264,13 +173,17 @@ namespace NewCapit.dist.pages
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
             // Obtém o ID da transportadora da QueryString
-            if (!int.TryParse(HttpContext.Current.Request.QueryString["id"], out int id))
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('ID inválido ou não fornecido.');", true);
-                return;
-            }
+            //if (!int.TryParse(HttpContext.Current.Request.QueryString["id"], out int id))
+           // {
+           //     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('ID /inválido ou não fornecido.');", true);
+           //     return;
+           // }
 
-            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID = @ID";
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+            {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID = @id";
 
             // Atualiza informações do usuário logado e data de alteração
             string usuarioLogado = Session["UsuarioLogado"]?.ToString() ?? "Usuário não identificado";
@@ -284,8 +197,8 @@ namespace NewCapit.dist.pages
                     command.Parameters.AddWithValue("@NomTra", txtRazCli.Text);
                     command.Parameters.AddWithValue("@ConTra", txtContato.Text);
                     command.Parameters.AddWithValue("@FanTra", txtFantasia.Text);
-                    command.Parameters.AddWithValue("@Fone1", this.txtFixo.Text);
-                    command.Parameters.AddWithValue("@Fone2", this.txtCelular.Text);
+                    command.Parameters.AddWithValue("@Fone1", txtFixo.Text);
+                    command.Parameters.AddWithValue("@Fone2", txtCelular.Text);
                     command.Parameters.AddWithValue("@EndTra", txtEndCli.Text);
                     command.Parameters.AddWithValue("@CepTra", txtCepCli.Text);
                     command.Parameters.AddWithValue("@BaiTra", txtBaiCli.Text);
@@ -311,7 +224,7 @@ namespace NewCapit.dist.pages
                     {
                         string mensagem = $"Olá, {usuarioLogado}! Registro atualizado com sucesso.";
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');", true);
-                        Response.Redirect("Consulta_Agregados.aspx");
+                        Response.Redirect("/dist/pages/Consulta_Agregados.aspx");
                     }
                     else
                     {
@@ -374,8 +287,6 @@ namespace NewCapit.dist.pages
                 //pnlMot.Visible = false;
             }
         }
-
-
 
         public void CarregaDadosAgregado3()
         {

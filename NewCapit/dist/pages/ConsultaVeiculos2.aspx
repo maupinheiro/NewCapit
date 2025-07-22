@@ -88,7 +88,7 @@
                                       </>                               
                                       <ul class="dropdown-menu dropdown-usermenu pull-right">
                                           <li>
-                                              <span>CNT: </span> 
+                                              <span>CNT (CC): </span> 
                                               <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 <asp:Label ID="FrotaCNT" runat="server" Text=""></asp:Label>
                                               </span>

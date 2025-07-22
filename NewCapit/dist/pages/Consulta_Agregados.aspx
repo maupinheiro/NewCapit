@@ -7,25 +7,24 @@
     <script language="javascript">
         function ConfirmMessage() {
             var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-        if (selectedvalue) {
+            if (selectedvalue) {
                 document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
 
         } else {
             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
 
-        }
-        
+            }
+
     </script>
     <style>
-    .pagination-centered {
-     text-align: center;
-    }
+        .pagination-centered {
+            text-align: center;
+        }
 
-    .pagination-centered table {
-    margin: 0 auto; /* Isso centraliza a tabela da paginação */
-    }
-
-</style>
+            .pagination-centered table {
+                margin: 0 auto; /* Isso centraliza a tabela da paginação */
+            }
+    </style>
     <!-- Page Heading -->
     <div class="content-wrapper">
         <div class="content-header">
@@ -135,34 +134,35 @@
 
          <div class="card shadow mb-4">
               <div class="card-body">
-                
-        <div class="card shadow mb-4">
-              <div class="card-header">
-                 <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
-              </div>
+               <%--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">--%> 
+               <div class="card-header">
+                 <asp:TextBox id="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server"></asp:TextBox>
+               </div>
+        <div class="card shadow mb-4">              
               <div class="card-body">
                  <div class="table-responsive">
                      <asp:GridView ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListAgregados_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                      <Columns>
-                        <asp:BoundField DataField="id" HeaderText="#ID" />
+                        <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
                         <asp:BoundField DataField="codtra" HeaderText="CÓDIGO" />
                         <asp:BoundField DataField="fantra" HeaderText="NOME FANTASIA" /> 
+                        <asp:BoundField DataField="pessoa" HeaderText="PESSOA" />
                         <asp:BoundField DataField="cnpj" HeaderText="CPF/CNPJ" />
                         <asp:BoundField DataField="filial" HeaderText="FILIAL" />
                         <asp:BoundField DataField="fone2" HeaderText="CELULAR" />
                         <asp:BoundField DataField="ativa_inativa" HeaderText="SITUAÇÃO" />
-                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" HeaderStyle-Width="180px">
+                        <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                             <ItemTemplate>
-                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i></asp:LinkButton>
+                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
+                                <%--<asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i></asp:LinkButton>--%>
                             </ItemTemplate>
                         </asp:TemplateField>
                      </Columns>
                     </asp:GridView>
 
                  </div>
-                 <asp:HiddenField ID="txtconformmessageValue" runat="server" />
+                 <!--<asp:HiddenField ID="txtconformmessageValue" runat="server" />-->
               </div>
          </div>
 
@@ -171,27 +171,8 @@
              
          </div>
         </div>
-    <!-- jQuery -->
-    
-    <script>
-        $(function () {
-            $("#example1").DataTable({
-                "responsive": true, "lengthChange": false, "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
-        });
-
-</script>
-
+  
+   
    
 
 </asp:Content>
