@@ -3,12 +3,20 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        function abrirConfirmacao() {
+            var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+            myModal.show();
+        }
+    </script>
+    <script type="text/javascript">
+        function abrirConfirmacaoCarreta() {
+            var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacaoCarreta'));
+            myModal.show();
+        }
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -51,7 +59,7 @@
             if (txtVencCET) aplicarMascara(txtVencCET, "00/00/0000");
         });
     </script>
-    <script language="javascript">
+    <%--<script language="javascript">
         function ConfirmMessage() {
             var selectedvalue = confirm("Esse motorista já possui vinculo com um veículo. Deseja desvincular o veículo?");
             if (selectedvalue) {
@@ -60,7 +68,7 @@
                 document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
             }
         }
-    </script>
+    </script>--%>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -72,7 +80,7 @@
                 </div>
                 <div class="card card-danger" id="miDiv" runat="server" visible="false">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;<asp:Label ID="lblErro" runat="server" ></asp:Label></h3>
+                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;<asp:Label ID="lblErro" runat="server"></asp:Label></h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -88,51 +96,38 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TIPO DE VEÍCULO:</span>
-                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" AutoPostBack="true">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
-                                    <asp:ListItem Value="BITREM" Text="BITREM"></asp:ListItem>
-                                    <asp:ListItem Value="BITRUCK" Text="BITRUCK"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES" Text="CAVALO SIMPLES"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO" Text="CAVALO TRUCADO"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO 4 EIXOS" Text="CAVALO 4 EIXOS"></asp:ListItem>
-                                    <asp:ListItem Value="FURGAO" Text="FURGAO"></asp:ListItem>
-                                    <asp:ListItem Value="LEVE" Text="LEVE"></asp:ListItem>
-                                    <asp:ListItem Value="SAVEIRO" Text="SAVEIRO"></asp:ListItem>
-                                    <asp:ListItem Value="TOCO" Text="TOCO"></asp:ListItem>
-                                    <asp:ListItem Value="TRUCK" Text="TRUCK"></asp:ListItem>
-                                    <asp:ListItem Value="VEICULO 3/4" Text="VEICULO 3/4"></asp:ListItem>
-                                    <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
-                                </asp:DropDownList><br />
-                                <asp:RequiredFieldValidator  ID="rfvcboTipo" runat="server" ControlToValidate="cboTipo" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="cboTipo_SelectedIndexChanged">                                   
+                                </asp:DropDownList>
+                                <asp:RequiredFieldValidator ID="rfvcboTipo" runat="server" ControlToValidate="cboTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PLACA:</span>
                                 <asp:TextBox ID="txtPlaca" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="True" OnTextChanged="txtPlaca_TextChanged"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="rvftxtPlaca" ControlToValidate="txtPlaca" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="rvftxtPlaca" ControlToValidate="txtPlaca" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">UF:</span>
-                                <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
+                                <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control select2" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator1" runat="server" ControlToValidate="ddlEstados" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="ddlEstados" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form_group">
                                 <span class="details">MUNICIPIO:</span>
-                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control">
+                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control select2">
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator2" runat="server" ControlToValidate="ddlCidades" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="ddlCidades" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">FILIAL:</span>
-                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -175,35 +170,35 @@
                             <div class="form_group">
                                 <span class="details">FAB/MOD.:</span>
                                 <asp:TextBox ID="txtAno" runat="server" Style="text-align: center" CssClass="form-control" placeholder="0000/0000" MaxLength="9"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator14" ControlToValidate="txtAno" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator14" ControlToValidate="txtAno" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
                                 <span class="details">AQUISIÇÃO:</span>
                                 <asp:TextBox ID="txtDataAquisicao" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator15" ControlToValidate="txtDataAquisicao" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator15" ControlToValidate="txtDataAquisicao" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">RENAVAM:</span>
                                 <asp:TextBox ID="txtRenavam" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="25"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator16" ControlToValidate="txtRenavam" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator16" ControlToValidate="txtRenavam" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">CHASSI:</span>
                                 <asp:TextBox ID="txtChassi" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="30"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator17" ControlToValidate="txtChassi" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator17" ControlToValidate="txtChassi" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
-                                <span class="details">LICENCIAMENTO:</span>
+                                <span class="details">LICEN.:</span>
                                 <asp:TextBox ID="txtLicenciamento" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator18" ControlToValidate="txtLicenciamento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator18" ControlToValidate="txtLicenciamento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
 
@@ -220,7 +215,7 @@
                                     <asp:ListItem Value="FITA" Text="FITA"></asp:ListItem>
                                     <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
                                 </asp:DropDownList><br />
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator3" runat="server" ControlToValidate="ddlTacografo" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="ddlTacografo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -232,56 +227,56 @@
                                     <asp:ListItem Value="ELETRONICO" Text="ELETRONICO"></asp:ListItem>
                                     <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator4" runat="server" ControlToValidate="ddlModeloTacografo" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="ddlModeloTacografo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
-                                <span class="details">COMPRIMENTO:</span>
+                                <span class="details">COMP.:</span>
                                 <asp:TextBox ID="txtComprimento" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator19" ControlToValidate="txtComprimento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator19" ControlToValidate="txtComprimento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
-                                <span class="details">LARGURA:</span>
+                                <span class="details">LARG.:</span>
                                 <asp:TextBox ID="txtLargura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator20" ControlToValidate="txtLargura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator20" ControlToValidate="txtLargura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
-                                <span class="details">ALTURA:</span>
+                                <span class="details">ALT.:</span>
                                 <asp:TextBox ID="txtAltura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator21" ControlToValidate="txtAltura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator21" ControlToValidate="txtAltura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
                                 <span class="details">PROT.CET:</span>
                                 <asp:TextBox ID="txtProtocoloCET" runat="server" CssClass="form-control" MaxLength="25" Style="text-align: center"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator22" ControlToValidate="txtProtocoloCET" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator22" ControlToValidate="txtProtocoloCET" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
-                                <span class="details">VENCIMENTO:</span>
+                                <span class="details">VALIDADE:</span>
                                 <asp:TextBox ID="txtVencCET" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator23" ControlToValidate="txtVencCET" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator23" ControlToValidate="txtVencCET" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
                                 <span class="details">OPACIDADE:</span>
                                 <asp:TextBox ID="txtOpacidade" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator24" ControlToValidate="txtOpacidade" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator24" ControlToValidate="txtOpacidade" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form_group">
                                 <span class="details">CRONO:</span>
                                 <asp:TextBox ID="txtCronotacografo" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator25" ControlToValidate="txtCronotacografo" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator25" ControlToValidate="txtCronotacografo" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                     </div>
@@ -290,22 +285,22 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">MARCA:</span>
-                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator5" runat="server" ControlToValidate="ddlMarca" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:DropDownList ID="ddlMarca" name="nomeFiliais" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="ddlMarca" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-group">
                                 <span class="details">MODELO:</span>
                                 <asp:TextBox ID="txtModelo" runat="server" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator26" ControlToValidate="txtModelo" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator26" ControlToValidate="txtModelo" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">COR:</span>
-                                <asp:DropDownList ID="ddlCor" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator6" runat="server" ControlToValidate="ddlCor" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:DropDownList ID="ddlCor" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="ddlCor" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                     </div>
@@ -320,28 +315,28 @@
                                     <asp:ListItem Value="RASTREADO" Text="RASTREADO"></asp:ListItem>
                                     <asp:ListItem Value="TELEMONITORADO" Text="TELEMONITORADO"></asp:ListItem>
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator7" runat="server" ControlToValidate="ddlMonitoramento" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="ddlMonitoramento" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CÓD.TEC.:</span>
                                 <asp:TextBox ID="txtCodRastreador" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="4" OnTextChanged="txtCodRastreador_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                 <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator27" ControlToValidate="txtCodRastreador" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator27" ControlToValidate="txtCodRastreador" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form_group">
                                 <span class="details">TECNOLOGIA/RASTREADOR:</span>
                                 <asp:DropDownList ID="ddlTecnologia" name="tecnologia" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="ddlTecnologia_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator28" runat="server" ControlToValidate="ddlTecnologia" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator28" runat="server" ControlToValidate="ddlTecnologia" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">ID:</span>
                                 <asp:TextBox ID="txtId" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11"></asp:TextBox>
-                                <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator29" ControlToValidate="txtId" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator29" ControlToValidate="txtId" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -358,7 +353,7 @@
                                     <asp:ListItem Value="RF/GPS/GPRS" Text="RF/GPS/GPRS"></asp:ListItem>
                                     <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator8" runat="server" ControlToValidate="ddlComunicacao" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator8" runat="server" ControlToValidate="ddlComunicacao" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                     </div>
@@ -373,14 +368,14 @@
                                     <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>
                                     <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator9" runat="server" ControlToValidate="ddlTipo" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator9" runat="server" ControlToValidate="ddlTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CÓD.PROP.:</span>
                                 <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="11" AutoPostBack="true" OnTextChanged="txtCodTra_TextChanged"></asp:TextBox>
-                                <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator30" ControlToValidate="txtCodTra" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator30" ControlToValidate="txtCodTra" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
 
                             </div>
                         </div>
@@ -389,7 +384,7 @@
                             <div class="form_group">
                                 <span class="details">PROPRIETÁRIO/TRANSPORTADORA:</span>
                                 <asp:DropDownList ID="ddlAgregados" class="form-control select2" runat="server" OnSelectedIndexChanged="ddlAgregados_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator10" runat="server" ControlToValidate="ddlAgregados" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server" ControlToValidate="ddlAgregados" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
 
@@ -397,7 +392,7 @@
                             <div class="form-group">
                                 <span class="details">ANTT/RNTRC:</span>
                                 <asp:TextBox ID="txtAntt" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="15"></asp:TextBox>
-                                <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator31" ControlToValidate="txtAntt" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator31" ControlToValidate="txtAntt" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                     </div>
@@ -407,14 +402,14 @@
                             <div class="form-group">
                                 <span class="details">MOTORISTA:</span>
                                 <asp:TextBox ID="txtCodMot" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="9" OnTextChanged="txtCodMot_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator32" ControlToValidate="txtCodMot" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator32" ControlToValidate="txtCodMot" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">NOME COMPLETO:</span>
                                 <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator11" runat="server" ControlToValidate="ddlMotorista" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server" ControlToValidate="ddlMotorista" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                             <asp:HiddenField ID="txtconformmessageValue" runat="server" />
                         </div>
@@ -429,19 +424,19 @@
                                     <asp:ListItem Value="PROPRIA" Text="PROPRIA"></asp:ListItem>
                                     <asp:ListItem Value="TRANSNOVAG" Text="TRANSNOVAG"></asp:ListItem>
                                 </asp:DropDownList>
-                                <asp:RequiredFieldValidator  ID="RequiredFieldValidator12" runat="server" ControlToValidate="ddlCarreta" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" ControlToValidate="ddlCarreta" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
-                                <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8"></asp:TextBox>
+                                <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb1_TextChanged"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <asp:Label ID="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
-                                <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8"></asp:TextBox>
+                                <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb2_TextChanged"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -456,7 +451,7 @@
                         <div class="col-md-5">
                             <span class="">COMPOSIÇÃO:</span>
                             <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                            <asp:RequiredFieldValidator  ID="RequiredFieldValidator13" runat="server" ControlToValidate="ddlComposicao" InitialValue=""  ErrorMessage="* Obrigatório" ValidationGroup="Cadastro"  Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator13" runat="server" ControlToValidate="ddlComposicao" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
@@ -580,81 +575,51 @@
                 </div>
             </div>
         </section>
-        <!-- Mensagens de erro toast -->
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body" id="mensagem">
-                        Código, não encontrado no sistema. Verifique o número digitado. 
+        <!-- modal motorista atrelado -->
+        <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalConfirmacaoLabel">Confirmação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    <div class="modal-body">
+                        Motorista:
+                        <asp:Label ID="txtMotoristaAtrelado" runat="server" CssClass="form-control"></asp:Label>Atrelado ao veículo:
+                        <asp:Label ID="txtPlacaAtrelada" runat="server" CssClass="form-control"></asp:Label>Deseja transferi-lo para o novo veículo?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                        <button type="button" class="btn btn-primary">Sim</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </div>
-
-
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.1.0 
+        <!-- modal carreta atrelada -->
+        <div class="modal fade" id="modalConfirmacaoCarreta" tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalConfirmacaoLabelCarreta">Confirmação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Frota/Carreta:
+                        <asp:Label ID="txtFrotaAtrelado" runat="server" CssClass="form-control"></asp:Label>
+                        Atrelada a Frota/Cavalo:
+                        <asp:Label ID="txtFrotaCavalo" runat="server" CssClass="form-control"></asp:Label>
+                        Transportadora/Agregado:
+                        <asp:Label ID="txtTransportadora" runat="server" CssClass="form-control"></asp:Label>
+                        Deseja transferi-la para o novo veículo?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="carretaNao" class="btn btn-secondary" data-bs-dismiss="modal" OnClick="carretaNao">Não</button>
+                        <button type="button" class="btn btn-primary">Sim</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>
-    <!-- Page specific script -->
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-
-            //Initialize Select2 Elements
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-
-            //Datemask dd/mm/yyyy
-            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-            //Datemask2 mm/dd/yyyy
-            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-            //Money Euro
-            $('[data-mask]').inputmask()
-
-            //Date picker
-            $('#reservationdate').datetimepicker({
-                format: 'L'
-            });
-
-
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-                }
-            )
-
-
-        })
-
-
-    </script>
-    <script>
-        function mostrarToastNaoEncontrado() {
-            var toastEl = document.getElementById('toastNotFound');
-            var toast = new bootstrap.Toast(toastEl);
-            toast.show();
-        }
-    </script>
+    </div>
 
 </asp:Content>

@@ -16,7 +16,7 @@ namespace NewCapit
 {
     public partial class ConsultaVeiculos : System.Web.UI.Page
     {
-        SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+       SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -313,7 +313,7 @@ namespace NewCapit
 
         private void AllDataVeiculos(string searchTerm = "")
         {
-           // var dataTable = DAL.ConVeiculos.FetchDataTable();
+            // var dataTable = DAL.ConVeiculos.FetchDataTable();
             var dataTable = DAL.ConVeiculos.FetchDataTable2(searchTerm);
             if (dataTable.Rows.Count <= 0)
             {
@@ -354,59 +354,6 @@ namespace NewCapit
             }
 
         }
-        //protected void Excluir(object sender, EventArgs e)
-        //{
-        //    if (txtconformmessageValue.Value == "Yes")
-        //    {
-        //        using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-        //        {
-        //            string id = gvVeiculos.DataKeys[row.RowIndex].Value.ToString();
-
-        //            string sql = "update tbveiculos set fl_exclusao='S' where id=@id";
-        //            SqlCommand comando = new SqlCommand(sql, con);
-        //            comando.Parameters.AddWithValue("@id", id);
-        //            try
-        //            {
-        //                con.Open();
-        //                comando.ExecuteNonQuery();
-        //                con.Close();
-        //                AllDataVeiculos()                                                                              ;
-        //                string retorno = "Registro excluído com sucesso!";
-        //                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //                sb.Append("<script type = 'text/javascript'>");
-        //                sb.Append("window.onload=function(){");
-        //                sb.Append("alert('");
-        //                sb.Append(retorno);
-        //                sb.Append("')};");
-        //                sb.Append("</script>");
-        //                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-        //                string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
-        //                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //                sb.Append("<script type = 'text/javascript'>");
-        //                sb.Append("window.onload=function(){");
-        //                sb.Append("alert('");
-        //                sb.Append(retorno);
-        //                sb.Append("')};");
-        //                sb.Append("</script>");
-        //                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-        //                //Chama a página de consulta clientes
-        //                Response.Redirect("ConsultaClientes.aspx");
-        //            }
-
-        //            finally
-        //            {
-        //                con.Close();
-        //            }
-        //        }
-        //    }
-
-
-        //}
 
         private void AllData(string searchTerm)
         {

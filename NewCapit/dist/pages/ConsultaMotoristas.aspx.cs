@@ -18,13 +18,15 @@ namespace NewCapit
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack) {
+            if (!IsPostBack)
+            {
 
-                
+
                 listarMotoristas();
 
             }
             ContagemMotorista();
+
         }
 
         private void listarMotoristas()
@@ -34,7 +36,7 @@ namespace NewCapit
             if (dataTable.Rows.Count <= 0)
             {
                 return;
-            }            
+            }
             gvListMotoristas.DataSource = dataTable;
             gvListMotoristas.DataBind();
 

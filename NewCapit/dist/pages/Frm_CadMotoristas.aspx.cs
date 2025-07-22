@@ -1,24 +1,24 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Domain;
 
 namespace NewCapit.dist.pages
 {
-    
     public partial class Frm_CadMotoristas : System.Web.UI.Page
     {
+        SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
-        string  caminhoFoto;
+        string caminhoFoto;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -35,9 +35,9 @@ namespace NewCapit.dist.pages
                 {
                     var lblUsuario = "<Usuário>";
                     txtUsuCadastro.Text = lblUsuario;
-                }                
+                }
                 PreencherComboFiliais();
-                PreencherComboCargo();                         
+                PreencherComboCargo();
                 PreencherComboJornada();
                 CarregarDDLAgregados();
 
@@ -47,8 +47,8 @@ namespace NewCapit.dist.pages
                 CarregarEstadosNascimento();
                 CarregarMunicipioNasc();
 
-                
-               
+
+
 
             }
             DateTime dataHoraAtual = DateTime.Now;
@@ -225,7 +225,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@naturalmot", ddlMunicipioNasc.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@numero", txtNumero.Text.Trim());
                     cmd.Parameters.AddWithValue("@complemento", txtComplemento.Text.Trim());
-                    cmd.Parameters.AddWithValue("@tipomot", ddlTipoMot.SelectedItem.ToString().Trim().ToUpper());  
+                    cmd.Parameters.AddWithValue("@tipomot", ddlTipoMot.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@venccartao", txtValCartao.Text);
                     cmd.Parameters.AddWithValue("@horario", ddlJornada.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@funcao", ddlFuncao.SelectedItem.Text.ToUpper());
@@ -259,7 +259,7 @@ namespace NewCapit.dist.pages
                             // Salva o arquivo com novo nome na nova pasta
                             FileUpload1.SaveAs(caminhoCompleto);
 
-                           
+
 
                             //lblMensagem.Text = "Imagem salva com sucesso como " + novoNome;
                         }
@@ -272,7 +272,7 @@ namespace NewCapit.dist.pages
                     {
                         //cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/");
                     }
-                    cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/"+ txtCodMot.Text.Trim().ToUpper()+".jpg");
+                    cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.Trim());
                     cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
@@ -281,12 +281,12 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@cracha", txtCracha.Text.Trim());
                     cmd.Parameters.AddWithValue("@regiao", ddlRegioes.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@numinss", txtINSS.Text.Trim());
-                    
-                    
+
+
 
 
                     try
-                        {
+                    {
                         conn.Open();
                         cmd.ExecuteNonQuery();
                         string nomeUsuario = txtUsuCadastro.Text;
@@ -332,47 +332,59 @@ namespace NewCapit.dist.pages
             }
         }
 
-
-
-
-
-
-
-
-
         protected void txtCodMot_TextChanged(object sender, EventArgs e)
         {
-            string termo = txtCodMot.Text.ToUpper();
-            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            //string termo = txtCodMot.Text.ToUpper();
+            //string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(strConn))
+            //using (SqlConnection conn = new SqlConnection(strConn))
+            //{
+            //    string query = "SELECT TOP 1 codmot FROM tbmotoristas WHERE codmot LIKE @termo";
+            //    SqlCommand cmd = new SqlCommand(query, conn);
+            //    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+            //    conn.Open();
+
+            //    object res = cmd.ExecuteScalar();
+            //    if (res != null)
+            //    {
+            //        //resultado = "Resultado: " + res.ToString();
+            //        string retorno = "Código: " + res.ToString() + ", já cadastrado. ";
+            //        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            //        sb.Append("<script type = 'text/javascript'>");
+            //        sb.Append("document.addEventListener('DOMContentLoaded', function() {");
+            //        sb.Append("alert('");
+            //        sb.Append(retorno);
+            //        sb.Append("');");
+            //        sb.Append("});");
+            //        sb.Append("</script>");
+            //        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+
+            //    }
+            //}
+
+            ////lblResultado.Text = resultado;
+            //txtCodMot.Text.ToUpper();
+            //// ddlTipoMot.Focus();
+            ///
+            if (txtCodMot.Text != "")
             {
-                string query = "SELECT TOP 1 codmot FROM tbmotoristas WHERE codmot LIKE @termo";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                string cod = txtCodMot.Text.Trim().ToUpper();
+                string sql = "select codmot, nommot from tbmotoristas where codmot='" + cod + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
                 conn.Open();
+                da.Fill(dt);
+                conn.Close();
 
-                object res = cmd.ExecuteScalar();
-                if (res != null)
+                if (dt.Rows.Count > 0)
                 {
-                    //resultado = "Resultado: " + res.ToString();
-                    string retorno = "Código: " + res.ToString() + ", já cadastrado. ";
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    sb.Append("<script type = 'text/javascript'>");
-                    sb.Append("document.addEventListener('DOMContentLoaded', function() {");
-                    sb.Append("alert('");
-                    sb.Append(retorno);
-                    sb.Append("');");
-                    sb.Append("});");
-                    sb.Append("</script>");
-                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
 
+                    ExibirToast("Código: " + txtCodMot.Text.Trim() + " ("+ dt.Rows[0][1].ToString() + "), já cadastrado no sistema.");
+                    Thread.Sleep(5000);
+                    txtCodMot.Text = "";
+                    txtCodMot.Focus();
                 }
             }
-
-            //lblResultado.Text = resultado;
-            txtCodMot.Text.ToUpper();
-           // ddlTipoMot.Focus();
         }
         // Função para carregar o DropDownList com dados dos agregados
         private void CarregarDDLAgregados()
@@ -423,7 +435,7 @@ namespace NewCapit.dist.pages
                 {
                     txtCodTra.Text = reader["codtra"].ToString();
                     //ddlAgregados.Text = reader["fantra"].ToString();
-                   
+
                 }
             }
         }
@@ -431,9 +443,9 @@ namespace NewCapit.dist.pages
         private void LimparCampos()
         {
             txtCodTra.Text = string.Empty;
-            
+
         }
-       
+
         private void CarregarCargos()
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -460,7 +472,7 @@ namespace NewCapit.dist.pages
             // Preencher os campos com base no valor selecionado
             if (idSelecionado > 0)
             {
-               // PreencherCamposCargo(idSelecionado);
+                // PreencherCamposCargo(idSelecionado);
             }
             else
             {
@@ -580,6 +592,41 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        protected void ExibirToast(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
 
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastCadastro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage2').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast2');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastErro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage3').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast3');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
     }
 }

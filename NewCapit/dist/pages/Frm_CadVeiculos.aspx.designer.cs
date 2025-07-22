@@ -24,13 +24,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtCodVei;
 
         /// <summary>
-        /// Controle btnVeiculo.
+        /// Controle RequiredFieldValidator27.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnVeiculo;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator27;
 
         /// <summary>
         /// Controle cboTipo.
@@ -78,13 +78,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.DropDownList ddlEstados;
 
         /// <summary>
-        /// Controle RequiredFieldValidator1.
+        /// Controle rvfddlEstados.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rvfddlEstados;
 
         /// <summary>
         /// Controle ddlCidades.
@@ -96,13 +96,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.DropDownList ddlCidades;
 
         /// <summary>
-        /// Controle RequiredFieldValidator2.
+        /// Controle rvfddlCidades.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rvfddlCidades;
 
         /// <summary>
         /// Controle cbFiliais.
@@ -114,13 +114,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.DropDownList cbFiliais;
 
         /// <summary>
-        /// Controle RequiredFieldValidator3.
+        /// Controle rvfcbFiliais.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator3;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rvfcbFiliais;
 
         /// <summary>
         /// Controle txtCodigo.
@@ -150,15 +150,6 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtControlePatrimonio;
 
         /// <summary>
-        /// Controle RequiredFieldValidator11.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator11;
-
-        /// <summary>
         /// Controle txtAno.
         /// </summary>
         /// <remarks>
@@ -184,6 +175,15 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDataAquisicao;
+
+        /// <summary>
+        /// Controle RequiredFieldValidator11.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator11;
 
         /// <summary>
         /// Controle txtRenavam.
@@ -321,6 +321,15 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtAltura;
 
         /// <summary>
+        /// Controle RequiredFieldValidator29.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator29;
+
+        /// <summary>
         /// Controle txtProtocoloCET.
         /// </summary>
         /// <remarks>
@@ -328,6 +337,15 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProtocoloCET;
+
+        /// <summary>
+        /// Controle RequiredFieldValidator28.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator28;
 
         /// <summary>
         /// Controle txtVencCET.

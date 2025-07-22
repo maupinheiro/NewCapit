@@ -11,7 +11,7 @@
             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
        } else {
            document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-       }
+        }
     }
 </script>
      <style>
@@ -363,30 +363,4 @@
         </div>
     </div>
  </div>    
-<footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.1.0 
-    </div>
-    <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-</footer>
-
-<!-- Page specific script -->
-<script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-</script>
-
 </asp:Content>
