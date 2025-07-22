@@ -13,6 +13,10 @@ using System.Data;
 using Newtonsoft.Json;
 using System.Web.Services;
 using System.Configuration;
+using System.Diagnostics.Eventing.Reader;
+using NPOI.SS.Formula.Functions;
+using static NPOI.HSSF.Util.HSSFColor;
+using System.Threading;
 
 
 namespace NewCapit
@@ -20,7 +24,6 @@ namespace NewCapit
     public partial class Frm_CadVeiculos : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
-        int sequencia;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -40,8 +43,8 @@ namespace NewCapit
                 }
 
                 DateTime dataHoraAtual = DateTime.Now;
-                //txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy");
-                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");                
+                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+
                 CarregarDDLAgregados();
                 PreencherComboRastreadores();
                 PreencherComboFiliais();
@@ -49,61 +52,65 @@ namespace NewCapit
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboEstados();
-
             }
+
         }
         protected void txtPlaca_TextChanged(object sender, EventArgs e)
         {
-            string termo = txtPlaca.Text.ToUpper();            
-            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(strConn))
+            if (txtPlaca.Text != "")
             {
-                string query = "SELECT TOP 1 plavei FROM tbveiculos WHERE plavei LIKE @termo";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-                conn.Open();
+                string termo = txtPlaca.Text.ToUpper();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
-                object res = cmd.ExecuteScalar();
-                if (res != null)
+                using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    //resultado = "Resultado: " + res.ToString();
-                    string retorno = "Placa: " + res.ToString() + ", já cadastrado. " ;
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    sb.Append("<script type = 'text/javascript'>");
-                    sb.Append("window.onload=function(){");
-                    sb.Append("alert('");
-                    sb.Append(retorno);
-                    sb.Append("')};");
-                    sb.Append("</script>");
-                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                    txtPlaca.Text = "";
-                    txtPlaca.Focus();
+                    string query = "SELECT TOP 1 plavei FROM tbveiculos WHERE plavei LIKE @termo";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                    conn.Open();
+
+                    object res = cmd.ExecuteScalar();
+                    if (res != null)
+                    {
+                        ExibirToast("Placa: " + txtPlaca.Text.Trim() + ", já cadastrada no sistema.");
+                        Thread.Sleep(5000);
+                        txtPlaca.Text = "";
+                        txtPlaca.Focus();
+                    }
                 }
-            }
 
-            //lblResultado.Text = resultado;
-            txtPlaca.Text.ToUpper();
-            ddlEstados.Focus();
+                //lblResultado.Text = resultado;
+                txtPlaca.Text.ToUpper();
+                ddlEstados.Focus();
+            }            
         }
-
         protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int estadoId = int.Parse(ddlEstados.SelectedValue);
-            CarregarCidades(estadoId);
+            string uf = ddlEstados.SelectedValue;
+            CarregarCidades(uf);
+
+            // Restaurar cidade se estiver em ViewState
+            if (ViewState["CidadeSelecionada"] != null)
+            {
+                string cidadeId = ViewState["CidadeSelecionada"].ToString();
+                if (ddlCidades.Items.FindByValue(cidadeId) != null)
+                {
+                    ddlCidades.SelectedValue = cidadeId;
+                }
+            }
         }
-        private void CarregarCidades(int estadoId)
+        private void CarregarCidades(string uf)
         {
             string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(strConn))
             {
-                string query = "SELECT uf, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @EstadoId";
+                string query = "SELECT cod_municipio, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @UF";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@EstadoId", estadoId);
+                cmd.Parameters.AddWithValue("@UF", uf);
                 conn.Open();
                 ddlCidades.DataSource = cmd.ExecuteReader();
                 ddlCidades.DataTextField = "nome_municipio";
-                ddlCidades.DataValueField = "uf";
+                ddlCidades.DataValueField = "cod_municipio"; // valor único
                 ddlCidades.DataBind();
 
                 ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
@@ -168,7 +175,7 @@ namespace NewCapit
                     cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cbFiliais.DataBind();  // Realiza o binding dos dados                   
-                    cbFiliais.Items.Insert(0, new ListItem("", "0"));
+                    cbFiliais.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -179,7 +186,6 @@ namespace NewCapit
                 }
             }
         }
-
         private void PreencherComboMarcasVeiculos()
         {
             // Consulta SQL que retorna os dados desejados
@@ -204,7 +210,7 @@ namespace NewCapit
                     ddlMarca.DataTextField = "marca";  // Campo que será mostrado no ComboBox
                     ddlMarca.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlMarca.DataBind();  // Realiza o binding dos dados                   
-                    ddlMarca.Items.Insert(0, new ListItem("", "0"));
+                    ddlMarca.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -215,7 +221,6 @@ namespace NewCapit
                 }
             }
         }
-
         private void PreencherComboCoresVeiculos()
         {
             // Consulta SQL que retorna os dados desejados
@@ -240,7 +245,7 @@ namespace NewCapit
                     ddlCor.DataTextField = "cor";  // Campo que será mostrado no ComboBox
                     ddlCor.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlCor.DataBind();  // Realiza o binding dos dados                   
-                    ddlCor.Items.Insert(0, new ListItem("", "0"));
+                    ddlCor.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -251,7 +256,6 @@ namespace NewCapit
                 }
             }
         }
-
         private void PreencherComboRastreadores()
         {
             // Consulta SQL que retorna os dados desejados
@@ -276,8 +280,8 @@ namespace NewCapit
                     ddlTecnologia.DataTextField = "nomRastreador";  // Campo que será mostrado no ComboBox
                     ddlTecnologia.DataValueField = "codRastreador";  // Campo que será o valor de cada item                    
                     ddlTecnologia.DataBind();  // Realiza o binding dos dados
-                                               
-                    ddlTecnologia.Items.Insert(0, new ListItem("", "0"));
+
+                    ddlTecnologia.Items.Insert(0, new ListItem("Selecione...", "0"));
 
                     // Feche o reader
                     reader.Close();
@@ -289,52 +293,24 @@ namespace NewCapit
                 }
             }
         }
-                
-        protected void btnVeiculo_Click(object sender, EventArgs e)
-        {
-            string cod = txtCodVei.Text;
-            string sql = "select * from tbveiculos where codvei='" + cod + "'";
-            SqlDataAdapter da = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            da.Fill(dt);
-            con.Close();
-
-            if (dt.Rows.Count > 0)
-            {
-                string retorno = "Frota: " + cod + ", já possui veículo vinculado!";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(retorno);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                txtCodVei.Text = "";
-                txtCodVei.Focus();
-            }
-            
-
-        }
-
+       
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-           //string[] cod_transp = ddlAgregados.SelectedItem.ToString().Split('-');
-            
-            string sql = @"INSERT INTO tbveiculos (id, codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca)
+            //string[] cod_transp = ddlAgregados.SelectedItem.ToString().Split('-');
+
+            string sql = @"INSERT INTO tbveiculos (codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca)
               VALUES
-              (@id,@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca)";
+              (@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca)";
 
             try
             {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    GerarNumero();
+
                     // Adicionando os parâmetros da inserção
                     cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.Trim().ToUpper());                    
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text.Trim());
@@ -348,7 +324,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));                    
+                    cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
                     cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text.Trim());
                     cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text.Trim());
@@ -367,9 +343,9 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
                     cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text.Trim());
-                    cmd.Parameters.AddWithValue("@venccronotacografo", txtCronotacografo.Text.Trim());
+                    cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(txtCronotacografo.Text.Trim()).ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text.Trim());
-                    cmd.Parameters.AddWithValue("@id", sequencia);
+
 
                     // Abrindo a conexão e executando a query
                     con.Open();
@@ -377,58 +353,39 @@ namespace NewCapit
 
                     if (rowsInserted > 0)
                     {
-                        string nomeUsuario = txtUsuCadastro.Text;
-                        string mensagem = $"Olá, {nomeUsuario}!\nVeículo com código {txtCodVei.Text} cadastrado com sucesso.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
+                       
+                        ExibirToastCadastro("Os dados foram salvos com sucesso!");
+                        Thread.Sleep(5000);
                         // Redirecionar para a página de consulta
                         Response.Redirect("ConsultaVeiculos.aspx");
                     }
                     else
                     {
-                        string mensagem = "Falha ao cadastrar o veículo. Tente novamente.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                        ExibirToastErro("Erro ao salvar os dados. Tente novamente.");
+                        Thread.Sleep(5000);
                     }
                 }
             }
             catch (Exception ex)
             {
-                string mensagemErro = "Erro ao cadastrar o veículo: " + ex.Message;
-                string scriptErro = $"alert('{HttpUtility.JavaScriptStringEncode(mensagemErro)}');";
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", scriptErro, true);
-            }
-        }               
 
+                ExibirToastErro("Erro ao salvar os dados do veículo. " + ex.Message);
+                Thread.Sleep(5000);
+                Response.Redirect("ConsultaVeiculos.aspx");
+
+            }
+        }
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
         }
-        public void GerarNumero()
-        {
-            string sql_sequncia = " select isnull(max(id+1),1) as id from tbveiculos";
-
-            con.Open();
-
-            SqlDataAdapter da = new SqlDataAdapter(sql_sequncia, con);
-
-            DataTable dt2 = new DataTable();
-
-            da.Fill(dt2);
-
-            sequencia = int.Parse(dt2.Rows[0][0].ToString());
-
-            con.Close();
-        }
-
         // Função para carregar o DropDownList com dados dos agregados
         private void CarregarDDLAgregados()
         {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))            
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT ID, fantra FROM tbtransportadoras WHERE fl_exclusao is null AND ativa_inativa = 'ATIVO' ORDER BY fantra"; 
+                string query = "SELECT ID, fantra FROM tbtransportadoras WHERE fl_exclusao is null AND ativa_inativa = 'ATIVO' ORDER BY fantra";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -438,10 +395,9 @@ namespace NewCapit
                 ddlAgregados.DataBind();
 
                 // Adicionar o item padrão
-                ddlAgregados.Items.Insert(0, new ListItem("", "0"));
+                ddlAgregados.Items.Insert(0, new ListItem("Selecione...", "0"));
             }
         }
-
         // Evento disparado quando o item do DropDownList é alterado
         protected void ddlAgregados_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -457,7 +413,6 @@ namespace NewCapit
                 LimparCampos();
             }
         }
-
         // Função para preencher os campos com os dados do banco
         private void PreencherCampos(int id)
         {
@@ -477,17 +432,145 @@ namespace NewCapit
                 }
             }
         }
-
         // Função para limpar os campos
         private void LimparCampos()
         {
             txtCodTra.Text = string.Empty;
             txtAntt.Text = string.Empty;
         }
+        protected void ddlCidades_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ViewState["CidadeSelecionada"] = ddlCidades.SelectedValue;
+        }        
+        protected void txtCodVei_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodVei.Text != "")
+            {
+                string cod = txtCodVei.Text;
+                string sql = "select * from tbveiculos where codvei='" + cod + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                con.Close();
 
+                if (dt.Rows.Count > 0)
+                {
 
+                    ExibirToast("Código: " + txtCodVei.Text.Trim() + ", já cadastrado no sistema.");
+                    Thread.Sleep(5000);
+                    txtCodVei.Text = "";
+                    txtCodVei.Focus();
+                }
+            }            
+        }
+        protected void txtCodRastreador_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodRastreador.Text != "")
+            {
+                string cod = txtCodRastreador.Text;
+                string sql = "SELECT codRastreador, nomRastreador, codBuonny FROM tbrastreadores where codRastreador='" + cod + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                con.Close();
 
+                if (dt.Rows.Count > 0)
+                {
+                    ddlTecnologia.SelectedItem.Text = dt.Rows[0][1].ToString();
+                }
+                else
+                {
+                    ExibirToastErro("Código: " + txtCodRastreador.Text.Trim() + ", não encontrado no sistema.");
+                    Thread.Sleep(5000);
+                    txtCodRastreador.Text = "";
+                    txtCodRastreador.Focus();
+                }
+            }
 
+        }
+        protected void txtCodTra_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodTra.Text != "")
+            {
+                string cod = txtCodTra.Text;
+                string sql = "SELECT codtra, fantra, ativa_inativa, fl_exclusao, antt FROM tbtransportadoras where codtra = '" + cod + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][3].ToString() == null)
+                    {
+                        ExibirToastErro("Código: " + txtCodTra.Text.Trim() + ", deletado do sistema.");
+                        Thread.Sleep(5000);
+                        txtCodVei.Text = "";
+                        txtCodVei.Focus();                       
+                    }
+                    else if (dt.Rows[0][2].ToString() == "INATIVO")
+                    {
+                        ExibirToastErro("Código: " + txtCodTra.Text.Trim() + ", inativo no sistema.");
+                        Thread.Sleep(5000);
+                        txtCodVei.Text = "";
+                        txtCodVei.Focus();                        
+                    }
+                    else
+                    {
+                        ddlAgregados.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtAntt.Text = dt.Rows[0][4].ToString();
+                    }
+                    
+                }
+                else
+                {
+                    ExibirToastErro("Código: " + txtCodTra.Text.Trim() + ", não encontrado no sistema.");
+                    Thread.Sleep(5000);
+                    txtCodTra.Text = "";
+                    txtCodTra.Focus();
+                }
+            }
+        }
+
+        protected void ExibirToast(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastCadastro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage2').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast2');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastErro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage3').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast3');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
 
     }
 }

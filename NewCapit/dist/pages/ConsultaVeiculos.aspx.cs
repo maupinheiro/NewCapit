@@ -16,11 +16,18 @@ namespace NewCapit
 {
     public partial class ConsultaVeiculos : System.Web.UI.Page
     {
-        SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+       SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
-            ContagemVeiculo();
-            AllDataVeiculos();
+
+            if (!IsPostBack)
+            {
+                ContagemVeiculo();
+                AllDataVeiculos();
+            }
+
+
+
         }
         public void ContagemVeiculo()
         {
@@ -80,7 +87,7 @@ namespace NewCapit
             TotalTerceiros.Text = dt4.Rows[0][0].ToString();
 
             // Distribuição da frota por nucleo
-            string sqlDistCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='FROTA' and nucleo = 'CNT' and fl_exclusao is null ";
+            string sqlDistCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='FROTA' and nucleo = 'CNT (CC)' and fl_exclusao is null ";
             SqlDataAdapter adptDistCNT = new SqlDataAdapter(sqlDistCNT, con);
             DataTable dtDistCNT = new DataTable();
             con.Open();
@@ -120,7 +127,7 @@ namespace NewCapit
             con.Close();
             FrotaPE.Text = dtDistPE.Rows[0][0].ToString();
 
-            string sqlDistSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'FROTA' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'FROTA' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistSBC = new SqlDataAdapter(sqlDistSBC, con);
             DataTable dtDistSBC = new DataTable();
             con.Open();
@@ -154,7 +161,7 @@ namespace NewCapit
 
 
             // Distribuição de terceiros por nucleo
-            string sqlDistTerCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='TERCEIRO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistTerCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='TERCEIRO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistTerCNT = new SqlDataAdapter(sqlDistTerCNT, con);
             DataTable dtDistTerCNT = new DataTable();
             con.Open();
@@ -194,7 +201,7 @@ namespace NewCapit
             con.Close();
             lbTerPE.Text = dtDistTerPE.Rows[0][0].ToString();
 
-            string sqlDistTerSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistTerSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'TERCEIRO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistTerSBC = new SqlDataAdapter(sqlDistTerSBC, con);
             DataTable dtDistTerSBC = new DataTable();
             con.Open();
@@ -228,7 +235,7 @@ namespace NewCapit
 
 
             // Distribuição de agregados por nucleo
-            string sqlDistAgCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='AGREGADO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistAgCNT = "SELECT count(*) FROM tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo='AGREGADO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistAgCNT = new SqlDataAdapter(sqlDistAgCNT, con);
             DataTable dtDistAgCNT = new DataTable();
             con.Open();
@@ -268,7 +275,7 @@ namespace NewCapit
             con.Close();
             AgPE.Text = dtDistAgPE.Rows[0][0].ToString();
 
-            string sqlDistAgSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'AGREGADO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistAgSBC = "select count(*) from tbveiculos where ativo_inativo = 'ATIVO' and tipoveiculo = 'AGREGADO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistAgSBC = new SqlDataAdapter(sqlDistAgSBC, con);
             DataTable dtDistAgSBC = new DataTable();
             con.Open();
@@ -304,11 +311,14 @@ namespace NewCapit
 
         }
 
-        private void AllDataVeiculos()
+        private void AllDataVeiculos(string searchTerm = "")
         {
-            var dataTable = DAL.ConVeiculos.FetchDataTable();
+            // var dataTable = DAL.ConVeiculos.FetchDataTable();
+            var dataTable = DAL.ConVeiculos.FetchDataTable2(searchTerm);
             if (dataTable.Rows.Count <= 0)
             {
+                gvVeiculos.DataSource = null;
+                gvVeiculos.DataBind();
                 return;
             }
             gvVeiculos.DataSource = dataTable;
@@ -323,71 +333,29 @@ namespace NewCapit
         {
             gvVeiculos.PageIndex = e.NewPageIndex;
             AllDataVeiculos();  // Método para recarregar os dados no GridView
+
+            //string searchTerm = myInput.Text.Trim();
+            //AllDataVeiculos(searchTerm);
+
         }
         protected void Editar(object sender, EventArgs e)
         {
+            //LinkButton btn = (LinkButton)sender;
+            //string id = btn.CommandArgument;
+
+            //Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
+
+
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
             {
                 string id = gvVeiculos.DataKeys[row.RowIndex].Value.ToString();
 
                 Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
             }
-        }
-        protected void Excluir(object sender, EventArgs e)
-        {
-            if (txtconformmessageValue.Value == "Yes")
-            {
-                using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-                {
-                    string id = gvVeiculos.DataKeys[row.RowIndex].Value.ToString();
-
-                    string sql = "update tbveiculos set fl_exclusao='S' where id=@id";
-                    SqlCommand comando = new SqlCommand(sql, con);
-                    comando.Parameters.AddWithValue("@id", id);
-                    try
-                    {
-                        con.Open();
-                        comando.ExecuteNonQuery();
-                        con.Close();
-                        AllDataVeiculos()                                                                              ;
-                        string retorno = "Registro excluído com sucesso!";
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                        sb.Append("<script type = 'text/javascript'>");
-                        sb.Append("window.onload=function(){");
-                        sb.Append("alert('");
-                        sb.Append(retorno);
-                        sb.Append("')};");
-                        sb.Append("</script>");
-                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
-                    }
-                    catch (Exception ex)
-                    {
-                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                        sb.Append("<script type = 'text/javascript'>");
-                        sb.Append("window.onload=function(){");
-                        sb.Append("alert('");
-                        sb.Append(retorno);
-                        sb.Append("')};");
-                        sb.Append("</script>");
-                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                        //Chama a página de consulta clientes
-                        Response.Redirect("ConsultaClientes.aspx");
-                    }
-
-                    finally
-                    {
-                        con.Close();
-                    }
-                }
-            }
-
 
         }
 
-        private void AllData(string searchTerm = "")
+        private void AllData(string searchTerm)
         {
             var dataTable = DAL.ConVeiculos.FetchDataTable2(searchTerm);
             if (dataTable.Rows.Count <= 0)

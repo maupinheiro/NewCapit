@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
@@ -14,7 +16,10 @@ namespace NewCapit
 {
     public partial class Frm_AltVeiculos : System.Web.UI.Page
     {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
+        string id_uf;
+        DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -25,27 +30,30 @@ namespace NewCapit
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
 
-                    txtAlteradoPor.Text = nomeUsuario;
-
+                    // txtAlteradoPor.Text = nomeUsuario;
+                    txtUsuarioAtual.Text = nomeUsuario;
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                    txtAlteradoPor.Text = lblUsuario;
-                }              
-                
-                //PreencherComboAgregados();
+                    // txtAlteradoPor.Text = lblUsuario;
+                }
+
+                PreencherComboEstados();
+               // PreencherComboComposicao();
                 CarregarDDLAgregados();
                 PreencherComboFiliais();
                 PreencherComboMarcasVeiculos();
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
+                PreencherComboCboTipo();
+                CarregaDadosDoVeiculo();
 
+                //DateTime dataHoraAtual = DateTime.Now;
+                // txtDtAlteracao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
             }
-            CarregaDadosDoVeiculo();
-
 
         }
 
@@ -156,7 +164,38 @@ namespace NewCapit
                 }
             }
         }
+        private void CarregarCidades(string uf)
+        {
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT cod_municipio, nome_municipio FROM tbmunicipiosbrasileiros WHERE uf = @UF";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UF", uf);
+                conn.Open();
+                ddlCidades.DataSource = cmd.ExecuteReader();
+                ddlCidades.DataTextField = "nome_municipio";
+                ddlCidades.DataValueField = "cod_municipio"; // valor único
+                ddlCidades.DataBind();
 
+                ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
+            }
+        }
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string uf = ddlEstados.SelectedValue;
+            CarregarCidades(uf);
+
+            // Restaurar cidade se estiver em ViewState
+            if (ViewState["CidadeSelecionada"] != null)
+            {
+                string cidadeId = ViewState["CidadeSelecionada"].ToString();
+                if (ddlCidades.Items.FindByValue(cidadeId) != null)
+                {
+                    ddlCidades.SelectedValue = cidadeId;
+                }
+            }
+        }
         private void PreencherComboRastreadores()
         {
             // Consulta SQL que retorna os dados desejados
@@ -192,15 +231,10 @@ namespace NewCapit
                 }
             }
         }
-        protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
-        }
-
-        private void PreencherComboMotoristas()
+        private void PreencherComboCboTipo()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao IS NULL AND status = 'ATIVO' ORDER BY nommot";
+            string query = "SELECT id, descricao FROM tbtipos_veiculos";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -213,7 +247,81 @@ namespace NewCapit
                     // Crie o comando SQL
                     SqlCommand cmd = new SqlCommand(query, conn);
 
-                    
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlTecnologia.DataSource = reader;
+                    ddlTecnologia.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    ddlTecnologia.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlTecnologia.DataBind();  // Realiza o binding dos dados                   
+
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        private void PreencherComboEstados()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT Uf, SiglaUf FROM tbestadosbrasileiros";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlEstados.DataSource = reader;
+                    ddlEstados.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
+                    ddlEstados.DataValueField = "Uf";  // Campo que será o valor de cada item                    
+                    ddlEstados.DataBind();  // Realiza o binding dos dados                   
+                    //ddlEstados.Items.Insert(0, new ListItem("", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
+        }
+        private void PreencherComboMotoristas()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao is null AND status = 'ATIVO' ORDER BY nommot";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -253,18 +361,19 @@ namespace NewCapit
             string composicao14 = "CAVALO SIMPLES COM PRANCHA";
             string composicao15 = "CAVALO TRUCADO COM PRANCHA";
             string composicao16 = "UTILITÁRIO/FURGÃO";
-            string composicao17 = "FIORINO";            
+            string composicao17 = "FIORINO";
 
             string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
             string tipoComposicao = selectedValue;
-
+            string tara = txtTara.Text.Trim();
+            int nTara = 0;
             if (tipoComposicao.Equals(composicao1))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -273,10 +382,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao2))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 41500;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -285,10 +394,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao3))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "41500";
+                txtLotacao.Text = "41500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -297,10 +406,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao4))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "46000";
+                txtLotacao.Text = "46000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 46000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
                 int nTotalCarga = nPesoLiquido + nPesoTolerancia;
@@ -308,22 +417,23 @@ namespace NewCapit
             }
             else if (tipoComposicao.Equals(composicao5))
             {
+
                 txtEixos.Text = "06";
-                txtCap.Text = "53000";
+                txtLotacao.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = Int32.Parse(tara);
                 int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;             
-            
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
             }
             else if (tipoComposicao.Equals(composicao6))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "48500";
+                txtLotacao.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -331,10 +441,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao7))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "48500";
+                txtLotacao.Text = "48500";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 48500;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -342,10 +452,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao8))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "53000";
+                txtLotacao.Text = "53000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 53000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -353,10 +463,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao9))
             {
                 txtEixos.Text = "03";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -364,10 +474,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao10))
             {
                 txtEixos.Text = "04";
-                txtCap.Text = "29000";
+                txtLotacao.Text = "29000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 29000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -375,10 +485,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao11))
             {
                 txtEixos.Text = "07";
-                txtCap.Text = "57000";
+                txtLotacao.Text = "57000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 57000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -386,10 +496,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao12))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "16000";
+                txtLotacao.Text = "16000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 16000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -397,10 +507,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao13))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "3000";
+                txtLotacao.Text = "3000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 3000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -408,10 +518,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao14))
             {
                 txtEixos.Text = "05";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -419,10 +529,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao15))
             {
                 txtEixos.Text = "06";
-                txtCap.Text = "23000";
+                txtLotacao.Text = "23000";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 23000;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -430,10 +540,10 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao16))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "1200";
+                txtLotacao.Text = "1200";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 1200;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
@@ -441,48 +551,278 @@ namespace NewCapit
             else if (tipoComposicao.Equals(composicao17))
             {
                 txtEixos.Text = "02";
-                txtCap.Text = "630";
+                txtLotacao.Text = "630";
                 txtTolerancia.Text = "5";
                 int nCapacidade = 630;
-                int nTara = int.Parse(txtTara.Text);
+                nTara = int.Parse(txtTara.Text);
                 int nPesoLiquido = nCapacidade - nTara;
                 int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
             }
         }
-        protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlComposicao_SelectedIndexChanged2(object sender, EventArgs e)
         {
-            if (txtTara.Text != string.Empty)
+            string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
+            string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
+            string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
+            string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
+            string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
+            string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
+            string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
+            string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
+            string composicao9 = "TRUCK";
+            string composicao10 = "BITRUCK";
+            string composicao11 = "BITREM";
+            string composicao12 = "TOCO";
+            string composicao13 = "VUC OU 3/4";
+            string composicao14 = "CAVALO SIMPLES COM PRANCHA";
+            string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+            string composicao16 = "UTILITÁRIO/FURGÃO";
+            string composicao17 = "FIORINO";
+
+            string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
+            string tipoComposicao = selectedValue;
+            string tara = txtTara.Text;
+
+            int nTara = 0;
+            if (tipoComposicao.Equals(composicao1))
             {
-                cboTipoCarreta_Leave();
+                txtEixos.Text = "05";
+                txtLotacao.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
             }
-            else
+            else if (tipoComposicao.Equals(composicao2))
             {
-                string retorno = "É necessário digitar o valor no campo Tara!";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(retorno);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                ddlComposicao.SelectedValue = "";
+                txtEixos.Text = "05";
+                txtLotacao.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 41500;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao3))
+            {
+                txtEixos.Text = "05";
+                txtLotacao.Text = "41500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao4))
+            {
+                txtEixos.Text = "05";
+                txtLotacao.Text = "46000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 46000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+                txtPBT.Text = nTotalCarga.ToString();
+            }
+            else if (tipoComposicao.Equals(composicao5))
+            {
+                tara = txtTara.Text.Trim();
+                txtEixos.Text = "06";
+                txtLotacao.Text = "53000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 53000;
+                nTara = int.Parse(tara);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao6))
+            {
+                txtEixos.Text = "06";
+                txtLotacao.Text = "48500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 48500;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao7))
+            {
+                txtEixos.Text = "06";
+                txtLotacao.Text = "48500";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 48500;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao8))
+            {
+                txtEixos.Text = "06";
+                txtLotacao.Text = "53000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 53000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao9))
+            {
+                txtEixos.Text = "03";
+                txtLotacao.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao10))
+            {
+                txtEixos.Text = "04";
+                txtLotacao.Text = "29000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 29000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao11))
+            {
+                txtEixos.Text = "07";
+                txtLotacao.Text = "57000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 57000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao12))
+            {
+                txtEixos.Text = "02";
+                txtLotacao.Text = "16000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 16000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao13))
+            {
+                txtEixos.Text = "02";
+                txtLotacao.Text = "3000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 3000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao14))
+            {
+                txtEixos.Text = "05";
+                txtLotacao.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao15))
+            {
+                txtEixos.Text = "06";
+                txtLotacao.Text = "23000";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 23000;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao16))
+            {
+                txtEixos.Text = "02";
+                txtLotacao.Text = "1200";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 1200;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
+            }
+            else if (tipoComposicao.Equals(composicao17))
+            {
+                txtEixos.Text = "02";
+                txtLotacao.Text = "630";
+                txtTolerancia.Text = "5";
+                int nCapacidade = 630;
+                nTara = int.Parse(txtTara.Text);
+                int nPesoLiquido = nCapacidade - nTara;
+                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+
             }
 
         }
+        private void PreencherComboComposicao()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT ID, composicao, eixos, pbt, tolerancia FROM tbcomposicaoveiculo";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlComposicao.DataSource = reader;
+                    ddlComposicao.DataTextField = "composicao";  // Campo que será mostrado no ComboBox
+                    ddlComposicao.DataValueField = "ID";  // Campo que será o valor de cada item                    
+                    ddlComposicao.DataBind();  // Realiza o binding dos dados                   
+
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
         public void CarregaDadosDoVeiculo()
         {
-            string id = HttpContext.Current.Request.QueryString["id"];
 
-            // Verifica se o ID está presente na query string
-            if (string.IsNullOrEmpty(id))
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
-                // Log ou mensagem indicando que o ID não foi informado
-                return;
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
 
-            string sql = @"SELECT * FROM tbveiculos WHERE id = @id and fl_exclusao is null";
+            string sql = "SELECT * FROM tbveiculos WHERE id = @id";
 
             try
             {
@@ -512,54 +852,246 @@ namespace NewCapit
                     string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
 
                     txtCodVei.Text = GetValue(row, 1);
-                    cboTipo.Items.Insert(0, GetValue(row, 2));
-                    ddlTipo.Items.Insert(0, GetValue(row, 3));
-                    txtModelo.Text = GetValue(row, 4);
-                    txtAno.Text = GetValue(row, 5);
-                    txtCadastro.Text = GetValue(row, 6);
-                    cbFiliais.Items.Insert(0, GetValue(row, 7));
-                    status.Items.Insert(0, GetValue(row, 8));
-                    txtPlaca.Text = GetValue(row, 9);
-                    txtReb1.Text = GetValue(row, 10);
-                    txtReb2.Text = GetValue(row, 11);
-                    ddlCarreta.Items.Insert(0, GetValue(row, 13));
-                    ddlComposicao.Items.Insert(0, GetValue(row, 12));
-                    ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
-                    txtCodRastreador.Text = GetValue(row, 15);
-                    ddlTecnologia.Items.Insert(0, GetValue(row, 16));
-                    txtId.Text = GetValue(row, 17);
-                    txtCap.Text = GetValue(row, 18);
-                    txtEixos.Text = GetValue(row, 19);
-                    txtTara.Text = GetValue(row, 20);
-                    txtTolerancia.Text = GetValue(row, 21);
-                    txtPBT.Text = GetValue(row, 22);
-                    txtCodMot.Text = GetValue(row, 27);
-                    ddlMotorista.Items.Insert(0, GetValue(row, 28));
-                    txtCodTra.Text = GetValue(row, 29);
-                    ddlAgregados.Items.Insert(0, GetValue(row, 30));
-                    txtOpacidade.Text = GetValue(row, 31);
-                    txtCadastradoPor.Text = GetValue(row, 32);
-                    txtDtCadastro.Text = GetValue(row, 33);
-                    txtValCET.Text = GetValue(row, 36);
-                    txtProtocolo.Text = GetValue(row, 37);
-                    txtLicenciamento.Text = GetValue(row, 38);
-                    ddlMarca.Items.Insert(0, GetValue(row, 39));
-                    txtRenavam.Text = GetValue(row, 40);
-                    ddlCor.Items.Insert(0, GetValue(row, 41));
-                    ddlComunicacao.Items.Insert(0, GetValue(row, 42));
-                    txtAntt.Text = GetValue(row, 43);
-                    ddlUfPlaca.Items.Insert(0, GetValue(row, 46));
-                    txtCidPlaca.Text = GetValue(row, 47);
-                    txtComprimento.Text = GetValue(row, 49);
-                    txtLargura.Text = GetValue(row, 50);
-                    txtAltura.Text = GetValue(row, 51);
-                    txtTipoSeguro.Text = GetValue(row, 54);
-                    ddlTacografo.Items.Insert(0, GetValue(row, 59));
-                    ddlModeloTacografo.Items.Insert(0, GetValue(row, 60));
-                    txtDataAquisicao.Text = GetValue(row, 61);
-                    txtChassi.Text = GetValue(row, 63);
-                    
 
+                    // cboTipo.Items.Insert(0, GetValue(row, 2));
+                    if (dt.Rows[0][2].ToString() != string.Empty)
+                    {
+                        cboTipo.Items.Insert(0, GetValue(row, 2));
+                    }
+
+                    if (dt.Rows[0][3].ToString() != string.Empty)
+                    {
+                        ddlTipo.Items.Insert(0, GetValue(row, 3));
+                    }
+                    if (dt.Rows[0][4].ToString() != string.Empty)
+                    {
+                        txtModelo.Text = GetValue(row, 4);
+                    }
+                    if (dt.Rows[0][5].ToString() != string.Empty)
+                    {
+                        txtAno.Text = GetValue(row, 5);
+                    }
+                    if (dt.Rows[0][6].ToString() != string.Empty)
+                    {
+                        txtDtcVei.Text = DateTime.Parse(dt.Rows[0][6].ToString()).ToString("dd/MM/yyyy");
+                    }
+                    if (dt.Rows[0][7].ToString() != string.Empty)
+                    {
+                        cbFiliais.Items.Insert(0, GetValue(row, 7));
+                    }
+                    if (dt.Rows[0][8].ToString() != string.Empty)
+                    {
+                        ddlSituacao.Items.Insert(0, GetValue(row, 8));
+                    }
+                    if (dt.Rows[0][9].ToString() != string.Empty)
+                    {
+                        txtPlaca.Text = GetValue(row, 9);
+                    }
+                    if (dt.Rows[0][10].ToString() != string.Empty)
+                    {
+                        txtReb1.Text = GetValue(row, 10);
+                    }
+                    if (dt.Rows[0][11].ToString() != string.Empty)
+                    {
+                        txtReb2.Text = GetValue(row, 11);
+                    }
+
+                    if (dt.Rows[0][12].ToString() != string.Empty)
+                    {
+                        ddlComposicao.Items.Insert(0, GetValue(row, 12));
+                    }
+                    if (dt.Rows[0][13].ToString() != string.Empty)
+                    {
+                        ddlCarreta.Items.Insert(0, GetValue(row, 13));
+                    }
+                    if (dt.Rows[0][14].ToString() != string.Empty)
+                    {
+                        ddlMonitoramento.Items.Insert(0, GetValue(row, 14));
+                    }
+                    if (dt.Rows[0][15].ToString() != string.Empty)
+                    {
+                        txtCodRastreador.Text = GetValue(row, 15);
+                    }
+                    if (dt.Rows[0][16].ToString() != string.Empty)
+                    {
+                        ddlTecnologia.Items.Insert(0, GetValue(row, 16));
+                    }
+                    if (dt.Rows[0][17].ToString() != string.Empty)
+                    {
+                        txtId.Text = GetValue(row, 17);
+                    }
+                    if (dt.Rows[0][18].ToString() != string.Empty)
+                    {
+                        txtCargaLiq.Text = GetValue(row, 18);
+                    }
+                    if (dt.Rows[0][19].ToString() != string.Empty)
+                    {
+                        txtEixos.Text = GetValue(row, 19);
+                    }
+                    if (dt.Rows[0][20].ToString() != string.Empty)
+                    {
+                        txtTara.Text = GetValue(row, 20);
+                    }
+                    if (dt.Rows[0][21].ToString() != string.Empty)
+                    {
+                        txtTolerancia.Text = GetValue(row, 21);
+                    }
+                    if (dt.Rows[0][22].ToString() != string.Empty)
+                    {
+                        txtPBT.Text = GetValue(row, 22);
+                    }
+                    if (dt.Rows[0][27].ToString() != string.Empty)
+                    {
+                        txtCodMot.Text = GetValue(row, 27);
+                    }
+                    if (dt.Rows[0][28].ToString() != string.Empty)
+                    {
+                        ddlMotorista.Items.Insert(0, GetValue(row, 28));
+                    }
+                    if (dt.Rows[0][29].ToString() != string.Empty)
+                    {
+                        txtCodTra.Text = GetValue(row, 29);
+                    }
+                    if (dt.Rows[0][30].ToString() != string.Empty)
+                    {
+                        ddlAgregados.Items.Insert(0, GetValue(row, 30));
+                    }
+                    if (dt.Rows[0][31].ToString() != string.Empty)
+                    {
+                        txtOpacidade.Text = GetValue(row, 31);
+                    }
+                    if (dt.Rows[0][32].ToString() != string.Empty)
+                    {
+                        txtCadastradoPor.Text = GetValue(row, 32);
+                    }
+                    if (dt.Rows[0][33].ToString() != string.Empty)
+                    {
+                        txtDtCadastro.Text = GetValue(row, 33);
+                    }
+                    if (dt.Rows[0][34].ToString() != string.Empty)
+                    {
+                        txtAlteradoPor.Text = GetValue(row, 34);
+                    }
+                    if (dt.Rows[0][35].ToString() != string.Empty)
+                    {
+                        txtDtAlteracao.Text = GetValue(row, 35);
+                    }
+                    if (dt.Rows[0][36].ToString() != string.Empty)
+                    {
+                        txtVencCET.Text = GetValue(row, 36);
+                    }
+                    if (dt.Rows[0][37].ToString() != string.Empty)
+                    {
+                        txtProtocoloCET.Text = GetValue(row, 37);
+                    }
+                    if (dt.Rows[0][38].ToString() != string.Empty)
+                    {
+                        txtLicenciamento.Text = GetValue(row, 38);
+                    }
+                    if (dt.Rows[0][39].ToString() != string.Empty)
+                    {
+                        txtCronotacografo.Text = DateTime.Parse(dt.Rows[0][39].ToString()).ToString("dd/MM/yyyy");
+                    }
+                    if (dt.Rows[0][40].ToString() != string.Empty)
+                    {
+                        ddlMarca.Items.Insert(0, GetValue(row, 40));
+                    }
+                    if (dt.Rows[0][41].ToString() != string.Empty)
+                    {
+                        txtRenavam.Text = GetValue(row, 41);
+                    }
+                    if (dt.Rows[0][42].ToString() != string.Empty)
+                    {
+                        ddlCor.Items.Insert(0, GetValue(row, 42));
+                    }
+                    if (dt.Rows[0][43].ToString() != string.Empty)
+                    {
+                        ddlComunicacao.Items.Insert(0, GetValue(row, 43));
+                    }
+                    if (dt.Rows[0][44].ToString() != string.Empty)
+                    {
+                        txtAntt.Text = GetValue(row, 44);
+                    }
+                    // numeroReb1.Text = GetValue(row, 45);
+                    // numeroReb2.Text = GetValue(row, 46); 
+                    //ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
+                    //ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
+                    //ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString()));
+                    //ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
+
+
+                    if (dt.Rows[0][47].ToString() != string.Empty)
+                    {
+                        ddlEstados.Items.Insert(0, new ListItem(GetValue(row, 47).ToString(), "0"));
+                    }
+                    if (dt.Rows[0][48].ToString() != string.Empty)
+                    {
+                        ddlCidades.Items.Insert(0, new ListItem(GetValue(row, 48)));
+                    }
+                    if (dt.Rows[0][49].ToString() != string.Empty)
+                    {
+                        txtLotacao.Text = GetValue(row, 49);
+                    }
+                    if (dt.Rows[0][50].ToString() != string.Empty)
+                    {
+                        txtComprimento.Text = GetValue(row, 50);
+                    }
+                    if (dt.Rows[0][51].ToString() != string.Empty)
+                    {
+                        txtLargura.Text = GetValue(row, 51);
+                    }
+                    if (dt.Rows[0][52].ToString() != string.Empty)
+                    {
+                        txtAltura.Text = GetValue(row, 52);
+                    }
+                    if (dt.Rows[0][53].ToString() != string.Empty)
+                    {
+                        txtPlacaAnt.Text = GetValue(row, 53);
+                    }
+                    if (dt.Rows[0][54].ToString() != string.Empty)
+                    {
+                        txtCodigo.Text = GetValue(row, 54);
+                    }
+                    if (dt.Rows[0][55].ToString() != string.Empty)
+                    {
+                        txtTipoSeguro.Text = GetValue(row, 55);
+                    }
+                    if (dt.Rows[0][56].ToString() != string.Empty)
+                    {
+                        txtSeguradora.Text = GetValue(row, 56);
+                    }
+                    if (dt.Rows[0][57].ToString() != string.Empty)
+                    {
+                        txtApolice.Text = GetValue(row, 57);
+                    }
+                    if (dt.Rows[0][58].ToString() != string.Empty)
+                    {
+                        txtValidadeApolice.Text = GetValue(row, 58);
+                    }
+                    if (dt.Rows[0][59].ToString() != string.Empty)
+                    {
+                        txtValorFranquia.Text = GetValue(row, 59);
+                    }
+                    if (dt.Rows[0][60].ToString() != string.Empty)
+                    {
+                        ddlTacografo.Items.Insert(0, GetValue(row, 60));
+                    }
+                    if (dt.Rows[0][61].ToString() != string.Empty)
+                    {
+                        ddlModeloTacografo.Items.Insert(0, GetValue(row, 61));
+                    }
+                    if (dt.Rows[0][62].ToString() != string.Empty)
+                    {
+                        txtDataAquisicao.Text = GetValue(row, 62);
+                    }
+                    if (dt.Rows[0][63].ToString() != string.Empty)
+                    {
+                        txtControlePatrimonio.Text = GetValue(row, 63);
+                    }
+                    if (dt.Rows[0][64].ToString() != string.Empty)
+                    {
+                        txtChassi.Text = GetValue(row, 64);
+                    }
                 }
             }
             catch (Exception ex)
@@ -580,47 +1112,53 @@ namespace NewCapit
             }
 
             string sql = @"UPDATE tbveiculos SET         
-        tipvei = @tipvei,
-        tipoveiculo = @tipoveiculo,
-        modelo = @modelo,
-        ano = @ano,
-        nucleo = @nucleo,
-        ativo_inativo = @ativo_inativo,
-        plavei = @plavei,
-        reboque1 = @reboque1,
-        reboque2 = @reboque2,
-        tipocarreta = @tipocarreta,
-        tiporeboque = @tiporeboque,
-        rastreamento = @rastreamento,
-        codrastreador = @codrastreador,
-        eixos = @eixos,
-        tara = @tara,
-        tolerancia = @tolerancia,
-        codmot = @codmot,
-        motorista = @motorista,
-        codtra = @codtra,
-        transp = @transp,
-        usualt = @usualt,
-        dtcalt = @dtcalt,
-        protocolocet = @protocolocet,
-        venclicenciamento = @venclicenciamento,
-        marca = @marca,
-        renavan = @renavan,
-        cor = @cor,
-        comunicacao = @comunicacao,
-        antt = @antt,
-        codreb1 = @codreb1,
-        codreb2 = @codreb2,
-        ufplaca = @ufplaca,
-        cidplaca = @cidplaca,        
-        comprimento = @comprimento,
-        largura = @largura,
-        altura = @altura,                
-        tacografo = @tacografo,
-        modelotacografo = @modelotacografo,
-        dataaquisicao = @dataaquisicao,        
-        chassi = @chassi
-    WHERE id = @id";
+                            tipvei = @tipvei,
+                            tipoveiculo = @tipoveiculo,
+                            modelo = @modelo,
+                            ano = @ano,
+                            nucleo = @nucleo,
+                            ativo_inativo = @ativo_inativo,
+                            plavei = @plavei,
+                            reboque1 = @reboque1,
+                            reboque2 = @reboque2,
+                            tipocarreta = @tipocarreta,
+                            tiporeboque = @tiporeboque,
+                            rastreamento = @rastreamento,
+                            codrastreador = @codrastreador,
+                            eixos = @eixos,
+                            cap = @cap, 
+                            tara = @tara,
+                            tolerancia = @tolerancia,
+                            pbt = @pbt,                            
+                            codmot = @codmot,
+                            motorista = @motorista,
+                            codtra = @codtra,
+                            transp = @transp,
+                            vencimentolaudofumaca = @vencimentolaudofumaca,
+                            usualt = @usualt,
+                            dtcalt = @dtcalt,
+                            protocolocet = @protocolocet,
+                            venclicencacet = @venclicencacet,
+                            venclicenciamento = @venclicenciamento,
+                            venccronotacografo = @venccronotacografo,
+                            marca = @marca,
+                            renavan = @renavan,
+                            cor = @cor,
+                            comunicacao = @comunicacao,
+                            antt = @antt,
+                            ufplaca = @ufplaca,
+                            cidplaca = @cidplaca,  
+                            lotacao = @lotacao,
+                            comprimento = @comprimento,
+                            largura = @largura,
+                            altura = @altura, 
+                            placaant = @placaant,
+                            tacografo = @tacografo,
+                            modelotacografo = @modelotacografo,
+                            dataaquisicao = @dataaquisicao, 
+                            controlepatrimonio = @controlepatrimonio,
+                            chassi = @chassi
+                        WHERE id = @id";
             try
             {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -628,47 +1166,57 @@ namespace NewCapit
                 {
                     // Adiciona os parâmetros                    
                     cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
-                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@ativo_inativo", ddlSituacao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text);
-                    cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text);
-                    cmd.Parameters.AddWithValue("@tipocarreta", ddlCarreta.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@tiporeboque", ddlComposicao.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@tiporeboque", ddlCarreta.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipocarreta", ddlComposicao.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
                     cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
-                    cmd.Parameters.AddWithValue("@capacidade", txtCap.Text);
+                    cmd.Parameters.AddWithValue("@cap", txtCargaLiq.Text);
                     cmd.Parameters.AddWithValue("@tara", txtTara.Text);
                     cmd.Parameters.AddWithValue("@tolerancia", txtTolerancia.Text);
-                    cmd.Parameters.AddWithValue("@ptb", txtPBT.Text);
+                    cmd.Parameters.AddWithValue("@pbt", txtPBT.Text);
                     cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@usualt", HttpContext.Current.User.Identity.Name.ToUpper()); // Usuário atual
-                    cmd.Parameters.AddWithValue("@dtcalt", DateTime.Now); // Corrigido para DateTime
-                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocolo.Text);
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text);
+                    cmd.Parameters.AddWithValue("@usualt", txtUsuarioAtual.Text.Trim().ToUpper()); // Usuário atual
+                    cmd.Parameters.AddWithValue("@dtcalt", dataHoraAtual.ToString("dd/MM/yyyy HH:mm")); // Corrigido para DateTime
+                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
+                    cmd.Parameters.AddWithValue("@venclicencacet", string.IsNullOrEmpty(txtVencCET.Text) ? (object)DBNull.Value : txtVencCET.Text);
                     cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@venccronotacografo", string.IsNullOrWhiteSpace(txtCronotacografo.Text) ? (object)DBNull.Value : DateTime.Parse(txtCronotacografo.Text));
+                    //cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(txtCronotacografo.Text).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
-                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text);
                     //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
                     //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
-                    cmd.Parameters.AddWithValue("@ufplaca", ddlUfPlaca.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@cidplaca", txtCidPlaca.Text);                   
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.Text);
+                    if (ddlCidades.SelectedItem.Text != null)
+                    {
+                        cmd.Parameters.AddWithValue("@cidplaca", string.IsNullOrEmpty(ddlCidades.SelectedItem.Text.ToUpper()) ? (object)DBNull.Value : ddlCidades.SelectedItem.Text.ToUpper());
+                    }
+                    cmd.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text);
-                    cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedValue.ToUpper());
-                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);                    
-                    cmd.Parameters.AddWithValue("@chassi", txtChassi.Text);                    
+                    cmd.Parameters.AddWithValue("@placaant", txtPlacaAnt.Text);
+                    cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text);
+                    cmd.Parameters.AddWithValue("@controlepatrimonio", txtControlePatrimonio.Text);
+                    cmd.Parameters.AddWithValue("@chassi", txtChassi.Text);
                     cmd.Parameters.AddWithValue("@id", idConvertido);
 
                     con.Open();
@@ -688,11 +1236,85 @@ namespace NewCapit
                     }
                 }
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                string script = $"alert('{mensagemErro}');";
-                ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+                //string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                //string script = $"alert('{mensagemErro}');";
+                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+
+                string erroDetalhado = "Erro ao salvar registro no banco de dados: " + ex.Message;
+
+                // Tentar identificar qual parâmetro pode ter causado o erro
+                erroDetalhado += "\nValores enviados:";
+                erroDetalhado += $"\ntipvei = {cboTipo.SelectedValue.ToUpper()}";
+                erroDetalhado += $"\ntipoveiculo = {ddlTipo.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nmodelo = {txtModelo.Text.ToUpper()}";
+                erroDetalhado += $"\nano = {txtAno.Text}";
+                erroDetalhado += $"\nnucleo = {cbFiliais.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nativo_inativo = {ddlSituacao.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nplavei = {txtPlaca.Text.ToUpper()}";
+                erroDetalhado += $"\nreboque1 = {txtReb1.Text.ToUpper()}";
+                erroDetalhado += $"\nreboque2 = {txtReb2.Text.ToUpper()}";
+                erroDetalhado += $"\ntipocarreta = {ddlCarreta.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ntiporeboque = {ddlComposicao.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nrastreamento = {ddlMonitoramento.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ncodrastreador = {txtCodRastreador.Text}";
+                erroDetalhado += $"\neixos = {txtEixos.Text.Trim()}";
+                erroDetalhado += $"\ncap = {txtLotacao.Text}";
+                erroDetalhado += $"\ntara = {txtTara.Text}";
+                erroDetalhado += $"\ntolerancia = {txtTolerancia.Text}";
+                erroDetalhado += $"\npbt = {txtPBT.Text}";
+                erroDetalhado += $"\ncodmot = {txtCodMot.Text.ToUpper()}";
+                erroDetalhado += $"\nmotorista = {ddlMotorista.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ncodtra = {txtCodTra.Text.ToUpper()}";
+                erroDetalhado += $"\ntransp = {ddlAgregados.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nvencimentolaudofumaca = {txtOpacidade.Text}";
+                erroDetalhado += $"\nusualt = {txtAlteradoPor.Text.Trim().ToUpper()}"; // Usuário atual
+                erroDetalhado += $"\ndtcalt = {txtDtAlteracao.Text}"; // Corrigido para DateTime
+                erroDetalhado += $"\nprotocolocet = {txtProtocoloCET.Text}";
+                erroDetalhado += $"\nvenclicencacet = {txtVencCET.Text}";
+                erroDetalhado += $"\nvenclicenciamento = {txtLicenciamento.Text}";
+                erroDetalhado += $"\nvenccronotacografo = {txtCronotacografo.Text}";
+                erroDetalhado += $"\nmarca = {ddlMarca.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nrenavan = {txtRenavam.Text}";
+                erroDetalhado += $"\ncor = {ddlCor.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ncomunicacao = {ddlComunicacao.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nantt = {txtAntt.Text}";
+
+                erroDetalhado += $"\nufplaca = {ddlEstados.SelectedItem.Text}";
+                erroDetalhado += $"\ncidplaca = {ddlCidades.SelectedItem.Text}";
+                erroDetalhado += $"\nlotacao = {txtLotacao.Text}";
+                erroDetalhado += $"\ncomprimento = {txtComprimento.Text}";
+                erroDetalhado += $"\nlargura = {txtLargura.Text}";
+                erroDetalhado += $"\naltura = {txtAltura.Text}";
+                erroDetalhado += $"\nplacaant = {txtPlacaAnt.Text}";
+                erroDetalhado += $"\ntacografo = {ddlTacografo.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nmodelotacografo = {ddlModeloTacografo.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ndataaquisicao = {txtDataAquisicao.Text}";
+                erroDetalhado += $"\ncontrolepatrimonio = {txtControlePatrimonio.Text}";
+                erroDetalhado += $"\nchassi = {txtChassi.Text}";
+                erroDetalhado += $"\nid = {idConvertido}";
+
+                //// Aciona o Toast via JavaScript
+                //ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+
+
+                //string script = $"alert('{erroDetalhado}');";
+                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+
+
+
+
+                // Exibir no log ou em uma Label (por exemplo)
+
+                //if (ex.Number == 8152)
+                //{
+                //    lblErro.Text = "Erro: Valor duplicado em campo único.";
+                //    lblErro.Text = erroDetalhado;
+                //}
+                miDiv.Visible = true;
+                lblErro.Text = erroDetalhado;
+
             }
         }
         private void PreencherComboAgregados(string filtroCodTra = null)
@@ -791,8 +1413,11 @@ namespace NewCapit
                     else
                     {
                         ddlMotorista.ClearSelection();
-                        txtCodMot.Text=string.Empty;
+                        txtCodMot.Text = string.Empty;
                     }
+
+                    
+
                 }
             }
         }
@@ -847,7 +1472,9 @@ namespace NewCapit
                 if (reader.Read())
                 {
                     txtCodTra.Text = reader["codtra"].ToString();
-                    //ddlAgregados.Text = reader["fantra"].ToString();
+                    //   ddlAgregados.DataValueField = reader["ID"].ToString();
+                    //    ddlAgregados.Text = reader["fantra"].ToString();
+
                     txtAntt.Text = reader["antt"].ToString();
                 }
             }
@@ -858,6 +1485,486 @@ namespace NewCapit
         {
             txtCodTra.Text = string.Empty;
             txtAntt.Text = string.Empty;
+        }
+
+        protected void ddlComposicao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(ddlComposicao.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherCamposComposicao(idSelecionado);
+            }
+            else
+            {
+                LimparCamposComposicao();
+            }
+        }
+
+        private void PreencherCamposComposicao(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT composicao, eixos, pbt, tolerancia FROM tbcomposicaoveiculo WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtEixos.Text = reader["eixos"].ToString();
+                    txtPBT.Text = reader["pbt"].ToString();
+                    txtTolerancia.Text = reader["tolerancia"].ToString();
+
+                    double sPBT, sTara;
+                    if (double.TryParse(txtPBT.Text, out sPBT) && double.TryParse(txtTara.Text, out sTara))
+                    {
+                        double resultado = sPBT - sTara;
+                        txtLotacao.Text = resultado.ToString("N0"); // casas decimais
+                    }
+
+                    double sTolerancia, sLotacao;
+                    if (double.TryParse(txtLotacao.Text, out sLotacao) && double.TryParse(txtTolerancia.Text, out sTolerancia))
+                    {
+                        double resultado2 = ((sLotacao * 5) / 100) + sLotacao;
+
+                        txtCargaLiq.Text = resultado2.ToString("N0"); // N0 = casas decimais 
+                    }
+
+                }
+            }
+        }
+
+        // Função para limpar os campos
+        private void LimparCamposComposicao()
+        {
+            txtTolerancia.Text = string.Empty;
+            txtPBT.Text = string.Empty;
+            txtLotacao.Text = string.Empty;
+            txtEixos.Text = string.Empty;
+        }
+
+        protected void txtCodTra_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodTra.Text != "")
+            {
+                string cod = txtCodTra.Text;
+                string sql = "SELECT codtra, fantra, ativa_inativa, fl_exclusao, antt FROM tbtransportadoras where codtra = '" + cod + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][3].ToString() == null)
+                    {
+                        ExibirToastErro("Código: " + txtCodTra.Text.Trim() + ", deletado do sistema.");
+                        Thread.Sleep(5000);
+                        txtCodVei.Text = "";
+                        txtCodVei.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][2].ToString() == "INATIVO")
+                    {
+                        ExibirToastErro("Código: " + txtCodTra.Text.Trim() + ", inativo no sistema.");
+                        Thread.Sleep(5000);
+                        txtCodVei.Text = "";
+                        txtCodVei.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        ddlAgregados.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtAntt.Text = dt.Rows[0][4].ToString();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    ExibirToastErro("Código: " + txtCodTra.Text.Trim() + ", não encontrado no sistema.");
+                    Thread.Sleep(5000);
+                    txtCodTra.Text = "";
+                    txtCodTra.Focus();
+                }
+            }
+
+        }
+
+        protected void txtCodMot_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodMot.Text != "")
+            {
+
+                string codigoMotorista = txtCodMot.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codmot, nommot, codtra, transp, status, fl_exclusao, placa, codvei FROM tbmotoristas WHERE codmot = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoMotorista);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                txtCodMot.Text = reader["codmot"].ToString();
+                                ddlMotorista.SelectedItem.Text = reader["nommot"].ToString();
+                                if (reader["codtra"].ToString() != txtCodTra.Text.Trim())
+                                {
+                                    ExibirToastErro("Motorista: " + reader["nommot"].ToString().Trim() + ", não pertence a transportadora do veículo. Não pode dirigir este veículo.");
+                                    Thread.Sleep(5000);
+                                    txtCodMot.Text = "";
+                                    ddlMotorista.SelectedItem.Text = "";
+                                    txtCodMot.Focus();
+                                    return;
+                                }
+                                else if (reader["status"].ToString() == "INATIVO")
+                                {
+                                    ExibirToastErro("Motorista: " + reader["nommot"].ToString().Trim() + ", inativo no sistema.");
+                                    Thread.Sleep(5000);
+                                    txtCodMot.Text = "";
+                                    ddlMotorista.SelectedItem.Text = "";
+                                    txtCodMot.Focus();
+                                    return;
+                                }
+                                else if (reader["fl_exclusao"].ToString() == "S")
+                                {
+                                    ExibirToastErro("Motorista: " + reader["nommot"].ToString().Trim() + ", deletado do sistema.");
+                                    Thread.Sleep(5000);
+                                    txtCodMot.Text = "";
+                                    ddlMotorista.SelectedItem.Text = "";
+                                    txtCodMot.Focus();
+                                    return;
+                                }
+                                // Verifica se o motorista está atrelado
+                                else if (reader["placa"].ToString() != "" || reader["placa"].ToString() != null)
+                                {
+                                    txtMotoristaAtrelado.Text = reader["codmot"].ToString() + "/" + reader["nommot"].ToString();
+                                    txtPlacaAtrelada.Text = reader["codvei"].ToString() + "/" + reader["placa"].ToString();
+
+                                    // Dispara o script para abrir o modal via JavaScript
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "modalConfirmacao", "abrirConfirmacao();", true);
+                                }
+                                else if (reader["codtra"].ToString() == txtCodTra.Text.Trim() && reader["status"].ToString() == "ATIVO" && reader["fl_exclusao"].ToString() != null)
+                                {
+                                    ddlMotorista.SelectedItem.Text = reader["nommot"].ToString();
+                                }
+                            }
+                            else
+                            {
+                                ExibirToastErro("Código: " + txtCodMot.Text.Trim() + ", não encontrado no sistema.");
+                                Thread.Sleep(5000);
+                                txtCodMot.Text = "";
+                                txtCodMot.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+        
+        protected void txtCodRastreador_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodRastreador.Text != "")
+            {
+
+                string codigoRastreador = txtCodRastreador.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codRastreador, nomRastreador FROM tbrastreadores WHERE codRastreador = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRastreador);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlTecnologia.SelectedItem.Text = reader["nomRastreador"].ToString();
+                            }
+                            else
+                            {
+                                ExibirToastErro("Código: " + txtCodRastreador.Text.Trim() + ", não encontrado no sistema.");
+                                Thread.Sleep(5000);
+                                txtCodRastreador.Text = "";
+                                txtCodRastreador.Focus();
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        protected void txtPlaca_TextChanged(object sender, EventArgs e)
+        {
+            if (txtPlaca.Text != "")
+            {
+                string termo = txtPlaca.Text.ToUpper();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT TOP 1 plavei,codvei FROM tbveiculos WHERE plavei LIKE @termo";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                    conn.Open();
+
+                    object res = cmd.ExecuteScalar();
+                    if (res != null)
+                    {
+                        ExibirToast("Placa: " + txtPlaca.Text.Trim() + ", já cadastrada no sistema.");
+                        Thread.Sleep(5000);
+                        txtPlaca.Text = "";
+                        txtPlaca.Focus();
+                    }
+                }
+
+
+                txtPlaca.Text.ToUpper();
+                ddlEstados.Focus();
+            }
+        }
+        protected void ExibirToast(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastCadastro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage2').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast2');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastErro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage3').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast3');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+
+        protected void txtReb1_TextChanged(object sender, EventArgs e)
+        {            
+            if (txtReb1.Text != "")
+            {
+                string placaReboque = txtReb1.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcarreta, placacarreta, tiporeboque, codprop, descprop, frota, placa_cavalo, ativo_inativo, fl_exclusao FROM tbcarretas where placacarreta = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", placaReboque);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                //txtCodMot.Text = reader["codmot"].ToString();
+                                //ddlMotorista.SelectedItem.Text = reader["nommot"].ToString();
+                                if (reader["tiporeboque"].ToString() == "FROTA" && reader["codprop"].ToString() != "1111")
+                                {
+                                    ExibirToastErro("Placa: " + reader["placacarreta"].ToString().Trim() + ", não pode se atrelada a veículo da frota.");
+                                    Thread.Sleep(5000);
+                                    txtReb1.Text = "";                                    
+                                    txtReb1.Focus();
+                                    return;
+                                }
+                                else if (reader["ativo_inativo"].ToString() == "INATIVO")
+                                {
+                                    ExibirToastErro("Placa: " + reader["placacarreta"].ToString().Trim() + ", inativa no sistema.");
+                                    Thread.Sleep(5000);
+                                    txtReb1.Text = "";                                    
+                                    txtReb1.Focus();
+                                    return;
+                                }
+                                else if (reader["fl_exclusao"].ToString() == "S")
+                                {
+                                    ExibirToastErro("Placa: " + reader["placacarreta"].ToString().Trim() + ", deletada do sistema.");
+                                    Thread.Sleep(5000);
+                                    txtReb1.Text = "";                                    
+                                    txtReb1.Focus();
+                                    return;
+                                }
+                                // Verifica se a carreta está atrelada
+                                else if (reader["placa_cavalo"].ToString() != "" || reader["placa_cavalo"].ToString() != null)
+                                {
+                                    txtFrotaAtrelado.Text = reader["codcarreta"].ToString() + "/" + reader["placacarreta"].ToString().ToUpper();                                    
+                                    txtFrotaCavalo.Text = reader["frota"].ToString() + "/" + reader["placa_cavalo"].ToString().ToUpper();                                   
+                                    txtTransportadora.Text = reader["descprop"].ToString();
+
+                                    // Dispara o script para abrir o modal via JavaScript
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "modalConfirmacaoCarreta", "abrirConfirmacaoCarreta();", true);
+                                }
+                                else if (reader["placa_cavalo"].ToString() != txtReb1.Text.Trim() && reader["ativo_inativo"].ToString() == "ATIVO" && reader["fl_exclusao"].ToString() != null)
+                                {
+                                    txtReb1.Text = reader["placacarreta"].ToString().Trim().ToUpper();
+                                }
+                            }
+                            else
+                            {
+                                ExibirToastErro("Código: " + txtReb1.Text.Trim() + ", não encontrado no sistema.");
+                                Thread.Sleep(5000);
+                                txtReb1.Text = "";
+                                txtReb1.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        protected void txtReb2_TextChanged(object sender, EventArgs e)
+        {
+            if (txtReb2.Text != "")
+            {
+                string placaReboque = txtReb2.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcarreta, placacarreta, tiporeboque, codprop, descprop, frota, placa_cavalo, ativo_inativo, fl_exclusao FROM tbcarretas where placacarreta = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", placaReboque);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                //txtCodMot.Text = reader["codmot"].ToString();
+                                //ddlMotorista.SelectedItem.Text = reader["nommot"].ToString();
+                                if (reader["tiporeboque"].ToString() == "FROTA" && reader["codprop"].ToString() != "1111")
+                                {
+                                    ExibirToastErro("Placa: " + reader["placacarreta"].ToString().Trim() + ", não pode se atrelada a veículo da frota.");
+                                    Thread.Sleep(5000);
+                                    txtReb2.Text = "";
+                                    txtReb2.Focus();
+                                    return;
+                                }
+                                else if (reader["ativo_inativo"].ToString() == "INATIVO")
+                                {
+                                    ExibirToastErro("Placa: " + reader["placacarreta"].ToString().Trim() + ", inativa no sistema.");
+                                    Thread.Sleep(5000);
+                                    txtReb2.Text = "";
+                                    txtReb2.Focus();
+                                    return;
+                                }
+                                else if (reader["fl_exclusao"].ToString() == "S")
+                                {
+                                    ExibirToastErro("Placa: " + reader["placacarreta"].ToString().Trim() + ", deletada do sistema.");
+                                    Thread.Sleep(5000);
+                                    txtReb2.Text = "";
+                                    txtReb2.Focus();
+                                    return;
+                                }
+                                // Verifica se a carreta está atrelada
+                                else if (reader["placa_cavalo"].ToString() != "" || reader["placa_cavalo"].ToString() != null)
+                                {
+                                    txtFrotaAtrelado.Text = reader["codcarreta"].ToString() + "/" + reader["placacarreta"].ToString().ToUpper();
+                                    txtFrotaCavalo.Text = reader["frota"].ToString() + "/" + reader["placa_cavalo"].ToString().ToUpper();
+                                    txtTransportadora.Text = reader["descprop"].ToString();
+
+                                    // Dispara o script para abrir o modal via JavaScript
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "modalConfirmacaoCarreta", "abrirConfirmacaoCarreta();", true);
+                                }
+                                else if (reader["placa_cavalo"].ToString() != txtReb2.Text.Trim() && reader["ativo_inativo"].ToString() == "ATIVO" && reader["fl_exclusao"].ToString() != null)
+                                {
+                                    txtReb2.Text = reader["placacarreta"].ToString().Trim().ToUpper();
+                                }
+                            }
+                            else
+                            {
+                                ExibirToastErro("Placa: " + txtReb2.Text.Trim() + ", não encontrada no sistema.");
+                                Thread.Sleep(5000);
+                                txtReb2.Text = "";
+                                txtReb2.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        protected void cboTipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tipoVeiculo = cboTipo.SelectedValue;
+            CarregarComposicao(tipoVeiculo);
+
+            // Restaurar cidade se estiver em ViewState
+            if (ViewState["ComposicaoSelecionada"] != null)
+            {
+                string composicaoId = ViewState["ComposicaoSelecionada"].ToString();
+                if (ddlComposicao.Items.FindByValue(composicaoId) != null)
+                {
+                    ddlComposicao.SelectedValue = composicaoId;
+                }
+            }
+        }
+        private void CarregarComposicao(string tipoVeiculo)
+        {
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string query = "SELECT ID, composicao, eixos, pbt, tolerancia, tipo_veiculo FROM tbcomposicaoveiculo WHERE ID = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", tipoVeiculo);
+                conn.Open();
+                ddlComposicao.DataSource = cmd.ExecuteReader();
+                ddlComposicao.DataTextField = "composicao";
+                ddlComposicao.DataValueField = "ID"; // valor único
+                ddlComposicao.DataBind();
+
+                ddlComposicao.Items.Insert(0, new ListItem("-- Selecione a composição --", "0"));
+            }
         }
     }
 }

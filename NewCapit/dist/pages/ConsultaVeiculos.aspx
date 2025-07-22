@@ -11,7 +11,7 @@
             document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
        } else {
            document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-       }
+        }
     }
 </script>
      <style>
@@ -28,7 +28,7 @@
      <div class="content-header">
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-2 text-gray-800">
-                <i class="fas fa-shipping-fast"></i> &nbsp;Consulta Veículos</h1>
+                <i class="fas fa-shipping-fast"></i> &nbsp;Controle de Veículos</h1>
             <a href="/dist/pages/Frm_CadVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro
             </a>
@@ -91,13 +91,13 @@
                                   </>                               
                                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                                       <li>
-                                          <span>CNT: </span> 
+                                          <span>CNT (CC): </span> 
                                           <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                             <asp:Label ID="FrotaCNT" runat="server" Text=""></asp:Label>
                                           </span>
                                       </li>
                                       <li>
-                                          <span>SBC: </span> 
+                                          <span>ANCHIETA: </span> 
                                           <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                             <asp:Label ID="FrotaSBC" runat="server" Text=""></asp:Label>
                                           </span>
@@ -169,13 +169,13 @@
                           </>                               
                           <ul class="dropdown-menu dropdown-usermenu pull-right">
                               <li>
-                                  <span>CNT: </span> 
+                                  <span>CNT (CC): </span> 
                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     <asp:Label ID="AgCNT" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                               <li>
-                                  <span>SBC: </span> 
+                                  <span>ANCHIETA: </span> 
                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                     <asp:Label ID="AgSBC" runat="server" Text=""></asp:Label>
                                   </span>
@@ -247,13 +247,13 @@
                           </>                               
                           <ul class="dropdown-menu dropdown-usermenu pull-right">
                               <li>
-                                  <span>CNT: </span> 
+                                  <span>CNT (CC): </span> 
                                   <span class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     <asp:Label ID="lbTerCNT" runat="server" Text=""></asp:Label>
                                   </span>
                               </li>
                               <li>
-                                  <span>SBC: </span> 
+                                  <span>ANCHIETA: </span> 
                                   <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                     <asp:Label ID="lbTerSBC" runat="server" Text=""></asp:Label>
                                   </span>
@@ -307,18 +307,18 @@
      <!-- Grid -->
      <div class="card shadow mb-4"> 
         <div class="card-header">
-           <asp:TextBox ID="myInput" CssClass="" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
+           <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
         </div>
         <div class="card-body">
             <div class="table-responsive">              
                 <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
-                    <Columns>                        
-                        <asp:BoundField DataField="id" HeaderText="#ID" />
+                    <Columns>   
                         <asp:BoundField DataField="codvei" HeaderText="FROTA" />
                         <asp:BoundField DataField="tipvei" HeaderText="VEÍCULO" />
                         <asp:BoundField DataField="plavei" HeaderText="PLACA" />
-                        <asp:BoundField DataField="reboque1" HeaderText="REBOQUE" />
+                        <asp:BoundField DataField="reboque1" HeaderText="REB1" />
+                        <asp:BoundField DataField="reboque2" HeaderText="REB2" />
                         <asp:BoundField DataField="tipoveiculo" HeaderText="TIPO" />
                         <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
                         <asp:BoundField DataField="transp" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />                             
@@ -326,18 +326,25 @@
                  
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                              <ItemTemplate >                              
-                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> 
-                                     </asp:LinkButton>
+                                  <%--<asp:LinkButton ID="lnkEditar" runat="server" 
+                                    OnClick="Editar" 
+                                    CssClass="btn btn-primary btn-sm"
+                                    CommandArgument='<%# Eval("id") %>'>
+                                    <i class="fa fa-edit"></i> Editar
+                                </asp:LinkButton>--%>
+
+                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
+
                                <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                     <i class="fa fa-edit"></i>
                                     Editar
                                  </a> --%>
                          
                                  <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
-                                    <i class="fas fa-map-marker-alt"></i>
+                                    <i class="fas fa-map-marker-alt"></i> Mapa
                                  </a> 
-                                  <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="ConfirmMessage();" ><i class="fa fa-trash"></i></i>
-                                      </asp:LinkButton>
+                                <%--  <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="ConfirmMessage();" ><i class="fa fa-trash"></i></i>
+                                      </asp:LinkButton>--%>
                         
                                  <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
                                     <i class="fa fa-trash"></i>                                    
@@ -356,39 +363,4 @@
         </div>
     </div>
  </div>    
- 
-    <!-- JavaScript 
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="src/javascript/script.js"></script>
-    <!--
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"     crossorigin="anonymous" />
-    
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"        crossorigin="anonymous"></script>
-    -->
-<footer class="main-footer">
-   <div class="float-right d-none d-sm-block">
-     <b>Version</b> 2.1.0
-   </div>
-   <strong>Copyright &copy; 2021-2024 Capit Logística.</strong> Todos os direitos reservados.
-</footer>
-
-<!-- Page specific script -->
-<script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-</script>
-
 </asp:Content>

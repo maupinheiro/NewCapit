@@ -18,13 +18,15 @@ namespace NewCapit
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack) {
+            if (!IsPostBack)
+            {
 
-                ContagemMotorista();
+
                 listarMotoristas();
 
             }
-            
+            ContagemMotorista();
+
         }
 
         private void listarMotoristas()
@@ -34,7 +36,7 @@ namespace NewCapit
             if (dataTable.Rows.Count <= 0)
             {
                 return;
-            }            
+            }
             gvListMotoristas.DataSource = dataTable;
             gvListMotoristas.DataBind();
 
@@ -105,7 +107,7 @@ namespace NewCapit
             Terceiros.Text = dt4.Rows[0][0].ToString();
 
             // Distribuição da frota por nucleo
-            string sqlDistCNT = "SELECT count(*) FROM tbmotoristas where status = 'ATIVO' and tipomot='FUNCIONÁRIO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistCNT = "SELECT count(*) FROM tbmotoristas where status = 'ATIVO' and tipomot='FUNCIONÁRIO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistCNT = new SqlDataAdapter(sqlDistCNT, con);
             DataTable dtDistCNT = new DataTable();
             con.Open();
@@ -145,7 +147,7 @@ namespace NewCapit
             con.Close();
             FrotaPE.Text = dtDistPE.Rows[0][0].ToString();
 
-            string sqlDistSBC = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistSBC = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistSBC = new SqlDataAdapter(sqlDistSBC, con);
             DataTable dtDistSBC = new DataTable();
             con.Open();
@@ -178,7 +180,7 @@ namespace NewCapit
             FrotaPR.Text = dtDistPR.Rows[0][0].ToString();
 
             // Distribuição de agregados por nucleo
-            string sqlDistAgCNT = "SELECT count(*) FROM tbmotoristas where status = 'ATIVO' and tipomot='AGREGADO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistAgCNT = "SELECT count(*) FROM tbmotoristas where status = 'ATIVO' and tipomot='AGREGADO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistAgCNT = new SqlDataAdapter(sqlDistAgCNT, con);
             DataTable dtDistAgCNT = new DataTable();
             con.Open();
@@ -218,7 +220,7 @@ namespace NewCapit
             con.Close();
             AgPE.Text = dtDistAgPE.Rows[0][0].ToString();
 
-            string sqlDistAgSBC = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistAgSBC = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistAgSBC = new SqlDataAdapter(sqlDistAgSBC, con);
             DataTable dtDistAgSBC = new DataTable();
             con.Open();
@@ -251,7 +253,7 @@ namespace NewCapit
             AgPR.Text = dtDistAgPR.Rows[0][0].ToString();
 
             // Distribuição de terceiros por nucleo
-            string sqlDistTCNT = "SELECT count(*) FROM tbmotoristas where status = 'ATIVO' and tipomot='TERCEIRO' and nucleo = 'CNT' and fl_exclusao is null";
+            string sqlDistTCNT = "SELECT count(*) FROM tbmotoristas where status = 'ATIVO' and tipomot='TERCEIRO' and nucleo = 'CNT (CC)' and fl_exclusao is null";
             SqlDataAdapter adptDistTCNT = new SqlDataAdapter(sqlDistTCNT, con);
             DataTable dtDistTCNT = new DataTable();
             con.Open();
@@ -291,7 +293,7 @@ namespace NewCapit
             con.Close();
             TPE.Text = dtDistTPE.Rows[0][0].ToString();
 
-            string sqlDistTSBC = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'SBC' and fl_exclusao is null";
+            string sqlDistTSBC = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'ANCHIETA' and fl_exclusao is null";
             SqlDataAdapter adptDistTSBC = new SqlDataAdapter(sqlDistTSBC, con);
             DataTable dtDistTSBC = new DataTable();
             con.Open();
@@ -344,6 +346,16 @@ namespace NewCapit
         {
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
+        }
+
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvListMotoristas.DataKeys[row.RowIndex].Value.ToString();
+
+                Response.Redirect("Frm_AltMotoristas.aspx?id=" + id);
+            }
         }
     }
 }
