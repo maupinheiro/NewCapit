@@ -374,5 +374,45 @@ namespace NewCapit
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
         }
+
+        protected void Mapa(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvVeiculos.DataKeys[row.RowIndex].Value.ToString();
+
+                string sql = "select plavei from tbveiculos where id=" + id;
+
+                SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                adpt.Fill(dt);
+                con.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    string url = "MapaVeiculoConsulta.aspx?placa=" + dt.Rows[0][0].ToString();
+                    string script = $"window.open('{url}', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+                }
+                else
+                {
+                    string linha1 = "Cliente não possui coordenadas cadastradas.";
+
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    // Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    // Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                }
+
+
+            }
+        }
     }
 }

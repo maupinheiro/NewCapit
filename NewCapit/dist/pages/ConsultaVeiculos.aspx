@@ -339,10 +339,12 @@
                                     <i class="fa fa-edit"></i>
                                     Editar
                                  </a> --%>
+                                 <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i> Mapa 
+                                    </asp:LinkButton>
                          
-                                 <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=">
+                                <%-- <a class="btn btn-info btn-sm" href="Frm_AltClientes.aspx?id=<%# Eval("id") %>">
                                     <i class="fas fa-map-marker-alt"></i> Mapa
-                                 </a> 
+                                 </a> --%>
                                 <%--  <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="ConfirmMessage();" ><i class="fa fa-trash"></i></i>
                                       </asp:LinkButton>--%>
                         
