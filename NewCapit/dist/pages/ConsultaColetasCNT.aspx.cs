@@ -28,12 +28,14 @@ namespace NewCapit.dist.pages
                 
                
                 PreencherColetas();
+                
                 //PreencherComboVeiculos();
                 //PreencherComboStatus();
 
             }
-           
-           
+            
+            
+
         }
         //private void PreencherComboStatus()
         //{
@@ -122,105 +124,121 @@ namespace NewCapit.dist.pages
         }
         protected void lnkPesquisar_Click(object sender, EventArgs e)
         {
-            string sql = "SELECT id, carga, cva, peso, status, cliorigem, clidestino, ";
-                   sql += "CONVERT(varchar, previsao, 103) AS previsao, situacao, rota,  ";
-                   sql += "andamento, data_hora, veiculo, tipo_viagem, solicitacoes ";
-                   sql += "FROM tbcargas ";
-                   sql += "WHERE  empresa = 'CNT (CC)' AND fl_exclusao IS NULL ";
-                   if(txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
-                   {
-                sql += "and data_hora between '" + DateTime.Parse(txtInicioData.Text).ToString("yyyy-MM-dd HH:mm") + "' and '" + DateTime.Parse(txtFimData.Text).ToString("yyyy-MM-dd HH:mm") + "'";
-                   }
-
-            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    con.Open();
-
-                    using (var cmd = con.CreateCommand())
-                    {
-                        DateTime? dtInicial = null;
-                        DateTime? dtFinal = null;
-
-                        string dataInicial = txtInicioData.Text.Trim();
-                        string dataFinal = txtFimData.Text.Trim();
-                        //string status = ddlStatus.SelectedItem.Text.Trim();
-                        //string veiculos = ddlVeiculos.SelectedItem.Text.Trim();
-
-                        //// Verificando e convertendo as datas corretamente
-                        if (!string.IsNullOrWhiteSpace(dataInicial) &&
-                            DateTime.TryParseExact(dataInicial, "dd/MM/yyyy hh:mm",
-                                                   CultureInfo.InvariantCulture, DateTimeStyles.None,
-                                                   out DateTime parsedDataInicial))
-                        {
-                            dtInicial = parsedDataInicial;
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(dataFinal) &&
-                            DateTime.TryParseExact(dataFinal, "dd/MM/yyyy hh:mm",
-                                                   CultureInfo.InvariantCulture, DateTimeStyles.None,
-                                                   out DateTime parsedDataFinal))
-                        {
-                            dtFinal = parsedDataFinal;
-                        }
-
-                        // Adicionando os filtros de data apenas se existirem valores válidos
-                        if (txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
-                        {
+            string searchTerm = myInput.Text.Trim();
+            AllData(searchTerm, txtInicioData.Text, txtFimData.Text);
+            //string sql = @"SELECT 
+            //                    c.id, c.carga, c.cva, c.data_hora,
+            //                    (co.codvw + '/' + co.codcli) AS CodigoO,
+            //                    c.cliorigem,
+            //                    (cd.codvw + '/' + cd.codcli) AS CodigoD,
+            //                    c.clidestino,
+            //                    c.atendimento, c.tipo_viagem, c.rota, c.veiculo,
+            //                    c.quant_palet, c.peso, c.pedidos, c.solicitacoes,
+            //                    c.estudo_rota, c.remessa, c.cva, c.gate, c.status,
+            //                    c.chegadaorigem, c.saidaorigem, c.tempoagcarreg,
+            //                    c.chegadadestino, c.entradaplanta, c.saidaplanta,
+            //                    c.tempodentroplanta, c.tempoesperagate,
+            //                    c.previsao, c.andamento
+            //                FROM tbcargas c
+            //                OUTER APPLY (
+            //                    SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvworigem
+            //                ) co
+            //                OUTER APPLY (
+            //                    SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvwdestino
+            //                ) cd
+            //                WHERE c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL
+            //                ";
 
 
-                            sql += " AND data_hora BETWEEN @dataInicial AND @dataFinal";
-                            cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
-                            cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
+            //using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //{
+            //    try
+            //    {
+            //        con.Open();
 
-                            //cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy");
-                            //    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy");
-                        }
-                        else if (txtInicioData.Text != string.Empty)
-                        {
-                            sql += " AND data_hora >= @dataInicial";
-                            cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy HH:mm"));
-                        }
-                        else if (txtFimData.Text != string.Empty)
-                        {
-                            sql += " AND data_hora <= @dataFinal";
-                            cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy HH:mm"));
-                        }
+            //        using (var cmd = con.CreateCommand())
+            //        {
+            //            DateTime? dtInicial = null;
+            //            DateTime? dtFinal = null;
 
-                        // Filtrando status, se necessário
-                        //if (/*!string.IsNullOrEmpty(status) && */status != "Selecione...")
-                        //{
-                        //    sql += " AND status = @status";
-                        //    cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
-                        //}
+            //            string dataInicial = txtInicioData.Text.Trim();
+            //            string dataFinal = txtFimData.Text.Trim();
+            //            //string status = ddlStatus.SelectedItem.Text.Trim();
+            //            //string veiculos = ddlVeiculos.SelectedItem.Text.Trim();
 
-                        // Filtrando veículo, se necessário
-                        //if (/*!string.IsNullOrEmpty(veiculos) &&*/ veiculos != "Selecione...")
-                        //{
-                        //    sql += " AND veiculo = @veiculo";
-                        //    cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 50).Value = veiculos;
-                        //}
+            //            //// Verificando e convertendo as datas corretamente
+            //            if (!string.IsNullOrWhiteSpace(dataInicial) &&
+            //                DateTime.TryParseExact(dataInicial, "yyyy-MM-dd HH:mm:00.000",
+            //                                       CultureInfo.InvariantCulture, DateTimeStyles.None,
+            //                                       out DateTime parsedDataInicial))
+            //            {
+            //                dtInicial = parsedDataInicial;
+            //            }
 
-                        cmd.CommandText = sql;
+            //            if (!string.IsNullOrWhiteSpace(dataFinal) &&
+            //                DateTime.TryParseExact(dataFinal, "yyyy-MM-dd HH:mm:00.000",
+            //                                       CultureInfo.InvariantCulture, DateTimeStyles.None,
+            //                                       out DateTime parsedDataFinal))
+            //            {
+            //                dtFinal = parsedDataFinal;
+            //            }
 
-                        // Executando a consulta e preenchendo o GridView
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            DataTable dataTable = new DataTable();
-                            dataTable.Load(reader);
-                            gvListCargas.DataSource = dataTable;
-                            gvListCargas.DataBind();
-                        }
+            //            // Adicionando os filtros de data apenas se existirem valores válidos
+            //            if (txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
+            //            {
 
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
-                    //lblMensagem.ForeColor = System.Drawing.Color.Red;
-                }
-            }
+
+            //                sql += " AND previsao BETWEEN @dataInicial AND @dataFinal";
+            //                cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("yyyy-MM-dd HH:mm:00.000"));
+            //                cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("yyyy-MM-dd HH:mm:00.000"));
+
+            //                //cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = DateTime.Parse(txtInicioData.Text).ToString("dd/MM/yyyy");
+            //                //    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = DateTime.Parse(txtFimData.Text).ToString("dd/MM/yyyy");
+            //            }
+            //            else if (txtInicioData.Text != string.Empty)
+            //            {
+            //                sql += " AND previsao >= @dataInicial";
+            //                cmd.Parameters.AddWithValue("@dataInicial", DateTime.Parse(txtInicioData.Text).ToString("yyyy-MM-dd HH:mm:00.000"));
+            //            }
+            //            else if (txtFimData.Text != string.Empty)
+            //            {
+            //                sql += " AND previsao <= @dataFinal";
+            //                cmd.Parameters.AddWithValue("@dataFinal", DateTime.Parse(txtFimData.Text).ToString("yyyy-MM-dd HH:mm:00.000"));
+            //            }
+
+            //            // Filtrando status, se necessário
+            //            //if (/*!string.IsNullOrEmpty(status) && */status != "Selecione...")
+            //            //{
+            //            //    sql += " AND status = @status";
+            //            //    cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
+            //            //}
+
+            //            // Filtrando veículo, se necessário
+            //            //if (/*!string.IsNullOrEmpty(veiculos) &&*/ veiculos != "Selecione...")
+            //            //{
+            //            //    sql += " AND veiculo = @veiculo";
+            //            //    cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 50).Value = veiculos;
+            //            //}
+
+            //            cmd.CommandText = sql;
+
+            //            // Executando a consulta e preenchendo o GridView
+            //            using (var reader = cmd.ExecuteReader())
+            //            {
+            //                DataTable dataTable = new DataTable();
+            //                dataTable.Load(reader);
+            //                gvListCargas.DataSource = dataTable;
+            //                gvListCargas.DataBind();
+            //            }
+
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        //lblMensagem.Text = "Erro ao buscar cargas: " + ex.Message;
+            //        //lblMensagem.ForeColor = System.Drawing.Color.Red;
+            //    }
+            //}
         }
         protected void gvListCargas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -407,23 +425,33 @@ namespace NewCapit.dist.pages
                
             }
         }
-        private void AllData(string searchTerm = "")
+        private void AllData(string searchTerm = "", string datainicial = "", string datafinal = "")
         {
-            var dataTable = DAL.ConCargas.FetchDataTablePesquisa(searchTerm);
-            if (dataTable.Rows.Count <= 0)
+            // Sanitiza os parâmetros: converte null em string vazia
+            searchTerm = searchTerm?.Trim() ?? string.Empty;
+            datainicial = datainicial?.Trim() ?? string.Empty;
+            datafinal = datafinal?.Trim() ?? string.Empty;
+
+            // Busca os dados com os filtros informados
+            DataTable dataTable = DAL.ConCargas.FetchDataTablePesquisa(searchTerm, datainicial, datafinal);
+
+            // Se não houver dados, limpa o GridView
+            if (dataTable == null || dataTable.Rows.Count == 0)
             {
                 gvListCargas.DataSource = null;
                 gvListCargas.DataBind();
                 return;
             }
 
+            // Exibe os dados no GridView
             gvListCargas.DataSource = dataTable;
             gvListCargas.DataBind();
         }
+
         protected void myInput_TextChanged(object sender, EventArgs e)
         {
             string searchTerm = myInput.Text.Trim();
-            AllData(searchTerm);
+            AllData(searchTerm,txtInicioData.Text,txtFimData.Text);
         }
 
     }
