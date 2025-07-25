@@ -28,83 +28,83 @@ namespace NewCapit.dist.pages
                 
                
                 PreencherColetas();
-                PreencherComboVeiculos();
-                PreencherComboStatus();
+                //PreencherComboVeiculos();
+                //PreencherComboStatus();
 
             }
            
            
         }
-        private void PreencherComboStatus()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT cod_status, ds_status FROM tb_status";
+        //private void PreencherComboStatus()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT cod_status, ds_status FROM tb_status";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlStatus.DataSource = reader;
-                    ddlStatus.DataTextField = "ds_status";  // Campo que será mostrado no ComboBox
-                    ddlStatus.DataValueField = "cod_status";  // Campo que será o valor de cada item                    
-                    ddlStatus.DataBind();  // Realiza o binding dos dados                   
-                    ddlStatus.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
-        private void PreencherComboVeiculos()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT ID, descricao FROM tbtiposveiculoscnt ORDER BY descricao";
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            ddlStatus.DataSource = reader;
+        //            ddlStatus.DataTextField = "ds_status";  // Campo que será mostrado no ComboBox
+        //            ddlStatus.DataValueField = "cod_status";  // Campo que será o valor de cada item                    
+        //            ddlStatus.DataBind();  // Realiza o binding dos dados                   
+        //            ddlStatus.Items.Insert(0, new ListItem("Selecione...", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
+        //private void PreencherComboVeiculos()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT ID, descricao FROM tbtiposveiculoscnt ORDER BY descricao";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlVeiculos.DataSource = reader;
-                    ddlVeiculos.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    ddlVeiculos.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    ddlVeiculos.DataBind();  // Realiza o binding dos dados                   
-                    ddlVeiculos.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            ddlVeiculos.DataSource = reader;
+        //            ddlVeiculos.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+        //            ddlVeiculos.DataValueField = "id";  // Campo que será o valor de cada item                    
+        //            ddlVeiculos.DataBind();  // Realiza o binding dos dados                   
+        //            ddlVeiculos.Items.Insert(0, new ListItem("Selecione...", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
         private void PreencherColetas()
         {
 
@@ -122,11 +122,15 @@ namespace NewCapit.dist.pages
         }
         protected void lnkPesquisar_Click(object sender, EventArgs e)
         {
-            string sql = "SELECT id, carga, peso, status, cliorigem, clidestino, ";
+            string sql = "SELECT id, carga, cva, peso, status, cliorigem, clidestino, ";
                    sql += "CONVERT(varchar, previsao, 103) AS previsao, situacao, rota,  ";
                    sql += "andamento, data_hora, veiculo, tipo_viagem, solicitacoes ";
                    sql += "FROM tbcargas ";
-                   sql += "WHERE empresa = 'CNT (CC)' AND fl_exclusao IS NULL ";
+                   sql += "WHERE  empresa = 'CNT (CC)' AND fl_exclusao IS NULL ";
+                   if(txtInicioData.Text != string.Empty && txtFimData.Text != string.Empty)
+                   {
+                sql += "and data_hora between '" + DateTime.Parse(txtInicioData.Text).ToString("yyyy-MM-dd HH:mm") + "' and '" + DateTime.Parse(txtFimData.Text).ToString("yyyy-MM-dd HH:mm") + "'";
+                   }
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -141,8 +145,8 @@ namespace NewCapit.dist.pages
 
                         string dataInicial = txtInicioData.Text.Trim();
                         string dataFinal = txtFimData.Text.Trim();
-                        string status = ddlStatus.SelectedItem.Text.Trim();
-                        string veiculos = ddlVeiculos.SelectedItem.Text.Trim();
+                        //string status = ddlStatus.SelectedItem.Text.Trim();
+                        //string veiculos = ddlVeiculos.SelectedItem.Text.Trim();
 
                         //// Verificando e convertendo as datas corretamente
                         if (!string.IsNullOrWhiteSpace(dataInicial) &&
@@ -185,18 +189,18 @@ namespace NewCapit.dist.pages
                         }
 
                         // Filtrando status, se necessário
-                        if (/*!string.IsNullOrEmpty(status) && */status != "Selecione...")
-                        {
-                            sql += " AND status = @status";
-                            cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
-                        }
+                        //if (/*!string.IsNullOrEmpty(status) && */status != "Selecione...")
+                        //{
+                        //    sql += " AND status = @status";
+                        //    cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = status;
+                        //}
 
                         // Filtrando veículo, se necessário
-                        if (/*!string.IsNullOrEmpty(veiculos) &&*/ veiculos != "Selecione...")
-                        {
-                            sql += " AND veiculo = @veiculo";
-                            cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 50).Value = veiculos;
-                        }
+                        //if (/*!string.IsNullOrEmpty(veiculos) &&*/ veiculos != "Selecione...")
+                        //{
+                        //    sql += " AND veiculo = @veiculo";
+                        //    cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 50).Value = veiculos;
+                        //}
 
                         cmd.CommandText = sql;
 
@@ -223,18 +227,18 @@ namespace NewCapit.dist.pages
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 // Obtendo os valores das colunas
-                string previsaoStr = DataBinder.Eval(e.Row.DataItem, "previsao")?.ToString();
+               
                 string dataHoraStr = DataBinder.Eval(e.Row.DataItem, "data_hora")?.ToString();
-                string status = DataBinder.Eval(e.Row.DataItem, "status")?.ToString();
+               
                 string andamento = DataBinder.Eval(e.Row.DataItem, "andamento")?.ToString();
                 string atendeu = DataBinder.Eval(e.Row.DataItem, "atendimento")?.ToString();
                 // Verifica se os valores são nulos ou vazios
-                if (string.IsNullOrEmpty(previsaoStr) || string.IsNullOrEmpty(dataHoraStr) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(andamento))
+                if (/*string.IsNullOrEmpty(previsaoStr) ||*/ string.IsNullOrEmpty(dataHoraStr) /*|| string.IsNullOrEmpty(status)*/ || string.IsNullOrEmpty(andamento))
                 {
                     return; // Se algum valor for nulo ou vazio, não faz nada
                 }
                 // Índice da célula correspondente à coluna "ATENDIMENTO" (ajuste conforme necessário)
-                int colunaAtendimentoIndex = 4; // Ajustar conforme a posição real da coluna no GridView
+                int colunaAtendimentoIndex = 5; // Ajustar conforme a posição real da coluna no GridView
                 TableCell cell = e.Row.Cells[colunaAtendimentoIndex];
 
                 DateTime previsao, dataHora;
@@ -242,27 +246,27 @@ namespace NewCapit.dist.pages
 
                 if (andamento == "PENDENTE")
                 {
-                    if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+                    if (/*DateTime.TryParse(previsaoStr, out previsao) &&*/ DateTime.TryParse(dataHoraStr, out dataHora))
                     {
                         // Mantendo apenas a data para a comparação principal
-                        DateTime dataPrevisao = previsao.Date;
+                        //DateTime dataPrevisao = previsao.Date;
                         DateTime dataHoraComparacao = new DateTime(dataHora.Year, dataHora.Month, dataHora.Day, dataHora.Hour, dataHora.Minute, dataHora.Second);
 
                         if (dataHoraComparacao < agora /* && (status == "CONCLUIDO" || status == "PENDENTE")*/)
                         {
-                            cell.Text = "ATRASADO";
+                            cell.Text = "ATRASADO / "+andamento.ToUpper() ;
                             cell.BackColor = System.Drawing.Color.Red;
                             cell.ForeColor = System.Drawing.Color.White;
                         }
                         else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay /*&& (status == "CONCLUIDO" || status == "PENDENTE")*/)
                         {
-                            cell.Text = "NO PRAZO";
+                            cell.Text = "NO PRAZO / " + andamento.ToUpper();
                             cell.BackColor = System.Drawing.Color.Green;
                             cell.ForeColor = System.Drawing.Color.White;
                         }
                         else if (dataHoraComparacao > agora /*&& status == "CONCLUIDO"*/)
                         {
-                            cell.Text = "NO PRAZO";
+                            cell.Text = "NO PRAZO / "+andamento.ToUpper();
                             cell.BackColor = System.Drawing.Color.Orange;
                             cell.ForeColor = System.Drawing.Color.White;
 
@@ -403,7 +407,24 @@ namespace NewCapit.dist.pages
                
             }
         }
+        private void AllData(string searchTerm = "")
+        {
+            var dataTable = DAL.ConCargas.FetchDataTablePesquisa(searchTerm);
+            if (dataTable.Rows.Count <= 0)
+            {
+                gvListCargas.DataSource = null;
+                gvListCargas.DataBind();
+                return;
+            }
 
-        
+            gvListCargas.DataSource = dataTable;
+            gvListCargas.DataBind();
+        }
+        protected void myInput_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = myInput.Text.Trim();
+            AllData(searchTerm);
+        }
+
     }
 }

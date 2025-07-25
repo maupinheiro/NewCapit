@@ -52,6 +52,7 @@ namespace NewCapit
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
                 PreencherComboEstados();
+                PreencherComboCboTipo();
             }
 
         }
@@ -571,6 +572,44 @@ namespace NewCapit
 
             ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
+        private void PreencherComboCboTipo()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbtipos_veiculos";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboTipo.DataSource = reader;
+                    cboTipo.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboTipo.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboTipo.DataBind();  // Realiza o binding dos dados                   
+
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        protected void cboTipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

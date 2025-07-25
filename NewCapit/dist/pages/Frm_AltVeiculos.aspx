@@ -427,18 +427,22 @@
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" ControlToValidate="ddlCarreta" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
-                                <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb1_TextChanged"></asp:TextBox>
+                        <%--<asp:Panel ID="pnlDivReboque1" runat="server" Visible="false">--%>
+                            <div class="col-md-1" ID="pnlDivReboque1" runat="server" Visible="false">
+                                <div class="form-group">
+                                    <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
+                                    <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb1_TextChanged"></asp:TextBox>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-1">
+                        <%--</asp:Panel>--%>    
+                        <%--<asp:Panel ID="pnlDivReboque2" runat="server" Visible="false">--%>
+                            <div class="col-md-1" ID="pnlDivReboque2" runat="server" Visible="false">
                             <div class="form-group">
                                 <asp:Label ID="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
                                 <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb2_TextChanged"></asp:TextBox>
                             </div>
                         </div>
+                        <%--</asp:Panel>--%>
                     </div>
                     <!-- linha 7 do formulario -->
                     <div class="row g-3">

@@ -74,6 +74,27 @@ namespace DAL
                 }
             }
         }
+        public static DataTable FetchDataTablePesquisa(string searchTerm)
+        {
+            string sql = "SELECT ID, carga, cva, data_hora, solicitacoes,  cliorigem, clidestino, veiculo, tipo_viagem, rota,atendimento, andamento FROM tbcargas "
+                + "where fl_exclusao is null and data_hora LIKE @searchTerm OR solicitacoes LIKE @searchTerm OR veiculo LIKE @searchTerm OR tipo_viagem LIKE @searchTerm OR cliorigem LIKE @searchTerm OR clidestino LIKE @searchTerm OR cva LIKE @searchTerm ORDER BY data_hora";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
 
         public static DataTable FetchDataTableColetas2(string searchTerm)
         {

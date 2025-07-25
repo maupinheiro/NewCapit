@@ -24,7 +24,7 @@
                             <h1 class="h3 mb-2 text-gray-800">
                                 <i class="fas fa-shipping-fast"></i>&nbsp;Coletas</h1>
                         </div>
-                       <%-- <div class="col-md-1 text-center">
+                        <%-- <div class="col-md-1 text-center">
                             <input type="text" class="knob" value="70" data-width="90" data-height="90" data-fgcolor="#f56954">
                             <div class="knob-label
                                 ">
@@ -39,7 +39,6 @@
                             <input type="text" class="knob" value="90" data-width="90" data-height="90" data-fgcolor="#932ab6">
                             <div class="knob-label">Antecipadas</div>
                         </div>--%>
-
                     </div>
                 </div>
 
@@ -60,7 +59,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <%-- <div class="col-md-2">
                         <div class="form-group">
                             <span class="">Status:</span>
                             <asp:DropDownList ID="ddlStatus" name="nomeStatus" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -72,12 +71,17 @@
                             <asp:DropDownList ID="ddlVeiculos" runat="server" CssClass="form-control">
                             </asp:DropDownList>
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="col-md-2">
                         <br />
                         <asp:LinkButton ID="lnkPesquisar" runat="server" CssClass="btn btn-warning" OnClick="lnkPesquisar_Click"><i class='fas fa-search' ></i>  Pesquisar</asp:LinkButton>
                     </div>
 
+                </div>
+                <div class="row g-3">
+                    <div class="card-header">
+                    <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server"></asp:TextBox>
+                </div>
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -98,16 +102,17 @@
 
                                         <Columns>
                                             <asp:BoundField DataField="id" HeaderText="ID" Visible="false" />
-                                            <asp:BoundField DataField="carga" HeaderText="COLETA" />
+                                            <asp:BoundField DataField="carga" HeaderText="COLETA" Visible="false" />
+                                            <asp:BoundField DataField="cva" HeaderText="CVA" />
                                             <asp:BoundField DataField="data_hora" HeaderText="DATA/HORA" />
                                             <asp:BoundField DataField="solicitacoes" HeaderText="SOLICITAÇÃO(ES)" />
-                                            <asp:BoundField DataField="" HeaderText="ATENDIMENTO" />
+                                            <asp:BoundField DataField="atendimento" HeaderText="ATENDIMENTO" />
                                             <asp:BoundField DataField="cliorigem" HeaderText="LOCAL DA COLETA" />
                                             <asp:BoundField DataField="clidestino" HeaderText="DESTINO" />
                                             <asp:BoundField DataField="veiculo" HeaderText="VEICULO" />
                                             <asp:BoundField DataField="tipo_viagem" HeaderText="VIAGEM" />
                                             <asp:BoundField DataField="rota" HeaderText="ROTA" />
-                                            <asp:BoundField DataField="andamento" HeaderText="SITUAÇÃO" />
+                                            <asp:BoundField DataField="andamento" HeaderText="SITUAÇÃO" Visible="false"/>
 
                                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                                                 <ItemTemplate>
@@ -440,11 +445,5 @@
         <!-- /.content -->
     </div>--%>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.1.0 
-        </div>
-        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>
 
 </asp:Content>

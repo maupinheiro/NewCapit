@@ -70,20 +70,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TIPO DE VEÍCULO:</span>
-                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                    <asp:ListItem Value="BITREM" Text="BITREM"></asp:ListItem>
-                                    <asp:ListItem Value="BITRUCK" Text="BITRUCK"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO SIMPLES" Text="CAVALO SIMPLES"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO TRUCADO" Text="CAVALO TRUCADO"></asp:ListItem>
-                                    <asp:ListItem Value="CAVALO 4 EIXOS" Text="CAVALO 4 EIXOS"></asp:ListItem>
-                                    <asp:ListItem Value="FURGAO" Text="FURGAO"></asp:ListItem>
-                                    <asp:ListItem Value="LEVE" Text="LEVE"></asp:ListItem>
-                                    <asp:ListItem Value="SAVEIRO" Text="SAVEIRO"></asp:ListItem>
-                                    <asp:ListItem Value="TOCO" Text="TOCO"></asp:ListItem>
-                                    <asp:ListItem Value="TRUCK" Text="TRUCK"></asp:ListItem>
-                                    <asp:ListItem Value="VEICULO 3/4" Text="VEICULO 3/4"></asp:ListItem>
-                                    <asp:ListItem Value="OUTROS" Text="OUTROS"></asp:ListItem>
+                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboTipo_SelectedIndexChanged">  
                                 </asp:DropDownList><br />
                                 <asp:RequiredFieldValidator ID="rfvcboTipo" runat="server" ControlToValidate="cboTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
