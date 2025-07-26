@@ -96,7 +96,7 @@
                         <!-- /.col -->
                         <div class="card">
                             <!-- /.card-header -->
-                            <div class="card-body table-responsive p-0" style="height: 590px;">
+                            <div class="card-body table-responsive p-0" style="height: 590px;font-size:smaller;">
                                 <table class="table table-head-fixed text-nowrap">
                                     <asp:GridView runat="server" ID="gvListCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="carga" OnRowDataBound="gvListCargas_RowDataBound" OnRowCommand="gvListCargas_RowCommand">
 

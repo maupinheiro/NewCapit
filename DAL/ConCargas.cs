@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,14 +56,18 @@ namespace DAL
                             OUTER APPLY (
                                 SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvwdestino
                             ) cd
-                            WHERE c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL
+                            WHERE c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL and data_hora between @datainicial and @datafinal
                             ";
 
 
             using (var con = ConnectionUtil.GetConnection())
             {
+               
                 using (var cmd = con.CreateCommand())
                 {
+                    DateTime dtInicial, dtFinal;
+                    cmd.Parameters.AddWithValue("@datainicial", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd 06:00"));
+                    cmd.Parameters.AddWithValue("@datafinal", DateTime.Now.ToString("yyyy-MM-dd 23:59"));
                     cmd.CommandText = sql;
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -74,27 +79,66 @@ namespace DAL
                 }
             }
         }
-        public static DataTable FetchDataTablePesquisa(string searchTerm)
+        public static DataTable FetchDataTablePesquisa(string searchTerm, string datainicial, string datafinal)
         {
-            string sql = "SELECT ID, carga, cva, data_hora, solicitacoes,  cliorigem, clidestino, veiculo, tipo_viagem, rota,atendimento, andamento FROM tbcargas "
-                + "where fl_exclusao is null and data_hora LIKE @searchTerm OR solicitacoes LIKE @searchTerm OR veiculo LIKE @searchTerm OR tipo_viagem LIKE @searchTerm OR cliorigem LIKE @searchTerm OR clidestino LIKE @searchTerm OR cva LIKE @searchTerm ORDER BY data_hora";
+            var sql = new StringBuilder(@"
+        SELECT ID, carga, cva, data_hora, solicitacoes, cliorigem, clidestino, veiculo, tipo_viagem, rota, atendimento, andamento 
+        FROM tbcargas 
+        WHERE fl_exclusao IS NULL");
 
             using (var con = ConnectionUtil.GetConnection())
+            using (var cmd = con.CreateCommand())
             {
-                using (var cmd = con.CreateCommand())
+                // Filtro por searchTerm (opcional)
+                if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    cmd.CommandText = sql;
-                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                    sql.Append(@"
+                AND (
+                    data_hora LIKE @searchTerm OR 
+                    solicitacoes LIKE @searchTerm OR 
+                    veiculo LIKE @searchTerm OR 
+                    tipo_viagem LIKE @searchTerm OR 
+                    cliorigem LIKE @searchTerm OR 
+                    clidestino LIKE @searchTerm OR 
+                    cva LIKE @searchTerm
+                )");
 
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        DataTable dataTable = new DataTable();
-                        dataTable.Load(reader);
-                        return dataTable;
-                    }
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                }
+
+                // Filtro por data (opcional)
+                DateTime dtInicial, dtFinal;
+
+                if (!string.IsNullOrWhiteSpace(datainicial) && DateTime.TryParse(datainicial, out dtInicial) &&
+                    !string.IsNullOrWhiteSpace(datafinal) && DateTime.TryParse(datafinal, out dtFinal))
+                {
+                    sql.Append(" AND previsao BETWEEN @dataInicial AND @dataFinal");
+                    cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = dtInicial;
+                    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = dtFinal;
+                }
+                else if (!string.IsNullOrWhiteSpace(datainicial) && DateTime.TryParse(datainicial, out dtInicial))
+                {
+                    sql.Append(" AND previsao >= @dataInicial");
+                    cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = dtInicial;
+                }
+                else if (!string.IsNullOrWhiteSpace(datafinal) && DateTime.TryParse(datafinal, out dtFinal))
+                {
+                    sql.Append(" AND previsao <= @dataFinal");
+                    cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = dtFinal;
+                }
+
+                // Finaliza e executa
+                cmd.CommandText = sql.ToString();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    return dt;
                 }
             }
         }
+
 
         public static DataTable FetchDataTableColetas2(string searchTerm)
         {
