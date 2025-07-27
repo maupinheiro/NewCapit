@@ -3,8 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+   <%-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>--%>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         function aplicarMascara(input, mascara) {
@@ -68,7 +68,7 @@
                             <div class="form-group">
                                 <span class="">TIPO DE CARRETA:</span>
                                 <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                                     <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>
                                     <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
@@ -79,7 +79,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">FILIAL:</span>
-                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-3"></div>
@@ -111,7 +111,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">UF:</span>
-                                <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
+                                <asp:DropDownList ID="ddlEstados" runat="server" AutoPostBack="True" class="form-control select2" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged">
                                 </asp:DropDownList>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="ddlEstados" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
@@ -119,7 +119,7 @@
                         <div class="col-md-3">
                             <div class="form_group">
                                 <span class="details">MUNICIPIO:</span>
-                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control">
+                                <asp:DropDownList ID="ddlCidades" runat="server" class="form-control select2">
                                 </asp:DropDownList>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="ddlCidades" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
@@ -204,7 +204,7 @@
                         <div class="col-md-5">
                             <div class="form_group">
                                 <span class="details">MARCA:</span>
-                                <asp:DropDownList ID="ddlMarca" name="nomeMarca" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMarca" name="nomeMarca" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="ddlMarca" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">COR:</span>
-                                <asp:DropDownList ID="ddlCor" runat="server" CssClass="form-control" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlCor" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="ddlCor" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
                         </div>
@@ -337,86 +337,12 @@
                             <asp:Button ID="btnSalvarCarreta" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" OnClick="btnSalvarCarreta_Click" />
                         </div>
                         <div class="col-md-1">
-                            <a href="ConsultaCarretas.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                            <a href="ControleCarretas.aspx" class="btn btn-outline-danger btn-lg">Sair               
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- Mensagens de erro toast -->
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toastNotFound" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body" id="mensagem">
-                        Código, não encontrado no sistema. Verifique o número digitado. 
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-
+        </section>  
     </div>
-
-
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.1.0 
-        </div>
-        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>
-    <!-- Page specific script -->
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-
-            //Initialize Select2 Elements
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-
-            //Datemask dd/mm/yyyy
-            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-            //Datemask2 mm/dd/yyyy
-            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-            //Money Euro
-            $('[data-mask]').inputmask()
-
-            //Date picker
-            $('#reservationdate').datetimepicker({
-                format: 'L'
-            });
-
-
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-                }
-            )
-
-
-        })
-    </script>
-    <script>
-        function mostrarToastNaoEncontrado() {
-            //var toastEl = document.getElementById('toastNotFound');
-            var toast = new bootstrap.Toast(toastEl);
-            toast.show();
-        }
-    </script>
-
 </asp:Content>
