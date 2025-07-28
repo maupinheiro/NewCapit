@@ -592,7 +592,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        <asp:Button ID="btnSalvaAlteracaoMot" runat="server" class="btn btn-primary" Text="Sim" OnClick="btnSalvaAlteracaoMot"></asp:Button>
+                        <asp:Button ID="btnSalvaAlteracaoMot" runat="server" CssClass="btn btn-primary" Text="Sim" OnClick="btnSalvaAlteracaoMot_Click" />
+                       
                     </div>
                 </div>
             </div>
