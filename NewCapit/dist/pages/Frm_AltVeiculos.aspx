@@ -416,7 +416,7 @@
 
                         <div class="col-md-2"></div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" id="carreta" runat="server" visible="false">
                             <div class="form-group">
                                 <span class="">CARRETA:</span>
                                 <asp:DropDownList ID="ddlCarreta" runat="server" CssClass="form-control">
@@ -526,8 +526,6 @@
                     </div>
                     <!-- Linha 7 do formulario -->
                     <div class="row g-3">
-
-
                         <div class="col-md-1">
                             <div class="form-group">
                                 <asp:Label ID="Label1" runat="server" class="details" Visible="false">usuario</asp:Label>
@@ -594,7 +592,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        <button type="button" class="btn btn-primary">Sim</button>
+                        <asp:Button ID="btnSalvaAlteracaoMot" class="btn btn-primary" OnClick="btnSalvaAlteracaoMot">Sim</>
                     </div>
                 </div>
             </div>
