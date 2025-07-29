@@ -578,7 +578,7 @@
             </div>
         </section>
         <!-- modal motorista atrelado -->
-        <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
+        <div class="modal fade" id="modalConfirmacao"  tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -592,7 +592,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        <asp:Button ID="btnSalvaAlteracaoMot" class="btn btn-primary" OnClick="btnSalvaAlteracaoMot">Sim</>
+                        <asp:Button ID="btnSalvaAlteracaoMot" runat="server" CssClass="btn btn-primary" Text="Sim" OnClick="btnSalvaAlteracaoMot_Click" />
+                       
                     </div>
                 </div>
             </div>

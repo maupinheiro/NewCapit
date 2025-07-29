@@ -2089,8 +2089,8 @@ namespace NewCapit
                                                     codvei=@codvei,
                                                     frota=@frota,
                                                     codprop=@codprop,
-                                                    reboque1@reboque1,
-                                                    reboque2=reboque2,
+                                                    reboque1=@reboque1,
+                                                    reboque2=@reboque2,
                                                     tipoveiculo=@tipoveiculo
                                                     WHERE placa=@termo";
                         SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
