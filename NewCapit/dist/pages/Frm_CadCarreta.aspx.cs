@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
@@ -31,6 +32,7 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                     txtCadastradoPor.Text = lblUsuario;
                 }
+                
                 txtDataCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
                 CarregarDDLAgregados();
@@ -42,6 +44,7 @@ namespace NewCapit
                 PreencherComboEstados();
             }
         }
+        
         private void CarregarDDLAgregados()
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -86,7 +89,7 @@ namespace NewCapit
                     ddlTecnologia.DataValueField = "codRastreador";  // Campo que será o valor de cada item                    
                     ddlTecnologia.DataBind();  // Realiza o binding dos dados
 
-                    ddlTecnologia.Items.Insert(0, new ListItem("", "0"));
+                    ddlTecnologia.Items.Insert(0, new ListItem("Selecione...", "0"));
 
                     // Feche o reader
                     reader.Close();
@@ -102,7 +105,8 @@ namespace NewCapit
         private void PreencherComboFiliais()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codFilial, nomFilial FROM tbfiliais";
+            string query = "SELECT codigo, descricao FROM tbempresa";
+
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -110,16 +114,19 @@ namespace NewCapit
                 {
                     // Abra a conexão com o banco de dados
                     conn.Open();
+
                     // Crie o comando SQL
                     SqlCommand cmd = new SqlCommand(query, conn);
+
                     // Execute o comando e obtenha os dados em um DataReader
                     SqlDataReader reader = cmd.ExecuteReader();
+
                     // Preencher o ComboBox com os dados do DataReader
                     cbFiliais.DataSource = reader;
-                    cbFiliais.DataTextField = "nomFilial";  // Campo que será mostrado no ComboBox
-                    cbFiliais.DataValueField = "codFilial";  // Campo que será o valor de cada item                    
-                    cbFiliais.DataBind();  // Realiza o binding dos dados
-                    cbFiliais.Items.Insert(0, new ListItem("", "0"));
+                    cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+                    cbFiliais.DataBind();  // Realiza o binding dos dados                   
+                    cbFiliais.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -155,7 +162,7 @@ namespace NewCapit
                     ddlMarca.DataTextField = "marca";  // Campo que será mostrado no ComboBox
                     ddlMarca.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlMarca.DataBind();  // Realiza o binding dos dados                   
-                    ddlMarca.Items.Insert(0, new ListItem("", "0"));
+                    ddlMarca.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -191,7 +198,7 @@ namespace NewCapit
                     ddlCor.DataTextField = "cor";  // Campo que será mostrado no ComboBox
                     ddlCor.DataValueField = "id";  // Campo que será o valor de cada item                    
                     ddlCor.DataBind();  // Realiza o binding dos dados                   
-                    ddlCor.Items.Insert(0, new ListItem("", "0"));
+                    ddlCor.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -227,7 +234,7 @@ namespace NewCapit
                     ddlEstados.DataTextField = "SiglaUf";  // Campo que será mostrado no ComboBox
                     ddlEstados.DataValueField = "Uf";  // Campo que será o valor de cada item                    
                     ddlEstados.DataBind();  // Realiza o binding dos dados                   
-                    //ddlEstados.Items.Insert(0, new ListItem("", "0"));
+                    ddlEstados.Items.Insert(0, new ListItem("--", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -451,6 +458,60 @@ namespace NewCapit
         protected void btnSalvarCarreta_Click(object sender, EventArgs e)
         {
 
+        }
+
+        protected void txtCodVei_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodVei.Text != "")
+            {
+                string termo = txtCodVei.Text.ToUpper();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT TOP 1 placacarreta, codcarreta FROM tbcarretas WHERE codcarreta LIKE @termo";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                    conn.Open();
+
+                    object res = cmd.ExecuteScalar();
+                    if (res != null)
+                    {
+                        ExibirToastErro("Código: " + txtCodVei.Text.Trim() + ", já cadastrado no sistema.");
+                        Thread.Sleep(5000);
+                        txtCodVei.Text = "";
+                        txtCodVei.Focus();
+                        return;
+                    }
+                }
+                //txtCodVei.Text.ToUpper();
+                //ddlTipo.Focus();
+
+            }            
+        }
+        protected void ExibirToastCadastro(string mensagem)
+        {
+            string script = $@"
+            <script>
+                document.getElementById('toastMessage2').innerText = '{mensagem.Replace("'", "\\'")}';
+                var toastEl = document.getElementById('myToast2');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ExibirToastErro(string mensagem)
+        {
+            string script = $@"
+            <script>
+                document.getElementById('toastMessage3').innerText = '{mensagem.Replace("'", "\\'")}';
+                var toastEl = document.getElementById('myToast3');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
     }
 }

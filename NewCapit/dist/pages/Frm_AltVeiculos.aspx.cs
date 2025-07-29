@@ -345,442 +345,442 @@ namespace NewCapit
                 }
             }
         }
-        private void cboTipoCarreta_Leave()
-        {
-            string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
-            string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
-            string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
-            string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
-            string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
-            string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
-            string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
-            string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
-            string composicao9 = "TRUCK";
-            string composicao10 = "BITRUCK";
-            string composicao11 = "BITREM";
-            string composicao12 = "TOCO";
-            string composicao13 = "VUC OU 3/4";
-            string composicao14 = "CAVALO SIMPLES COM PRANCHA";
-            string composicao15 = "CAVALO TRUCADO COM PRANCHA";
-            string composicao16 = "UTILITÁRIO/FURGÃO";
-            string composicao17 = "FIORINO";
+        //private void cboTipoCarreta_Leave()
+        //{
+        //    string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
+        //    string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
+        //    string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
+        //    string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
+        //    string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
+        //    string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
+        //    string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
+        //    string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
+        //    string composicao9 = "TRUCK";
+        //    string composicao10 = "BITRUCK";
+        //    string composicao11 = "BITREM";
+        //    string composicao12 = "TOCO";
+        //    string composicao13 = "VUC OU 3/4";
+        //    string composicao14 = "CAVALO SIMPLES COM PRANCHA";
+        //    string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+        //    string composicao16 = "UTILITÁRIO/FURGÃO";
+        //    string composicao17 = "FIORINO";
 
-            string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
-            string tipoComposicao = selectedValue;
-            string tara = txtTara.Text.Trim();
-            int nTara = 0;
-            if (tipoComposicao.Equals(composicao1))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 46000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao2))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 41500;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao3))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "41500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 46000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao4))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 46000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao5))
-            {
+        //    string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
+        //    string tipoComposicao = selectedValue;
+        //    string tara = txtTara.Text.Trim();
+        //    int nTara = 0;
+        //    if (tipoComposicao.Equals(composicao1))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "46000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 46000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao2))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "46000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 41500;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao3))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "41500";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 46000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao4))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "46000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 46000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao5))
+        //    {
 
-                txtEixos.Text = "06";
-                txtLotacao.Text = "53000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 53000;
-                nTara = Int32.Parse(tara);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "53000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 53000;
+        //        nTara = Int32.Parse(tara);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao6))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao6))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "48500";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 48500;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao7))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao7))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "48500";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 48500;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao8))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "53000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 53000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao8))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "53000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 53000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao9))
-            {
-                txtEixos.Text = "03";
-                txtLotacao.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao9))
+        //    {
+        //        txtEixos.Text = "03";
+        //        txtLotacao.Text = "23000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 23000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao10))
-            {
-                txtEixos.Text = "04";
-                txtLotacao.Text = "29000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 29000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao10))
+        //    {
+        //        txtEixos.Text = "04";
+        //        txtLotacao.Text = "29000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 29000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao11))
-            {
-                txtEixos.Text = "07";
-                txtLotacao.Text = "57000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 57000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao11))
+        //    {
+        //        txtEixos.Text = "07";
+        //        txtLotacao.Text = "57000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 57000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao12))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "16000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 16000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao12))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "16000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 16000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao13))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "3000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 3000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao13))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "3000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 3000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao14))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao14))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "23000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 23000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao15))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao15))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "23000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 23000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao16))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "1200";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 1200;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao16))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "1200";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 1200;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao17))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "630";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 630;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao17))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "630";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 630;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-        }
-        protected void ddlComposicao_SelectedIndexChanged2(object sender, EventArgs e)
-        {
-            string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
-            string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
-            string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
-            string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
-            string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
-            string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
-            string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
-            string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
-            string composicao9 = "TRUCK";
-            string composicao10 = "BITRUCK";
-            string composicao11 = "BITREM";
-            string composicao12 = "TOCO";
-            string composicao13 = "VUC OU 3/4";
-            string composicao14 = "CAVALO SIMPLES COM PRANCHA";
-            string composicao15 = "CAVALO TRUCADO COM PRANCHA";
-            string composicao16 = "UTILITÁRIO/FURGÃO";
-            string composicao17 = "FIORINO";
+        //    }
+        //}
+        //protected void ddlComposicao_SelectedIndexChanged2(object sender, EventArgs e)
+        //{
+        //    string composicao1 = "CAVALO SIMPLES COM CARRETA VANDERLEIA ABERTA";
+        //    string composicao2 = "CAVALO SIMPLES COM CARRETA SIMPLES TOTAL SIDER";
+        //    string composicao3 = "CAVALO SIMPLES COM CARRETA SIMPLES(LS) ABERTA";
+        //    string composicao4 = "CAVALO SIMPLES COM CARRETA VANDERLEIA TOTAL SIDER";
+        //    string composicao5 = "CAVALO TRUCADO COM CARRETA VANDERLEIA ABERTA";
+        //    string composicao6 = "CAVALO TRUCADO COM CARRETA SIMPLES TOTAL SIDER";
+        //    string composicao7 = "CAVALO TRUCADO COM CARRETA SIMPLES(LS) ABERTA";
+        //    string composicao8 = "CAVALO TRUCADO COM CARRETA VANDERLEIA TOTAL SIDER";
+        //    string composicao9 = "TRUCK";
+        //    string composicao10 = "BITRUCK";
+        //    string composicao11 = "BITREM";
+        //    string composicao12 = "TOCO";
+        //    string composicao13 = "VUC OU 3/4";
+        //    string composicao14 = "CAVALO SIMPLES COM PRANCHA";
+        //    string composicao15 = "CAVALO TRUCADO COM PRANCHA";
+        //    string composicao16 = "UTILITÁRIO/FURGÃO";
+        //    string composicao17 = "FIORINO";
 
-            string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
-            string tipoComposicao = selectedValue;
-            string tara = txtTara.Text;
+        //    string selectedValue = ddlComposicao.SelectedItem.ToString().Trim();
+        //    string tipoComposicao = selectedValue;
+        //    string tara = txtTara.Text;
 
-            int nTara = 0;
-            if (tipoComposicao.Equals(composicao1))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 46000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao2))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 41500;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao3))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "41500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 46000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao4))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "46000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 46000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
-                int nTotalCarga = nPesoLiquido + nPesoTolerancia;
-                txtPBT.Text = nTotalCarga.ToString();
-            }
-            else if (tipoComposicao.Equals(composicao5))
-            {
-                tara = txtTara.Text.Trim();
-                txtEixos.Text = "06";
-                txtLotacao.Text = "53000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 53000;
-                nTara = int.Parse(tara);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    int nTara = 0;
+        //    if (tipoComposicao.Equals(composicao1))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "46000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 46000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao2))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "46000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 41500;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao3))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "41500";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 46000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao4))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "46000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 46000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //        int nTotalCarga = nPesoLiquido + nPesoTolerancia;
+        //        txtPBT.Text = nTotalCarga.ToString();
+        //    }
+        //    else if (tipoComposicao.Equals(composicao5))
+        //    {
+        //        tara = txtTara.Text.Trim();
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "53000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 53000;
+        //        nTara = int.Parse(tara);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao6))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao6))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "48500";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 48500;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao7))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "48500";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 48500;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao7))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "48500";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 48500;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao8))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "53000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 53000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao8))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "53000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 53000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao9))
-            {
-                txtEixos.Text = "03";
-                txtLotacao.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao9))
+        //    {
+        //        txtEixos.Text = "03";
+        //        txtLotacao.Text = "23000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 23000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao10))
-            {
-                txtEixos.Text = "04";
-                txtLotacao.Text = "29000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 29000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao10))
+        //    {
+        //        txtEixos.Text = "04";
+        //        txtLotacao.Text = "29000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 29000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao11))
-            {
-                txtEixos.Text = "07";
-                txtLotacao.Text = "57000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 57000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao11))
+        //    {
+        //        txtEixos.Text = "07";
+        //        txtLotacao.Text = "57000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 57000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao12))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "16000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 16000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao12))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "16000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 16000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao13))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "3000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 3000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao13))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "3000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 3000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao14))
-            {
-                txtEixos.Text = "05";
-                txtLotacao.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao14))
+        //    {
+        //        txtEixos.Text = "05";
+        //        txtLotacao.Text = "23000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 23000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao15))
-            {
-                txtEixos.Text = "06";
-                txtLotacao.Text = "23000";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 23000;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao15))
+        //    {
+        //        txtEixos.Text = "06";
+        //        txtLotacao.Text = "23000";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 23000;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao16))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "1200";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 1200;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao16))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "1200";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 1200;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
-            else if (tipoComposicao.Equals(composicao17))
-            {
-                txtEixos.Text = "02";
-                txtLotacao.Text = "630";
-                txtTolerancia.Text = "5";
-                int nCapacidade = 630;
-                nTara = int.Parse(txtTara.Text);
-                int nPesoLiquido = nCapacidade - nTara;
-                int nPesoTolerancia = (nPesoLiquido * 5) / 100;
+        //    }
+        //    else if (tipoComposicao.Equals(composicao17))
+        //    {
+        //        txtEixos.Text = "02";
+        //        txtLotacao.Text = "630";
+        //        txtTolerancia.Text = "5";
+        //        int nCapacidade = 630;
+        //        nTara = int.Parse(txtTara.Text);
+        //        int nPesoLiquido = nCapacidade - nTara;
+        //        int nPesoTolerancia = (nPesoLiquido * 5) / 100;
 
-            }
+        //    }
 
-        }
+        //}
         private void PreencherComboComposicao()
         {
             // Consulta SQL que retorna os dados desejados
@@ -864,16 +864,19 @@ namespace NewCapit
                         {
                             pnlDivReboque1.Visible = false;
                             pnlDivReboque2.Visible = false;
+                            carreta.Visible = false;
                         }
                         else if (cboTipo.SelectedItem.Text == "BITREM 7 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 8 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 9 EIXOS")
                         {
                             pnlDivReboque1.Visible = true;
                             pnlDivReboque2.Visible = true;
+                            carreta.Visible = true;
                         }
                         else if (cboTipo.SelectedItem.Text == "CAVALO SIMPLES" || cboTipo.SelectedItem.Text == "CAVALO TRUCADO" || cboTipo.SelectedItem.Text == "CAVALO 4 EIXOS")
                         {
                             pnlDivReboque1.Visible = true;
                             pnlDivReboque2.Visible = false;
+                            carreta.Visible = true;
                         }
 
                     }
@@ -1121,8 +1124,83 @@ namespace NewCapit
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-            string id = HttpContext.Current.Request.QueryString["id"];
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            if (txtPlaca.Text != "")
+            {
+                string termo = txtPlaca.Text.ToUpper();
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    // alterando dados no motorista
+                    string query = "SELECT placa, codvei, frota, codprop, reboque1, reboque2, tipoveiculo FROM tbmotoristas WHERE placa LIKE @termo";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                    conn.Open();
 
+                    object res = cmd.ExecuteScalar();
+                    if (res != null)
+                    {
+                        string queryLimpaVeiculo = @"UPDATE tbmotoristas
+                                                    SET placa=@placa,
+                                                    codvei=@codvei,
+                                                    frota=@frota,
+                                                    codprop=@codprop,
+                                                    reboque1@reboque1,
+                                                    reboque2=reboque2,
+                                                    tipoveiculo=@tipoveiculo
+                                                    WHERE placa=@termo";
+                        SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
+                        LimpaVeiculo.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim().ToUpper());
+                        LimpaVeiculo.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
+                        LimpaVeiculo.Parameters.AddWithValue("@frota", txtCodVei.Text.Trim().ToUpper());
+                        LimpaVeiculo.Parameters.AddWithValue("@codprop", txtCodTra.Text.Trim().ToUpper());
+                        LimpaVeiculo.Parameters.AddWithValue("@reboque1", txtReb1.Text.Trim().ToUpper());
+                        LimpaVeiculo.Parameters.AddWithValue("@reboque2", txtReb2.Text.Trim().ToUpper());
+                        LimpaVeiculo.Parameters.AddWithValue("@tipoveiculo", cboTipo.SelectedItem.Text.ToUpper());
+                        conn.Open();
+                        LimpaVeiculo.ExecuteNonQuery();
+
+                    }
+
+                    // alterando dados no reboque1
+                    //using (SqlConnection conVeiculo = new SqlConnection(strConn))
+                    //{
+                    //    string queryVeiculo = "SELECT TOP 1 codvei, plavei, codmot, motorista, codprop, reboque1, reboque2, tipoveiculo FROM tbmotoristass WHERE placa LIKE @termo";
+                    //    SqlCommand cmdVeiculo = new SqlCommand(queryVeiculo, conn);
+                    //    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                    //    conn.Open();
+
+                    //    object res = cmd.ExecuteScalar();
+                    //    if (res != null)
+                    //    {
+                    //        string queryLimpaVeiculo = @"UPDATE tbmotoristas
+                    //                                SET placa=@placa,
+                    //                                codvei=@codvei,
+                    //                                frota=@frota,
+                    //                                codprop=@codprop,
+                    //                                reboque1@reboque1,
+                    //                                reboque2=reboque2,
+                    //                                tipoveiculo=@tipoveiculo
+                    //                                WHERE placa=@termo";
+                    //        SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
+                    //        LimpaVeiculo.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim().ToUpper());
+                    //        LimpaVeiculo.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
+                    //        LimpaVeiculo.Parameters.AddWithValue("@frota", txtCodVei.Text.Trim().ToUpper());
+                    //        LimpaVeiculo.Parameters.AddWithValue("@codprop", txtCodTra.Text.Trim().ToUpper());
+                    //        LimpaVeiculo.Parameters.AddWithValue("@reboque1", txtReb1.Text.Trim().ToUpper());
+                    //        LimpaVeiculo.Parameters.AddWithValue("@reboque2", txtReb2.Text.Trim().ToUpper());
+                    //        LimpaVeiculo.Parameters.AddWithValue("@tipoveiculo", cboTipo.SelectedItem.Text.ToUpper());
+                    //        conn.Open();
+                    //        LimpaVeiculo.ExecuteNonQuery();
+
+                    //    }
+
+
+                }
+            }
+
+
+
+            string id = HttpContext.Current.Request.QueryString["id"];
             // Verifica se o ID foi fornecido e é um número válido
             if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idConvertido))
             {
@@ -1184,7 +1262,7 @@ namespace NewCapit
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
                     // Adiciona os parâmetros                    
-                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.ToUpper());
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);
@@ -1243,9 +1321,11 @@ namespace NewCapit
 
                     if (rowsAffected > 0)
                     {
-                        string mensagem = $"Olá, {txtAlteradoPor.Text}! Código {txtCodTra.Text} atualizado com sucesso.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        //string mensagem = $"Olá, {txtAlteradoPor.Text}! Código {txtCodTra.Text} atualizado com sucesso.";
+                        //string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        ExibirToastErro("Dados atualizados com sucesso.");
+                        Thread.Sleep(5000);
 
                         Response.Redirect("ConsultaVeiculos.aspx");
                     }
@@ -1956,16 +2036,19 @@ namespace NewCapit
             {
                 pnlDivReboque1.Visible = false;
                 pnlDivReboque2.Visible = false;
+                ddlCarreta.Visible = false;
             }
             else if (cboTipo.SelectedItem.Text == "BITREM 7 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 8 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 9 EIXOS")
             {
                 pnlDivReboque1.Visible = true;
                 pnlDivReboque2.Visible = true;
+                ddlCarreta.Visible = true;
             }
             else if (cboTipo.SelectedItem.Text == "CAVALO SIMPLES" || cboTipo.SelectedItem.Text == "CAVALO TRUCADO" || cboTipo.SelectedItem.Text == "CAVALO 4 EIXOS")
             {
                 pnlDivReboque1.Visible = true;
                 pnlDivReboque2.Visible = false;
+                ddlCarreta.Visible = true;
             }
         }
         private void CarregarComposicao(string tipoVeiculo)
@@ -1985,7 +2068,79 @@ namespace NewCapit
                 //ddlComposicao.Items.Insert(0, new ListItem("-- Selecione a composição --", "0"));
             }
         }
+        protected void btnSalvaAlteracaoMot_Click(object sender, EventArgs e)
+        {
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            if (txtPlaca.Text != "")
+            {
+                string termo = txtPlaca.Text.ToUpper();
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT placa, codvei, frota, codprop, reboque1, reboque2, tipoveiculo FROM tbmotoristas WHERE placa LIKE @termo";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                    conn.Open();
 
+                    object res = cmd.ExecuteScalar();
+                    if (res != null)
+                    {
+                        string queryLimpaVeiculo = @"UPDATE tbmotoristas
+                                                    SET placa=@placa,
+                                                    codvei=@codvei,
+                                                    frota=@frota,
+                                                    codprop=@codprop,
+                                                    reboque1=@reboque1,
+                                                    reboque2=@reboque2,
+                                                    tipoveiculo=@tipoveiculo
+                                                    WHERE placa=@termo";
+                        SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
+                                   LimpaVeiculo.Parameters.AddWithValue("@placa", "");
+                                   LimpaVeiculo.Parameters.AddWithValue("@codvei", "");
+                                   LimpaVeiculo.Parameters.AddWithValue("@frota", "");
+                                   LimpaVeiculo.Parameters.AddWithValue("@codprop", "");   
+                                   LimpaVeiculo.Parameters.AddWithValue("@reboque1", "");
+                                   LimpaVeiculo.Parameters.AddWithValue("@reboque2", "");
+                                   LimpaVeiculo.Parameters.AddWithValue("@tipoveiculo", "");
+                        conn.Open();
+                        LimpaVeiculo.ExecuteNonQuery();
+
+                    }
+                }
+            }
+            
+
+
+            //using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //{
+            //    string queryMot = @"UPDATE tbveiculos SET 
+            //                                        codmot=@codmot,
+            //                                        motorista=@motorista                                                           WHERE carga = @carga";
+
+            //    SqlCommand cmdc = new SqlCommand(queryc, con);
+            //    cmdc.Parameters.AddWithValue("@carga", carga);
+            //    cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
+            //    cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
+            //    cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
+            //    cmdc.Parameters.AddWithValue("@status", "PENDENTE");
+            //    cmdc.Parameters.AddWithValue("@andamento", "EM ANDAMENTO");
+            //    cmdc.Parameters.AddWithValue("@atendimento", atendimento);
+            //    cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());
+            //    cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+
+            //    con.Open();
+            //    cmdc.ExecuteNonQuery();
+
+            //    //nomeUsuario = txtUsuCadastro.Text;
+            //    //string mensagem = $"Olá, {nomeUsuario}!\nOrdem de Coleta, cadastrada com sucesso!";
+            //    //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+            //    //string script = $"alert('{mensagemCodificada}');";
+            //    //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+            //}
+
+
+
+        }
     }
 }
 

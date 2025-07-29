@@ -2,39 +2,37 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">   
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<link rel="stylesheet" href="/css/styleTabela.css">
+<%--<link rel="stylesheet" href="/css/styleTabela.css">--%>
 
     <script language="javascript">
-            function ConfirmMessage() {
-                var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
-                if (selectedvalue) {
-                    document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
+        function ConfirmMessage() {
+            var selectedvalue = confirm("Exclusão de Dados\n Tem certeza de que deseja excluir a informação permanentemente?");
+            if (selectedvalue) {
+                document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "Yes";
                 } else {
                     document.getElementById('<%=txtconformmessageValue.ClientID %>').value = "No";
-                }
             }
-        </script>
+        }
+    </script>
     <style>
-             .pagination-centered {
-                 text-align: center;
-             }
+        .pagination-centered {
+            text-align: center;
+        }
 
-                 .pagination-centered table {
-                     margin: 0 auto; /* Isso centraliza a tabela da paginação */
-                 }
-         </style>   
-    
-    <div class="container-xxl">
-        <div class="content-wrapper">
-             <div class="content-header">
-                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            .pagination-centered table {
+                margin: 0 auto; /* Isso centraliza a tabela da paginação */
+            }
+    </style> 
+    <div class="content-wrapper">
+       <div class="content-header">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-2 text-gray-800">
                         <i class="fa fa-truck"></i> &nbsp;Controle de Carretas</h1>
-                    <a href="/dist/pages/FrmCadCarreta.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <a href="/dist/pages/Frm_CadCarreta.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                         <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro  </a>
                 </div> 
-                 <!-- Content Row -->
-                 <div class="row">
+            <!-- Content Row -->
+            <div class="row">
                       <!-- Total Veículos -->        
                       <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
@@ -303,22 +301,22 @@
                    </div>
                       </div>        
                 </div>
-             </div>
-             <!-- Grid -->
-             <div class="card shadow mb-4"> 
+       </div>
+       <!-- Grid -->
+       <div class="card shadow mb-4"> 
                     <div class="card-header">
                        <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
                     </div>
                     <div class="card-body">
-            <div class="table-responsive">              
+            <div class="table-responsive" style="height: 590px;font-size:smaller;">              
                 <asp:GridView runat="server" ID="gvCarretas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="idcarreta" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvCarretas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>   
                         <asp:BoundField DataField="codcarreta" HeaderText="FROTA" />
                         <asp:BoundField DataField="placacarreta" HeaderText="PLACA" />
-                        <asp:BoundField DataField="licenciamento" HeaderText="EXERCICIO" />
+                        <asp:BoundField DataField="licenciamento" HeaderText="LICENCIAMENTO" />
                         <asp:BoundField DataField="modelo" HeaderText="MODELO" />
-                        <asp:BoundField DataField="anocarreta" HeaderText="ANO" />                        
+                        <asp:BoundField DataField="anocarreta" HeaderText="ANO/MOD" />                        
                         <asp:BoundField DataField="tiporeboque" HeaderText="TIPO" />
                         <asp:BoundField DataField="descprop" HeaderText="TRANSPORTADORA/PROPRIETÁRIO" />
                         <asp:BoundField DataField="nucleo" HeaderText="FILIAL" />
@@ -336,12 +334,7 @@
             <asp:HiddenField ID="txtconformmessageValue" runat="server" />                   
         </div>
              </div> 
-        </div>
-    </div> 
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.1.0 
-        </div>
-        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>     
+    </div>
+    
+   
 </asp:Content>
