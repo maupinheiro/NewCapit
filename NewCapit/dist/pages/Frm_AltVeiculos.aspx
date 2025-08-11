@@ -263,9 +263,9 @@
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator22" ControlToValidate="txtProtocoloCET" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form_group">
-                                <span class="details">VALIDADE:</span>
+                                <span class="details">VALIDADE CET:</span>
                                 <asp:TextBox ID="txtVencCET" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator23" ControlToValidate="txtVencCET" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
@@ -491,7 +491,7 @@
                                 <asp:TextBox ID="txtCargaLiq" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6" Enabled="true"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-1" id="motAnterior" runat="server">
+                        <div class="col-md-1" id="motAnterior" runat="server" visible="false">
                             <div class="form-group">
                                 <span class="details">MOT. ANTERIOR</span>
                                 <asp:TextBox ID="txtMotAnterior" runat="server" Style="text-align: center" CssClass="form-control" Enabled="false"></asp:TextBox>

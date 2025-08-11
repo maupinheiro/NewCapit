@@ -440,7 +440,7 @@ namespace NewCapit.dist.pages
 
                     TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
                     // Agora você pode comparar a diferença
-                    if (diferencaLicenciamento.TotalDays < 30)
+                    if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >=1)
                     {
                         string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
                         txtCRLVVeiculo.Text = txtCRLVVeiculo.Text + " (" + diasLicenciamento + " dias)";

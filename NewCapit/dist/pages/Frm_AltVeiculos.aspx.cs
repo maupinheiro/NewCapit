@@ -40,8 +40,11 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                     // txtAlteradoPor.Text = lblUsuario;
                 }
-
                 PreencherComboEstados();
+                CarregaDadosDoVeiculo();
+                
+               
+                
                 PreencherComboComposicao();
                 CarregarDDLAgregados();
                 PreencherComboFiliais();
@@ -50,7 +53,7 @@ namespace NewCapit
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
                 PreencherComboCboTipo();
-                CarregaDadosDoVeiculo();
+               
                
 
 
@@ -180,7 +183,7 @@ namespace NewCapit
                 ddlCidades.DataValueField = "cod_municipio"; // valor único
                 ddlCidades.DataBind();
 
-                ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
+                //ddlCidades.Items.Insert(0, new ListItem("-- Selecione uma cidade --", "0"));
             }
         }
         protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
@@ -805,7 +808,7 @@ namespace NewCapit
                     ddlComposicao.DataTextField = "composicao";  // Campo que será mostrado no ComboBox
                     ddlComposicao.DataValueField = "ID";  // Campo que será o valor de cada item                    
                     ddlComposicao.DataBind();  // Realiza o binding dos dados                   
-
+                    ddlComposicao.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -853,13 +856,11 @@ namespace NewCapit
                     // Método auxiliar para evitar exceções de valores nulos
                     string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
 
-                    txtCodVei.Text = GetValue(row, 1);                    
-
-                    // cboTipo.Items.Insert(0, GetValue(row, 2));
+                    txtCodVei.Text = GetValue(row, 1); 
                     if (dt.Rows[0][2].ToString() != "")
                     {
-                        //cboTipo.Items.Insert(0, new ListItem(GetValue(row, 2),"0"));
-                        cboTipo.SelectedItem.Text = GetValue(row, 2);
+                        
+                        cboTipo.Items.Insert(0, new ListItem(GetValue(row, 2)));
 
                         if (cboTipo.SelectedItem.Text.Trim() == "TRUCK" || cboTipo.SelectedItem.Text.Trim() == "BITRUCK" || cboTipo.SelectedItem.Text.Trim() == "UTILITÁRIO/FURGÃO" || cboTipo.SelectedItem.Text.Trim() == "LEVE" || cboTipo.SelectedItem.Text.Trim() == "FIORINO" || cboTipo.SelectedItem.Text.Trim() == "TOCO" || cboTipo.SelectedItem.Text.Trim() == "VUC OU 3/4")
                         {
@@ -983,9 +984,34 @@ namespace NewCapit
                     {
                         ddlAgregados.Items.Insert(0, GetValue(row, 30));
                     }
-                    if (dt.Rows[0][31].ToString() != string.Empty)
+                    
+                    if (dt.Rows[0][31].ToString() == string.Empty)
                     {
-                        txtOpacidade.Text = GetValue(row, 31);
+                        txtOpacidade.BackColor = System.Drawing.Color.Red;
+                        txtOpacidade.ForeColor = System.Drawing.Color.White;
+                        txtOpacidade.Text = "Verifique";
+                    }
+                    else
+                    {
+                        txtOpacidade.Text = DateTime.Parse(GetValue(row, 31).ToString()).ToString("dd/MM/yyyy");
+                        DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        DateTime dataLicenciamento = Convert.ToDateTime(txtOpacidade.Text);
+
+                        TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
+                        // comparar a diferença
+                        if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >= 1)
+                        {
+                            string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
+                            txtOpacidade.Text = DateTime.Parse(GetValue(row, 31).ToString()).ToString("dd/MM/yyyy");
+                            txtOpacidade.BackColor = System.Drawing.Color.Khaki;
+                            txtOpacidade.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                        else if (diferencaLicenciamento.TotalDays <= 0)
+                        {
+                            txtOpacidade.Text = DateTime.Parse(GetValue(row, 31).ToString()).ToString("dd/MM/yyyy");
+                            txtOpacidade.BackColor = System.Drawing.Color.Red;
+                            txtOpacidade.ForeColor = System.Drawing.Color.White;
+                        }
                     }
                     if (dt.Rows[0][32].ToString() != string.Empty)
                     {
@@ -1002,23 +1028,100 @@ namespace NewCapit
                     if (dt.Rows[0][35].ToString() != string.Empty)
                     {
                         txtDtAlteracao.Text = GetValue(row, 35);
+                    }                    
+                    if (dt.Rows[0][36].ToString() == string.Empty)
+                    {
+                        txtVencCET.BackColor = System.Drawing.Color.Red;
+                        txtVencCET.ForeColor = System.Drawing.Color.White;
+                        txtVencCET.Text = "Verifique";
                     }
-                    if (dt.Rows[0][36].ToString() != string.Empty)
+                    else
                     {
                         txtVencCET.Text = GetValue(row, 36);
+                        DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        DateTime dataLicenciamento = Convert.ToDateTime(txtLicenciamento.Text);
+
+                        TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
+                        // comparar a diferença
+                        if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >= 1)
+                        {
+                            string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
+                            txtVencCET.Text = DateTime.Parse(GetValue(row, 36).ToString()).ToString("dd/MM/yyyy");
+                            txtVencCET.Text = txtVencCET.Text + " (" + diasLicenciamento + " dias)";
+                            txtVencCET.BackColor = System.Drawing.Color.Khaki;
+                            txtVencCET.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                        else if (diferencaLicenciamento.TotalDays <= 0)
+                        {
+                            txtVencCET.Text = DateTime.Parse(GetValue(row, 36).ToString()).ToString("dd/MM/yyyy");
+                            txtVencCET.BackColor = System.Drawing.Color.Red;
+                            txtVencCET.ForeColor = System.Drawing.Color.White;
+                            txtVencCET.Text = txtVencCET.Text + " (Vencida)";
+                        }
                     }
+
+
+
                     if (dt.Rows[0][37].ToString() != string.Empty)
                     {
                         txtProtocoloCET.Text = GetValue(row, 37);
                     }
-                    if (dt.Rows[0][38].ToString() != string.Empty)
+                    if (dt.Rows[0][38].ToString() == string.Empty)
                     {
+                        txtLicenciamento.BackColor = System.Drawing.Color.Red;
+                        txtLicenciamento.ForeColor = System.Drawing.Color.White;
+                        txtLicenciamento.Text = "Verifique";
+                    }
+                    else
+                    { 
                         txtLicenciamento.Text = GetValue(row, 38);
+                        DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        DateTime dataLicenciamento = Convert.ToDateTime(txtLicenciamento.Text);
+
+                        TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
+                        // comparar a diferença
+                        if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >= 1)
+                        {
+                            string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
+                            txtLicenciamento.Text = DateTime.Parse(GetValue(row, 38).ToString()).ToString("dd/MM/yyyy");
+                            txtLicenciamento.BackColor = System.Drawing.Color.Khaki;
+                            txtLicenciamento.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                        else if (diferencaLicenciamento.TotalDays <= 0)
+                        {
+                            txtLicenciamento.Text = DateTime.Parse(GetValue(row, 38).ToString()).ToString("dd/MM/yyyy");
+                            txtLicenciamento.BackColor = System.Drawing.Color.Red;
+                            txtLicenciamento.ForeColor = System.Drawing.Color.White;                            
+                        }
                     }
-                    if (dt.Rows[0][39].ToString() != string.Empty)
+                    if (dt.Rows[0][39].ToString() == string.Empty)
                     {
-                        txtCronotacografo.Text = DateTime.Parse(dt.Rows[0][39].ToString()).ToString("dd/MM/yyyy");
+                        txtCronotacografo.BackColor = System.Drawing.Color.Red;
+                        txtCronotacografo.ForeColor = System.Drawing.Color.White;
+                        txtCronotacografo.Text = "Verifique";
                     }
+                    else
+                    {                        
+                        txtCronotacografo.Text = DateTime.Parse(GetValue(row, 39).ToString()).ToString("dd/MM/yyyy");
+                        DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        DateTime dataLicenciamento = Convert.ToDateTime(txtCronotacografo.Text);
+
+                        TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
+                        // comparar a diferença
+                        if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >= 1)
+                        {
+                            string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
+                            txtCronotacografo.Text = DateTime.Parse(GetValue(row, 39).ToString()).ToString("dd/MM/yyyy");
+                            txtCronotacografo.BackColor = System.Drawing.Color.Khaki;
+                            txtCronotacografo.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                        else if (diferencaLicenciamento.TotalDays <= 0)
+                        {
+                            txtCronotacografo.Text = DateTime.Parse(GetValue(row, 39).ToString()).ToString("dd/MM/yyyy");
+                            txtCronotacografo.BackColor = System.Drawing.Color.Red;
+                            txtCronotacografo.ForeColor = System.Drawing.Color.White;
+                        }
+                    }                   
                     if (dt.Rows[0][40].ToString() != string.Empty)
                     {
                         ddlMarca.Items.Insert(0, GetValue(row, 40));
@@ -1039,21 +1142,13 @@ namespace NewCapit
                     {
                         txtAntt.Text = GetValue(row, 44);
                     }
-                    // numeroReb1.Text = GetValue(row, 45);
-                    // numeroReb2.Text = GetValue(row, 46); 
-                    //ddlEstados.Items.Insert(0, new ListItem(dt.Rows[0][47].ToString(),""));
-                    //ddlCidades.Items.Insert(0, new ListItem(dt.Rows[0][48].ToString(),""));
-                    //ddlCNH.Items.Insert(0, new ListItem(dt.Rows[0][57].ToString()));
-                    //ddlMunicipioNasc.Items.Insert(0, new ListItem(dt.Rows[0][38].ToString(), "0"));
-
-
                     if (dt.Rows[0][47].ToString() != string.Empty)
                     {
-                        ddlEstados.Items.Insert(0, new ListItem(GetValue(row, 47).ToString(), "0"));
+                        ddlEstados.Items.Insert(0,GetValue(row, 47));
                     }
                     if (dt.Rows[0][48].ToString() != string.Empty)
                     {
-                        ddlCidades.Items.Insert(0, new ListItem(GetValue(row, 48)));
+                        ddlCidades.Items.Insert(0, GetValue(row, 48));
                     }
                     if (dt.Rows[0][49].ToString() != string.Empty)
                     {
@@ -1091,9 +1186,33 @@ namespace NewCapit
                     {
                         txtApolice.Text = GetValue(row, 57);
                     }
-                    if (dt.Rows[0][58].ToString() != string.Empty)
+                    if (dt.Rows[0][58].ToString() == string.Empty)
+                    {
+                        txtTipoSeguro.BackColor = System.Drawing.Color.Red;
+                        txtTipoSeguro.ForeColor = System.Drawing.Color.White;
+                        txtTipoSeguro.Text = "Sem Seguro Cadastrado";
+                    }
+                    else
                     {
                         txtValidadeApolice.Text = GetValue(row, 58);
+                        DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        DateTime dataLicenciamento = Convert.ToDateTime(txtValidadeApolice.Text);
+
+                        TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
+                        // comparar a diferença
+                        if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >= 1)
+                        {
+                            string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
+                            txtValidadeApolice.Text = DateTime.Parse(GetValue(row, 58).ToString()).ToString("dd/MM/yyyy");
+                            txtValidadeApolice.BackColor = System.Drawing.Color.Khaki;
+                            txtValidadeApolice.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                        else if (diferencaLicenciamento.TotalDays <= 0)
+                        {
+                            txtValidadeApolice.Text = DateTime.Parse(GetValue(row, 58).ToString()).ToString("dd/MM/yyyy");
+                            txtValidadeApolice.BackColor = System.Drawing.Color.Red;
+                            txtValidadeApolice.ForeColor = System.Drawing.Color.White;
+                        }
                     }
                     if (dt.Rows[0][59].ToString() != string.Empty)
                     {
@@ -1229,8 +1348,8 @@ namespace NewCapit
                                 controlepatrimonio = @controlepatrimonio,
                                 chassi = @chassi
                             WHERE id = @id";
-            try
-            {
+            //try
+            //{
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
@@ -1276,10 +1395,11 @@ namespace NewCapit
                     //cmd.Parameters.AddWithValue("@codreb1", numeroReb1.Text);
                     //cmd.Parameters.AddWithValue("@codreb2", numeroReb2.Text);
                     cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.Text);
-                    if (ddlCidades.SelectedItem.Text != null)
-                    {
-                        cmd.Parameters.AddWithValue("@cidplaca", string.IsNullOrEmpty(ddlCidades.SelectedItem.Text.ToUpper()) ? (object)DBNull.Value : ddlCidades.SelectedItem.Text.ToUpper());
-                    }
+                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.Text);
+                    //if (ddlCidades.SelectedItem.Text != null)
+                    //{
+                    //    cmd.Parameters.AddWithValue("@cidplaca", string.IsNullOrEmpty(ddlCidades.SelectedItem.Text.ToUpper()) ? (object)DBNull.Value : ddlCidades.SelectedItem.Text.ToUpper());
+                    //}
                     cmd.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text);
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text);
@@ -1310,87 +1430,87 @@ namespace NewCapit
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Nenhum registro foi atualizado.');", true);
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                //string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                //string script = $"alert('{mensagemErro}');";
-                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+            //}
+            //catch (SqlException ex)
+            //{
+            //    //string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+            //    //string script = $"alert('{mensagemErro}');";
+            //    //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
 
-                string erroDetalhado = "Erro ao salvar registro no banco de dados: " + ex.Message;
+            //    string erroDetalhado = "Erro ao salvar registro no banco de dados: " + ex.Message;
 
-                // Tentar identificar qual parâmetro pode ter causado o erro
-                erroDetalhado += "\nValores enviados:";
-                erroDetalhado += $"\ntipvei = {cboTipo.SelectedValue.ToUpper()}";
-                erroDetalhado += $"\ntipoveiculo = {ddlTipo.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nmodelo = {txtModelo.Text.ToUpper()}";
-                erroDetalhado += $"\nano = {txtAno.Text}";
-                erroDetalhado += $"\nnucleo = {cbFiliais.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nativo_inativo = {ddlSituacao.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nplavei = {txtPlaca.Text.ToUpper()}";
-                erroDetalhado += $"\nreboque1 = {txtReb1.Text.ToUpper()}";
-                erroDetalhado += $"\nreboque2 = {txtReb2.Text.ToUpper()}";
-                erroDetalhado += $"\ntipocarreta = {ddlCarreta.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\ntiporeboque = {ddlComposicao.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nrastreamento = {ddlMonitoramento.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\ncodrastreador = {txtCodRastreador.Text}";
-                erroDetalhado += $"\neixos = {txtEixos.Text.Trim()}";
-                erroDetalhado += $"\ncap = {txtLotacao.Text}";
-                erroDetalhado += $"\ntara = {txtTara.Text}";
-                erroDetalhado += $"\ntolerancia = {txtTolerancia.Text}";
-                erroDetalhado += $"\npbt = {txtPBT.Text}";
-                erroDetalhado += $"\ncodmot = {txtCodMot.Text.ToUpper()}";
-                erroDetalhado += $"\nmotorista = {ddlMotorista.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\ncodtra = {txtCodTra.Text.ToUpper()}";
-                erroDetalhado += $"\ntransp = {ddlAgregados.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nvencimentolaudofumaca = {txtOpacidade.Text}";
-                erroDetalhado += $"\nusualt = {txtAlteradoPor.Text.Trim().ToUpper()}"; // Usuário atual
-                erroDetalhado += $"\ndtcalt = {txtDtAlteracao.Text}"; // Corrigido para DateTime
-                erroDetalhado += $"\nprotocolocet = {txtProtocoloCET.Text}";
-                erroDetalhado += $"\nvenclicencacet = {txtVencCET.Text}";
-                erroDetalhado += $"\nvenclicenciamento = {txtLicenciamento.Text}";
-                erroDetalhado += $"\nvenccronotacografo = {txtCronotacografo.Text}";
-                erroDetalhado += $"\nmarca = {ddlMarca.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nrenavan = {txtRenavam.Text}";
-                erroDetalhado += $"\ncor = {ddlCor.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\ncomunicacao = {ddlComunicacao.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nantt = {txtAntt.Text}";
+            //    // Tentar identificar qual parâmetro pode ter causado o erro
+            //    erroDetalhado += "\nValores enviados:";
+            //    erroDetalhado += $"\ntipvei = {cboTipo.SelectedValue.ToUpper()}";
+            //    erroDetalhado += $"\ntipoveiculo = {ddlTipo.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nmodelo = {txtModelo.Text.ToUpper()}";
+            //    erroDetalhado += $"\nano = {txtAno.Text}";
+            //    erroDetalhado += $"\nnucleo = {cbFiliais.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nativo_inativo = {ddlSituacao.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nplavei = {txtPlaca.Text.ToUpper()}";
+            //    erroDetalhado += $"\nreboque1 = {txtReb1.Text.ToUpper()}";
+            //    erroDetalhado += $"\nreboque2 = {txtReb2.Text.ToUpper()}";
+            //    erroDetalhado += $"\ntipocarreta = {ddlCarreta.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\ntiporeboque = {ddlComposicao.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nrastreamento = {ddlMonitoramento.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\ncodrastreador = {txtCodRastreador.Text}";
+            //    erroDetalhado += $"\neixos = {txtEixos.Text.Trim()}";
+            //    erroDetalhado += $"\ncap = {txtLotacao.Text}";
+            //    erroDetalhado += $"\ntara = {txtTara.Text}";
+            //    erroDetalhado += $"\ntolerancia = {txtTolerancia.Text}";
+            //    erroDetalhado += $"\npbt = {txtPBT.Text}";
+            //    erroDetalhado += $"\ncodmot = {txtCodMot.Text.ToUpper()}";
+            //    erroDetalhado += $"\nmotorista = {ddlMotorista.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\ncodtra = {txtCodTra.Text.ToUpper()}";
+            //    erroDetalhado += $"\ntransp = {ddlAgregados.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nvencimentolaudofumaca = {txtOpacidade.Text}";
+            //    erroDetalhado += $"\nusualt = {txtAlteradoPor.Text.Trim().ToUpper()}"; // Usuário atual
+            //    erroDetalhado += $"\ndtcalt = {txtDtAlteracao.Text}"; // Corrigido para DateTime
+            //    erroDetalhado += $"\nprotocolocet = {txtProtocoloCET.Text}";
+            //    erroDetalhado += $"\nvenclicencacet = {txtVencCET.Text}";
+            //    erroDetalhado += $"\nvenclicenciamento = {txtLicenciamento.Text}";
+            //    erroDetalhado += $"\nvenccronotacografo = {txtCronotacografo.Text}";
+            //    erroDetalhado += $"\nmarca = {ddlMarca.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nrenavan = {txtRenavam.Text}";
+            //    erroDetalhado += $"\ncor = {ddlCor.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\ncomunicacao = {ddlComunicacao.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nantt = {txtAntt.Text}";
 
-                erroDetalhado += $"\nufplaca = {ddlEstados.SelectedItem.Text}";
-                erroDetalhado += $"\ncidplaca = {ddlCidades.SelectedItem.Text}";
-                erroDetalhado += $"\nlotacao = {txtLotacao.Text}";
-                erroDetalhado += $"\ncomprimento = {txtComprimento.Text}";
-                erroDetalhado += $"\nlargura = {txtLargura.Text}";
-                erroDetalhado += $"\naltura = {txtAltura.Text}";
-                erroDetalhado += $"\nplacaant = {txtPlacaAnt.Text}";
-                erroDetalhado += $"\ntacografo = {ddlTacografo.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\nmodelotacografo = {ddlModeloTacografo.SelectedItem.Text.ToUpper()}";
-                erroDetalhado += $"\ndataaquisicao = {txtDataAquisicao.Text}";
-                erroDetalhado += $"\ncontrolepatrimonio = {txtControlePatrimonio.Text}";
-                erroDetalhado += $"\nchassi = {txtChassi.Text}";
-                erroDetalhado += $"\nid = {idConvertido}";
+            //    erroDetalhado += $"\nufplaca = {ddlEstados.SelectedItem.Text}";
+            //    erroDetalhado += $"\ncidplaca = {ddlCidades.SelectedItem.Text}";
+            //    erroDetalhado += $"\nlotacao = {txtLotacao.Text}";
+            //    erroDetalhado += $"\ncomprimento = {txtComprimento.Text}";
+            //    erroDetalhado += $"\nlargura = {txtLargura.Text}";
+            //    erroDetalhado += $"\naltura = {txtAltura.Text}";
+            //    erroDetalhado += $"\nplacaant = {txtPlacaAnt.Text}";
+            //    erroDetalhado += $"\ntacografo = {ddlTacografo.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\nmodelotacografo = {ddlModeloTacografo.SelectedItem.Text.ToUpper()}";
+            //    erroDetalhado += $"\ndataaquisicao = {txtDataAquisicao.Text}";
+            //    erroDetalhado += $"\ncontrolepatrimonio = {txtControlePatrimonio.Text}";
+            //    erroDetalhado += $"\nchassi = {txtChassi.Text}";
+            //    erroDetalhado += $"\nid = {idConvertido}";
 
-                //// Aciona o Toast via JavaScript
-                //ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-
-
-                //string script = $"alert('{erroDetalhado}');";
-                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+            //    //// Aciona o Toast via JavaScript
+            //    //ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
 
 
+            //    //string script = $"alert('{erroDetalhado}');";
+            //    //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
 
 
-                // Exibir no log ou em uma Label (por exemplo)
 
-                //if (ex.Number == 8152)
-                //{
-                //    lblErro.Text = "Erro: Valor duplicado em campo único.";
-                //    lblErro.Text = erroDetalhado;
-                //}
-                miDiv.Visible = true;
-                lblErro.Text = erroDetalhado;
 
-            }
+            //    // Exibir no log ou em uma Label (por exemplo)
+
+            //    //if (ex.Number == 8152)
+            //    //{
+            //    //    lblErro.Text = "Erro: Valor duplicado em campo único.";
+            //    //    lblErro.Text = erroDetalhado;
+            //    //}
+            //    miDiv.Visible = true;
+            //    lblErro.Text = erroDetalhado;
+
+            //}
         }
         private void PreencherComboAgregados(string filtroCodTra = null)
         {
@@ -1426,7 +1546,7 @@ namespace NewCapit
                     ddlAgregados.DataValueField = "codtra";
                     ddlAgregados.DataBind();
 
-                    ddlAgregados.Items.Insert(0, "");
+                    //ddlAgregados.Items.Insert(0, "Selecione...");
 
                     // Feche o reader
                     reader.Close();
@@ -1512,7 +1632,7 @@ namespace NewCapit
                 ddlAgregados.DataBind();
 
                 // Adicionar o item padrão
-                ddlAgregados.Items.Insert(0, new ListItem("", "0"));
+                ddlAgregados.Items.Insert(0, new ListItem("Selecione...", "0"));
             }
         }
         // Evento disparado quando o item do DropDownList é alterado
@@ -2015,18 +2135,21 @@ namespace NewCapit
                 pnlDivReboque1.Visible = false;
                 pnlDivReboque2.Visible = false;
                 ddlCarreta.Visible = false;
+                carreta.Visible = false;
             }
             else if (cboTipo.SelectedItem.Text == "BITREM")
             {
                 pnlDivReboque1.Visible = true;
                 pnlDivReboque2.Visible = true;
                 ddlCarreta.Visible = true;
+                carreta.Visible = true;
             }
             else if (cboTipo.SelectedItem.Text == "CAVALO SIMPLES" || cboTipo.SelectedItem.Text == "CAVALO TRUCADO" || cboTipo.SelectedItem.Text == "CAVALO 4 EIXOS")
             {
                 pnlDivReboque1.Visible = true;
                 pnlDivReboque2.Visible = false;
                 ddlCarreta.Visible = true;
+                carreta.Visible = true;
             }
         }
         private void CarregarComposicao(string tipoVeiculo)
