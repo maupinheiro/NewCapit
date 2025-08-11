@@ -84,7 +84,7 @@
             </div>
             <form>
 
-                <asp:ScriptManager ID="asm" runat="server" />
+                <%--<asp:ScriptManager ID="asm" runat="server" />--%>
                 <div class="card-header">
                     <!-- Linha 1 do formulario -->
                     <div class="row g-3">
@@ -185,7 +185,7 @@
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">UF NASC.:</span>
-                                        <asp:DropDownList ID="ddlEstNasc" runat="server" class="form-control" AutoPostBack="True"
+                                        <asp:DropDownList ID="ddlEstNasc" runat="server" class="form-control select2" AutoPostBack="True"
                                             OnSelectedIndexChanged="ddlEstNasc_SelectedIndexChanged">
                                         </asp:DropDownList>
                                     </div>
@@ -193,7 +193,7 @@
                                 <div class="col-md-3">
                                     <div class="form_group">
                                         <span class="details">MUNICIPIO DE NASCIMENTO:</span>
-                                        <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control select2"></asp:DropDownList>
                                     </div>
                                 </div>
 
@@ -468,31 +468,31 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PROP.:</span>
-                                <asp:TextBox ID="txtCodProp" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:TextBox ID="txtCodProp" runat="server" CssClass="form-control" readonly="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PLACA:</span>
-                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtPlaca_TextChanged" ></asp:TextBox>
+                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" readonly="true" ></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">REBOQUE 1:</span>
-                                <asp:TextBox ID="txtReboque1" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:TextBox ID="txtReboque1" runat="server" CssClass="form-control" readonly="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">REBOQUE 2:</span>
-                                <asp:TextBox ID="txtReboque2" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:TextBox ID="txtReboque2" runat="server" CssClass="form-control" readonly="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">TIPO DE VEÍCULO:</span>
-                                <asp:TextBox ID="txtTipoVeiculo" runat="server" CssClass="form-control" value=""></asp:TextBox>
+                                <asp:TextBox ID="txtTipoVeiculo" runat="server" CssClass="form-control" readonly="true"></asp:TextBox>
                             </div>
                         </div>
 

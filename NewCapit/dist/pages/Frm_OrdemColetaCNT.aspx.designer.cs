@@ -15,15 +15,6 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
-        /// Controle ScriptManager1.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.ScriptManager ScriptManager1;
-
-        /// <summary>
         /// Controle novaColeta.
         /// </summary>
         /// <remarks>
@@ -78,33 +69,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtFuncao;
 
         /// <summary>
-        /// Controle txtExameToxic.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtExameToxic;
-
-        /// <summary>
-        /// Controle txtCNH.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCNH;
-
-        /// <summary>
-        /// Controle txtLibGR.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLibGR;
-
-        /// <summary>
         /// Controle txtNomMot.
         /// </summary>
         /// <remarks>
@@ -150,6 +114,51 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCelular;
 
         /// <summary>
+        /// Controle txtCodTransportadora.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodTransportadora;
+
+        /// <summary>
+        /// Controle txtTransportadora.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTransportadora;
+
+        /// <summary>
+        /// Controle txtExameToxic.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtExameToxic;
+
+        /// <summary>
+        /// Controle txtCNH.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNH;
+
+        /// <summary>
+        /// Controle txtLibGR.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLibGR;
+
+        /// <summary>
         /// Controle txtCodVeiculo.
         /// </summary>
         /// <remarks>
@@ -193,6 +202,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOpacidade;
+
+        /// <summary>
+        /// Controle txtCrono.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCrono;
 
         /// <summary>
         /// Controle txtCET.

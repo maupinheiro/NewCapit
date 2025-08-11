@@ -3,51 +3,18 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   <style>
-    /* Cor padrão das abas */
-    .nav-tabs .nav-link {
-        background-color: #35BDB4; /* #f0f0f0 cinza claro */
-        color: white;               /* cor do texto 333 */
-        border: 1px solid #ccc;
-        margin-right: 4px;
-    }
-
-    /* Aba ativa */
-    .nav-tabs .nav-link.active {
-        background-color: #007bff; /* azul Bootstrap */
-        color: white;
-        border-color: #007bff #007bff #fff;
-    }
-
-    /* Hover */
-    .nav-tabs .nav-link:hover {
-        background-color: #e0e0e0;
-        color: #000;
-    }
-</style>
-
-
-    <script>
-        // Salvar aba ativa no localStorage
-        document.addEventListener("DOMContentLoaded", function () {
-            var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
-            triggerTabList.forEach(function (triggerEl) {
-                triggerEl.addEventListener('shown.bs.tab', function (event) {
-                    localStorage.setItem('activeTab', event.target.getAttribute('data-bs-target'));
-                });
-            });
-
-            // Restaurar aba ativa
-            var activeTab = localStorage.getItem('activeTab');
-            if (activeTab) {
-                var someTabTriggerEl = document.querySelector('[data-bs-target="' + activeTab + '"]');
-                if (someTabTriggerEl) {
-                    var tab = new bootstrap.Tab(someTabTriggerEl);
-                    tab.show();
-                }
-            }
-        });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <style>
+        .fonte-menor {
+            font-size: 10px;
+        }
+    </style>
+    <%-- <style>
+        body {
+            font-size: 12px; /* ou menor, como 10px */
+        }
+    </style>--%>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -77,17 +44,55 @@
             let txtAno = document.getElementById("<%= txtAno.ClientID %>");
             let txtDataAquisicao = document.getElementById("<%= txtDataAquisicao.ClientID %>");
             let txtLicenciamento = document.getElementById("<%= txtLicenciamento.ClientID %>");
-
-            let txtCronotacografo = document.getElementById("<%= txtCronotacografo.ClientID %>");
+            let txtCNPJ = document.getElementById("<%= txtCNPJ.ClientID %>");
+            let txtInicioContrato = document.getElementById("<%= txtInicioContrato.ClientID %>");
+            let txtTerminoContrato = document.getElementById("<%= txtTerminoContrato.ClientID %>");
 
 
             if (txtAno) aplicarMascara(txtAno, "0000/0000");
             if (txtDataAquisicao) aplicarMascara(txtDataAquisicao, "00/00/0000");
             if (txtLicenciamento) aplicarMascara(txtLicenciamento, "00/00/0000");
+            if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
+            if (txtInicioContrato) aplicarMascara(txtInicioContrato, "00/00/0000");
+            if (txtTerminoContrato) aplicarMascara(txtTerminoContrato, "00/00/0000");
 
-            if (txtCronotacografo) aplicarMascara(txtCronotacografo, "00/00/0000");
+    </script>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                function aplicarMascaraLatitudeLongitude(input) {
+                    input.addEventListener("input", function () {
+                        let valor = input.value;
 
-        });
+                        // Garante que o "-" sempre esteja no início
+                        if (!valor.startsWith("-")) {
+                            valor = "-" + valor.replace(/[^0-9.]/g, ""); // Remove caracteres inválidos e adiciona "-"
+                        } else {
+                            valor = "-" + valor.substring(1).replace(/[^0-9.]/g, ""); // Mantém o "-" e filtra o resto
+                        }
+
+                        // Remove pontos extras, mantendo apenas o primeiro
+                        let partes = valor.split(".");
+                        if (partes.length > 2) {
+                            valor = partes[0] + "." + partes.slice(1).join(""); // Remove pontos extras
+                        }
+
+                        // Garante que tenha no máximo 2 dígitos antes do ponto
+                        let match = valor.match(/^-?\d{0,2}(\.\d{0,8})?/);
+                        if (match) {
+                            valor = match[0];
+                        }
+
+                        input.value = valor;
+                    });
+
+                    // Adiciona o "-" automaticamente se o campo estiver vazio ao perder o foco
+                    input.addEventListener("blur", function () {
+                        if (input.value === "-") {
+                            input.value = "";
+                        }
+                    });
+                }
+            });
     </script>
     <div class="content-wrapper">
         <section class="content">
@@ -110,7 +115,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="">TIPO DE CARRETA:</span>
-                                <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control">
+                                <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlTipo_SelectedIndexChanged">
                                     <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
                                     <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>
@@ -122,8 +127,8 @@
                         <div class="col-md-2" id="alugada" runat="server" visible="false">
                             <div class="form-group">
                                 <span class="">CARRETA:</span>
-                                <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                <asp:DropDownList ID="ddlCarreta" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlCarreta_SelectedIndexChanged">
+                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="ALUGADA" Text="ALUGADA"></asp:ListItem>
                                     <asp:ListItem Value="PROPRIA" Text="PROPRIA"></asp:ListItem>
                                 </asp:DropDownList>
@@ -134,39 +139,23 @@
                                 <span class="details">FILIAL:</span>
                                 <asp:DropDownList ID="cbFiliais" name="nomeFiliais" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
                             </div>
-                        </div>                       
-                        
+                        </div>
+
                     </div>
 
-                    <!-- Abas -->
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
-                                Dados da Carreta
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
-                                Dados do Proprietário
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
-                                Rastreamento
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
-                                Seguro
-                            </button>
-                        </li>
-                    </ul>
-
-                    <!-- Conteúdo das Abas -->
-                    <div class="tab-content" id="myTabContent">
-                        <!-- aba 1 -->
-                        <div class="tab-pane fade show active p-3 border border-top-0" id="tab1" role="tabpanel">
-                            <!-- linha 2 -->
+                    <!-- dados da carreta -->
+                    <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados da Carreta</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-1">
                                     <div class="form-group">
@@ -192,7 +181,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- linha 3 -->
                             <div class="row g-3">
                                 <div class="col-md-1">
                                     <div class="form-group">
@@ -230,7 +218,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
-                                        <span class="details">VENC.LIC:</span>
+                                        <span class="details">VENC. LIC:</span>
                                         <asp:TextBox ID="txtLicenciamento" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator18" ControlToValidate="txtLicenciamento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
@@ -239,54 +227,74 @@
                             <div class="row g-3">
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <span class="details">TARA:</span>
-                                        <asp:TextBox ID="txtTara" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                                        <span class="details">TARA(kg):</span>
+                                        <asp:TextBox ID="txtTara" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000000" MaxLength="6"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator3" ControlToValidate="txtTara" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
-                                        <span class="details">COMPRIMENTO:</span>
-                                        <asp:TextBox ID="txtComprimento" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                                        <span class="details">COMP.(m):</span>
+                                        <asp:TextBox ID="txtComprimento" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator19" ControlToValidate="txtComprimento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
-                                        <span class="details">LARGURA:</span>
-                                        <asp:TextBox ID="txtLargura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                                        <span class="details">LARG.(m):</span>
+                                        <asp:TextBox ID="txtLargura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator20" ControlToValidate="txtLargura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
-                                        <span class="details">ALTURA:</span>
-                                        <asp:TextBox ID="txtAltura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="10"></asp:TextBox>
+                                        <span class="details">ALT.(m):</span>
+                                        <asp:TextBox ID="txtAltura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator21" ControlToValidate="txtAltura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">ODOMETRO:</span>
-                                        <asp:TextBox ID="txtCronotacografo" runat="server" CssClass="form-control" placeholder="km" MaxLength="10" Style="text-align: center"></asp:TextBox>
-                                        <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator25" ControlToValidate="txtCronotacografo" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                        <asp:TextBox ID="txtOdometro" runat="server" CssClass="form-control" placeholder="km" MaxLength="10" Style="text-align: center"></asp:TextBox>
+                                        <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator25" ControlToValidate="txtOdometro" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
+
                             </div>
-                            <!-- linha 3 -->
                             <div class="row g-3">
-                                <div class="col-md-5">
+                                <div class="col-md-3">
                                     <div class="form_group">
                                         <span class="details">MARCA:</span>
                                         <asp:DropDownList ID="ddlMarca" name="nomeMarca" runat="server" CssClass="form-control select2" AutoPostBack="true"></asp:DropDownList>
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="ddlMarca" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <span class="details">MODELO:</span>
                                         <asp:TextBox ID="txtModelo" runat="server" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator26" ControlToValidate="txtModelo" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="">TIPO DE CARRECERIA:</span>
+                                        <asp:DropDownList ID="ddlCarroceria" runat="server" CssClass="form-control">
+                                            <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA ABERTA BOBINEIRA" Text="CARRETA VANDERLEA ABERTA BOBINEIRA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA LS ABERTA BOBINEIRA" Text="CARRETA LS ABERTA BOBINEIRA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA TOTAL SIDER BOBINEIRA" Text="CARRETA VANDERLEA TOTAL SIDER BOBINEIRA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA SIDER PRANCHA" Text="CARRETA VANDERLEA SIDER PRANCHA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA ABERTA PRANCHA" Text="CARRETA VANDERLEA ABERTA PRANCHA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA LS ABERTA PRANCHA" Text="CARRETA LS ABERTA PRANCHA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA TOTAL SIDER PRANCHA" Text="CARRETA VANDERLEA TOTAL SIDER PRANCHA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA SIDER BOBINEIRA" Text="CARRETA VANDERLEA SIDER BOBINEIRA"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA LS TOTAL SIDER" Text="CARRETA LS TOTAL SIDER"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA LS SIDER" Text="CARRETA LS SIDER"></asp:ListItem>
+                                            <asp:ListItem Value="CARRETA VANDERLEA SIDER" Text="CARRETA VANDERLEA SIDER"></asp:ListItem>
+                                        </asp:DropDownList>
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="ddlCarroceria" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -297,10 +305,22 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                        <!-- aba 2 dados do proprietario -->
-                        <div class="tab-pane fade p-3 border border-top-0" id="tab2" role="tabpanel">
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- dados do proprietario -->
+                    <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados do Proprietário</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-1">
                                     <div class="form-group">
@@ -325,26 +345,26 @@
                                 </div>
                             </div>
                             <!-- linha 5 se a carreta for alugada pela TNG, mostra o proprietario -->
-                            <div class="row g-3">
-                                <div class="col-md-2" id="cnpj" runat="server" visible="false">
+                            <div class="row g-3" id="aluguel" runat="server" visible="false">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <span class="details">CNPJ:</span>
-                                        <asp:TextBox ID="txtCNPJ" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="txtCNPJ" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCNPJ_TextChanged"></asp:TextBox>
                                     </div>
                                 </div>
-                                <div class="col-md-3" id="contrato" runat="server" visible="false">
+                                <div class="col-md-8">
                                     <div class="form_group">
                                         <span class="details">CONTRATO:</span>
-                                        <asp:TextBox ID="txtRazaoSocial" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="txtAlugada_De" runat="server" CssClass="form-control"></asp:TextBox>
                                     </div>
                                 </div>
-                                <div class="col-md-1" id="inicio" runat="server" visible="false">
+                                <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">INICIO:</span>
                                         <asp:TextBox ID="txtInicioContrato" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10"></asp:TextBox>
                                     </div>
                                 </div>
-                                <div class="col-md-1" id="termino" runat="server" visible="false">
+                                <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">TERMINO:</span>
                                         <asp:TextBox ID="txtTerminoContrato" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10"></asp:TextBox>
@@ -352,8 +372,21 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- aba 3 dados do rastreador -->
-                        <div class="tab-pane fade p-3 border border-top-0" id="tab3" role="tabpanel">                            
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- dados do rastreamento -->
+                    <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados do Rastreamento</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-1">
                                     <div class="form-group">
@@ -395,16 +428,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- aba 4 -->
-                        <div class="tab-pane fade p-3 border border-top-0" id="tab4" role="tabpanel">
-                            
-                        </div>
-
+                        <!-- /.card-body -->
                     </div>
-
-
-
-                   
                     <!-- linha 6 -->
                     <div class="row g-3">
                         <div class="col-md-2">
@@ -431,7 +456,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </div>    
+       </section>
     </div>
+  
 </asp:Content>

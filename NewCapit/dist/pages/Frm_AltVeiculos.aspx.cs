@@ -20,7 +20,7 @@ namespace NewCapit
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
-        string id_uf;
+        string id_uf;  
         DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -42,7 +42,7 @@ namespace NewCapit
                 }
 
                 PreencherComboEstados();
-                // PreencherComboComposicao();
+                PreencherComboComposicao();
                 CarregarDDLAgregados();
                 PreencherComboFiliais();
                 PreencherComboMarcasVeiculos();
@@ -236,7 +236,7 @@ namespace NewCapit
         private void PreencherComboCboTipo()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, descricao FROM tbtipos_veiculos";
+            string query = "SELECT id, descricao FROM tbtipos_veiculos order by descricao";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -853,30 +853,34 @@ namespace NewCapit
                     // Método auxiliar para evitar exceções de valores nulos
                     string GetValue(DataRow r, int index) => r[index] == DBNull.Value ? string.Empty : r[index].ToString();
 
-                    txtCodVei.Text = GetValue(row, 1);
+                    txtCodVei.Text = GetValue(row, 1);                    
 
                     // cboTipo.Items.Insert(0, GetValue(row, 2));
-                    if (dt.Rows[0][2].ToString() != string.Empty)
+                    if (dt.Rows[0][2].ToString() != "")
                     {
-                        cboTipo.Items.Insert(0, new ListItem(GetValue(row, 2),"0"));
+                        //cboTipo.Items.Insert(0, new ListItem(GetValue(row, 2),"0"));
+                        cboTipo.SelectedItem.Text = GetValue(row, 2);
 
-                        if (cboTipo.SelectedItem.Text == "TRUCK" || cboTipo.SelectedItem.Text == "BITRUCK" || cboTipo.SelectedItem.Text == "UTILITÁRIO/FURGÃO" || cboTipo.SelectedItem.Text == "LEVE" || cboTipo.SelectedItem.Text == "FIORINO" || cboTipo.SelectedItem.Text == "TOCO" || cboTipo.SelectedItem.Text == "VUC OU 3/4")
+                        if (cboTipo.SelectedItem.Text.Trim() == "TRUCK" || cboTipo.SelectedItem.Text.Trim() == "BITRUCK" || cboTipo.SelectedItem.Text.Trim() == "UTILITÁRIO/FURGÃO" || cboTipo.SelectedItem.Text.Trim() == "LEVE" || cboTipo.SelectedItem.Text.Trim() == "FIORINO" || cboTipo.SelectedItem.Text.Trim() == "TOCO" || cboTipo.SelectedItem.Text.Trim() == "VUC OU 3/4")
                         {
+                            carreta.Visible = false;
                             pnlDivReboque1.Visible = false;
                             pnlDivReboque2.Visible = false;
-                            carreta.Visible = false;
+                            
                         }
-                        else if (cboTipo.SelectedItem.Text == "BITREM 7 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 8 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 9 EIXOS")
+                        if (cboTipo.SelectedItem.Text.Trim() == "BITREM")
                         {
+                            carreta.Visible = true;
                             pnlDivReboque1.Visible = true;
                             pnlDivReboque2.Visible = true;
-                            carreta.Visible = true;
+                            
                         }
-                        else if (cboTipo.SelectedItem.Text == "CAVALO SIMPLES" || cboTipo.SelectedItem.Text == "CAVALO TRUCADO" || cboTipo.SelectedItem.Text == "CAVALO 4 EIXOS")
+                        if (cboTipo.SelectedItem.Text.Trim() == "CAVALO SIMPLES" || cboTipo.SelectedItem.Text.Trim() == "CAVALO TRUCADO" || cboTipo.SelectedItem.Text.Trim() == "CAVALO 4 EIXOS")
                         {
+                            carreta.Visible = true;
                             pnlDivReboque1.Visible = true;
                             pnlDivReboque2.Visible = false;
-                            carreta.Visible = true;
+                            
                         }
 
                     }
@@ -965,6 +969,7 @@ namespace NewCapit
                     if (dt.Rows[0][27].ToString() != string.Empty)
                     {
                         txtCodMot.Text = GetValue(row, 27);
+                        txtMotAnterior.Text = GetValue(row, 27);
                     }
                     if (dt.Rows[0][28].ToString() != string.Empty)
                     {
@@ -1123,82 +1128,50 @@ namespace NewCapit
             }
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
-        {
-            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            if (txtPlaca.Text != "")
+        {           
+            if (txtCodMot.Text != "")
             {
-                string termo = txtPlaca.Text.ToUpper();
-                using (SqlConnection conn = new SqlConnection(strConn))
+                string codigoMotoristaNovo = txtCodMot.Text.Trim();
+                string strConnMotNovo = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConnMotNovo))
                 {
-                    // alterando dados no motorista
-                    string query = "SELECT placa, codvei, frota, codprop, reboque1, reboque2, tipoveiculo FROM tbmotoristas WHERE placa LIKE @termo";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-                    conn.Open();
+                    string queryMotoristaNovo = "SELECT codprop, placa, reboque1, reboque2, tipoveiculo  FROM tbmotoristas where codmot = @Codigo";
 
-                    object res = cmd.ExecuteScalar();
-                    if (res != null)
+                    using (SqlCommand cmdMotoristaNovo = new SqlCommand(queryMotoristaNovo, conn))
                     {
-                        string queryLimpaVeiculo = @"UPDATE tbmotoristas
-                                                    SET placa=@placa,
-                                                    codvei=@codvei,
-                                                    frota=@frota,
-                                                    codprop=@codprop,
-                                                    reboque1@reboque1,
-                                                    reboque2=reboque2,
-                                                    tipoveiculo=@tipoveiculo
-                                                    WHERE placa=@termo";
-                        SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
-                        LimpaVeiculo.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim().ToUpper());
-                        LimpaVeiculo.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
-                        LimpaVeiculo.Parameters.AddWithValue("@frota", txtCodVei.Text.Trim().ToUpper());
-                        LimpaVeiculo.Parameters.AddWithValue("@codprop", txtCodTra.Text.Trim().ToUpper());
-                        LimpaVeiculo.Parameters.AddWithValue("@reboque1", txtReb1.Text.Trim().ToUpper());
-                        LimpaVeiculo.Parameters.AddWithValue("@reboque2", txtReb2.Text.Trim().ToUpper());
-                        LimpaVeiculo.Parameters.AddWithValue("@tipoveiculo", cboTipo.SelectedItem.Text.ToUpper());
+                        cmdMotoristaNovo.Parameters.AddWithValue("@Codigo", codigoMotoristaNovo);
                         conn.Open();
-                        LimpaVeiculo.ExecuteNonQuery();
 
+                        using (SqlDataReader reader = cmdMotoristaNovo.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                conn.Close();
+                                // Achou o motorista limpa
+                                string queryAtualizaMotorista = @"UPDATE tbmotoristas SET codprop=@codprop, placa=@placa, reboque1=@reboque1, reboque2=@reboque2, tipoveiculo=@tipoveiculo WHERE codmot = '" + codigoMotoristaNovo + "'";
+                                SqlCommand AtualizaMotorista = new SqlCommand(queryAtualizaMotorista, conn);
+                                AtualizaMotorista.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim().ToUpper());
+                                AtualizaMotorista.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
+                                AtualizaMotorista.Parameters.AddWithValue("@frota", txtCodVei.Text.Trim().ToUpper());
+                                AtualizaMotorista.Parameters.AddWithValue("@codprop", txtCodTra.Text.Trim().ToUpper());
+                                AtualizaMotorista.Parameters.AddWithValue("@reboque1", txtReb1.Text.Trim().ToUpper());
+                                AtualizaMotorista.Parameters.AddWithValue("@reboque2", txtReb2.Text.Trim().ToUpper());
+                                AtualizaMotorista.Parameters.AddWithValue("@tipoveiculo", cboTipo.SelectedItem.Text);
+                                conn.Open();
+                                AtualizaMotorista.ExecuteNonQuery();
+                                conn.Close();
+                            }
+                            else
+                            {
+                                // motorista não está atrelado a nenhum veículo.
+                            }
+                        }
                     }
 
-                    // alterando dados no reboque1
-                    //using (SqlConnection conVeiculo = new SqlConnection(strConn))
-                    //{
-                    //    string queryVeiculo = "SELECT TOP 1 codvei, plavei, codmot, motorista, codprop, reboque1, reboque2, tipoveiculo FROM tbmotoristass WHERE placa LIKE @termo";
-                    //    SqlCommand cmdVeiculo = new SqlCommand(queryVeiculo, conn);
-                    //    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-                    //    conn.Open();
-
-                    //    object res = cmd.ExecuteScalar();
-                    //    if (res != null)
-                    //    {
-                    //        string queryLimpaVeiculo = @"UPDATE tbmotoristas
-                    //                                SET placa=@placa,
-                    //                                codvei=@codvei,
-                    //                                frota=@frota,
-                    //                                codprop=@codprop,
-                    //                                reboque1@reboque1,
-                    //                                reboque2=reboque2,
-                    //                                tipoveiculo=@tipoveiculo
-                    //                                WHERE placa=@termo";
-                    //        SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
-                    //        LimpaVeiculo.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim().ToUpper());
-                    //        LimpaVeiculo.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
-                    //        LimpaVeiculo.Parameters.AddWithValue("@frota", txtCodVei.Text.Trim().ToUpper());
-                    //        LimpaVeiculo.Parameters.AddWithValue("@codprop", txtCodTra.Text.Trim().ToUpper());
-                    //        LimpaVeiculo.Parameters.AddWithValue("@reboque1", txtReb1.Text.Trim().ToUpper());
-                    //        LimpaVeiculo.Parameters.AddWithValue("@reboque2", txtReb2.Text.Trim().ToUpper());
-                    //        LimpaVeiculo.Parameters.AddWithValue("@tipoveiculo", cboTipo.SelectedItem.Text.ToUpper());
-                    //        conn.Open();
-                    //        LimpaVeiculo.ExecuteNonQuery();
-
-                    //    }
-
-
                 }
+
+
             }
-
-
 
             string id = HttpContext.Current.Request.QueryString["id"];
             // Verifica se o ID foi fornecido e é um número válido
@@ -1272,7 +1245,10 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@reboque1", string.IsNullOrEmpty(txtReb1.Text.ToUpper()) ? (object)DBNull.Value : txtReb1.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@reboque2", string.IsNullOrEmpty(txtReb2.Text.ToUpper()) ? (object)DBNull.Value : txtReb2.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@tiporeboque", ddlCarreta.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@tipocarreta", ddlComposicao.SelectedItem.Text.ToUpper());
+                    if (ddlComposicao.SelectedItem.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@tipocarreta", ddlComposicao.SelectedItem.Text.ToUpper());
+                    }
                     cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
                     cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
@@ -1511,8 +1487,8 @@ namespace NewCapit
                     }
                     else
                     {
-                        ddlMotorista.ClearSelection();
-                        txtCodMot.Text = string.Empty;
+                        //ddlMotorista.ClearSelection();
+                        //txtCodMot.Text = string.Empty;
                     }
 
 
@@ -1689,6 +1665,7 @@ namespace NewCapit
             if (txtCodMot.Text != "")
             {
 
+
                 string codigoMotorista = txtCodMot.Text.Trim();
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
@@ -1740,7 +1717,8 @@ namespace NewCapit
                                     txtPlacaAtrelada.Text = reader["codvei"].ToString() + "/" + reader["placa"].ToString();
 
                                     // Dispara o script para abrir o modal via JavaScript
-                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "modalConfirmacao", "abrirConfirmacao();", true);
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirTrocaMotorista", "abrirTrocaMotorista();", true);                                    
+                                    
                                 }
                                 else if (reader["codtra"].ToString() == txtCodTra.Text.Trim() && reader["status"].ToString() == "ATIVO" && reader["fl_exclusao"].ToString() != null)
                                 {
@@ -2038,7 +2016,7 @@ namespace NewCapit
                 pnlDivReboque2.Visible = false;
                 ddlCarreta.Visible = false;
             }
-            else if (cboTipo.SelectedItem.Text == "BITREM 7 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 8 EIXOS" || cboTipo.SelectedItem.Text == "BITREM 9 EIXOS")
+            else if (cboTipo.SelectedItem.Text == "BITREM")
             {
                 pnlDivReboque1.Visible = true;
                 pnlDivReboque2.Visible = true;
@@ -2068,78 +2046,134 @@ namespace NewCapit
                 //ddlComposicao.Items.Insert(0, new ListItem("-- Selecione a composição --", "0"));
             }
         }
-        protected void btnSalvaAlteracaoMot_Click(object sender, EventArgs e)
+        protected void btnSalvarTrocaMotorista_Click(object sender, EventArgs e)
         {
-            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            if (txtPlaca.Text != "")
+            if (txtCodMot.Text != "")
             {
-                string termo = txtPlaca.Text.ToUpper();
+                string codigoMotorista = txtCodMot.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT placa, codvei, frota, codprop, reboque1, reboque2, tipoveiculo FROM tbmotoristas WHERE placa LIKE @termo";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-                    conn.Open();
+                    string query = "SELECT codmot, motorista FROM tbveiculos where codmot = @Codigo";
 
-                    object res = cmd.ExecuteScalar();
-                    if (res != null)
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        string queryLimpaVeiculo = @"UPDATE tbmotoristas
-                                                    SET placa=@placa,
-                                                    codvei=@codvei,
-                                                    frota=@frota,
-                                                    codprop=@codprop,
-                                                    reboque1=@reboque1,
-                                                    reboque2=@reboque2,
-                                                    tipoveiculo=@tipoveiculo
-                                                    WHERE placa=@termo";
-                        SqlCommand LimpaVeiculo = new SqlCommand(queryLimpaVeiculo, conn);
-                                   LimpaVeiculo.Parameters.AddWithValue("@placa", "");
-                                   LimpaVeiculo.Parameters.AddWithValue("@codvei", "");
-                                   LimpaVeiculo.Parameters.AddWithValue("@frota", "");
-                                   LimpaVeiculo.Parameters.AddWithValue("@codprop", "");   
-                                   LimpaVeiculo.Parameters.AddWithValue("@reboque1", "");
-                                   LimpaVeiculo.Parameters.AddWithValue("@reboque2", "");
-                                   LimpaVeiculo.Parameters.AddWithValue("@tipoveiculo", "");
+                        cmd.Parameters.AddWithValue("@Codigo", codigoMotorista);
                         conn.Open();
-                        LimpaVeiculo.ExecuteNonQuery();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                conn.Close();
+                                // Achou o motorista limpa
+                                string queryLimpaMotorista = @"UPDATE tbveiculos SET codmot=@codmot, motorista=@motorista WHERE codmot = '" + codigoMotorista + "'";
+                                SqlCommand LimpaMotorista = new SqlCommand(queryLimpaMotorista, conn);
+                                LimpaMotorista.Parameters.AddWithValue("@codmot", "");
+                                LimpaMotorista.Parameters.AddWithValue("@motorista", "");
+                                conn.Open();
+                                LimpaMotorista.ExecuteNonQuery();
+                                conn.Close();                               
+                            }
+                            else
+                            {
+                                // motorista não está atrelado a nenhum veículo.
+                                if (txtMotAnterior.Text != "")
+                                {
+                                    string codigoMotoristaAnterior = txtMotAnterior.Text.Trim();
+                                    string strConnMotAnterior = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                                    using (SqlConnection conn2 = new SqlConnection(strConnMotAnterior))
+                                    {
+                                        string queryMotoristaAnterior2 = "SELECT codmot, codprop, placa, reboque1, reboque2, tipoveiculo FROM tbmotoristas where codmot = @Codigo";
+
+                                        using (SqlCommand cmdMotoristaAnterior = new SqlCommand(queryMotoristaAnterior2, conn2))
+                                        {
+                                            cmdMotoristaAnterior.Parameters.AddWithValue("@Codigo", codigoMotoristaAnterior);
+                                            conn2.Open();
+
+                                            using (SqlDataReader reader2 = cmdMotoristaAnterior.ExecuteReader())
+                                            {
+                                                if (reader2.Read())
+                                                {
+                                                    conn2.Close();
+                                                    // Achou o motorista limpa
+                                                    string queryLimpaMotoristaAnterior2 = @"UPDATE tbmotoristas SET codprop=@codprop, placa=@placa, reboque1=@reboque1, reboque2=@reboque2, tipoveiculo=@tipoveiculo WHERE codmot = '" + codigoMotoristaAnterior + "'";
+                                                    SqlCommand LimpaMotoristaAnterior2 = new SqlCommand(queryLimpaMotoristaAnterior2, conn2);
+                                                    LimpaMotoristaAnterior2.Parameters.AddWithValue("@codprop", "");
+                                                    LimpaMotoristaAnterior2.Parameters.AddWithValue("@placa", "");
+                                                    LimpaMotoristaAnterior2.Parameters.AddWithValue("@reboque1", "");
+                                                    LimpaMotoristaAnterior2.Parameters.AddWithValue("@reboque2", "");
+                                                    LimpaMotoristaAnterior2.Parameters.AddWithValue("@tipoveiculo", "");
+                                                    conn2.Open();
+                                                    LimpaMotoristaAnterior2.ExecuteNonQuery();
+                                                    conn2.Close();
+                                                }
+                                                else
+                                                {
+                                                    // motorista não está atrelado a nenhum veículo.
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+
+                if (txtMotAnterior.Text != "")
+                {
+                    string codigoMotoristaAnterior = txtMotAnterior.Text.Trim();
+                    string strConnMotAnterior = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                    using (SqlConnection conn = new SqlConnection(strConnMotAnterior))
+                    {
+                        string queryMotoristaAnterior = "SELECT codmot, codprop, placa, reboque1, reboque2, tipoveiculo FROM tbmotoristas where codmot = @Codigo";
+
+                        using (SqlCommand cmdMotoristaAnterior = new SqlCommand(queryMotoristaAnterior, conn))
+                        {
+                            cmdMotoristaAnterior.Parameters.AddWithValue("@Codigo", codigoMotoristaAnterior);
+                            conn.Open();
+
+                            using (SqlDataReader reader = cmdMotoristaAnterior.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    conn.Close();
+                                    // Achou o motorista limpa
+                                    string queryLimpaMotoristaAnterior = @"UPDATE tbmotoristas SET codprop=@codprop, placa=@placa, reboque1=@reboque1, reboque2=@reboque2, tipoveiculo=@tipoveiculo WHERE codmot = '" + codigoMotoristaAnterior + "'";
+                                    SqlCommand LimpaMotoristaAnterior = new SqlCommand(queryLimpaMotoristaAnterior, conn);
+                                    LimpaMotoristaAnterior.Parameters.AddWithValue("@codprop", "");
+                                    LimpaMotoristaAnterior.Parameters.AddWithValue("@placa", "");
+                                    LimpaMotoristaAnterior.Parameters.AddWithValue("@reboque1", "");
+                                    LimpaMotoristaAnterior.Parameters.AddWithValue("@reboque2", "");
+                                    LimpaMotoristaAnterior.Parameters.AddWithValue("@tipoveiculo", "");
+                                    conn.Open();
+                                    LimpaMotoristaAnterior.ExecuteNonQuery();
+                                    conn.Close();
+
+
+
+                                }
+                                else
+                                {
+                                    // motorista não está atrelado a nenhum veículo.
+                                }
+                            }
+                        }
 
                     }
+
                 }
+
+                // Script para fechar o modal após salvar
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal", "$('#ModalTrocarMotorista').modal('hide');", true);
             }
+
             
-
-
-            //using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            //{
-            //    string queryMot = @"UPDATE tbveiculos SET 
-            //                                        codmot=@codmot,
-            //                                        motorista=@motorista                                                           WHERE carga = @carga";
-
-            //    SqlCommand cmdc = new SqlCommand(queryc, con);
-            //    cmdc.Parameters.AddWithValue("@carga", carga);
-            //    cmdc.Parameters.AddWithValue("@idviagem", novaColeta?.Text ?? "");
-            //    cmdc.Parameters.AddWithValue("@codmot", txtCodMotorista?.Text ?? "");
-            //    cmdc.Parameters.AddWithValue("@frota", txtCodFrota?.Text ?? "");
-            //    cmdc.Parameters.AddWithValue("@status", "PENDENTE");
-            //    cmdc.Parameters.AddWithValue("@andamento", "EM ANDAMENTO");
-            //    cmdc.Parameters.AddWithValue("@atendimento", atendimento);
-            //    cmdc.Parameters.AddWithValue("@funcaomot", txtFuncao.Text.Trim());
-            //    cmdc.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-
-            //    con.Open();
-            //    cmdc.ExecuteNonQuery();
-
-            //    //nomeUsuario = txtUsuCadastro.Text;
-            //    //string mensagem = $"Olá, {nomeUsuario}!\nOrdem de Coleta, cadastrada com sucesso!";
-            //    //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-            //    //string script = $"alert('{mensagemCodificada}');";
-            //    //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-            //}
-
-
-
         }
     }
 }

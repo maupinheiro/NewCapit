@@ -144,6 +144,40 @@
     <Content Include="CadUsuario.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
     <Content Include="css\styleTabela.css" />
+    <Content Include="dist\css\alt\AdminLTE-bootstrap-social.css" />
+    <Content Include="dist\css\alt\AdminLTE-bootstrap-social.min.css" />
+    <Content Include="dist\css\alt\AdminLTE-fullcalendar.css" />
+    <Content Include="dist\css\alt\AdminLTE-fullcalendar.min.css" />
+    <Content Include="dist\css\alt\AdminLTE-select2.css" />
+    <Content Include="dist\css\alt\AdminLTE-select2.min.css" />
+    <Content Include="dist\css\alt\AdminLTE-without-plugins.css" />
+    <Content Include="dist\css\alt\AdminLTE-without-plugins.min.css" />
+    <Content Include="dist\css\skins\skin-black-light.css" />
+    <Content Include="dist\css\skins\skin-black-light.min.css" />
+    <Content Include="dist\css\skins\skin-black.css" />
+    <Content Include="dist\css\skins\skin-black.min.css" />
+    <Content Include="dist\css\skins\skin-blue-light.css" />
+    <Content Include="dist\css\skins\skin-blue-light.min.css" />
+    <Content Include="dist\css\skins\skin-blue.css" />
+    <Content Include="dist\css\skins\skin-blue.min.css" />
+    <Content Include="dist\css\skins\skin-green-light.css" />
+    <Content Include="dist\css\skins\skin-green-light.min.css" />
+    <Content Include="dist\css\skins\skin-green.css" />
+    <Content Include="dist\css\skins\skin-green.min.css" />
+    <Content Include="dist\css\skins\skin-purple-light.css" />
+    <Content Include="dist\css\skins\skin-purple-light.min.css" />
+    <Content Include="dist\css\skins\skin-purple.css" />
+    <Content Include="dist\css\skins\skin-purple.min.css" />
+    <Content Include="dist\css\skins\skin-red-light.css" />
+    <Content Include="dist\css\skins\skin-red-light.min.css" />
+    <Content Include="dist\css\skins\skin-red.css" />
+    <Content Include="dist\css\skins\skin-red.min.css" />
+    <Content Include="dist\css\skins\skin-yellow-light.css" />
+    <Content Include="dist\css\skins\skin-yellow-light.min.css" />
+    <Content Include="dist\css\skins\skin-yellow.css" />
+    <Content Include="dist\css\skins\skin-yellow.min.css" />
+    <Content Include="dist\css\skins\_all-skins.css" />
+    <Content Include="dist\css\skins\_all-skins.min.css" />
     <Content Include="dist\img\credit\cargas.png" />
     <Content Include="dist\img\credit\entregas.png" />
     <Content Include="dist\img\credit\veiculo.png" />
@@ -212,14 +246,12 @@
     <Content Include="dist\js\adminlte.js" />
     <Content Include="dist\js\adminlte.min.js" />
     <Content Include="dist\js\demo.js" />
-    <Content Include="dist\js\pages\dashboard.js" />
-    <Content Include="dist\js\pages\dashboard2.js" />
-    <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
+    <Content Include="dist\pages\Frm_AltCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
     <Content Include="dist\pages\Frm_CadCargas.aspx" />
@@ -584,6 +616,8 @@
     <Content Include="img\veiculoInativo.png" />
     <Content Include="img\web_ui_truck_delivery_icon_233659.png" />
     <Content Include="dist\pages\index.html" />
+    <Content Include="js\adminlte.js" />
+    <Content Include="js\adminlte.min.js" />
     <Content Include="js\cnpj.config.js" />
     <Content Include="js\consultaMotoristas.js" />
     <Content Include="js\demo\chart-area-demo.js" />
@@ -4422,6 +4456,13 @@
     <Compile Include="dist\pages\FrmCadCarreta.aspx.designer.cs">
       <DependentUpon>FrmCadCarreta.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Frm_AltCarreta.aspx.cs">
+      <DependentUpon>Frm_AltCarreta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AltCarreta.aspx.designer.cs">
+      <DependentUpon>Frm_AltCarreta.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Frm_AltColetaCNT.aspx.cs">
       <DependentUpon>Frm_AltColetaCNT.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4660,9 +4701,10 @@
     <Content Include="dist\css\alt\adminlte.pages.min.css.map" />
     <Content Include="dist\css\alt\adminlte.plugins.css.map" />
     <Content Include="dist\css\alt\adminlte.plugins.min.css.map" />
-    <Content Include="dist\js\.eslintrc.json" />
     <Content Include="dist\js\adminlte.js.map" />
     <Content Include="dist\js\adminlte.min.js.map" />
+    <Content Include="js\adminlte.js.map" />
+    <Content Include="js\adminlte.min.js.map" />
     <None Include="packages.config" />
     <Content Include="scss\navs\_global.scss" />
     <Content Include="scss\navs\_sidebar.scss" />

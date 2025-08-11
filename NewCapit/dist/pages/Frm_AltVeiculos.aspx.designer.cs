@@ -780,15 +780,6 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.DropDownList ddlComposicao;
 
         /// <summary>
-        /// Controle RequiredFieldValidator13.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator13;
-
-        /// <summary>
         /// Controle txtEixos.
         /// </summary>
         /// <remarks>
@@ -832,6 +823,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCargaLiq;
+
+        /// <summary>
+        /// Controle motAnterior.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl motAnterior;
+
+        /// <summary>
+        /// Controle txtMotAnterior.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMotAnterior;
 
         /// <summary>
         /// Controle txtTipoSeguro.
@@ -942,6 +951,15 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.Button btnSalvar1;
 
         /// <summary>
+        /// Controle UpdatePanelTrocaMot.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanelTrocaMot;
+
+        /// <summary>
         /// Controle txtMotoristaAtrelado.
         /// </summary>
         /// <remarks>
@@ -958,6 +976,15 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtPlacaAtrelada;
+
+        /// <summary>
+        /// Controle btnSalvarTrocaMotorista.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSalvarTrocaMotorista;
 
         /// <summary>
         /// Controle txtFrotaAtrelado.

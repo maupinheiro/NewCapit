@@ -51,13 +51,13 @@ namespace NewCapit
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl alugada;
 
         /// <summary>
-        /// Controle DropDownList1.
+        /// Controle ddlCarreta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCarreta;
 
         /// <summary>
         /// Controle cbFiliais.
@@ -294,13 +294,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator21;
 
         /// <summary>
-        /// Controle txtCronotacografo.
+        /// Controle txtOdometro.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCronotacografo;
+        protected global::System.Web.UI.WebControls.TextBox txtOdometro;
 
         /// <summary>
         /// Controle RequiredFieldValidator25.
@@ -346,6 +346,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator26;
+
+        /// <summary>
+        /// Controle ddlCarroceria.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCarroceria;
+
+        /// <summary>
+        /// Controle RequiredFieldValidator4.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator4;
 
         /// <summary>
         /// Controle ddlCor.
@@ -420,13 +438,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator31;
 
         /// <summary>
-        /// Controle cnpj.
+        /// Controle aluguel.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl cnpj;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl aluguel;
 
         /// <summary>
         /// Controle txtCNPJ.
@@ -438,31 +456,13 @@ namespace NewCapit
         protected global::System.Web.UI.WebControls.TextBox txtCNPJ;
 
         /// <summary>
-        /// Controle contrato.
+        /// Controle txtAlugada_De.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl contrato;
-
-        /// <summary>
-        /// Controle txtRazaoSocial.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRazaoSocial;
-
-        /// <summary>
-        /// Controle inicio.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl inicio;
+        protected global::System.Web.UI.WebControls.TextBox txtAlugada_De;
 
         /// <summary>
         /// Controle txtInicioContrato.
@@ -472,15 +472,6 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtInicioContrato;
-
-        /// <summary>
-        /// Controle termino.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl termino;
 
         /// <summary>
         /// Controle txtTerminoContrato.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,5 +32,9 @@ namespace Domain
         public string tipoveiculo { get; set; }
         public string cargo { get; set; }
         public string veiculotipo { get; set; }
+        public string codtranspmotorista { get; set; }
+        public string nomtranspmotorista { get; set; }
+        public string codtra { get; set; }
+        public string transp { get; set; }
     }
 }

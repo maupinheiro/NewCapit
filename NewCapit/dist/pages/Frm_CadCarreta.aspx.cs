@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -32,7 +34,7 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                     txtCadastradoPor.Text = lblUsuario;
                 }
-                
+
                 txtDataCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
                 CarregarDDLAgregados();
@@ -41,8 +43,9 @@ namespace NewCapit
                 PreencherComboMarcasVeiculos();
                 PreencherComboCoresVeiculos();
                 PreencherComboRastreadores();
-                PreencherComboEstados();
+                PreencherComboEstados();                
             }
+            
         }
         
         private void CarregarDDLAgregados()
@@ -141,7 +144,7 @@ namespace NewCapit
         private void PreencherComboMarcasVeiculos()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, marca FROM tbmarcasveiculos";
+            string query = "SELECT id, marca FROM tbmarcascarretas";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -309,18 +312,41 @@ namespace NewCapit
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
-                            {
-                                ddlAgregados.SelectedItem.Text = reader["fantra"].ToString();
-                                txtAntt.Text = reader["antt"].ToString();                                
+                            {                                 
+                                if (ddlTipo.SelectedItem.Text == "FROTA" && txtCodTra.Text != "1111")
+                                {
+                                    // Aciona o Toast via JavaScript
+                                    ExibirToastErro("Tipo de carreta, não permite outro proprietário, que não seja 1111");
+                                    Thread.Sleep(5000);
+                                    ddlAgregados.ClearSelection();
+                                   // txtAntt.Text = string.Empty;
+                                    txtCodTra.Text = "1111";
+                                    txtCodTra.Focus();
+                                }
+                                else if (ddlTipo.SelectedItem.Text != "FROTA" && txtCodTra.Text == "1111")
+                                {
+                                    // Aciona o Toast via JavaScript
+                                    ExibirToastErro("Proprietário inválido, escolha outro que não seja 1111");
+                                    Thread.Sleep(5000);
+                                    ddlAgregados.ClearSelection();
+                                    // txtAntt.Text = string.Empty;
+                                    txtCodTra.Text = "1111";
+                                    txtCodTra.Focus();
+                                }
+                                else
+                                {
+                                    ddlAgregados.SelectedItem.Text = reader["fantra"].ToString();
+                                    txtAntt.Text = reader["antt"].ToString();
+                                }
                             }
                             else
-                            {
+                            {                               
+                                // Aciona o Toast via JavaScript
+                                ExibirToastErro("Código transportadora: " + txtCodTra.Text.Trim() + ", não cadastrada no sistema.");
+                                Thread.Sleep(5000);
                                 ddlAgregados.ClearSelection();
                                 txtAntt.Text = string.Empty;
                                 txtCodTra.Text = string.Empty;
-                                // Aciona o Toast via JavaScript
-
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
                                 txtCodTra.Focus();
                                 // Opcional: exibir mensagem ao usuário
                             }
@@ -345,10 +371,46 @@ namespace NewCapit
 
                 if (reader.Read())
                 {
-                    txtCodTra.Text = reader["codtra"].ToString();
-                    //ddlAgregados.Text = reader["fantra"].ToString();
-                    txtAntt.Text = reader["antt"].ToString();
+                    if (ddlTipo.SelectedItem.Text == "FROTA" && txtCodTra.Text != "1111")
+                    {
+                        // Aciona o Toast via JavaScript
+                        ExibirToastErro("Tipo de carreta, não permite outro proprietário, que não seja 1111");
+                        Thread.Sleep(5000);
+                        ddlAgregados.ClearSelection();
+                        // txtAntt.Text = string.Empty;
+                        txtCodTra.Text = "1111";
+                        txtCodTra.Focus();
+                    }
+                    else if (ddlTipo.SelectedItem.Text != "FROTA" && txtCodTra.Text == "1111")
+                    {
+                        // Aciona o Toast via JavaScript
+                        ExibirToastErro("Proprietário inválido, escolha outro que não seja 1111");
+                        Thread.Sleep(5000);
+                        ddlAgregados.ClearSelection();
+                        // txtAntt.Text = string.Empty;
+                        txtCodTra.Text = "1111";
+                        txtCodTra.Focus();
+                    }
+                    else
+                    {
+                        txtCodTra.Text = reader["codtra"].ToString();
+                        ddlAgregados.SelectedItem.Text = reader["fantra"].ToString();
+                        txtAntt.Text = reader["antt"].ToString();
+                    }
                 }
+                else
+                {
+                    // Aciona o Toast via JavaScript
+                    ExibirToastErro("Código transportadora: " + txtCodTra.Text.Trim() + ", não cadastrada no sistema.");
+                    Thread.Sleep(5000);
+                    ddlAgregados.ClearSelection();
+                    txtAntt.Text = string.Empty;
+                    txtCodTra.Text = string.Empty;
+                    txtCodTra.Focus();
+                    // Opcional: exibir mensagem ao usuário
+                }
+
+
             }
         }
 
@@ -431,22 +493,12 @@ namespace NewCapit
                 object res = cmd.ExecuteScalar();
                 if (res != null)
                 {
-                    //resultado = "Resultado: " + res.ToString();
-                    //string retorno = "Placa: " + res.ToString() + ", já cadastrado. ";
-                    //System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    //sb.Append("<script type = 'text/javascript'>");
-                    //sb.Append("window.onload=function(){");
-                    //sb.Append("alert('");
-                    //sb.Append(retorno);
-                    //sb.Append("')};");
-                    //sb.Append("</script>");
-                    //ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                    //txtPlaca.Text = "";
-                    //txtPlaca.Focus();
-
-                    ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                    ExibirToastErro("Placa carreta: " + txtPlaca.Text.Trim() + ", já cadastrado no sistema.");
+                    Thread.Sleep(5000);
                     txtPlaca.Text = "";
                     txtPlaca.Focus();
+                    return;
+                   
 
                 }
             }
@@ -457,6 +509,98 @@ namespace NewCapit
         }
         protected void btnSalvarCarreta_Click(object sender, EventArgs e)
         {
+            string sqlSalvarCarreta = "insert into tbcarretas (codcarreta, modelo, placacarreta, tipocarreta, anocarreta, tiporeboque, codprop, descprop, nucleo, ativo_inativo, marca, renavan, cor, antt, codrastreador, tecnologia, idrastreador, comunicacao, chassi, licenciamento, kilometragem, carretaalugada, alugada_de,cnpj_de, inicio_contrato, termino_contrato, uf_placa_carreta, municipio_placa_carreta, data_cadastro, cadastrado_por, dt_cadastro, patrimonio, tara, comprimento, largura, altura, aquisicao) values (@codcarreta, @modelo, @placacarreta, @tipocarreta, @anocarreta, @tiporeboque, @codprop, @descprop, @nucleo, @ativo_inativo, @marca, @renavan, @cor, @antt, @codrastreador, @tecnologia, @idrastreador, @comunicacao, @chassi, @licenciamento, @kilometragem, @carretaalugada, @alugada_de, @cnpj_de, @inicio_contrato, @termino_contrato,@uf_placa_carreta, @municipio_placa_carreta, @data_cadastro, @cadastrado_por, @dt_cadastro, @patrimonio, @tara, @comprimento, @largura, @altura, @aquisicao)";
+           
+            SqlCommand comando = new SqlCommand(sqlSalvarCarreta, con);
+            comando.Parameters.AddWithValue("@codcarreta", txtCodVei.Text.ToUpper());
+            comando.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
+            comando.Parameters.AddWithValue("@placacarreta", txtPlaca.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tipocarreta", ddlCarroceria.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@anocarreta", txtAno.Text );
+            comando.Parameters.AddWithValue("@tiporeboque", ddlTipo.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@codprop",txtCodTra.Text.Trim().ToUpper());
+            comando.Parameters.AddWithValue("@descprop", ddlAgregados.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@ativo_inativo", "ATIVO");
+            comando.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@renavan", txtRenavam.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@antt", txtAntt.Text.ToUpper());
+            comando.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tecnologia", ddlTecnologia.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@idrastreador", txtId.Text);
+            comando.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@chassi", txtChassi.Text.ToUpper());
+            comando.Parameters.AddWithValue("@licenciamento", txtLicenciamento.Text.ToUpper());
+            comando.Parameters.AddWithValue("@kilometragem", txtOdometro.Text);
+            comando.Parameters.AddWithValue("@carretaalugada", ddlCarreta.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@alugada_de", txtAlugada_De.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cnpj_de", txtCNPJ.Text);
+            comando.Parameters.AddWithValue("@inicio_contrato", txtInicioContrato.Text.ToUpper());
+            comando.Parameters.AddWithValue("@termino_contrato", txtTerminoContrato.Text);
+            comando.Parameters.AddWithValue("@uf_placa_carreta", ddlEstados.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@municipio_placa_carreta", ddlCidades.SelectedItem.Text.ToUpper());
+            comando.Parameters.AddWithValue("@data_cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm"));
+            comando.Parameters.AddWithValue("@cadastrado_por", txtCadastradoPor.Text.Trim().ToUpper());
+            comando.Parameters.AddWithValue("@dt_cadastro", dataHoraAtual.ToString("dd/MM/yyyy"));            
+            comando.Parameters.AddWithValue("@patrimonio", txtControlePatrimonio.Text.ToUpper());
+            comando.Parameters.AddWithValue("@tara", txtTara.Text.ToUpper());
+            if (txtComprimento.Text != "")
+            {
+                string entradaComprimento = txtComprimento.Text.Trim();
+                // Substitui vírgula por ponto
+                string formatado = entradaComprimento.Replace(',', '.');
+
+                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+                {
+                    comando.Parameters.AddWithValue("@comprimento", numero.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            if (txtLargura.Text != "")
+            {
+                string entradaLargura = txtLargura.Text.Trim();
+                // Substitui vírgula por ponto
+                string formatado = entradaLargura.Replace(',', '.');
+                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+                {
+                    comando.Parameters.AddWithValue("@largura", numero.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            if (txtAltura.Text != "")
+            {
+                string entradaAltura = txtAltura.Text.Trim();
+                // Substitui vírgula por ponto
+                string formatado = entradaAltura.Replace(',', '.');
+                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+                {
+                    comando.Parameters.AddWithValue("@altura", numero.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            comando.Parameters.AddWithValue("@aquisicao", txtDataAquisicao.Text.ToUpper());
+            try
+            {
+                con.Open();
+                comando.ExecuteNonQuery();
+                con.Close();
+                ExibirToastCadastro("Placa da carreta: " + txtPlaca.Text.Trim() + ", cadastrada com sucesso!");
+                Thread.Sleep(5000);
+                //Chama a página de controle de carretas
+                Response.Redirect("/dist/pages/ControleCarretas.aspx");
+
+            }
+            catch (Exception ex)
+            {
+                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                ExibirToastErro("Erro ao cadastrar a placa da carreta: " + txtPlaca.Text.Trim() + " - " + message);
+                Thread.Sleep(5000);
+                //Chama a página de controle de carretas
+                //Response.Redirect("/dist/pages/ControleCarretas.aspx");
+            }
+
+            finally
+            {
+                con.Close();
+            }
 
         }
 
@@ -477,7 +621,7 @@ namespace NewCapit
                     object res = cmd.ExecuteScalar();
                     if (res != null)
                     {
-                        ExibirToastErro("Código: " + txtCodVei.Text.Trim() + ", já cadastrado no sistema.");
+                        ExibirToastErro("Código carreta: " + txtCodVei.Text.Trim() + ", já cadastrado no sistema.");
                         Thread.Sleep(5000);
                         txtCodVei.Text = "";
                         txtCodVei.Focus();
@@ -512,6 +656,73 @@ namespace NewCapit
             </script>";
 
             ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
+        }
+        protected void ddlTipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(ddlTipo.SelectedItem.Text == "FROTA")
+            {
+                alugada.Visible = true;
+                string codigoTNG = "1111";
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string queryTNG = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE codtra = @Codigo";
+
+                    using (SqlCommand cmdTNG = new SqlCommand(queryTNG, conn))
+                    {
+                        cmdTNG.Parameters.AddWithValue("@Codigo", codigoTNG);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmdTNG.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                txtCodTra.Text = reader["codtra"].ToString().ToUpper();
+                                ddlAgregados.SelectedItem.Text = reader["fantra"].ToString().ToUpper();
+                                txtAntt.Text = reader["antt"].ToString().ToUpper();
+                                //txtCodTra.Enabled = false;
+                                //ddlAgregados.Enabled = false;
+                                //txtAntt.Enabled = false;
+                            }                            
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                alugada.Visible = false;
+            }
+        }
+        protected void ddlCarreta_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddlCarreta.SelectedItem.Text == "ALUGADA")
+            {
+                aluguel.Visible = true;
+
+            }
+            else
+            {
+                aluguel.Visible = false;
+            }
+
+        }
+        private string RemoverMascaraCNPJ(string cnpj)
+        {
+            // Remove os caracteres não numéricos (pontos, barras e traços)
+            return System.Text.RegularExpressions.Regex.Replace(cnpj, @"[^\d]", "");
+        }
+        protected void txtCNPJ_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCNPJ.Text != "")
+            {
+                string cnpjSemMascara = RemoverMascaraCNPJ(txtCNPJ.Text);
+                var cnpj = Empresa.ObterCnpj(cnpjSemMascara);
+                if (cnpj != null)
+                {
+                    txtAlugada_De.Text = cnpj.nome;
+                }
+            }
         }
     }
 }

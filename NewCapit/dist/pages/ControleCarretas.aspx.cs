@@ -346,7 +346,7 @@ namespace NewCapit.dist.pages
             {
                 string id = gvCarretas.DataKeys[row.RowIndex].Value.ToString();
 
-              //  Response.Redirect("Frm_AltVeiculos.aspx?id=" + id);
+                Response.Redirect("Frm_AltCarreta.aspx?id=" + id);
             }
 
         }

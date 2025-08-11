@@ -6,9 +6,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
-        function abrirConfirmacao() {
-            var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
-            myModal.show();
+        function fecharModalMotorista() {
+            $('#ModalTrocarMotorista').modal('hide');
         }
     </script>
     <script type="text/javascript">
@@ -17,6 +16,12 @@
             myModal.show();
         }
     </script>
+     <script type="text/javascript">
+         function abrirTrocaMotorista() {
+             var myModal = new bootstrap.Modal(document.getElementById('ModalTrocarMotorista'));
+             myModal.show();
+         }
+     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -70,7 +75,7 @@
         }
     </script>--%>
     <div class="content-wrapper">
-        <section class="content">
+        <section id="formAltVei" class="content">
             <div class="container-fluid">
                 <br />
                 <div class="card card-info">
@@ -96,7 +101,7 @@
                         <div class="col-md-2">
                             <div class="form_group">
                                 <span class="details">TIPO DE VEÍCULO:</span>
-                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="cboTipo_SelectedIndexChanged">                                   
+                                <asp:DropDownList ID="cboTipo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="cboTipo_SelectedIndexChanged">
                                 </asp:DropDownList>
                                 <asp:RequiredFieldValidator ID="rfvcboTipo" runat="server" ControlToValidate="cboTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                             </div>
@@ -428,15 +433,15 @@
                             </div>
                         </div>
                         <%--<asp:Panel ID="pnlDivReboque1" runat="server" Visible="false">--%>
-                            <div class="col-md-1" ID="pnlDivReboque1" runat="server" Visible="false">
-                                <div class="form-group">
-                                    <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
-                                    <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb1_TextChanged"></asp:TextBox>
-                                </div>
+                        <div class="col-md-1" id="pnlDivReboque1" runat="server" visible="false">
+                            <div class="form-group">
+                                <asp:Label ID="numeroReb1" runat="server" class="details">REBOQUE 1:</asp:Label>
+                                <asp:TextBox ID="txtReb1" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb1_TextChanged"></asp:TextBox>
                             </div>
-                        <%--</asp:Panel>--%>    
+                        </div>
+                        <%--</asp:Panel>--%>
                         <%--<asp:Panel ID="pnlDivReboque2" runat="server" Visible="false">--%>
-                            <div class="col-md-1" ID="pnlDivReboque2" runat="server" Visible="false">
+                        <div class="col-md-1" id="pnlDivReboque2" runat="server" visible="false">
                             <div class="form-group">
                                 <asp:Label ID="numeroReb2" runat="server" class="details">REBOQUE 2:</asp:Label>
                                 <asp:TextBox ID="txtReb2" runat="server" CssClass="form-control" Style="text-align: center" placeholder="" MaxLength="8" AutoPostBack="true" OnTextChanged="txtReb2_TextChanged"></asp:TextBox>
@@ -454,8 +459,7 @@
                         </div>
                         <div class="col-md-5">
                             <span class="">COMPOSIÇÃO:</span>
-                            <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                            <asp:RequiredFieldValidator ID="RequiredFieldValidator13" runat="server" ControlToValidate="ddlComposicao" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                            <asp:DropDownList ID="ddlComposicao" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="ddlComposicao_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
@@ -481,11 +485,16 @@
                                 <asp:TextBox ID="txtLotacao" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
                             </div>
                         </div>
-
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CARGA LIQ.:</span>
-                                <asp:TextBox ID="txtCargaLiq" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtCargaLiq" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" MaxLength="6" Enabled="true"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1" id="motAnterior" runat="server">
+                            <div class="form-group">
+                                <span class="details">MOT. ANTERIOR</span>
+                                <asp:TextBox ID="txtMotAnterior" runat="server" Style="text-align: center" CssClass="form-control" Enabled="false"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -578,27 +587,29 @@
             </div>
         </section>
         <!-- modal motorista atrelado -->
-        <div class="modal fade" id="modalConfirmacao"  tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalConfirmacaoLabel">Confirmação</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-                    <div class="modal-body">
-                        Motorista:
+        <div class="modal fade" id="ModalTrocarMotorista" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <asp:UpdatePanel ID="UpdatePanelTrocaMot" runat="server">
+                    <ContentTemplate>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Transferir Motorista</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                Motorista:
                         <asp:Label ID="txtMotoristaAtrelado" runat="server" CssClass="form-control"></asp:Label>Atrelado ao veículo:
                         <asp:Label ID="txtPlacaAtrelada" runat="server" CssClass="form-control"></asp:Label>Deseja transferi-lo para o novo veículo?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        <asp:Button ID="btnSalvaAlteracaoMot" runat="server" CssClass="btn btn-primary" Text="Sim" OnClick="btnSalvaAlteracaoMot_Click" />
-                       
-                    </div>
-                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <asp:Button ID="btnSalvarTrocaMotorista" runat="server" Text="Sim" CssClass="btn btn-success" OnClick="btnSalvarTrocaMotorista_Click" UseSubmitBehavior="false" />
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
             </div>
         </div>
-
         <!-- modal carreta atrelada -->
         <div class="modal fade" id="modalConfirmacaoCarreta" tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -617,12 +628,12 @@
                         Deseja transferi-la para o novo veículo?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="carretaNao" class="btn btn-secondary" data-bs-dismiss="modal" OnClick="carretaNao">Não</button>
+                        <button type="button" id="carretaNao" class="btn btn-secondary" data-bs-dismiss="modal" onclick="carretaNao">Não</button>
                         <button type="button" class="btn btn-primary">Sim</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+   
 </asp:Content>

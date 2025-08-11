@@ -79,6 +79,8 @@ namespace DAL
             }
         }
 
+
+
         public static ConsultaAgregado CheckAgregado(ConsultaAgregado obj)
         {
             string sqlQuery = "SELECT * FROM tbtransportadoras WHERE (codtra = @codtra)";

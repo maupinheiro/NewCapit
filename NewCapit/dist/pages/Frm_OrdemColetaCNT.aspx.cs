@@ -541,7 +541,7 @@ namespace NewCapit.dist.pages
                         txtFilialMot.Text = ConsultaMotorista.nucleo;
                         txtTipoMot.Text = ConsultaMotorista.tipomot;
                         txtExameToxic.Text = ConsultaMotorista.venceti;
-                        txtCNH.Text = ConsultaMotorista.venccnh.ToString();
+                        txtCNH.Text = ConsultaMotorista.venccnh.ToString("dd/MM/yyyy");
                         txtLibGR.Text = ConsultaMotorista.validade;
                         txtNomMot.Text = ConsultaMotorista.nommot;
                         txtCPF.Text = ConsultaMotorista.cpf;
@@ -549,6 +549,8 @@ namespace NewCapit.dist.pages
                         txtValCartao.Text = ConsultaMotorista.venccartao;
                         txtCelular.Text = ConsultaMotorista.fone2;
                         txtFuncao.Text = ConsultaMotorista.cargo;
+                        txtCodTransportadora.Text = ConsultaMotorista.codtra;
+                        txtTransportadora.Text = ConsultaMotorista.transp;
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
@@ -569,7 +571,9 @@ namespace NewCapit.dist.pages
                             var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
                             if (ConsultaVeiculo != null)
                             {
-                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+                                DateTime dataConvertida = DateTime.ParseExact(ConsultaVeiculo.vencimentolaudofumaca, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                string dataOpacidade = dataConvertida.ToString("dd/MM/yyyy");
+                                txtOpacidade.Text = dataOpacidade; //ConsultaVeiculo.vencimentolaudofumaca;
                                 txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
                                 txtCET.Text = ConsultaVeiculo.venclicencacet;
                                 txtCarreta.Text = ConsultaVeiculo.tiporeboque;
@@ -600,7 +604,9 @@ namespace NewCapit.dist.pages
                             var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
                             if (ConsultaVeiculo != null)
                             {
-                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+                                DateTime dataConvertida = DateTime.ParseExact(ConsultaVeiculo.vencimentolaudofumaca, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                string dataOpacidade = dataConvertida.ToString("dd/MM/yyyy");
+                                txtOpacidade.Text = dataOpacidade;
                                 txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
                                 txtCET.Text = ConsultaVeiculo.venclicencacet;
                                 txtCarreta.Text = ConsultaVeiculo.tiporeboque;
@@ -1030,11 +1036,11 @@ namespace NewCapit.dist.pages
                         num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
                         cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, filialveiculo, valcet, valcrlvveiculo,
                         valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
-                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao, funcao
+                        tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa,dtcad,usucad,situacao, funcao, codtranspmotorista, nomtranspmotorista,venccronotacografo,valopacidade
                     ) VALUES (
                         @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto,@nomemotorista, @cpf,
                         @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @filialveiculo, @valcet, @valcrlvveiculo,
-                        @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,@tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@funcao
+                        @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,@tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa,@dtcad,@usucad,@situacao,@funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade
                     )";
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1064,6 +1070,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
+                cmd.Parameters.AddWithValue("@venccronotacografo", SafeValue(txtCrono.Text));
+                cmd.Parameters.AddWithValue("@valopacidade", SafeValue(txtOpacidade.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
                 cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
                 cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
@@ -1079,7 +1087,9 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
                 cmd.Parameters.AddWithValue("@situacao", "EM ANDAMENTO");
                 cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
-               // cmd.Parameters.AddWithValue("@tipoveiculocnt", SafeValue(lblVeiculo));
+                cmd.Parameters.AddWithValue("@codtranspmotorista", SafeValue(txtCodTransportadora.Text));
+                cmd.Parameters.AddWithValue("@nomtranspmotorista", SafeValue(txtTransportadora.Text));
+                // cmd.Parameters.AddWithValue("@tipoveiculocnt", SafeValue(lblVeiculo));
                 //cmd.Parameters.AddWithValue("@codcliorigem", codCliInicial.Text);
                 //cmd.Parameters.AddWithValue("@nomcliorigem", ddlCliInicial.SelectedItem.Text);
                 //cmd.Parameters.AddWithValue("@codclidestino", codCliFinal.Text);
