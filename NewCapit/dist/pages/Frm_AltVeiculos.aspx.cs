@@ -40,11 +40,7 @@ namespace NewCapit
                     var lblUsuario = "<Usuário>";
                     // txtAlteradoPor.Text = lblUsuario;
                 }
-                PreencherComboEstados();
-                CarregaDadosDoVeiculo();
-                
-               
-                
+                PreencherComboEstados();                
                 PreencherComboComposicao();
                 CarregarDDLAgregados();
                 PreencherComboFiliais();
@@ -53,8 +49,8 @@ namespace NewCapit
                 PreencherComboRastreadores();
                 PreencherComboMotoristas();
                 PreencherComboCboTipo();
-               
-               
+
+                CarregaDadosDoVeiculo();
 
 
                 //DateTime dataHoraAtual = DateTime.Now;
@@ -858,10 +854,9 @@ namespace NewCapit
 
                     txtCodVei.Text = GetValue(row, 1); 
                     if (dt.Rows[0][2].ToString() != "")
-                    {
-                        
-                        cboTipo.Items.Insert(0, new ListItem(GetValue(row, 2)));
-
+                    {                        
+                        //cboTipo.Items.Insert(0, new ListItem(GetValue(row, 2)));
+                        cboTipo.SelectedItem.Text = GetValue(row, 2);
                         if (cboTipo.SelectedItem.Text.Trim() == "TRUCK" || cboTipo.SelectedItem.Text.Trim() == "BITRUCK" || cboTipo.SelectedItem.Text.Trim() == "UTILITÁRIO/FURGÃO" || cboTipo.SelectedItem.Text.Trim() == "LEVE" || cboTipo.SelectedItem.Text.Trim() == "FIORINO" || cboTipo.SelectedItem.Text.Trim() == "TOCO" || cboTipo.SelectedItem.Text.Trim() == "VUC OU 3/4")
                         {
                             carreta.Visible = false;
@@ -984,7 +979,7 @@ namespace NewCapit
                     {
                         ddlAgregados.Items.Insert(0, GetValue(row, 30));
                     }
-                    
+
                     if (dt.Rows[0][31].ToString() == string.Empty)
                     {
                         txtOpacidade.BackColor = System.Drawing.Color.Red;
@@ -1028,7 +1023,7 @@ namespace NewCapit
                     if (dt.Rows[0][35].ToString() != string.Empty)
                     {
                         txtDtAlteracao.Text = GetValue(row, 35);
-                    }                    
+                    }
                     if (dt.Rows[0][36].ToString() == string.Empty)
                     {
                         txtVencCET.BackColor = System.Drawing.Color.Red;
@@ -1036,10 +1031,10 @@ namespace NewCapit
                         txtVencCET.Text = "Verifique";
                     }
                     else
-                    {
-                        txtVencCET.Text = GetValue(row, 36);
+                    {                        
+                        txtVencCET.Text = DateTime.Parse(GetValue(row, 36).ToString()).ToString("dd/MM/yyyy");
                         DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-                        DateTime dataLicenciamento = Convert.ToDateTime(txtLicenciamento.Text);
+                        DateTime dataLicenciamento = Convert.ToDateTime(txtVencCET.Text);
 
                         TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
                         // comparar a diferença
@@ -1073,8 +1068,8 @@ namespace NewCapit
                         txtLicenciamento.Text = "Verifique";
                     }
                     else
-                    { 
-                        txtLicenciamento.Text = GetValue(row, 38);
+                    {
+                        txtLicenciamento.Text = DateTime.Parse(GetValue(row, 38).ToString()).ToString("dd/MM/yyyy");
                         DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         DateTime dataLicenciamento = Convert.ToDateTime(txtLicenciamento.Text);
 
@@ -1091,7 +1086,7 @@ namespace NewCapit
                         {
                             txtLicenciamento.Text = DateTime.Parse(GetValue(row, 38).ToString()).ToString("dd/MM/yyyy");
                             txtLicenciamento.BackColor = System.Drawing.Color.Red;
-                            txtLicenciamento.ForeColor = System.Drawing.Color.White;                            
+                            txtLicenciamento.ForeColor = System.Drawing.Color.White;
                         }
                     }
                     if (dt.Rows[0][39].ToString() == string.Empty)
@@ -1101,7 +1096,7 @@ namespace NewCapit
                         txtCronotacografo.Text = "Verifique";
                     }
                     else
-                    {                        
+                    {
                         txtCronotacografo.Text = DateTime.Parse(GetValue(row, 39).ToString()).ToString("dd/MM/yyyy");
                         DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         DateTime dataLicenciamento = Convert.ToDateTime(txtCronotacografo.Text);
@@ -1121,7 +1116,7 @@ namespace NewCapit
                             txtCronotacografo.BackColor = System.Drawing.Color.Red;
                             txtCronotacografo.ForeColor = System.Drawing.Color.White;
                         }
-                    }                   
+                    }
                     if (dt.Rows[0][40].ToString() != string.Empty)
                     {
                         ddlMarca.Items.Insert(0, GetValue(row, 40));
@@ -1194,7 +1189,7 @@ namespace NewCapit
                     }
                     else
                     {
-                        txtValidadeApolice.Text = GetValue(row, 58);
+                        txtValidadeApolice.Text = DateTime.Parse(GetValue(row, 58).ToString()).ToString("dd/MM/yyyy");
                         DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         DateTime dataLicenciamento = Convert.ToDateTime(txtValidadeApolice.Text);
 
@@ -1246,6 +1241,7 @@ namespace NewCapit
                 // Exemplo: ex.Message
             }
         }
+        
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {           
             if (txtCodMot.Text != "")
