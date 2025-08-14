@@ -511,7 +511,7 @@
                                         </a>
                                     </li>--%>
                                     <li class="nav-item">
-                                        <a href="pages/forms/validation.html" class="nav-link">
+                                        <a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Acerto de Ponto</p>
                                         </a>
@@ -523,13 +523,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/forms/validation.html" class="nav-link">
+                                        <a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Gera TXT Folha</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/forms/validation.html" class="nav-link">
+                                        <a href="/dist/pages/Frm_Comissoes.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Acerto das Comissões</p>
                                         </a>

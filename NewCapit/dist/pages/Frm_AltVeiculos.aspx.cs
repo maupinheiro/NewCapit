@@ -1375,13 +1375,13 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@motorista", ddlMotorista.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text);
+                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", SafeDateValue(txtOpacidade.Text));
                     cmd.Parameters.AddWithValue("@usualt", txtUsuarioAtual.Text.Trim().ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtcalt", dataHoraAtual.ToString("dd/MM/yyyy HH:mm")); // Corrigido para DateTime
-                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
-                    cmd.Parameters.AddWithValue("@venclicencacet", string.IsNullOrEmpty(txtVencCET.Text) ? (object)DBNull.Value : txtVencCET.Text);
-                    cmd.Parameters.AddWithValue("@venclicenciamento", string.IsNullOrEmpty(txtLicenciamento.Text) ? (object)DBNull.Value : txtLicenciamento.Text);
-                    cmd.Parameters.AddWithValue("@venccronotacografo", string.IsNullOrWhiteSpace(txtCronotacografo.Text) ? (object)DBNull.Value : DateTime.Parse(txtCronotacografo.Text));
+                    cmd.Parameters.AddWithValue("@protocolocet", SafeDateValue(txtProtocoloCET.Text));
+                    cmd.Parameters.AddWithValue("@venclicencacet", SafeDateValue(txtVencCET.Text));
+                    cmd.Parameters.AddWithValue("@venclicenciamento", SafeDateValue(txtLicenciamento.Text));
+                    cmd.Parameters.AddWithValue("@venccronotacografo", SafeDateValue(txtCronotacografo.Text));
                     //cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(txtCronotacografo.Text).ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text);
@@ -1507,6 +1507,20 @@ namespace NewCapit
             //    lblErro.Text = erroDetalhado;
 
             //}
+        }
+        private object SafeValue(string input)
+        {
+            return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
+
+
+        }
+        private object SafeDateValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
         }
         private void PreencherComboAgregados(string filtroCodTra = null)
         {

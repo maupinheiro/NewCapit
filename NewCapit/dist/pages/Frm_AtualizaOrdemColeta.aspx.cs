@@ -631,7 +631,7 @@ namespace NewCapit.dist.pages
                     {
                         ddlStatus.DataSource = rdr;
                         ddlStatus.DataTextField = "ds_status";
-                        ddlStatus.DataValueField = "cod_status";
+                        ddlStatus.DataValueField = "ds_status";
                         ddlStatus.DataBind();
                     }
                     var drv = (HiddenField)e.Item.FindControl("hdfStatus"); ;
@@ -649,6 +649,7 @@ namespace NewCapit.dist.pages
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                // ... (suas declarações de variáveis iniciais) ...
                 string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
                 string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
                 string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
@@ -667,32 +668,36 @@ namespace NewCapit.dist.pages
                         dataHora.Hour, dataHora.Minute, dataHora.Second
                     );
 
-                    if (dataHoraComparacao < agora /*&& (status == "Concluído" || status == "PENDENTE")*/)
+                    // Lógica para "Atrasado"
+                    if (dataHoraComparacao < agora)
                     {
                         lblAtendimento.Text = "Atrasado";
-                        tdAtendimento.BgColor = "Red";
-                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                        // CORREÇÃO AQUI: Mova o BgColor para dentro do style
+                        tdAtendimento.Attributes["style"] = "background-color: Red; color: white; font-weight: bold;";
                     }
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay
-                             /*&& (status == "Concluído" || status == "PENDENTE")*/)
+                    // Lógica para "No Prazo"
+                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay)
                     {
                         lblAtendimento.Text = "No Prazo";
-                        tdAtendimento.BgColor = "Green";
-                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                        // CORREÇÃO AQUI: Mova o BgColor para dentro do style
+                        tdAtendimento.Attributes["style"] = "background-color: Green; color: white; font-weight: bold;";
                     }
-                    else if (dataHoraComparacao > agora /*&& status == "Concluído"*/)
+                    // Lógica para "Antecipado"
+                    else if (dataHoraComparacao > agora)
                     {
                         lblAtendimento.Text = "Antecipado";
-                        tdAtendimento.BgColor = "Orange";
-                        tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+                        // CORREÇÃO AQUI: Mova o BgColor para dentro do style
+                        tdAtendimento.Attributes["style"] = "background-color: Orange; color: white; font-weight: bold;";
                     }
                     else
                     {
                         lblAtendimento.Text = status;
-
+                        // Opcional: Limpar estilos se não cair em nenhuma condição
+                        tdAtendimento.Attributes["style"] = "";
                     }
                 }
             }
+
 
 
 
@@ -2314,7 +2319,10 @@ namespace NewCapit.dist.pages
             // Reexibe o modal após postback
             ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowModal", "$('#modalOcorrencia').modal('show');", true);
 
-        }      
+        }
+
+        
+
         protected void ExibirToastErro(string mensagem)
         {
             string script = $@"

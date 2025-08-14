@@ -68,6 +68,84 @@
         }
     </script>
     <script>
+        // Função para converter o formato "Xh Ymin" para minutos totais.
+        function converterTempoParaMinutos(tempoStr) {
+            if (!tempoStr || typeof tempoStr !== 'string' || tempoStr.includes("Inválido")) {
+                return 0;
+            }
+            const partesHoras = tempoStr.split('h');
+            const horas = parseInt(partesHoras[0], 10) || 0;
+            const partesMinutos = (partesHoras[1] || '').split('min');
+            const minutos = parseInt(partesMinutos[0], 10) || 0;
+            return (horas * 60) + minutos;
+        }
+
+        // NOVA FUNÇÃO: Atualiza o status e o estilo dos campos de tempo.
+        function atualizarStatusECores(item) {
+            const ddlStatus = item.querySelector('.ddlStatus');
+            if (!ddlStatus) return;
+
+            const txtChegadaOrigem = item.querySelector('.chegada');
+            const txtSaidaOrigem = item.querySelector('.saida');
+            const txtChegadaDestino = item.querySelector('.chegada-planta');
+            const txtSaidaPlanta = item.querySelector('.saida-planta');
+
+            const txtAgCarreg = item.querySelector('.espera');
+            const txtEsperaGate = item.querySelector('.espera-gate');
+            const txtDentroPlanta = item.querySelector('.dentro-planta');
+
+            // 1. Atualiza o Status baseado no preenchimento dos campos
+            if (txtSaidaPlanta && txtSaidaPlanta.value) {
+                ddlStatus.value = 'Concluido';
+            } else if (txtChegadaDestino && txtChegadaDestino.value) {
+                ddlStatus.value = 'Ag. Descarga';
+            } else if (txtSaidaOrigem && txtSaidaOrigem.value) {
+                ddlStatus.value = 'Em Transito';
+            } else if (txtChegadaOrigem && txtChegadaOrigem.value) {
+                ddlStatus.value = 'Ag. Carreg.';
+            }
+
+            // 2. Verifica o tempo e aplica o estilo (fundo vermelho, letra branca)
+            // Limite de 90 minutos (1h 30min)
+            const limiteMinutos = 90;
+
+            // Verifica txtAgCarreg
+            if (txtAgCarreg) {
+                const tempoAgCarreg = converterTempoParaMinutos(txtAgCarreg.value);
+                if (tempoAgCarreg > limiteMinutos) {
+                    txtAgCarreg.style.backgroundColor = 'red';
+                    txtAgCarreg.style.color = 'white';
+                } else {
+                    txtAgCarreg.style.backgroundColor = '';
+                    txtAgCarreg.style.color = '';
+                }
+            }
+
+            // Verifica txtEsperaGate
+            if (txtEsperaGate) {
+                const tempoEsperaGate = converterTempoParaMinutos(txtEsperaGate.value);
+                if (tempoEsperaGate > limiteMinutos) {
+                    txtEsperaGate.style.backgroundColor = 'red';
+                    txtEsperaGate.style.color = 'white';
+                } else {
+                    txtEsperaGate.style.backgroundColor = '';
+                    txtEsperaGate.style.color = '';
+                }
+            }
+
+            // Verifica txtDentroPlanta
+            if (txtDentroPlanta) {
+                const tempoDentroPlanta = converterTempoParaMinutos(txtDentroPlanta.value);
+                if (tempoDentroPlanta > limiteMinutos) {
+                    txtDentroPlanta.style.backgroundColor = 'red';
+                    txtDentroPlanta.style.color = 'white';
+                } else {
+                    txtDentroPlanta.style.backgroundColor = '';
+                    txtDentroPlanta.style.color = '';
+                }
+            }
+        }
+
         function calcularTempoAgCarreg(item) {
             const chegada = item.querySelector('.chegada').value;
             const saida = item.querySelector('.saida').value;
@@ -94,6 +172,8 @@
                     espera.value = '';
                 }
             }
+            // Chama a função de atualização após o cálculo
+            atualizarStatusECores(item);
         }
 
         function calcularTempoEsperaGate(item) {
@@ -122,7 +202,10 @@
                     esperaGate.value = '';
                 }
             }
+            // Chama a função de atualização após o cálculo
+            atualizarStatusECores(item);
         }
+
         function calcularTempoDentroPlanta(item) {
             const entrada = item.querySelector('.entrada-planta')?.value;
             const saida = item.querySelector('.saida-planta')?.value;
@@ -149,8 +232,9 @@
                     dentro.value = '';
                 }
             }
+            // Chama a função de atualização após o cálculo
+            atualizarStatusECores(item);
         }
-
 
         function mostrarErro(item, campo, mensagem) {
             const spanErro = item.querySelector('.msg-erro');
@@ -195,21 +279,18 @@
 
             limparErros(item);
 
-            // Conversões de datas
             const v1 = new Date(chegadaOrigemInput.value);
             const v2 = new Date(saidaOrigemInput.value);
             const v3 = new Date(chegadaDestinoInput.value);
             const v4 = new Date(entradaInput.value);
             const v5 = new Date(saidaPlantaInput.value);
 
-            // Regra 1: Gate não pode ser preenchido sem CVA
             if (cvaInput && gateInput && gateInput.value && !cvaInput.value.trim()) {
                 mostrarErro(item, gateInput, "Preencha o Nº CVA antes da Janela Gate.");
                 gateInput.value = "";
                 return;
             }
 
-            // Regra 2: Gate não pode ser menor que data_hora
             if (dataHoraAttr && gateInput?.value) {
                 const dtGate = new Date(gateInput.value);
                 const dtReferencia = new Date(dataHoraAttr);
@@ -221,7 +302,6 @@
                 }
             }
 
-            // Regras de sequência obrigatória
             if (!chegadaOrigemInput.value && saidaOrigemInput.value) {
                 mostrarErro(item, saidaOrigemInput, "Preencha a chegada do fornecedor antes da saída.");
                 saidaOrigemInput.value = "";
@@ -246,7 +326,6 @@
                 return;
             }
 
-            // Validações de ordem temporal
             if (v1 > agora) {
                 mostrarErro(item, chegadaOrigemInput, "Chegada do fornecedor não pode ser no futuro.");
                 return;
@@ -272,55 +351,34 @@
                 return;
             }
 
-            // Tudo válido
             limparErros(item);
+            // Chama a função de atualização após a validação bem-sucedida
+            atualizarStatusECores(item);
         }
-
 
         function bindEventos() {
             const itens = document.querySelectorAll('.item-coleta');
             itens.forEach(item => {
-                const chegada = item.querySelector('.chegada');
-                const saida = item.querySelector('.saida');
-                const chegadaPlanta = item.querySelector('.chegada-planta');
-                const entrada = item.querySelector('.entrada-planta');
-                const saidaPlanta = item.querySelector('.saida-planta');
-                const gate = item.querySelector('.gate');
+                // MODIFICAÇÃO: Adiciona a classe 'ddlStatus' ao DropDownList para facilitar a seleção.
+                const ddl = item.querySelector('select[id*="ddlStatus"]');
+                if (ddl) {
+                    ddl.classList.add('ddlStatus');
+                }
 
-                // Eventos de mudança (validação e cálculo)
-                chegada?.addEventListener('change', () => {
-                    calcularTempoAgCarreg(item);
-                    validarDatas(item);
+                const inputsDeData = item.querySelectorAll('.chegada, .saida, .chegada-planta, .entrada-planta, .saida-planta, .gate');
+
+                inputsDeData.forEach(input => {
+                    input.addEventListener('change', () => {
+                        // Centraliza as chamadas de função
+                        calcularTempoAgCarreg(item);
+                        calcularTempoEsperaGate(item);
+                        calcularTempoDentroPlanta(item);
+                        validarDatas(item); // validarDatas já chama a atualização no final
+                    });
                 });
 
-                saida?.addEventListener('change', () => {
-                    calcularTempoAgCarreg(item);
-                    validarDatas(item);
-                });
-
-                chegadaPlanta?.addEventListener('change', () => {
-                    calcularTempoEsperaGate(item);
-                    validarDatas(item);
-                });
-
-                entrada?.addEventListener('change', () => {
-                    calcularTempoEsperaGate(item);
-                    calcularTempoDentroPlanta(item);
-                    validarDatas(item);
-                });
-
-                saidaPlanta?.addEventListener('change', () => {
-                    calcularTempoDentroPlanta(item);
-                    validarDatas(item);
-                });
-
-                gate?.addEventListener('change', () => {
-                    validarDatas(item);
-                });
-
-                // Eventos de correção (ao digitar/apagar valores)
-                const inputs = item.querySelectorAll('input');
-                inputs.forEach(input => {
+                const inputsGerais = item.querySelectorAll('input');
+                inputsGerais.forEach(input => {
                     input.addEventListener('input', () => {
                         if (input.classList.contains('com-erro')) {
                             input.style.border = "";
@@ -333,12 +391,15 @@
                         }
                     });
                 });
+
+                // Executa a verificação inicial quando a página carrega
+                atualizarStatusECores(item);
             });
         }
 
-
         window.addEventListener('load', bindEventos);
     </script>
+
     <script>
         $(document).ready(function () {
             // Escuta mudança em qualquer txtCVA dentro do Repeater
@@ -895,9 +956,9 @@
                                                                                 <div class="form-group">
                                                                                     <span class="details">CHEGADA:</span>
                                                                                     <div class="input-group">
-                                                                                        <asp:TextBox ID="txtChegadaOrigem" runat="server"
+                                                                                        <asp:TextBox ID="txtChegadaOrigem" runat="server" 
                                                                                             CssClass="form-control chegada"
-                                                                                            Text='<%# Eval("chegadaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                                            Text='<%# Bind("chegadaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                             TextMode="DateTimeLocal"
                                                                                             Style="text-align: center" onChange="validarDatas(item)" />
                                                                                     </div>
@@ -910,7 +971,7 @@
                                                                                     <div class="input-group">
                                                                                         <asp:TextBox ID="txtSaidaOrigem" runat="server"
                                                                                             CssClass="form-control saida"
-                                                                                            Text='<%# Eval("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                                            Text='<%# Bind("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                             TextMode="DateTimeLocal"
                                                                                             Style="text-align: center" onChange="validarDatas(item)" />
                                                                                     </div>
@@ -926,8 +987,8 @@
                                                                                     <div class="input-group">
                                                                                         <asp:TextBox ID="txtAgCarreg" runat="server"
                                                                                             CssClass="form-control espera"
-                                                                                            Text='<%# Eval("tempoagcarreg") %>'
-                                                                                            Style="text-align: center" ReadOnly="true" />
+                                                                                            Text='<%# Bind("tempoagcarreg") %>'
+                                                                                            Style="text-align: center" onkeydown="return false;" />
                                                                                     </div>
                                                                                     <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                 </div>
@@ -954,7 +1015,7 @@
                                                                                     <span class="details">CHEGADA:</span>
                                                                                     <div class="input-group">
                                                                                         <asp:TextBox ID="txtChegadaDestino" runat="server"
-                                                                                            Text='<%# Eval("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                                            Text='<%# Bind("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                             CssClass="form-control chegada-planta"
                                                                                             TextMode="DateTimeLocal"
                                                                                             Style="text-align: center" onChange="validarDatas(item)" />
@@ -968,7 +1029,7 @@
                                                                                     <span class="details">ENTRADA:</span>
                                                                                     <div class="input-group">
                                                                                         <asp:TextBox ID="txtEntrada" runat="server"
-                                                                                            Text='<%# Eval("entradaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                                            Text='<%# Bind("entradaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                             CssClass="form-control entrada-planta"
                                                                                             TextMode="DateTimeLocal"
                                                                                             Style="text-align: center" onChange="validarDatas(item)" />
@@ -981,9 +1042,9 @@
                                                                                 <div class="form-group">
                                                                                     <span class="details">ESPERA GATE:</span>
                                                                                     <div class="input-group">
-                                                                                        <asp:TextBox ID="txtEsperaGate" runat="server" Text='<%# Eval("tempoesperagate") %>'
+                                                                                        <asp:TextBox ID="txtEsperaGate" runat="server" Text='<%# Bind("tempoesperagate") %>'
                                                                                             CssClass="form-control espera-gate"
-                                                                                            Style="text-align: center" ReadOnly="true" />
+                                                                                            Style="text-align: center" onkeydown="return false;" />
 
                                                                                     </div>
                                                                                 </div>
@@ -995,7 +1056,7 @@
                                                                                     <span class="details">SAIDA:</span>
                                                                                     <div class="input-group">
                                                                                         <asp:TextBox ID="txtSaidaPlanta" runat="server"
-                                                                                            Text='<%# Eval("saidaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
+                                                                                            Text='<%# Bind("saidaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                             CssClass="form-control saida-planta"
                                                                                             TextMode="DateTimeLocal"
                                                                                             Style="text-align: center" onChange="validarDatas(item)" />
@@ -1009,9 +1070,9 @@
                                                                                     <span class="details">TEMPO DE ESPERA:</span>
                                                                                     <div class="input-group">
                                                                                         <asp:TextBox ID="txtDentroPlanta" runat="server"
-                                                                                            Text='<%# Eval("tempodentroplanta") %>'
+                                                                                            Text='<%# Bind("tempodentroplanta") %>'
                                                                                             CssClass="form-control dentro-planta"
-                                                                                            Style="text-align: center" ReadOnly="true" />
+                                                                                            Style="text-align: center" onkeydown="return false;" />
 
                                                                                     </div>
                                                                                 </div>
