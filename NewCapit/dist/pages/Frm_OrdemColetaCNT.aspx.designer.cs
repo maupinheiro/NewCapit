@@ -24,6 +24,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Label novaColeta;
 
         /// <summary>
+        /// Controle updPrincipal.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updPrincipal;
+
+        /// <summary>
+        /// Controle txtColeta.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtColeta;
+
+        /// <summary>
         /// Controle txtCodMotorista.
         /// </summary>
         /// <remarks>
@@ -31,15 +49,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCodMotorista;
-
-        /// <summary>
-        /// Controle btnPesquisarMotorista.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisarMotorista;
 
         /// <summary>
         /// Controle txtFilialMot.
@@ -166,15 +175,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCodVeiculo;
-
-        /// <summary>
-        /// Controle btnPesquisarVeiculo.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisarVeiculo;
 
         /// <summary>
         /// Controle txtFilialVeicCNT.
@@ -355,42 +355,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFoneCorp;
-
-        /// <summary>
-        /// Controle btnPesquisarContato.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisarContato;
-
-        /// <summary>
-        /// Controle updPrincipal.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updPrincipal;
-
-        /// <summary>
-        /// Controle txtColeta.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtColeta;
-
-        /// <summary>
-        /// Controle bntPesquisaColeta.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button bntPesquisaColeta;
 
         /// <summary>
         /// Controle lblMensagem.

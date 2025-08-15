@@ -189,16 +189,32 @@
         </div>
         <div class="container-fluid">
             <div class="row g-3">
+                <asp:UpdatePanel ID="updPrincipal" runat="server">
+                    <ContentTemplate>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">CVA:</span>
+                                <asp:TextBox ID="txtColeta" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="bntPesquisaColeta_Click" AutoPostBack="true"></asp:TextBox>
+                            </div>
+                        </div>
+                        <%--<div class="col-md-1">
+                            <asp:Button ID="bntPesquisaColeta" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="bntPesquisaColeta_Click" />
+                        </div>--%>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+
+            <div class="row g-3">
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">MOTORISTA:</span>
-                        <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="btnPesquisarMotorista_Click" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
-                <div class="col-md-1">
+                <%--<div class="col-md-1">
                     <br />
                     <asp:Button ID="btnPesquisarMotorista" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarMotorista_Click" />
-                </div>
+                </div>--%>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FILIAL:</span>
@@ -311,13 +327,13 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CÓD./FROTA:</span>
-                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="btnPesquisarVeiculo_Click" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
-                <div class="col-md-1">
+               <%-- <div class="col-md-1">
                     <br />
                     <asp:Button ID="btnPesquisarVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarVeiculo_Click" />
-                </div>
+                </div>--%>
                 <div class="col-md-2">
                     <div class="form-group">
                         <span class="details">FILIAL:</span>
@@ -444,7 +460,7 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <span class="details">CONTATO:</span>
-                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
+                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" placeholder="" OnTextChanged="btnPesquisarContato_Click" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -453,27 +469,12 @@
                         <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" placeholder="" ReadOnly="true"></asp:TextBox>
                     </div>
                 </div>
-                <div class="col-md-1">
+                <%--<div class="col-md-1">
                     <br />
                     <asp:Button ID="btnPesquisarContato" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarContato_Click" />
-                </div>
+                </div>--%>
             </div>
-            <div class="row g-3">
-                <asp:UpdatePanel ID="updPrincipal" runat="server">
-                    <ContentTemplate>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">COLETA:</span>
-                                <asp:TextBox ID="txtColeta" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
-                            </div>
-                        </div>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-                <div class="col-md-1">
-                    <br />
-                    <asp:Button ID="bntPesquisaColeta" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="bntPesquisaColeta_Click" />
-                </div>
-            </div>
+
             <!-- grid coletas -->
             <div class="row g-3">
                 <div class="col-md-12">
