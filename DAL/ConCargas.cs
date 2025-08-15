@@ -37,7 +37,7 @@ namespace DAL
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
             string sql = @"SELECT 
-                                c.id, c.carga, c.cva, CONVERT(varchar, CAST(c.data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(c.data_hora AS datetime), 108) AS c.data_hora,
+                                c.id, c.carga, c.cva, CONVERT(varchar, CAST(c.data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(c.data_hora AS datetime), 108) AS data_hora,
                                 (co.codvw + '/' + co.codcli) AS CodigoO,
                                 c.cliorigem,
                                 (cd.codvw + '/' + cd.codcli) AS CodigoD,

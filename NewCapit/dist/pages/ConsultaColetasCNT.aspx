@@ -89,7 +89,7 @@
         <!-- Main content -->
 
         <section class="content">
-            <asp:ScriptManager ID="ScriptManager2" runat="server" />
+            
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
