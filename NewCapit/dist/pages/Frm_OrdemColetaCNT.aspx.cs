@@ -687,7 +687,7 @@ namespace NewCapit.dist.pages
                 string nomeUsuario = txtUsuCadastro.Text;
 
                 string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Por favor, digite o número da coleta.";
+                string linha2 = "Por favor, digite o número do CVA.";
 
                 // Concatenando as linhas com '\n' para criar a mensagem
                 string mensagem = $"{linha1}\n{linha2}";
@@ -708,7 +708,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT carga, cliorigem, clidestino, status FROM tbcargas WHERE carga = @Codigo";
+                    string query = "SELECT carga, cliorigem, clidestino, status FROM tbcargas WHERE cva = @Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
