@@ -33,15 +33,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
-        /// Controle timerAtualiza.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.Timer timerAtualiza;
-
-        /// <summary>
         /// Controle btnAtualizar.
         /// </summary>
         /// <remarks>
@@ -58,6 +49,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GVColetas;
+
+        /// <summary>
+        /// Controle UpdatePanel1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
+
+        /// <summary>
+        /// Controle lblCVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCVA;
 
         /// <summary>
         /// Controle lblColeta.
@@ -112,6 +121,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewCarga;
+
+        /// <summary>
+        /// Controle btnFechar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnFechar;
 
         /// <summary>
         /// Controle btnSalvarOcorrencia.

@@ -20,6 +20,8 @@ using System.Diagnostics.Eventing.Reader;
 using System.Web.Services.Description;
 using NPOI.SS.UserModel;
 using ICSharpCode.SharpZipLib.Zip;
+using MathNet.Numerics.Providers.SparseSolver;
+using System.Drawing.Drawing2D;
 
 namespace NewCapit.dist.pages
 {
@@ -29,7 +31,7 @@ namespace NewCapit.dist.pages
         public string fotoMotorista;
         string codmot, caminhofoto;
         string num_coleta;
-        string status;        
+        string status;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -48,11 +50,11 @@ namespace NewCapit.dist.pages
                 DateTime dataHoraAtual = DateTime.Now;
                 lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
-                PreencherComboMotoristas(); 
+                PreencherComboMotoristas();
                 CarregaDados();
                 CarregaNumColeta();
                 PreencherComboResponsavel();
-                
+
 
                 //PreencherComboStatus();
                 //PreencherNumColeta();
@@ -216,10 +218,10 @@ namespace NewCapit.dist.pages
                 // Agora você pode comparar a diferença
                 if (diferencaGR.TotalDays < 30)
                 {
-                  string diasGR = diferencaGR.TotalDays.ToString();
-                  txtLibGR.Text = txtLibGR.Text + " (" + diasGR + " dias)";
-                  txtLibGR.BackColor = System.Drawing.Color.Khaki;
-                  txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
+                    string diasGR = diferencaGR.TotalDays.ToString();
+                    txtLibGR.Text = txtLibGR.Text + " (" + diasGR + " dias)";
+                    txtLibGR.BackColor = System.Drawing.Color.Khaki;
+                    txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
                 }
                 else if (diferencaGR.TotalDays <= 0)
                 {
@@ -228,10 +230,10 @@ namespace NewCapit.dist.pages
                     txtLibGR.ForeColor = System.Drawing.Color.White;
                     txtLibGR.Text = txtLibGR.Text + " (Vencida)";
                 }
-                
+
             }
             txtTipoMot.Text = dt.Rows[0][128].ToString();
-            
+
             if (dt.Rows[0][86].ToString() == "")
             {
                 txtCNH.BackColor = System.Drawing.Color.Red;
@@ -239,7 +241,7 @@ namespace NewCapit.dist.pages
                 txtCNH.Text = "Verifique";
 
             }
-            else 
+            else
             {
                 txtCNH.Text = DateTime.Parse(dt.Rows[0][86].ToString()).ToString("dd/MM/yyyy");
                 DateTime dataHoje = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
@@ -250,7 +252,7 @@ namespace NewCapit.dist.pages
                 if (diferenca.TotalDays < 30)
                 {
                     string diasCNH = diferenca.TotalDays.ToString();
-                    txtCNH.Text = txtCNH.Text + " ("+ diasCNH + " dias)";
+                    txtCNH.Text = txtCNH.Text + " (" + diasCNH + " dias)";
                     txtCNH.BackColor = System.Drawing.Color.Khaki;
                     txtCNH.ForeColor = System.Drawing.Color.OrangeRed;
                 }
@@ -319,13 +321,13 @@ namespace NewCapit.dist.pages
                     }
 
                 }
-                
+
 
             }
             else
             {
                 ETI.Visible = false;
-            }            
+            }
             ddlMotorista.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(), ""));
             txtCPF.Text = dt.Rows[0][80].ToString();
             txtCartao.Text = dt.Rows[0][81].ToString();
@@ -336,7 +338,7 @@ namespace NewCapit.dist.pages
             }
 
             txtCelular.Text = dt.Rows[0][10].ToString();
-            
+
 
             fotoMotorista = dt.Rows[0][87].ToString();
 
@@ -358,8 +360,8 @@ namespace NewCapit.dist.pages
             txtPlaca.Text = dt.Rows[0][16].ToString();
             txtVeiculoTipo.Text = dt.Rows[0][132].ToString();
             txtTipoVeiculo.Text = dt.Rows[0][14].ToString();
-            txtReboque1.Text = dt.Rows[0][17].ToString();           
-            
+            txtReboque1.Text = dt.Rows[0][17].ToString();
+
             if (dt.Rows[0][135].ToString() == "")
             {
                 txtOpacidade.BackColor = System.Drawing.Color.Red;
@@ -389,7 +391,7 @@ namespace NewCapit.dist.pages
                     txtOpacidade.Text = txtOpacidade.Text + " (Vencido)";
                 }
             }
-           
+
             if (dt.Rows[0][136].ToString().Length > 0)
             {
                 txtCET.Text = DateTime.Parse(dt.Rows[0][136].ToString()).ToString("dd/MM/yyyy");
@@ -440,7 +442,7 @@ namespace NewCapit.dist.pages
 
                     TimeSpan diferencaLicenciamento = dataLicenciamento - dataHoje;
                     // Agora você pode comparar a diferença
-                    if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >=1)
+                    if (diferencaLicenciamento.TotalDays < 30 && diferencaLicenciamento.TotalDays >= 1)
                     {
                         string diasLicenciamento = diferencaLicenciamento.TotalDays.ToString();
                         txtCRLVVeiculo.Text = txtCRLVVeiculo.Text + " (" + diasLicenciamento + " dias)";
@@ -453,17 +455,17 @@ namespace NewCapit.dist.pages
                         txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
                         txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
                         txtCRLVVeiculo.Text = txtCRLVVeiculo.Text + " (Vencido)";
-                    }                                
+                    }
                 }
             }
 
-            if(txtTipoVeiculo.Text == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
+            if (txtTipoVeiculo.Text == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
             {
                 reb1.Visible = false;
-                reboque1.Visible = false; 
+                reboque1.Visible = false;
                 carretas.Visible = false;
             }
-            else 
+            else
             {
                 reb1.Visible = true;
                 reboque1.Visible = true;
@@ -500,7 +502,7 @@ namespace NewCapit.dist.pages
 
             }
 
-            if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS" )
+            if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS")
             {
                 reb1.Visible = true;
                 reboque1.Visible = true;
@@ -540,7 +542,7 @@ namespace NewCapit.dist.pages
             else
             {
                 reb2.Visible = false;
-                reboque2.Visible = false;                
+                reboque2.Visible = false;
             }
 
             if (txtTipoVeiculo.Text == "BITREM 7 EIXOS" || txtTipoVeiculo.Text == "BITREM 8 EIXOS" || txtTipoVeiculo.Text == "BITREM 9 EIXOS")
@@ -595,8 +597,6 @@ namespace NewCapit.dist.pages
                 reboque2.Visible = false;
                 reb2.Visible = false;
             }
-            
-            
             txtCarreta.Text = dt.Rows[0][104].ToString();
             txtTecnologia.Text = dt.Rows[0][84].ToString();
             txtRastreamento.Text = dt.Rows[0][82].ToString();
@@ -742,7 +742,7 @@ namespace NewCapit.dist.pages
                     }
                     else if (chegada != null && saida != null && entrada != null)
                     {
-                        status = "Ag. Descarga.";
+                        status = "Ag. Descarga";
                     }
                     else if (chegada != null && saida != null)
                     {
@@ -756,10 +756,6 @@ namespace NewCapit.dist.pages
                     {
                         status = "Pendente";
                     }
-
-
-
-
 
                     string query = @"UPDATE tbcargas SET 
                                 cva = @cva, 
@@ -814,11 +810,14 @@ namespace NewCapit.dist.pages
                 {
                     conn.Open();
 
-                    SqlCommand cmd1 = new SqlCommand("SELECT carga, andamento FROM tbcargas WHERE carga = @Id", conn);
+                    SqlCommand cmd1 = new SqlCommand("SELECT carga,cva, andamento FROM tbcargas WHERE carga = @Id", conn);
                     cmd1.Parameters.AddWithValue("@Id", id);
                     SqlDataReader reader1 = cmd1.ExecuteReader();
                     if (reader1.Read())
                     {
+                        lblCVA.BackColor = System.Drawing.Color.Magenta;
+                        lblCVA.ForeColor = System.Drawing.Color.White;
+                        lblCVA.Text = reader1["cva"].ToString();
 
                         lblColeta.BackColor = System.Drawing.Color.LightGreen;
                         lblColeta.Text = reader1["carga"].ToString();
@@ -836,6 +835,7 @@ namespace NewCapit.dist.pages
                         else if (reader1["andamento"].ToString() == "EM ANDAMENTO")
                         {
                             lblStatus.BackColor = System.Drawing.Color.Purple;
+                            lblCVA.ForeColor = System.Drawing.Color.White;
                             lblStatus.Text = reader1["andamento"].ToString();
                         }
                         else
@@ -880,7 +880,7 @@ namespace NewCapit.dist.pages
         protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodMotorista.Text = ddlMotorista.SelectedValue;
-            
+
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -947,26 +947,26 @@ namespace NewCapit.dist.pages
             {
                 //try
                 //{
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+                // Abra a conexão com o banco de dados
+                conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+                // Crie o comando SQL
+                SqlCommand cmd = new SqlCommand(query, conn);
 
 
 
-                    SqlDataReader reader = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    ddlMotorista.DataSource = reader;
-                    ddlMotorista.DataTextField = "nommot";
-                    ddlMotorista.DataValueField = "codmot";
-                    ddlMotorista.DataBind();
+                // Preencher o ComboBox com os dados do DataReader
+                ddlMotorista.DataSource = reader;
+                ddlMotorista.DataTextField = "nommot";
+                ddlMotorista.DataValueField = "codmot";
+                ddlMotorista.DataBind();
 
-                    //ddlMotorista.Items.Insert(0, "");
+                //ddlMotorista.Items.Insert(0, "");
 
-                    // Feche o reader
-                    reader.Close();
+                // Feche o reader
+                reader.Close();
                 //}
                 //catch (Exception ex)
                 //{
@@ -1073,7 +1073,7 @@ namespace NewCapit.dist.pages
 
                             string nomeUsuario = txtUsuCadastro.Text;
                             string linha1 = "Olá, " + nomeUsuario + "!";
-                            string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não pertence a transportadora do veículo " + txtProprietario.Text.Trim() +".";
+                            string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não pertence a transportadora do veículo " + txtProprietario.Text.Trim() + ".";
                             string linha3 = "Verifique o código digitado: " + codigo + ". Ou altere o proprietário do veículo";
                             //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
 
@@ -1111,12 +1111,12 @@ namespace NewCapit.dist.pages
 
                         }
                         // verifica se a funcao do motorista permite dirigir o veiculo
-                        string primeiraLetraString = txtFuncao.Text.Trim().Substring(0, 1);                        
+                        string primeiraLetraString = txtFuncao.Text.Trim().Substring(0, 1);
                         if (txtFuncao.Text != "")
                         {
                             if (primeiraLetraString == "M")
                             {
-                                if (txtTipoVeiculo.Text ==  "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
+                                if (txtTipoVeiculo.Text == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
                                 {
                                     // motorista apto a dirigir o veiculo
                                 }
@@ -1162,7 +1162,7 @@ namespace NewCapit.dist.pages
                             }
                             else if (primeiraLetraString == "C")
                             {
-                                if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS" || txtTipoVeiculo.Text.Trim() == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" ||  txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
+                                if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS" || txtTipoVeiculo.Text.Trim() == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
                                 {
                                     // motorista apto a dirigir qualquer veiculo, exceto bitrem
                                 }
@@ -1339,7 +1339,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Focus();
 
                             }
-                        
+
                         }
                         // Verifica reboque 2 - bitrem
                         if (txtTipoVeiculo.Text.Trim() == "BITREM")
@@ -1530,6 +1530,7 @@ namespace NewCapit.dist.pages
                             fonecorporativo = @fonecorporativo,
                             empresa = @empresa,
                             dtalt = @dtalt,
+                            status = @status,
                             usualt = @usualt
                             WHERE num_carregamento = @num_carregamento";
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1567,6 +1568,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
                 cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
                 cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
+
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
@@ -1785,7 +1787,7 @@ namespace NewCapit.dist.pages
                                 txtCodProprietario.Text = ConsultaVeiculo.codtra;
                                 txtProprietario.Text = ConsultaVeiculo.transp;
 
-                            }                           
+                            }
                         }
                         else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
                         {
@@ -1962,7 +1964,7 @@ namespace NewCapit.dist.pages
                                 }
                             }
                         }
-                        
+
                         // pesquisar validade da liberação GR
                         if (txtLibGR.Text != "")
                         {
@@ -2068,11 +2070,11 @@ namespace NewCapit.dist.pages
                                 txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
-                        txtCodVeiculo.Focus();                        
+                        txtCodVeiculo.Focus();
                     }
                 }
                 else
-                {                    
+                {
                     string nomeUsuario = txtUsuCadastro.Text;
                     string linha1 = "Olá, " + nomeUsuario + "!";
                     string linha2 = "Motorista " + codigo + ", não cadastrado no sistema.";
@@ -2119,7 +2121,7 @@ namespace NewCapit.dist.pages
                 try
                 {
                     conn.Open();
-                    cmd.ExecuteNonQuery();                                       
+                    cmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -2135,20 +2137,23 @@ namespace NewCapit.dist.pages
                                                         true
                                                     );
             }
-            
+
         }
         protected void btnFechar_Click(object sender, EventArgs e)
         {
             // Opcional: limpar ou fechar modal
-            ScriptManager.RegisterStartupScript(
-                                                    this,
-                                                    this.GetType(),
-                                                    "fecharModalOcorrencia",
-                                                    "$('#modalOcorrencia').modal('hide'); $('.modal-backdrop').remove(); $('body').removeClass('modal-open');",
-                                                    true
-                                                );
+            ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
+            //ScriptManager.RegisterStartupScript(
+            //                                        this,
+            //                                        this.GetType(),
+            //                                        "fecharModalOcorrencia",
+            //                                        "$('#modalOcorrencia').modal('hide'); $('.modal-backdrop').remove(); $('body').removeClass('modal-open');",
+            //                                        true
+            //                                    );
         }
 
+        
+                                                   
         //private bool ExisteCarga(string numeroCarga)
         //{
         //    bool existe = false;
@@ -2249,7 +2254,7 @@ namespace NewCapit.dist.pages
                 //    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
                 //}                
             }
-        }                            
+        }
         private void CarregarMotivoOcorrencias(string codigo)
         {
             string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
@@ -2321,7 +2326,7 @@ namespace NewCapit.dist.pages
 
         }
 
-        
+
 
         protected void ExibirToastErro(string mensagem)
         {

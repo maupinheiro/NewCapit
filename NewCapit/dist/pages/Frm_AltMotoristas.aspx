@@ -193,7 +193,7 @@
                                 <div class="col-md-3">
                                     <div class="form_group">
                                         <span class="details">MUNICIPIO DE NASCIMENTO:</span>
-                                        <asp:DropDownList ID="ddlMunicipioNasc" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlMunicipioNasc" class="form-control select2" runat="server"></asp:DropDownList>
                                     </div>
                                 </div>
 
