@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.Configuration;
+using System.Text;
 
 namespace NewCapit.dist.pages
 {
@@ -18,7 +19,10 @@ namespace NewCapit.dist.pages
             if (!IsPostBack)
             {
                 PreencherComboResponsavel();
-                CarregarGrid();                
+                
+                CarregarGrid();
+               
+                               
             }
            
         }
@@ -37,16 +41,63 @@ namespace NewCapit.dist.pages
                 GVColetas.DataBind();
             }
         }
+        private void CarregarGridPesquisa(string searchTerm)
+        {
+            var sql = new StringBuilder(@"
+                             SELECT id, carga, cva, atendimento, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, cliorigem, clidestino, veiculo, tipo_viagem, solicitacoes,peso,pedidos, andamento FROM tbcargas WHERE andamento = 'PENDENTE'");
 
+            string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            { 
+                // Filtro por searchTerm (opcional)
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    sql.Append(@"
+                AND (
+                    data_hora LIKE @searchTerm OR 
+                    solicitacoes LIKE @searchTerm OR 
+                    veiculo LIKE @searchTerm OR 
+                    tipo_viagem LIKE @searchTerm OR 
+                    cliorigem LIKE @searchTerm OR 
+                    clidestino LIKE @searchTerm OR 
+                    cva LIKE @searchTerm
+                )");
+
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                }
+
+               
+
+                // Finaliza e executa
+                cmd.CommandText = sql.ToString();
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    GVColetas.DataSource = dt;
+                    GVColetas.DataBind();
+                    conn.Close();
+                }
+            }
+          
+        }
+        protected void myInput_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = myInput.Text.Trim();
+            CarregarGridPesquisa(searchTerm);
+        }
         //protected void timerAtualiza_Tick(object sender, EventArgs e)
         //{
         //    CarregarGrid();
         //}
 
-        protected void btnAtualizar_Click(object sender, EventArgs e)
-        {
-            CarregarGrid();
-        }
+        //protected void btnAtualizar_Click(object sender, EventArgs e)
+        //{
+        //    CarregarGrid();
+        //}
 
         //private void PreencherComboResponsavel()
         //{

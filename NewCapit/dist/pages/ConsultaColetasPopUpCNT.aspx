@@ -32,9 +32,15 @@
 
         <%--<asp:Timer ID="timerAtualiza" runat="server" OnTick="timerAtualiza_Tick" Interval="30000"></asp:Timer>--%>
         <br />
-        <div>
-            <asp:Button ID="btnAtualizar" runat="server" CssClass="btn btn-success" Text="Atualizar" OnClick="btnAtualizar_Click" />
+        <div class="row g-3">
+            <div class="card-header">
+            <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server"></asp:TextBox>
         </div>
+           <%-- <div>
+                <asp:Button ID="btnAtualizar" runat="server" CssClass="btn btn-success" Text="Atualizar" OnClick="btnAtualizar_Click" />
+            </div>--%>
+        </div>
+        
         <br />
         <%--<asp:GridView ID="GVColetas" runat="server" CssClass="table table-bordered table-striped" AutoGenerateColumns="false" OnRowCommand="GVColetas_RowCommand">--%>
         <asp:GridView ID="GVColetas" runat="server" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" OnRowCommand="GVColetas_RowCommand" OnRowDataBound="GVColetas_RowDataBound">
