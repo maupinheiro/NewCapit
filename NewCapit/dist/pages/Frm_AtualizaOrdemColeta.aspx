@@ -956,7 +956,7 @@
                                                                                 <div class="form-group">
                                                                                     <span class="details">CHEGADA:</span>
                                                                                     <div class="input-group">
-                                                                                        <asp:TextBox ID="txtChegadaOrigem" runat="server" 
+                                                                                        <asp:TextBox ID="txtChegadaOrigem" runat="server"
                                                                                             CssClass="form-control chegada"
                                                                                             Text='<%# Bind("chegadaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                             TextMode="DateTimeLocal"
@@ -1187,7 +1187,6 @@
         </div>
     </div>
     <!-- Modal Ocorrências -->
-
     <div class="modal fade bd-example-modal-xl" id="modalOcorrencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
@@ -1203,11 +1202,15 @@
                             <div class="row g-3">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <asp:Label ID="lblColeta" runat="server" class="form-control font-weight-bold" Style="text-align: center">  
+                                        <asp:Label ID="lblCVA" runat="server" class="form-control font-weight-bold" Style="text-align: center">  
                                         </asp:Label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <asp:Label ID="lblColeta" runat="server" class="form-control font-weight-bold" Style="text-align: center">  
+                                        </asp:Label>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">

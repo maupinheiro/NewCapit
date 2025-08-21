@@ -12,5 +12,7 @@ namespace Domain
         public string codmot { get; set; }
         public string empresa { get; set; }
         public string fl_exclusao { get; set; }
+        public string frota { get; set; }
+        public string andamento { get; set; }
     }
 }

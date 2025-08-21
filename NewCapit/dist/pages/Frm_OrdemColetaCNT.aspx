@@ -7,10 +7,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>--%>
     <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    --%>
-    <%-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>--%>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    --%>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -189,19 +194,19 @@
         </div>
         <div class="container-fluid">
             <div class="row g-3">
-                <asp:UpdatePanel ID="updPrincipal" runat="server">
-                    <ContentTemplate>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <span class="details">CVA:</span>
-                                <asp:TextBox ID="txtColeta" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="bntPesquisaColeta_Click" AutoPostBack="true"></asp:TextBox>
-                            </div>
-                        </div>
-                        <%--<div class="col-md-1">
+                <%-- <asp:UpdatePanel ID="updPrincipal" runat="server">
+                    <ContentTemplate>--%>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <span class="details">CVA:</span>
+                        <asp:TextBox ID="txtColeta" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="bntPesquisaColeta_Click" AutoPostBack="true"></asp:TextBox>
+                    </div>
+                </div>
+                <%-- <div class="col-md-1">
                             <asp:Button ID="bntPesquisaColeta" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="bntPesquisaColeta_Click" />
                         </div>--%>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
+                <%--</ContentTemplate>
+                </asp:UpdatePanel>--%>
             </div>
 
             <div class="row g-3">
@@ -211,7 +216,7 @@
                         <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="btnPesquisarMotorista_Click" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
-                <%--<div class="col-md-1">
+                <%-- <div class="col-md-1">
                     <br />
                     <asp:Button ID="btnPesquisarMotorista" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarMotorista_Click" />
                 </div>--%>
@@ -300,7 +305,7 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <span class="details">EX.TOXIC.:</span>
+                        <span class="details">EXAME TOXIC.:</span>
                         <div class="input-group">
                             <asp:TextBox ID="txtExameToxic" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                         </div>
@@ -308,7 +313,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <span class="details">VAL. CNH:</span>
+                        <span class="details">VALIDADE. CNH:</span>
                         <div class="input-group">
                             <asp:TextBox ID="txtCNH" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                         </div>
@@ -316,7 +321,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <span class="details">VAL. GR.:</span>
+                        <span class="details">LIBERAÇÃO RISCO:</span>
                         <div class="input-group">
                             <asp:TextBox ID="txtLibGR" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                         </div>
@@ -330,7 +335,7 @@
                         <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="btnPesquisarVeiculo_Click" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
-               <%-- <div class="col-md-1">
+                <%-- <div class="col-md-1">
                     <br />
                     <asp:Button ID="btnPesquisarVeiculo" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnPesquisarVeiculo_Click" />
                 </div>--%>
@@ -505,8 +510,7 @@
                                         </HeaderTemplate>
                                         <ItemTemplate>
                                             <tr data-widget="expandable-table" aria-expanded="false">
-                                                <td>
-                                                    <asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>' /></td>
+                                                <td><asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>'/></td>
                                                 <td><%# Eval("cva") %></td>
                                                 <td><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                 <%-- <td><%# Eval("CodigoO") %></td>--%>

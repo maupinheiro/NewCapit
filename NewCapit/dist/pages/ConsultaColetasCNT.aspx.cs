@@ -28,7 +28,9 @@ namespace NewCapit.dist.pages
                 
                
                 PreencherColetas();
-                
+                txtInicioData.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-ddT00:00");
+                txtFimData.Text = DateTime.Now.ToString("yyyy-MM-ddT23:59");
+
                 //PreencherComboVeiculos();
                 //PreencherComboStatus();
 
