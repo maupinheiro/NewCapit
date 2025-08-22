@@ -291,8 +291,9 @@ namespace NewCapit.dist.pages
                 txtRemessa.Text = row["remessa"].ToString();
 
                 txtHistorico.Text = row["quant_palet"].ToString();
+                lblNumerocva.Text = "- CVA Nº "+ row["cva"].ToString();
 
-               
+
 
                 // Labels
                 string[] partes = row["cadastro"].ToString().Split(new string[] { " - " }, StringSplitOptions.None);
