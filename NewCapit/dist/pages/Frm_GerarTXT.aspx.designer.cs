@@ -33,13 +33,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDtFinal;
 
         /// <summary>
-        /// Controle txtCodMot.
+        /// Controle txtCodMotorista.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodMot;
+        protected global::System.Web.UI.WebControls.TextBox txtCodMotorista;
 
         /// <summary>
         /// Controle txtNomMot.
@@ -49,6 +49,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNomMot;
+
+        /// <summary>
+        /// Controle txtFuncao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFuncao;
+
+        /// <summary>
+        /// Controle txtFilialMot.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFilialMot;
 
         /// <summary>
         /// Controle btnPesquisarMotorista.
@@ -94,6 +112,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkMinas;
+
+        /// <summary>
+        /// Controle chkMotorista.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkMotorista;
 
         /// <summary>
         /// Controle txtconformmessageValue4.

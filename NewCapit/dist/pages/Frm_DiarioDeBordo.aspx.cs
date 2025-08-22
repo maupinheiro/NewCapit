@@ -31,8 +31,15 @@ namespace NewCapit.dist.pages
         {
             btnExcluiMotoristas.Visible = false;
             btnExcluiTodas.Visible = false;
-            CarregaFoto();
-
+            
+            if (txtMotorista.Text.Trim() == string.Empty)
+            {
+                fotoMotorista = "../../fotos/usuario.jpg";
+            }
+            else
+            {
+                CarregaFoto();
+            }
         }
         public void CarregaFoto()
         {
@@ -440,7 +447,7 @@ namespace NewCapit.dist.pages
 
             login = txtMotorista.Text;
 
-
+            
             string sql1 = "exec sp_tempo_total '" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "'," + login + "";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
             DataTable dt = new DataTable();
