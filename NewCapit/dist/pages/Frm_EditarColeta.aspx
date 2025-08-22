@@ -15,7 +15,7 @@
                 <br />
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-clipboard-list"></i>&nbsp;COLETAS - ATUALIZAÇÃO DE DADOS</h3>
+                        <h3 class="card-title"><i class="fas fa-clipboard-list"></i>&nbsp;COLETAS - ATUALIZAÇÃO DE DADOS&nbsp;<asp:Label ID="lblNumerocva" runat="server" Text=""></asp:Label> </h3>
                     </div>
                 </div>
                 <div class="card-header">
