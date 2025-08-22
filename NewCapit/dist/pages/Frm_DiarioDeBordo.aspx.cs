@@ -402,10 +402,24 @@ namespace NewCapit.dist.pages
 
 
 
-            login = txtMotorista.Text;
+            login = txtMotorista.Text.Trim();
+
+            if (!login.All(char.IsDigit)) // verifica se tem apenas números
+            {
+                string message = "Motorista não possui marcações!";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(message);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                return;
+            }
 
 
-            string sql1 = "exec sp_tempo_total '" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "'," + login + "";
+            string sql1 = "exec sp_tempo_total '" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + login + "'";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
             DataTable dt = new DataTable();
             con.Open();

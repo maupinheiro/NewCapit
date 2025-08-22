@@ -162,6 +162,24 @@
             if (tecla == 46) { if (indexvir !== -1 || indexpon !== -1) { return false } }
         }
     </script>
+   <script type="text/javascript">
+       function somenteNumeros(e) {
+           var charCode = e.which ? e.which : e.keyCode;
+           // permite: backspace (8), delete (46), tab (9), setas (37-40)
+           if (charCode == 8 || charCode == 9 || charCode == 46 || (charCode >= 37 && charCode <= 40)) {
+               return true;
+           }
+           // permite apenas números (0-9)
+           if (charCode < 48 || charCode > 57) {
+               return false;
+           }
+           return true;
+       }
+
+       function limparNaoNumeros(campo) {
+           campo.value = campo.value.replace(/\D/g, ''); // remove tudo que não for número
+       }
+   </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -178,7 +196,8 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">MOTORISTA:</span>
-                                <asp:TextBox ID="txtMotorista" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" MaxLength="11"></asp:TextBox>
+                                <asp:TextBox ID="txtMotorista" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" MaxLength="11" onkeypress="return somenteNumeros(event)" oninput="limparNaoNumeros(this)"></asp:TextBox>
+
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -475,6 +494,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
         </section>
         <!-- Mensagens de erro toast -->
         <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -488,6 +508,7 @@
             </div>
         </div>
     </div>
+   
     <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
