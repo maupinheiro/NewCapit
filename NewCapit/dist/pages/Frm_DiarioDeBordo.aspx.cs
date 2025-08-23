@@ -25,55 +25,12 @@ namespace NewCapit.dist.pages
         string cod_ref_parada;
         string login, html;
         bool valido, valido2;
-        public string fotoMotorista;
-        string codmot, caminhofoto;
         protected void Page_Load(object sender, EventArgs e)
         {
             btnExcluiMotoristas.Visible = false;
             btnExcluiTodas.Visible = false;
-            
-            if (txtMotorista.Text.Trim() == string.Empty)
-            {
-                fotoMotorista = "../../fotos/usuario.jpg";
-            }
-            else
-            {
-                CarregaFoto();
-            }
-        }
-        public void CarregaFoto()
-        {
-            var codigo = txtMotorista.Text.Trim();
-
-            var obj = new Domain.ConsultaMotorista
-            {
-                codmot = codigo
-            };
-            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
-            if (ConsultaMotorista != null)
-            {
-                if (ConsultaMotorista.status.Trim() != "INATIVO")
-                {
-                    if (txtMotorista.Text.Trim() != "")
-                    {
-                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-
-                        if (!File.Exists(fotoMotorista))
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-                        }
-                        else
-                        {
-                            fotoMotorista = "../../fotos/usuario.jpg";
-                        }
-                    }
-
-                }
-
-            }
 
         }
-
         protected void grdCusto_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Select")
@@ -445,10 +402,24 @@ namespace NewCapit.dist.pages
 
 
 
-            login = txtMotorista.Text;
+            login = txtMotorista.Text.Trim();
 
-            
-            string sql1 = "exec sp_tempo_total '" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "'," + login + "";
+            if (!login.All(char.IsDigit)) // verifica se tem apenas números
+            {
+                string message = "Motorista não possui marcações!";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(message);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                return;
+            }
+
+
+            string sql1 = "exec sp_tempo_total '" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + login + "'";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
             DataTable dt = new DataTable();
             con.Open();
