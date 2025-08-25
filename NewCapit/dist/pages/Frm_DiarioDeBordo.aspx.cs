@@ -113,7 +113,7 @@ namespace NewCapit.dist.pages
                     cmd5.Parameters.AddWithValue("@tipo_macro", dt.Rows[0][11].ToString());
                     cmd5.Parameters.AddWithValue("@cod_cracha", dt.Rows[0][10].ToString());
                     cmd5.Parameters.AddWithValue("@dt_exclusao", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
-                    cmd5.Parameters.AddWithValue("@nm_usuario", Page.Session["usuario"].ToString());
+                    cmd5.Parameters.AddWithValue("@nm_usuario", Page.Session["UsuarioLogado"].ToString());
 
                     try
                     {
@@ -216,7 +216,7 @@ namespace NewCapit.dist.pages
                     cmd5.Parameters.AddWithValue("@tipo_macro", dt.Rows[0][11].ToString());
                     cmd5.Parameters.AddWithValue("@cod_cracha", dt.Rows[0][10].ToString());
                     cmd5.Parameters.AddWithValue("@dt_exclusao", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
-                    cmd5.Parameters.AddWithValue("@nm_usuario", Page.Session["usuario"].ToString());
+                    cmd5.Parameters.AddWithValue("@nm_usuario", Page.Session["UsuarioLogado"].ToString());
 
                     try
                     {
@@ -323,7 +323,7 @@ namespace NewCapit.dist.pages
                                 cmd5.Parameters.AddWithValue("@tipo_macro", dt.Rows[0][11].ToString());
                                 cmd5.Parameters.AddWithValue("@cod_cracha", dt.Rows[0][10].ToString());
                                 cmd5.Parameters.AddWithValue("@dt_exclusao", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
-                                cmd5.Parameters.AddWithValue("@nm_usuario", Page.Session["usuario"].ToString());
+                                cmd5.Parameters.AddWithValue("@nm_usuario", Page.Session["UsuarioLogado"].ToString());
 
                                 try
                                 {
@@ -475,7 +475,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnMacromanual_Click(object sender, EventArgs e)
         {
-            string cod_usuario = Page.Session["cod_usuario"].ToString();
+            string cod_usuario = Page.Session["CodUsuario"].ToString();
 
             if (txtconformmessageValue1.Value == "Yes")
             {
