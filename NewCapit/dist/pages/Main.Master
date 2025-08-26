@@ -88,9 +88,9 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Navbar Search -->
                     <li class="nav-item">
-                        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                        <%-- <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                             <i class="fas fa-search"></i>
-                        </a>
+                        </a>--%>
                         <div class="navbar-search-block">
                             <%--  <form class="form-inline">
                                 <div class="input-group input-group-sm">
@@ -112,9 +112,9 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-comments"></i>
-                            <span class="badge badge-danger navbar-badge">3</span>
+                            <span class="badge badge-danger navbar-badge">0</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <%-- <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <a href="#" class="dropdown-item">
                                 <!-- Message Start -->
                                 <div class="media">
@@ -164,15 +164,15 @@
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                        </div>
+                        </div>--%>
                     </li>
                     <!-- Notifications Dropdown Menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">15</span>
+                            <span class="badge badge-warning navbar-badge">0</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <%--<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <span class="dropdown-item dropdown-header">15 Notifications</span>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
@@ -194,18 +194,18 @@
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                        </div>
+                        </div>--%>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                             <i class="fas fa-expand-arrows-alt"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <%--<li class="nav-item">
                         <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
                             <i class="fas fa-th-large"></i>
                         </a>
-                    </li>
+                    </li>--%>
                 </ul>
             </nav>
             <!-- /.navbar -->
@@ -213,7 +213,7 @@
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Capit Logo -->
-                <a href="index3.html" class="brand-link">
+                <a href="#" class="brand-link">
                     <img src="/dist/img/logo.png" alt="Capit Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                     <span class="brand-text font-weight-light">Capit Logística</span>
                 </a>
@@ -358,7 +358,7 @@
                                             <li class="nav-item">
                                                 <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
                                                     <i class="fas fa-shipping-fast nav-icon"></i>
-                                                    <p>Controle de Solicitações</p>
+                                                    <p>Cont. de Solicitações</p>
                                                 </a>
                                                 <a href="ImportarPlanejamento.aspx" class="nav-link">
                                                     <i class="fas fa-boxes nav-icon"></i>
@@ -415,7 +415,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-user-friends"></i>
                                     <p>
-                                        Agregados               
+                                        Proprietários               
                                     <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -423,7 +423,7 @@
                                     <li class="nav-item">
                                         <a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Agregados</p>
+                                            <p>Cont. de Proprietários</p>
                                         </a>
                                     </li>
                                     <%--<li class="nav-item">
@@ -516,7 +516,7 @@
                                             <p>Acerto de Ponto</p>
                                         </a>
                                     </li>
-                                  <%--  <li class="nav-item">
+                                    <%--  <li class="nav-item">
                                         <a href="pages/forms/validation.html" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Fechamento do Ponto</p>
@@ -528,17 +528,50 @@
                                             <p>Gera TXT Folha</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    <%--<li class="nav-item">
                                         <a href="/dist/pages/Frm_Comissoes.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Acerto das Comissões</p>
                                         </a>
-                                    </li>
+                                    </li>--%>
                                 </ul>
                             </li>
 
+                            <!-- Usuários -->
                             <li class="nav-item">
-                                <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#modalSair" ><i class="nav-icon fas fa-power-off"></i>Sair</a>
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>
+                                        Usuários               
+         <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/#" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Trocar Senha</p>
+                                        </a>
+                                    </li>                                   
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/#" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Trocar Foto</p>
+                                        </a>
+                                    </li>                                    
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Controle de Usuários</p>
+                                        </a>
+                                    </li>                                    
+                                </ul>
+                            </li>
+
+
+                            <!-- menu daqui para cima -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#modalSair"><i class="nav-icon fas fa-power-off"></i>Sair</a>
                             </li>
                         </ul>
                     </nav>
@@ -547,7 +580,7 @@
                 <!-- /.sidebar -->
             </aside>
         </div>
-        <!-- Modal sair do sistema -->        
+        <!-- Modal sair do sistema -->
         <div class="modal fade" id="modalSair" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -561,7 +594,7 @@
                     <div class="modal-footer">
                         <asp:Button ID="btnSair" runat="server" class="btn btn-primary" Text="Sim" OnClientClick="fecharModal(); return false;" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        
+
                     </div>
                 </div>
             </div>
