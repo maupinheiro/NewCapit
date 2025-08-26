@@ -25,10 +25,52 @@ namespace NewCapit.dist.pages
         string cod_ref_parada;
         string login, html;
         bool valido, valido2;
+        public string fotoMotorista;
+        string codmot, caminhofoto;
         protected void Page_Load(object sender, EventArgs e)
         {
             btnExcluiMotoristas.Visible = false;
             btnExcluiTodas.Visible = false;
+            if (txtMotorista.Text.Trim() == string.Empty)
+            {
+                fotoMotorista = "../../fotos/usuario.jpg";
+            }
+            else
+            {
+                CarregaFoto();
+            }
+
+        }
+        public void CarregaFoto()
+        {
+            var codigo = txtMotorista.Text.Trim();
+
+            var obj = new Domain.ConsultaMotorista
+            {
+                codmot = codigo
+            };
+            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+            if (ConsultaMotorista != null)
+            {
+                if (ConsultaMotorista.status.Trim() != "INATIVO")
+                {
+                    if (txtMotorista.Text.Trim() != "")
+                    {
+                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                        if (!File.Exists(fotoMotorista))
+                        {
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+                        }
+                        else
+                        {
+                            fotoMotorista = "../../fotos/usuario.jpg";
+                        }
+                    }
+
+                }
+
+            }
 
         }
         protected void grdCusto_RowCommand(object sender, GridViewCommandEventArgs e)
