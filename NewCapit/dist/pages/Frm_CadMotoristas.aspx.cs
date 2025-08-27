@@ -331,7 +331,6 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", scriptErro, true);
             }
         }
-
         protected void txtCodMot_TextChanged(object sender, EventArgs e)
         {
             //string termo = txtCodMot.Text.ToUpper();

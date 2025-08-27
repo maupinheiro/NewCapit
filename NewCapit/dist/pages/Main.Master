@@ -426,12 +426,12 @@
                                             <p>Cont. de Proprietários</p>
                                         </a>
                                     </li>
-                                    <%--<li class="nav-item">
-                                        <a href="pages/charts/flot.html" class="nav-link">
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ControleCreditoAbastecimento.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Limite de Crédito</p>
                                         </a>
-                                    </li>--%>
+                                    </li>
                                 </ul>
                             </li>
 

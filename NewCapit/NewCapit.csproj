@@ -248,6 +248,7 @@
     <Content Include="dist\js\adminlte.min.js" />
     <Content Include="dist\js\demo.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
+    <Content Include="dist\pages\ControleCreditoAbastecimento.aspx" />
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
@@ -4435,6 +4436,13 @@
     </Compile>
     <Compile Include="dist\pages\Consulta_Agregados.aspx.designer.cs">
       <DependentUpon>Consulta_Agregados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ControleCreditoAbastecimento.aspx.cs">
+      <DependentUpon>ControleCreditoAbastecimento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleCreditoAbastecimento.aspx.designer.cs">
+      <DependentUpon>ControleCreditoAbastecimento.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ControleCarretas.aspx.cs">
       <DependentUpon>ControleCarretas.aspx</DependentUpon>
