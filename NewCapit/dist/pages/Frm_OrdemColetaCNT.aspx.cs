@@ -725,7 +725,7 @@ namespace NewCapit.dist.pages
                                     string searchTerm;
                                     searchTerm = txtColeta.Text.Trim();
                                     CarregarColetas(searchTerm);
-                                    txtColeta.Text = string.Empty;
+                                    //txtColeta.Text = string.Empty;
                                 }
                                 else
                                 {

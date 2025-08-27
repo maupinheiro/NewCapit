@@ -99,15 +99,16 @@ namespace NewCapit.dist.pages
                         txtAtivo_Inativo.Text = reader1["ativa_inativa"].ToString();
                         txtLimiteCreditoAbastecimento.Text = reader1["limitecreditoabastecimento"].ToString();
                         txtSaldoParaAbastecimento.Text = reader1["saldoparaabastecimento"].ToString();
-
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "$('#modalCadastro').modal('show');", true);
+                        hdfId.Value = id.ToString();
+                        
                     }
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "$('#modalCadastro').modal('show');", true);
+
                 }
 
-                
+
 
             }
         }
-
     }
 }

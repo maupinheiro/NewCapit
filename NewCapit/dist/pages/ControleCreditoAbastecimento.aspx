@@ -31,7 +31,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <asp:GridView runat="server" ID="gvListLimiteCredito" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListLimiteCredito_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                    <asp:GridView runat="server" ID="gvListLimiteCredito" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="ID" OnRowCommand="gvListLimiteCredito_RowCommand" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListLimiteCredito_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
                             <asp:TemplateField HeaderText="PROP.">
@@ -84,7 +84,7 @@
 
                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                                 <ItemTemplate>
-                                    <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm" CommandName="LimiteCredito" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-credit-card"></i> Limite de Crédito</asp:LinkButton>
+                                    <asp:LinkButton ID="lnkEditar" runat="server" CssClass="btn btn-primary btn-sm" CommandName="LimiteCredito" CommandArgument='<%# Eval("ID") %>'><i class="fas fa-credit-card"></i> Limite de Crédito</asp:LinkButton>
                                     <asp:LinkButton ID="lnkDetalhe" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Detalhes</asp:LinkButton>
                                 </ItemTemplate>
                             </asp:TemplateField>
@@ -99,7 +99,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Limite de Crédito</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <%--  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--%>
                     </div>
                     <div class="modal-body" >
                         <asp:Label runat="server" ID="lblMensagem" CssClass="text-success"></asp:Label>
@@ -162,7 +162,8 @@
                     </div>
                     <div class="modal-footer">
                         <asp:Button ID="btnSalvar" runat="server" Text="Salvar" CssClass="btn btn-success" OnClick="btnSalvar_Click" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sair</button>
+                        <asp:Button ID="btnSair" class="btn btn-secondary" data-bs-dismiss="modal" runat="server" Text="Sair" />
+                        <asp:HiddenField ID="hdfId" runat="server" />
                     </div>
                 </div>
             </div>
