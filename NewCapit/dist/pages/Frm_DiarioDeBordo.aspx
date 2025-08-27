@@ -1,4 +1,4 @@
-﻿    <%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -162,24 +162,24 @@
             if (tecla == 46) { if (indexvir !== -1 || indexpon !== -1) { return false } }
         }
     </script>
-   <script type="text/javascript">
-       function somenteNumeros(e) {
-           var charCode = e.which ? e.which : e.keyCode;
-           // permite: backspace (8), delete (46), tab (9), setas (37-40)
-           if (charCode == 8 || charCode == 9 || charCode == 46 || (charCode >= 37 && charCode <= 40)) {
-               return true;
-           }
-           // permite apenas números (0-9)
-           if (charCode < 48 || charCode > 57) {
-               return false;
-           }
-           return true;
-       }
+    <script type="text/javascript">
+        function somenteNumeros(e) {
+            var charCode = e.which ? e.which : e.keyCode;
+            // permite: backspace (8), delete (46), tab (9), setas (37-40)
+            if (charCode == 8 || charCode == 9 || charCode == 46 || (charCode >= 37 && charCode <= 40)) {
+                return true;
+            }
+            // permite apenas números (0-9)
+            if (charCode < 48 || charCode > 57) {
+                return false;
+            }
+            return true;
+        }
 
-       function limparNaoNumeros(campo) {
-           campo.value = campo.value.replace(/\D/g, ''); // remove tudo que não for número
-       }
-   </script>
+        function limparNaoNumeros(campo) {
+            campo.value = campo.value.replace(/\D/g, ''); // remove tudo que não for número
+        }
+    </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -188,7 +188,7 @@
                 <br />
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-clipboard-list"></i>&nbsp;JORNADA - DIARIO DE BORDO</h3>
+                        <h3 class="card-title"><i class="fas fa-clipboard-list"></i>&nbsp;DIARIO DE BORDO DO MOTORISTA</h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -210,6 +210,13 @@
                             <br />
                             <asp:Button ID="btnBuscar" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" ValidationGroup="Cadastro" OnClick="btnBuscar_Click" />
                         </div>
+                        <div class="col-md-7"></div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <img src="<%=fotoMotorista%>" class="rounded-circle float-center" height="80" width="80" alt="User Image">
+                            </div>
+                        </div>
+
                     </div>
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -399,7 +406,7 @@
                     </div>
 
                     <b>
-                    <asp:Label ID="lblAlerta" runat="server" Text="" ForeColor="Red"></asp:Label></b>
+                        <asp:Label ID="lblAlerta" runat="server" Text="" ForeColor="Red"></asp:Label></b>
                     <div class="card card-success">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -446,7 +453,7 @@
                     <div class="col-md-1">
                         <asp:HiddenField ID="txtconformmessageValue5" runat="server" />
                         <asp:Button ID="btnExcluiMotoristas" runat="server" CssClass="btn btn-outline-danger" Text="Excluir" OnClientClick="javascript:ConfirmMessage5();" Width="139px" />
-                    </div>                    
+                    </div>
                     <div class="card card-warning">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -464,24 +471,24 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <%--<div class="card-body">--%>
-                                        <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                            <asp:GridView ID="grdTodas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_parada" OnRowCommand="grdTodas_RowCommand">
-                                                <Columns>
-                                                    <asp:TemplateField>
-                                                        <ItemTemplate>
-                                                            <asp:CheckBox ID="chkT" runat="server" HeaderText="SEL." />
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
-                                                    <asp:BoundField DataField="ds_macro" HeaderText="TIPO DE MARCAÇÃO" />
-                                                    <asp:BoundField DataField="ds_tipo" HeaderText="DESCRIÇÃO" />
-                                                    <asp:BoundField DataField="data" HeaderText="DATA" ItemStyle-HorizontalAlign="Center" />
-                                                    <asp:BoundField DataField="Hora1" HeaderText="HORA INICIAL" ItemStyle-HorizontalAlign="Center" />
-                                                    <asp:BoundField DataField="Hora2" HeaderText="HORA FINAL" ItemStyle-HorizontalAlign="Center" />
-                                                    <asp:BoundField DataField="Total" HeaderText="TOTAL" ItemStyle-HorizontalAlign="Center" />
-                                                    <%--<asp:ButtonField ButtonType="Link" HeaderText="AÇÃO" CommandName="Select" Text="Excluir" />--%>
-                                                </Columns>
-                                            </asp:GridView>
-                                        </table>
+                                    <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
+                                        <asp:GridView ID="grdTodas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_parada" OnRowCommand="grdTodas_RowCommand">
+                                            <Columns>
+                                                <asp:TemplateField>
+                                                    <ItemTemplate>
+                                                        <asp:CheckBox ID="chkT" runat="server" HeaderText="SEL." />
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:BoundField DataField="ds_macro" HeaderText="TIPO DE MARCAÇÃO" />
+                                                <asp:BoundField DataField="ds_tipo" HeaderText="DESCRIÇÃO" />
+                                                <asp:BoundField DataField="data" HeaderText="DATA" ItemStyle-HorizontalAlign="Center" />
+                                                <asp:BoundField DataField="Hora1" HeaderText="HORA INICIAL" ItemStyle-HorizontalAlign="Center" />
+                                                <asp:BoundField DataField="Hora2" HeaderText="HORA FINAL" ItemStyle-HorizontalAlign="Center" />
+                                                <asp:BoundField DataField="Total" HeaderText="TOTAL" ItemStyle-HorizontalAlign="Center" />
+                                                <%--<asp:ButtonField ButtonType="Link" HeaderText="AÇÃO" CommandName="Select" Text="Excluir" />--%>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </table>
                                     <%--</div>--%>
                                 </div>
                             </div>
@@ -494,7 +501,7 @@
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
         </section>
         <!-- Mensagens de erro toast -->
         <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -508,15 +515,8 @@
             </div>
         </div>
     </div>
-   
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.1.0 
-        </div>
-        <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>
 
+    <!-- /.content-wrapper -->
     <script>
         function mostrarToastNaoEncontrado() {
             var toastEl = document.getElementById('toastNotFound');
@@ -524,4 +524,4 @@
             toast.show();
         }
     </script>
-    </asp:Content>
+</asp:Content>

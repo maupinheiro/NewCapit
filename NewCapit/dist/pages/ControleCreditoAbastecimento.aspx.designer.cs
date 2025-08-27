@@ -11,151 +11,124 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class Frm_GerarTXT
+    public partial class ControleCreditoAbastecimento
     {
 
         /// <summary>
-        /// Controle txtDtInicial.
+        /// Controle btnAbrirModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDtInicial;
+        protected global::System.Web.UI.WebControls.Button btnAbrirModal;
 
         /// <summary>
-        /// Controle txtDtFinal.
+        /// Controle myInput.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDtFinal;
+        protected global::System.Web.UI.WebControls.TextBox myInput;
 
         /// <summary>
-        /// Controle txtCodMotorista.
+        /// Controle gvListLimiteCredito.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodMotorista;
+        protected global::System.Web.UI.WebControls.GridView gvListLimiteCredito;
 
         /// <summary>
-        /// Controle txtNomMot.
+        /// Controle lblMensagem.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNomMot;
+        protected global::System.Web.UI.WebControls.Label lblMensagem;
 
         /// <summary>
-        /// Controle txtFuncao.
+        /// Controle txtCodTra.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFuncao;
+        protected global::System.Web.UI.WebControls.TextBox txtCodTra;
 
         /// <summary>
-        /// Controle txtFilialMot.
+        /// Controle txtFanTra.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFilialMot;
+        protected global::System.Web.UI.WebControls.TextBox txtFanTra;
 
         /// <summary>
-        /// Controle btnPesquisarMotorista.
+        /// Controle txtFilial.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisarMotorista;
+        protected global::System.Web.UI.WebControls.TextBox txtFilial;
 
         /// <summary>
-        /// Controle chkCadiriri.
+        /// Controle txtPessoa.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkCadiriri;
+        protected global::System.Web.UI.WebControls.TextBox txtPessoa;
 
         /// <summary>
-        /// Controle chkDiadema.
+        /// Controle txtCnpj.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkDiadema;
+        protected global::System.Web.UI.WebControls.TextBox txtCnpj;
 
         /// <summary>
-        /// Controle chkIpiranda.
+        /// Controle txtAtivo_Inativo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkIpiranda;
+        protected global::System.Web.UI.WebControls.TextBox txtAtivo_Inativo;
 
         /// <summary>
-        /// Controle chkMinas.
+        /// Controle txtLimiteCreditoAbastecimento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMinas;
+        protected global::System.Web.UI.WebControls.TextBox txtLimiteCreditoAbastecimento;
 
         /// <summary>
-        /// Controle chkMotorista.
+        /// Controle txtSaldoParaAbastecimento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMotorista;
+        protected global::System.Web.UI.WebControls.TextBox txtSaldoParaAbastecimento;
 
         /// <summary>
-        /// Controle txtconformmessageValue4.
+        /// Controle btnSalvar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField txtconformmessageValue4;
-
-        /// <summary>
-        /// Controle btnLimpar.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLimpar;
-
-        /// <summary>
-        /// Controle btnGerar.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGerar;
-
-        /// <summary>
-        /// Controle ddlEscolherArquivo.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEscolherArquivo;
+        protected global::System.Web.UI.WebControls.Button btnSalvar;
     }
 }

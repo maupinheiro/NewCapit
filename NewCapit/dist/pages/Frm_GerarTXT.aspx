@@ -5,28 +5,28 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script>
-         function formatar(src, mask) {
-             var i = src.value.length;
-             var saida = mask.substring(0, 1);
-             var texto = mask.substring(i)
-             if (texto.substring(0, 1) != saida) {
-                 src.value += texto.substring(0, 1);
-             }
-         }
-     </script>
-     <script language="javascript">
+    <script>
+        function formatar(src, mask) {
+            var i = src.value.length;
+            var saida = mask.substring(0, 1);
+            var texto = mask.substring(i)
+            if (texto.substring(0, 1) != saida) {
+                src.value += texto.substring(0, 1);
+            }
+        }
+    </script>
+    <script language="javascript">
 
-         function ConfirmMessage4() {
-             var selectedvalue = confirm("Deseja excluir todos os arquivos?");
-             if (selectedvalue) {
-                 document.getElementById('<%=txtconformmessageValue4.ClientID %>').value = "Yes";
-        } else {
-            document.getElementById('<%=txtconformmessageValue4.ClientID %>').value = "No";
-             }
-         }
+        function ConfirmMessage4() {
+            var selectedvalue = confirm("Deseja excluir todos os arquivos?");
+            if (selectedvalue) {
+                document.getElementById('<%=txtconformmessageValue4.ClientID %>').value = "Yes";
+            } else {
+                document.getElementById('<%=txtconformmessageValue4.ClientID %>').value = "No";
+            }
+        }
 
-     </script>
+    </script>
     <script>
         function mostrarModalCarregando() {
             var modal = new bootstrap.Modal(document.getElementById('modalCarregando'));
@@ -41,7 +41,7 @@
                 <br />
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-clipboard-list"></i>&nbsp;JORNADA - GERAR ARQUIVO TXT PARA DEPARTAMENTO PESSOAL</h3>
+                        <h3 class="card-title"><i class="fas fa-clipboard-list"></i>&nbsp;GERAR ARQUIVO TXT PARA DEPARTAMENTO PESSOAL</h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -58,18 +58,36 @@
                                 <asp:TextBox ID="txtDtFinal" OnKeyPress="formatar(this, '##/##/####')" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" MaxLength="10"></asp:TextBox>
                             </div>
                         </div>
+                        <div class="col-md-7"></div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <img src="<%=fotoMotorista%>" class="rounded-circle float-center" height="80" width="80" alt="User Image">
+                            </div>
+                        </div>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">MOTORISTA:</span>
-                                <asp:TextBox ID="txtCodMot" runat="server" CssClass="form-control font-weight-bold" MaxLength="11"></asp:TextBox>
+                                <asp:TextBox ID="txtCodMotorista" runat="server" CssClass="form-control font-weight-bold" MaxLength="11"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <span class="details">NOME COMPLETO:</span>
                                 <asp:TextBox ID="txtNomMot" runat="server" CssClass="form-control font-weight-bold"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <span class="details">CARGO:</span>
+                                <asp:TextBox ID="txtFuncao" runat="server" CssClass="form-control font-weight-bold"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <span class="details">FILIAL:</span>
+                                <asp:TextBox ID="txtFilialMot" runat="server" CssClass="form-control font-weight-bold"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -88,12 +106,12 @@
                                 <div class="col-sm-6">
                                     <!-- checkbox -->
                                     <div class="form-group clearfix">
-                                        
-                                             <asp:CheckBox ID="chkCadiriri" runat="server" AutoPostBack="true" OnCheckedChanged="chkCadiriri_CheckedChanged"/>
-                                            <label for="checkboxPrimary1">
-                                                TNG MATRIZ
-                                            </label>
-                                        
+
+                                        <asp:CheckBox ID="chkCadiriri" runat="server" AutoPostBack="true" OnCheckedChanged="chkCadiriri_CheckedChanged" />
+                                        <label for="checkboxPrimary1">
+                                            TNG MATRIZ
+                                        </label>
+
 
                                     </div>
                                 </div>
@@ -103,12 +121,12 @@
                                 <div class="col-sm-6">
                                     <!-- checkbox -->
                                     <div class="form-group clearfix">
-                                       
-                                            <asp:CheckBox ID="chkDiadema"  runat="server" AutoPostBack="true" OnCheckedChanged="chkDiadema_CheckedChanged"/>
-                                            <label for="checkboxDanger1">
-                                                TNG DIADEMA
-                                            </label>
-                                       
+
+                                        <asp:CheckBox ID="chkDiadema" runat="server" AutoPostBack="true" OnCheckedChanged="chkDiadema_CheckedChanged" />
+                                        <label for="checkboxDanger1">
+                                            TNG DIADEMA
+                                        </label>
+
                                     </div>
                                 </div>
                             </div>
@@ -117,12 +135,12 @@
                                 <div class="col-sm-6">
                                     <!-- checkbox -->
                                     <div class="form-group clearfix">
-                                        
-                                            <asp:CheckBox ID="chkIpiranda"  runat="server" AutoPostBack="true" OnCheckedChanged="chkIpiranda_CheckedChanged"/>
-                                            <label for="checkboxSuccess1">
-                                                TNG IPIRANGA
-                                            </label>
-                                        
+
+                                        <asp:CheckBox ID="chkIpiranda" runat="server" AutoPostBack="true" OnCheckedChanged="chkIpiranda_CheckedChanged" />
+                                        <label for="checkboxSuccess1">
+                                            TNG IPIRANGA
+                                        </label>
+
                                     </div>
                                 </div>
                             </div>
@@ -131,12 +149,25 @@
                                 <div class="col-sm-6">
                                     <!-- checkbox -->
                                     <div class="form-group clearfix">
-                                     
-                                             <asp:CheckBox ID="chkMinas" runat="server" AutoPostBack="true" OnCheckedChanged="chkMinas_CheckedChanged"/>
-                                            <label for="checkboxSuccess2">
-                                                TNG MINAS
-                                            </label>
-                                       
+
+                                        <asp:CheckBox ID="chkMinas" runat="server" AutoPostBack="true" OnCheckedChanged="chkMinas_CheckedChanged" />
+                                        <label for="checkboxSuccess2">
+                                            TNG MINAS
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Por motorista -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- checkbox -->
+                                    <div class="form-group clearfix">
+                                        <asp:CheckBox ID="chkMotorista" runat="server" AutoPostBack="true" OnCheckedChanged="chkMinas_CheckedChanged" />
+                                        <label for="checkboxSuccessPorMotorista">
+                                            POR MOTORISTA
+                                        </label>
+
                                     </div>
                                 </div>
                             </div>
@@ -154,9 +185,9 @@
                             <asp:Button ID="btnGerar" runat="server" Text="Gerar TXT" OnClick="btnGerar_Click" OnClientClick="mostrarModalCarregando();" CssClass="btn btn-outline-success" />
                         </div>
                         <div class="col-md-4">
-                                <br />
-                                <asp:DropDownList ID="ddlEscolherArquivo" placeholder="Selecione um arquivo..." OnSelectedIndexChanged="ddlEscolherArquivo_SelectedIndexChanged" AutoPostBack="true" runat="server" CssClass="form-control"></asp:DropDownList>
-                            
+                            <br />
+                            <asp:DropDownList ID="ddlEscolherArquivo" placeholder="Selecione um arquivo para baixar..." OnSelectedIndexChanged="ddlEscolherArquivo_SelectedIndexChanged" AutoPostBack="true" runat="server" CssClass="form-control"></asp:DropDownList>
+
                         </div>
                     </div>
 
@@ -177,24 +208,24 @@
 
     </div>
     <div class="modal fade" id="modalCarregando" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content text-center">
-      <div class="modal-body">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Carregando...</span>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-3">Gerando arquivo, por favor aguarde...</p>
+                </div>
+            </div>
         </div>
-        <p class="mt-3">Gerando arquivo, por favor aguarde...</p>
-      </div>
     </div>
-  </div>
-</div>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
+    <%--<footer class="main-footer">
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 3.1.0 
         </div>
         <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-    </footer>
+    </footer>--%>
 
     <script>
         function mostrarToastNaoEncontrado() {

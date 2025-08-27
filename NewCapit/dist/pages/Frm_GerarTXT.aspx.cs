@@ -24,6 +24,9 @@ namespace NewCapit.dist.pages
         int c, d;
         int inicio, reinicio, fim, pernoite;
         int iniciob, reiniciob, fimb, pernoiteb;
+        string usuarioLogado;
+        public string fotoMotorista;
+        string codmot, caminhofoto;
 
         protected void btnLimpar_Click(object sender, EventArgs e)
         {
@@ -69,7 +72,7 @@ namespace NewCapit.dist.pages
             }
         }
 
-       
+
 
         protected void btnGerar_Click(object sender, EventArgs e)
         {
@@ -120,8 +123,60 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    //var lblUsuario = nomeUsuario;
+                    var usuarioLogado = nomeUsuario;
+                }
+                else
+                {
+                    //var lblUsuario = "<Usuário>";
+                    var usuarioLogado = "<Usuário>";
+                }
+                
                 CarregaLista();
             }
+            if (txtCodMotorista.Text.Trim() == string.Empty)
+            {
+                fotoMotorista = "../../fotos/usuario.jpg";
+            }
+            else
+            {
+                CarregaFoto();
+            }
+        }
+        public void CarregaFoto()
+        {
+            var codigo = txtCodMotorista.Text.Trim();
+
+            var obj = new Domain.ConsultaMotorista
+            {
+                codmot = codigo
+            };
+            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+            if (ConsultaMotorista != null)
+            {
+                if (ConsultaMotorista.status.Trim() != "INATIVO")
+                {
+                    if (txtCodMotorista.Text.Trim() != "")
+                    {
+                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                        if (!File.Exists(fotoMotorista))
+                        {
+                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+                        }
+                        else
+                        {
+                            fotoMotorista = "../../fotos/usuario.jpg";
+                        }
+                    }
+
+                }
+
+            }
+
         }
         protected void chkDiadema_CheckedChanged(object sender, EventArgs e)
         {
@@ -160,7 +215,141 @@ namespace NewCapit.dist.pages
         }
         protected void btnPesquisarMotorista_Click(object sender, EventArgs e)
         {
+            string nomeUsuario = usuarioLogado;
+            if (txtCodMotorista.Text.Trim() == "")
+            {     
+                string linha1 = "Olá, " + nomeUsuario.Trim() + "!";
+                string linha2 = "Por favor, digite o código do motorista.";
 
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodMotorista.Focus();
+
+            }
+            else
+            {
+                var codigo = txtCodMotorista.Text.Trim();
+                var obj = new Domain.ConsultaMotorista
+                {
+                    codmot = codigo
+                };
+                var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+                if (ConsultaMotorista != null)
+                {
+                    if (ConsultaMotorista.status.Trim() == "INATIVO")
+                    {
+                        //if (txtCodMotorista.Text.Trim() != "")
+                        //{
+                        //    fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                        //    String path = Server.MapPath("../../fotos/");
+                        //    string file = fotoMotorista;
+                        //    if (File.Exists(path + file))
+                        //    {
+                        //        fotoMotorista = "../../fotos/" + file + "";
+                        //    }
+                        //    else
+                        //    {
+                        //        fotoMotorista = "../../fotos/usuario.jpg";
+                        //    }
+                        //}
+                        string razaoSocial = ConsultaMotorista.nommot;
+                        string unidade = ConsultaMotorista.nucleo;
+
+                        string linha1 = "Olá, " + nomeUsuario + "!";
+                        string linha2 = "Código " + codigo + ", excluido ou inativo no sistema.";
+                        string linha3 = "Motorista: " + razaoSocial + ".";
+                        string linha4 = "Filial: " + unidade + ". Por favor, verifique.";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        // Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        // Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        txtFilialMot.Text = ConsultaMotorista.nucleo;
+                        txtFuncao.Text = ConsultaMotorista.cargo;
+                        txtNomMot.Text = ConsultaMotorista.nommot;
+                        //if (txtCodMotorista.Text.Trim() != "")
+                        //{
+                        //    fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+
+                        //    String path = Server.MapPath("../../fotos/");
+                        //    string file = fotoMotorista;
+                        //    if (File.Exists(path + file))
+                        //    {
+                        //        fotoMotorista = "../../fotos/" + file + "";
+                        //    }
+                        //    else
+                        //    {
+                        //        fotoMotorista = "../../fotos/usuario.jpg";
+                        //    }
+                        //}
+
+
+                        if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
+                        {
+                            string razaoSocial = ConsultaMotorista.nommot;
+                            string unidade = ConsultaMotorista.nucleo;
+
+                            string linha1 = "Olá, " + nomeUsuario + "!";
+                            string linha2 = "Código " + codigo;
+                            string linha3 = "Motorista: " + razaoSocial + ".";
+                            string linha4 = "Não é empregado.";
+
+                            // Concatenando as linhas com '\n' para criar a mensagem
+                            string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                            string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                            // Gerando o script JavaScript para exibir o alerta
+                            string script = $"alert('{mensagemCodificada}');";
+
+                            // Registrando o script para execução no lado do cliente
+                            ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+
+                        }                        
+                    }
+                }
+                else
+                {                    
+                    string linha1 = "Olá, " + nomeUsuario + "!";
+                    string linha2 = "Motorista " + codigo + ", não cadastrado no sistema.";
+                    string linha3 = "Verifique o código digitado: " + codigo + ".";
+                    
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    //// Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    //// Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                    fotoMotorista = "../../fotos/usuario.jpg";
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+
+                }
+
+            }
         }
         public void Txt5d()
         {

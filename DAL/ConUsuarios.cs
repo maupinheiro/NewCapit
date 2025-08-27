@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class ConAgregados
+    public class ConUsuarios
     {
         public static DataTable FetchDataTable()
         {
-            string sql = "SELECT ID, codtra, fantra, pessoa, cnpj, filial, fone2, ativa_inativa, limitecreditoabastecimento, saldoparaabastecimento FROM tbtransportadoras where fl_exclusao is null ORDER BY fantra";
+            string sql = "SELECT foto_usuario, cod_usuario, nm_nome, nm_usuario, emp_usuario, fun_usuario, dep_usuario, CONVERT(varchar, dt_ultimo_acesso, 103) AS dt_ultimo_acesso, fl_tipo, fl_status FROM tb_usuario ORDER BY nm_nome";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -28,32 +28,11 @@ namespace DAL
                 }
             }
         }
-
-        public static DataTable FetchDataTableLimite()
-        {
-            string sql = "SELECT ID, codtra, fantra, pessoa, cnpj, filial, fone2, ativa_inativa, limitecreditoabastecimento, saldoparaabastecimento FROM tbtransportadoras where fl_exclusao is null and ativa_inativa = 'ATIVO' ORDER BY fantra";
-
-            using (var con = ConnectionUtil.GetConnection())
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        DataTable dataTable = new DataTable();
-                        dataTable.Load(reader);
-                        return dataTable;
-                    }
-
-                }
-            }
-        }
-
 
         public static DataTable FetchDataTable2(string searchTerm)
         {
-            string sql = "SELECT ID, codtra, fantra, pessoa, cnpj, filial, fone2, ativa_inativa, limitecreditoabastecimento, saldoparaabastecimento FROM tbtransportadoras " 
-                + "where fl_exclusao is null and codtra LIKE @searchTerm OR fantra LIKE @searchTerm OR cnpj LIKE @searchTerm  ORDER BY fantra";
+            string sql = "SELECT foto_usuario, cod_usuario, nm_nome, nm_usuario, emp_usuario, fun_usuario, dep_usuario, CONVERT(varchar, dt_ultimo_acesso, 103) AS dt_ultimo_acesso," +
+                " fl_tipo, fl_status FROM tb_usuario where nm_nome LIKE @searchTerm or emp_usuario LIKE @searchTerm or fun_usuario LIKE @searchTerm or nm_usuario LIKE @searchTerm or fl_tipo LIKE @searchTerm or fl_status LIKE @searchTerm ORDER BY nm_nome";
 
             using (var con = ConnectionUtil.GetConnection())
             {
