@@ -44,6 +44,8 @@
     <!-- Bootstrap JS (com Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+
+
     <asp:ContentPlaceHolder ID="head" runat="server">
         <style>
             .img-custom {
@@ -59,6 +61,57 @@
             window.location.href = 'Login.aspx'; // Altere para a URL da sua página de login
         }
     </script>
+    <script>
+        function showToast(message) {
+            var toast = document.getElementById('toastContainer');
+            toast.innerHTML = message;
+            toast.style.display = 'block';
+            setTimeout(function () {
+                toast.style.display = 'none';
+            }, 5000); // Fecha o toast após 5 segundos alerta de atenção
+        }
+    </script>
+    <script>
+        function validarCNPJ(cnpj) {
+            cnpj = cnpj.replace(/[^\d]+/g, '');
+
+            if (cnpj.length !== 14) return false;
+
+            // Elimina CNPJs com todos os dígitos iguais
+            if (/^(\d)\1+$/.test(cnpj)) return false;
+
+            let tamanho = cnpj.length - 2;
+            let numeros = cnpj.substring(0, tamanho);
+            let digitos = cnpj.substring(tamanho);
+            let soma = 0;
+            let pos = tamanho - 7;
+
+            for (let i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2) pos = 9;
+            }
+
+            let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+            if (resultado != digitos.charAt(0)) return false;
+
+            tamanho = tamanho + 1;
+            numeros = cnpj.substring(0, tamanho);
+            soma = 0;
+            pos = tamanho - 7;
+
+            for (let i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2) pos = 9;
+            }
+
+            resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+            if (resultado != digitos.charAt(1)) return false;
+
+            return true;
+        }
+    </script>
+
+
 </head>
 
 <!-- layout-fixed -->
@@ -91,8 +144,8 @@
                         <%-- <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                             <i class="fas fa-search"></i>
                         </a>--%>
-                        <div class="navbar-search-block">
-                            <%--  <form class="form-inline">
+                        <%-- <div class="navbar-search-block">
+                             <form class="form-inline">
                                 <div class="input-group input-group-sm">
                                     <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                                     <div class="input-group-append">
@@ -104,8 +157,8 @@
                                         </button>
                                     </div>
                                 </div>
-                            </form>--%>
-                        </div>
+                            </form>
+                        </div>--%>
                     </li>
 
                     <!-- Messages Dropdown Menu -->
@@ -358,7 +411,7 @@
                                             <li class="nav-item">
                                                 <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
                                                     <i class="fas fa-shipping-fast nav-icon"></i>
-                                                    <p>Cont. de Solicitações</p>
+                                                    <p>Solicitações VW</p>
                                                 </a>
                                                 <a href="ImportarPlanejamento.aspx" class="nav-link">
                                                     <i class="fas fa-boxes nav-icon"></i>
@@ -386,7 +439,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-address-card"></i>
+                                    <i class="nav-icon fas fa-industry"></i>
                                     <p>
                                         Clientes               
                                     <i class="fas fa-angle-left right"></i>
@@ -397,7 +450,7 @@
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaClientes.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Clientes</p>
+                                            <p>Gestão</p>
                                         </a>
                                         <%--<a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
@@ -423,7 +476,7 @@
                                     <li class="nav-item">
                                         <a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Cont. de Proprietários</p>
+                                            <p>Gestão</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -447,13 +500,13 @@
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Veículos</p>
+                                            <p>Gestão</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/ControleCarretas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Carretas</p>
+                                            <p>Gestão de Carretas</p>
                                         </a>
                                     </li>
                                     <%-- <li class="nav-item">
@@ -485,7 +538,7 @@
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-id-card-alt"></i>
+                                    <i class="nav-icon fas fa-user-tie"></i>
                                     <p>
                                         Motoristas               
                                     <i class="fas fa-angle-left right"></i>
@@ -495,7 +548,7 @@
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Motoristas</p>
+                                            <p>Gestão</p>
                                         </a>
                                     </li>
                                     <%--<li class="nav-item">
@@ -524,7 +577,7 @@
                                     </li>--%>
                                     <li class="nav-item">
                                         <a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="far fa-check-circle nav-icon"></i>
                                             <p>Gera TXT Folha</p>
                                         </a>
                                     </li>
@@ -536,11 +589,48 @@
                                     </li>--%>
                                 </ul>
                             </li>
+                            <!-- Manutencão Ipiranga -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-building"></i>
+                                    <p>
+                                        Fornecedores               
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="far fa-check-circle nav-icon"></i>
+                                            <p>Gestão</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/GestaoPostos.aspx" class="nav-link">
+                                            <i class="far fa-check-circle nav-icon"></i>
+                                            <p>Gestão de Postos</p>
+                                        </a>
+                                    </li>
+                                    <%--<li class="nav-item">
+                                        <a href="/dist/pages/#" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Trocar Foto</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Controle de Usuários</p>
+                                        </a>
+                                    </li>--%>
+                                </ul>
+                            </li>
+
 
                             <!-- Usuários -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-users"></i>
+                                    <i class="nav-icon fas fa-user-circle"></i>
                                     <p>
                                         Usuários               
          <i class="fas fa-angle-left right"></i>
@@ -552,23 +642,21 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Trocar Senha</p>
                                         </a>
-                                    </li>                                   
+                                    </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Trocar Foto</p>
                                         </a>
-                                    </li>                                    
+                                    </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Controle de Usuários</p>
                                         </a>
-                                    </li>                                    
+                                    </li>
                                 </ul>
                             </li>
-
-
                             <!-- menu daqui para cima -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#modalSair"><i class="nav-icon fas fa-power-off"></i>Sair</a>
@@ -894,5 +982,6 @@
 
     </script>
 </body>
+  
 </html>
 

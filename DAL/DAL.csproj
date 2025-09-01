@@ -50,8 +50,10 @@
     <Compile Include="ConCarretas.cs" />
     <Compile Include="ConEntrega.cs" />
     <Compile Include="ConCargas.cs" />
+    <Compile Include="ConFornecedores.cs" />
     <Compile Include="ConMotoristas.cs" />
     <Compile Include="ConnectionUtil.cs" />
+    <Compile Include="ConPostos.cs" />
     <Compile Include="ConUsuarios.cs" />
     <Compile Include="ConVeiculos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

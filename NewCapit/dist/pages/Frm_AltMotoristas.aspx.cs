@@ -558,13 +558,13 @@ namespace NewCapit.dist.pages
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Nenhum registro foi atualizado.');", true);
                     }
                 }
-            }
+        }
             catch (Exception ex)
             {
                 string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                string script = $"alert('{mensagemErro}');";
-                ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
-            }
+        string script = $"alert('{mensagemErro}');";
+        ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+        }
         }
         private void PreencherComboJornada()
         {
@@ -835,7 +835,10 @@ namespace NewCapit.dist.pages
                                 txtCodTra.Text = string.Empty;
                                 // Aciona o Toast via JavaScript
 
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                // Acione o toast quando a página for carregada
+                                string script = "<script>showToast('Código do proprietário, não encontrado.');</script>";
+                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
                                 txtCodTra.Focus();
                                 // Opcional: exibir mensagem ao usuário
                             }
@@ -884,22 +887,26 @@ namespace NewCapit.dist.pages
                                 }
                                 else 
                                 {
-                                    string nomeUsuario = txtUsuCadastro.Text;
+                                    //string nomeUsuario = txtUsuCadastro.Text;
 
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "Veículo com o motorista: " + reader["tipvei"].ToString() + ".";
-                                    string linha3 = "Escolha outro veículo, ou retire o motorista atrelado.";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+                                    //string linha1 = "Olá, " + nomeUsuario + "!";
+                                    //string linha2 = "Veículo com o motorista: " + reader["tipvei"].ToString() + ".";
+                                    //string linha3 = "Escolha outro veículo, ou retire o motorista atrelado.";
+                                    ////string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
 
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+                                    //// Concatenando as linhas com '\n' para criar a mensagem
+                                    //string mensagem = $"{linha1}\n{linha2}\n{linha3}";
 
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
+                                    //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    ////// Gerando o script JavaScript para exibir o alerta
+                                    //string script = $"alert('{mensagemCodificada}');";
 
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                                    ////// Registrando o script para execução no lado do cliente
+                                    //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    // Acione o toast quando a página for carregada
+                                    string script = "<script>showToast('Veículo atrelado a outro motorista.');</script>";
+                                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
 
                                     txtPlaca.Text = "";
                                     txtPlaca.Focus();
@@ -911,7 +918,12 @@ namespace NewCapit.dist.pages
                                 txtPlaca.Text = string.Empty;
                                 // Aciona o Toast via JavaScript
 
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                //ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+
+                                // Acione o toast quando a página for carregada
+                                string script = "<script>showToast('Veículo não encontrado.');</script>";
+                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
                                 txtCodTra.Focus();
                                 // Opcional: exibir mensagem ao usuário
                             }
@@ -921,6 +933,41 @@ namespace NewCapit.dist.pages
                 }
 
             }
+        }
+        protected void txtCodSeguranca_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodSeguranca.Text != "")
+            {
+                string textoDigitado = txtCodSeguranca.Text;
+                int numeroDeCaracteres = textoDigitado.Length;
+                if (numeroDeCaracteres < 22)
+                {
+                    //ExibirToastErro("Código de Segurança: " + txtCodSeguranca.Text.Trim() + " é invalido.");
+
+
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast('Código de segurança digitado, é inválido.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                    txtCodSeguranca.Text = "";
+                    txtCodSeguranca.Focus();
+
+                }
+
+            }
+        }
+
+        protected void ExibirToastErro(string mensagem)
+        {
+            string script = $@"
+        <script>
+            document.getElementById('toastMessage3').innerText = '{mensagem.Replace("'", "\\'")}';
+            var toastEl = document.getElementById('myToast3');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
     }
 }

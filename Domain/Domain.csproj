@@ -47,6 +47,7 @@
     <Compile Include="ConsultaCarga.cs" />
     <Compile Include="ConsultaCliente.cs" />
     <Compile Include="ConsultaContato.cs" />
+    <Compile Include="ConsultaFornecedor.cs" />
     <Compile Include="ConsultaMotorista.cs" />
     <Compile Include="ConsultaPedido.cs" />
     <Compile Include="ConsultaReboque.cs" />

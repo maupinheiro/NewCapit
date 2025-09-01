@@ -50,6 +50,16 @@ namespace DAL
                 return con.Query<ConsultaCliente>(sqlQuery, obj).FirstOrDefault();
             }
         }
+        public static ConsultaFornecedor CheckFornecedor(ConsultaFornecedor obj)
+        {
+            string sqlQuery = "SELECT * FROM tbfornecedores WHERE (codfor = @codfor)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaFornecedor>(sqlQuery, obj).FirstOrDefault();
+            }
+        }
+
         public static ConsultaContato CheckContato(ConsultaContato obj)
         {
             string sqlQuery = "SELECT * FROM tbfoneveiculos WHERE (veiculo = @veiculo)";
@@ -68,7 +78,6 @@ namespace DAL
                 return con.Query<ConsultaMotorista>(sqlQuery, obj).FirstOrDefault();
             }
         }
-
         public static ConsultaPedido CheckPedido(ConsultaPedido obj)
         {
             string sqlQuery = "SELECT * FROM tbpedidos WHERE (pedido = @pedido)";
@@ -78,9 +87,6 @@ namespace DAL
                 return con.Query<ConsultaPedido>(sqlQuery, obj).FirstOrDefault();
             }
         }
-
-
-
         public static ConsultaAgregado CheckAgregado(ConsultaAgregado obj)
         {
             string sqlQuery = "SELECT * FROM tbtransportadoras WHERE (codtra = @codtra)";

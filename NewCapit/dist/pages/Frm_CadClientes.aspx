@@ -37,8 +37,8 @@
 
             if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
             if (txtCep) aplicarMascara(txtCep, "00000-000");
-            if (txtTelefone) aplicarMascara(txtTelefone, "(00) 00000-0000");
-            if (txtCelular) aplicarMascara(txtTelefone, "(00) 0 00000-0000");
+            if (txtTelefone) aplicarMascara(txtTelefone, "(00) 0000-0000");
+            if (txtCelular) aplicarMascara(txtTelefone, "(00) 0 0000-0000");
     });
     </script>
     <script>
@@ -383,12 +383,4 @@
       </section>
    </div>
   
-   <footer class="main-footer">
-       <div class="float-right d-none d-sm-block">
-           <b>Version</b> 2.1.0 
-       </div>
-       <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-   </footer>
- 
-
 </asp:Content>

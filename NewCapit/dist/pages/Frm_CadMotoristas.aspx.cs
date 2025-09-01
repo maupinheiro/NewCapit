@@ -627,5 +627,28 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
+
+        protected void txtCodSeguranca_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodSeguranca.Text != "")
+            {
+                string textoDigitado = txtCodSeguranca.Text;
+                int numeroDeCaracteres = textoDigitado.Length;
+                if (numeroDeCaracteres < 22)
+                {
+                    //ExibirToastErro("Código de Segurança: " + txtCodSeguranca.Text.Trim() + " é invalido.");
+                    //Thread.Sleep(5000);
+
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast('Código de segurança digitado, é inválido.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                    txtCodSeguranca.Text = "";
+                    txtCodSeguranca.Focus();
+
+                }
+
+            }
+        }
     }
 }

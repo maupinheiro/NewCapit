@@ -18,22 +18,21 @@
 
     <style>
         .pagination-centered {
-         text-align: center;
+            text-align: center;
         }
 
-        .pagination-centered table {
-        margin: 0 auto; /* Isso centraliza a tabela da paginação */
-        }
-
+            .pagination-centered table {
+                margin: 0 auto; /* Isso centraliza a tabela da paginação */
+            }
     </style>
     <!-- Page Heading -->
     <div class="content-wrapper">
         <div class="content-header">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">
-                    <i class="fas fa-warehouse"></i> &nbsp;Consulta Clientes</h1>
+                    <i class="fas fa-warehouse"></i>&nbsp;Consulta Clientes</h1>
                 <a href="/dist/pages/Frm_CadClientes.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-warehouse"></i> &nbsp;Novo Cadastro
+                    <i class="fas fa-warehouse"></i>&nbsp;Novo Cadastro
                 </a>
             </div>
             <div class="row">
@@ -109,12 +108,8 @@
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                         Região Sul                                       
                                     </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col-auto">
-                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                                                <asp:Label ID="Sul" runat="server" Text=""></asp:Label>
-                                            </div>
-                                        </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <asp:Label ID="Sul" runat="server" Text=""></asp:Label>
                                     </div>
                                 </div>
                                 <div class="col-auto">
@@ -173,7 +168,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
-              <%--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">--%>
+                <%--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Pesquisar ...">--%>
             </div>
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
@@ -190,22 +185,22 @@
                             <asp:BoundField DataField="estcli" HeaderText="UF" />
                             <asp:BoundField DataField="ativo_inativo" HeaderText="SITUAÇÃO" />
 
-                            <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
+                            <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                                 <ItemTemplate>
                                     <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar 
-                                 </asp:LinkButton>
-                                       <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i> Mapa 
-                                           </asp:LinkButton>
+                                    </asp:LinkButton>
+                                    <asp:LinkButton ID="lnkMapa" runat="server" OnClick="Mapa" CssClass="btn btn-info btn-sm"> <i class="fas fa-map-marker-alt"></i> Mapa 
+                                    </asp:LinkButton>
                                     <%--<a class="btn btn-primary btn-sm" href="Frm_AltClientes.aspx?=<%# Eval("codcli") %>">
                                 <i class="fa fa-edit"></i>
                                 Editar
                              </a> --%>
 
-                                  <%--  <a class="btn btn-info btn-sm">
+                                    <%--  <a class="btn btn-info btn-sm">
                                         <i class="fas fa-map-marker-alt"></i>
                                         
                                     </a>--%>
-                                   <%-- <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
+                                    <%-- <asp:LinkButton ID="lnkExcluir" runat="server" OnClick="Excluir" CssClass="btn btn-danger btn-sm" OnClientClick="javascript:ConfirmMessage();"><i class="fa fa-trash"></i></i>
                                   </asp:LinkButton>--%>
 
                                     <%-- <a class="btn btn-danger btn-sm" href="Frm_AltClientes.aspx?id=">
@@ -225,12 +220,12 @@
         </div>
     </div>
     <footer class="main-footer">
-       <div class="float-right d-none d-sm-block">
-         <b>Version</b> 2.1.0
-       </div>
-       <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 2.1.0
+        </div>
+        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
     </footer>
-  
+
     <script>
         function myFunction() {
             // Declare variables
