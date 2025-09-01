@@ -13,6 +13,22 @@
                 margin: 0 auto; /* Isso centraliza a tabela da paginação */
             }
     </style>
+    <!-- script de máscara -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+
+<script>
+    $(function () {
+        $("#txtLimiteCreditoAbastecimento").inputmask("currency", {
+            prefix: "R$ ",
+            groupSeparator: ".",
+            radixPoint: ",",
+            digits: 2,
+            autoGroup: true,
+            rightAlign: false
+        });
+    });
+</script>
     <!-- Page Heading -->
     <div class="content-wrapper">
         <div class="content-header">
@@ -148,7 +164,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <span class="details">LIMITE DE CRÉDITO:</span>
-                                    <asp:TextBox ID="txtLimiteCreditoAbastecimento" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtLimiteCreditoAbastecimento" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-6"></div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -72,6 +73,50 @@ namespace NewCapit.dist.pages
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
+            decimal limite;
+            if (!decimal.TryParse(txtLimiteCreditoAbastecimento.Text
+                                     .Replace("R$", "")
+                                     .Trim()
+                                     .Replace(".", "")
+                                     .Replace(",", "."),
+                                  System.Globalization.NumberStyles.Any,
+                                  System.Globalization.CultureInfo.InvariantCulture,
+                                  out limite))
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "Erro", "alert('Valor inválido!');", true);
+                return;
+            }
+
+            string sql = "update tbtransportadoras set limitecreditoabastecimento=@limitecreditoabastecimento where id=@id";
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.Add("@limitecreditoabastecimento", SqlDbType.Decimal).Value = limite;
+                    cmd.Parameters.AddWithValue("@id", hdfId.Value);
+
+                    con.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        // atualiza  
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Erro ao atualizar o número da coleta.');", true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                string script = $"alert('{mensagemErro}');";
+                ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+            }
+
 
         }
 
