@@ -80,7 +80,66 @@
 
         });
     </script>
-
+    <script>
+        $(function () {
+            $("#txtS500").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+     <script>
+         $(function () {
+             $("#txtS10").inputmask("currency", {
+                 prefix: "R$ ",
+                 groupSeparator: ".",
+                 radixPoint: ",",
+                 digits: 2,
+                 autoGroup: true,
+                 rightAlign: false
+             });
+         });
+     </script>
+     <script>
+         $(function () {
+             $("#txtEtanol").inputmask("currency", {
+                 prefix: "R$ ",
+                 groupSeparator: ".",
+                 radixPoint: ",",
+                 digits: 2,
+                 autoGroup: true,
+                 rightAlign: false
+             });
+         });
+     </script>
+     <script>
+         $(function () {
+             $("#txtGasolina").inputmask("currency", {
+                 prefix: "R$ ",
+                 groupSeparator: ".",
+                 radixPoint: ",",
+                 digits: 2,
+                 autoGroup: true,
+                 rightAlign: false
+             });
+         });
+     </script>
+     <script>
+         $(function () {
+             $("#txtArla").inputmask("currency", {
+                 prefix: "R$ ",
+                 groupSeparator: ".",
+                 radixPoint: ",",
+                 digits: 2,
+                 autoGroup: true,
+                 rightAlign: false
+             });
+         });
+     </script>
 
     <div class="content-wrapper">
         <section class="content">
@@ -258,35 +317,35 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">DIESEL S500:</span>
-                                <asp:TextBox ID="txtS500" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18"></asp:TextBox>
+                                <asp:TextBox ID="txtS500" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18" ClientIDMode="Static"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator1" ControlToValidate="txtS500" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">DIESEL S10:</span>
-                                <asp:TextBox ID="txtS10" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18"></asp:TextBox>
+                                <asp:TextBox ID="txtS10" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18" ClientIDMode="Static"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator2" ControlToValidate="txtS10" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">ETANOL:</span>
-                                <asp:TextBox ID="txtEtanol" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18"></asp:TextBox>
+                                <asp:TextBox ID="txtEtanol" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18" ClientIDMode="Static"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator3" ControlToValidate="txtEtanol" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">GASOLINA:</span>
-                                <asp:TextBox ID="txtGasolina" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18"></asp:TextBox>
+                                <asp:TextBox ID="txtGasolina" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18" ClientIDMode="Static"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator4" ControlToValidate="txtGasolina" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">ARLA 32:</span>
-                                <asp:TextBox ID="txtArla" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18"></asp:TextBox>
+                                <asp:TextBox ID="txtArla" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="18" ClientIDMode="Static"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator5" ControlToValidate="txtArla" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>

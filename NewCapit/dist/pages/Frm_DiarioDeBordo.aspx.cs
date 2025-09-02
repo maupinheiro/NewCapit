@@ -119,8 +119,8 @@ namespace NewCapit.dist.pages
                 sb.Append("')};");
                 sb.Append("</script>");
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                //Limpar2();
-                //CarregaCusto();
+                Limpar2();
+                CarregaCusto();
 
             }
 
@@ -202,8 +202,8 @@ namespace NewCapit.dist.pages
                         sb.Append("</script>");
                         ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                         //Limpar();
-                        //CarregaGrid2();
-                        //CarregaTodas();
+                        CarregaGrid2();
+                        CarregaTodas();
 
                     }
                     catch (Exception ex)
@@ -305,8 +305,8 @@ namespace NewCapit.dist.pages
                         sb.Append("</script>");
                         ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                         //Limpar();
-                        //CarregaGrid2();
-                        //CarregaTodas();
+                        CarregaGrid2();
+                        CarregaTodas();
 
                     }
                     catch (Exception ex)
@@ -428,8 +428,8 @@ namespace NewCapit.dist.pages
                 sb.Append("</script>");
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                 //Limpar();
-                //CarregaGrid2();
-                //CarregaTodas();
+                CarregaGrid2();
+                CarregaTodas();
             }
         }
         public void CarregaTodas()
@@ -504,12 +504,12 @@ namespace NewCapit.dist.pages
         }
         public void Limpar2()
         {
-            txtAlmoco.Text = "0,00";
-            txtCafe.Text = "0,00";
-            txtJantar.Text = "0,00";
-            txtPernoite.Text = "0,00";
-            //txtPremio.Text = "0,00";
-            txtEngDesen.Text = "0,00";
+            txtAlmoco.Text = string.Empty;
+            txtCafe.Text = string.Empty;
+            txtJantar.Text = string.Empty;
+            txtPernoite.Text = string.Empty;
+            txtComissao.Text = string.Empty;
+            txtEngDesen.Text = string.Empty;
             txtRel1.Text = string.Empty;
             txtRel2.Text = string.Empty;
             txtRel3.Text = string.Empty;
@@ -2319,6 +2319,172 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void btnValor_Click(object sender, EventArgs e)
+        {
+            if (txtMotorista.Text != "" && txtData.Text != "")
+            {
+
+                if (txtconformmessageValue2.Value == "Yes")
+                {
+                    decimal almoco;
+                    decimal cafe;
+                    decimal jantar;
+                    decimal pernoite;
+                    decimal comissao;
+                    decimal desengate;
+
+
+                    if (!decimal.TryParse(txtAlmoco.Text
+                                             .Replace("R$", "")
+                                             .Trim()
+                                             .Replace(".", "")
+                                             .Replace(",", "."),
+                                          System.Globalization.NumberStyles.Any,
+                                          System.Globalization.CultureInfo.InvariantCulture,
+                                          out almoco))
+                    {
+                        //string script = "<script>showToast('Valor do Almoço, é inválido.');</script>";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                        //return;
+                    }
+                    if (!decimal.TryParse(txtCafe.Text
+                                            .Replace("R$", "")
+                                            .Trim()
+                                            .Replace(".", "")
+                                            .Replace(",", "."),
+                                         System.Globalization.NumberStyles.Any,
+                                         System.Globalization.CultureInfo.InvariantCulture,
+                                         out cafe))
+                    {
+                        //string script = "<script>showToast('Valor do Café, é inválido.');</script>";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                        //return;
+                    }
+                    if (!decimal.TryParse(txtJantar.Text
+                                            .Replace("R$", "")
+                                            .Trim()
+                                            .Replace(".", "")
+                                            .Replace(",", "."),
+                                         System.Globalization.NumberStyles.Any,
+                                         System.Globalization.CultureInfo.InvariantCulture,
+                                         out jantar))
+                    {
+                        //string script = "<script>showToast('Valor do Jantar, é inválido.');</script>";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        //return;
+                    }
+                    if (!decimal.TryParse(txtPernoite.Text
+                                            .Replace("R$", "")
+                                            .Trim()
+                                            .Replace(".", "")
+                                            .Replace(",", "."),
+                                         System.Globalization.NumberStyles.Any,
+                                         System.Globalization.CultureInfo.InvariantCulture,
+                                         out pernoite))
+                    {
+                        //string script = "<script>showToast('Valor da Pernoite, é inválido.');</script>";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                        //return;
+                    }
+                    if (!decimal.TryParse(txtComissao.Text
+                                            .Replace("R$", "")
+                                            .Trim()
+                                            .Replace(".", "")
+                                            .Replace(",", "."),
+                                         System.Globalization.NumberStyles.Any,
+                                         System.Globalization.CultureInfo.InvariantCulture,
+                                         out comissao))
+                    {
+                        //string script = "<script>showToast('Valor da Comissão, é inválido.');</script>";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        //return;
+                    }
+                    if (!decimal.TryParse(txtEngDesen.Text
+                                            .Replace("R$", "")
+                                            .Trim()
+                                            .Replace(".", "")
+                                            .Replace(",", "."),
+                                         System.Globalization.NumberStyles.Any,
+                                         System.Globalization.CultureInfo.InvariantCulture,
+                                         out desengate))
+                    {
+                        //string script = "<script>showToast('Valor do Engate/Desengate, é inválido.');</script>";
+                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        //return;
+                    }
+                    string sql = @"INSERT INTO tb_custo_motorista 
+                                    (cod_cracha, dt_custo, vl_cafe, vl_almoco, vl_jantar, vl_premio, vl_pernoite, ds_rel1, ds_rel2, ds_rel3, ds_rel4, vl_engate_des) 
+                                    VALUES (@cod_cracha, @dt_custo, @vl_cafe, @vl_almoco, @vl_jantar, @vl_premio, @vl_pernoite, @ds_rel1, @ds_rel2, @ds_rel3, @ds_rel4, @vl_engate_des)";
+
+                    SqlCommand cmd = new SqlCommand(sql, con);
+                    cmd.Parameters.AddWithValue("@cod_cracha", txtMotorista.Text);
+                    cmd.Parameters.Add("@dt_custo", SqlDbType.DateTime).Value = DateTime.Parse(txtData.Text);
+
+                    cmd.Parameters.AddWithValue("@vl_cafe", cafe);
+                    cmd.Parameters.AddWithValue("@vl_almoco", almoco);
+                    cmd.Parameters.AddWithValue("@vl_jantar", jantar);
+                    cmd.Parameters.AddWithValue("@vl_pernoite", pernoite);
+                    cmd.Parameters.AddWithValue("@vl_premio", comissao);
+                    cmd.Parameters.AddWithValue("@vl_engate_des", desengate);
+
+                    cmd.Parameters.AddWithValue("@ds_rel1", txtRel1.Text);
+                    cmd.Parameters.AddWithValue("@ds_rel2", txtRel2.Text);
+                    cmd.Parameters.AddWithValue("@ds_rel3", txtRel3.Text);
+                    cmd.Parameters.AddWithValue("@ds_rel4", txtRel4.Text);
+
+                    try
+                    {
+                        con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    string message = "Informações cadastradas com sucesso!";
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    sb.Append("<script type = 'text/javascript'>");
+                    sb.Append("window.onload=function(){");
+                    sb.Append("alert('");
+                    sb.Append(message);
+                    sb.Append("')};");
+                    sb.Append("</script>");
+                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    Limpar2();
+                    CarregaCusto();
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(retorno);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+
+                    }
+                }
+            }
+            else
+            {
+
+                string retorno = "É necessário escolher um Motorista ";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(retorno);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+            }
+        }
+
         protected void ddlNumero_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddlNumero.SelectedValue == "1")
@@ -2392,7 +2558,8 @@ namespace NewCapit.dist.pages
             //txtCafe.Text = "0,00";
             //txtJantar.Text = "0,00";
             //txtPernoite.Text = "0,00";
-            //txtPremio.Text = "0,00";
+            //txtComissao.Text = "0,00";
+
             string sql = "select  cod_custo, ISNULL(vl_cafe, 0) AS cafe,ISNULL(vl_almoco, 0) AS almoco,ISNULL(vl_jantar, 0) AS jantar,ISNULL(vl_pernoite, 0) AS pernoite,ISNULL(vl_premio, 0) AS premio,ISNULL(vl_engate_des, 0) AS engatedes,";
             sql += " SUM(ISNULL(vl_cafe, 0) + ISNULL(vl_almoco, 0) + ISNULL(vl_jantar, 0) + ISNULL(vl_pernoite, 0) + ISNULL(vl_premio, 0) + ISNULL(vl_engate_des, 0)) AS total,ds_rel1, ds_rel2, ds_rel3, ds_rel4 from tb_custo_motorista ";
             sql += " where cod_cracha=" + txtMotorista.Text + " and dt_custo='" + DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd") + "' group by cod_custo, cod_cracha, dt_custo,vl_cafe,vl_almoco,vl_jantar,vl_pernoite,vl_premio,vl_engate_des,ds_rel1,ds_rel2,ds_rel3,ds_rel4";
@@ -2406,79 +2573,7 @@ namespace NewCapit.dist.pages
 
         }
 
-        protected void btnValor_Click(object sender, EventArgs e)
-        {
-
-            if (txtMotorista.Text != "" && txtData.Text != "")
-            {
-
-                if (txtconformmessageValue2.Value == "Yes")
-                {
-                    string sql = "insert tb_custo_motorista (cod_cracha, dt_custo, vl_cafe, vl_almoco, vl_jantar, vl_pernoite, ds_rel1,ds_rel2,ds_rel3,ds_rel4,vl_engate_des)";
-                    sql += " values(@cod_cracha, @dt_custo, @vl_cafe, @vl_almoco, @vl_jantar, @vl_pernoite, @ds_rel1,@ds_rel2,@ds_rel3,@ds_rel4, @vl_engate_des)";
-                    SqlCommand cmd = new SqlCommand(sql, con);
-                    cmd.Parameters.AddWithValue("@cod_cracha", txtMotorista.Text);
-                    cmd.Parameters.AddWithValue("@dt_custo", DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@vl_cafe", txtCafe.Text.Replace(",", "."));
-                    cmd.Parameters.AddWithValue("@vl_almoco", txtAlmoco.Text.Replace(",", "."));
-                    cmd.Parameters.AddWithValue("@vl_jantar", txtJantar.Text.Replace(",", "."));
-                    cmd.Parameters.AddWithValue("@vl_pernoite", txtPernoite.Text.Replace(",", "."));
-                    //cmd.Parameters.AddWithValue("@vl_premio", txtPremio.Text.Replace(",", "."));
-                    cmd.Parameters.AddWithValue("@vl_engate_des", txtEngDesen.Text.Replace(",", "."));
-                    cmd.Parameters.AddWithValue("@ds_rel1", txtRel1.Text);
-                    cmd.Parameters.AddWithValue("@ds_rel2", txtRel2.Text);
-                    cmd.Parameters.AddWithValue("@ds_rel3", txtRel3.Text);
-                    cmd.Parameters.AddWithValue("@ds_rel4", txtRel4.Text);
-
-                    try
-                    {
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                        string message = "Informações cadastradas com sucesso!";
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                        sb.Append("<script type = 'text/javascript'>");
-                        sb.Append("window.onload=function(){");
-                        sb.Append("alert('");
-                        sb.Append(message);
-                        sb.Append("')};");
-                        sb.Append("</script>");
-                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                        Limpar2();
-                        CarregaCusto();
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                        string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                        sb.Append("<script type = 'text/javascript'>");
-                        sb.Append("window.onload=function(){");
-                        sb.Append("alert('");
-                        sb.Append(retorno);
-                        sb.Append("')};");
-                        sb.Append("</script>");
-                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
-                    }
-                }
-            }
-            else
-            {
-
-                string retorno = "É necessário escolher um Motorista ";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(retorno);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-            }
-        }
+       
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {

@@ -34,10 +34,11 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     //txtUsuCadastro.Text = lblUsuario;
                 }
+                CarregaDadosFornecedor();
             }
             //DateTime dataHoraAtual = DateTime.Now;
             //lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-            CarregaDadosFornecedor();
+            
         }
         public void CarregaDadosFornecedor()
         {
@@ -100,26 +101,100 @@ namespace NewCapit.dist.pages
 
 
         protected void btnSalvar_Click(object sender, EventArgs e)
-        {            
-            decimal novoValorS500;            
+        {
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+            {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            decimal novoValorS500;
+            decimal novoValorS10;
+            decimal novoValorEtanol;
+            decimal novoValorGasolina;
+            decimal novoValorArla;
+            string nomeUsuario = Session["UsuarioLogado"].ToString();
 
-            if (!decimal.TryParse(txtS500.Text.Replace(",", "."), System.Globalization.NumberStyles.Any,
-    System.Globalization.CultureInfo.InvariantCulture, out novoValorS500))
-                {
-                // Acione o toast quando a página for carregada
+            if (!decimal.TryParse(txtS500.Text
+                                     .Replace("R$", "")
+                                     .Trim()
+                                     .Replace(".", "")
+                                     .Replace(",", "."),
+                                  System.Globalization.NumberStyles.Any,
+                                  System.Globalization.CultureInfo.InvariantCulture,
+                                  out novoValorS500))
+            {
                 string script = "<script>showToast('Valor do Diesel S500, é inválido.');</script>";
                 ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                 txtS500.Focus();
                 return;
             }
-
+            if (!decimal.TryParse(txtS10.Text
+                                    .Replace("R$", "")
+                                    .Trim()
+                                    .Replace(".", "")
+                                    .Replace(",", "."),
+                                 System.Globalization.NumberStyles.Any,
+                                 System.Globalization.CultureInfo.InvariantCulture,
+                                 out novoValorS10))
+            {
+                string script = "<script>showToast('Valor do Diesel S10, é inválido.');</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                txtS10.Focus();
+                return;
+            }
+            if (!decimal.TryParse(txtEtanol.Text
+                                    .Replace("R$", "")
+                                    .Trim()
+                                    .Replace(".", "")
+                                    .Replace(",", "."),
+                                 System.Globalization.NumberStyles.Any,
+                                 System.Globalization.CultureInfo.InvariantCulture,
+                                 out novoValorEtanol))
+            {
+                string script = "<script>showToast('Valor do Etanol, é inválido.');</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                txtEtanol.Focus();
+                return;
+            }
+            if (!decimal.TryParse(txtGasolina.Text
+                                    .Replace("R$", "")
+                                    .Trim()
+                                    .Replace(".", "")
+                                    .Replace(",", "."),
+                                 System.Globalization.NumberStyles.Any,
+                                 System.Globalization.CultureInfo.InvariantCulture,
+                                 out novoValorGasolina))
+            {
+                string script = "<script>showToast('Valor da Gasolina, é inválido.');</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                txtGasolina.Focus();
+                return;
+            }
+            if (!decimal.TryParse(txtArla.Text
+                                    .Replace("R$", "")
+                                    .Trim()
+                                    .Replace(".", "")
+                                    .Replace(",", "."),
+                                 System.Globalization.NumberStyles.Any,
+                                 System.Globalization.CultureInfo.InvariantCulture,
+                                 out novoValorArla))
+            {
+                string script = "<script>showToast('Valor da Arla, é inválido.');</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                txtArla.Focus();
+                return;
+            }
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string query = "UPDATE tbfornecedores SET combustivel_S500 = @NovoValorS500 WHERE id = @Id";
+                string query = "UPDATE tbfornecedores SET combustivel_S500 = @combustivel_S500,combustivel_S10=@combustivel_S10, combustivel_Etanol=@combustivel_Etanol, combustivel_gasolina=@combustivel_gasolina, combustivel_arla=@combustivel_arla, data_alteracao=@data_alteracao, usuario_alteracao=@usuario_alteracao WHERE id = @Id";
                 SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@combustivel_S500", novoValorS500);
-                cmd.Parameters.AddWithValue("@Id", id);
-
+                cmd.Parameters.Add("@combustivel_S500", SqlDbType.Decimal).Value = novoValorS500;
+                cmd.Parameters.Add("@combustivel_S10", SqlDbType.Decimal).Value = novoValorS10;
+                cmd.Parameters.Add("@combustivel_Etanol", SqlDbType.Decimal).Value = novoValorEtanol;
+                cmd.Parameters.Add("@combustivel_gasolina", SqlDbType.Decimal).Value = novoValorGasolina;
+                cmd.Parameters.Add("@combustivel_arla", SqlDbType.Decimal).Value = novoValorArla;
+                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                cmd.Parameters.Add("@data_alteracao", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                cmd.Parameters.Add("@usuario_alteracao", SqlDbType.VarChar).Value = nomeUsuario;
                 try
                 {
                     con.Open();

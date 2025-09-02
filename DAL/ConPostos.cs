@@ -52,7 +52,7 @@ namespace DAL
 
         public static DataTable FetchDataTable2(string searchTerm)
         {
-            string sql = "SELECT id, codfor, fantasia, cidade, estado FROM tbfornecedores WHERE fl_exclusao is null AND status = 'ATIVO' AND tipofornecedor = 'POSTO COMBUSTÍVEL' OR codfor LIKE @searchTerm OR fantasia LIKE @searchTerm OR cidade LIKE @searchTerm OR estado LIKE @searchTerm ORDER BY fantasia";
+            string sql = "SELECT id, codfor, fantasia, cidade, estado FROM tbfornecedores WHERE fl_exclusao IS NULL AND status = 'ATIVO' AND tipofornecedor = 'POSTO COMBUSTÍVEL' AND (@searchTerm = '' OR codfor LIKE @searchTerm OR fantasia LIKE @searchTerm OR cidade LIKE @searchTerm     OR estado LIKE @searchTerm) ORDER BY fantasia";
 
             using (var con = ConnectionUtil.GetConnection())
             {

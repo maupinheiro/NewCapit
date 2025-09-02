@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -180,6 +180,78 @@
             campo.value = campo.value.replace(/\D/g, ''); // remove tudo que não for número
         }
     </script>
+     <script>
+         $(function () {
+             $("#txtAlmoco").inputmask("currency", {
+                 prefix: "R$ ",
+                 groupSeparator: ".",
+                 radixPoint: ",",
+                 digits: 2,
+                 autoGroup: true,
+                 rightAlign: false
+             });
+         });
+     </script>
+  <script>
+      $(function () {
+          $("#txtCafe").inputmask("currency", {
+              prefix: "R$ ",
+              groupSeparator: ".",
+              radixPoint: ",",
+              digits: 2,
+              autoGroup: true,
+              rightAlign: false
+          });
+      });
+  </script>
+  <script>
+      $(function () {
+          $("#txtJantar").inputmask("currency", {
+              prefix: "R$ ",
+              groupSeparator: ".",
+              radixPoint: ",",
+              digits: 2,
+              autoGroup: true,
+              rightAlign: false
+          });
+      });
+  </script>
+  <script>
+      $(function () {
+          $("#txtPernoite").inputmask("currency", {
+              prefix: "R$ ",
+              groupSeparator: ".",
+              radixPoint: ",",
+              digits: 2,
+              autoGroup: true,
+              rightAlign: false
+          });
+      });
+  </script>
+  <script>
+      $(function () {
+          $("#txtComissao").inputmask("currency", {
+              prefix: "R$ ",
+              groupSeparator: ".",
+              radixPoint: ",",
+              digits: 2,
+              autoGroup: true,
+              rightAlign: false
+          });
+      });
+  </script>
+     <script>
+         $(function () {
+             $("#txtEngDesen").inputmask("currency", {
+                 prefix: "R$ ",
+                 groupSeparator: ".",
+                 radixPoint: ",",
+                 digits: 2,
+                 autoGroup: true,
+                 rightAlign: false
+             });
+         });
+     </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -245,37 +317,37 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CAFÉ:</span>
-                                <asp:TextBox ID="txtCafe" runat="server" CssClass="form-control" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtCafe" runat="server" CssClass="form-control" MaxLength="6" ClientIDMode="Static"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">ALMOÇO:</span>
-                                <asp:TextBox ID="txtAlmoco" runat="server" CssClass="form-control" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtAlmoco" runat="server" CssClass="form-control" MaxLength="6" ClientIDMode="Static"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">JANTA:</span>
-                                <asp:TextBox ID="txtJantar" runat="server" CssClass="form-control" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtJantar" runat="server" CssClass="form-control" MaxLength="6" ClientIDMode="Static"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">PERNOITE:</span>
-                                <asp:TextBox ID="txtPernoite" runat="server" CssClass="form-control" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtPernoite" runat="server" CssClass="form-control" MaxLength="6" ClientIDMode="Static"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">ENG./DES:</span>
-                                <asp:TextBox ID="txtEngDesen" runat="server" CssClass="form-control" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtEngDesen" runat="server" CssClass="form-control" MaxLength="6" ClientIDMode="Static"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">COMISSÃO:</span>
-                                <asp:TextBox ID="txtComissao" runat="server" CssClass="form-control" MaxLength="6"></asp:TextBox>
+                                <asp:TextBox ID="txtComissao" runat="server" CssClass="form-control" MaxLength="6" ClientIDMode="Static"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -305,7 +377,7 @@
                         <div class="col-md-1">
                             <br />
                             <asp:HiddenField ID="txtconformmessageValue2" runat="server" />
-                            <asp:Button ID="btnValor" runat="server" Text="Inserir" CssClass="btn btn-outline-info" OnClick="btnValor_Click" />
+                            <asp:Button ID="btnValor" runat="server" Text="Inserir" CssClass="btn btn-outline-info" OnClientClick="ConfirmMessage3();" OnClick="btnValor_Click" />
                         </div>
                     </div>
                     <div class="row g-3">
@@ -367,7 +439,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="">PARADA:</span>
-                                <asp:DropDownList ID="ddlNumero" runat="server" CssClass="form-control">
+                                <asp:DropDownList ID="ddlNumero" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlNumero_SelectedIndexChanged" AutoPostBack="true">
                                     <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="1" Text="1"></asp:ListItem>
                                     <asp:ListItem Value="2" Text="2"></asp:ListItem>
