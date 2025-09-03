@@ -44,7 +44,7 @@ namespace NewCapit.dist.pages
             {
                 string id = gvListFornecedores.DataKeys[row.RowIndex].Value.ToString();
 
-                Response.Redirect("Frm_AltTransportadoras.aspx?id=" + id);
+                Response.Redirect("Frm_AltFornecedor.aspx?id=" + id);
             }
         }
         private void AllData(string searchTerm = "")

@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadFornecedores.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadFornecedores" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AltFornecedor.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AltFornecedor" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -92,7 +93,7 @@
                 </div>
                 <div class="card card-success">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-users"></i>&nbsp;FORNECEDORES - NOVO CADASTRO</h3>
+                        <h3 class="card-title"><i class="fas fa-users"></i>&nbsp;FORNECEDORES - ATUALIZAÇÃO</h3>
                     </div>
                 </div>
                 <div class="card-header">
@@ -114,7 +115,7 @@
                             <br />
                             <asp:Button ID="btnCnpj" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCnpj_Click" />
                         </div>
-                        <div class="col-md-3"></div>
+                        <div class="col-md-1"></div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <span class="details">TIPO DE EMPRESA:</span>
@@ -134,6 +135,22 @@
                                 <span class="details">SITUAÇÃO NA RFB:</span>
                                 <asp:TextBox ID="txtSituacao" runat="server" CssClass="form-control"></asp:TextBox>
                                 <asp:RequiredFieldValidator runat="server" ID="rvftxtSituacao" ControlToValidate="txtSituacao" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="details">CADASTRO:</span>
+                                <asp:TextBox ID="txtDtCadastro" runat="server" CssClass="form-control"></asp:TextBox>  
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="">STATUS:</span>
+                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
+                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
+                                    <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
+                                </asp:DropDownList>
                             </div>
                         </div>
                     </div>
@@ -281,7 +298,7 @@
                                 <asp:RequiredFieldValidator runat="server" ID="rfvtxtEstFor" ControlToValidate="txtEstFor" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
-                    </div>                   
+                    </div>
 
                     <div class="row g-3">
                         <div class="col-md-2">
@@ -296,11 +313,24 @@
                                 <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <span class="details">ÚLTIMA ATUALIZAÇÃO EM:</span>
+                                <asp:Label ID="txtUltimaAtualizacao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="details">POR:</span>
+                                <asp:TextBox ID="txtAtualizadoPor" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
+                            </div>
+                        </div>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-1">
                             <br />
-                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Cadastrar" />
+                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Atualizar" />
                         </div>
                         <div class="col-md-1">
                             <br />
