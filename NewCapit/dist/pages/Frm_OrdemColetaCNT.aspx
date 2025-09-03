@@ -214,6 +214,7 @@
                     <div class="form-group">
                         <span class="details">MOTORISTA:</span>
                         <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" placeholder="" OnTextChanged="btnPesquisarMotorista_Click" AutoPostBack="true"></asp:TextBox>
+                        <asp:HiddenField ID="hdfCodMotorista" runat="server" />
                     </div>
                 </div>
                 <%-- <div class="col-md-1">
