@@ -12,6 +12,7 @@ using System.Text;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
+using NPOI.OpenXmlFormats.Wordprocessing;
 //using Microsoft.Ajax.Utilities;
 
 namespace NewCapit.dist.pages
@@ -56,6 +57,8 @@ namespace NewCapit.dist.pages
                     sb.Append("')};");
                     sb.Append("</script>");
                     ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    CarregaLista();
+
                 }
                 else
                 {
@@ -76,15 +79,54 @@ namespace NewCapit.dist.pages
 
         protected void btnGerar_Click(object sender, EventArgs e)
         {
-            TimeSpan date = Convert.ToDateTime(txtDtFinal.Text) - Convert.ToDateTime(txtDtInicial.Text);
 
-            int totalDias = date.Days;
-
-            if (totalDias <= 7)
+            if (txtDtInicial.Text != string.Empty || txtDtFinal.Text != string.Empty)
             {
-                if (/*chkBahia.Checked == false &&*/ chkCadiriri.Checked == false && chkDiadema.Checked == false && chkIpiranda.Checked == false && chkMinas.Checked == false)
+                TimeSpan date = Convert.ToDateTime(txtDtFinal.Text) - Convert.ToDateTime(txtDtInicial.Text);
+
+                int totalDias = date.Days;
+
+                if (totalDias <= 7)
                 {
-                    string message = "É necessário selecionar uma unidade";
+                    if (chkMotorista.Checked == false && chkCadiriri.Checked == false && chkDiadema.Checked == false && chkIpiranda.Checked == false && chkMinas.Checked == false)
+                    {
+                        string message = "É necessário selecionar uma unidade ou Motorista";
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<script type = 'text/javascript'>");
+                        sb.Append("window.onload=function(){");
+                        sb.Append("alert('");
+                        sb.Append(message);
+                        sb.Append("')};");
+                        sb.Append("</script>");
+                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    }
+                    else
+                    {
+                        if (chkMotorista.Checked == true && txtCodMotorista.Text == string.Empty)
+                        {
+                            string message = "É necessário que o Motorista seja indicado!";
+                            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                            sb.Append("<script type = 'text/javascript'>");
+                            sb.Append("window.onload=function(){");
+                            sb.Append("alert('");
+                            sb.Append(message);
+                            sb.Append("')};");
+                            sb.Append("</script>");
+                            ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                        }
+                        else
+                        {
+                            // Txt4a();
+                            Txt5e();
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "fecharModal", "$('.modal').modal('hide');", true);
+                        }
+                        
+                    }
+
+                }
+                else
+                {
+                    string message = "O período está fora do escopo suportado pelo sistema. ";
                     System.Text.StringBuilder sb = new System.Text.StringBuilder();
                     sb.Append("<script type = 'text/javascript'>");
                     sb.Append("window.onload=function(){");
@@ -94,17 +136,10 @@ namespace NewCapit.dist.pages
                     sb.Append("</script>");
                     ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                 }
-                else
-                {
-                    // Txt4a();
-                    Txt5e();
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "fecharModal", "$('.modal').modal('hide');", true);
-                }
-
             }
             else
             {
-                string message = "O período está fora do escopo suportado pelo sistema. ";
+                string message = "É necessário escolher o período de pesquisa. ";
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");
@@ -115,9 +150,23 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
             }
 
+
+            
+
         }
 
         int dia;
+
+        protected void chkMotorista_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDiadema.Checked = false;
+            //chkBahia.Checked = false;
+            chkCadiriri.Checked = false;
+            chkIpiranda.Checked = false;
+            chkMinas.Checked = false;
+            chkMotorista.Checked = true;
+        }
+
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -6463,6 +6512,10 @@ namespace NewCapit.dist.pages
             //{
             // string sql1 = "select nr_cracha from tb_motorista_txt";
             string sql1 = "select cod_login, ds_noturno from tb_motorista where ISNUMERIC(cod_login)=1 ";
+
+
+
+
             if (chkDiadema.Checked)
             {
                 sql1 += " and ds_nucleo in('TNG CNT') ";
@@ -6491,6 +6544,13 @@ namespace NewCapit.dist.pages
             else if (chkIpiranda.Checked)
             {
                 sql1 += " and ds_nucleo='TNG IPIRANGA' ";
+            }
+            else if(chkMotorista.Checked)
+            {
+               
+                 sql1 += " and cod_login='" + txtCodMotorista.Text + "' ";
+               
+                
             }
             sql1 += " order by cod_login";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
@@ -6528,6 +6588,10 @@ namespace NewCapit.dist.pages
             else if (chkIpiranda.Checked)
             {
                 arquivo1 = "Tngipiranga" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
+            }
+            else if (chkMotorista.Checked)
+            {
+                arquivo1 = txtCodMotorista.Text + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
             }
 
 
@@ -6619,6 +6683,10 @@ namespace NewCapit.dist.pages
                     else if (chkIpiranda.Checked)
                     {
                         arquivo = "Tngipiranga" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
+                    }
+                    else if (chkMotorista.Checked)
+                    {
+                        arquivo = txtCodMotorista.Text + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
                     }
                     else
                     {

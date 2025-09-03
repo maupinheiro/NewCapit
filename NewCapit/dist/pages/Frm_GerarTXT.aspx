@@ -163,7 +163,7 @@
                                 <div class="col-sm-6">
                                     <!-- checkbox -->
                                     <div class="form-group clearfix">
-                                        <asp:CheckBox ID="chkMotorista" runat="server" AutoPostBack="true" OnCheckedChanged="chkMinas_CheckedChanged" />
+                                        <asp:CheckBox ID="chkMotorista" runat="server" AutoPostBack="true" OnCheckedChanged="chkMotorista_CheckedChanged" />
                                         <label for="checkboxSuccessPorMotorista">
                                             POR MOTORISTA
                                         </label>
