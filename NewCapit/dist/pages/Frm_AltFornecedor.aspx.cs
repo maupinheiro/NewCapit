@@ -284,16 +284,35 @@ namespace NewCapit.dist.pages
             
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string query = "UPDATE tbfornecedores SET combustivel_S500 = @combustivel_S500,combustivel_S10=@combustivel_S10, combustivel_Etanol=@combustivel_Etanol, combustivel_gasolina=@combustivel_gasolina, combustivel_arla=@combustivel_arla, data_alteracao=@data_alteracao, usuario_alteracao=@usuario_alteracao WHERE id = @Id";
+                string query = "UPDATE tbfornecedores SET razaosocial=@razaosocial, fantasia=@fantasia, cnpj=@cnpj, inscestadual=@inscestadual, inscccm=@inscccm, tipoempresa=@tipoempresa, abertura=@abertura, situacaoreceita=@situacaoreceita, tipofornecedor=@tipofornecedor, contato=@contato, fonefixo=@fonefixo, fonecelular=@fonecelular, email=@email, site=@site, cep=@cep, endereco=@endereco, numero=@numero, complemento=@complemento, bairro=@bairro, cidade=@cidade, estado=@estado, pais=@pais, data_alteracao=@data_alteracao, usuario_alteracao=@usuario_alteracao, dtcadastro=@dtcadastro, status=@status WHERE id = @Id";
                 SqlCommand cmd = new SqlCommand(query, con);
-                //cmd.Parameters.Add("@combustivel_S500", SqlDbType.Decimal).Value = novoValorS500;
-                //cmd.Parameters.Add("@combustivel_S10", SqlDbType.Decimal).Value = novoValorS10;
-                //cmd.Parameters.Add("@combustivel_Etanol", SqlDbType.Decimal).Value = novoValorEtanol;
-                //cmd.Parameters.Add("@combustivel_gasolina", SqlDbType.Decimal).Value = novoValorGasolina;
-                //cmd.Parameters.Add("@combustivel_arla", SqlDbType.Decimal).Value = novoValorArla;
-                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                cmd.Parameters.Add("@razaosocial", SqlDbType.VarChar).Value = txtRazFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@fantasia", SqlDbType.VarChar).Value = txtNomFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@cnpj", SqlDbType.VarChar).Value = txtCnpj.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@inscestadual", SqlDbType.VarChar).Value = txtInscEstadual.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@inscccm", SqlDbType.VarChar).Value = txtInscCCM.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@tipoempresa", SqlDbType.VarChar).Value = txtTipo.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@abertura", SqlDbType.VarChar).Value = txtAbertura.Text;
+                cmd.Parameters.Add("@situacaoreceita", SqlDbType.VarChar).Value = txtSituacao.Text.ToUpper();
+                cmd.Parameters.Add("@tipofornecedor", SqlDbType.VarChar).Value = ddlTipoFornecedor.SelectedItem.Text;
+                cmd.Parameters.Add("@contato", SqlDbType.VarChar).Value = txtConFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@fonefixo", SqlDbType.VarChar).Value = txtTc1For.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@fonecelular", SqlDbType.VarChar).Value = txtTc2For.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = txtEmail.Text.Trim().ToLower();
+                cmd.Parameters.Add("@site", SqlDbType.VarChar).Value = txtSite.Text.Trim().ToLower();
+                cmd.Parameters.Add("@cep", SqlDbType.VarChar).Value = txtCepFor.Text.Trim().ToLower();
+                cmd.Parameters.Add("@endereco", SqlDbType.VarChar).Value = txtEndFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@numero", SqlDbType.VarChar).Value = txtNumero.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@complemento", SqlDbType.VarChar).Value = txtComplemento.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@bairro", SqlDbType.VarChar).Value = txtBaiFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@cidade", SqlDbType.VarChar).Value = txtCidFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@estado", SqlDbType.VarChar).Value = txtEstFor.Text.Trim().ToUpper();
+                cmd.Parameters.Add("@pais", SqlDbType.VarChar).Value = ddlPaises.SelectedItem.Text;
                 cmd.Parameters.Add("@data_alteracao", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 cmd.Parameters.Add("@usuario_alteracao", SqlDbType.VarChar).Value = nomeUsuario;
+                cmd.Parameters.Add("@dtcadastro", SqlDbType.VarChar).Value = txtDtCadastro.Text;
+                cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = ddlStatus.SelectedItem.Text;
+                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
                 try
                 {
                     con.Open();
@@ -302,25 +321,24 @@ namespace NewCapit.dist.pages
                     if (linhasAfetadas > 0)
                     {
                         // Acione o toast quando a página for carregada
-                        //string script = "<script>showToast('Reajuste atualizado com sucesso.');</script>";
-                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        //txtS500.Focus();
+                        string script = "<script>showToast('Atualização realizada com sucesso.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);                        
                     }
                     else
                     {
                         // Acione o toast quando a página for carregada
-                        //string script = "<script>showToast('Id não encontrado para atualização.');</script>";
-                        //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        //txtS500.Focus();
+                        string script = "<script>showToast('Id não encontrado para atualização.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                       
                     }
                 }
                 catch (Exception ex)
                 {
                     //lblMensagem.Text = "Erro: " + ex.Message;
                     // Acione o toast quando a página for carregada
-                    //string script = "<script>showToast('Erro ao atualizar fornecedor.');</script>";
-                    //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                    //txtS500.Focus();
+                    string script = "<script>showToast('Erro ao atualizar fornecedor.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
                 }
             }
         }
