@@ -358,20 +358,14 @@
                                 <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />
                             </div>
                             <div class="col-md-1">
-                                <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                                <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Fechar               
                                 </a>
                             </div>
                         </div>                     
                 </div>                              
             </div>
         </section>
-    </div>
-    <footer class="main-footer">
-       <div class="float-right d-none d-sm-block">
-         <b>Version</b> 2.1.0
-       </div>
-       <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>    
+    </div>      
    
     <!-- Page specific script -->
     <script>
