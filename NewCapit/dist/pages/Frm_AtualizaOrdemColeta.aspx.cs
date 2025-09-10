@@ -1569,7 +1569,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
                 cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
                 cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
-
+                cmd.Parameters.AddWithValue("@status", status);
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
@@ -1749,7 +1749,7 @@ namespace NewCapit.dist.pages
                         txtTipoMot.Text = ConsultaMotorista.tipomot;
                         txtExameToxic.Text = ConsultaMotorista.venceti;
                         txtCNH.Text = ConsultaMotorista.venccnh.ToString();
-                        txtLibGR.Text = ConsultaMotorista.validade.ToString();
+                        //txtLibGR.Text = ConsultaMotorista.validade.ToString() ?? "";
                         // ddlMotorista.Items.Insert(0, new ListItem(ConsultaMotorista.nommot, ""));
                         ddlMotorista.SelectedItem.Text = ConsultaMotorista.nommot;
                         txtCPF.Text = ConsultaMotorista.cpf;
@@ -1967,49 +1967,55 @@ namespace NewCapit.dist.pages
                         }
 
                         // pesquisar validade da liberação GR
-                        if (txtLibGR.Text != "")
+                        if (!string.IsNullOrWhiteSpace(txtLibGR.Text))
                         {
-                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                            DateTime dataGR = Convert.ToDateTime(txtLibGR.Text).Date; ;
-
-                            TimeSpan diferencaGR = dataGR - dataHoje;
-                            // Agora você pode comparar a diferença
-                            if (diferencaGR.TotalDays < 30)
+                            DateTime dataHoje = DateTime.Now;
+                            DateTime dataGR;
+                            if (DateTime.TryParseExact(txtLibGR.Text.Trim(), "dd/MM/yyyy",
+                               System.Globalization.CultureInfo.InvariantCulture,
+                               System.Globalization.DateTimeStyles.None,
+                               out dataGR))
                             {
-                                txtExameToxic.BackColor = System.Drawing.Color.Khaki;
-                                txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
-                                string nomeUsuario = txtUsuCadastro.Text;
-                                string linha1 = "Olá, " + nomeUsuario + "!";
-                                string linha2 = "A liberãção de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
-                                string linha3 = "Data de vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
-                                //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                // Concatenando as linhas com '\n' para criar a mensagem
-                                string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                //// Gerando o script JavaScript para exibir o alerta
-                                string script = $"alert('{mensagemCodificada}');";
-                                //// Registrando o script para execução no lado do cliente
-                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                            }
-                            else if (diferencaGR.TotalDays <= 0)
-                            {
-                                txtExameToxic.BackColor = System.Drawing.Color.Red;
-                                txtExameToxic.ForeColor = System.Drawing.Color.White;
-                                string nomeUsuario = txtUsuCadastro.Text;
-                                string linha1 = "Olá, " + nomeUsuario + "!";
-                                string linha2 = "A liberação de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está vencida.";
-                                string linha3 = "Data do vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
-                                //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                // Concatenando as linhas com '\n' para criar a mensagem
-                                string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                //// Gerando o script JavaScript para exibir o alerta
-                                string script = $"alert('{mensagemCodificada}');";
-                                //// Registrando o script para execução no lado do cliente
-                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                txtCodMotorista.Text = "";
-                                txtCodMotorista.Focus();
 
+                                TimeSpan diferencaGR = dataGR - dataHoje;
+                                // Agora você pode comparar a diferença
+                                if (diferencaGR.TotalDays < 30 && diferencaGR.TotalDays > 0)
+                                {
+                                    txtExameToxic.BackColor = System.Drawing.Color.Khaki;
+                                    txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
+                                    string nomeUsuario = txtUsuCadastro.Text;
+                                    string linha1 = "Olá, " + nomeUsuario + "!";
+                                    string linha2 = "A liberãção de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
+                                    string linha3 = "Data de vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
+                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                                }
+                                else if (diferencaGR.TotalDays <= 0)
+                                {
+                                    txtExameToxic.BackColor = System.Drawing.Color.Red;
+                                    txtExameToxic.ForeColor = System.Drawing.Color.White;
+                                    string nomeUsuario = txtUsuCadastro.Text;
+                                    string linha1 = "Olá, " + nomeUsuario + "!";
+                                    string linha2 = "A liberação de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está vencida.";
+                                    string linha3 = "Data do vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
+                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                                    txtCodMotorista.Text = "";
+                                    txtCodMotorista.Focus();
+
+                                }
                             }
                             else
                             {
@@ -2031,6 +2037,7 @@ namespace NewCapit.dist.pages
                                     txtCodMotorista.Focus();
 
                                 }
+
                                 else
                                 {
                                     txtLibGR.BackColor = System.Drawing.Color.LightGray;
@@ -2327,7 +2334,59 @@ namespace NewCapit.dist.pages
 
         }
 
+        //protected void btnAtualizarMotorista_Click(object sender, EventArgs e)
+        //{
+        //    string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+        //    try
+        //        {
+        //        using (SqlConnection connection = new SqlConnection(strConn))
+        //        {
+        //            connection.Open();
 
+        //            // Adiciona um manipulador de eventos para capturar mensagens PRINT
+        //            // Renomeamos os parâmetros da lambda para 's' e 'args' para evitar conflito
+        //            connection.InfoMessage += (s, args) =>
+        //            {
+        //                // Em ASP.NET, Console.WriteLine não é visível para o usuário final.
+        //                // Você precisa atualizar um controle na página ou logar em algum lugar.
+        //                // Exemplo usando um Label (lblMensagens) ou Literal (litMensagens):
+        //                // lblMensagens.Text += "Mensagem do SQL Server: " + args.Message + "  
+                        
+        //                // litMensagens.Text += "Mensagem do SQL Server: " + args.Message + "  
+
+        
+        //        // Para fins de depuração no Visual Studio, você ainda pode usar:
+        //        System.Diagnostics.Debug.WriteLine("Mensagem do SQL Server: " + args.Message);
+        //            };
+
+        //            using (SqlCommand command = new SqlCommand("sp_AtualizarCVA", connection))
+        //            {
+        //                command.Parameters.AddWithValue("@parametro1", valorParametro1);
+        //                command.Parameters.AddWithValue("@parametro2", valorParametro2);
+        //                command.CommandType = CommandType.StoredProcedure;
+        //                command.ExecuteNonQuery();
+        //            }
+        //            // lblMensagens.Text += " Procedure executada com sucesso!"; // Mensagem de sucesso
+        //        }
+        //    }
+        //        catch (SqlException ex)
+        //        {
+        //                    // Captura erros específicos do SQL Server
+        //                    // lblMensagens.Text += "    Erro no SQL Server: " + ex.Message;
+        //            System.Diagnostics.Debug.WriteLine("Erro no SQL Server: " + ex.Message);
+        //                    foreach (SqlError error in ex.Errors)
+        //                    {
+        //                        // lblMensagens.Text += string.Format("  Erro { 0}: { 1}(Linha: { 2})", error.Number, error.Message, error.LineNumber);
+        //                        System.Diagnostics.Debug.WriteLine(string.Format("  Erro {0}: {1} (Linha: {2})", error.Number, error.Message, error.LineNumber));
+        //                    }
+        //                }
+        //        catch (Exception ex)
+        //        {
+        //                    // Captura outros erros gerais
+        //                    // lblMensagens.Text += "Ocorreu um erro inesperado: " + ex.Message;
+        //            System.Diagnostics.Debug.WriteLine("Ocorreu um erro inesperado: " + ex.Message);
+        //                }
+        //}
 
         protected void ExibirToastErro(string mensagem)
         {

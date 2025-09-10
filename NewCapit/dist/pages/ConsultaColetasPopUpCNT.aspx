@@ -64,6 +64,11 @@
                         <asp:LinkButton ID="btnDetalhes" runat="server" Text="Ocorrencias" CommandName="Ocorrencias" CommandArgument='<%# Eval("carga") %>' class="btn btn-danger"></asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
+                 <asp:TemplateField HeaderText="Motorista" ShowHeader="True">
+                     <ItemTemplate>
+                         <asp:LinkButton ID="btnAtualizar" runat="server" Text="Atualizar" CommandName="Motoristas" CommandArgument='<%# Eval("carga") %>' class="btn btn-success"></asp:LinkButton>
+                     </ItemTemplate>
+                 </asp:TemplateField>
             </Columns>
         </asp:GridView>
         <!-- Modal Ocorrências -->

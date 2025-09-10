@@ -9,11 +9,13 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Text;
+using System.Web.Services.Description;
 
 namespace NewCapit.dist.pages
 {
     public partial class ConsultaColetasPopUp : System.Web.UI.Page
     {
+        string mensagem;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -268,6 +270,100 @@ namespace NewCapit.dist.pages
 
                         // Exibe o modal com JavaScript
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalOcorrencia').modal('show');", true);
+
+                    }
+                }
+            }
+            if (e.CommandName == "Motoristas")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+
+                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd1 = new SqlCommand("SELECT cva,codvworigem from tbcargas WHERE carga = @Id", conn);
+                    cmd1.Parameters.AddWithValue("@Id", id);
+                    SqlDataReader reader1 = cmd1.ExecuteReader();
+                    if (reader1.Read())
+                    {
+                        try
+                        {
+                            using (SqlConnection connection = new SqlConnection(connStr))
+                            {
+                                connection.Open();
+                                
+                                // Adiciona um manipulador de eventos para capturar mensagens PRINT
+                                // Renomeamos os parâmetros da lambda para 's' e 'args' para evitar conflito
+                                connection.InfoMessage += (s, args) =>
+                                {
+                                    // Em ASP.NET, Console.WriteLine não é visível para o usuário final.
+                                    // Você precisa atualizar um controle na página ou logar em algum lugar.
+                                    // Exemplo usando um Label (lblMensagens) ou Literal (litMensagens):
+                                    // lblMensagens.Text += "Mensagem do SQL Server: " + args.Message + "  
+
+                                    // litMensagens.Text += "Mensagem do SQL Server: " + args.Message + "  
+
+
+                                    // Para fins de depuração no Visual Studio, você ainda pode usar:
+                                    System.Diagnostics.Debug.WriteLine("Mensagem do SQL Server: " + args.Message);
+                                    mensagem = args.Message;
+
+                                };
+
+                                using (SqlCommand command = new SqlCommand("sp_AtualizarCVAIndividual", connection))
+                                {
+                                    command.Parameters.AddWithValue("@p_cva", reader1["cva"].ToString());
+                                    command.Parameters.AddWithValue("@p_codvworigem", reader1["codvworigem"].ToString());
+                                    command.CommandType = CommandType.StoredProcedure;
+                                    command.ExecuteNonQuery();
+                                }
+                                
+                                string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "MotoristaDiferenteAlerta", script, true);
+                                // lblMensagens.Text += " Procedure executada com sucesso!"; // Mensagem de sucesso
+                            }
+                        }
+                        catch (SqlException ex)
+                        {
+                            // Captura erros específicos do SQL Server
+                            // lblMensagens.Text += "    Erro no SQL Server: " + ex.Message;
+                            System.Diagnostics.Debug.WriteLine("Erro no SQL Server: " + ex.Message);
+                            foreach (SqlError error in ex.Errors)
+                            {
+                                string msg = $"Erro {error.Number}: {error.Message} (Linha: {error.LineNumber})";
+                                string script = $"alert('{HttpUtility.JavaScriptStringEncode(msg)}');";
+                                ClientScript.RegisterStartupScript(this.GetType(), "MotoristaDiferenteAlerta", script, true);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Captura outros erros gerais
+                            // lblMensagens.Text += "Ocorreu um erro inesperado: " + ex.Message;
+                            string script = $"alert('{HttpUtility.JavaScriptStringEncode(ex.Message)}');";
+                            ClientScript.RegisterStartupScript(this.GetType(), "MotoristaDiferenteAlerta", script, true);
+                            //System.Diagnostics.Debug.WriteLine("Ocorreu um erro inesperado: " + ex.Message);
+                        }
+
+                        //using (SqlConnection con = new SqlConnection(connStr))
+                        //{
+                        //    string query = "SELECT id, responsavel, motivo, observacao, data_inclusao, usuario_inclusao FROM tbocorrencias WHERE carga = @numeroCarga";
+
+                        //    SqlCommand cmd = new SqlCommand(query, con);
+                        //    cmd.Parameters.AddWithValue("@numeroCarga", id);
+
+                        //    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        //    DataTable dt = new DataTable();
+                        //    da.Fill(dt);
+
+                        //    GridViewCarga.DataSource = dt;
+                        //    GridViewCarga.DataBind();
+                        //}
+
+
+                        // Exibe o modal com JavaScript
+                        //ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalOcorrencia').modal('show');", true);
 
                     }
                 }
