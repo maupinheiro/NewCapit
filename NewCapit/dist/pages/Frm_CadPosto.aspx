@@ -367,7 +367,7 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <span class="details">ATUALIZAO EM:</span>
+                                <span class="details">ATUALIZADO EM:</span>
                                 <asp:Label ID="lblDataAlteracao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
                             </div>
                         </div>

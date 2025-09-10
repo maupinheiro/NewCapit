@@ -263,11 +263,13 @@
     <Content Include="dist\pages\Frm_CadCarreta.aspx" />
     <Content Include="dist\pages\Frm_CadFornecedores.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
+    <Content Include="dist\pages\Frm_CadPedidos.aspx" />
     <Content Include="dist\pages\Frm_CadPosto.aspx" />
     <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
+    <Content Include="dist\pages\Frm_OrdemAbastecimento.aspx" />
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\GestaoPostos.aspx" />
     <Content Include="dist\pages\Home.aspx" />
@@ -4547,6 +4549,13 @@
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.designer.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Frm_CadPedidos.aspx.cs">
+      <DependentUpon>Frm_CadPedidos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadPedidos.aspx.designer.cs">
+      <DependentUpon>Frm_CadPedidos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Frm_CadPosto.aspx.cs">
       <DependentUpon>Frm_CadPosto.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4581,6 +4590,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_GerarTXT.aspx.designer.cs">
       <DependentUpon>Frm_GerarTXT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_OrdemAbastecimento.aspx.cs">
+      <DependentUpon>Frm_OrdemAbastecimento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_OrdemAbastecimento.aspx.designer.cs">
+      <DependentUpon>Frm_OrdemAbastecimento.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_OrdemColetaCNT.aspx.cs">
       <DependentUpon>Frm_OrdemColetaCNT.aspx</DependentUpon>
