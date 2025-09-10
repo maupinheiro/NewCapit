@@ -35,8 +35,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">
                     <i class="far fa-credit-card"></i>&nbsp;Controle de Limite de Crédito para Abastecimento</h1>
-                <asp:Button ID="btnAbrirModal" runat="server" Text="Novo Usuário" CssClass="btn btn-primary mb-3"
-                    OnClientClick="$('#modalCadastro').modal('show'); return false;" />
+               <%-- <asp:Button ID="btnAbrirModal" runat="server" Text="Novo Usuário" CssClass="btn btn-primary mb-3"
+                    OnClientClick="$('#modalCadastro').modal('show'); return false;" />--%>
             </div>
         </div>
 

@@ -52,7 +52,7 @@ namespace NewCapit.dist.pages
             {
                 string id = gvListPostos.DataKeys[row.RowIndex].Value.ToString();
 
-                Response.Redirect("Frm_CadPosto.aspx?id=" + id);
+                Response.Redirect("Frm_OrdemAbastecimento.aspx?id=" + id);
             }
         }
         private void AllData(string searchTerm = "")

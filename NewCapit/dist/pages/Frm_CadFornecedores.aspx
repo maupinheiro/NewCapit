@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadFornecedores.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadFornecedores" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -167,7 +168,16 @@
                                 </asp:DropDownList>
                             </div>
                         </div>
-
+                       <%-- <div class="col-md-1">
+                            <div class="form-group">
+                                <span class="">POSTO:</span>
+                                <asp:DropDownList ID="ddlTipoPosto" runat="server" CssClass="form-control">
+                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="EXTERNO" Text="EXTERNO"></asp:ListItem>
+                                    <asp:ListItem Value="INTERNO" Text="INTERNO"></asp:ListItem> 
+                                </asp:DropDownList>
+                            </div>
+                        </div>--%>
 
                     </div>
                     <div class="row g-3">
@@ -281,7 +291,7 @@
                                 <asp:RequiredFieldValidator runat="server" ID="rfvtxtEstFor" ControlToValidate="txtEstFor" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                             </div>
                         </div>
-                    </div>                   
+                    </div>
 
                     <div class="row g-3">
                         <div class="col-md-2">
