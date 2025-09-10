@@ -412,21 +412,9 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <span class="details">MACRO:</span>
-                                <asp:DropDownList ID="ddlMacros" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                    <asp:ListItem Value="INICIO DE JORNADA" Text="INICIO DE JORNADA"></asp:ListItem>
-                                    <asp:ListItem Value="INICIO JORNADA" Text="INICIO JORNADA"></asp:ListItem>
-                                    <asp:ListItem Value="INICIO DE VIAGEM" Text="INICIO DE VIAGEM"></asp:ListItem>
-                                    <asp:ListItem Value="REINICIO DE VIAGEM" Text="REINICIO DE VIAGEM"></asp:ListItem>
-                                    <asp:ListItem Value="PARADA INTERNA" Text="PARADA INTERNA"></asp:ListItem>
-                                    <asp:ListItem Value="PARADA REFEICAO" Text="PARADA REFEICAO"></asp:ListItem>
-                                    <asp:ListItem Value="RETORNO REFEICAO" Text="RETORNO REFEICAO"></asp:ListItem>
-                                    <asp:ListItem Value="PARADA CLIENTE/FORNECEDOR" Text="PARADA CLIENTE/FORNECEDOR"></asp:ListItem>
-                                    <asp:ListItem Value="PARADA" Text="PARADA"></asp:ListItem>
-                                    <asp:ListItem Value="PARADA OFICINA" Text="PARADA OFICINA"></asp:ListItem>
-                                    <asp:ListItem Value="FIM DE VIAGEM" Text="FIM DE VIAGEM"></asp:ListItem>
-                                    <asp:ListItem Value="FIM DE JORNADA" Text="FIM DE JORNADA"></asp:ListItem>
-                                    <asp:ListItem Value="PARADA PERNOITE" Text="PARADA PERNOITE"></asp:ListItem>
+                                <asp:DropDownList ID="ddlMacros" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlMacros_SelectedIndexChanged" AutoPostBack="true">
+                                    
+                                 
                                 </asp:DropDownList><br />
                             </div>
                         </div>
@@ -440,22 +428,8 @@
                             <div class="form-group">
                                 <span class="">PARADA:</span>
                                 <asp:DropDownList ID="ddlNumero" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlNumero_SelectedIndexChanged" AutoPostBack="true">
-                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                    <asp:ListItem Value="1" Text="1"></asp:ListItem>
-                                    <asp:ListItem Value="2" Text="2"></asp:ListItem>
-                                    <asp:ListItem Value="3" Text="3"></asp:ListItem>
-                                    <asp:ListItem Value="4" Text="4"></asp:ListItem>
-                                    <asp:ListItem Value="6" Text="6"></asp:ListItem>
-                                    <asp:ListItem Value="7" Text="7"></asp:ListItem>
-                                    <asp:ListItem Value="9" Text="9"></asp:ListItem>
-                                    <asp:ListItem Value="11" Text="11"></asp:ListItem>
-                                    <asp:ListItem Value="13" Text="13"></asp:ListItem>
-                                    <asp:ListItem Value="14" Text="14"></asp:ListItem>
-                                    <asp:ListItem Value="15" Text="15"></asp:ListItem>
-                                    <asp:ListItem Value="16" Text="16"></asp:ListItem>
-                                    <asp:ListItem Value="17" Text="17"></asp:ListItem>
-                                    <asp:ListItem Value="22" Text="22"></asp:ListItem>
-                                    <asp:ListItem Value="23" Text="23"></asp:ListItem>
+                                   <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                  
                                 </asp:DropDownList>
                             </div>
                         </div>

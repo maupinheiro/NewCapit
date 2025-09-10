@@ -19,36 +19,29 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-
                 PreencherComboFiliais();
-
                 CarregaDadosFornecedor();
-
-
-
+               // Carrega apenas na primeira vez
             }
-           
-
-        }
-        public void CarregaCombustivel()
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            else
             {
-                SqlCommand cmd = new SqlCommand("SELECT codposto, combustivel FROM tbprecocombustivel WHERE codposto =" + txtCodFor.Text.Trim() + "", conn);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                // Se você precisa recarregar o ddlFrutas em postbacks por algum motivo,
+                // certifique-se de que a seleção do usuário seja restaurada APÓS o DataBind.
+                // No entanto, a melhor prática é carregar apenas uma vez se os dados não mudam.
+                // Se os dados mudam, você pode precisar de uma lógica mais complexa para preservar a seleção.
+                // Por exemplo, você pode salvar o valor selecionado em ViewState antes do DataBind
+                // e restaurá-lo depois.
 
-                ddlFrutas.DataSource = reader;
-                ddlFrutas.DataTextField = "combustivel";    // O que será mostrado
-                ddlFrutas.DataValueField = "codposto";     // O que será usado internamente
-                ddlFrutas.DataBind();
-
-                ddlFrutas.Items.Insert(0, new ListItem("-- Combustível --", ""));
-
-
+                // Exemplo (se CarregaCombustivel() precisar ser chamado em postbacks):
+                // string selectedValue = ddlFrutas.SelectedValue;
+                // CarregaCombustivel();
+                 
             }
-        }
 
+
+
+        }
+        
         protected void ddlFrutas_SelectedIndexChanged(object sender, EventArgs e)
         {
             string idSelecionado = ddlFrutas.SelectedItem.Text;
@@ -151,11 +144,69 @@ namespace NewCapit.dist.pages
                         txtExterno.ForeColor = System.Drawing.Color.White;
                         txtExterno.Text = "EXTERNO";
                     }
-                    
+
+                    CarregaCombustivel();
+
                 }
 
-                CarregaCombustivel();
+                //CarregaCombustivel();
             }
         }
+
+        public void CarregaCombustivel()
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string query = "SELECT id, combustivel FROM tbprecocombustivel WHERE codposto = @codposto";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    int codPosto;
+                    if (!int.TryParse(txtCodFor.Text.Trim(), out codPosto))
+                    {
+                        return;
+                    }
+
+                    cmd.Parameters.AddWithValue("@codposto", codPosto);
+
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Salva o valor selecionado antes do DataBind, se houver um postback
+                    string selectedValue = string.Empty;
+                    if (IsPostBack && ddlFrutas.SelectedItem != null)
+                    {
+                        selectedValue = ddlFrutas.SelectedValue;
+                    }
+
+                    ddlFrutas.DataSource = reader;
+                    ddlFrutas.DataTextField = "combustivel";
+                    ddlFrutas.DataValueField = "id";
+                    ddlFrutas.DataBind();
+
+                    // Insere o item padrão. É importante que ele tenha um DataValueField único, como uma string vazia.
+                    ddlFrutas.Items.Insert(0, new ListItem("-- Combustível --", ""));
+
+                    // Tenta restaurar a seleção após o DataBind e a inserção do item padrão
+                    if (IsPostBack && !string.IsNullOrEmpty(selectedValue))
+                    {
+                        try
+                        {
+                            ddlFrutas.SelectedValue = selectedValue;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log ou trate o erro se o valor selecionado não for encontrado na nova lista
+                            // Isso pode acontecer se a lista de combustíveis mudar dinamicamente
+                            System.Diagnostics.Debug.WriteLine("Erro ao restaurar seleção do ddlFrutas: " + ex.Message);
+                        }
+                    }
+
+                    reader.Close();
+                    conn.Close();
+                }
+            }
+        }
+
     }
 }

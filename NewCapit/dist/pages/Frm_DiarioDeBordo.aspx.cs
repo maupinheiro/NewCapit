@@ -39,6 +39,15 @@ namespace NewCapit.dist.pages
             {
                 CarregaFoto();
             }
+            if(!IsPostBack)
+            {
+                CarregaMacros();
+
+               
+
+
+            }
+            
 
         }
         public void CarregaFoto()
@@ -2487,9 +2496,16 @@ namespace NewCapit.dist.pages
 
         protected void ddlNumero_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+            CarregaOpcao();
+
+
+        }
+        public void CarregaOpcao()
+        {
             if (ddlNumero.SelectedValue == "1")
             {
-                txtTipoMarcacao.Text = "PARADA POSTO FISCAL";
+                txtTipoMarcacao.Text = "POSTO FISCAL";
             }
             else if (ddlNumero.SelectedValue == "2")
             {
@@ -2505,19 +2521,19 @@ namespace NewCapit.dist.pages
             }
             else if (ddlNumero.SelectedValue == "6")
             {
-                txtTipoMarcacao.Text = "CARREGADO AG. LIBERAÇÃO/RODIZIO";
+                txtTipoMarcacao.Text = "CARREGADO AG. RODIZIO";
             }
             else if (ddlNumero.SelectedValue == "7")
             {
-                txtTipoMarcacao.Text = "CARRO ABASTECENDO";
+                txtTipoMarcacao.Text = "ABASTECENDO VEICULO";
             }
             else if (ddlNumero.SelectedValue == "9")
             {
-                txtTipoMarcacao.Text = "CARRO BORRACHARIA";
+                txtTipoMarcacao.Text = "NA BORRACHARIA";
             }
             else if (ddlNumero.SelectedValue == "11")
             {
-                txtTipoMarcacao.Text = "CARRO QUEBRADO";
+                txtTipoMarcacao.Text = "EM TRANSITO - CARRO QUEBRADO";
             }
             else if (ddlNumero.SelectedValue == "14")
             {
@@ -2529,29 +2545,76 @@ namespace NewCapit.dist.pages
             }
             else if (ddlNumero.SelectedValue == "15")
             {
-                txtTipoMarcacao.Text = "PARADA 30 MINUTOS";
+                txtTipoMarcacao.Text = "PARADA OBRIGATORIA - 30 MINUTOS";
             }
             else if (ddlNumero.SelectedValue == "16")
             {
-                txtTipoMarcacao.Text = "ACIDENTE COM O CARRO";
+                txtTipoMarcacao.Text = "ACIDENTE COM O VEICULO";
             }
             else if (ddlNumero.SelectedValue == "17")
             {
-                txtTipoMarcacao.Text = "VERIFICANDO CARRO";
+                txtTipoMarcacao.Text = "CHECK-LIST";
             }
             else if (ddlNumero.SelectedValue == "22")
             {
-                txtTipoMarcacao.Text = "MOT. A DISPOSIÇÃO";
+                txtTipoMarcacao.Text = "MOTORISTA A DISPOSICAO";
             }
             else if (ddlNumero.SelectedValue == "23")
             {
-                txtTipoMarcacao.Text = "PARADA BANHEIRO";
+                txtTipoMarcacao.Text = "OUTRAS PARADAS";
             }
             else if (ddlNumero.SelectedValue == "0")
             {
                 txtTipoMarcacao.Text = "";
             }
         }
+
+        protected void ddlMacros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string codmacro= ddlMacros.SelectedValue;
+            CarregaCodMacros(codmacro);
+            CarregaOpcao();
+
+        }
+        private void CarregaCodMacros( string codmacro)
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "select codigoparada, descricaopada from tbcodigoparadasvalidas where idmacroparada="+codmacro;
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+
+                    ddlNumero.DataSource = reader;
+                    ddlNumero.DataTextField = "codigoparada";  // Campo que será mostrado no ComboBox
+                    ddlNumero.DataValueField = "codigoparada";  // Campo que será o valor de cada item
+                   
+                    ddlNumero.DataBind();  // Realiza o binding dos dados                   
+                                           //ddlEstados.Items.Insert(0, new ListItem("", "0"));
+                                           // Feche o reader
+                    ddlNumero.Items.Insert(0, new ListItem("Selecione", "0"));
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+
         public void CarregaCusto()
         {
             //txtAlmoco.Text = "0,00";
@@ -2572,9 +2635,7 @@ namespace NewCapit.dist.pages
             grdCusto.DataBind();
 
         }
-
-       
-
+        
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             if (txtMotorista.Text != string.Empty && txtData.Text != string.Empty)
@@ -2602,6 +2663,43 @@ namespace NewCapit.dist.pages
 
         }
 
-       
+        private void CarregaMacros()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "select id,descricamacro from tbmacrosvalidas";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlMacros.DataSource = reader;
+                    ddlMacros.DataTextField = "descricamacro";  // Campo que será mostrado no ComboBox
+                    ddlMacros.DataValueField = "id";  // Campo que será o valor de cada item
+                    
+                    ddlMacros.DataBind();  // Realiza o binding dos dados                   
+                                           //ddlEstados.Items.Insert(0, new ListItem("", "0"));
+                                           // Feche o reader
+                    ddlMacros.Items.Insert(0, new ListItem("Selecione", ""));
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+
     }
 }

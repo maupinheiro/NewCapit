@@ -146,9 +146,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">COMBUSTÍVEL:</span>
-                                   <%-- <asp:TextBox ID="txtCombustivel" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>--%>
-                                    <asp:DropDownList ID="ddlFrutas" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlFrutas_SelectedIndexChanged">
-                                    </asp:DropDownList>
+                                    <asp:DropDownList ID="ddlFrutas" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlFrutas_SelectedIndexChanged"></asp:DropDownList>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -370,6 +369,9 @@
                         <br>
                     </div>
                 </div>
+                </div>
+
+
         </section>
     </div>
 </asp:Content>
