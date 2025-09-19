@@ -131,7 +131,15 @@ namespace NewCapit.dist.pages
                 {
                     txtCodFor.Text = dt.Rows[0][0].ToString(); 
                     txtNomFor.Text = dt.Rows[0][1].ToString();
-                    if (txtNomFor.Text == "TRANSNOVAG")
+
+                    string textoCompleto = dt.Rows[0][1].ToString();
+
+                    // Verifica se o texto tem pelo menos 5 caracteres
+                    string primeiras10Letras = textoCompleto.Length >= 10
+                        ? textoCompleto.Substring(0, 10)
+                        : textoCompleto; // Se tiver menos de 10, pega tudo
+
+                    if (primeiras10Letras == "TRANSNOVAG")
                     {
                         txtExterno.BackColor = System.Drawing.Color.Purple;
                         txtExterno.ForeColor = System.Drawing.Color.White;

@@ -265,12 +265,14 @@
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadPedidos.aspx" />
     <Content Include="dist\pages\Frm_CadPosto.aspx" />
+    <Content Include="dist\pages\Frm_CadRotas.aspx" />
     <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
     <Content Include="dist\pages\Frm_OrdemAbastecimento.aspx" />
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
+    <Content Include="dist\pages\Frm_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\GestaoPostos.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
@@ -4563,6 +4565,13 @@
     <Compile Include="dist\pages\Frm_CadPosto.aspx.designer.cs">
       <DependentUpon>Frm_CadPosto.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Frm_CadRotas.aspx.cs">
+      <DependentUpon>Frm_CadRotas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_CadRotas.aspx.designer.cs">
+      <DependentUpon>Frm_CadRotas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Frm_Comissoes.aspx.cs">
       <DependentUpon>Frm_Comissoes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4604,6 +4613,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_OrdemColetaCNT.aspx.designer.cs">
       <DependentUpon>Frm_OrdemColetaCNT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_TabelaPrecoMatriz.aspx.cs">
+      <DependentUpon>Frm_TabelaPrecoMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_TabelaPrecoMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_TabelaPrecoMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoPostos.aspx.cs">
       <DependentUpon>GestaoPostos.aspx</DependentUpon>

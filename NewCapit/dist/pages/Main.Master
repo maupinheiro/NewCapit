@@ -314,20 +314,17 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="./index.html" class="nav-link">
+                                        <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Matriz</p>
                                         </a>
-                                        <%--<ul class="nav nav-treeview">
+                                        <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                                <a href="#" class="nav-link">
-                                                    <i class="nav-icon fas fa-coins"></i>
-                                                    <p>
-                                                        Cargas               
-                                                        <i class="fas fa-angle-left right"></i>
-                                                    </p>
+                                                <a href="/dist/pages/Frm_TabelaPrecoMatriz.aspx" class="nav-link">
+                                                    <i class="fas fa-shipping-fast nav-icon"></i>
+                                                    <p>Cargas</p>
                                                 </a>
-                                                <ul class="nav nav-treeview">
+                                                <%--<ul class="nav nav-treeview">
                                                     <li class="nav-item">
                                                         <a href="/dist/pages/ConsultaCargas.aspx" class="nav-link">
                                                             <i class="fas fa-pallet nav-icon"></i>
@@ -340,9 +337,9 @@
                                                             <p>Solicitações VW</p>
                                                         </a>
                                                     </li>                                    
-                                                </ul>
+                                                </ul>--%>
                                             </li>
-                                            <li class="nav-item">
+                                            <%-- <li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                                     <p>
@@ -399,11 +396,11 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </li>
-                                        </ul>--%>
+                                            </li>--%>
+                                        </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link">
+                                        <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>CC - Diadema</p>
                                         </a>
@@ -452,14 +449,14 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Gestão</p>
                                         </a>
-                                        <%--<a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                        <a href="/dist/pages/Frm_CadRotas.aspx" class="nav-link">
+                                            <i class="fas fa-map-marker-alt nav-icon"></i>
                                             <p>Cadastro de Rotas</p>
                                         </a>
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                        <a href="/dist/pages/Frm_TabelaPrecoMatriz.aspx" class="nav-link">
+                                            <i class="fas fa-money-bill-alt nav-icon"></i>
                                             <p>Cadastro de Fretes</p>
-                                        </a>--%>
+                                        </a>
                                     </li>
                                 </ul>
                             </li>
@@ -982,6 +979,6 @@
 
     </script>
 </body>
-  
+
 </html>
 

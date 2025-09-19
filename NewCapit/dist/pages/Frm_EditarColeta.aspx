@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="form-group">
-                                        <span class="details">REMETENTE:</span>
+                                        <span class="details">DESTINATÁRIO:</span>
                                         <asp:TextBox ID="txtNomDestinatario" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
                                     </div>
                                 </div>

@@ -11,44 +11,26 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class Frm_CadPedidos
+    public partial class Frm_CadRotas
     {
 
         /// <summary>
-        /// Controle cbSolicitantes.
+        /// Controle txtRota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cbSolicitantes;
+        protected global::System.Web.UI.WebControls.TextBox txtRota;
 
         /// <summary>
-        /// Controle cboPagador.
+        /// Controle ddlStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboPagador;
-
-        /// <summary>
-        /// Controle txtGR.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGR;
-
-        /// <summary>
-        /// Controle cboFilial.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboFilial;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
         /// <summary>
         /// Controle txtCadastro.
@@ -96,6 +78,42 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtUFRemetente;
 
         /// <summary>
+        /// Controle txtCodExpedidor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodExpedidor;
+
+        /// <summary>
+        /// Controle cboExpedidor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboExpedidor;
+
+        /// <summary>
+        /// Controle txtCidExpedidor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCidExpedidor;
+
+        /// <summary>
+        /// Controle txtUFExpedidor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUFExpedidor;
+
+        /// <summary>
         /// Controle txtCodDestinatario.
         /// </summary>
         /// <remarks>
@@ -132,94 +150,103 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtUFDestinatario;
 
         /// <summary>
-        /// Controle txtNumPedido.
+        /// Controle txtCodRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumPedido;
+        protected global::System.Web.UI.WebControls.TextBox txtCodRecebedor;
 
         /// <summary>
-        /// Controle cboMaterial.
+        /// Controle cboRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboMaterial;
+        protected global::System.Web.UI.WebControls.DropDownList cboRecebedor;
 
         /// <summary>
-        /// Controle txtPeso.
+        /// Controle txtCidRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPeso;
+        protected global::System.Web.UI.WebControls.TextBox txtCidRecebedor;
 
         /// <summary>
-        /// Controle cboDeposito.
+        /// Controle txtUFRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboDeposito;
+        protected global::System.Web.UI.WebControls.TextBox txtUFRecebedor;
 
         /// <summary>
-        /// Controle cboStatus.
+        /// Controle txtDistancia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboStatus;
+        protected global::System.Web.UI.WebControls.TextBox txtDistancia;
 
         /// <summary>
-        /// Controle txtControleCliente.
+        /// Controle txtDuracao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtControleCliente;
+        protected global::System.Web.UI.WebControls.TextBox txtDuracao;
 
         /// <summary>
-        /// Controle txtPrevEntrega.
+        /// Controle cboDeslocamento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrevEntrega;
+        protected global::System.Web.UI.WebControls.DropDownList cboDeslocamento;
 
         /// <summary>
-        /// Controle cboEntrega.
+        /// Controle lblDtCadastro.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboEntrega;
+        protected global::System.Web.UI.WebControls.Label lblDtCadastro;
 
         /// <summary>
-        /// Controle txtNumPedidos.
+        /// Controle txtUsuCadastro.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumPedidos;
+        protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
 
         /// <summary>
-        /// Controle txtPesoTotalCarga.
+        /// Controle lbDtAtualizacao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPesoTotalCarga;
+        protected global::System.Web.UI.WebControls.Label lbDtAtualizacao;
+
+        /// <summary>
+        /// Controle txtAltCad.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAltCad;
 
         /// <summary>
         /// Controle btnAlterar.
