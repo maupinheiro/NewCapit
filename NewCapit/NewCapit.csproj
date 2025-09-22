@@ -190,6 +190,7 @@
     <Content Include="dist\pages\ConsultaEntregas.aspx" />
     <Content Include="dist\pages\ConsultaFornecedores.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
+    <Content Include="dist\pages\ConsultaRotas.aspx" />
     <Content Include="dist\pages\ConsultaUsuarios.aspx" />
     <Content Include="dist\pages\ConsultaVeiculos.aspx" />
     <Content Include="css\sb-admin-2.css" />
@@ -4424,6 +4425,13 @@
     </Compile>
     <Compile Include="dist\pages\ConsultaMotoristas.aspx.designer.cs">
       <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaRotas.aspx.cs">
+      <DependentUpon>ConsultaRotas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaRotas.aspx.designer.cs">
+      <DependentUpon>ConsultaRotas.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ConsultaUsuarios.aspx.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>

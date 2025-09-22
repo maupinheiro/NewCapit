@@ -8,6 +8,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Drawing.Imaging;
+using NPOI.SS.UserModel;
 
 namespace NewCapit.dist.pages
 {
@@ -678,6 +679,161 @@ namespace NewCapit.dist.pages
                         }
 
                         // FIM DA PESQUISA 
+
+                        if (txtUFExpedidor.Text != "" && txtUFRecebedor.Text != "")
+                        {
+                            if (txtUFExpedidor.Text != txtUFRecebedor.Text)
+                            {
+                                cboDeslocamento.SelectedItem.Text = "INTERESTADUAL";
+                            }
+                        }
+                        if (txtCidExpedidor.Text != "" && txtCidRecebedor.Text != "")
+                        {
+                            if (txtCidExpedidor.Text != txtCidRecebedor.Text && txtUFExpedidor.Text == txtUFRecebedor.Text)
+                            {
+                                cboDeslocamento.SelectedItem.Text = "INTERMUNICIPAL";
+                            }
+                            if (txtCidExpedidor.Text == txtCidRecebedor.Text && txtUFExpedidor.Text == txtUFRecebedor.Text)
+                            {
+                                cboDeslocamento.SelectedItem.Text = "MUNICIPAL";
+                            }
+                        }
+
+                        // DEFINE DESCRIÇÃO DA ROTA
+                        if (txtCodRemetente.Text == "" || cboRemetente.SelectedItem.Text == "")
+                        {
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast('Remetente, está faltando parametro. Verifique CODIGO/NOME/CIDADE/ESTADO.');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRecebedor.Text = "";
+                            txtCodRemetente.Text = "";
+                            txtCodRemetente.Focus();
+                            return;
+                        }
+                        else if (txtCodExpedidor.Text == "" || cboExpedidor.SelectedItem.Text == "")
+                        {
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast('Expedidor, está faltando parametro. Verifique CODIGO/NOME/CIDADE/ESTADO.');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRecebedor.Text = "";
+                            txtCodExpedidor.Text = "";
+                            txtCodExpedidor.Focus();
+                            return;
+                        }
+                        else if (txtCodDestinatario.Text == "" || cboDestinatario.SelectedItem.Text == "")
+                        {
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast('Destinatário, está faltando parametro. Verifique CODIGO/NOME/CIDADE/ESTADO.');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRecebedor.Text = "";
+                            txtCodDestinatario.Text = "";
+                            txtCodDestinatario.Focus();
+                            return;
+                        }
+                        else if (txtCodRecebedor.Text == "" || cboRecebedor.SelectedItem.Text == "")
+                        {
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast('Recebedor, está faltando parametro. Verifique CODIGO/NOME/CIDADE/ESTADO.');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);                            
+                            txtCodRecebedor.Text = "";
+                            txtCodRecebedor.Focus();
+                            return;
+                        }
+                        else
+                        {
+                            string texto = cboRemetente.SelectedItem.Text.Trim(); 
+                            int indexEspaco = texto.IndexOf(" ");
+                            string remetente;
+                            if (indexEspaco != -1)
+                            {
+                                // Pega do início até antes do primeiro espaço
+                                remetente = texto.Substring(0, indexEspaco);
+                            }
+                            else
+                            {
+                                // Não há espaço, pega o texto inteiro
+                                remetente = texto;
+                            }
+
+                            string textoDestinatario = cboDestinatario.SelectedItem.Text.Trim();
+                            int indexEspacoDestinatario = textoDestinatario.IndexOf(" ");
+                            string destinatario;
+                            if (indexEspacoDestinatario != -1)
+                            {
+                                // Pega do início até antes do primeiro espaço
+                                destinatario = textoDestinatario.Substring(0, indexEspacoDestinatario);
+                            }
+                            else
+                            {
+                                // Não há espaço, pega o texto inteiro
+                                destinatario = textoDestinatario;
+                            }
+
+                            string textoExpedidor = cboExpedidor.SelectedItem.Text.Trim();
+                            int indexEspacoExpedidor = textoExpedidor.IndexOf(" ");
+                            string expedidor;
+                            if (indexEspacoExpedidor != -1)
+                            {
+                                // Pega do início até antes do primeiro espaço
+                                expedidor = textoExpedidor.Substring(0, indexEspacoExpedidor);
+                            }
+                            else
+                            {
+                                // Não há espaço, pega o texto inteiro
+                                expedidor = textoExpedidor;
+                            }
+
+                            string textoRecebedor = cboRecebedor.SelectedItem.Text.Trim();
+                            int indexEspacoRecebedor = textoRecebedor.IndexOf(" ");
+                            string recebedor;
+                            if (indexEspacoRecebedor != -1)
+                            {
+                                // Pega do início até antes do primeiro espaço
+                                recebedor = textoRecebedor.Substring(0, indexEspacoRecebedor);
+                            }
+                            else
+                            {
+                                // Não há espaço, pega o texto inteiro
+                                recebedor = textoRecebedor;
+                            }
+
+
+                            txtDesc_Rota.Text = "Rem./Dest.: " + txtCodRemetente.Text.Trim() + " - " + remetente + " / " + txtCodDestinatario.Text.Trim() + " - " + destinatario + " - Expedidor/Recebedor: " + txtCodExpedidor.Text.Trim() + " - " + expedidor + "(" + txtCidExpedidor.Text.Trim() + "/" + txtUFExpedidor.Text.Trim() + ") / " + txtCodRecebedor.Text.Trim() + " - " + recebedor + "(" + txtCidRecebedor.Text.Trim() + "/" + txtUFRecebedor.Text.Trim() + ")";
+                            
+                            if (txtDesc_Rota.Text != "")
+                            {
+                                string codDesc_Rota = txtDesc_Rota.Text;
+                                string sqlDescricao = "SELECT rota, desc_rota, situacao, fl_exclusao FROM tbrotasdeentregas where desc_rota = '" + codDesc_Rota + "'";
+                                SqlDataAdapter daRota = new SqlDataAdapter(sqlDescricao, conn);
+                                DataTable dtRota = new DataTable();
+                                conn.Open();
+                                daRota.Fill(dtRota);
+                                conn.Close();
+
+                                if (dt.Rows.Count > 0)
+                                {
+                                    if (dt.Rows[0][3].ToString() == null)
+                                    {
+                                        // Acione o toast quando a página for carregada
+                                        string script = "<script>showToast('Rota deletada, recuperada.');</script>";
+                                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                                        // aqui recupera o registro voltando para o sistema e volta para a tela de gestão
+                                        return;
+                                    }
+                                    else if (dt.Rows[0][2].ToString() == "INATIVO")
+                                    {
+                                        // Acione o toast quando a página for carregada
+                                        string script = "<script>showToast('Rota inativa, foi ativada.');</script>";
+                                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                                        // aqui recupera o registro voltando para o sistema e volta para a tela de gestão
+                                        return;
+                                    } 
+                                }
+                            }
+                        }
+
+
+
                         return;
                     }
 

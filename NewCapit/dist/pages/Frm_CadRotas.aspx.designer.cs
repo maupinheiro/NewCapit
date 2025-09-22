@@ -24,22 +24,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtRota;
 
         /// <summary>
-        /// Controle ddlStatus.
+        /// Controle txtDesc_Rota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
-
-        /// <summary>
-        /// Controle txtCadastro.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCadastro;
+        protected global::System.Web.UI.WebControls.TextBox txtDesc_Rota;
 
         /// <summary>
         /// Controle txtCodRemetente.
@@ -211,6 +202,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cboDeslocamento;
+
+        /// <summary>
+        /// Controle ddlStatus.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
+
+        /// <summary>
+        /// Controle txtCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCadastro;
 
         /// <summary>
         /// Controle lblDtCadastro.

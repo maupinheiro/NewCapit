@@ -54,6 +54,7 @@
     <Compile Include="ConMotoristas.cs" />
     <Compile Include="ConnectionUtil.cs" />
     <Compile Include="ConPostos.cs" />
+    <Compile Include="ConRotas.cs" />
     <Compile Include="ConUsuarios.cs" />
     <Compile Include="ConVeiculos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

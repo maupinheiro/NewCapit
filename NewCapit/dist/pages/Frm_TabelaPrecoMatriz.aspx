@@ -34,26 +34,36 @@
                                 <div class="col-md-5"></div>
                                 <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CADASTRO:</label>
                                 <div class="col-sm-2">
-                                    <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                    <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
 
-
-
+                            <div class="form-group row">
+                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
+                                <div class="col-sm-1">
+                                    <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-6">
+                                </div>
+                                <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">SITUAÇÃO:</label>
+                                <div class="col-sm-2">
+                                    <asp:TextBox ID="txtStatusRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
                             <!-- REMETENTE -->
                             <div class="form-group row">
                                 <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">REMETENTE:</label>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodRemetente_TextChanged"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-5">
-                                    <asp:DropDownList ID="cboRemetente" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRemetente_SelectedIndexChanged"></asp:DropDownList>
+                                    <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-4">
-                                    <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
 
                             </div>
@@ -61,48 +71,48 @@
                             <div class="form-group row">
                                 <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">EXPEDIDOR:</label>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control" OnTextChanged="txtCodExpedidor_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-5">
-                                    <asp:DropDownList ID="cboExpedidor" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboExpedidor_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:TextBox ID="cboExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-4">
-                                    <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFExpedidor" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtUFExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
                             <!-- DESTINATARIO -->
                             <div class="form-group row">
                                 <label for="inputDestinatario" class="col-sm-1 col-form-label" style="text-align: right">DESTINATÁRIO:</label>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodDestinatario_TextChanged"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-5">
-                                    <asp:DropDownList ID="cboDestinatario" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboDestinatario_SelectedIndexChanged"></asp:DropDownList>
+                                    <asp:TextBox ID="cboDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-4">
-                                    <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
                             <!-- RECEBEDOR -->
                             <div class="form-group row">
                                 <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">RECEBEDOR:</label>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodRecebedor_TextChanged"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-5">
-                                    <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRecebedor_SelectedIndexChanged"></asp:DropDownList>
+                                    <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:DropDownList>
                                 </div>
                                 <div class="col-md-4">
-                                    <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFRecebedor" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtUFRecebedor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
                             <!-- CONSIGNATARIO -->
@@ -143,13 +153,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="inputDistancia" class="col-sm-2 col-form-label">DISTÂNCIA(KM):</label>
-                                <asp:TextBox ID="txtDistancia" class="form-control" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtDistancia" class="form-control" runat="server" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <label for="inputDuracao" class="col-sm-1 col-form-label">DURAÇÃO:</label>
-                                <asp:TextBox ID="txtDuracao" class="form-control" runat="server" placeholder="00:00"></asp:TextBox>
+                                <asp:TextBox ID="txtDuracao" class="form-control" runat="server" placeholder="00:00" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -230,12 +240,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <label for="inputFilial" class="col-sm-3 col-form-label" style="text-align: right">LOTAÇÃO (KG):</label>
+                                            <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">LOTAÇÃO (KG):</label>
                                             <div class="col-sm-1">
                                                 <asp:TextBox ID="txtLotacao" runat="server" CssClass="form-control" Style="text-align: center" placeholder="00000"></asp:TextBox>
                                             </div>
                                             <label for="inputFilial" class="col-sm-3 col-form-label" style="text-align: right">MATERIAL:</label>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboTipoMaterial" runat="server" CssClass="form-control select2">
                                                 </asp:DropDownList>
                                             </div>
@@ -251,6 +261,12 @@
                                                 <div class="form-group">
                                                     <span class="details">VICÊNCIA FINAL:</span>
                                                     <asp:TextBox ID="txtVigenciaFinal" TextMode="Date" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" MaxLength="10"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <span class="details">TOTAL DO FRETE:</span>
+                                                    <asp:TextBox ID="txtTotalFrete" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
