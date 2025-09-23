@@ -449,12 +449,12 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Gestão</p>
                                         </a>
-                                        <a href="/dist/pages/Frm_CadRotas.aspx" class="nav-link">
+                                        <a href="/dist/pages/ConsultaRotas.aspx" class="nav-link">
                                             <i class="fas fa-map-marker-alt nav-icon"></i>
-                                            <p>Cadastro de Rotas</p>
+                                            <p>Gestão de Rotas</p>
                                         </a>
                                         <a href="/dist/pages/Frm_TabelaPrecoMatriz.aspx" class="nav-link">
-                                            <i class="fas fa-money-bill-alt nav-icon"></i>
+                                            <i class="fas fa-dollar-sign nav-icon"></i>
                                             <p>Cadastro de Fretes</p>
                                         </a>
                                     </li>
