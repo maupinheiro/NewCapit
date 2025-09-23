@@ -743,7 +743,10 @@ namespace NewCapit.dist.pages
             txtCidRecebedor.Text = string.Empty;
             txtUFRecebedor.Text = string.Empty;
         }
-              
 
+        protected void btnAlterar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

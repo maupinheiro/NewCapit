@@ -198,13 +198,14 @@
                     </div>
                     <div class="row g-3">
                         <div class="col-md-1">
-                            <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" />
+                            <asp:Button ID="btnAlterar" runat="server" OnClick="btnAlterar_Click" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" />
                         </div>
                         <div class="col-md-1">
                             <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               
                             </a>
                         </div>
                     </div>
+                </div>
                 </div>
         </section>
     </div>
