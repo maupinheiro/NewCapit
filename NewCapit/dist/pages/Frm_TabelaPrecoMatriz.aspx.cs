@@ -28,7 +28,8 @@ namespace NewCapit.dist.pages
                 {
                     var lblUsuario = "<Usuário>";
                 }
-               
+
+                PreencherComboRotas();
                 PreencherComboFiliais();               
                 PreencherComboTipoVeiculos();
                 PreencherComboMateriais();
@@ -38,6 +39,7 @@ namespace NewCapit.dist.pages
             }
             //DateTime dataHoraAtual = DateTime.Now;
             txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            txtStatusRota.Text = "ATIVO";
         }
         private void PreencherComboFiliais()
         {
@@ -248,7 +250,42 @@ namespace NewCapit.dist.pages
                     Response.Write("Erro: " + ex.Message);
                 }
             }
-        }      
+        }
+        private void PreencherComboRotas()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT rota, desc_rota, fl_exclusao FROM tbrotasdeentregas where fl_exclusao is null  and situacao = 'ATIVO' order by desc_rota";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboRotas.DataSource = reader;
+                    cboRotas.DataTextField = "desc_rota";  // Campo que será mostrado no ComboBox
+                    cboRotas.DataValueField = "rota";  // Campo que será o valor de cada item                    
+                    cboRotas.DataBind();  // Realiza o binding dos dados                   
+                    cboRotas.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
 
         protected void txtCodConsignatario_TextChanged(object sender, EventArgs e)
         {
@@ -284,7 +321,7 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        cboRecebedor.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        cboRecebedor.Text = dt.Rows[0][1].ToString();
                         txtCidConsignatario.Text = dt.Rows[0][2].ToString();
                         txtUFConsignatario.Text = dt.Rows[0][3].ToString();
                         return;
@@ -438,6 +475,145 @@ namespace NewCapit.dist.pages
             txtUFPagador.Text = string.Empty;
         }
 
+        protected void txtRota_TextChanged(object sender, EventArgs e)
+        {
+            if (txtRota.Text != "")
+            {
+                string cod = txtRota.Text;
+                string sql = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento, fl_exclusao, situacao FROM tbrotasdeentregas where rota = '" + cod + "' and situacao = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][17].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('Rota deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtRota.Text = "";
+                        txtRota.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][18].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('Rota inativa no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtRota.Text = "";
+                        txtRota.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtRota.Text = dt.Rows[0][0].ToString();
+                        cboRotas.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCodRemetente.Text = dt.Rows[0][2].ToString();
+                        cboRemetente.Text = dt.Rows[0][3].ToString();
+                        txtMunicipioRemetente.Text = dt.Rows[0][4].ToString();
+                        txtUFRemetente.Text = dt.Rows[0][5].ToString();
+
+                        txtCodExpedidor.Text = dt.Rows[0][6].ToString();
+                        cboExpedidor.Text = dt.Rows[0][7].ToString();
+                        txtCidExpedidor.Text = dt.Rows[0][8].ToString();
+                        txtUFExpedidor.Text = dt.Rows[0][9].ToString();
+
+                        txtCodDestinatario.Text = dt.Rows[0][10].ToString();
+                        cboDestinatario.Text = dt.Rows[0][11].ToString();
+                        txtMunicipioDestinatario.Text = dt.Rows[0][12].ToString();
+                        txtUFDestinatario.Text = dt.Rows[0][13].ToString();
+
+                        txtCodRecebedor.Text = dt.Rows[0][14].ToString();
+                        cboRecebedor.Text = dt.Rows[0][15].ToString();
+                        txtCidRecebedor.Text = dt.Rows[0][16].ToString();
+                        txtUFRecebedor.Text = dt.Rows[0][17].ToString();
+
+                        txtDistancia.Text = dt.Rows[0][18].ToString();
+                        txtDuracao.Text = dt.Rows[0][19].ToString();
+                        cboDeslocamento.SelectedItem.Text = dt.Rows[0][20].ToString();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast('Rota não encontrada no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtRota.Text = "";
+                    txtRota.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void cboRotas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(cboRotas.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherCamposRotas(idSelecionado);
+            }
+            else
+            {
+                LimparCamposRotas();
+            }
+        }
+        // Função para preencher os campos com os dados do banco
+        private void PreencherCamposRotas(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario, codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento FROM tbrotasdeentregas WHERE rota = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtRota.Text = reader["rota"].ToString();                    
+                    cboRotas.SelectedItem.Text = reader["desc_rota"].ToString();
+                    txtCodRemetente.Text = reader["codigo_remetente"].ToString();
+                    cboRemetente.Text = reader["nome_remetente"].ToString();
+                    txtMunicipioRemetente.Text = reader["cidade_remetente"].ToString();
+                    txtUFRemetente.Text = reader["uf_remetente"].ToString();
+
+                    txtCodExpedidor.Text = reader["codigo_expedidor"].ToString();
+                    cboExpedidor.Text = reader["nome_expedidor"].ToString();
+                    txtCidExpedidor.Text = reader["cidade_expedidor"].ToString();
+                    txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
+                    
+                    txtCodDestinatario.Text = reader["codigo_destinatario"].ToString();
+                    cboDestinatario.Text = reader["nome_destinatario"].ToString();
+                    txtMunicipioDestinatario.Text = reader["cidade_destinatario"].ToString();
+                    txtUFDestinatario.Text = reader["uf_destinatario"].ToString();
+
+                    txtCodRecebedor.Text = reader["codigo_recebedor"].ToString();
+                    cboRecebedor.Text = reader["nome_recebedor"].ToString();
+                    txtCidRecebedor.Text = reader["cidade_recebedor"].ToString();
+                    txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
+
+                    txtDistancia.Text = reader["distancia"].ToString();
+                    txtDuracao.Text = reader["tempo"].ToString();
+                    cboDeslocamento.SelectedItem.Text = reader["deslocamento"].ToString();
+                    return;
+
+                }
+            }
+        }
+        // Função para limpar os campos
+        private void LimparCamposRotas()
+        {
+            //txtCodPagador.Text = string.Empty;
+            //txtCidPagador.Text = string.Empty;
+            //txtUFPagador.Text = string.Empty;
+        }
 
     }
 }

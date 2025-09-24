@@ -31,7 +31,11 @@
                                 <div class="col-sm-3">
                                     <asp:DropDownList ID="cboFilial" runat="server" CssClass="form-control select2"></asp:DropDownList>
                                 </div>
-                                <div class="col-md-5"></div>
+                                <div class="col-md-2"></div>
+                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SITUAÇÃO:</label>
+                                <div class="col-sm-2">
+                                    <asp:TextBox ID="txtStatusRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                </div>
                                 <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CADASTRO:</label>
                                 <div class="col-sm-2">
                                     <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
@@ -41,13 +45,10 @@
                             <div class="form-group row">
                                 <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
                                 <div class="col-sm-1">
-                                    <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                    <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" OnTextChanged="txtRota_TextChanged" AutoPostBack="true"></asp:TextBox>
                                 </div>
-                                <div class="col-sm-6">
-                                </div>
-                                <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">SITUAÇÃO:</label>
-                                <div class="col-sm-2">
-                                    <asp:TextBox ID="txtStatusRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                <div class="col-md-10">
+                                    <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRotas_SelectedIndexChanged" ></asp:DropDownList>
                                 </div>
                             </div>
                             <!-- REMETENTE -->
@@ -106,7 +107,7 @@
                                     <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-5">
-                                    <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:DropDownList>
+                                    <asp:TextBox ID="cboRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-4">
                                     <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -165,7 +166,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="inputDistancia" class="col-sm-2 col-form-label">DESLOCAMENTO:</label>
-                                <asp:DropDownList ID="cboDeslocamento" runat="server" CssClass="form-control">
+                                <asp:DropDownList ID="cboDeslocamento" runat="server" CssClass="form-control" ReadOnly="true">
                                     <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                     <asp:ListItem Value="MUNICIPAL" Text="MUNICIPAL"></asp:ListItem>
                                     <asp:ListItem Value="INTERMUNICIAPAL" Text="INTERMUNICIAPAL"></asp:ListItem>
@@ -436,7 +437,7 @@
                             <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" />
                         </div>
                         <div class="col-md-1">
-                            <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                            <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Sair               
                             </a>
                         </div>
                     </div>

@@ -24,6 +24,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList cboFilial;
 
         /// <summary>
+        /// Controle txtStatusRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStatusRota;
+
+        /// <summary>
         /// Controle txtCadastro.
         /// </summary>
         /// <remarks>
@@ -42,13 +51,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtRota;
 
         /// <summary>
-        /// Controle txtStatusRota.
+        /// Controle cboRotas.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStatusRota;
+        protected global::System.Web.UI.WebControls.DropDownList cboRotas;
 
         /// <summary>
         /// Controle txtCodRemetente.
@@ -174,7 +183,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboRecebedor;
+        protected global::System.Web.UI.WebControls.TextBox cboRecebedor;
 
         /// <summary>
         /// Controle txtCidRecebedor.
