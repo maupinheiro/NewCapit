@@ -189,6 +189,7 @@
     <Content Include="dist\pages\ConsultaColetasPopUpCNT.aspx" />
     <Content Include="dist\pages\ConsultaEntregas.aspx" />
     <Content Include="dist\pages\ConsultaFornecedores.aspx" />
+    <Content Include="dist\pages\ConsultaFretes.aspx" />
     <Content Include="dist\pages\ConsultaMotoristas.aspx" />
     <Content Include="dist\pages\ConsultaRotas.aspx" />
     <Content Include="dist\pages\ConsultaUsuarios.aspx" />
@@ -4418,6 +4419,13 @@
     </Compile>
     <Compile Include="dist\pages\ConsultaFornecedores.aspx.designer.cs">
       <DependentUpon>ConsultaFornecedores.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaFretes.aspx.cs">
+      <DependentUpon>ConsultaFretes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConsultaFretes.aspx.designer.cs">
+      <DependentUpon>ConsultaFretes.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ConsultaMotoristas.aspx.cs">
       <DependentUpon>ConsultaMotoristas.aspx</DependentUpon>

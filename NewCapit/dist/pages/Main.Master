@@ -453,9 +453,9 @@
                                             <i class="fas fa-map-marker-alt nav-icon"></i>
                                             <p>Gestão de Rotas</p>
                                         </a>
-                                        <a href="/dist/pages/Frm_TabelaPrecoMatriz.aspx" class="nav-link">
+                                        <a href="/dist/pages/ConsultaFretes.aspx" class="nav-link">
                                             <i class="fas fa-dollar-sign nav-icon"></i>
-                                            <p>Cadastro de Fretes</p>
+                                            <p>Gestão de Fretes</p>
                                         </a>
                                     </li>
                                 </ul>

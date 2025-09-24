@@ -51,6 +51,7 @@
     <Compile Include="ConEntrega.cs" />
     <Compile Include="ConCargas.cs" />
     <Compile Include="ConFornecedores.cs" />
+    <Compile Include="ConFretes.cs" />
     <Compile Include="ConMotoristas.cs" />
     <Compile Include="ConnectionUtil.cs" />
     <Compile Include="ConPostos.cs" />
