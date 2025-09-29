@@ -320,7 +320,7 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                                <a href="/dist/pages/Frm_TabelaPrecoMatriz.aspx" class="nav-link">
+                                                <a href="/dist/pages/Frm_CadPedidos.aspx" class="nav-link">
                                                     <i class="fas fa-shipping-fast nav-icon"></i>
                                                     <p>Cargas</p>
                                                 </a>
