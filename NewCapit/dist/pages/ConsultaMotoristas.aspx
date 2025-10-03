@@ -240,17 +240,17 @@
                            <asp:Label ID="TSC" runat="server" Text=""></asp:Label>
                         </span>
                   </li>
-                 <li><span>PR - PARANÁ: </span>
+                 <li><span>PARANÁ: </span>
                         <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                            <asp:Label ID="TPR" runat="server" Text=""></asp:Label>
                         </span>
                  </li>
-                 <li><span>PE - PERNAMBUCO: </span>
+                 <li><span>PERNAMBUCO: </span>
                    <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                        <asp:Label ID="TPE" runat="server" Text=""></asp:Label>
                    </span>
                  </li>
-                 <li><span>MG - MINAS GERAIS: </span>
+                 <li><span>MINAS GERAIS: </span>
                      <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                          <asp:Label ID="TMG" runat="server" Text=""></asp:Label>
                      </span>
@@ -269,10 +269,11 @@
         </div> 
         <div class="card-body">
             <div class="table-responsive">
-                 <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                 <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                     <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                 <Columns>
-                    <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="45" ItemStyle-Width="45" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
+                    <%--tamanho da foto 45x45--%>
+                    <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="39" ItemStyle-Width="39" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
                     <asp:TemplateField HeaderText="MOTORISTA">
                         <ItemTemplate>
                             <!-- <%# Eval("codmot") + " - " + Eval("nommot")%> -->

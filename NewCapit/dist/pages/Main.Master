@@ -326,28 +326,28 @@
                                                 </a>
                                                 <%--<ul class="nav nav-treeview">
                                                     <li class="nav-item">
-                                                        <a href="/dist/pages/ConsultaCargas.aspx" class="nav-link">
+                                                        <a href="/dist/pages/Frm_Coleta.aspx" class="nav-link">
                                                             <i class="fas fa-pallet nav-icon"></i>
-                                                            <p>Consulta</p>
+                                                            <p>Entregas</p>
                                                         </a>
-                                                    </li>
-                                                    <li class="nav-item">
+                                                    </li>--%>
+                                                   <%-- <li class="nav-item">
                                                         <a href="pages/tables/jsgrid.html" class="nav-link">
                                                             <i class="fas fa-calendar-alt nav-icon"></i>
                                                             <p>Solicitações VW</p>
                                                         </a>
-                                                    </li>                                    
-                                                </ul>--%>
+                                                    </li>   --%>                                 
+                                                <%--</ul>--%>
                                             </li>
-                                            <%-- <li class="nav-item">
-                                                <a href="#" class="nav-link">
+                                             <li class="nav-item">
+                                                <a href="/dist/pages/Frm_Coleta.aspx" class="nav-link">
                                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                                     <p>
                                                         Coletas/Entregas               
                                                      <i class="fas fa-angle-left right"></i>
                                                     </p>
                                                 </a>
-                                                <ul class="nav nav-treeview">
+                                                <%--<ul class="nav nav-treeview">
                                                     <li class="nav-item">
                                                         <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
                                                             <i class="fas fa-warehouse nav-icon"></i>
@@ -360,7 +360,7 @@
                                                             <p>Relatórios</p>
                                                         </a>
                                                     </li>
-                                                </ul>
+                                                </ul>--%>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
@@ -396,7 +396,7 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </li>--%>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">

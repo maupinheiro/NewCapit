@@ -268,6 +268,7 @@
     <Content Include="dist\pages\Frm_CadPedidos.aspx" />
     <Content Include="dist\pages\Frm_CadPosto.aspx" />
     <Content Include="dist\pages\Frm_CadRotas.aspx" />
+    <Content Include="dist\pages\Frm_Coleta.aspx" />
     <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
@@ -4587,6 +4588,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_CadRotas.aspx.designer.cs">
       <DependentUpon>Frm_CadRotas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Coleta.aspx.cs">
+      <DependentUpon>Frm_Coleta.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Coleta.aspx.designer.cs">
+      <DependentUpon>Frm_Coleta.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_Comissoes.aspx.cs">
       <DependentUpon>Frm_Comissoes.aspx</DependentUpon>
