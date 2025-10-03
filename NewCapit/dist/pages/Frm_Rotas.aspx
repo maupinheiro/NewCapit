@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadRotas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadRotas" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_Rotas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_Rotas" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -207,7 +206,7 @@
                     </div>
                     <div class="row g-3">
                         <div class="col-md-1">
-                            <asp:Button ID="btnCadastrar" runat="server" OnClick="btnCadastrar_Click" CssClass="btn btn-outline-success btn-lg" Text="Cadastrar" />
+                            <asp:Button ID="btnAlterar" runat="server" OnClick="btnAlterar_Click" CssClass="btn btn-outline-success btn-lg" Text="Alterar" />
                         </div>
                         <div class="col-md-1">
                             <a href="ConsultaRotas.aspx" class="btn btn-outline-danger btn-lg">Sair               

@@ -47,7 +47,7 @@ namespace NewCapit.dist.pages
             {
                 string id = gvListRotas.DataKeys[row.RowIndex].Value.ToString();
 
-                Response.Redirect("Frm_AltTransportadoras.aspx?id=" + id);
+                Response.Redirect("Frm_Rotas.aspx?id=" + id);
             }
         }
         private void AllData(string searchTerm = "")

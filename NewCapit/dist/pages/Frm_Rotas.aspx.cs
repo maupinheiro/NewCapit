@@ -10,14 +10,16 @@ using System.Web.UI.WebControls;
 using System.Drawing.Imaging;
 using NPOI.SS.UserModel;
 using NPOI.SS.Formula.PTG;
+using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_CadRotas : System.Web.UI.Page
+    public partial class Frm_Rotas : System.Web.UI.Page
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
+        string id;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -25,7 +27,7 @@ namespace NewCapit.dist.pages
                 if (Session["UsuarioLogado"] != null)
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    txtUsuCadastro.Text = Session["UsuarioLogado"].ToString().ToUpper();
+                    txtAltCad.Text = Session["UsuarioLogado"].ToString().ToUpper();
                 }
                 else
                 {
@@ -36,11 +38,11 @@ namespace NewCapit.dist.pages
                 PreencherComboExpedidor();
                 PreencherComboDestinatario();
                 PreencherComboRecebedor();
-
+                CarregaRotas();
             }
-            //DateTime dataHoraAtual = DateTime.Now;
-            txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-            lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            DateTime dataHoraAtual = DateTime.Now;
+            lbDtAtualizacao.Text= dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+           
 
         }
         private void PreencherNumRota()
@@ -900,120 +902,130 @@ namespace NewCapit.dist.pages
             txtCidRecebedor.Text = string.Empty;
             txtUFRecebedor.Text = string.Empty;
         }
-
-
-        protected void btnCadastrar_Click(object sender, EventArgs e)
+        public void CarregaRotas()
         {
-            string cs = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
-
-
-            using (SqlConnection conn = new SqlConnection(cs))
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+            string rota = id;
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string queryRota = "SELECT rota,desc_rota,codigo_remetente,nome_remetente,cidade_remetente,uf_remetente,codigo_expedidor,nome_expedidor,cidade_expedidor,uf_expedidor,codigo_destinatario,nome_destinatario,cidade_destinatario,uf_destinatario ";
+                queryRota += " ,codigo_recebedor,nome_recebedor,cidade_recebedor,uf_recebedor,distancia,tempo,deslocamento,situacao,data_cadastro,usuario_cadastro  FROM dbo.tbrotasdeentregas where rota=@idrota";
 
-                string sqlc = "SELECT rota, desc_rota, deslocamento, distancia, tempo, situacao FROM tbrotasdeentregas where dec_rota='" + txtDesc_Rota.Text + "'";
-                SqlDataAdapter adtp = new SqlDataAdapter(sqlc, conn);
-                DataTable dt = new DataTable();
-                conn.Open();
-                adtp.Fill(dt);
-                conn.Close();
-
-                if (dt.Rows.Count > 0)
+                using (SqlCommand cmdTNG = new SqlCommand(queryRota, conn))
                 {
-                    string script = "<script>showToast('Rota jhá cadastrada no sistema, verifique.');</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                }
-                else
-                {
-                    string sql = @"
-                                INSERT INTO dbo.tbrotasdeentregas
-                                   (rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente,
-                                    codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor,
-                                    codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,
-                                    codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor,
-                                    distancia, tempo, deslocamento, situacao,
-                                    data_cadastro, usuario_cadastro.)
-                                VALUES
-                                   (@rota, @desc_rota, @codigo_remetente, @nome_remetente, @cidade_remetente, @uf_remetente,
-                                    @codigo_expedidor, @nome_expedidor, @cidade_expedidor, @uf_expedidor,
-                                    @codigo_destinatario, @nome_destinatario, @cidade_destinatario, @uf_destinatario,
-                                    @codigo_recebedor, @nome_recebedor, @cidade_recebedor, @uf_recebedor,
-                                    @distancia, @tempo, @deslocamento, @situacao,
-                                    @data_cadastro, @usuario_cadastro);";
+                    cmdTNG.Parameters.AddWithValue("@idrota", rota);
+                    conn.Open();
 
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    using (SqlDataReader reader = cmdTNG.ExecuteReader())
                     {
-                        // Exemplo de parâmetros (substitua pelas variáveis/controles corretos)
-                        cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
-                        cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = txtDesc_Rota.Text;
-                        cmd.Parameters.Add("@codigo_remetente", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
-                        cmd.Parameters.Add("@nome_remetente", SqlDbType.NVarChar, 50).Value = cboRemetente.SelectedItem;
-                        cmd.Parameters.Add("@cidade_remetente", SqlDbType.NVarChar, 50).Value = txtMunicipioRemetente.Text;
-                        cmd.Parameters.Add("@uf_remetente", SqlDbType.NVarChar, 2).Value = txtUFRemetente.Text;
-
-                        cmd.Parameters.Add("@codigo_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text);
-                        cmd.Parameters.Add("@nome_expedidor", SqlDbType.NVarChar, 50).Value = cboExpedidor.SelectedItem;
-                        cmd.Parameters.Add("@cidade_expedidor", SqlDbType.NVarChar, 50).Value = txtCidExpedidor.Text;
-                        cmd.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2).Value = txtUFExpedidor.Text;
-
-                        cmd.Parameters.Add("@codigo_destinatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodDestinatario.Text);
-                        cmd.Parameters.Add("@nome_destinatario", SqlDbType.NVarChar, 50).Value = cboDestinatario.SelectedItem;
-                        cmd.Parameters.Add("@cidade_destinatario", SqlDbType.NVarChar, 50).Value = txtMunicipioDestinatario.Text;
-                        cmd.Parameters.Add("@uf_destinatario", SqlDbType.NVarChar, 2).Value = txtUFDestinatario.Text;
-
-                        cmd.Parameters.Add("@codigo_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text);
-                        cmd.Parameters.Add("@nome_recebedor", SqlDbType.NVarChar, 50).Value = cboRecebedor.SelectedItem;
-                        cmd.Parameters.Add("@cidade_recebedor", SqlDbType.NVarChar, 50).Value = txtCidRecebedor.Text;
-                        cmd.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2).Value = txtUFRecebedor.Text;
-
-                        cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = Convert.ToDecimal(txtDistancia.Text);
-                        cmd.Parameters.Add("@tempo", SqlDbType.NVarChar, 16).Value = txtDuracao.Text;
-                        cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar, 20).Value = cboDeslocamento.SelectedValue;
-                        cmd.Parameters.Add("@situacao", SqlDbType.NVarChar, 7).Value = ddlStatus.SelectedValue;
-
-                        // Datas: armazene como DateTime se a coluna for DateTime no banco
-                        cmd.Parameters.Add("@data_cadastro", SqlDbType.NVarChar, 16).Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
-                        cmd.Parameters.Add("@usuario_cadastro", SqlDbType.NVarChar, 50).Value = txtUsuCadastro.Text;
-
-
-
-                        try
+                        if (reader.Read())
                         {
-                            conn.Open();
-                            int linhasAfetadas = cmd.ExecuteNonQuery();
+                            txtRota.Text = reader["rota"].ToString();
+                            txtDesc_Rota.Text = reader["desc_rota"].ToString();
+                            txtCodRemetente.Text = reader["codigo_remetente"].ToString();
+                            cboRemetente.SelectedItem.Text = reader["nome_remetente"].ToString();
+                            txtMunicipioRemetente.Text = reader["cidade_remetente"].ToString();
+                            txtUFRemetente.Text = reader["uf_remetente"].ToString();
+                            txtCodExpedidor.Text = reader["codigo_expedidor"].ToString();
+                            cboExpedidor.SelectedItem.Text = reader["nome_expedidor"].ToString();
+                            txtCidExpedidor.Text = reader["cidade_expedidor"].ToString();
+                            txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
+                            txtCodDestinatario.Text = reader["codigo_destinatario"].ToString();
+                            cboDestinatario.SelectedItem.Text = reader["nome_destinatario"].ToString();
+                            txtMunicipioDestinatario.Text = reader["cidade_destinatario"].ToString();
+                            txtUFDestinatario.Text = reader["uf_destinatario"].ToString();
+                            txtCodRecebedor.Text = reader["codigo_recebedor"].ToString();
+                            cboRecebedor.SelectedItem.Text = reader["nome_recebedor"].ToString();
+                            txtCidRecebedor.Text = reader["cidade_recebedor"].ToString();
+                            txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
+                            txtDistancia.Text = reader["distancia"].ToString();
+                            txtDuracao.Text = reader["tempo"].ToString();
+                            cboDeslocamento.SelectedItem.Text = reader["deslocamento"].ToString();
+                            ddlStatus.SelectedItem.Text = reader["situacao"].ToString();
+                            lblDtCadastro.Text = reader["data_cadastro"].ToString();
+                            txtCadastro.Text = reader["usuario_cadastro"].ToString();
+                            txtUsuCadastro.Text = reader["usuario_cadastro"].ToString();
 
-                            if (linhasAfetadas > 0)
-                            {
-                                // Acione o toast quando a página for carregada
-                                string script = "<script>showToast('Atualização realizada com sucesso.');</script>";
-                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                            }
-                            else
-                            {
-                                // Acione o toast quando a página for carregada
-                                string script = "<script>showToast('Id não encontrado para atualização.');</script>";
-                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            //lblMensagem.Text = "Erro: " + ex.Message;
-                            // Acione o toast quando a página for carregada
-                            string script = "<script>showToast('Erro ao atualizar fornecedor.');</script>";
-                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
 
                         }
                     }
                 }
-
-
-
-
-
-
             }
         }
+        protected void btnAlterar_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(Request.QueryString["id"]))
+            {
+                string id = Request.QueryString["id"].ToString();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string sql = @"
+            UPDATE dbo.tbrotasdeentregas
+               SET desc_rota           = @desc_rota,
+                   codigo_remetente    = @codigo_remetente,
+                   nome_remetente      = @nome_remetente,
+                   cidade_remetente    = @cidade_remetente,
+                   uf_remetente        = @uf_remetente,
+                   codigo_expedidor    = @codigo_expedidor,
+                   nome_expedidor      = @nome_expedidor,
+                   cidade_expedidor    = @cidade_expedidor,
+                   uf_expedidor        = @uf_expedidor,
+                   codigo_destinatario = @codigo_destinatario,
+                   nome_destinatario   = @nome_destinatario,
+                   cidade_destinatario = @cidade_destinatario,
+                   uf_destinatario     = @uf_destinatario,
+                   codigo_recebedor    = @codigo_recebedor,
+                   nome_recebedor      = @nome_recebedor,
+                   cidade_recebedor    = @cidade_recebedor,
+                   uf_recebedor        = @uf_recebedor,
+                   distancia           = @distancia,
+                   tempo               = @tempo,
+                   deslocamento        = @deslocamento,
+                   situacao            = @situacao,
+                   data_alteracao      = @data_alteracao,
+                   usuario_alteracao   = @usuario_alteracao
+                   WHERE rota = @rota";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        // parâmetros
+                        cmd.Parameters.AddWithValue("@desc_rota", txtDesc_Rota.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codigo_remetente", txtCodRemetente.Text.Trim());
+                        cmd.Parameters.AddWithValue("@nome_remetente", cboRemetente.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@cidade_remetente", txtMunicipioRemetente.Text.Trim());
+                        cmd.Parameters.AddWithValue("@uf_remetente", txtUFRemetente.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codigo_expedidor", txtCodExpedidor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@nome_expedidor", cboExpedidor.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@cidade_expedidor", txtCidExpedidor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@uf_expedidor", txtUFExpedidor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codigo_destinatario", txtCodDestinatario.Text.Trim());
+                        cmd.Parameters.AddWithValue("@nome_destinatario", cboDestinatario.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@cidade_destinatario", txtMunicipioDestinatario.Text.Trim());
+                        cmd.Parameters.AddWithValue("@uf_destinatario", txtUFDestinatario.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codigo_recebedor", txtCodRecebedor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@nome_recebedor", cboRecebedor.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@cidade_recebedor", txtCidRecebedor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@uf_recebedor", txtUFRecebedor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text.Trim().Replace(',', '.'));
+                        cmd.Parameters.AddWithValue("@tempo", txtDuracao.Text.Trim());
+                        cmd.Parameters.AddWithValue("@deslocamento", cboDeslocamento.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@situacao", ddlStatus.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@data_alteracao", txtAltCad.Text.Trim());
+                        cmd.Parameters.AddWithValue("@usuario_alteracao", lblDtCadastro.Text.Trim());
+                        cmd.Parameters.AddWithValue("@rota", id); // rota (chave)
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+        }
     }
-
 }

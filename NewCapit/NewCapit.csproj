@@ -287,6 +287,7 @@
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
+    <Content Include="dist\pages\Frm_Rotas.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4755,6 +4756,13 @@
     </Compile>
     <Compile Include="dist\pages\Ver_txt.aspx.designer.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Rotas.aspx.cs">
+      <DependentUpon>Frm_Rotas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Rotas.aspx.designer.cs">
+      <DependentUpon>Frm_Rotas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
