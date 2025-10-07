@@ -45,6 +45,93 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+    <!-- jQuery (necessário para Toastr) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        function showSuccessToast(message) {
+            toastr.success(message, 'Sucesso');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+        function showWarningToast(message) {
+            toastr.warning(message, 'Atenção');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+        function showErrorToast(message) {
+            toastr.error(message, 'Erro');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+        function showInfoToast(message) {
+            toastr.info(message, 'Informativo');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+
+
+        function showSuccessToastVeiculo(message) {
+            toastr.success(message, 'Sucesso');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+        function showWarningToastVeiculo(message) {
+            toastr.warning(message, 'Atenção');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+        function showErrorToastVeiculo(message) {
+            toastr.error(message, 'Erro');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+        function showInfoToastVeiculo(message) {
+            toastr.info(message, 'Informativo');
+        }
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "10000"
+        };
+    </script>
+
+
+
 
     <asp:ContentPlaceHolder ID="head" runat="server">
         <style>
@@ -331,15 +418,15 @@
                                                             <p>Entregas</p>
                                                         </a>
                                                     </li>--%>
-                                                   <%-- <li class="nav-item">
+                                                <%-- <li class="nav-item">
                                                         <a href="pages/tables/jsgrid.html" class="nav-link">
                                                             <i class="fas fa-calendar-alt nav-icon"></i>
                                                             <p>Solicitações VW</p>
                                                         </a>
-                                                    </li>   --%>                                 
+                                                    </li>   --%>
                                                 <%--</ul>--%>
                                             </li>
-                                             <li class="nav-item">
+                                            <li class="nav-item">
                                                 <a href="/dist/pages/Frm_Coleta.aspx" class="nav-link">
                                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                                     <p>

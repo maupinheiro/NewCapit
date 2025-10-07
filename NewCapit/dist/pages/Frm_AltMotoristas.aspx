@@ -44,10 +44,13 @@
             let txtCelular = document.getElementById("<%= txtCelular.ClientID %>");
             let txtDtInativacao = document.getElementById("<%= txtDtInativacao.ClientID %>");
 
+
+            
             if (txtDtNasc) aplicarMascara(txtDtNasc, "00/00/0000");
             if (txtDtInativacao) aplicarMascara(txtDtInativacao, "00/00/0000");
             if (txtDtEmissao) aplicarMascara(txtDtEmissao, "00/00/0000");
             if (txtValCNH) aplicarMascara(txtValCNH, "00/00/0000");
+            if (txtVAlExameTox) aplicarMascara(txtVAlExameTox, "00/00/0000");
             if (txtValLibRisco) aplicarMascara(txtValLibRisco, "00/00/0000");
             if (txtVAlMoop) aplicarMascara(txtVAlMoop, "00/00/0000");
             if (txtCPF) aplicarMascara(txtCPF, "000.000.000-00");

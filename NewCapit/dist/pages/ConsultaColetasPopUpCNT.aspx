@@ -168,12 +168,12 @@
             </div>
         </div>
 
-        <footer class="main-footer">
+       <%-- <footer class="main-footer">
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> 3.1.0 
             </div>
             <strong>Copyright &copy; 2023-2025 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
-        </footer>
+        </footer>--%>
 
 
     </form>

@@ -1385,12 +1385,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Focus();
 
                             }
-
                         }
-
-
-
-
                     }
                 }
                 else
@@ -1413,8 +1408,8 @@ namespace NewCapit.dist.pages
                     //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
+                    txtCodVeiculo.Text = "";
+                    txtCodVeiculo.Focus();
 
                 }
 
@@ -2047,8 +2042,125 @@ namespace NewCapit.dist.pages
                         }
 
 
+                        //pesquisar primeiro reboque
+                        //if (txtReboque1.Text.Trim() != "")
+                        //{
+                        //    var placaReboque1 = txtReboque1.Text.Trim();
+
+                        //    var objCarreta = new Domain.ConsultaReboque
+                        //    {
+                        //        placacarreta = placaReboque1
+                        //    };
+                        //    var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
+                        //    if (ConsultaReboque != null)
+                        //    {
+                        //        txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
+                        //    }
+                        //}
+
+                        //pesquisar segundo reboque
+                        //if (txtReboque2.Text.Trim() != "")
+                        //{
+                        //    var placaReboque2 = txtReboque2.Text.Trim();
+
+                        //    var objCarreta = new Domain.ConsultaReboque
+                        //    {
+                        //        placacarreta = placaReboque2
+                        //    };
+                        //    var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
+                        //    if (ConsultaReboque != null)
+                        //    {
+                        //        txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
+                        //    }
+                        //}
+                        //txtCodVeiculo.Focus();
+
+                        // Pesquisar validade do Laudo de Fumaça
+                        if (txtOpacidade.Text != "")
+                        {
+                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
+                            DateTime dataOpacidade = Convert.ToDateTime(txtOpacidade.Text).Date;
+                            txtOpacidade.Text = dataOpacidade.ToString("dd/MM/yyyy");
+                            TimeSpan diferencaOpacidade = dataOpacidade - dataHoje;
+                            // Agora você pode comparar a diferença
+                            if (diferencaOpacidade.TotalDays >= 1 && diferencaOpacidade.TotalDays <= 30)
+                            {
+                                txtOpacidade.BackColor = System.Drawing.Color.Khaki;
+                                txtOpacidade.ForeColor = System.Drawing.Color.OrangeRed;
+                                // Acione o toast quando a página for carregada
+                                //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
+                                //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                                ShowToastrWarningVeiculo("Laudo de Opacidade do Veículo, vence em menos de 30 dias!");
+                                // txtCodFrota.Focus();
+                            }
+                            if (diferencaOpacidade.TotalDays <= 0)
+                            {
+                                txtOpacidade.BackColor = System.Drawing.Color.Red;
+                                txtOpacidade.ForeColor = System.Drawing.Color.White;
+                                ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, está vencido!");
+                                txtCodVeiculo.Text = "";
+                                txtCodVeiculo.Focus();
+                            }
+                            else
+                            {
+                                if (txtOpacidade.Text == "")
+                                {
+                                    txtOpacidade.BackColor = System.Drawing.Color.Red;
+                                    txtOpacidade.ForeColor = System.Drawing.Color.White;
+                                    ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, não encontrado no sistema!");
+                                    txtOpacidade.Text = "";
+                                    txtOpacidade.Focus();
+                                }
+                            }
+                        }
+
+                        // Pesquisar validade da Licença CET
+                        if (txtVeiculoTipo.Text == "FROTA")
+                        {
+                            if (txtCET.Text != "")
+                            {
+                                DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
+                                DateTime dataCET = Convert.ToDateTime(txtOpacidade.Text).Date;
+                                txtCET.Text = dataCET.ToString("dd/MM/yyyy");
+                                TimeSpan diferencaCET = dataCET - dataHoje;
+                                // Agora você pode comparar a diferença
+                                if (diferencaCET.TotalDays >= 1 && diferencaCET.TotalDays <= 30)
+                                {
+                                    txtCET.BackColor = System.Drawing.Color.Khaki;
+                                    txtCET.ForeColor = System.Drawing.Color.OrangeRed;
+                                    // Acione o toast quando a página for carregada
+                                    //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
+                                    //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                                    ShowToastrWarningVeiculo("Autorização CET do veículo, vence em menos de 30 dias!");
+                                    // txtCodFrota.Focus();
+                                }
+                                if (diferencaCET.TotalDays <= 0)
+                                {
+                                    txtCET.BackColor = System.Drawing.Color.Red;
+                                    txtCET.ForeColor = System.Drawing.Color.White;
+                                    ShowToastrErrorVeiculo("Autorização CET do veículo, está vencida. Pare o veículo imediatamente!");
+                                    txtCodVeiculo.Text = "";
+                                    txtCodVeiculo.Focus();
+                                }
+                                else
+                                {
+                                    if (txtCET.Text == "")
+                                    {
+                                        txtCET.BackColor = System.Drawing.Color.Red;
+                                        txtCET.ForeColor = System.Drawing.Color.White;
+                                        ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, não encontrado no sistema!");
+                                        txtCET.Text = "";
+                                        txtCET.Focus();
+                                    }
+                                }
+                            }
+
+                        }
+
                         // pesquisar primeiro reboque
-                        if (txtReboque1.Text.Trim() != "")
+                        if (txtReboque1.Text != "")
                         {
                             var placaReboque1 = txtReboque1.Text.Trim();
 
@@ -2064,7 +2176,7 @@ namespace NewCapit.dist.pages
                         }
 
                         // pesquisar segundo reboque
-                        if (txtReboque2.Text.Trim() != "")
+                        if (txtReboque2.Text != "")
                         {
                             var placaReboque2 = txtReboque2.Text.Trim();
 
@@ -2075,10 +2187,127 @@ namespace NewCapit.dist.pages
                             var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
                             if (ConsultaReboque != null)
                             {
-                                txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
+                                //txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
                             }
                         }
-                        txtCodVeiculo.Focus();
+
+                        // Pesquisar licenciamento do veiculo
+                        if (txtCRLVVeiculo.Text != "")
+                        {
+                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
+                            DateTime dataPlaca = Convert.ToDateTime(txtCRLVVeiculo.Text).Date;
+                            txtCRLVVeiculo.Text = dataPlaca.ToString("dd/MM/yyyy");
+                            TimeSpan diferencaPlaca = dataPlaca - dataHoje;
+                            // Agora você pode comparar a diferença
+                            if (diferencaPlaca.TotalDays >= 1 && diferencaPlaca.TotalDays <= 30)
+                            {
+                                txtCRLVVeiculo.BackColor = System.Drawing.Color.Khaki;
+                                txtCRLVVeiculo.ForeColor = System.Drawing.Color.OrangeRed;
+                                // Acione o toast quando a página for carregada
+                                //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
+                                //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                                ShowToastrWarningVeiculo("Licenciamento do Veículo, vence em menos de 30 dias!");
+                                // txtCodFrota.Focus();
+                            }
+                            if (diferencaPlaca.TotalDays <= 0)
+                            {
+                                txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
+                                txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
+                                ShowToastrErrorVeiculo("Licenciamento do veículo, está vencido!");
+                                txtCodVeiculo.Text = "";
+                                txtCodVeiculo.Focus();
+                            }
+                            else
+                            {
+                                if (txtCRLVVeiculo.Text == "")
+                                {
+                                    txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
+                                    txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
+                                    ShowToastrErrorVeiculo("Veículo sem licenciamento lançado!");
+                                    txtCodVeiculo.Text = "";
+                                    txtCodVeiculo.Focus();
+                                }
+                            }
+                        }
+
+                        // Pesquisar licenciamento da carreta 1
+                        if (txtCRLVReb1.Text != "")
+                        {
+                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
+                            DateTime dataReboque1 = Convert.ToDateTime(txtCRLVReb1.Text).Date;
+                            txtCRLVReb1.Text = dataReboque1.ToString("dd/MM/yyyy");
+                            TimeSpan diferencaReboque1 = dataReboque1 - dataHoje;
+                            // Agora você pode comparar a diferença
+                            if (diferencaReboque1.TotalDays >= 1 && diferencaReboque1.TotalDays <= 30)
+                            {
+                                txtCRLVReb1.BackColor = System.Drawing.Color.Khaki;
+                                txtCRLVReb1.ForeColor = System.Drawing.Color.OrangeRed;
+                                // Acione o toast quando a página for carregada
+                                //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
+                                //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                                ShowToastrWarningVeiculo("Licenciamento da Carreta, vence em menos de 30 dias!");
+                                // txtCodFrota.Focus();
+                            }
+                            if (diferencaReboque1.TotalDays <= 0)
+                            {
+                                txtCRLVReb1.BackColor = System.Drawing.Color.Red;
+                                txtCRLVReb1.ForeColor = System.Drawing.Color.White;
+                                ShowToastrErrorVeiculo("Licenciamento da carreta, está vencido!");
+                                txtCodVeiculo.Text = "";
+                                txtCodVeiculo.Focus();
+                            }
+                            else
+                            {
+                                if (txtCRLVReb1.Text == "")
+                                {
+                                    txtCRLVReb1.BackColor = System.Drawing.Color.Red;
+                                    txtCRLVReb1.ForeColor = System.Drawing.Color.White;
+                                    ShowToastrErrorVeiculo("Carreta sem licenciamento lançado!");
+                                    txtCodVeiculo.Text = "";
+                                    txtCodVeiculo.Focus();
+                                }
+                            }
+                        }
+
+                        // Pesquisar licenciamento da carreta 2
+                        if (txtCRLVReb2.Text != "")
+                        {
+                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
+                            DateTime dataReboque2 = Convert.ToDateTime(txtCRLVReb2.Text).Date;
+                            txtCRLVReb2.Text = dataReboque2.ToString("dd/MM/yyyy");
+                            TimeSpan diferencaReboque2 = dataReboque2 - dataHoje;
+                            // Agora você pode comparar a diferença
+                            if (diferencaReboque2.TotalDays >= 1 && diferencaReboque2.TotalDays <= 30)
+                            {
+                                txtCRLVReb2.BackColor = System.Drawing.Color.Khaki;
+                                txtCRLVReb2.ForeColor = System.Drawing.Color.OrangeRed;
+
+                                ShowToastrWarningVeiculo("Licenciamento da Carreta, vence em menos de 30 dias!");
+                                // txtCodFrota.Focus();
+                            }
+                            if (diferencaReboque2.TotalDays <= 0)
+                            {
+                                txtCRLVReb2.BackColor = System.Drawing.Color.Red;
+                                txtCRLVReb2.ForeColor = System.Drawing.Color.White;
+                                ShowToastrErrorVeiculo("Licenciamento da carreta, está vencido!");
+                                txtCodVeiculo.Text = "";
+                                txtCodVeiculo.Focus();
+                            }
+                            else
+                            {
+                                if (txtCRLVReb2.Text == "")
+                                {
+                                    txtCRLVReb2.BackColor = System.Drawing.Color.Red;
+                                    txtCRLVReb2.ForeColor = System.Drawing.Color.White;
+                                    ShowToastrErrorVeiculo("Carreta sem licenciamento lançado!");
+                                    txtCodVeiculo.Text = "";
+                                    txtCodVeiculo.Focus();
+                                }
+                            }
+                        }
+
                     }
                 }
                 else
@@ -2159,8 +2388,7 @@ namespace NewCapit.dist.pages
             //                                        true
             //                                    );
         }
-
-        
+              
                                                    
         //private bool ExisteCarga(string numeroCarga)
         //{
@@ -2401,5 +2629,48 @@ namespace NewCapit.dist.pages
             ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
 
+        private void ShowToastrSuccess(string message)
+        {
+            string script = $"showSuccessToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrSuccess", script, true);
+        }
+        private void ShowToastrError(string message)
+        {
+            string script = $"showErrorToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrError", script, true);
+
+        }
+        private void ShowToastrInfo(string message)
+        {
+            string script = $"showInfoToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrInfo", script, true);
+        }
+        private void ShowToastrWarning(string message)
+        {
+            string script = $"showWarningToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
+        }
+
+        private void ShowToastrSuccessVeiculo(string message)
+        {
+            string script = $"showSuccessToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrSuccess", script, true);
+        }
+        private void ShowToastrErrorVeiculo(string message)
+        {
+            string script = $"showErrorToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrError", script, true);
+
+        }
+        private void ShowToastrInfoVeiculo(string message)
+        {
+            string script = $"showInfoToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrInfo", script, true);
+        }
+        private void ShowToastrWarningVeiculo(string message)
+        {
+            string script = $"showWarningToast('{message}');";
+            ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
+        }
     }
 }

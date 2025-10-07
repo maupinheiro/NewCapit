@@ -34,7 +34,7 @@ namespace NewCapit.dist.pages
             string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT id, carga, cva, atendimento, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, cliorigem, clidestino, veiculo, tipo_viagem, solicitacoes,peso,pedidos, andamento FROM tbcargas WHERE andamento = 'PENDENTE' order by data_hora";
+                string query = "SELECT id, carga, cva, atendimento, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, cliorigem, clidestino, veiculo, tipo_viagem, solicitacoes,peso,pedidos, andamento FROM tbcargas WHERE andamento = 'PENDENTE' AND empresa = 'CNT (CC)' order by data_hora";
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
