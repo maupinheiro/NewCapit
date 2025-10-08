@@ -249,6 +249,51 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtTransportadora;
 
         /// <summary>
+        /// Controle txtCafe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCafe;
+
+        /// <summary>
+        /// Controle txtAlmoco.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAlmoco;
+
+        /// <summary>
+        /// Controle txtJanta.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtJanta;
+
+        /// <summary>
+        /// Controle txtPernoite.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPernoite;
+
+        /// <summary>
+        /// Controle txtComissao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtComissao;
+
+        /// <summary>
         /// Controle txtFilialVeicCNT.
         /// </summary>
         /// <remarks>

@@ -1502,6 +1502,11 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
+            //comissao = @comissao,
+            //vlpernoite = @vlpernoite,
+            //cafe = @cafe,
+            //almoco = @almoco,
+            //janta = @janta,
             string query = @"UPDATE tbcarregamentos SET
                             codmotorista = @codmotorista,
                             nucleo = @nucleo,
@@ -1545,7 +1550,7 @@ namespace NewCapit.dist.pages
                             cidclifimprestacao = @cidclifimprestacao,	
                             estclifimprestacao = @estclifimprestacao,
                             dtalt = @dtalt,
-                            status = @status,
+                            status = @status,                            
                             usualt = @usualt
                             WHERE num_carregamento = @num_carregamento";
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1583,7 +1588,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
                 cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
                 cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
-                cmd.Parameters.AddWithValue("@status", status);
+                cmd.Parameters.AddWithValue("@status", SafeValue(status));
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
@@ -1595,6 +1600,13 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@nomclifimprestacao", SafeValue(txtNomCliFinal.Text));
                 cmd.Parameters.AddWithValue("@cidclifimprestacao", SafeValue(txtCidCliFinal.Text));
                 cmd.Parameters.AddWithValue("@estclifimprestacao", SafeValue(txtUFCliFinal.Text));
+
+                //cmd.Parameters.AddWithValue("@comissao", SafeValue(txtComissao.Text));
+                //cmd.Parameters.AddWithValue("@vlpernoite", SafeValue(txtPernoite.Text));
+                //cmd.Parameters.AddWithValue("@cafe", SafeValue(txtCafe.Text));
+                //cmd.Parameters.AddWithValue("@almoco", SafeValue(txtAlmoco.Text));
+                //cmd.Parameters.AddWithValue("@janta", SafeValue(txtJanta.Text));
+
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT (CC)"));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usualt", nomeUsuario);
@@ -1611,8 +1623,8 @@ namespace NewCapit.dist.pages
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
 
-                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
-                    //AtualizarColetasVisiveis();
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
+                    AtualizarColetasVisiveis();
 
 
                 }
