@@ -456,22 +456,49 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtNomCliFinal;
 
         /// <summary>
-        /// Controle txtCidFinal.
+        /// Controle txtCidCliFinal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCidFinal;
+        protected global::System.Web.UI.WebControls.TextBox txtCidCliFinal;
 
         /// <summary>
-        /// Controle txtUFFinal.
+        /// Controle txtUFCliFinal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFFinal;
+        protected global::System.Web.UI.WebControls.TextBox txtUFCliFinal;
+
+        /// <summary>
+        /// Controle updMapa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updMapa;
+
+        /// <summary>
+        /// Controle tmAtualizaMapa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.Timer tmAtualizaMapa;
+
+        /// <summary>
+        /// Controle GMap1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::Subgurim.Controles.GMap GMap1;
 
         /// <summary>
         /// Controle rptColetas.

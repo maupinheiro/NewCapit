@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaOrdemColeta.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaOrdemColeta" %>
-
+<%@ register assembly="GMaps" namespace="Subgurim.Controles" tagprefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -747,7 +747,7 @@
                     <div class="form-group row">
                         <label for="inputExpedidor" class="col-sm-3 col-form-label" style="text-align: right">INICIO DA PRESTAÇÃO DO SERVIÇO:</label>
                         <div class="col-md-1">
-                            <asp:TextBox ID="txtCodCliInicio" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtCodCliInicio" runat="server" CssClass="form-control" OnTextChanged="txtCodCliInicio_TextChanged" AutoPostBack="true"></asp:TextBox>
                         </div>
                         <div class="col-md-3">
                             <asp:TextBox ID="txtNomCliInicio" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -763,16 +763,16 @@
                     <div class="form-group row">
                         <label for="inputExpedidor" class="col-sm-3 col-form-label" style="text-align: right">TERMINO DA PRESTAÇÃO DO SERVIÇO:</label>
                         <div class="col-md-1">
-                            <asp:TextBox ID="txtCodCliFinal" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtCodCliFinal" runat="server" CssClass="form-control" OnTextChanged="txtCodCliFinal_TextChanged" AutoPostBack="true"></asp:TextBox>
                         </div>
                         <div class="col-md-3">
                             <asp:TextBox ID="txtNomCliFinal" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                         </div>
                         <div class="col-md-4">
-                            <asp:TextBox ID="txtCidFinal" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                            <asp:TextBox ID="txtCidCliFinal" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                         </div>
                         <div class="col-md-1">
-                            <asp:TextBox ID="txtUFFinal" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                            <asp:TextBox ID="txtUFCliFinal" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                         </div>
                     </div>
 
@@ -783,11 +783,22 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-plus"></i>
                                 </button>
+                                 
                             </div>
                             <!-- /.card-tools -->
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <asp:UpdatePanel ID="updMapa" runat="server">
+                                <ContentTemplate>
+                                    <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="60000" OnTick="tmAtualizaMapa_Tick" />
+                                     <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="570px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True" />
+                                </ContentTemplate>
+                                <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="tmAtualizaMapa" EventName="Tick" />
+                                    </Triggers>
+                            </asp:UpdatePanel>
+                           
                         </div>
                     </div>
 

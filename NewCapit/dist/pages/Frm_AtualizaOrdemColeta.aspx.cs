@@ -23,6 +23,14 @@ using NPOI.SS.UserModel;
 using ICSharpCode.SharpZipLib.Zip;
 using MathNet.Numerics.Providers.SparseSolver;
 using System.Drawing.Drawing2D;
+using GMaps;
+using GMaps.Classes;
+using Subgurim;
+using Subgurim.Controles;
+using Subgurim.Controls;
+using Subgurim.Maps;
+using Subgurim.Web;
+using System.Globalization;
 
 namespace NewCapit.dist.pages
 {
@@ -33,6 +41,8 @@ namespace NewCapit.dist.pages
         string codmot, caminhofoto;
         string num_coleta;
         string status;
+        string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade;
+        GInfoWindow window;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -359,6 +369,7 @@ namespace NewCapit.dist.pages
             txtCodVeiculo.Text = dt.Rows[0][15].ToString(); //+ "/" + dt.Rows[0][13].ToString();
             txtFilialVeicCNT.Text = dt.Rows[0][133].ToString();
             txtPlaca.Text = dt.Rows[0][16].ToString();
+            CarregaMap(dt.Rows[0][16].ToString());
             txtVeiculoTipo.Text = dt.Rows[0][132].ToString();
             txtTipoVeiculo.Text = dt.Rows[0][14].ToString();
             txtReboque1.Text = dt.Rows[0][17].ToString();
@@ -1525,6 +1536,14 @@ namespace NewCapit.dist.pages
                             codcontato = @codcontato,
                             fonecorporativo = @fonecorporativo,
                             empresa = @empresa,
+                            codcliinicioprestacao =	@codcliinicioprestacao,
+                            nomcliinicioprestacao =	@nomcliinicioprestacao,
+                            cidcliinicioprestacao =	@cidcliinicioprestacao,
+                            estcliinicioprestacao =	@estcliinicioprestacao,
+                            codclifimprestacao = @codclifimprestacao,
+                            nomclifimprestacao = @nomclifimprestacao,	
+                            cidclifimprestacao = @cidclifimprestacao,	
+                            estclifimprestacao = @estclifimprestacao,
                             dtalt = @dtalt,
                             status = @status,
                             usualt = @usualt
@@ -1568,6 +1587,14 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
+                cmd.Parameters.AddWithValue("@codcliinicioprestacao", SafeValue(txtCodCliInicio.Text));
+                cmd.Parameters.AddWithValue("@nomcliinicioprestacao", SafeValue(txtNomCliInicio.Text));
+                cmd.Parameters.AddWithValue("@cidcliinicioprestacao", SafeValue(txtCidCliInicio.Text));
+                cmd.Parameters.AddWithValue("@estcliinicioprestacao", SafeValue(txtUFCliInicio.Text));
+                cmd.Parameters.AddWithValue("@codclifimprestacao", SafeValue(txtCodCliFinal.Text));
+                cmd.Parameters.AddWithValue("@nomclifimprestacao", SafeValue(txtNomCliFinal.Text));
+                cmd.Parameters.AddWithValue("@cidclifimprestacao", SafeValue(txtCidCliFinal.Text));
+                cmd.Parameters.AddWithValue("@estclifimprestacao", SafeValue(txtUFCliFinal.Text));
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT (CC)"));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usualt", nomeUsuario);
@@ -2543,6 +2570,42 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        protected void txtCodCliInicio_TextChanged(object sender, EventArgs e)
+        {
+            string sql= "select codcli, nomcli, cidcli, estcli from tbclientes where codcli = '" + txtCodCliInicio.Text+ "' OR codvw='" + txtCodCliInicio.Text + "'";
+            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adp.Fill(dt);
+            con.Close();
+
+            if(dt.Rows.Count >0)
+            {
+                txtNomCliInicio.Text = dt.Rows[0][1].ToString();
+                txtCidCliInicio.Text = dt.Rows[0][2].ToString();
+                txtUFCliInicio.Text = dt.Rows[0][3].ToString();
+            }
+
+        }
+
+        protected void txtCodCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            string sql = "select codcli, nomcli, cidcli, estcli from tbclientes where codcli = '" + txtCodCliInicio.Text + "' OR codvw='" + txtCodCliInicio.Text + "'";
+            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adp.Fill(dt);
+            con.Close();
+
+            if (dt.Rows.Count > 0)
+            {
+                txtNomCliFinal.Text = dt.Rows[0][1].ToString();
+                txtCidCliFinal.Text = dt.Rows[0][2].ToString();
+                txtUFCliFinal.Text = dt.Rows[0][3].ToString();
+            }
+        }
+
         protected void cboResponsavel_SelectedIndexChanged(object sender, EventArgs e)
         {
             string codigo = cboResponsavel.SelectedValue;
@@ -2671,6 +2734,142 @@ namespace NewCapit.dist.pages
         {
             string script = $"showWarningToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
+        }
+
+        public void CarregaMap(string ds_placa)
+        {
+            
+            string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf, t.nr_direcao   ";
+            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where v.ds_placa='" + ds_placa + "'";
+            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adpt.Fill(dt);
+            con.Close();
+
+            if (dt.Rows.Count > 0)
+            {
+                try
+                {
+                    hora = DateTime.Parse(dt.Rows[0][3].ToString()).ToString("dd/MM/yyyy - HH:mm:ss");
+
+                    placa = dt.Rows[0][1].ToString();
+                    lat = dt.Rows[0][6].ToString();
+                    lon = dt.Rows[0][7].ToString();
+
+                    if (dt.Rows[0][5].ToString() == "1")
+                    {
+                        ignicao = "Ligada";
+                    }
+                    else
+                    {
+                        ignicao = "Desligada";
+                    }
+
+                    velocidade = dt.Rows[0][8].ToString() + " Km/h";
+                    rua = dt.Rows[0][9].ToString();
+                    uf = dt.Rows[0][10].ToString();
+
+                    GLatLng latlng1 = new GLatLng(Convert.ToDouble(lat, CultureInfo.InvariantCulture), Convert.ToDouble(lon, CultureInfo.InvariantCulture));
+
+                    window = new GInfoWindow(latlng1, string.Format(@"<b>Informações:</b><br />Horário: {0}<br/>Placa: {1}<br/>Lat: {2}<br/>Long: {3}<br/>End: {4}<br/>UF: {5}<br/>Ignição: {6}<br/>Velocidade: {7}",
+                                                      hora, placa, lat, lon, rua, uf, ignicao, velocidade), true);
+
+                    GMap1.Add(window);
+
+                    // Focar o veículo no mapa com zoom adequado
+                    GMap1.setCenter(latlng1);
+                    GMap1.GZoom = 18;
+                    //GMap1; // Ajuste conforme necessário
+                    GIcon ico = new GIcon();
+
+
+                    ico.iconAnchor = new GPoint(25, 10);
+                    if (dt.Rows[0][11].ToString() == "0")
+                    {
+                        ico.image = "../img/ico_truck.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "1")
+                    {
+                        ico.image = "../img/ico_truck1.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "2")
+                    {
+                        ico.image = "../img/ico_truck2.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "3")
+                    {
+                        ico.image = "../img/ico_truck3.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "4")
+                    {
+                        ico.image = "../img/ico_truck4.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "5")
+                    {
+                        ico.image = "../img/ico_truck5.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "6")
+                    {
+                        ico.image = "../img/ico_truck6.png";
+                    }
+                    if (dt.Rows[0][11].ToString() == "7")
+                    {
+                        ico.image = "../img/ico_truck7.png";
+                    }
+                    GMarkerOptions mOpts = new GMarkerOptions();
+                    mOpts.clickable = true;
+                    mOpts.icon = ico;
+                    mOpts.draggable = false;
+
+                    GMarker marker = new GMarker(latlng1, mOpts);
+
+                    /* GInfoWindow window2 = new GInfoWindow(marker, latlng1.ToString(), false, GListener.Event.mouseover);
+                     GMap1.Add(window2);*/
+
+                    GMap1.Add(marker);
+                }
+                catch
+                {
+                    //CarregaMap();
+                }
+
+
+
+                //return "document.getElementById('Msg1').innerHTML="+ e.point.lat.ToString() + ";" + "document.getElementById('Msg2').innerHTML="+ e.point.lng.ToString();
+
+                //return window.ToString(e.map);
+            }
+            else
+            {
+                string linha1 = "Placa não encontrada no sistema.";
+
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+
+            }
+
+
+
+
+        }
+
+        protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
+        {
+            if (ViewState["placaAtual"] != null)
+            {
+                string ds_placa = ViewState["placaAtual"].ToString();
+                CarregaMap(ds_placa);
+            }
         }
     }
 }
