@@ -49,6 +49,11 @@
                                     <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
                                     <asp:BoundField DataField="codfor" HeaderText="CÓDIGO" />
                                     <asp:BoundField DataField="fantasia" HeaderText="NOME FANTASIA" />
+                                    <asp:BoundField DataField="combustivel_S500" HeaderText="DIESEL S500" />
+                                    <asp:BoundField DataField="combustivel_S10" HeaderText="DIESEL S10" />
+                                    <asp:BoundField DataField="combustivel_Etanol" HeaderText="ETANOL" />
+                                    <asp:BoundField DataField="combustivel_gasolina" HeaderText="GASOLINA" />
+                                    <asp:BoundField DataField="combustivel_arla" HeaderText="ARLA 32 (l)" />
                                     <asp:BoundField DataField="cidade" HeaderText="MUNICIPIO" />
                                     <asp:BoundField DataField="estado" HeaderText="UF" />
                                                                    

@@ -11,7 +11,7 @@ namespace DAL
     {
         public static DataTable FetchDataTable()
         {
-            string sql = "SELECT id, codfor, fantasia, cidade, estado FROM tbfornecedores WHERE fl_exclusao is null AND status = 'ATIVO'AND tipofornecedor = 'POSTO COMBUSTÍVEL' ORDER BY fantasia";
+            string sql = "SELECT id, codfor, fantasia, combustivel_S500, combustivel_S10, combustivel_Etanol, combustivel_gasolina, combustivel_arla, cidade, estado FROM tbfornecedores WHERE fl_exclusao is null AND status = 'ATIVO'AND tipofornecedor = 'POSTO COMBUSTÍVEL' ORDER BY fantasia";
 
             using (var con = ConnectionUtil.GetConnection())
             {

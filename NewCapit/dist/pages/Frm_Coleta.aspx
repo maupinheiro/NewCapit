@@ -377,6 +377,14 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-2" id="crono" runat="server">
+                                                <div class="form-group">
+                                                    <span class="details">VAL. CRONOTACOGRAFO:</span>
+                                                    <div class="input-group">
+                                                        <asp:TextBox ID="txtCrono" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row g-3">
                                             <div class="col-md-1">
@@ -592,9 +600,8 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="tab-content" id="custom-tabs-four-tabContent">
-                                                        <!-- ATENDIMENTO --> 
-                                                        
-                                          <div class="tab-pane fade show active" id="custom-tabs-four-atendimento" role="tabpanel" aria-labelledby="custom-tabs-four-atendimento-tab">
+                                                        <!-- ATENDIMENTO -->
+                                                        <div class="tab-pane fade show active" id="custom-tabs-four-atendimento" role="tabpanel" aria-labelledby="custom-tabs-four-atendimento-tab">
                                                             <div class="row g-3">
                                                                 <div class="col-md-1">
                                                                     <div class="form-group">
@@ -726,12 +733,10 @@
                                                             </div>
 
                                                         </div>
-                                                        <!-- Pedidos -->
+                                                        <!-- PEDIDOS -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-pedidos" role="tabpanel" aria-labelledby="custom-tabs-four-pedidos-tab">
-                                                            <div class="card-body table-responsive p-0" style="height: 250px;">
+                                                            <div class="card-body table-responsive p-0" style="height: 150px;">
                                                                 <table class="table table-head-fixed text-nowrap">
-                                                                    <%-- <asp:GridView ID="gvPedidos" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" EmptyDataText="Nenhum pedido encontrado." OnRowEditing="gvPedidos_RowEditing"
-                                                                        OnRowUpdating="gvPedidos_RowUpdating" OnRowCancelingEdit="gvPedidos_RowCancelingEdit">--%>
                                                                     <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-striped"
                                                                         AutoGenerateColumns="False"
                                                                         DataKeyNames="carga"
@@ -814,12 +819,10 @@
                                                                 </table>
                                                             </div>
                                                         </div>
-                                                        <!-- Documentos -->
+                                                        <!-- DOCUMENTOS CTE/RPS -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-documentos" role="tabpanel" aria-labelledby="custom-tabs-four-pedidos-tab">
                                                             <div class="card-body table-responsive p-0" style="height: 150px;">
                                                                 <table class="table table-head-fixed text-nowrap">
-                                                                    <%-- <asp:GridView ID="gvPedidos" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" EmptyDataText="Nenhum pedido encontrado." OnRowEditing="gvPedidos_RowEditing"
-                OnRowUpdating="gvPedidos_RowUpdating" OnRowCancelingEdit="gvPedidos_RowCancelingEdit">--%>
                                                                     <asp:GridView ID="GridView1" runat="server" CssClass="table table-striped"
                                                                         AutoGenerateColumns="False"
                                                                         DataKeyNames="carga"
@@ -902,33 +905,91 @@
                                                                 </table>
                                                             </div>
                                                         </div>
-                                                        <!-- frete Agregado/Terceiro -->
+                                                        <!-- NOTAS FISCAIS -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                                                            <div class="form-group row">
-                                                                <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VALOR DO FRETE:</label>
-                                                                <div class="col-sm-1">
-                                                                    <asp:TextBox ID="txtFreteAgregado" runat="server" CssClass="form-control" Style="text-align: center" placeholder="000,00"></asp:TextBox>
-                                                                </div>
-                                                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
-                                                                <div class="col-sm-2">
-                                                                    <asp:DropDownList ID="ddlFixoAgregado" runat="server" CssClass="form-control">
-                                                                        <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                                        <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                                        <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                                        <asp:ListItem Value="KILO" Text="KILO"></asp:ListItem>
-                                                                        <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
-                                                                    </asp:DropDownList>
-                                                                </div>
-                                                                <label for="inputFilial" class="col-sm-3 col-form-label" style="text-align: right">ALUGUEL DE CARRETA TNG (%):</label>
-                                                                <div class="col-sm-1">
-                                                                    <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control" Style="text-align: center" placeholder="000,00"></asp:TextBox>
-                                                                </div>
-                                                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">% FRETE TNG:</label>
-                                                                <div class="col-sm-1">
-                                                                    <asp:TextBox ID="txtPercTNGAgregado" runat="server" CssClass="form-control" Style="text-align: center" placeholder="000,00"></asp:TextBox>
-                                                                </div>
-                                                            </div>
+                                                            <div class="card-body table-responsive p-0" style="height: 150px;">
+                                                                <table class="table table-head-fixed text-nowrap">
+                                                                    <asp:GridView ID="GridView2" runat="server" CssClass="table table-striped"
+                                                                        AutoGenerateColumns="False"
+                                                                        DataKeyNames="carga"
+                                                                        OnRowEditing="gvPedidos_RowEditing"
+                                                                        OnRowUpdating="gvPedidos_RowUpdating"
+                                                                        OnRowCancelingEdit="gvPedidos_RowCancelingEdit">
+                                                                        <Columns>
+                                                                            <asp:TemplateField HeaderText="Del" ShowHeader="True" ItemStyle-Width="9">
+                                                                                <ItemTemplate>
+                                                                                    <asp:LinkButton ID="lnkExcluir" runat="server" Style="text-align: center" CssClass="btn btn-danger btn-sm"><i class="fa fa-trash"></i></i>
+                                                                                    </asp:LinkButton>
+                                                                                </ItemTemplate>
+                                                                            </asp:TemplateField>
+                                                                            <asp:BoundField DataField="pedido" HeaderText="Pedido" ReadOnly="True" />
+                                                                            <asp:BoundField DataField="portao" HeaderText="Deposito" ReadOnly="True" />
+                                                                            <asp:BoundField DataField="peso" HeaderText="Peso" ReadOnly="True" />
+                                                                            <asp:BoundField DataField="material" HeaderText="Material" ReadOnly="True" />
 
+                                                                            <asp:TemplateField>
+                                                                                <HeaderTemplate>
+                                                                                    <asp:CheckBox ID="chkHeader" runat="server" onclick="checkAll(this);" />
+                                                                                </HeaderTemplate>
+                                                                                <ItemTemplate>
+                                                                                    <asp:CheckBox ID="chkSelect" runat="server" />
+                                                                                </ItemTemplate>
+
+                                                                            </asp:TemplateField>
+                                                                            <asp:TemplateField HeaderText="Motorista Carregamento">
+                                                                                <ItemTemplate>
+                                                                                    <%# Eval("motcar") %>
+                                                                                </ItemTemplate>
+                                                                                <EditItemTemplate>
+                                                                                    <asp:DropDownList ID="ddlMotoristas" runat="server" />
+                                                                                </EditItemTemplate>
+                                                                            </asp:TemplateField>
+
+                                                                            <asp:TemplateField HeaderText="Inicio Carreg.">
+                                                                                <ItemTemplate>
+                                                                                    <%# Eval("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>
+                                                                                </ItemTemplate>
+                                                                                <EditItemTemplate>
+                                                                                    <asp:TextBox ID="txtDataHoraCarreg" runat="server" Text='<%# Bind("iniciocar", "{0:yyyy-MM-dd HH:mm}") %>' />
+                                                                                    <asp:RegularExpressionValidator ID="revDataHoraCarreg" runat="server"
+                                                                                        ControlToValidate="txtDataHoraCarreg"
+                                                                                        ValidationExpression="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$"
+                                                                                        ErrorMessage="Data inválida."
+                                                                                        ForeColor="Red" />
+                                                                                </EditItemTemplate>
+                                                                            </asp:TemplateField>
+
+                                                                            <asp:TemplateField HeaderText="Termino Carreg.">
+                                                                                <ItemTemplate>
+                                                                                    <%# Eval("termcar", "{0:dd/MM/yyyy HH:mm}") %>
+                                                                                </ItemTemplate>
+                                                                                <EditItemTemplate>
+                                                                                    <asp:TextBox ID="txtDataHoraFimCarreg" runat="server" Text='<%# Bind("termcar", "{0:yyyy-MM-dd HH:mm}") %>' />
+                                                                                    <asp:RegularExpressionValidator ID="revDataHoraFimCarreg" runat="server"
+                                                                                        ControlToValidate="txtDataHoraFimCarreg"
+                                                                                        ValidationExpression="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$"
+                                                                                        ErrorMessage="Data inválida."
+                                                                                        ForeColor="Red" />
+                                                                                </EditItemTemplate>
+                                                                            </asp:TemplateField>
+
+                                                                            <asp:TemplateField HeaderText="Duração">
+                                                                                <%--<ItemTemplate>
+    <%# GetDuracaoHoras(Eval("iniciocar"), Eval("termcar")) %>
+</ItemTemplate>--%>
+                                                                            </asp:TemplateField>
+
+                                                                            <asp:TemplateField HeaderText="Salvar" ShowHeader="True" ItemStyle-Width="9">
+                                                                                <ItemTemplate>
+                                                                                    <asp:LinkButton ID="lnkSalvar" runat="server" Style="text-align: center" CssClass="btn btn-success btn-sm"><i class="fas fa-redo-alt"></i></i>
+                                                                                    </asp:LinkButton>
+                                                                                </ItemTemplate>
+                                                                            </asp:TemplateField>
+
+                                                                        </Columns>
+                                                                    </asp:GridView>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                         <!-- frete Especial -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">

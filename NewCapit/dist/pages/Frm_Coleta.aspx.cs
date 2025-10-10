@@ -225,6 +225,7 @@ namespace NewCapit.dist.pages
                                 txtConjunto.Text = ConsultaVeiculo.tipocarreta;
                                 txtCodProprietario.Text = ConsultaVeiculo.codtra;
                                 txtProprietario.Text = ConsultaVeiculo.transp;
+                                txtCrono.Text = ConsultaVeiculo.venccronotacografo;
                             }
                         }
                         else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
@@ -256,6 +257,7 @@ namespace NewCapit.dist.pages
                                 txtConjunto.Text = ConsultaVeiculo.tipocarreta;
                                 txtCodProprietario.Text = ConsultaVeiculo.codtra;
                                 txtProprietario.Text = ConsultaVeiculo.transp;
+                                txtCrono.Text = ConsultaVeiculo.venccronotacografo;
 
                             }
                             // pesquisar validade do Exame Toxicologico
@@ -491,6 +493,44 @@ namespace NewCapit.dist.pages
                                         ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, não encontrado no sistema!");
                                         txtCET.Text = "";
                                         txtCET.Focus();
+                                    }
+                                }
+                            }
+                            if (txtCrono.Text != "")
+                            {
+                                DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
+                                DateTime dataCrono = Convert.ToDateTime(txtCrono.Text).Date;
+                                txtCrono.Text = dataCrono.ToString("dd/MM/yyyy");
+                                TimeSpan diferencaCrono = dataCrono - dataHoje;
+                                // Agora você pode comparar a diferença
+                                if (diferencaCrono.TotalDays >= 1 && diferencaCrono.TotalDays <= 30)
+                                {
+                                    txtCET.BackColor = System.Drawing.Color.Khaki;
+                                    txtCET.ForeColor = System.Drawing.Color.OrangeRed;
+                                    // Acione o toast quando a página for carregada
+                                    //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
+                                    //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                                    ShowToastrWarningVeiculo("Cronotacografo do veículo, vence em menos de 30 dias!");
+                                    // txtCodFrota.Focus();
+                                }
+                                if (diferencaCrono.TotalDays <= 0)
+                                {
+                                    txtCET.BackColor = System.Drawing.Color.Red;
+                                    txtCET.ForeColor = System.Drawing.Color.White;
+                                    ShowToastrErrorVeiculo("Cronotacografo do veículo, está vencido. Pare o veículo imediatamente!");
+                                    txtCodVeiculo.Text = "";
+                                    txtCodVeiculo.Focus();
+                                }
+                                else
+                                {
+                                    if (txtCrono.Text == "")
+                                    {
+                                        txtCrono.BackColor = System.Drawing.Color.Red;
+                                        txtCrono.ForeColor = System.Drawing.Color.White;
+                                        ShowToastrErrorVeiculo("Cronotacografo do Veículo, não encontrado no sistema!");
+                                        txtCrono.Text = "";
+                                        txtCrono.Focus();
                                     }
                                 }
                             }

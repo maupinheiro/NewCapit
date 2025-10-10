@@ -348,6 +348,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCRLVReb2;
 
         /// <summary>
+        /// Controle crono.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl crono;
+
+        /// <summary>
+        /// Controle txtCrono.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCrono;
+
+        /// <summary>
         /// Controle txtCodProprietario.
         /// </summary>
         /// <remarks>
@@ -762,40 +780,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.GridView GridView1;
 
         /// <summary>
-        /// Controle txtFreteAgregado.
+        /// Controle GridView2.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFreteAgregado;
-
-        /// <summary>
-        /// Controle ddlFixoAgregado.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlFixoAgregado;
-
-        /// <summary>
-        /// Controle txtPercentualAluguelCarreta.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPercentualAluguelCarreta;
-
-        /// <summary>
-        /// Controle txtPercTNGAgregado.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPercTNGAgregado;
+        protected global::System.Web.UI.WebControls.GridView GridView2;
 
         /// <summary>
         /// Controle txtCodAgregado.

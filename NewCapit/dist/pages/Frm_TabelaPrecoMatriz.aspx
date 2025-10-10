@@ -48,7 +48,7 @@
                                     <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" OnTextChanged="txtRota_TextChanged" AutoPostBack="true"></asp:TextBox>
                                 </div>
                                 <div class="col-md-10">
-                                    <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRotas_SelectedIndexChanged" ></asp:DropDownList>
+                                    <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRotas_SelectedIndexChanged"></asp:DropDownList>
                                 </div>
                             </div>
                             <!-- REMETENTE -->
@@ -268,6 +268,16 @@
                                                 <div class="form-group">
                                                     <span class="details">TOTAL DO FRETE:</span>
                                                     <asp:TextBox ID="txtTotalFrete" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <span class="details">EMITE PEDÁGIO:</span>
+                                                    <asp:DropDownList ID="ddlEmitePedagio" runat="server" CssClass="form-control">
+                                                        <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                                        <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+                                                        <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                    </asp:DropDownList>
                                                 </div>
                                             </div>
                                         </div>

@@ -910,7 +910,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(cs))
             {
 
-                string sqlc = "SELECT rota, desc_rota, deslocamento, distancia, tempo, situacao FROM tbrotasdeentregas where dec_rota='" + txtDesc_Rota.Text + "'";
+                string sqlc = "SELECT rota, desc_rota, deslocamento, distancia, tempo, situacao FROM tbrotasdeentregas where desc_rota='" + txtDesc_Rota.Text + "'";
                 SqlDataAdapter adtp = new SqlDataAdapter(sqlc, conn);
                 DataTable dt = new DataTable();
                 conn.Open();

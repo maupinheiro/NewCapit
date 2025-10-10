@@ -662,6 +662,14 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">DESENGATE:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtDesengate" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </div>
                                 </div>
