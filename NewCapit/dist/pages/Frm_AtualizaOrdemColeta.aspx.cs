@@ -617,9 +617,19 @@ namespace NewCapit.dist.pages
             txtProprietario.Text = dt.Rows[0][13].ToString();
             txtCodTransportadora.Text = dt.Rows[0][145].ToString();
             txtTransportadora.Text = dt.Rows[0][146].ToString();
+
+            txtCodCliInicio.Text = dt.Rows[0][147].ToString();
+            txtNomCliInicio.Text = dt.Rows[0][148].ToString();
+            txtCidCliInicio.Text = dt.Rows[0][149].ToString();
+            txtUFCliInicio.Text = dt.Rows[0][150].ToString();
+            txtCodCliFinal.Text = dt.Rows[0][151].ToString();
+            txtNomCliFinal.Text = dt.Rows[0][152].ToString();
+            txtCidCliFinal.Text = dt.Rows[0][153].ToString();
+            txtUFCliFinal.Text = dt.Rows[0][154].ToString();
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);
+            
 
         }
 
@@ -1616,6 +1626,7 @@ namespace NewCapit.dist.pages
                 {
                     conn.Open();
                     cmd.ExecuteNonQuery();
+                    CalculaKmTotal();
                     nomeUsuario = txtUsuCadastro.Text;
                     string mensagem = $"Olá, {nomeUsuario}!\nCarregamento atualizado no sistema com sucesso.";
                     string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
@@ -1638,6 +1649,7 @@ namespace NewCapit.dist.pages
                     // Caso queira exibir também em um Label
                     // lblMensagem.Text = mensagemErro;
                 }
+                
             }
         }
         private object SafeValue(string input)
@@ -2597,13 +2609,14 @@ namespace NewCapit.dist.pages
                 txtNomCliInicio.Text = dt.Rows[0][1].ToString();
                 txtCidCliInicio.Text = dt.Rows[0][2].ToString();
                 txtUFCliInicio.Text = dt.Rows[0][3].ToString();
+                CalculaInicioPrestacao(dt.Rows[0][2].ToString(), dt.Rows[0][3].ToString());
             }
 
         }
 
         protected void txtCodCliFinal_TextChanged(object sender, EventArgs e)
         {
-            string sql = "select codcli, nomcli, cidcli, estcli from tbclientes where codcli = '" + txtCodCliInicio.Text + "' OR codvw='" + txtCodCliInicio.Text + "'";
+            string sql = "select codcli, nomcli, cidcli, estcli from tbclientes where codcli = '" + txtCodCliFinal.Text + "' OR codvw='" + txtCodCliFinal.Text + "'";
             SqlDataAdapter adp = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
@@ -2615,9 +2628,260 @@ namespace NewCapit.dist.pages
                 txtNomCliFinal.Text = dt.Rows[0][1].ToString();
                 txtCidCliFinal.Text = dt.Rows[0][2].ToString();
                 txtUFCliFinal.Text = dt.Rows[0][3].ToString();
+                CalculaFimPrestacao(dt.Rows[0][2].ToString(), dt.Rows[0][3].ToString());
+
             }
+           
+        }
+        public void CalculaInicioPrestacao(string CidadiInicio, string UfInicio)
+        {
+            if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
+            {
+                num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
+            }
+
+            string sqli = "select Top 1 cidorigem, ufcliorigem from tbcargas where idviagem="+num_coleta+" order by id asc";
+            SqlDataAdapter adpi = new SqlDataAdapter(sqli, con);
+            DataTable dti = new DataTable();
+            con.Open();
+            adpi.Fill(dti);
+            con.Close();
+
+            if(dti.Rows.Count > 0)
+            {
+                string sqld = "select  Distancia from tbdistanciapremio where Origem='"+ CidadiInicio + "' and UF_Origem='"+ UfInicio + "' and Destino='"+ dti.Rows[0][0].ToString() + "' and UF_Destino='"+ dti.Rows[0][1].ToString() + "'";
+                SqlDataAdapter adpd = new SqlDataAdapter(sqld, con);
+                DataTable dtd = new DataTable();
+                con.Open();
+                adpd.Fill(dtd);
+                con.Close();
+
+                if (dtd.Rows.Count > 0)
+                {
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
+                        string query = "update tbcarregamentos set km_inicial=@km_inicial where num_carregamento=@num_carregamento";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@num_carregamento", num_coleta);
+                        cmd.Parameters.AddWithValue("@km_inicial", decimal.Parse(dtd.Rows[0][0].ToString()));
+
+
+                        try
+                        {
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Logar ou exibir erro
+                            Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                        }
+                        // Opcional: limpar ou fechar modal
+
+                    }
+                }
+                else
+                {
+                    string mensagem = "Nao foi encontrado a Distancia do inicio de de Prestação.";
+                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                }
+            }
+
+
         }
 
+        public void CalculaFimPrestacao(string CidadiFim, string UfFim)
+        {
+            if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
+            {
+                num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
+            }
+
+            string sqlf = "select Top 1 cidorigem, ufcliorigem from tbcargas where idviagem=" + num_coleta + " order by id desc";
+            SqlDataAdapter adpf = new SqlDataAdapter(sqlf, con);
+            DataTable dtf = new DataTable();
+            con.Open();
+            adpf.Fill(dtf);
+            con.Close();
+
+            if (dtf.Rows.Count > 0)
+            {
+                string sqld = "select  Distancia from tbdistanciapremio where Origem='" + dtf.Rows[0][0].ToString() + "' and UF_Origem='" + dtf.Rows[0][1].ToString()  + "' and Destino='" + CidadiFim + "' and UF_Destino='" + UfFim + "'";
+                SqlDataAdapter adpd = new SqlDataAdapter(sqld, con);
+                DataTable dtd = new DataTable();
+                con.Open();
+                adpd.Fill(dtd);
+                con.Close();
+
+                if (dtd.Rows.Count > 0)
+                {
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
+                        string query = "update tbcarregamentos set km_final=@km_final where num_carregamento=@num_carregamento";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@num_carregamento", num_coleta);
+                        cmd.Parameters.AddWithValue("@km_final", decimal.Parse(dtd.Rows[0][0].ToString()));
+
+
+                        try
+                        {
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Logar ou exibir erro
+                            Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                        }
+                        // Opcional: limpar ou fechar modal
+
+                    }
+                }
+                else
+                {
+                    string mensagem = "Nao foi encontrado a Distancia do fim de de Prestação.";
+                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                }
+            }
+
+
+        }
+
+        public void CalculaKmTotal()
+        {
+
+            if(txtCidCliInicio.Text != string.Empty && txtCidCliFinal.Text != string.Empty)
+            {
+                if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
+                {
+                    num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
+                }
+                string sqlg = "SELECT SUM(CONVERT(DECIMAL(18,2), REPLACE(distancia, ',', '.'))) AS total_distancia FROM tbcargas WHERE idviagem = " + num_coleta + "  AND ISNUMERIC(REPLACE(distancia, ',', '.')) = 1;";
+                SqlDataAdapter adpg = new SqlDataAdapter(sqlg, con);
+                DataTable dtg = new DataTable();
+                con.Open();
+                adpg.Fill(dtg);
+                con.Close();
+
+                string sqlc = "select km_inicial,km_inicial  from tbcarregamentos where num_carregamento=" + num_coleta + "";
+                SqlDataAdapter adpc = new SqlDataAdapter(sqlc, con);
+                DataTable dtc = new DataTable();
+                con.Open();
+                adpc.Fill(dtc);
+                con.Close();
+
+                decimal kmfinal = decimal.Parse(dtg.Rows[0][0].ToString())+ decimal.Parse(dtc.Rows[0][0].ToString()) + decimal.Parse(dtc.Rows[0][1].ToString());
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string query = "update tbcarregamentos set kmtotalprestacao=@kmtotalprestacao where num_carregamento=@num_carregamento";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@num_carregamento", num_coleta);
+                    cmd.Parameters.AddWithValue("@kmtotalprestacao", kmfinal);
+
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        CalculaPremio(kmfinal);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        // Logar ou exibir erro
+                        Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                    }
+                    // Opcional: limpar ou fechar modal
+
+                }
+
+                
+            }
+
+           
+
+
+        }
+
+        public void CalculaPremio(decimal kmtotalcoleta)
+        {
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["carregamento"]))
+                num_coleta = HttpContext.Current.Request.QueryString["carregamento"].ToString();
+
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sql = @"SELECT distancia1, distancia2, motorista, carreteiro, bitrem, desengate 
+                       FROM tbvalorpremiomotoristas 
+                       WHERE distancia1 <= ROUND(@distancia, 0) 
+                         AND distancia2 >= ROUND(@distancia, 0)";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@distancia", kmtotalcoleta);
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    adp.Fill(dt);
+                }
+            }
+
+            if (dt.Rows.Count == 0)
+            {
+                string script = "alert('Nenhum registro encontrado para a distância informada.');";
+                ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+                return;
+            }
+
+            decimal premio = 0, desengate = 0;
+
+            string funcao = txtFuncao.Text.Substring(0, 1);
+
+            if (funcao == "M")
+                premio = decimal.Parse(dt.Rows[0]["motorista"].ToString(), CultureInfo.InvariantCulture);
+            else if (funcao == "C")
+                premio = decimal.Parse(dt.Rows[0]["carreteiro"].ToString(), CultureInfo.InvariantCulture);
+            else if (funcao == "B")
+            {
+                premio = decimal.Parse(dt.Rows[0]["bitrem"].ToString(), CultureInfo.InvariantCulture);
+                desengate = decimal.Parse(dt.Rows[0]["desengate"].ToString(), CultureInfo.InvariantCulture);
+            }
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string query = funcao == "B"
+                    ? "UPDATE tbcarregamentos SET premio=@premio, desengate=@desengate WHERE num_carregamento=@num_carregamento"
+                    : "UPDATE tbcarregamentos SET premio=@premio WHERE num_carregamento=@num_carregamento";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@num_carregamento", num_coleta);
+                    cmd.Parameters.AddWithValue("@premio", premio);
+                    if (funcao == "B") cmd.Parameters.AddWithValue("@desengate", desengate);
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        string mensagem = funcao == "B"
+                            ? "Prêmio e desengate cadastrados com sucesso."
+                            : "Prêmio cadastrado com sucesso.";
+                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "Sucesso", script, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                    }
+                }
+            }
+        }
+       
         protected void cboResponsavel_SelectedIndexChanged(object sender, EventArgs e)
         {
             string codigo = cboResponsavel.SelectedValue;
