@@ -548,7 +548,7 @@ namespace NewCapit.dist.pages
                         if (ddlMacros.SelectedValue == "PARADA" || ddlMacros.SelectedValue == "PARADA INTERNA" || ddlMacros.SelectedValue == "PARADA CLIENTE/FORNECEDOR" || ddlMacros.SelectedValue == "PARADA OFICINA")
                         {
 
-                            if (ddlNumero.SelectedValue != "0")
+                            if (ddlNumero.SelectedValue != "0" || ddlNumero.SelectedValue != "Selecione")
                             {
                                 DateTime data;
                                 TimeSpan hora;
@@ -604,7 +604,7 @@ namespace NewCapit.dist.pages
                                         cmd5.Parameters.Add("@hr_posicao_parada", SqlDbType.Time).Value = hora;
 
                                         cmd5.Parameters.Add("@ds_macro", SqlDbType.VarChar, 200).Value = ddlMacros.SelectedItem.Text;
-                                        cmd5.Parameters.Add("@cod_ref_parada", SqlDbType.VarChar, 50).Value = ddlNumero.SelectedItem.Text;
+                                        cmd5.Parameters.Add("@cod_ref_parada", SqlDbType.VarChar, 50).Value = ddlNumero.SelectedValue;
                                         cmd5.Parameters.Add("@ds_tipo", SqlDbType.VarChar, 100).Value = txtTipoMarcacao.Text;
                                         cmd5.Parameters.Add("@ds_local_parada", SqlDbType.VarChar, 200).Value = "MARCAÇÃO MANUAL";
                                         cmd5.Parameters.Add("@cod_cracha", SqlDbType.VarChar, 50).Value = txtMotorista.Text;
@@ -694,7 +694,7 @@ namespace NewCapit.dist.pages
                                     cmd5.Parameters.Add("@dt_posicao_parada", SqlDbType.Date).Value = data.Date;
                                     cmd5.Parameters.Add("@hr_posicao_parada", SqlDbType.Time).Value = hora; // 👈 importante: TimeSpan!
                                     cmd5.Parameters.Add("@ds_macro", SqlDbType.VarChar).Value = ddlMacros.SelectedItem.Text;
-                                    cmd5.Parameters.Add("@cod_ref_parada", SqlDbType.VarChar).Value = ddlNumero.SelectedItem.Text;
+                                    cmd5.Parameters.Add("@cod_ref_parada", SqlDbType.VarChar).Value = ddlNumero.SelectedValue;
                                     cmd5.Parameters.Add("@ds_tipo", SqlDbType.VarChar).Value = txtTipoMarcacao.Text;
                                     cmd5.Parameters.Add("@ds_local_parada", SqlDbType.VarChar).Value = "MARCAÇÃO MANUAL";
                                     cmd5.Parameters.Add("@cod_cracha", SqlDbType.VarChar).Value = txtMotorista.Text;
