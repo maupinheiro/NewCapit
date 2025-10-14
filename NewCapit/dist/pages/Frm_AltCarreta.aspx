@@ -3,20 +3,55 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <%-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>--%>
     <style>
         .fonte-menor {
             font-size: 10px;
         }
     </style>
-    <%-- <style>
+    <style>
         body {
             font-size: 12px; /* ou menor, como 10px */
         }
-    </style>--%>
+    </style>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            function aplicarMascaraLatitudeLongitude(input) {
+                input.addEventListener("input", function () {
+                    let valor = input.value;
+
+                    // Garante que o "-" sempre esteja no início
+                    if (!valor.startsWith("-")) {
+                        valor = "-" + valor.replace(/[^0-9.]/g, ""); // Remove caracteres inválidos e adiciona "-"
+                    } else {
+                        valor = "-" + valor.substring(1).replace(/[^0-9.]/g, ""); // Mantém o "-" e filtra o resto
+                    }
+
+                    // Remove pontos extras, mantendo apenas o primeiro
+                    let partes = valor.split(".");
+                    if (partes.length > 2) {
+                        valor = partes[0] + "." + partes.slice(1).join(""); // Remove pontos extras
+                    }
+
+                    // Garante que tenha no máximo 2 dígitos antes do ponto
+                    let match = valor.match(/^-?\d{0,2}(\.\d{0,8})?/);
+                    if (match) {
+                        valor = match[0];
+                    }
+
+                    input.value = valor;
+                });
+
+                // Adiciona o "-" automaticamente se o campo estiver vazio ao perder o foco
+                input.addEventListener("blur", function () {
+                    if (input.value === "-") {
+                        input.value = "";
+                    }
+                });
+            }
+
             function aplicarMascara(input, mascara) {
                 input.addEventListener("input", function () {
                     let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
@@ -57,44 +92,7 @@
             if (txtInicioContrato) aplicarMascara(txtInicioContrato, "00/00/0000");
             if (txtTerminoContrato) aplicarMascara(txtTerminoContrato, "00/00/0000");
             if (txtDt_Cadastro) aplicarMascara(txtDt_Cadastro, "00/00/0000");
-
-    </script>
-    <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                function aplicarMascaraLatitudeLongitude(input) {
-                    input.addEventListener("input", function () {
-                        let valor = input.value;
-
-                        // Garante que o "-" sempre esteja no início
-                        if (!valor.startsWith("-")) {
-                            valor = "-" + valor.replace(/[^0-9.]/g, ""); // Remove caracteres inválidos e adiciona "-"
-                        } else {
-                            valor = "-" + valor.substring(1).replace(/[^0-9.]/g, ""); // Mantém o "-" e filtra o resto
-                        }
-
-                        // Remove pontos extras, mantendo apenas o primeiro
-                        let partes = valor.split(".");
-                        if (partes.length > 2) {
-                            valor = partes[0] + "." + partes.slice(1).join(""); // Remove pontos extras
-                        }
-
-                        // Garante que tenha no máximo 2 dígitos antes do ponto
-                        let match = valor.match(/^-?\d{0,2}(\.\d{0,8})?/);
-                        if (match) {
-                            valor = match[0];
-                        }
-
-                        input.value = valor;
-                    });
-
-                    // Adiciona o "-" automaticamente se o campo estiver vazio ao perder o foco
-                    input.addEventListener("blur", function () {
-                        if (input.value === "-") {
-                            input.value = "";
-                        }
-                    });
-                }
-            });
+        });
     </script>
     <div class="content-wrapper">
         <section class="content">

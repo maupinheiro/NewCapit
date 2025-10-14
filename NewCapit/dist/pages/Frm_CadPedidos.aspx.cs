@@ -21,7 +21,7 @@ namespace NewCapit.dist.pages
         DateTime dataHoraAtual = DateTime.Now;
         int totalQuantidade = 0;
         //int totalLinhas = 0;
-        int totalPesoCarga;
+        string totalPesoCarga;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -680,8 +680,8 @@ namespace NewCapit.dist.pages
                         else
                         {
                             conn.Close();
-                            string sqlSalvarPedido = "insert into tbpedidos " + "(pedido, carga, emissao, status, solicitante, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, cliddestino, observacao, andamento, ufcliorigem, ufclidestino, tomador, cidorigem, ciddestino, gr, cadastro)" +
-              "values" + "(@pedido, @carga, @emissao, @status, @solicitante, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @cliddestino, @observacao, @andamento, @ufcliorigem, @ufclidestino, @tomador, @cidorigem, @ciddestino, @gr, @cadastro)";
+                            string sqlSalvarPedido = "insert into tbpedidos " + "(pedido, carga, emissao, status, solicitante, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, andamento, ufcliorigem, ufclidestino, tomador, cidorigem, ciddestino, gr, cadastro)" +
+              "values" + "(@pedido, @carga, @emissao, @status, @solicitante, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @andamento, @ufcliorigem, @ufclidestino, @tomador, @cidorigem, @ciddestino, @gr, @cadastro)";
 
                             SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                             comando.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
@@ -754,7 +754,7 @@ namespace NewCapit.dist.pages
                 e.Row.Cells[1].Text = "Total:";
                 e.Row.Cells[2].Text = totalQuantidade.ToString();
                 e.Row.Cells[2].Font.Bold = true;
-                int totalPesoCarga = totalQuantidade;
+                totalPesoCarga = e.Row.Cells[2].Text;
                 
                 int totalLinhas = gvPedidos.Rows.Count;
                 e.Row.Cells[4].Text = "Total de Pedidos:";
@@ -805,7 +805,7 @@ namespace NewCapit.dist.pages
                     comando.Parameters.AddWithValue("@status", "Pendete");
                     comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
                     comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@peso", totalPesoCarga);
+                    comando.Parameters.AddWithValue("@peso", int.Parse(totalPesoCarga));
                     comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);

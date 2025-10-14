@@ -294,6 +294,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtOpacidade;
 
         /// <summary>
+        /// Controle valCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl valCET;
+
+        /// <summary>
         /// Controle txtCET.
         /// </summary>
         /// <remarks>
@@ -409,6 +418,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCadastro;
+
+        /// <summary>
+        /// Controle txtContFerrolene.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtContFerrolene;
 
         /// <summary>
         /// Controle txtCarga.
@@ -618,22 +636,94 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDocumentos;
 
         /// <summary>
-        /// Controle txtTipoSolicitacao.
+        /// Controle rbCTe.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTipoSolicitacao;
+        protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbCTe;
 
         /// <summary>
-        /// Controle txtTipoDeVeiculo.
+        /// Controle rbMDFe.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTipoDeVeiculo;
+        protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbMDFe;
+
+        /// <summary>
+        /// Controle rbRPS.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbRPS;
+
+        /// <summary>
+        /// Controle rbNFe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbNFe;
+
+        /// <summary>
+        /// Controle txtEmbarqueNum.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEmbarqueNum;
+
+        /// <summary>
+        /// Controle txtMDFeNum.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMDFeNum;
+
+        /// <summary>
+        /// Controle txtEmisaoMDFe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEmisaoMDFe;
+
+        /// <summary>
+        /// Controle txtChaveAcessoMDFe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtChaveAcessoMDFe;
+
+        /// <summary>
+        /// Controle txtSituacaoMDFe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSituacaoMDFe;
+
+        /// <summary>
+        /// Controle txtResponsavelBaixaMDFe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtResponsavelBaixaMDFe;
 
         /// <summary>
         /// Controle txtJanOrigem.
@@ -715,15 +805,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtConclusao;
-
-        /// <summary>
-        /// Controle txtContFerrolene.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtContFerrolene;
 
         /// <summary>
         /// Controle txtCVA.
@@ -843,13 +924,22 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPercTNGEspecial;
 
         /// <summary>
-        /// Controle txtMensagem.
+        /// Controle txtTipoSolicitacao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMensagem;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoSolicitacao;
+
+        /// <summary>
+        /// Controle txtTipoDeVeiculo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTipoDeVeiculo;
 
         /// <summary>
         /// Controle lblDtCadastro.
@@ -877,5 +967,32 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSalvar;
+
+        /// <summary>
+        /// Controle txtCodContato.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodContato;
+
+        /// <summary>
+        /// Controle txtCadCelular.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCadCelular;
+
+        /// <summary>
+        /// Controle btnCadContato.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCadContato;
     }
 }

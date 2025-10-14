@@ -11,6 +11,7 @@ using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NPOI.POIFS.Crypt.Dsig;
 
 namespace NewCapit.dist.pages
 {
@@ -19,6 +20,7 @@ namespace NewCapit.dist.pages
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string idCarreta;
         DateTime dataHoraAtual = DateTime.Now;
+        DateTime dataLicenciamento;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -495,10 +497,12 @@ namespace NewCapit.dist.pages
         //}
         protected void btnSalvarCarreta_Click(object sender, EventArgs e)
         {
+            
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
                 idCarreta = HttpContext.Current.Request.QueryString["id"].ToString();
             }
+
 
             string codigoTNG = idCarreta;
 
@@ -521,7 +525,7 @@ namespace NewCapit.dist.pages
             comando.Parameters.AddWithValue("@idrastreador", txtId.Text);
             comando.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
             comando.Parameters.AddWithValue("@chassi", txtChassi.Text.ToUpper());
-            comando.Parameters.AddWithValue("@licenciamento", txtLicenciamento.Text.ToUpper());
+            comando.Parameters.AddWithValue("@licenciamento", SafeDateValue(txtLicenciamento.Text));
             comando.Parameters.AddWithValue("@kilometragem", txtOdometro.Text);
             comando.Parameters.AddWithValue("@carretaalugada", ddlCarreta.SelectedItem.Text.ToUpper());
             comando.Parameters.AddWithValue("@alugada_de", txtAlugada_De.Text.ToUpper());
@@ -836,6 +840,14 @@ namespace NewCapit.dist.pages
                 txtMotivo_Inativacao.Text = "";
             }
 
+        }
+        private object SafeDateValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
         }
     }
 }

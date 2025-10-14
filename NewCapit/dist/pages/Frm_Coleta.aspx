@@ -6,7 +6,23 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
+    <!-- Bootstrap CSS + JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script type="text/javascript">
+        function abrirModalTelefone() {
+            // Pega valor do TextBox do Web Forms            
+            var codigoFrota = document.getElementById('<%= txtCodFrota.ClientID %>').value;
+
+            // Define o valor no TextBox do modal
+            document.getElementById('<%= txtCodFrota.ClientID %>').value = codigoFrota;
+
+            //$('#telefoneModal').modal('show');
+            $('#telefoneModal').modal({ backdrop: 'static', keyboard: false });
+        }
+    </script>
     <style>
         hr {
             height: 10px; /* Define a espessura da linha em 5 pixels */
@@ -15,7 +31,6 @@
             margin: 1px 0; /* Adiciona margem acima e abaixo da linha */
         }
     </style>
-
     <script type="text/javascript">
         function apenasNumeros(e) {
             var charCode = (e.which) ? e.which : e.keyCode;
@@ -61,6 +76,7 @@
             let txtChegada = document.getElementById("<%= txtChegada.ClientID %>");
             let txtConclusao = document.getElementById("<%= txtConclusao.ClientID %>");
             let txtCPF = document.getElementById("<%= txtCPF.ClientID %>");
+            let txtCadCelular = document.getElementById("<%= txtCadCelular.ClientID %>");
 
             if (txtJanOrigem) aplicarMascara(txtJanOrigem, "00/00/0000 00:00");
             if (txtJanDestino) aplicarMascara(txtJanDestino, "00/00/0000 00:00");
@@ -69,7 +85,7 @@
             if (txtChegada) aplicarMascara(txtChegada, "00/00/0000 00:00");
             if (txtConclusao) aplicarMascara(txtConclusao, "00/00/0000 00:00");
             if (txtCPF) aplicarMascara(txtCPF, "000.000.000-00");
-
+            if (txtCadCelular) aplicarMascara(txtCadCelular, "(00) 0 0000-0000");
 
         });
     </script>
@@ -97,13 +113,7 @@
             }
         }
     </script>
-    <script>
-        $(document).ready(function () {
-            $('#txtCPF').mask('000.000.000-00');
-            //$('#txtTelefone').mask('(00) 00000-0000');
-            //$('#txtData').mask('00/00/0000');
-        });
-    </script>
+
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -160,7 +170,7 @@
                                                 <div class="col-md-1">
                                                     <div class="form-group">
                                                         <span class="details">CONTATO:</span>
-                                                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
+                                                        <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="txtCodFrota_TextChanged"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -172,7 +182,7 @@
                                                 <div class="col-md-1">
                                                     <div class="form-group">
                                                         <span class="details">CÓD./FROTA:</span>
-                                                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarVeiculo_Click"></asp:TextBox>
+                                                        <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="txtCodVeiculo_TextChanged"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
@@ -181,7 +191,7 @@
                                                         <asp:TextBox ID="txtPlaca" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-1" id="reboque1" runat="server">
+                                                <div class="col-md-1" id="reboque1" runat="server" visible="false">
                                                     <div class="form-group">
                                                         <span class="details">REBOQUE:</span>
                                                         <asp:TextBox ID="txtReboque1" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
@@ -347,7 +357,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-2" id="valCET" runat="server">
                                                 <div class="form-group">
                                                     <span class="details">VALIDADE LIC. CET:</span>
                                                     <div class="input-group">
@@ -361,7 +371,7 @@
                                                     <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2" id="reb1" runat="server">
+                                            <div class="col-md-2" id="reb1" runat="server" visible="false">
                                                 <div class="form-group">
                                                     <span class="details">VALIDADE REBOQUE:</span>
                                                     <div class="input-group">
@@ -369,7 +379,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2" id="reb2" runat="server">
+                                            <div class="col-md-2" id="reb2" runat="server" visible="false">
                                                 <div class="form-group">
                                                     <span class="details">VALIDADE REBOQUE:</span>
                                                     <div class="input-group">
@@ -439,6 +449,12 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group">
+                                                    <span class="details">AUT. FERROLENE:</span>
+                                                    <asp:TextBox ID="txtContFerrolene" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
                                                     <span class="details">CARGA/SOLICITAÇÃO:</span>
                                                     <asp:TextBox ID="txtCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" OnTextChanged="txtCarga_TextChanged" AutoPostBack="true"></asp:TextBox>
                                                 </div>
@@ -449,7 +465,7 @@
                                                     <asp:DropDownList ID="cboStatus" runat="server" CssClass="form-control select2" ReadOnly="true"></asp:DropDownList>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <span class="details">SITUAÇÃO:</span>
                                                     <asp:TextBox ID="txtSituacao" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -579,7 +595,7 @@
                                                             <a class="nav-link" id="custom-tabs-four-pedidos-tab" data-toggle="pill" href="#custom-tabs-four-pedidos" role="tab" aria-controls="custom-tabs-four-pedidos" aria-selected="false">Pedidos</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="nav-link" id="custom-tabs-four-documentos-tab" data-toggle="pill" href="#custom-tabs-four-documentos" role="tab" aria-controls="custom-tabs-four-documentos" aria-selected="false">CT-e/RPS</a>
+                                                            <a class="nav-link" id="custom-tabs-four-documentos-tab" data-toggle="pill" href="#custom-tabs-four-documentos" role="tab" aria-controls="custom-tabs-four-documentos" aria-selected="false">CTe/RPS/MDFe</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="nav-link" id="custom-tabs-four-notasfiscais-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-notasfiscais" aria-selected="false">Notas Fiscais</a>
@@ -603,53 +619,91 @@
                                                         <!-- ATENDIMENTO -->
                                                         <div class="tab-pane fade show active" id="custom-tabs-four-atendimento" role="tabpanel" aria-labelledby="custom-tabs-four-atendimento-tab">
                                                             <div class="row g-3">
-                                                                <div class="col-md-1">
+                                                                <div class="col-md-4">
                                                                     <div class="form-group">
                                                                         <span class="details">ADD. DOC.:</span>
-                                                                        <asp:TextBox ID="txtDocumentos" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                                        <asp:TextBox ID="txtDocumentos" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" MaxLength="44" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtDocumentos_TextChanged"></asp:TextBox>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-1">
                                                                     <br />
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-radio">
-                                                                            <input class="custom-control-input custom-control-input-info custom-control-input-outline" type="radio" id="customRadioCTe" name="customRadioTipo">
-                                                                            <label for="customRadioCTe" class="custom-control-label">CT-e</label>
-                                                                        </div>
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio" name="opcao" id="rbCTe" value="1" runat="server">
+                                                                        <label class="form-check-label" for="rboCTe">
+                                                                            CT-e
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-1">
                                                                     <br />
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-radio">
-                                                                            <input class="custom-control-input custom-control-input-info custom-control-input-outline" type="radio" id="customRadioMDFe" name="customRadioTipo">
-                                                                            <label for="customRadioMDFe" class="custom-control-label">MDF-e</label>
-                                                                        </div>
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio" name="opcao" id="rbMDFe" value="2" runat="server">
+                                                                        <label class="form-check-label" for="rbMDFe">
+                                                                            MDF-e
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-1">
                                                                     <br />
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-radio">
-                                                                            <input class="custom-control-input custom-control-input-info custom-control-input-outline" type="radio" id="customRadioNV" name="customRadioTipo">
-                                                                            <label for="customRadioNV" class="custom-control-label">NV</label>
-                                                                        </div>
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio" name="opcao" id="rbRPS" value="3" runat="server">
+                                                                        <label class="form-check-label" for="rbRPS">
+                                                                            RPS-e
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <br />
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio" name="opcao" id="rbNFe" value="4" runat="server">
+                                                                        <label class="form-check-label" for="rbNFe">
+                                                                            Nota Fiscal
+                                                                        </label>
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="col-md-4" id="tipoSolicitacao">
+                                                            </div>
+                                                            <div class="row g-3">
+                                                                <div class="col-md-1">
                                                                     <div class="form-group">
-                                                                        <span class="details">TIPO DE SOLICITAÇÃO:</span>
-                                                                        <asp:TextBox ID="txtTipoSolicitacao" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                        <span class="details">EMBARQUE:</span>
+                                                                        <asp:TextBox ID="txtEmbarqueNum" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4" id="tipoVeiculo">
+                                                                <div class="col-md-1">
                                                                     <div class="form-group">
-                                                                        <span class="details">TIPO DE VEÍCULO:</span>
-                                                                        <asp:TextBox ID="txtTipoDeVeiculo" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                        <span class="details">MDF-e/Série:</span>
+                                                                        <asp:TextBox ID="txtMDFeNum" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                                                     </div>
                                                                 </div>
-
+                                                                <div class="col-md-1">
+                                                                    <div class="form-group">
+                                                                        <span class="details">EMISSÃO:</span>
+                                                                        <asp:TextBox ID="txtEmisaoMDFe" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <span class="details">CHAVE DE ACESSO DO MDFe:</span>
+                                                                        <asp:TextBox ID="txtChaveAcessoMDFe" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="form-group">
+                                                                        <span class="details">SITUAÇÃO:</span>
+                                                                        <asp:TextBox ID="txtSituacaoMDFe" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" id="botaoMDFe">
+                                                                    <br />
+                                                                    <button type="button" class="btn btn-info">Encerrar</button>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group">
+                                                                        <span class="details">RESPONSÁVEL:</span>
+                                                                        <asp:TextBox ID="txtResponsavelBaixaMDFe" Style="text-align: left" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <div class="row g-3">
                                                                 <div class="col-md-2">
@@ -699,12 +753,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row g-3">
-                                                                <div class="col-md-2">
-                                                                    <div class="form-group">
-                                                                        <span class="details">Nº CARREG. FERROLENE:</span>
-                                                                        <asp:TextBox ID="txtContFerrolene" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
-                                                                    </div>
-                                                                </div>
+
                                                                 <div class="col-md-2">
                                                                     <div class="form-group">
                                                                         <span class="details">Nº CVA:</span>
@@ -821,6 +870,7 @@
                                                         </div>
                                                         <!-- DOCUMENTOS CTE/RPS -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-documentos" role="tabpanel" aria-labelledby="custom-tabs-four-pedidos-tab">
+
                                                             <div class="card-body table-responsive p-0" style="height: 150px;">
                                                                 <table class="table table-head-fixed text-nowrap">
                                                                     <asp:GridView ID="GridView1" runat="server" CssClass="table table-striped"
@@ -991,7 +1041,7 @@
                                                                 </table>
                                                             </div>
                                                         </div>
-                                                        <!-- frete Especial -->
+                                                        <!-- DADOS PEDÁGIO -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                                                             <div class="form-group row">
                                                                 <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">AGREGADO/TERCEIRO:</label>
@@ -1027,13 +1077,21 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- frete Mensagem -->
+                                                        <!-- DADOS DA SM KRONA -->
                                                         <div class="tab-pane fade" id="custom-tabs-four-mensagem" role="tabpanel" aria-labelledby="custom-tabs-four-mensagem-tab">
                                                             <div class="row g-3">
                                                                 <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="inputMensagem" class="col-sm-2 col-form-label">MENSAGEM NO CTE:</label>
-                                                                        <asp:TextBox ID="txtMensagem" class="form-control" runat="server" placeholder="Digite a mensagem que aparecerá no documento de transporte..."></asp:TextBox>
+                                                                    <div class="col-md-6" id="tipoSolicitacao">
+                                                                        <div class="form-group">
+                                                                            <span class="details">TIPO DE SOLICITAÇÃO:</span>
+                                                                            <asp:TextBox ID="txtTipoSolicitacao" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6" id="tipoVeiculo">
+                                                                        <div class="form-group">
+                                                                            <span class="details">TIPO DE VEÍCULO:</span>
+                                                                            <asp:TextBox ID="txtTipoDeVeiculo" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1077,7 +1135,44 @@
                         </div>
                     </div>
                 </div>
+
+            </div>
+            <!-- Modal Bootstrap Cadastro de Telefone -->
+            <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="telefoneModalLabel">Cadastrar Contato</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="details">CÓDIGO:</span>
+                                        <asp:TextBox ID="txtCodContato" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <span class="details">CELULAR:</span>
+                                        <div class="input-group">
+                                            <asp:TextBox ID="txtCadCelular" runat="server" CssClass="form-control font-weight-bold"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnCadContato_Click" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
+
 </asp:Content>
