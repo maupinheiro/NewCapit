@@ -1296,6 +1296,7 @@ namespace NewCapit
                 return;
             }
 
+
             string sql = @"UPDATE tbveiculos SET         
                                 tipvei = @tipvei,
                                 tipoveiculo = @tipoveiculo,
