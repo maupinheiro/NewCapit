@@ -71,7 +71,7 @@ namespace NewCapit.dist.pages
 
 
 
-                string sql2 = "select cod_login, nm_motorista, fl_funcao, hr_entrada, hr_saida from tb_motorista where cod_login='" + cracha + "'";
+                string sql2 = "select codmot, nommot, cargo, horario from tbmotoristas where codmot='" + cracha + "'";
                 SqlDataAdapter adtp2 = new SqlDataAdapter(sql2, con);
                 DataTable dt2 = new DataTable();
                 con.Open();
@@ -85,11 +85,13 @@ namespace NewCapit.dist.pages
                 adtp4.Fill(dt4);
                 con.Close();
 
+                string[] horario = dt2.Rows[0][3].ToString().Trim().Split('-');
+
                 lblCracha.Text = cracha;
                 lblData.Text = data1 + " - " + dtfi.GetDayName(data.DayOfWeek);
                 lblNome.Text = dt2.Rows[0][1].ToString();
                 lblCargo.Text = dt2.Rows[0][2].ToString();
-                lblHorário.Text = DateTime.Parse(dt2.Rows[0][3].ToString()).ToString("HH:mm") + " - " + DateTime.Parse(dt2.Rows[0][4].ToString()).ToString("HH:mm");
+                lblHorário.Text = DateTime.Parse(horario[0]).ToString("HH:mm") + " - " + DateTime.Parse(horario[1]).ToString("HH:mm");
 
                 grdMotoristas.DataSource = dt4;
                 grdMotoristas.DataBind();

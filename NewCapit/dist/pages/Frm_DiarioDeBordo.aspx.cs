@@ -63,7 +63,7 @@ namespace NewCapit.dist.pages
             {
                 if (ConsultaMotorista.status.Trim() != "INATIVO")
                 {
-                    if (txtMotorista.Text.Trim() != "")
+                    if (txtMotorista.Text.Trim() == "")
                     {
                         fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
@@ -524,6 +524,15 @@ namespace NewCapit.dist.pages
             txtRel3.Text = string.Empty;
             txtRel4.Text = string.Empty;
         }
+        void ShowAlert(string msg)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<script type='text/javascript'>");
+            sb.Append("window.onload=function(){alert('" + msg.Replace("'", "\\'") + "');};");
+            sb.Append("</script>");
+            ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+        }
+
         protected void btnMacromanual_Click(object sender, EventArgs e)
         {
             string cod_usuario = Page.Session["CodUsuario"].ToString();
@@ -539,56 +548,97 @@ namespace NewCapit.dist.pages
                         if (ddlMacros.SelectedValue == "PARADA" || ddlMacros.SelectedValue == "PARADA INTERNA" || ddlMacros.SelectedValue == "PARADA CLIENTE/FORNECEDOR" || ddlMacros.SelectedValue == "PARADA OFICINA")
                         {
 
-                            if (ddlNumero.SelectedValue != "0")
+                            if (ddlNumero.SelectedValue != "0" || ddlNumero.SelectedValue != "Selecione")
                             {
-                                string sql_ini5 = "insert tb_parada(cod_idveiculo, cod_transmissao, dt_posicao_parada, hr_posicao, ds_macro, cod_ref_parada,ds_tipo,ds_local_parada,cod_cracha, cod_usuario_alt) ";
-                                sql_ini5 += " values (@cod_veiculo,@cod_transmissao, @dt_posicao_parada, @hr_posicao_parada,@ds_macro, @cod_ref_parada,@ds_tipo,@ds_local_parada,@cod_cracha,@cod_usuario_alt)";
+                                DateTime data;
+                                TimeSpan hora;
 
-                                SqlCommand cmd5 = new SqlCommand(sql_ini5, con);
-                                cmd5.Parameters.AddWithValue("@cod_veiculo", "123456");
-                                cmd5.Parameters.AddWithValue("@cod_transmissao", "000" + DateTime.Now.ToString("mmss"));
-                                cmd5.Parameters.AddWithValue("@dt_posicao_parada", DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd"));
-                                cmd5.Parameters.AddWithValue("@hr_posicao_parada", DateTime.Parse(txtHora.Text).ToString("HH:mm:ss.000"));
-                                cmd5.Parameters.AddWithValue("@cod_ref_parada", ddlNumero.SelectedValue);
-                                cmd5.Parameters.AddWithValue("@ds_tipo", txtTipoMarcacao.Text);
-                                cmd5.Parameters.AddWithValue("@ds_macro", ddlMacros.SelectedValue);
-                                cmd5.Parameters.AddWithValue("@ds_local_parada", "MARCAÇÃO MANUAL");
-                                cmd5.Parameters.AddWithValue("@cod_cracha", txtMotorista.Text);
-                                cmd5.Parameters.AddWithValue("@cod_usuario_alt", cod_usuario);
+                                // tenta parsear a data (aceita vários formatos comuns)
+                                if (!DateTime.TryParse(txtData.Text, out data))
+                                {
+                                    string retorno = "Data inválida. Verifique o formato (ex.: 01/01/2025).";
+                                    ShowAlert(retorno);
+                                    return;
+                                }
 
+                                // primeiro tenta parsear diretamente como TimeSpan (ex.: "13:45")
+                                if (!TimeSpan.TryParse(txtHora.Text, out hora))
+                                {
+                                    // se falhar, tenta parsear como DateTime (alguns navegadores retornam full datetime)
+                                    DateTime temp;
+                                    if (DateTime.TryParse(txtHora.Text, out temp))
+                                    {
+                                        hora = temp.TimeOfDay;
+                                    }
+                                    else
+                                    {
+                                        string retorno = "Hora inválida. Verifique o formato (ex.: 13:45).";
+                                        ShowAlert(retorno);
+                                        return;
+                                    }
+                                }
+
+                                // monta a query
+                                string sql_ini5 = @"
+                                                INSERT INTO tb_parada
+                                                (cod_idveiculo, cod_transmissao, dt_posicao_parada, hr_posicao, ds_macro, cod_ref_parada,
+                                                 ds_tipo, ds_local_parada, cod_cracha, cod_usuario_alt)
+                                                VALUES
+                                                (@cod_veiculo, @cod_transmissao, @dt_posicao_parada, @hr_posicao_parada, @ds_macro,
+                                                 @cod_ref_parada, @ds_tipo, @ds_local_parada, @cod_cracha, @cod_usuario_alt)";
+
+                                // use using para garantir dispose
                                 try
                                 {
-                                    con.Open();
-                                    cmd5.ExecuteNonQuery();
-                                    con.Close();
-                                    string message = "Informações cadastradas com sucesso!";
-                                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                                    sb.Append("<script type = 'text/javascript'>");
-                                    sb.Append("window.onload=function(){");
-                                    sb.Append("alert('");
-                                    sb.Append(message);
-                                    sb.Append("')};");
-                                    sb.Append("</script>");
-                                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                                    using (SqlConnection conn = new SqlConnection(con.ConnectionString)) // ou 'con' se for a mesma instância
+                                    using (SqlCommand cmd5 = new SqlCommand(sql_ini5, conn))
+                                    {
+                                        // parâmetros com tipos explícitos
+                                        cmd5.Parameters.Add("@cod_veiculo", SqlDbType.VarChar, 50).Value = "123456";
+                                        cmd5.Parameters.Add("@cod_transmissao", SqlDbType.VarChar, 50).Value = "000" + DateTime.Now.ToString("mmss");
+
+                                        // se a coluna no banco for DATE
+                                        cmd5.Parameters.Add("@dt_posicao_parada", SqlDbType.Date).Value = data.Date;
+
+                                        // se a coluna no banco for TIME (SqlDbType.Time) -> use TimeSpan
+                                        cmd5.Parameters.Add("@hr_posicao_parada", SqlDbType.Time).Value = hora;
+
+                                        cmd5.Parameters.Add("@ds_macro", SqlDbType.VarChar, 200).Value = ddlMacros.SelectedItem.Text;
+                                        cmd5.Parameters.Add("@cod_ref_parada", SqlDbType.VarChar, 50).Value = ddlNumero.SelectedValue;
+                                        cmd5.Parameters.Add("@ds_tipo", SqlDbType.VarChar, 100).Value = txtTipoMarcacao.Text;
+                                        cmd5.Parameters.Add("@ds_local_parada", SqlDbType.VarChar, 200).Value = "MARCAÇÃO MANUAL";
+                                        cmd5.Parameters.Add("@cod_cracha", SqlDbType.VarChar, 50).Value = txtMotorista.Text;
+                                        cmd5.Parameters.Add("@cod_usuario_alt", SqlDbType.Int).Value = cod_usuario; // ajuste tipo se necessário
+
+                                        conn.Open();
+                                        cmd5.ExecuteNonQuery();
+                                    }
+
+                                    // Após inserir, executar suas rotinas
                                     AtualizaJornada();
-                                    Limpar();
                                     CarregaGrid2();
                                     CarregaTodas();
 
+                                    ShowAlert("Informações cadastradas com sucesso!");
                                 }
                                 catch (Exception ex)
                                 {
                                     var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                                    string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
+                                    string retorno = "Erro! Contate o administrador. Detalhes do erro 649: " + message;
+                                    ShowAlert(retorno);
+                                }
+
+                                // método auxiliar para mostrar alert (para evitar duplicar código)
+                                void ShowAlert(string texto)
+                                {
                                     System.Text.StringBuilder sb = new System.Text.StringBuilder();
                                     sb.Append("<script type = 'text/javascript'>");
                                     sb.Append("window.onload=function(){");
                                     sb.Append("alert('");
-                                    sb.Append(retorno);
+                                    sb.Append(texto.Replace("'", "\\'"));
                                     sb.Append("')};");
                                     sb.Append("</script>");
                                     ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
                                 }
                             }
                             else
@@ -607,54 +657,65 @@ namespace NewCapit.dist.pages
                         }
                         else
                         {
-                            string sql_ini5 = "insert into tb_parada(cod_idveiculo, cod_transmissao, dt_posicao_parada, hr_posicao, ds_macro, cod_ref_parada,ds_tipo,ds_local_parada,cod_cracha,cod_usuario_alt) ";
-                            sql_ini5 += " values (@cod_veiculo,@cod_transmissao, @dt_posicao_parada, @hr_posicao_parada,@ds_macro, @cod_ref_parada,@ds_tipo,@ds_local_parada,@cod_cracha,@cod_usuario_alt)";
-
-                            SqlCommand cmd5 = new SqlCommand(sql_ini5, con);
-                            cmd5.Parameters.AddWithValue("@cod_veiculo", "000000");
-                            cmd5.Parameters.AddWithValue("@cod_transmissao", "000" + DateTime.Now.ToString("mmss"));
-                            cmd5.Parameters.AddWithValue("@dt_posicao_parada", DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd"));
-                            cmd5.Parameters.AddWithValue("@hr_posicao_parada", DateTime.Parse(txtHora.Text).ToString("HH:mm:ss.000"));
-                            cmd5.Parameters.AddWithValue("@cod_ref_parada", ddlNumero.SelectedValue);
-                            cmd5.Parameters.AddWithValue("@ds_tipo", txtTipoMarcacao.Text);
-                            cmd5.Parameters.AddWithValue("@ds_macro", ddlMacros.SelectedValue);
-                            cmd5.Parameters.AddWithValue("@ds_local_parada", "MARCAÇÃO MANUAL");
-                            cmd5.Parameters.AddWithValue("@cod_cracha", txtMotorista.Text);
-                            cmd5.Parameters.AddWithValue("@cod_usuario_alt", cod_usuario);
                             try
                             {
-                                con.Open();
-                                cmd5.ExecuteNonQuery();
-                                con.Close();
-                                string message = "Informações cadastradas com sucesso!";
-                                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                                sb.Append("<script type = 'text/javascript'>");
-                                sb.Append("window.onload=function(){");
-                                sb.Append("alert('");
-                                sb.Append(message);
-                                sb.Append("')};");
-                                sb.Append("</script>");
-                                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                                DateTime data;
+                                TimeSpan hora;
+
+                                // --- Validação da Data ---
+                                if (!DateTime.TryParse(txtData.Text, out data))
+                                {
+                                    ShowAlert("Data inválida. Use o formato dd/MM/yyyy.");
+                                    return;
+                                }
+
+                                // --- Validação da Hora ---
+                                string horaTexto = txtHora.Text.Trim();
+
+                                // O campo TextMode="Time" normalmente retorna no formato HH:mm
+                                if (!TimeSpan.TryParse(horaTexto, out hora))
+                                {
+                                    ShowAlert("Hora inválida. Use o formato HH:mm.");
+                                    return;
+                                }
+
+                                string sql_ini5 = @"
+                                                    INSERT INTO tb_parada
+                                                    (cod_idveiculo, cod_transmissao, dt_posicao_parada, hr_posicao,
+                                                     ds_macro, cod_ref_parada, ds_tipo, ds_local_parada, cod_cracha, cod_usuario_alt)
+                                                    VALUES
+                                                    (@cod_veiculo, @cod_transmissao, @dt_posicao_parada, @hr_posicao_parada,
+                                                     @ds_macro, @cod_ref_parada, @ds_tipo, @ds_local_parada, @cod_cracha, @cod_usuario_alt)";
+
+                                using (SqlCommand cmd5 = new SqlCommand(sql_ini5, con))
+                                {
+                                    cmd5.Parameters.Add("@cod_veiculo", SqlDbType.VarChar).Value = "000000";
+                                    cmd5.Parameters.Add("@cod_transmissao", SqlDbType.VarChar).Value = "000" + DateTime.Now.ToString("mmss");
+                                    cmd5.Parameters.Add("@dt_posicao_parada", SqlDbType.Date).Value = data.Date;
+                                    cmd5.Parameters.Add("@hr_posicao_parada", SqlDbType.Time).Value = hora; // 👈 importante: TimeSpan!
+                                    cmd5.Parameters.Add("@ds_macro", SqlDbType.VarChar).Value = ddlMacros.SelectedItem.Text;
+                                    cmd5.Parameters.Add("@cod_ref_parada", SqlDbType.VarChar).Value = ddlNumero.SelectedValue;
+                                    cmd5.Parameters.Add("@ds_tipo", SqlDbType.VarChar).Value = txtTipoMarcacao.Text;
+                                    cmd5.Parameters.Add("@ds_local_parada", SqlDbType.VarChar).Value = "MARCAÇÃO MANUAL";
+                                    cmd5.Parameters.Add("@cod_cracha", SqlDbType.VarChar).Value = txtMotorista.Text;
+                                    cmd5.Parameters.Add("@cod_usuario_alt", SqlDbType.Int).Value = cod_usuario;
+
+                                    con.Open();
+                                    cmd5.ExecuteNonQuery();
+                                    con.Close();
+                                }
+
                                 AtualizaJornada();
-                                Limpar();
                                 CarregaGrid2();
                                 CarregaTodas();
 
+                                ShowAlert("Informações cadastradas com sucesso!");
                             }
                             catch (Exception ex)
                             {
-                                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                                string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
-                                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                                sb.Append("<script type = 'text/javascript'>");
-                                sb.Append("window.onload=function(){");
-                                sb.Append("alert('");
-                                sb.Append(retorno);
-                                sb.Append("')};");
-                                sb.Append("</script>");
-                                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
+                                ShowAlert("Erro ao cadastrar: " + ex.Message);
                             }
+
                         }
                     }
                     else
@@ -1981,40 +2042,49 @@ namespace NewCapit.dist.pages
 
                                 if (dtta.Rows.Count > 0)
                                 {
-                                    TimeSpan hr_ini = new TimeSpan();
-                                    TimeSpan hr_fim = new TimeSpan();
+                                    TimeSpan hr_ini, hr_fim;
 
-                                    hr_ini = TimeSpan.Parse(dtta.Rows[0][1].ToString());
-                                    hr_fim = TimeSpan.Parse(dt.Rows[x][7].ToString());
+                                    bool iniOK = TimeSpan.TryParse(dtta.Rows[0][1].ToString().Split('.')[0], out hr_ini);
+                                    bool fimOK = TimeSpan.TryParse(dt.Rows[x][7].ToString().Split('.')[0], out hr_fim);
 
-                                    if (hr_fim > hr_ini)
+                                    if (iniOK && fimOK)
                                     {
-                                        string sqlf = "update tb_jornada set hr_fim_intervalo=@hr_fim_intervalo, nr_idveiculo=@nr_idveiculo where  dt_jornada=@dt_jornada and cod_login=@cod_login";
-
-
-                                        SqlCommand cmdf = new SqlCommand(sqlf, con);
-                                        cmdf.Parameters.AddWithValue("@nr_idveiculo", dt.Rows[x][1].ToString());
-                                        cmdf.Parameters.AddWithValue("@dt_jornada", DateTime.Parse(dt.Rows[x][5].ToString()).ToString("yyyy-MM-dd"));
-                                        cmdf.Parameters.AddWithValue("@cod_login", login);
-                                        // cmdf.Parameters.AddWithValue("@cod_jornada", dtta.Rows[0][2].ToString());
-                                        cmdf.Parameters.AddWithValue("@hr_fim_intervalo", DateTime.Parse(dt.Rows[x][6].ToString()).ToString("HH:mm:ss.000"));
-
-                                        try
+                                        if (hr_fim > hr_ini)
                                         {
-                                            con.Open();
-                                            cmdf.ExecuteNonQuery();
-                                            con.Close();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            StreamWriter write = new StreamWriter(@"C:\Erros_SisLog\Log.txt", true);
-                                            write.WriteLine("Erro Inserir na Tabela Jornada Reinicio Viagem: " + ex.ToString() + " - " + DateTime.Now.ToString());
-                                            write.Flush();
-                                            write.Close();
-                                            con.Close();
+                                            string sqlf = "update tb_jornada set hr_fim_intervalo=@hr_fim_intervalo, nr_idveiculo=@nr_idveiculo where dt_jornada=@dt_jornada and cod_login=@cod_login";
 
+                                            SqlCommand cmdf = new SqlCommand(sqlf, con);
+                                            cmdf.Parameters.AddWithValue("@nr_idveiculo", dt.Rows[x][1].ToString());
+                                            cmdf.Parameters.AddWithValue("@dt_jornada", DateTime.Parse(dt.Rows[x][5].ToString()).ToString("yyyy-MM-dd"));
+                                            cmdf.Parameters.AddWithValue("@cod_login", login);
+                                            cmdf.Parameters.AddWithValue("@hr_fim_intervalo", TimeSpan.Parse(dt.Rows[x][6].ToString().Split('.')[0]));
+
+                                            try
+                                            {
+                                                con.Open();
+                                                cmdf.ExecuteNonQuery();
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                using (StreamWriter write = new StreamWriter(@"C:\Erros_SisLog\Log.txt", true))
+                                                {
+                                                    write.WriteLine("Erro Inserir na Tabela Jornada Reinicio Viagem: " + ex.ToString() + " - " + DateTime.Now.ToString());
+                                                }
+                                            }
+                                            finally
+                                            {
+                                                con.Close();
+                                            }
                                         }
                                     }
+                                    else
+                                    {
+                                        using (StreamWriter write = new StreamWriter(@"C:\Erros_SisLog\Log.txt", true))
+                                        {
+                                            write.WriteLine($"Erro: formato inválido de hora — hr_ini: {dtta.Rows[0][1]}, hr_fim: {dt.Rows[x][7]} - {DateTime.Now}");
+                                        }
+                                    }
+
                                 }
 
                             }

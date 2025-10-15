@@ -428,7 +428,7 @@
                             <div class="form-group">
                                 <span class="">PARADA:</span>
                                 <asp:DropDownList ID="ddlNumero" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlNumero_SelectedIndexChanged" AutoPostBack="true">
-                                   <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                   <asp:ListItem Value="0" Text="Selecione..."></asp:ListItem>
                                   
                                 </asp:DropDownList>
                             </div>
