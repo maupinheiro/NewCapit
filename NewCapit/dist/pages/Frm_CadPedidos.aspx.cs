@@ -616,6 +616,13 @@ namespace NewCapit.dist.pages
                     ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                     cboGR.Focus();
                 }
+                else if (txtPrevEntrega.Text == "")
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast('Preenchimento obrigatório para a Previsão de Entrega!');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtPrevEntrega.Focus();
+                }
                 else
                 {
                     string cod = txtNumPedido.Text;
@@ -747,14 +754,17 @@ namespace NewCapit.dist.pages
                 // Soma a quantidade
                 int quantidade = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Peso"));
                 totalQuantidade += quantidade;
+
+                //int totalPeso = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Peso"));
+                //totalPesoCarga += totalPeso;
             }
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
                 // Exibe o total no rodapé                
-                e.Row.Cells[1].Text = "Total:";
-                e.Row.Cells[2].Text = totalQuantidade.ToString();
+                e.Row.Cells[1].Text = "Peso Total:";
+                e.Row.Cells[2].Text = totalPesoCarga.ToString();
                 e.Row.Cells[2].Font.Bold = true;
-                totalPesoCarga = e.Row.Cells[2].Text;
+                //totalPesoCarga = e.Row.Cells[2].Text;
                 
                 int totalLinhas = gvPedidos.Rows.Count;
                 e.Row.Cells[4].Text = "Total de Pedidos:";
