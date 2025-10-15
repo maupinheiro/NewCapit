@@ -322,7 +322,7 @@
                                 <!-- /.card-header -->
                                 <div class="card-body table-responsive p-0" style="height: 260px;">
                                     <table class="table table-head-fixed text-nowrap">
-                                        <asp:GridView ID="gvPedidos" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" EmptyDataText="Nenhum pedido encontrado." OnRowDataBound="gvPedidos_RowDataBound" ShowFooter="True">
+                                        <asp:GridView ID="gvPedidos" runat="server" DataKeyNames="pedido" AutoGenerateColumns="False" CssClass="table table-striped" EmptyDataText="Nenhum pedido encontrado." OnRowDataBound="gvPedidos_RowDataBound" ShowFooter="True">
                                             <Columns>
                                                 <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">
                                                     <ItemTemplate>

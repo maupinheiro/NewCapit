@@ -744,27 +744,67 @@ namespace NewCapit.dist.pages
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                // Soma a quantidade
                 int quantidade = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Peso"));
                 totalQuantidade += quantidade;
             }
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
-                // Exibe o total no rodapé                
                 e.Row.Cells[1].Text = "Total:";
                 e.Row.Cells[2].Text = totalQuantidade.ToString();
                 e.Row.Cells[2].Font.Bold = true;
-                totalPesoCarga = e.Row.Cells[2].Text;
-                
+
+                // Armazena o total no ViewState
+                ViewState["TotalPesoCarga"] = totalQuantidade;
+
                 int totalLinhas = gvPedidos.Rows.Count;
                 e.Row.Cells[4].Text = "Total de Pedidos:";
                 e.Row.Cells[5].Text = totalLinhas.ToString();
                 e.Row.Font.Bold = true;
             }
         }
+
         protected void lnkExcluir_Click(object sender, EventArgs e)
         {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvPedidos.DataKeys[row.RowIndex].Value.ToString();
+                try
+                {
+                    string sql = "delete tbpedidos where pedido=@pedido";
+                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    using (SqlCommand cmdUpdate = new SqlCommand(sql, con))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@pedido", id);
 
+                        con.Open();
+                        int rowsAffected = cmdUpdate.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast('Pedido excluído com sucesso!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            // atualiza  
+                            txtNumPedido.Text = "";
+                            txtNumPedido.Focus();
+                        }
+                        else
+                        {
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast('Erro ao excluir o pedido.');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                    string script = $"alert('{mensagemErro}');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+                }
+
+            }
+           
         }
 
         protected void btnSalvar_Click(object sender, EventArgs e)
@@ -796,8 +836,11 @@ namespace NewCapit.dist.pages
                 else
                 {
                     conn.Close();
+                    int totalPesoCarga = 0;
+                    if (ViewState["TotalPesoCarga"] != null)
+                        totalPesoCarga = Convert.ToInt32(ViewState["TotalPesoCarga"]);
                     string sqlSalvarPedido = "insert into tbcargas " + "(carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, ufcliorigem, ufclidestino, pedidos, gr, ot, solicitante, empresa, andamento,cadastro, distancia, emitepedagio, cidorigem, ciddestino, nucleo, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-      "values" + "(@carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @ufcliorigem, @ufclidestino, @pedidos, @gr, @ot, @solicitante, @empresa, @andamento, @cadastro, @distancia, @emitepedagio, @cidorigem, @ciddestino, @nucleo, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                    "values" + "(@carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @ufcliorigem, @ufclidestino, @pedidos, @gr, @ot, @solicitante, @empresa, @andamento, @cadastro, @distancia, @emitepedagio, @cidorigem, @ciddestino, @nucleo, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
 
                     SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                     comando.Parameters.AddWithValue("@carga", novaCarga.Text);
@@ -805,7 +848,7 @@ namespace NewCapit.dist.pages
                     comando.Parameters.AddWithValue("@status", "Pendete");
                     comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
                     comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@peso", int.Parse(totalPesoCarga));
+                    comando.Parameters.AddWithValue("@peso", totalPesoCarga);
                     comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);
