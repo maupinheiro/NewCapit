@@ -2881,6 +2881,11 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        public void InserePremioMotorista()
+        {
+            
+        }
        
         protected void cboResponsavel_SelectedIndexChanged(object sender, EventArgs e)
         {
