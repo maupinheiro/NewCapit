@@ -1237,10 +1237,12 @@
                                     <br />
                                     <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
                                 </div>
-                                <div class="col-md-1"></div>
+                                <div class="col-md-1">
+                                    <asp:Button ID="btnEncerrar" CssClass="btn btn-outline-danger  btn-lg" runat="server" Text="Encerrar Ordem de Coleta" OnClick="btnEncerrar_Click" />
+                                </div>
                                 <div class="col-md-1">
                                     <br />
-                                    <a href="ConsultaEntregas.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                                    <a href="ConsultaEntregas.aspx" class="btn btn-outline-info btn-lg">Sair               
                                     </a>
                                 </div>
                             </div>

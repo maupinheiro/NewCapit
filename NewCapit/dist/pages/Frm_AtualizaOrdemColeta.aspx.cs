@@ -2886,7 +2886,13 @@ namespace NewCapit.dist.pages
         {
             
         }
+
        
+        protected void btnEncerrar_Click(object sender, EventArgs e)
+        {
+
+        }
+
         protected void cboResponsavel_SelectedIndexChanged(object sender, EventArgs e)
         {
             string codigo = cboResponsavel.SelectedValue;
