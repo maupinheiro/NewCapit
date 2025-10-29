@@ -6511,14 +6511,14 @@ namespace NewCapit.dist.pages
             //try
             //{
             // string sql1 = "select nr_cracha from tb_motorista_txt";
-            string sql1 = "select cod_login, ds_noturno from tb_motorista where ISNUMERIC(cod_login)=1 ";
+            string sql1 = "select codmot  from tbmotoristas where ISNUMERIC(codmot)=1 ";
 
 
 
 
             if (chkDiadema.Checked)
             {
-                sql1 += " and ds_nucleo in('TNG CNT') ";
+                sql1 += " and nucleo in('CNT (CC)') ";
                 //sql1 += " and cod_login in (330,912,1027,1058,958,1091,1099,1116,1219,1290,1338,1352,1274,1403,1421,1446,1395,1526,1532,1534,1544,1545,1543, ";
                 //sql1 += " 1564,1570,1571,1584,482,999,820,989,1591,1590) ";
                 //sql1 += " and cod_login in (636,906,1047,1064,1070,1075,1178,1231,1388,1412,1463,1464,1478,1485,1488,1490,1491,1492,1495,1496,1497,1498,1499,1500,1537,1539,1548,1549,1563,1567,1568,1569,1572,";
@@ -6526,7 +6526,7 @@ namespace NewCapit.dist.pages
             }
             else if (chkCadiriri.Checked)
             {
-                sql1 += " and ds_nucleo in('TNG MATRIZ') ";
+                sql1 += " and nucleo in('MATRIZ') ";
                 //sql1 += " and cod_login in (330,912,1027,1058,958,1091,1099,1116,1219,1290,1338,1352,1274,1403,1421,1446,1395,1526,1532,1534,1544,1545,1543, ";
                 //sql1 += " 1564,1570,1571,1584,482,999,820,989,1591,1590) ";
                 //sql1 += " and cod_login in (636,906,1047,1064,1070,1075,1178,1231,1388,1412,1463,1464,1478,1485,1488,1490,1491,1492,1495,1496,1497,1498,1499,1500,1537,1539,1548,1549,1563,1567,1568,1569,1572,";
@@ -6534,7 +6534,7 @@ namespace NewCapit.dist.pages
             }
             else if (chkMinas.Checked)
             {
-                sql1 += " and ds_nucleo='TNG MINAS' ";
+                sql1 += " and nucleo='MINAS GERAIS' ";
 
             }
             //else if (chkBahia.Checked)
@@ -6543,16 +6543,16 @@ namespace NewCapit.dist.pages
             //}
             else if (chkIpiranda.Checked)
             {
-                sql1 += " and ds_nucleo='TNG IPIRANGA' ";
+                sql1 += " and nucleo='IPIRANGA' ";
             }
             else if(chkMotorista.Checked)
             {
                
-                 sql1 += " and cod_login='" + txtCodMotorista.Text + "' ";
+                 sql1 += " and codmot='" + txtCodMotorista.Text + "' ";
                
                 
             }
-            sql1 += " order by cod_login";
+            sql1 += " order by codmot";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
             DataTable dt1 = new DataTable();
 

@@ -324,7 +324,7 @@ namespace NewCapit.dist.pages
                     conn.Open();
 
                     // Tab 1
-                    SqlCommand cmd1 = new SqlCommand("SELECT carga, empresa, tomador, veiculo, codorigem, codvworigem,cliorigem, cidorigem, ufcliorigem, coddestino, codvwdestino, clidestino, ciddestino, ufclidestino, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, solicitacoes, rota, tipo_viagem, peso, pedidos, estudo_rota, remessa, quant_palet, andamento, observacao FROM tbcargas WHERE Id = @Id", conn);
+                    SqlCommand cmd1 = new SqlCommand("SELECT carga, empresa, tomador, veiculo, codorigem, codvworigem,cliorigem, cidorigem, ufcliorigem, coddestino, codvwdestino, clidestino, ciddestino, ufclidestino, CONVERT(varchar, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, solicitacoes, rota, tipo_viagem, peso, pedidos, estudo_rota, remessa, quant_palet, andamento, observacao FROM tbcargas WHERE Id = @Id AND ISDATE(data_hora) = 1", conn);
                     cmd1.Parameters.AddWithValue("@Id", id);
                     SqlDataReader reader1 = cmd1.ExecuteReader();
                     if (reader1.Read())

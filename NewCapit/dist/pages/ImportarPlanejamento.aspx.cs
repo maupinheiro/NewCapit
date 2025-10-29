@@ -264,16 +264,16 @@ namespace NewCapit.dist.pages
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@carga", nr_carga);
-                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("dd/MM/yyyy HH:mm").ToString());
+                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm").ToString());
                         cmd.Parameters.AddWithValue("@status", "PENDENTE");
                         cmd.Parameters.AddWithValue("@tomador", plantaSolicitante);
                         cmd.Parameters.AddWithValue("@entrega", "NORMAL");
-                        cmd.Parameters.AddWithValue("@peso", peso);
+                        cmd.Parameters.AddWithValue("@peso", SafeDecimalValue(peso));
                         cmd.Parameters.AddWithValue("@material", "SOLICITAÇÃO");
                         cmd.Parameters.AddWithValue("@portao", codDestino);
                         cmd.Parameters.AddWithValue("@situacao", "PRONTO");
-                        //cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
-                        cmd.Parameters.AddWithValue("@previsao", SafeDateValue(dataHora.TrimEnd()));
+                       // cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
+                        cmd.Parameters.AddWithValue("@previsao", SafeDateValueData(dataHora.TrimEnd()));
                         cmd.Parameters.AddWithValue("@codorigem", dto.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
                         cmd.Parameters.AddWithValue("@coddestino", dtd.Rows[0]["codcli"].ToString());
@@ -292,7 +292,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@quant_palet", quantidadePallets);
                         cmd.Parameters.AddWithValue("@tipo_viagem", viagemTipo);
                         cmd.Parameters.AddWithValue("@solicitacoes", solicitacaoNumero);
-                        cmd.Parameters.AddWithValue("@data_hora", SafeDateValue(dataHora.TrimEnd()));
+                        cmd.Parameters.AddWithValue("@data_hora", dataHora.TrimEnd());
                         cmd.Parameters.AddWithValue("@estudo_rota", estudoRota);
                         cmd.Parameters.AddWithValue("@remessa", remessa);
                         cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
@@ -326,15 +326,38 @@ namespace NewCapit.dist.pages
                 //}
             }
         }
+        private object SafeDecimalValue(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return DBNull.Value; // campo vazio → NULL no banco
+
+            // Remove "kg" (maiúsculo ou minúsculo) e espaços
+            input = System.Text.RegularExpressions.Regex.Replace(input, "(?i)kg", "").Trim();
+
+            // Tenta converter para decimal
+            decimal valor;
+            if (decimal.TryParse(input, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valor))
+                return valor;
+            else
+                return DBNull.Value; // se não for número válido, grava NULL
+        }
+
         private object SafeDateValue(string input)
         {
             DateTime dt;
             if (DateTime.TryParse(input, out dt))
-                return dt.ToString("yyyy-MM-dd HH:mm");
+                return dt.ToString("yyyy-MM-dd HH:mm.00");
             else
                 return DBNull.Value;
         }
-
+        private object SafeDateValueData(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
+        }
         public void GerarNumero()
         {
             string sql_sequncia = " select isnull(max(nr_carga+1),1) as nr_carga from tbcontador where nm_empresa='CNT' ";

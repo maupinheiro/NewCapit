@@ -437,7 +437,7 @@
                             <div class="form-group">
                                 <span class="details">DESCRIÇÃO:</span>
                                 <asp:HiddenField ID="txtconformmessageValue1" runat="server" />
-                                <asp:TextBox ID="txtTipoMarcacao" runat="server" CssClass="form-control font-weight-bold"></asp:TextBox>
+                                <asp:TextBox ID="txtTipoMarcacao" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true" ></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">

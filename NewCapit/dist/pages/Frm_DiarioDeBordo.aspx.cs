@@ -31,6 +31,15 @@ namespace NewCapit.dist.pages
         {
             btnExcluiMotoristas.Visible = false;
             btnExcluiTodas.Visible = false;
+           
+            if(!IsPostBack)
+            {
+                CarregaMacros();
+
+
+
+
+            }
             if (txtMotorista.Text.Trim() == string.Empty)
             {
                 fotoMotorista = "../../fotos/usuario.jpg";
@@ -39,49 +48,58 @@ namespace NewCapit.dist.pages
             {
                 CarregaFoto();
             }
-            if(!IsPostBack)
-            {
-                CarregaMacros();
-
-               
-
-
-            }
-            
 
         }
         public void CarregaFoto()
         {
+            // Verifica se o controle txtMotorista existe
+            if (txtMotorista == null || string.IsNullOrWhiteSpace(txtMotorista.Text))
+            {
+                fotoMotorista = "../../fotos/usuario.jpg";
+                return;
+            }
+
             var codigo = txtMotorista.Text.Trim();
 
             var obj = new Domain.ConsultaMotorista
             {
                 codmot = codigo
             };
+
             var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+
             if (ConsultaMotorista != null)
             {
-                if (ConsultaMotorista.status.Trim() != "INATIVO")
+                if (!string.Equals(ConsultaMotorista.status?.Trim(), "INATIVO", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (txtMotorista.Text.Trim() == "")
+                    // Se o campo caminhofoto for nulo ou vazio, usa a foto padrão
+                    if (!string.IsNullOrWhiteSpace(ConsultaMotorista.caminhofoto))
                     {
-                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
+                        fotoMotorista = "../.." + ConsultaMotorista.caminhofoto.Trim();
 
-                        if (!File.Exists(fotoMotorista))
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-                        }
-                        else
+                        string caminhoFisico = Server.MapPath(fotoMotorista);
+
+                        if (!File.Exists(caminhoFisico))
                         {
                             fotoMotorista = "../../fotos/usuario.jpg";
                         }
                     }
-
+                    else
+                    {
+                        fotoMotorista = "../../fotos/usuario.jpg";
+                    }
                 }
-
+                else
+                {
+                    fotoMotorista = "../../fotos/inativo.jpg";
+                }
             }
-
+            else
+            {
+                fotoMotorista = "../../fotos/usuario.jpg";
+            }
         }
+
         protected void grdCusto_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Select")
@@ -524,14 +542,7 @@ namespace NewCapit.dist.pages
             txtRel3.Text = string.Empty;
             txtRel4.Text = string.Empty;
         }
-        void ShowAlert(string msg)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append("<script type='text/javascript'>");
-            sb.Append("window.onload=function(){alert('" + msg.Replace("'", "\\'") + "');};");
-            sb.Append("</script>");
-            ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-        }
+        
 
         protected void btnMacromanual_Click(object sender, EventArgs e)
         {
@@ -714,6 +725,14 @@ namespace NewCapit.dist.pages
                             catch (Exception ex)
                             {
                                 ShowAlert("Erro ao cadastrar: " + ex.Message);
+                            }
+                            void ShowAlert(string msg)
+                            {
+                                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                                sb.Append("<script type='text/javascript'>");
+                                sb.Append("window.onload=function(){alert('" + msg.Replace("'", "\\'") + "');};");
+                                sb.Append("</script>");
+                                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                             }
 
                         }
