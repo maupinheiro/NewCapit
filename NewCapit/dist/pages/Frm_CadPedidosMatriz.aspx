@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadPedidos.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadPedidos" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadPedidosMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_CadPedidos" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -29,6 +29,40 @@
                 campo.value = valor.substring(0, 2) + '/' + valor.substring(2, 4) + '/' + valor.substring(4, 8);
         }
     </script>
+    
+     <script>
+         document.addEventListener("DOMContentLoaded", function () {
+             function aplicarMascara(input, mascara) {
+                 input.addEventListener("input", function () {
+                     let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+                     let resultado = "";
+                     let posicao = 0;
+
+                     for (let i = 0; i < mascara.length; i++) {
+                         if (mascara[i] === "0") {
+                             if (valor[posicao]) {
+                                 resultado += valor[posicao];
+                                 posicao++;
+                             } else {
+                                 break;
+                             }
+                         } else {
+                             resultado += mascara[i];
+                         }
+                     }
+
+                     input.value = resultado;
+                 });
+             }
+
+             // Pegando os elementos no ASP.NET
+             let txtPrevEntrega = document.getElementById("<%= txtPrevEntrega.ClientID %>");             
+
+             if (txtPrevEntrega) aplicarMascara(txtPrevEntrega, "00/00/0000");
+             
+
+     });
+     </script>
 
     <div class="content-wrapper">
         <!-- Main content -->
@@ -282,15 +316,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">PREV. ENTREGA:</label>
-                                <asp:TextBox ID="txtPrevEntrega" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10" onkeyup="formatarData(this, event);"></asp:TextBox>
-                                <asp:RegularExpressionValidator
-                                    ID="revData"
-                                    runat="server"
-                                    ControlToValidate="txtPrevEntrega"
-                                    ErrorMessage="Data inválida"
-                                    ValidationExpression="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$"
-                                    ForeColor="Red"
-                                    Display="Dynamic" />
+                                <asp:TextBox ID="txtPrevEntrega" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10" OnTextChanged="txtPrevEntrega_TextChanged" AutoPostBack="true"></asp:TextBox>                               
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -306,8 +332,8 @@
                         <br />
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">&emsp;</label>
-                                <asp:Button ID="btnAdicionar" runat="server" CssClass="btn btn-primary btn-sm" Text="Adicionar" OnClick="btnAdicionar_Click" />
+                                <label>&nbsp;</label><br />
+                                <asp:Button ID="btnAdicionar" runat="server" CssClass="btn btn-primary" Text="Adicionar" OnClick="btnAdicionar_Click" />
                             </div>
                         </div>
                     </div>
@@ -370,7 +396,7 @@
                             <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Salvar" OnClick="btnSalvar_Click" />
                         </div>
                         <div class="col-md-1">
-                            <a href="ConsultaColetasCNT.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
                             </a>
                         </div>
                     </div>

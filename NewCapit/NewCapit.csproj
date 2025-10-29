@@ -51,11 +51,32 @@
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
       <HintPath>..\packages\BouncyCastle.Cryptography.2.3.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
+    <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.105.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d5f7376574c51ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.Parser.2.0.0\lib\netstandard2.0\ClosedXML.Parser.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.1.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.1.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Enums.NET, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
       <HintPath>..\packages\Enums.NET.4.0.1\lib\net45\Enums.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=8.2.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.8.2.1\lib\net462\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=8.1.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.8.1.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
     <Reference Include="ExtendedNumerics.BigDecimal, Version=2025.1001.2.129, Culture=neutral, PublicKeyToken=65f1315a45ad8949, processorArchitecture=MSIL">
       <HintPath>..\packages\ExtendedNumerics.BigDecimal.2025.1001.2.129\lib\net472\ExtendedNumerics.BigDecimal.dll</HintPath>
@@ -69,9 +90,12 @@
     <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.0\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -88,6 +112,10 @@
     <Reference Include="NPOI.OpenXmlFormats, Version=2.7.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.7.3\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
+      <HintPath>..\packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
+    </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
@@ -96,6 +124,9 @@
     </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
@@ -123,6 +154,8 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.DataVisualization" />
+    <Reference Include="System.Web.DataVisualization.Design" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -139,6 +172,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
@@ -256,26 +290,29 @@
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
+    <Content Include="dist\pages\Frm_AltCarga.aspx" />
     <Content Include="dist\pages\Frm_AltCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AltFornecedor.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
-    <Content Include="dist\pages\Frm_CadCargas.aspx" />
+    <Content Include="dist\pages\Frm_CadCargasMatriz.aspx" />
     <Content Include="dist\pages\Frm_AltMotoristas.aspx" />
     <Content Include="dist\pages\Frm_CadCarreta.aspx" />
     <Content Include="dist\pages\Frm_CadFornecedores.aspx" />
     <Content Include="dist\pages\Frm_CadMotoristas.aspx" />
-    <Content Include="dist\pages\Frm_CadPedidos.aspx" />
+    <Content Include="dist\pages\Frm_CadPedidosMatriz.aspx" />
     <Content Include="dist\pages\Frm_CadPosto.aspx" />
     <Content Include="dist\pages\Frm_CadRotas.aspx" />
-    <Content Include="dist\pages\Frm_Coleta.aspx" />
+    <Content Include="dist\pages\Frm_ColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
+    <Content Include="dist\pages\Frm_EditarColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
     <Content Include="dist\pages\Frm_OrdemAbastecimento.aspx" />
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_TabelaPrecoMatriz.aspx" />
+    <Content Include="dist\pages\GestaoDeCargasMatriz.aspx" />
     <Content Include="dist\pages\GestaoPostos.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
@@ -4506,6 +4543,13 @@
     <Compile Include="dist\pages\FrmCadCarreta.aspx.designer.cs">
       <DependentUpon>FrmCadCarreta.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Frm_AltCarga.aspx.cs">
+      <DependentUpon>Frm_AltCarga.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AltCarga.aspx.designer.cs">
+      <DependentUpon>Frm_AltCarga.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Frm_AltCarreta.aspx.cs">
       <DependentUpon>Frm_AltCarreta.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4534,12 +4578,12 @@
     <Compile Include="dist\pages\Frm_AtualizaOrdemColeta.aspx.designer.cs">
       <DependentUpon>Frm_AtualizaOrdemColeta.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Frm_CadCargas.aspx.cs">
-      <DependentUpon>Frm_CadCargas.aspx</DependentUpon>
+    <Compile Include="dist\pages\Frm_CadCargasMatriz.aspx.cs">
+      <DependentUpon>Frm_CadCargasMatriz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\pages\Frm_CadCargas.aspx.designer.cs">
-      <DependentUpon>Frm_CadCargas.aspx</DependentUpon>
+    <Compile Include="dist\pages\Frm_CadCargasMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_CadCargasMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_AltMotoristas.aspx.cs">
       <DependentUpon>Frm_AltMotoristas.aspx</DependentUpon>
@@ -4569,12 +4613,12 @@
     <Compile Include="dist\pages\Frm_CadMotoristas.aspx.designer.cs">
       <DependentUpon>Frm_CadMotoristas.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Frm_CadPedidos.aspx.cs">
-      <DependentUpon>Frm_CadPedidos.aspx</DependentUpon>
+    <Compile Include="dist\pages\Frm_CadPedidosMatriz.aspx.cs">
+      <DependentUpon>Frm_CadPedidosMatriz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\pages\Frm_CadPedidos.aspx.designer.cs">
-      <DependentUpon>Frm_CadPedidos.aspx</DependentUpon>
+    <Compile Include="dist\pages\Frm_CadPedidosMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_CadPedidosMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_CadPosto.aspx.cs">
       <DependentUpon>Frm_CadPosto.aspx</DependentUpon>
@@ -4590,12 +4634,12 @@
     <Compile Include="dist\pages\Frm_CadRotas.aspx.designer.cs">
       <DependentUpon>Frm_CadRotas.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Frm_Coleta.aspx.cs">
-      <DependentUpon>Frm_Coleta.aspx</DependentUpon>
+    <Compile Include="dist\pages\Frm_ColetaMatriz.aspx.cs">
+      <DependentUpon>Frm_ColetaMatriz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\pages\Frm_Coleta.aspx.designer.cs">
-      <DependentUpon>Frm_Coleta.aspx</DependentUpon>
+    <Compile Include="dist\pages\Frm_ColetaMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_ColetaMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_Comissoes.aspx.cs">
       <DependentUpon>Frm_Comissoes.aspx</DependentUpon>
@@ -4617,6 +4661,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_EditarColeta.aspx.designer.cs">
       <DependentUpon>Frm_EditarColeta.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_EditarColetaMatriz.aspx.cs">
+      <DependentUpon>Frm_EditarColetaMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_EditarColetaMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_EditarColetaMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_GerarTXT.aspx.cs">
       <DependentUpon>Frm_GerarTXT.aspx</DependentUpon>
@@ -4645,6 +4696,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_TabelaPrecoMatriz.aspx.designer.cs">
       <DependentUpon>Frm_TabelaPrecoMatriz.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasMatriz.aspx.cs">
+      <DependentUpon>GestaoDeCargasMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasMatriz.aspx.designer.cs">
+      <DependentUpon>GestaoDeCargasMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoPostos.aspx.cs">
       <DependentUpon>GestaoPostos.aspx</DependentUpon>
@@ -4938,6 +4996,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

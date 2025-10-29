@@ -789,6 +789,31 @@
                                 </div>
                                 <!-- /.card-body -->
                             </div>
+                            <div class="card card-outline card-info collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-map-marker-alt"></i>&nbsp;Rastreamento do Veículo</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+
+                                    </div>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <asp:UpdatePanel ID="updMapa" runat="server">
+                                        <ContentTemplate>
+                                            <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="60000" OnTick="tmAtualizaMapa_Tick" />
+                                            <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="570px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True" />
+                                        </ContentTemplate>
+                                        <Triggers>
+                                            <asp:AsyncPostBackTrigger ControlID="tmAtualizaMapa" EventName="Tick" />
+                                        </Triggers>
+                                    </asp:UpdatePanel>
+
+                                </div>
+                            </div>
 
                             <!-- INICIO DA PRESTAÇÃO DO SERVIÇO -->
                             <div class="form-group row">
@@ -823,31 +848,7 @@
                                 </div>
                             </div>
 
-                            <div class="card card-outline card-info collapsed-card">
-                                <div class="card-header">
-                                    <h3 class="card-title"><i class="fas fa-map-marker-alt"></i>&nbsp;Rastreamento</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
 
-                                    </div>
-                                    <!-- /.card-tools -->
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <asp:UpdatePanel ID="updMapa" runat="server">
-                                        <ContentTemplate>
-                                            <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="60000" OnTick="tmAtualizaMapa_Tick" />
-                                            <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="570px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True" />
-                                        </ContentTemplate>
-                                        <Triggers>
-                                            <asp:AsyncPostBackTrigger ControlID="tmAtualizaMapa" EventName="Tick" />
-                                        </Triggers>
-                                    </asp:UpdatePanel>
-
-                                </div>
-                            </div>
 
                             <div class="row g-3">
                                 <div class="col-md-12">

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadCargas.aspx.cs" Inherits="NewCapit.dist.pages.FrmCadCargas" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="Main.Master" AutoEventWireup="true" CodeBehind="Frm_CadCargasMatriz.aspx.cs" Inherits="NewCapit.dist.pages.FrmCadCargas" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
@@ -256,7 +256,7 @@
                             <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Salvar" />
                         </div>
                         <div class="col-md-1">
-                            <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
                             </a>
                         </div>
                     </div>

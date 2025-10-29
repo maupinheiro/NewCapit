@@ -407,7 +407,7 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                                <a href="/dist/pages/Frm_CadPedidos.aspx" class="nav-link">
+                                                <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
                                                     <i class="fas fa-shipping-fast nav-icon"></i>
                                                     <p>Cargas</p>
                                                 </a>
@@ -427,7 +427,7 @@
                                                 <%--</ul>--%>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="/dist/pages/Frm_Coleta.aspx" class="nav-link">
+                                                <a href="/dist/pages/Frm_ColetaMatriz.aspx" class="nav-link">
                                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                                     <p>
                                                         Coletas/Entregas               

@@ -80,10 +80,8 @@ namespace NewCapit
             }
            
            
-        }
+        }       
 
-
-        
 
 
     }

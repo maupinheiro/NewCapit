@@ -687,7 +687,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
                             comando.Parameters.AddWithValue("@carga", novaCarga.Text);
                             comando.Parameters.AddWithValue("@emissao", txtCadastro.Text);
-                            comando.Parameters.AddWithValue("@status", "Pendete");
+                            comando.Parameters.AddWithValue("@status", "Pendente");
                             comando.Parameters.AddWithValue("@solicitante", cboSituacao.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@peso", txtPeso.Text);
@@ -839,14 +839,15 @@ namespace NewCapit.dist.pages
                     int totalPesoCarga = 0;
                     if (ViewState["TotalPesoCarga"] != null)
                         totalPesoCarga = Convert.ToInt32(ViewState["TotalPesoCarga"]);
-                    string sqlSalvarPedido = "insert into tbcargas " + "(carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, ufcliorigem, ufclidestino, pedidos, gr, ot, solicitante, empresa, andamento,cadastro, distancia, emitepedagio, cidorigem, ciddestino, nucleo, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-                    "values" + "(@carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @ufcliorigem, @ufclidestino, @pedidos, @gr, @ot, @solicitante, @empresa, @andamento, @cadastro, @distancia, @emitepedagio, @cidorigem, @ciddestino, @nucleo, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                    string sqlSalvarPedido = "insert into tbcargas " + "(carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, ufcliorigem, ufclidestino, pedidos, gr, ot, solicitante, empresa, andamento,cadastro, distancia, emitepedagio, cidorigem, ciddestino, nucleo, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, duracao, cod_tomador, tipo_veiculo, deslocamento)" +
+                    "values" + "(@carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @ufcliorigem, @ufclidestino, @pedidos, @gr, @ot, @solicitante, @empresa, @andamento, @cadastro, @distancia, @emitepedagio, @cidorigem, @ciddestino, @nucleo, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao, @cod_tomador, @tipo_veiculo, @deslocamento)";
 
                     SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                     comando.Parameters.AddWithValue("@carga", novaCarga.Text);
-                    comando.Parameters.AddWithValue("@emissao", txtCadastro.Text);
-                    comando.Parameters.AddWithValue("@status", "Pendete");
-                    comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
+                    comando.Parameters.AddWithValue("@emissao", DateTime.Parse(txtCadastro.Text).ToString("yyyy-MM-dd HH:mm"));
+                    comando.Parameters.AddWithValue("@status", "Pendente");
+                    //comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
+                    comando.Parameters.AddWithValue("@tomador", cboFrete.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@peso", totalPesoCarga);
                     comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
@@ -889,6 +890,9 @@ namespace NewCapit.dist.pages
                     comando.Parameters.AddWithValue("@cid_pagador", txtCidPagador.Text);
                     comando.Parameters.AddWithValue("@uf_pagador", txtUFPagador.Text);
                     comando.Parameters.AddWithValue("@duracao", txtDuracao.Text);
+                    comando.Parameters.AddWithValue("@cod_tomador", txtFrete.Text);
+                    comando.Parameters.AddWithValue("@tipo_veiculo", txtTipoVeiculo.Text);
+                    comando.Parameters.AddWithValue("@deslocamento", txtDeslocamento.Text);
 
                     try
                     {
@@ -899,7 +903,7 @@ namespace NewCapit.dist.pages
                         string script = "<script>showToast('Carga cadastrado com sucesso!');</script>";
                         ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                         // atualiza  
-                        Response.Redirect("/dist/pages/ControleCarretas.aspx");                     
+                        Response.Redirect("/dist/pages/GestaoDeCargasMatriz.aspx");                     
                     }
                     catch (Exception ex)
                     {
@@ -916,6 +920,39 @@ namespace NewCapit.dist.pages
 
                 }
             }
+        }
+
+        protected void txtPrevEntrega_TextChanged(object sender, EventArgs e)
+        {
+            if (txtPrevEntrega.Text != "")
+            {
+                DateTime data;
+                if (DataValida(txtPrevEntrega.Text, out data))
+                {
+                    //lblMensagem.Text = "Data válida: " + data.ToString("dd/MM/yyyy");
+                    //lblMensagem.ForeColor = System.Drawing.Color.Green;
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast('Data inválida!');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtPrevEntrega.Focus();
+                }
+
+            }
+           
+        }
+        public static bool DataValida(string dataTexto, out DateTime data)
+        {
+            string formato = "dd/MM/yyyy";
+            return DateTime.TryParseExact(
+                dataTexto,
+                formato,
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out data
+            );
         }
     }
 }

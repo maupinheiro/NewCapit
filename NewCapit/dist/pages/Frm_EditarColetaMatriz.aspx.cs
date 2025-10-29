@@ -26,10 +26,15 @@ using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using System.Runtime.InteropServices.ComTypes;
 using System.Globalization;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Drawing;
+using System.Web.Script.Serialization;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_Coleta : System.Web.UI.Page
+   
+    public partial class Frm_EditarColetaMatriz : System.Web.UI.Page
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         public string fotoMotorista;
@@ -51,7 +56,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     txtUsuCadastro.Text = lblUsuario;
                 }
-                
+
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
@@ -61,6 +66,8 @@ namespace NewCapit.dist.pages
                 fotoMotorista = "/img/totalFunc.png";
             }
             CarregaFoto();
+            PreencherComboMateriais();
+            PreencherComboStatus();
 
         }
         protected void btnSelecionar_Click(object sender, EventArgs e)
@@ -69,7 +76,7 @@ namespace NewCapit.dist.pages
 
             foreach (GridViewRow row in gvPedidos.Rows)
             {
-                CheckBox chk = (CheckBox)row.FindControl("chkSelect");
+                System.Web.UI.WebControls.CheckBox chk = (System.Web.UI.WebControls.CheckBox)row.FindControl("chkSelect");
                 if (chk != null && chk.Checked)
                 {
                     string id = gvPedidos.DataKeys[row.RowIndex].Value.ToString();
@@ -202,9 +209,9 @@ namespace NewCapit.dist.pages
 
                         if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
                         {
-                            txtCodVeiculo.Text = ConsultaMotorista.codvei;                            
+                            txtCodVeiculo.Text = ConsultaMotorista.codvei;
                             txtPlaca.Text = ConsultaMotorista.placa;
-                            txtTipoMot.Text = ConsultaMotorista.tipomot;                         
+                            txtTipoMot.Text = ConsultaMotorista.tipomot;
                             txtReboque1.Text = ConsultaMotorista.reboque1;
                             txtReboque2.Text = ConsultaMotorista.reboque2;
                             ETI.Visible = false;
@@ -229,13 +236,14 @@ namespace NewCapit.dist.pages
                                 txtCodProprietario.Text = ConsultaVeiculo.codtra;
                                 txtProprietario.Text = ConsultaVeiculo.transp;
                                 txtCrono.Text = ConsultaVeiculo.venccronotacografo;
+                                txtCapCarga.Text = ConsultaVeiculo.cap;
                             }
                             ETI.Visible = false;
                             valCET.Visible = false;
                             crono.Visible = false;
-                            
+
                         }
-                        
+
                         if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
                         {
                             txtCodVeiculo.Text = ConsultaMotorista.frota;
@@ -245,7 +253,7 @@ namespace NewCapit.dist.pages
                             txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
                             //txtReboque1.Text = ConsultaMotorista.reboque1;
                             //txtReboque2.Text = ConsultaMotorista.reboque2;
-                            ETI.Visible = true;                            
+                            ETI.Visible = true;
                             valCET.Visible = true;
                             crono.Visible = true;
                             var codigoAgregado = txtCodVeiculo.Text.Trim();
@@ -256,7 +264,7 @@ namespace NewCapit.dist.pages
                             };
                             var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
                             if (ConsultaVeiculo != null)
-                            {                                
+                            {
                                 txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
                                 txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
                                 txtCET.Text = ConsultaVeiculo.venclicencacet;
@@ -269,7 +277,8 @@ namespace NewCapit.dist.pages
                                 txtCrono.Text = ConsultaVeiculo.venccronotacografo;
                                 txtPlaca.Text = ConsultaVeiculo.plavei;
                                 txtReboque1.Text = ConsultaVeiculo.reboque1;
-                                txtReboque2.Text = ConsultaVeiculo.reboque2;                                
+                                txtReboque2.Text = ConsultaVeiculo.reboque2;
+                                txtCapCarga.Text = ConsultaVeiculo.cap;
                             }
                             // pesquisar validade do Exame Toxicologico
                             if (txtExameToxic.Text != "")
@@ -312,7 +321,7 @@ namespace NewCapit.dist.pages
                                         txtExameToxic.BackColor = System.Drawing.Color.Red;
                                         txtExameToxic.ForeColor = System.Drawing.Color.White;
                                         // Acione o toast quando a página for carregada
-                                        ShowToastrError("Motorista, não tem Exame Toxicologico lançado no sistema!");                                        
+                                        ShowToastrError("Motorista, não tem Exame Toxicologico lançado no sistema!");
                                         txtCodMotorista.Text = "";
                                         txtCodMotorista.Focus();
                                     }
@@ -341,7 +350,7 @@ namespace NewCapit.dist.pages
                             if (diferenca.TotalDays <= 0)
                             {
                                 txtCNH.BackColor = System.Drawing.Color.Red;
-                                txtCNH.ForeColor = System.Drawing.Color.White;                               
+                                txtCNH.ForeColor = System.Drawing.Color.White;
                                 ShowToastrError("Validade da CNH do motorista, está vencida!");
                                 txtCodMotorista.Text = "";
                                 txtCodMotorista.Focus();
@@ -355,7 +364,7 @@ namespace NewCapit.dist.pages
                                     ShowToastrError("CNH do motorista, sem data de validade!");
                                     txtCodMotorista.Text = "";
                                     txtCodMotorista.Focus();
-                                }                               
+                                }
                             }
                         }
 
@@ -377,18 +386,18 @@ namespace NewCapit.dist.pages
                                 ShowToastrWarning("Liberação de Risco do Motorista, vence em menos de 30 dias!");
                                 txtCodFrota.Focus();
 
-                                    //string nomeUsuario = txtUsuCadastro.Text;
-                                    //string linha1 = "Olá, " + nomeUsuario + "!";
-                                    //string linha2 = "A liberãção de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
-                                    //string linha3 = "Data de vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
-                                    ////string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    //// Concatenando as linhas com '\n' para criar a mensagem
-                                    //string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    ////// Gerando o script JavaScript para exibir o alerta
-                                    //string script = $"alert('{mensagemCodificada}');";
-                                    ////// Registrando o script para execução no lado do cliente
-                                    //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                                //string nomeUsuario = txtUsuCadastro.Text;
+                                //string linha1 = "Olá, " + nomeUsuario + "!";
+                                //string linha2 = "A liberãção de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
+                                //string linha3 = "Data de vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
+                                ////string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+                                //// Concatenando as linhas com '\n' para criar a mensagem
+                                //string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+                                //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                ////// Gerando o script JavaScript para exibir o alerta
+                                //string script = $"alert('{mensagemCodificada}');";
+                                ////// Registrando o script para execução no lado do cliente
+                                //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
                             }
                             if (diferencaGR.TotalDays <= 0)
@@ -443,7 +452,7 @@ namespace NewCapit.dist.pages
                                 //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
 
                                 ShowToastrWarningVeiculo("Laudo de Opacidade do Veículo, vence em menos de 30 dias!");
-                               // txtCodFrota.Focus();
+                                // txtCodFrota.Focus();
                             }
                             if (diferencaOpacidade.TotalDays <= 0)
                             {
@@ -1139,7 +1148,7 @@ namespace NewCapit.dist.pages
 
                             }
                         }
-                        
+
                     }
                 }
                 else
@@ -1158,8 +1167,7 @@ namespace NewCapit.dist.pages
                 }
             }
 
-        }              
-
+        }
         public void CarregaFoto()
         {
             var codigo = txtCodMotorista.Text.Trim();
@@ -1316,12 +1324,119 @@ namespace NewCapit.dist.pages
             if (txtCarga.Text.Trim() != "")
             {
                 string numeroCarga = txtCarga.Text.Trim();
-                CarregarGridPedidos(numeroCarga);
+                string sql = "SELECT * from tbcargas where carga = " + numeroCarga;
+                SqlDataAdapter adpt = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                adpt.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    // Preenchendo os TextBoxes com valores do DataTable                    
+                    txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                    cboStatus.SelectedItem.Text = "Ag. Carreg.";
+                    txtSituacao.BackColor = System.Drawing.Color.Purple;
+                    txtSituacao.ForeColor = System.Drawing.Color.White;
+                    txtSituacao.Text = dt.Rows[0][40].ToString();
+                    txtGR.Text = dt.Rows[0][28].ToString();
+                    txtSolicitante.Text = dt.Rows[0][30].ToString();
+                    cboMaterial.SelectedItem.Text = dt.Rows[0][8].ToString();
+                    //cboMaterial.Items.Insert(0, new ListItem(dt.Rows[0][8].ToString(), ""));
+                    txtPesoCarga.Text = dt.Rows[0][7].ToString();
+
+                    txtCodRemetente.Text = dt.Rows[0][12].ToString();
+                    cboRemetente.Text = dt.Rows[0][13].ToString();
+                    txtMunicipioRemetente.Text = dt.Rows[0][23].ToString();
+                    txtUFRemetente.Text = dt.Rows[0][19].ToString();
+
+                    txtCodDestinatario.Text = dt.Rows[0][14].ToString();
+                    cboDestinatario.Text = dt.Rows[0][15].ToString();
+                    txtMunicipioDestinatario.Text = dt.Rows[0][24].ToString();
+                    txtUFDestinatario.Text = dt.Rows[0][20].ToString();
+
+                    txtCodPagador.Text = dt.Rows[0][76].ToString();
+                    txtPagador.Text = dt.Rows[0][77].ToString();
+                    txtCidPagador.Text = dt.Rows[0][78].ToString();
+                    txtUFPagador.Text = dt.Rows[0][79].ToString();
+
+                    // Carregar pedidos
+                    CarregarGridPedidos(numeroCarga);
+
+                }
 
             }
         }
-        // Função chamada no <%# ... %> para calcular o tempo de carregamento
+        private void PreencherComboMateriais()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, descricao FROM tbtipomaterial";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboMaterial.DataSource = reader;
+                    cboMaterial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboMaterial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboMaterial.DataBind();  // Realiza o binding dos dados                   
+                    //cboMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        private void PreencherComboStatus()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT descricao FROM tbtipostatus";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboStatus.DataSource = reader;
+                    cboStatus.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    cboStatus.DataValueField = "descricao";  // Campo que será o valor de cada item                    
+                    cboStatus.DataBind();  // Realiza o binding dos dados                   
+                    //cboMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
         private void PreencherComboMotoristas()
         {
             // Consulta SQL que retorna os dados desejados
@@ -1359,7 +1474,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void gvPedidos_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             //int id = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
@@ -1387,7 +1501,6 @@ namespace NewCapit.dist.pages
             //GridView1.EditIndex = -1;
             //CarregarGrid();
         }
-
         private void ShowToastrSuccess(string message)
         {
             string script = $"showSuccessToast('{message}');";
@@ -1409,7 +1522,6 @@ namespace NewCapit.dist.pages
             string script = $"showWarningToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
         }
-
         private void ShowToastrSuccessVeiculo(string message)
         {
             string script = $"showSuccessToast('{message}');";
@@ -1426,7 +1538,6 @@ namespace NewCapit.dist.pages
             string script = $"showInfoToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrInfo", script, true);
         }
-
         protected void txtCodFrota_TextChanged(object sender, EventArgs e)
         {
             if (txtCodFrota.Text.Trim() != "")
@@ -1458,11 +1569,10 @@ namespace NewCapit.dist.pages
 
             }
         }
-
         protected void txtCodVeiculo_TextChanged(object sender, EventArgs e)
         {
             if (txtCodVeiculo.Text.Trim() != "")
-            {               
+            {
                 var codigo = txtCodVeiculo.Text.Trim();
 
                 var obj = new Domain.ConsultaVeiculo
@@ -1497,7 +1607,7 @@ namespace NewCapit.dist.pages
                         txtCodVeiculo.Text = "";
                         txtPlaca.Text = "";
                         txtReboque1.Text = "";
-                        txtReboque2.Text = "";                      
+                        txtReboque2.Text = "";
                         txtVeiculoTipo.Text = "";
                         txtTipoVeiculo.Text = "";
                         txtCarreta.Text = "";
@@ -1514,7 +1624,7 @@ namespace NewCapit.dist.pages
                         txtCodVeiculo.Focus();
                     }
                     else
-                    {                        
+                    {
                         txtVeiculoTipo.Text = ConsultaVeiculo.tipoveiculo;
                         txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
                         txtCET.Text = ConsultaVeiculo.venclicencacet;
@@ -1529,6 +1639,7 @@ namespace NewCapit.dist.pages
                         txtConjunto.Text = ConsultaVeiculo.tipocarreta;
                         txtCodProprietario.Text = ConsultaVeiculo.codtra;
                         txtProprietario.Text = ConsultaVeiculo.transp;
+                        txtCapCarga.Text = ConsultaVeiculo.cap;
                         // verifica se o motorista pertence a transportadora
                         if (txtCodTransportadora.Text.Trim() != txtCodProprietario.Text.Trim())
                         {
@@ -1553,7 +1664,7 @@ namespace NewCapit.dist.pages
                             txtCodVeiculo.Text = "";
                             txtPlaca.Text = "";
                             txtReboque1.Text = "";
-                            txtReboque2.Text = "";                            
+                            txtReboque2.Text = "";
                             txtVeiculoTipo.Text = "";
                             txtTipoVeiculo.Text = "";
                             txtCarreta.Text = "";
@@ -1603,7 +1714,7 @@ namespace NewCapit.dist.pages
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";                                    
+                                    txtReboque2.Text = "";
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1648,7 +1759,7 @@ namespace NewCapit.dist.pages
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";                                   
+                                    txtReboque2.Text = "";
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1694,7 +1805,7 @@ namespace NewCapit.dist.pages
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";                                    
+                                    txtReboque2.Text = "";
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1734,7 +1845,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";                                
+                                txtReboque2.Text = "";
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1778,7 +1889,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";                                
+                                txtReboque2.Text = "";
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1822,7 +1933,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";                                
+                                txtReboque2.Text = "";
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1855,7 +1966,6 @@ namespace NewCapit.dist.pages
             }
 
         }
-
         protected void btnCadContato_Click(object sender, EventArgs e)
         {
 
@@ -1900,7 +2010,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void txtDocumentos_TextChanged(object sender, EventArgs e)
         {
             if (txtDocumentos.Text != "")
@@ -1918,7 +2027,7 @@ namespace NewCapit.dist.pages
                     txtDocumentos.Focus();
                 }
                 else
-                {               
+                {
                     // Verificar se o RadioButton está marcado
                     if (rbCTe.Checked)
                     {
@@ -1997,10 +2106,245 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void btnSalvar_Click(object sender, EventArgs e)
+        {
+            //string sqlSalvarCarreta = "insert into tbcarregamentos () values ()";
+
+            //SqlCommand comando = new SqlCommand(sqlSalvarCarreta, con);
+            //comando.Parameters.AddWithValue("@codcarreta", txtCodMotorista.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@modelo", ddlMotorista.SelectedItem.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@placacarreta", txtCodFrota.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tipocarreta", txtFoneCorp.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@anocarreta", txtCodVeiculo.Text);
+            //comando.Parameters.AddWithValue("@tiporeboque", txtPlaca.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@codprop", txtReboque1.Text.Trim().ToUpper());
+            //comando.Parameters.AddWithValue("@descprop", txtReboque2.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@nucleo", txtFilialMot.Text.ToUpper());            
+            //comando.Parameters.AddWithValue("@marca", txtTipoMot.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@renavan", txtFuncao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@cor", txtFuncao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@antt", txtExameToxic.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@codrastreador", txtCNH.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tecnologia", txtLibGR.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@idrastreador", txtCelular.Text);
+            //comando.Parameters.AddWithValue("@comunicacao", txtCPF.SelectedItem.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@chassi", txtCartao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@licenciamento", txtValCartao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@kilometragem", txtCodTransportadora.Text);
+            //comando.Parameters.AddWithValue("@carretaalugada", txtTransportadora.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@alugada_de", txtVeiculoTipo.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@cnpj_de", txtTipoVeiculo.Text);
+            //comando.Parameters.AddWithValue("@inicio_contrato", txtCarreta.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@termino_contrato", txtConjunto.Text);
+            //comando.Parameters.AddWithValue("@uf_placa_carreta", txtOpacidade.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@municipio_placa_carreta", txtCET.SelectedItem.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@data_cadastro", txtCRLVVeiculo.ToString("dd/MM/yyyy HH:mm"));
+            //comando.Parameters.AddWithValue("@cadastrado_por", txtCRLVReb1.Text.Trim().ToUpper());
+            //comando.Parameters.AddWithValue("@dt_cadastro", txtCRLVReb2.ToString("dd/MM/yyyy"));
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tara", txtCodProprietario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtProprietario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtTecnologia.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtRastreamento.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCadastro.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCarga.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", cboStatus.SelectedItem.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtSituacao.Text.ToUpper()); // EM ANDAMENTO
+            //comando.Parameters.AddWithValue("@patrimonio", txtContFerrolene.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtSolicitante.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtGR.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", cboMaterial.SelectedItem.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtPesoCarga.Text.ToUpper()); // A VIRGULA POR PONTO
+            //comando.Parameters.AddWithValue("@patrimonio", txtCapCarga.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCintas.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCatracas.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtControleCli.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCodRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", cboRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtMunicipioRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtUFRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCodDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", cboDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtMunicipioDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtUFDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCodPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCidPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtUFPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@patrimonio", txtCrono.Text.ToUpper());
+
+
+
+
+
+
+
+
+
+
+
+            //if (txtComprimento.Text != "")
+            //{
+            //    string entradaComprimento = txtComprimento.Text.Trim();
+            //    // Substitui vírgula por ponto
+            //    string formatado = entradaComprimento.Replace(',', '.');
+
+            //    if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+            //    {
+            //        comando.Parameters.AddWithValue("@comprimento", numero.ToString(CultureInfo.InvariantCulture));
+            //    }
+            //}
+            //if (txtLargura.Text != "")
+            //{
+            //    string entradaLargura = txtLargura.Text.Trim();
+            //    // Substitui vírgula por ponto
+            //    string formatado = entradaLargura.Replace(',', '.');
+            //    if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+            //    {
+            //        comando.Parameters.AddWithValue("@largura", numero.ToString(CultureInfo.InvariantCulture));
+            //    }
+            //}
+            //if (txtAltura.Text != "")
+            //{
+            //    string entradaAltura = txtAltura.Text.Trim();
+            //    // Substitui vírgula por ponto
+            //    string formatado = entradaAltura.Replace(',', '.');
+            //    if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+            //    {
+            //        comando.Parameters.AddWithValue("@altura", numero.ToString(CultureInfo.InvariantCulture));
+            //    }
+            //}
+            //comando.Parameters.AddWithValue("@aquisicao", txtDataAquisicao.Text.ToUpper());
+            //try
+            //{
+            //    con.Open();
+            //    comando.ExecuteNonQuery();
+            //    con.Close();
+            //    ExibirToastCadastro("Placa da carreta: " + txtPlaca.Text.Trim() + ", cadastrada com sucesso!");
+            //    Thread.Sleep(5000);
+            //    //Chama a página de controle de carretas
+            //    Response.Redirect("/dist/pages/ControleCarretas.aspx");
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+            //    ExibirToastErro("Erro ao cadastrar a placa da carreta: " + txtPlaca.Text.Trim() + " - " + message);
+            //    Thread.Sleep(5000);
+            //    //Chama a página de controle de carretas
+            //    //Response.Redirect("/dist/pages/ControleCarretas.aspx");
+            //}
+
+            //finally
+            //{
+            //    con.Close();
+            //}
+        }
+
         private void ShowToastrWarningVeiculo(string message)
         {
             string script = $"showWarningToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
         }
+
+
+
+        //protected void btnSalvar_Click(object sender, EventArgs e)
+        //{
+        //    int idCliente = int.Parse(hfIdCliente.Value); // hidden field com o ID
+        //    string usuario = Session["Usuario"]?.ToString() ?? "Desconhecido";
+
+        //    // 1️⃣ Buscar dados antigos no banco
+        //    var dadosAntigos = ObterDadosAntigos(idCliente);
+
+        //    // 2️⃣ Novos dados do formulário
+        //    var dadosNovos = new Dictionary<string, string>
+        //{
+        //    { "Nome", txtNome.Text },
+        //    { "Email", txtEmail.Text },
+        //    { "Telefone", txtTelefone.Text }
+        //};
+
+        //    // 3️⃣ Comparar e salvar histórico
+        //    foreach (var campo in dadosNovos)
+        //    {
+        //        string valorAntigo = dadosAntigos.ContainsKey(campo.Key) ? dadosAntigos[campo.Key] : null;
+        //        string valorNovo = campo.Value;
+
+        //        if (valorAntigo != valorNovo)
+        //            SalvarHistorico("Cliente", idCliente, campo.Key, valorAntigo, valorNovo, usuario);
+        //    }
+
+        //    // 4️⃣ Atualizar dados principais
+        //    AtualizarCliente(idCliente, dadosNovos);
+        //}
+
+        //private Dictionary<string, string> ObterDadosAntigos(int idCliente)
+        //{
+        //    var resultado = new Dictionary<string, string>();
+
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        string sql = "SELECT Nome, Email, Telefone FROM Cliente WHERE Id = @Id";
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+        //        cmd.Parameters.AddWithValue("@Id", idCliente);
+
+        //        conn.Open();
+        //        using (SqlDataReader dr = cmd.ExecuteReader())
+        //        {
+        //            if (dr.Read())
+        //            {
+        //                resultado["Nome"] = dr["Nome"].ToString();
+        //                resultado["Email"] = dr["Email"].ToString();
+        //                resultado["Telefone"] = dr["Telefone"].ToString();
+        //            }
+        //        }
+        //    }
+        //    return resultado;
+        //}
+
+        //private void SalvarHistorico(string tabela, int chave, string campo, string valorAntigo, string valorNovo, string usuario)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        string sql = @"
+        //        INSERT INTO HistoricoAlteracoes (Tabela, ChaveRegistro, Campo, ValorAntigo, ValorNovo, Usuario)
+        //        VALUES (@Tabela, @ChaveRegistro, @Campo, @ValorAntigo, @ValorNovo, @Usuario)";
+
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+        //        cmd.Parameters.AddWithValue("@Tabela", tabela);
+        //        cmd.Parameters.AddWithValue("@ChaveRegistro", chave);
+        //        cmd.Parameters.AddWithValue("@Campo", campo);
+        //        cmd.Parameters.AddWithValue("@ValorAntigo", (object)valorAntigo ?? DBNull.Value);
+        //        cmd.Parameters.AddWithValue("@ValorNovo", (object)valorNovo ?? DBNull.Value);
+        //        cmd.Parameters.AddWithValue("@Usuario", usuario);
+
+        //        conn.Open();
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+
+        //private void AtualizarCliente(int idCliente, Dictionary<string, string> dadosNovos)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        string sql = @"UPDATE Cliente SET Nome = @Nome, Email = @Email, Telefone = @Telefone WHERE Id = @Id";
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+        //        cmd.Parameters.AddWithValue("@Nome", dadosNovos["Nome"]);
+        //        cmd.Parameters.AddWithValue("@Email", dadosNovos["Email"]);
+        //        cmd.Parameters.AddWithValue("@Telefone", dadosNovos["Telefone"]);
+        //        cmd.Parameters.AddWithValue("@Id", idCliente);
+
+        //        conn.Open();
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+
     }
 }

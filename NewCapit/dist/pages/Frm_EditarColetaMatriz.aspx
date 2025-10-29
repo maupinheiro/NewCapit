@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_Coleta.aspx.cs" Inherits="NewCapit.dist.pages.Frm_Coleta" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_EditarColetaMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_EditarColetaMatriz" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -149,7 +148,8 @@
                                 <div class="info-box">
                                     <span class="info-box-icon bg-info">
                                         <%--tamanho da foto 39x39 60--%>
-                                        <img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />
+                                        <%--<img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />--%>
+                                        
                                     </span>
                                     <div class="info-box-content">
                                         <span class="info-box-number">
@@ -449,12 +449,6 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group">
-                                                    <span class="details">AUT. FERROLENE:</span>
-                                                    <asp:TextBox ID="txtContFerrolene" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
                                                     <span class="details">CARGA/SOLICITAÇÃO:</span>
                                                     <asp:TextBox ID="txtCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" OnTextChanged="txtCarga_TextChanged" AutoPostBack="true"></asp:TextBox>
                                                 </div>
@@ -462,13 +456,19 @@
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <span class="details">STATUS:</span>
-                                                    <asp:DropDownList ID="cboStatus" runat="server" CssClass="form-control select2" ReadOnly="true"></asp:DropDownList>
+                                                    <asp:DropDownList ID="cboStatus" runat="server" CssClass="form-control" ReadOnly="true"></asp:DropDownList>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-5">
                                                 <div class="form-group">
                                                     <span class="details">SITUAÇÃO:</span>
                                                     <asp:TextBox ID="txtSituacao" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <span class="details">FERROLENE:</span>
+                                                    <asp:TextBox ID="txtContFerrolene" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -489,7 +489,7 @@
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <span class="details">MATERIAL:</span>
-                                                    <asp:DropDownList ID="cboMaterial" Style="text-align: center" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                                    <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control"></asp:DropDownList>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
@@ -514,6 +514,12 @@
                                                 <div class="form-group">
                                                     <span class="details">CATRACAS:</span>
                                                     <asp:TextBox ID="txtCatracas" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <span class="details">O.T. CLIENTE:</span>
+                                                    <asp:TextBox ID="txtControleCli" Style="text-align: center" ReadOnly="true" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -783,7 +789,7 @@
 
                                                         </div>
                                                         <!-- PEDIDOS -->
-                                                        <div class="tab-pane fade" id="custom-tabs-four-pedidos" role="tabpanel" aria-labelledby="custom-tabs-four-pedidos-tab">
+                                                        <div class="tab-pane fade" id="custom-tabs-four-pedidos" role="tabpanel" aria-labelledby="custom-tabs-four-pedidos-tab">                                                            
                                                             <div class="card-body table-responsive p-0" style="height: 150px;">
                                                                 <table class="table table-head-fixed text-nowrap">
                                                                     <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-striped"
@@ -1124,7 +1130,7 @@
                             <!-- Linha 9 do formulário -->
                             <div class="row g-3">
                                 <div class="col-md-1">
-                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" />
+                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" OnClick="btnSalvar_Click" />
                                 </div>
                                 <div class="col-md-1">
                                     <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Sair               

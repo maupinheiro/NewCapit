@@ -27,6 +27,7 @@ namespace Domain
         public string tiporeboque { get; set; } 
         public string vencimentolaudofumaca { get; set; }
         public string venccronotacografo { get; set; }
+        public string cap { get; set; }
     }
     
 }
