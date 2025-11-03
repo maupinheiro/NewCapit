@@ -26,6 +26,8 @@ namespace NewCapit.dist.pages
                 else
                 {
                     var lblUsuario = "<Usuário>";
+                    Response.Redirect("Login.aspx");
+
                 }
                 DateTime dataHoraAtual = DateTime.Now;
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");

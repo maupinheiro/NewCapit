@@ -53,8 +53,9 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-                    var lblUsuario = "<Usuário>";
-                    txtUsuCadastro.Text = lblUsuario;
+                    //var lblUsuario = "<Usuário>";
+                    //txtUsuCadastro.Text = lblUsuario;
+                    Response.Redirect("Login.aspx");
                 }
 
                 lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");

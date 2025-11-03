@@ -30,7 +30,9 @@ namespace NewCapit.dist.pages
                 {
                     var lblUsuario = "<Usuário>";
                     txtUsuCadastro.Text = lblUsuario;
-                } 
+                    Response.Redirect("Login.aspx");
+
+                }
             }
             DateTime dataHoraAtual = DateTime.Now;
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");

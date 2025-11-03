@@ -20,7 +20,20 @@ namespace NewCapit
         {
             if (!IsPostBack)
             {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
 
+
+
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+
+                    Response.Redirect("Login.aspx");
+                }
 
                 listarMotoristas();
 

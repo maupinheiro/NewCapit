@@ -158,6 +158,32 @@
                                     </div>
                                 </div>
                             </div>
+                             <div class="row">
+                                 <div class="col-sm-6">
+                                     <!-- checkbox -->
+                                     <div class="form-group clearfix">
+
+                                         <asp:CheckBox ID="chkTaubate" runat="server" AutoPostBack="true" OnCheckedChanged="chkTaubate_CheckedChanged" />
+                                         <label for="checkboxSuccess3">
+                                             TNG TAUBATE
+                                         </label>
+
+                                     </div>
+                                 </div>
+                             </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- checkbox -->
+                                    <div class="form-group clearfix">
+
+                                        <asp:CheckBox ID="chkSaoCarlos" runat="server" AutoPostBack="true" OnCheckedChanged="chkSaoCarlos_CheckedChanged" />
+                                        <label for="checkboxSuccess3">
+                                            TNG SAO CARLOS
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Por motorista -->
                             <div class="row">
                                 <div class="col-sm-6">

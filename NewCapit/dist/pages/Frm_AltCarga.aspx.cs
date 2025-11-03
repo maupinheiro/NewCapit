@@ -33,6 +33,8 @@ namespace NewCapit.dist.pages
                 else
                 {
                     var lblUsuario = "<Usuário>";
+                    Response.Redirect("Login.aspx");
+
                 }
                 //PreencherNumCarga();
                 PreencherComboSolicitantes();

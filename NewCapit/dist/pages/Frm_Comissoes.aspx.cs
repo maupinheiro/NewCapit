@@ -26,7 +26,8 @@ namespace NewCapit.dist.pages
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                   // txtUsuCadastro.Text = lblUsuario;
+                    // txtUsuCadastro.Text = lblUsuario;
+                    Response.Redirect("login.aspx");
                 }
                 PreencherComboFiliais();             
 

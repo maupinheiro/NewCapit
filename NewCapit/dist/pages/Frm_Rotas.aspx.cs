@@ -39,6 +39,20 @@ namespace NewCapit.dist.pages
                 PreencherComboDestinatario();
                 PreencherComboRecebedor();
                 CarregaRotas();
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+
+
+
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+
+                    Response.Redirect("Login.aspx");
+                }
             }
             DateTime dataHoraAtual = DateTime.Now;
             lbDtAtualizacao.Text= dataHoraAtual.ToString("dd/MM/yyyy HH:mm");

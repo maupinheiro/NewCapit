@@ -33,6 +33,8 @@ namespace NewCapit
                 {
                     var lblUsuario = "<Usuário>";
                     txtCadastradoPor.Text = lblUsuario;
+                    Response.Redirect("Login.aspx");
+
                 }
 
                 txtDataCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");

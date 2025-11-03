@@ -861,7 +861,6 @@
                                                     <table id="gridCargas" class="table table-bordered table-hover">
                                                         <thead>
                                                             <tr>
-                                                                <th>COLETA</th>
                                                                 <th>CVA</th>
                                                                 <th>DATA COLETA</th>
                                                                 <%--<th>CODIGO</th>--%>
@@ -876,7 +875,6 @@
                                                 </HeaderTemplate>
                                                 <ItemTemplate>
                                                     <tr data-widget="expandable-table" aria-expanded="false">
-                                                        <td><%# Eval("carga") %></td>
                                                         <td><%# Eval("cva") %></td>
                                                         <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                         <%--<td><%# Eval("CodigoO") %></td>--%>
@@ -1233,15 +1231,16 @@
                                     <br />
                                     <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar Ordem de Coleta" />
                                 </div>
-                                <div class="col-md-1"></div>
+                            
                                 <div class="col-md-2">
                                     <br />
                                     <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
+                                     <br />
                                     <asp:Button ID="btnEncerrar" CssClass="btn btn-outline-danger  btn-lg" runat="server" Text="Encerrar Ordem de Coleta" OnClick="btnEncerrar_Click" />
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <br />
                                     <a href="ConsultaEntregas.aspx" class="btn btn-outline-info btn-lg">Sair               
                                     </a>

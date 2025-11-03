@@ -39,7 +39,7 @@ namespace NewCapit.dist.pages
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                    txtUsuCadastro.Text = lblUsuario;
+                    Response.Redirect("Login.asapx");
                 }
                 if (txtCodMotorista.Text == "")
                 {

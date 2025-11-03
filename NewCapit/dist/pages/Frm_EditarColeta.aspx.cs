@@ -35,6 +35,7 @@ namespace NewCapit.dist.pages
                 {
                     var lblUsuario = "<Usuário>";
                     //txtAlteradoPor.Text = lblUsuario;
+                    Response.Redirect("Login.aspx");
                 }
 
                 

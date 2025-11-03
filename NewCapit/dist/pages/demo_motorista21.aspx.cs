@@ -32,6 +32,23 @@ namespace NewCapit.dist.pages
         protected void Page_Load(object sender, EventArgs e)
         {
             Carrega();
+            if (!IsPostBack)
+            {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+
+
+
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+
+                    Response.Redirect("Login.aspx");
+                }
+            }
         }
 
         public void Carrega()

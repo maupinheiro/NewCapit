@@ -88,7 +88,7 @@ namespace NewCapit.dist.pages
 
                 if (totalDias <= 7)
                 {
-                    if (chkMotorista.Checked == false && chkCadiriri.Checked == false && chkDiadema.Checked == false && chkIpiranda.Checked == false && chkMinas.Checked == false)
+                    if (chkMotorista.Checked == false && chkCadiriri.Checked == false && chkDiadema.Checked == false && chkIpiranda.Checked == false && chkMinas.Checked == false && chkTaubate.Checked == false && chkSaoCarlos.Checked == false)
                     {
                         string message = "É necessário selecionar uma unidade ou Motorista";
                         System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -167,6 +167,29 @@ namespace NewCapit.dist.pages
             chkMotorista.Checked = true;
         }
 
+        protected void chkTaubate_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDiadema.Checked = false;
+            //chkBahia.Checked = false;
+            chkCadiriri.Checked = false;
+            chkIpiranda.Checked = false;
+            chkMinas.Checked = false;
+            chkMotorista.Checked = false;
+            chkTaubate.Checked = true;
+        }
+
+        protected void chkSaoCarlos_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDiadema.Checked = false;
+            //chkBahia.Checked = false;
+            chkCadiriri.Checked = false;
+            chkIpiranda.Checked = false;
+            chkMinas.Checked = false;
+            chkMotorista.Checked = false;
+            chkTaubate.Checked = false;
+            chkSaoCarlos.Checked = true;
+        }
+
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -181,7 +204,7 @@ namespace NewCapit.dist.pages
                 else
                 {
                     //var lblUsuario = "<Usuário>";
-                    var usuarioLogado = "<Usuário>";
+                    Response.Redirect("Login.apsx");
                 }
                 
                 CarregaLista();
@@ -6545,12 +6568,20 @@ namespace NewCapit.dist.pages
             {
                 sql1 += " and nucleo='IPIRANGA' ";
             }
-            else if(chkMotorista.Checked)
+            else if (chkTaubate.Checked)
             {
-               
-                 sql1 += " and codmot='" + txtCodMotorista.Text + "' ";
-               
-                
+                sql1 += " and nucleo='TAUBATE' ";
+            }
+            else if (chkSaoCarlos.Checked)
+            {
+                sql1 += " and nucleo='SAO CARLOS' ";
+            }
+            else if (chkMotorista.Checked)
+            {
+
+                sql1 += " and codmot='" + txtCodMotorista.Text + "' ";
+
+
             }
             sql1 += " order by codmot";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
@@ -6581,6 +6612,14 @@ namespace NewCapit.dist.pages
                 arquivo1 = "Tngminas" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
 
             }
+            else if (chkTaubate.Checked)
+            {
+                arquivo1 = "TngTaubate" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
+            }
+            else if (chkSaoCarlos.Checked)
+            {
+                arquivo1 = "TngSaoCarlos" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
+            }
             //else if (chkBahia.Checked)
             //{
             //    arquivo1 = "Tngbahia" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
@@ -6589,6 +6628,7 @@ namespace NewCapit.dist.pages
             {
                 arquivo1 = "Tngipiranga" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
             }
+
             else if (chkMotorista.Checked)
             {
                 arquivo1 = txtCodMotorista.Text + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
@@ -6683,6 +6723,14 @@ namespace NewCapit.dist.pages
                     else if (chkIpiranda.Checked)
                     {
                         arquivo = "Tngipiranga" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
+                    }
+                    else if (chkTaubate.Checked)
+                    {
+                        arquivo = "TngTaubate" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
+                    }
+                    else if (chkSaoCarlos.Checked)
+                    {
+                        arquivo = "TngSaoCarlos" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "a" + DateTime.Parse(txtDtFinal.Text).ToString("ddMM") + ".txt";
                     }
                     else if (chkMotorista.Checked)
                     {
