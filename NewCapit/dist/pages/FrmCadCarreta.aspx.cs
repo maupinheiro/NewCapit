@@ -16,6 +16,20 @@ namespace NewCapit.dist.pages
         DateTime dataHoraAtual = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UsuarioLogado"] != null)
+            {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+                var lblUsuario = nomeUsuario;
+
+
+
+            }
+            else
+            {
+                var lblUsuario = "<Usuário>";
+
+                Response.Redirect("Login.aspx");
+            }
         }
 
     }

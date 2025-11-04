@@ -216,6 +216,14 @@
     <Content Include="dist\img\credit\entregas.png" />
     <Content Include="dist\img\credit\veiculo.png" />
     <Content Include="dist\img\icon_loc.png" />
+    <Content Include="dist\img\ico_truck.png" />
+    <Content Include="dist\img\ico_truck1.png" />
+    <Content Include="dist\img\ico_truck2.png" />
+    <Content Include="dist\img\ico_truck3.png" />
+    <Content Include="dist\img\ico_truck4.png" />
+    <Content Include="dist\img\ico_truck5.png" />
+    <Content Include="dist\img\ico_truck6.png" />
+    <Content Include="dist\img\ico_truck7.png" />
     <Content Include="dist\img\logo_transnovag.png" />
     <Content Include="dist\pages\ConsultaCargas.aspx" />
     <Content Include="dist\pages\ConsultaClientes.aspx" />

@@ -32,6 +32,20 @@ namespace NewCapit.dist.pages
                 CarregaGraficos();
                 lblData.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + " - " + DateTime.Now.ToString("dd/MM/yyyy");
             }
+            if (Session["UsuarioLogado"] != null)
+            {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+                var lblUsuario = nomeUsuario;
+
+               
+
+            }
+            else
+            {
+               
+               
+                Response.Redirect("Login.aspx");
+            }
         }
         
         public void CarregaBloco()

@@ -57,6 +57,8 @@ namespace NewCapit.dist.pages
                 {
                     var lblUsuario = "<Usuário>";
                     txtAtualizadoPor.Text = lblUsuario;
+                    Response.Redirect("Login.aspx");
+
                 }
                 DateTime dataHoraAtual = DateTime.Now;
                 lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
@@ -3103,6 +3105,10 @@ namespace NewCapit.dist.pages
                     if (dt.Rows[0][11].ToString() == "7")
                     {
                         ico.image = "../img/ico_truck7.png";
+                    }
+                    else
+                    {
+                        ico.image = "../img/ico_truck.png";
                     }
                     GMarkerOptions mOpts = new GMarkerOptions();
                     mOpts.clickable = true;

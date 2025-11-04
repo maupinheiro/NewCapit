@@ -21,7 +21,21 @@ namespace NewCapit.dist.pages
             {
                 PreencherComboFiliais();
                 CarregaDadosFornecedor();
-               // Carrega apenas na primeira vez
+                // Carrega apenas na primeira vez
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+
+
+
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+
+                    Response.Redirect("Login.aspx");
+                }
             }
             else
             {

@@ -30,6 +30,7 @@ namespace NewCapit.dist.pages
                 else
                 {
                     txtUsuCadastro.Text = "<USUÁRIO>";
+                    Response.Redirect("Login.aspx");
                 }
                 PreencherNumRota();
                 PreencherComboRemetente();

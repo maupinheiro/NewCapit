@@ -34,6 +34,20 @@ namespace NewCapit.dist.pages
                 //var lblUsuario = "<Usuário>";
                 //txtAlteradoPor.Text = lblUsuario;
             }
+            if (Session["UsuarioLogado"] != null)
+            {
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+                var lblUsuario = nomeUsuario;
+
+
+
+            }
+            else
+            {
+                var lblUsuario = "<Usuário>";
+
+                Response.Redirect("Login.aspx");
+            }
         }
         protected void lnkCarregar_Click(object sender, EventArgs e)
         {

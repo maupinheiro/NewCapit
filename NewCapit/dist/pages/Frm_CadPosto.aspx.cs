@@ -33,6 +33,7 @@ namespace NewCapit.dist.pages
                 {
                     var lblUsuario = "<Usuário>";
                     //txtUsuCadastro.Text = lblUsuario;
+                    Response.Redirect("Login.aspx");
                 }
                 CarregaDadosFornecedor();
             }

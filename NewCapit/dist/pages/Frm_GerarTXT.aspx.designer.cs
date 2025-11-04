@@ -114,6 +114,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.CheckBox chkMinas;
 
         /// <summary>
+        /// Controle chkTaubate.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkTaubate;
+
+        /// <summary>
+        /// Controle chkSaoCarlos.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSaoCarlos;
+
+        /// <summary>
         /// Controle chkMotorista.
         /// </summary>
         /// <remarks>
