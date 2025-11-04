@@ -74,15 +74,15 @@ namespace NewCapit.dist.pages
         {
             List<string> selecionados = new List<string>();
 
-            foreach (GridViewRow row in gvPedidos.Rows)
-            {
-                System.Web.UI.WebControls.CheckBox chk = (System.Web.UI.WebControls.CheckBox)row.FindControl("chkSelect");
-                if (chk != null && chk.Checked)
-                {
-                    string id = gvPedidos.DataKeys[row.RowIndex].Value.ToString();
-                    selecionados.Add(id);
-                }
-            }
+            //foreach (GridViewRow row in gvPedidos.Rows)
+            //{
+            //    System.Web.UI.WebControls.CheckBox chk = (System.Web.UI.WebControls.CheckBox)row.FindControl("chkSelect");
+            //    if (chk != null && chk.Checked)
+            //    {
+            //        string id = gvPedidos.DataKeys[row.RowIndex].Value.ToString();
+            //        selecionados.Add(id);
+            //    }
+            //}
 
             // Exemplo: mostrar resultado
             string resultado = "Selecionados: " + string.Join(", ", selecionados);
@@ -116,43 +116,43 @@ namespace NewCapit.dist.pages
         //}
         protected void gvPedidos_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            gvPedidos.EditIndex = e.NewEditIndex;
-            string numeroCarga = txtCarga.Text.Trim();
-            CarregarGridPedidos(numeroCarga);
+            //gvPedidos.EditIndex = e.NewEditIndex;
+            //string numeroCarga = txtCarga.Text.Trim();
+            //CarregarGridPedidos(numeroCarga);
         }
         protected void gvPedidos_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvPedidos.EditIndex = -1;
-            string numeroCarga = txtCarga.Text.Trim();
-            CarregarGridPedidos(numeroCarga);
+            //gvPedidos.EditIndex = -1;
+            //string numeroCarga = txtCarga.Text.Trim();
+            //CarregarGridPedidos(numeroCarga);
         }
         protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow && gvPedidos.EditIndex == e.Row.RowIndex)
-            {
-                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotoristas");
+            //if (e.Row.RowType == DataControlRowType.DataRow && gvPedidos.EditIndex == e.Row.RowIndex)
+            //{
+            //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotoristas");
 
-                if (ddl != null)
-                {
-                    // Carrega os cargos no DropDownList
-                    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                    {
-                        string query = "SELECT codmot, nommot FROM tbmotoristas";
-                        SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
+            //    if (ddl != null)
+            //    {
+            //        // Carrega os cargos no DropDownList
+            //        using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //        {
+            //            string query = "SELECT codmot, nommot FROM tbmotoristas";
+            //            SqlDataAdapter da = new SqlDataAdapter(query, conn);
+            //            DataTable dt = new DataTable();
+            //            da.Fill(dt);
 
-                        ddl.DataSource = dt;
-                        ddl.DataTextField = "nommot";
-                        ddl.DataValueField = "codmot";
-                        ddl.DataBind();
+            //            ddl.DataSource = dt;
+            //            ddl.DataTextField = "nommot";
+            //            ddl.DataValueField = "codmot";
+            //            ddl.DataBind();
 
-                        // Seleciona o valor atual
-                        string cargoIdAtual = DataBinder.Eval(e.Row.DataItem, "nommot").ToString();
-                        ddl.SelectedValue = cargoIdAtual;
-                    }
-                }
-            }
+            //            // Seleciona o valor atual
+            //            string cargoIdAtual = DataBinder.Eval(e.Row.DataItem, "nommot").ToString();
+            //            ddl.SelectedValue = cargoIdAtual;
+            //        }
+            //    }
+            //}
         }
         protected void txtCodMotorista_TextChanged(object sender, EventArgs e)
         {
@@ -236,7 +236,7 @@ namespace NewCapit.dist.pages
                                 txtCodProprietario.Text = ConsultaVeiculo.codtra;
                                 txtProprietario.Text = ConsultaVeiculo.transp;
                                 txtCrono.Text = ConsultaVeiculo.venccronotacografo;
-                                txtCapCarga.Text = ConsultaVeiculo.cap;
+                                //txtCapCarga.Text = ConsultaVeiculo.cap;
                             }
                             ETI.Visible = false;
                             valCET.Visible = false;
@@ -278,7 +278,7 @@ namespace NewCapit.dist.pages
                                 txtPlaca.Text = ConsultaVeiculo.plavei;
                                 txtReboque1.Text = ConsultaVeiculo.reboque1;
                                 txtReboque2.Text = ConsultaVeiculo.reboque2;
-                                txtCapCarga.Text = ConsultaVeiculo.cap;
+                                //txtCapCarga.Text = ConsultaVeiculo.cap;
                             }
                             // pesquisar validade do Exame Toxicologico
                             if (txtExameToxic.Text != "")
@@ -1304,13 +1304,13 @@ namespace NewCapit.dist.pages
 
                             if (dt.Rows.Count > 0)
                             {
-                                gvPedidos.DataSource = dt;
-                                gvPedidos.DataBind();
+                                //gvPedidos.DataSource = dt;
+                                //gvPedidos.DataBind();
                             }
                             else
                             {
-                                gvPedidos.DataSource = null;
-                                gvPedidos.DataBind();
+                                //gvPedidos.DataSource = null;
+                                //gvPedidos.DataBind();
                                 return;
                             }
                         }
@@ -1321,60 +1321,63 @@ namespace NewCapit.dist.pages
         }
         protected void txtCarga_TextChanged(object sender, EventArgs e)
         {
-            if (txtCarga.Text.Trim() != "")
-            {
-                string numeroCarga = txtCarga.Text.Trim();
-                string sql = "SELECT * from tbcargas where carga = " + numeroCarga + " AND empresa = '1111'";
-                SqlDataAdapter adpt = new SqlDataAdapter(sql, conn);
-                DataTable dt = new DataTable();
-                conn.Open();
-                adpt.Fill(dt);
-                conn.Close();
+            //if (txtCarga.Text.Trim() != "")
+            //{
+            //    string numeroCarga = txtCarga.Text.Trim();
+            //    string sql = "SELECT * from tbcargas where carga = " + numeroCarga + " AND empresa = '1111'";
+            //    SqlDataAdapter adpt = new SqlDataAdapter(sql, conn);
+            //    DataTable dt = new DataTable();
+            //    conn.Open();
+            //    adpt.Fill(dt);
+            //    conn.Close();
 
-                if (dt.Rows.Count > 0)
-                {
-                    // Preenchendo os TextBoxes com valores do DataTable                    
-                    txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-                    cboStatus.SelectedItem.Text = "Ag. Carreg.";
-                    txtSituacao.BackColor = System.Drawing.Color.Purple;
-                    txtSituacao.ForeColor = System.Drawing.Color.White;
-                    txtSituacao.Text = dt.Rows[0][40].ToString();
-                    txtGR.Text = dt.Rows[0][28].ToString();
-                    txtSolicitante.Text = dt.Rows[0][30].ToString();
-                    cboMaterial.SelectedItem.Text = dt.Rows[0][8].ToString();
-                    //cboMaterial.Items.Insert(0, new ListItem(dt.Rows[0][8].ToString(), ""));
-                    txtPesoCarga.Text = dt.Rows[0][7].ToString();
+            //    if (dt.Rows.Count > 0)
+            //    {
+            //        // Preenchendo os TextBoxes com valores do DataTable                    
+            //        txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            //        cboStatus.SelectedItem.Text = "Ag. Carreg.";
+            //        txtSituacao.BackColor = System.Drawing.Color.Purple;
+            //        txtSituacao.ForeColor = System.Drawing.Color.White;
+            //        txtSituacao.Text = dt.Rows[0][40].ToString();
+            //        txtGR.Text = dt.Rows[0][28].ToString();
+            //        txtControleCli.Text = dt.Rows[0][29].ToString();
+            //        txtSolicitante.Text = dt.Rows[0][30].ToString();
+            //        cboMaterial.SelectedItem.Text = dt.Rows[0][8].ToString();
+            //        //cboMaterial.Items.Insert(0, new ListItem(dt.Rows[0][8].ToString(), ""));
+            //        txtPesoCarga.Text = dt.Rows[0][7].ToString();
                     
-                    txtCodRemetente.Text = dt.Rows[0][12].ToString();
-                    cboRemetente.Text = dt.Rows[0][13].ToString();
-                    txtMunicipioRemetente.Text = dt.Rows[0][23].ToString();
-                    txtUFRemetente.Text = dt.Rows[0][19].ToString();
+            //        txtCodRemetente.Text = dt.Rows[0][12].ToString();
+            //        cboRemetente.Text = dt.Rows[0][13].ToString();
+            //        txtMunicipioRemetente.Text = dt.Rows[0][23].ToString();
+            //        txtUFRemetente.Text = dt.Rows[0][19].ToString();
                     
-                    txtCodDestinatario.Text = dt.Rows[0][14].ToString();
-                    cboDestinatario.Text = dt.Rows[0][15].ToString();
-                    txtMunicipioDestinatario.Text = dt.Rows[0][24].ToString();
-                    txtUFDestinatario.Text = dt.Rows[0][20].ToString();
+            //        txtCodDestinatario.Text = dt.Rows[0][14].ToString();
+            //        cboDestinatario.Text = dt.Rows[0][15].ToString();
+            //        txtMunicipioDestinatario.Text = dt.Rows[0][24].ToString();
+            //        txtUFDestinatario.Text = dt.Rows[0][20].ToString();
                     
-                    txtCodPagador.Text = dt.Rows[0][76].ToString();
-                    txtPagador.Text = dt.Rows[0][77].ToString();
-                    txtCidPagador.Text = dt.Rows[0][78].ToString();
-                    txtUFPagador.Text = dt.Rows[0][79].ToString();
+            //        txtCodPagador.Text = dt.Rows[0][76].ToString();
+            //        txtPagador.Text = dt.Rows[0][77].ToString();
+            //        txtCidPagador.Text = dt.Rows[0][78].ToString();
+            //        txtUFPagador.Text = dt.Rows[0][79].ToString();
 
-                    txtPedagio.Text = dt.Rows[0][63].ToString();
-                    string sDuracao = dt.Rows[0][81].ToString();
-                    txtPercurso.Text = dt.Rows[0][84].ToString();
-                    // Carregar pedidos
-                    CarregarGridPedidos(numeroCarga);
+            //        txtDistancia.Text = dt.Rows[0][62].ToString();
+            //        txtPedagio.Text = dt.Rows[0][63].ToString();
+            //        txtDuracao.Text = dt.Rows[0][81].ToString();
+            //        txtPercurso.Text = dt.Rows[0][84].ToString();
+                    
+            //        // Carregar pedidos
+            //        CarregarGridPedidos(numeroCarga);
 
-                }
-                else
-                {
-                    ShowToastrInfo("Carga não cadastrada, ou pertence a outra filial!");
-                    txtCarga.Text = "";
-                    txtCarga.Focus();
-                }
+            //    }
+            //    else
+            //    {
+            //        ShowToastrInfo("Carga não cadastrada, ou pertence a outra filial!");
+            //        txtCarga.Text = "";
+            //        txtCarga.Focus();
+            //    }
 
-            }
+            //}
         }
         private void PreencherComboMateriais()
         {
@@ -1396,10 +1399,10 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    cboMaterial.DataSource = reader;
-                    cboMaterial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cboMaterial.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    cboMaterial.DataBind();  // Realiza o binding dos dados                   
+                    //cboMaterial.DataSource = reader;
+                    //cboMaterial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    //cboMaterial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    //cboMaterial.DataBind();  // Realiza o binding dos dados                   
                     //cboMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
@@ -1431,10 +1434,10 @@ namespace NewCapit.dist.pages
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     // Preencher o ComboBox com os dados do DataReader
-                    cboStatus.DataSource = reader;
-                    cboStatus.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cboStatus.DataValueField = "descricao";  // Campo que será o valor de cada item                    
-                    cboStatus.DataBind();  // Realiza o binding dos dados                   
+                    //cboStatus.DataSource = reader;
+                    //cboStatus.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+                    //cboStatus.DataValueField = "descricao";  // Campo que será o valor de cada item                    
+                    //cboStatus.DataBind();  // Realiza o binding dos dados                   
                     //cboMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
@@ -1648,7 +1651,7 @@ namespace NewCapit.dist.pages
                         txtConjunto.Text = ConsultaVeiculo.tipocarreta;
                         txtCodProprietario.Text = ConsultaVeiculo.codtra;
                         txtProprietario.Text = ConsultaVeiculo.transp;
-                        txtCapCarga.Text = ConsultaVeiculo.cap;
+                        //txtCapCarga.Text = ConsultaVeiculo.cap;
                         // verifica se o motorista pertence a transportadora
                         if (txtCodTransportadora.Text.Trim() != txtCodProprietario.Text.Trim())
                         {
@@ -2032,139 +2035,143 @@ namespace NewCapit.dist.pages
             // Depois, converter o DateTime para string no formato ISO (yyyy-MM-dd HH:mm)
             string dataFormatada = converterDataCadastro.ToString("yyyy-MM-dd HH:mm");
 
-
-            string sqlSalvarColeta = "INSERT INTO tbcarregamentos(funcao, valtoxicologico, venccnh, valgr, foneparticular, cpf, cartaopedagio, valcartao, codtranspmotorista, nomtranspmotorista, veiculotipo, tipoveiculo, carreta, tipocarreta, valopacidade, valcet, valcrlvveiculo, valcrlvreboque1, valcrlvreboque2, venccronotacografo, codtra, transportadora, tecnologia, rastreamento, emissao, num_carregamento, status, situacao, controle_ferrolene, solicitante, gr, material, peso, cargaliq, rede, catraca, dtottu, codcliorigem, nomcliorigem, cidorigem, uforigem, codclidestino, nomclidestino, ciddestino, ufdestino, cod_pagador, nom_pagador, cid_pagador, uf_pagador, emite_pedagio, percurso, duracao_viagem, pedagio, solicitantepedagio, pagadorpedagioida,pagadorpedagiovolta,historicopedagio) VALUES(@funcao, @valtoxicologico,@venccnh,@valgr,@foneparticular,@cpf, @cartaopedagio, @valcartao, @codtranspmotorista, @nomtranspmotorista, @veiculotipo, @tipoveiculo, @carreta, @tipocarreta, @valopacidade, @valcet, @valcrlvveiculo, @valcrlvreboque1, @valcrlvreboque2, @venccronotacografo, @codtra, @transportadora, @tecnologia, @rastreamento, @emissao, @num_carregamento, @status, @situacao, @controle_ferrolene, @solicitante, @gr, @material, @peso, @cargaliq, @rede, @catraca, @dtottu, @codcliorigem, @nomcliorigem, @cidorigem, @uforigem, @codclidestino, @nomclidestino, @ciddestino, @ufdestino, @cod_pagador, @nom_pagador, @cid_pagador, @uf_pagador, @emite_pedagio, @percurso, @duracao_viagem, @pedagio, @solicitantepedagio, @pagadorpedagioida, @pagadorpedagiovolta, @historicopedagio)";
+            string sqlSalvarColeta = "INSERT INTO tbcarregamentos(codmotorista, nomemotorista, codcontato, fonecorporativo, veiculo, placa, reboque1, reboque2, funcao, valtoxicologico, venccnh, valgr, foneparticular, cpf, cartaopedagio, valcartao, codtranspmotorista, nomtranspmotorista, veiculotipo, tipoveiculo, carreta, tipocarreta, valopacidade, valcet, valcrlvveiculo, valcrlvreboque1, valcrlvreboque2, venccronotacografo, codtra, transportadora, tecnologia, rastreamento, emissao, num_carregamento, status, situacao, controle_ferrolene, solicitante, gr, material, peso, cargaliq, rede, catraca, dtottu, codcliorigem, nomcliorigem, cidorigem, uforigem, codclidestino, nomclidestino, ciddestino, ufdestino, cod_pagador, nom_pagador, cid_pagador, uf_pagador, emite_pedagio, percurso, duracao_viagem, pedagio, solicitantepedagio, pagadorpedagioida,pagadorpedagiovolta,historicopedagio, nucleo, carga, usucad, dtcad, empresa, tipomot, foto) VALUES(@codmotorista, @nomemotorista, @codcontato, @fonecorporativo, @veiculo, @placa, @reboque1, @reboque2, @funcao, @valtoxicologico,@venccnh,@valgr,@foneparticular,@cpf, @cartaopedagio, @valcartao, @codtranspmotorista, @nomtranspmotorista, @veiculotipo, @tipoveiculo, @carreta, @tipocarreta, @valopacidade, @valcet, @valcrlvveiculo, @valcrlvreboque1, @valcrlvreboque2, @venccronotacografo, @codtra, @transportadora, @tecnologia, @rastreamento, @emissao, @num_carregamento, @status, @situacao, @controle_ferrolene, @solicitante, @gr, @material, @peso, @cargaliq, @rede, @catraca, @dtottu, @codcliorigem, @nomcliorigem, @cidorigem, @uforigem, @codclidestino, @nomclidestino, @ciddestino, @ufdestino, @cod_pagador, @nom_pagador, @cid_pagador, @uf_pagador, @emite_pedagio, @percurso, @duracao_viagem, @pedagio, @solicitantepedagio, @pagadorpedagioida, @pagadorpedagiovolta, @historicopedagio, @nucleo, @carga, @usucad, @dtcad, @empresa, @tipomot, @foto)";
 
             SqlCommand comando = new SqlCommand(sqlSalvarColeta, conn);
-            comando.Parameters.AddWithValue("@codmotorista", txtCodMotorista.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nomemotorista", ddlMotorista.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codcontato", txtCodFrota.Text.ToUpper());
-            comando.Parameters.AddWithValue("@fonecorporativo", txtFoneCorp.Text.ToUpper());
-            comando.Parameters.AddWithValue("@veiculo", txtCodVeiculo.Text);
-            comando.Parameters.AddWithValue("@placa", txtPlaca.Text.ToUpper());
-            comando.Parameters.AddWithValue("@reboque1", txtReboque1.Text.Trim().ToUpper());
-            comando.Parameters.AddWithValue("@reboque2", txtReboque2.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nucleo", txtFilialMot.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tipomot", txtTipoMot.Text.ToUpper());
-            comando.Parameters.AddWithValue("@funcao", txtFuncao.Text.ToUpper());
-            comando.Parameters.AddWithValue("@valtoxicologico", SafedDateValue(txtExameToxic.Text));
-            comando.Parameters.AddWithValue("@venccnh", SafedDateValue(txtCNH.Text));
-            comando.Parameters.AddWithValue("@valgr", SafedDateValue(txtLibGR.Text));
-            comando.Parameters.AddWithValue("@foneparticular", txtCelular.Text);
-            comando.Parameters.AddWithValue("@cpf", txtCPF.Text);
-            comando.Parameters.AddWithValue("@cartaopedagio", txtCartao.Text.ToUpper());
-            comando.Parameters.AddWithValue("@valcartao", txtValCartao.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codtranspmotorista", txtCodTransportadora.Text);
-            comando.Parameters.AddWithValue("@nomtranspmotorista", txtTransportadora.Text.ToUpper());
-            comando.Parameters.AddWithValue("@veiculotipo", txtVeiculoTipo.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tipoveiculo", txtTipoVeiculo.Text);
-            comando.Parameters.AddWithValue("@carreta", txtCarreta.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tipocarreta", txtConjunto.Text.ToUpper());
-            comando.Parameters.AddWithValue("@valopacidade", SafedDateValue(txtOpacidade.Text));
-            comando.Parameters.AddWithValue("@valcet", SafedDateValue(txtCET.Text));
-            comando.Parameters.AddWithValue("@valcrlvveiculo", SafedDateValue(txtCRLVVeiculo.Text));
-            comando.Parameters.AddWithValue("@valcrlvreboque1", SafedDateValue(txtCRLVReb1.Text));
-            comando.Parameters.AddWithValue("@valcrlvreboque2", SafedDateValue(txtCRLVReb2.Text));
-            comando.Parameters.AddWithValue("@venccronotacografo", SafedDateValue(txtCrono.Text));
-            comando.Parameters.AddWithValue("@codtra", txtCodProprietario.Text.ToUpper());
-            comando.Parameters.AddWithValue("@transportadora", txtProprietario.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tecnologia", txtTecnologia.Text.ToUpper());
-            comando.Parameters.AddWithValue("@rastreamento", txtRastreamento.Text.ToUpper());
-            comando.Parameters.AddWithValue("@emissao", converterDataCadastro);
-            comando.Parameters.AddWithValue("@num_carregamento", txtCarga.Text.ToUpper());
-            comando.Parameters.AddWithValue("@status", cboStatus.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper()); // EM ANDAMENTO
-            comando.Parameters.AddWithValue("@controle_ferrolene", txtContFerrolene.Text.ToUpper());
-            comando.Parameters.AddWithValue("@solicitante", txtSolicitante.Text.ToUpper());
-            comando.Parameters.AddWithValue("@gr", txtGR.Text.ToUpper());
-            comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@peso", txtPesoCarga.Text.ToUpper()); // A VIRGULA POR PONTO
-            comando.Parameters.AddWithValue("@cargaliq", txtCapCarga.Text.ToUpper());
-            comando.Parameters.AddWithValue("@rede", txtCintas.Text.ToUpper());
-            comando.Parameters.AddWithValue("@catraca", txtCatracas.Text.ToUpper());
-            comando.Parameters.AddWithValue("@dtottu", txtControleCli.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codcliorigem", txtCodRemetente.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nomcliorigem", cboRemetente.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cidorigem", txtMunicipioRemetente.Text.ToUpper());
-            comando.Parameters.AddWithValue("@uforigem", txtUFRemetente.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codclidestino", txtCodDestinatario.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nomclidestino", cboDestinatario.Text.ToUpper());
-            comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text.ToUpper());
-            comando.Parameters.AddWithValue("@ufdestino", txtUFDestinatario.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cod_pagador", txtCodPagador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nom_pagador", txtPagador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cid_pagador", txtCidPagador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@uf_pagador", txtUFPagador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@emite_pedagio", txtPedagio.Text.ToUpper());
-            comando.Parameters.AddWithValue("@percurso", txtPercurso.Text);
-            comando.Parameters.AddWithValue("@duracao_viagem", SafeHourValue(sDuracao));
+            //comando.Parameters.AddWithValue("@codmotorista", txtCodMotorista.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@nomemotorista", ddlMotorista.SelectedItem.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@codcontato", txtCodFrota.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@fonecorporativo", txtFoneCorp.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@veiculo", txtCodVeiculo.Text);
+            //comando.Parameters.AddWithValue("@placa", txtPlaca.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@reboque1", txtReboque1.Text.Trim().ToUpper());
+            //comando.Parameters.AddWithValue("@reboque2", txtReboque2.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@nucleo", txtFilialMot.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tipomot", txtTipoMot.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@funcao", txtFuncao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@valtoxicologico", SafedDateValue(txtExameToxic.Text));
+            //comando.Parameters.AddWithValue("@venccnh", SafedDateValue(txtCNH.Text));
+            //comando.Parameters.AddWithValue("@valgr", SafedDateValue(txtLibGR.Text));
+            //comando.Parameters.AddWithValue("@foneparticular", txtCelular.Text);
+            //comando.Parameters.AddWithValue("@cpf", txtCPF.Text);
+            //comando.Parameters.AddWithValue("@cartaopedagio", txtCartao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@valcartao", txtValCartao.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@codtranspmotorista", txtCodTransportadora.Text);
+            //comando.Parameters.AddWithValue("@nomtranspmotorista", txtTransportadora.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@veiculotipo", txtVeiculoTipo.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tipoveiculo", txtTipoVeiculo.Text);
+            //comando.Parameters.AddWithValue("@carreta", txtCarreta.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tipocarreta", txtConjunto.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@valopacidade", SafedDateValue(txtOpacidade.Text));
+            //comando.Parameters.AddWithValue("@valcet", SafedDateValue(txtCET.Text));
+            //comando.Parameters.AddWithValue("@valcrlvveiculo", SafedDateValue(txtCRLVVeiculo.Text));
+            //comando.Parameters.AddWithValue("@valcrlvreboque1", SafedDateValue(txtCRLVReb1.Text));
+            //comando.Parameters.AddWithValue("@valcrlvreboque2", SafedDateValue(txtCRLVReb2.Text));
+            //comando.Parameters.AddWithValue("@venccronotacografo", SafedDateValue(txtCrono.Text));
+            //comando.Parameters.AddWithValue("@codtra", txtCodProprietario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@transportadora", txtProprietario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@tecnologia", txtTecnologia.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@rastreamento", txtRastreamento.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@emissao", converterDataCadastro);
+            //comando.Parameters.AddWithValue("@num_carregamento", novaColeta.Text.Trim());
+            //comando.Parameters.AddWithValue("@status", cboStatus.SelectedItem.Text);
+            //comando.Parameters.AddWithValue("@situacao", "EM ANDAMENTO"); // EM ANDAMENTO
+            //comando.Parameters.AddWithValue("@controle_ferrolene", txtContFerrolene.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@solicitante", txtSolicitante.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@gr", txtGR.Text.ToUpper());            
+            //comando.Parameters.AddWithValue("@carga", txtCarga.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
+            //comando.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@dtcad", converterDataCadastro);
+            //comando.Parameters.AddWithValue("@foto", fotoMotorista);           
+            //if (txtPesoCarga.Text != "")
+            //{
+            //    string entradaPesoCarga = txtPesoCarga.Text.Trim();
+            //    // Substitui vírgula por ponto
+            //    string formatado = entradaPesoCarga.Replace(',', '.');
+            //    if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal pesoTotalCarga))
+            //    {
+            //        comando.Parameters.AddWithValue("@peso", pesoTotalCarga.ToString(CultureInfo.InvariantCulture));
+            //    }
+            //}
+            //comando.Parameters.AddWithValue("@cargaliq", txtCapCarga.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@rede", txtCintas.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@catraca", txtCatracas.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@dtottu", txtControleCli.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@codcliorigem", txtCodRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@nomcliorigem", cboRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@cidorigem", txtMunicipioRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@uforigem", txtUFRemetente.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@codclidestino", txtCodDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@nomclidestino", cboDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@ufdestino", txtUFDestinatario.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@cod_pagador", txtCodPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@nom_pagador", txtPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@cid_pagador", txtCidPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@uf_pagador", txtUFPagador.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@emite_pedagio", txtPedagio.Text.ToUpper());
+            //comando.Parameters.AddWithValue("@percurso", txtPercurso.Text);
+            //comando.Parameters.AddWithValue("@empresa", "1111");            
+            //comando.Parameters.AddWithValue("@duracao_viagem", SafeHourValue(txtDuracao.Text));
 
 
-            if (txtPedagio.Text == "SIM")
-            {
-                if (txtCodPagador.Text == "6164" || txtCodPagador.Text == "6580" || txtCodPagador.Text == "7479" || txtCodPagador.Text == "6024" || txtCodPagador.Text == "5577" || txtCodPagador.Text == "5566" || txtCodPagador.Text == "9984" || txtCodPagador.Text == "6289")
-                {
-                    comando.Parameters.AddWithValue("@pedagio", "NAO");                    
-                    comando.Parameters.AddWithValue("@solicitantepedagio", DBNull.Value);
-                    comando.Parameters.AddWithValue("@pagadorpedagioida", DBNull.Value);
-                    comando.Parameters.AddWithValue("@pagadorpedagiovolta", DBNull.Value);                    
-                    comando.Parameters.AddWithValue("@historicopedagio", "Pedágio por conta do pagador do frete...");
-                }
-                else
-                { 
-                    comando.Parameters.AddWithValue("@pedagio", "SIM");
-                    comando.Parameters.AddWithValue("@historicopedagio", "Pedido enviado automaticamente.");
-                    comando.Parameters.AddWithValue("@solicitantepedagio", txtUsuCadastro.Text.ToUpper());
-                    if (txtCodPagador.Text == "1000")
-                    {
-                        comando.Parameters.AddWithValue("@pagadorpedagioida", "FERROLENE");
-                    }
+            //if (txtPedagio.Text == "SIM")
+            //{
+            //    if (txtCodPagador.Text == "6164" || txtCodPagador.Text == "6580" || txtCodPagador.Text == "7479" || txtCodPagador.Text == "6024" || txtCodPagador.Text == "5577" || txtCodPagador.Text == "5566" || txtCodPagador.Text == "9984" || txtCodPagador.Text == "6289")
+            //    {
+            //        comando.Parameters.AddWithValue("@pedagio", "NAO");                    
+            //        comando.Parameters.AddWithValue("@solicitantepedagio", DBNull.Value);
+            //        comando.Parameters.AddWithValue("@pagadorpedagioida", DBNull.Value);
+            //        comando.Parameters.AddWithValue("@pagadorpedagiovolta", DBNull.Value);                    
+            //        comando.Parameters.AddWithValue("@historicopedagio", "Pedágio por conta do pagador do frete...");
+            //    }
+            //    else
+            //    { 
+            //        comando.Parameters.AddWithValue("@pedagio", "SIM");
+            //        comando.Parameters.AddWithValue("@historicopedagio", "Pedido enviado automaticamente.");
+            //        comando.Parameters.AddWithValue("@solicitantepedagio", txtUsuCadastro.Text.ToUpper());
+            //        if (txtCodPagador.Text == "1000")
+            //        {
+            //            comando.Parameters.AddWithValue("@pagadorpedagioida", "FERROLENE");
+            //        }
 
-                    if (txtCodPagador.Text == "1020" || txtCodPagador.Text == "1236" || txtCodPagador.Text == "2763")
-                    {
-                        comando.Parameters.AddWithValue("@pagadorpedagioida", "VOLKSWAGEN");
-                    }    
+            //        if (txtCodPagador.Text == "1020" || txtCodPagador.Text == "1236" || txtCodPagador.Text == "2763")
+            //        {
+            //            comando.Parameters.AddWithValue("@pagadorpedagioida", "VOLKSWAGEN");
+            //        }    
                     
-                    if (txtCodPagador.Text != "1020" || txtCodPagador.Text != "1236" || txtCodPagador.Text != "2763" || txtCodPagador.Text != "2763" || txtCodPagador.Text != "1000") 
-                    {
-                        comando.Parameters.AddWithValue("@pagadorpedagioida", "TRANSNOVAG");
-                    }
+            //        if (txtCodPagador.Text != "1020" || txtCodPagador.Text != "1236" || txtCodPagador.Text != "2763" || txtCodPagador.Text != "2763" || txtCodPagador.Text != "1000") 
+            //        {
+            //            comando.Parameters.AddWithValue("@pagadorpedagioida", "TRANSNOVAG");
+            //        }
 
-                    if (txtVeiculoTipo.Text == "AGREGADO" || txtVeiculoTipo.Text == "FROTA")
-                    {
-                        comando.Parameters.AddWithValue("@pagadorpedagiovolta", "TRANSNOVAG");
-                        comando.Parameters.AddWithValue("@pagadorpedagioida", "SIM");
-                    }
-                    else
-                    {
-                        comando.Parameters.AddWithValue("@pagadorpedagiovolta", DBNull.Value);
-                        comando.Parameters.AddWithValue("@historicopedagio", "Pedágio emitido pelo pagador do frete.");
-                    }
+            //        if (txtVeiculoTipo.Text == "AGREGADO" || txtVeiculoTipo.Text == "FROTA")
+            //        {
+            //            comando.Parameters.AddWithValue("@pagadorpedagiovolta", "TRANSNOVAG");
+            //            comando.Parameters.AddWithValue("@pagadorpedagioida", "SIM");
+            //        }
+            //        else
+            //        {
+            //            comando.Parameters.AddWithValue("@pagadorpedagiovolta", DBNull.Value);
+            //            comando.Parameters.AddWithValue("@historicopedagio", "Pedágio emitido pelo pagador do frete.");
+            //        }
 
-                }
-
-
-            }
-            else
-            {
-                comando.Parameters.AddWithValue("@pedagio", "NAO");
-                comando.Parameters.AddWithValue("@historicopedagio", DBNull.Value);
-                comando.Parameters.AddWithValue("@solicitantepedagio", DBNull.Value);                
-                comando.Parameters.AddWithValue("@pagadorpedagiovolta", DBNull.Value);
-                comando.Parameters.AddWithValue("@pagadorpedagioida", "NAO");
-            }
+            //    }
 
 
-                //if (txtAltura.Text != "")
-                //{
-                //    string entradaAltura = txtAltura.Text.Trim();
-                //    // Substitui vírgula por ponto
-                //    string formatado = entradaAltura.Replace(',', '.');
-                //    if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
-                //    {
-                //        comando.Parameters.AddWithValue("@altura", numero.ToString(CultureInfo.InvariantCulture));
-                //    }
-                //}
+            //}
+            //else
+            //{
+            //    comando.Parameters.AddWithValue("@pedagio", "NAO");
+            //    comando.Parameters.AddWithValue("@historicopedagio", DBNull.Value);
+            //    comando.Parameters.AddWithValue("@solicitantepedagio", DBNull.Value);                
+            //    comando.Parameters.AddWithValue("@pagadorpedagiovolta", DBNull.Value);
+            //    comando.Parameters.AddWithValue("@pagadorpedagioida", "NAO");
+            //}
+
+
+                
                
                 //try
                 //{
@@ -2313,5 +2320,222 @@ namespace NewCapit.dist.pages
         //        cmd.ExecuteNonQuery();
         //    }
         //}
+
+        protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            //if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            //{
+            //    DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+
+            //    if (ddlStatus != null)
+            //    {
+            //        // Aqui pegamos o texto do status (ds_status) vindo do banco
+            //        string statusTexto = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
+            //        string query = "SELECT cod_status, ds_status FROM tb_status";
+
+            //        using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //        {
+            //            try
+            //            {
+            //                conn.Open();
+            //                SqlCommand cmd = new SqlCommand(query, conn);
+            //                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            //                DataTable dtStatus = new DataTable();
+            //                adapter.Fill(dtStatus);
+
+            //                ddlStatus.DataSource = dtStatus;
+            //                ddlStatus.DataTextField = "ds_status";
+            //                ddlStatus.DataValueField = "cod_status";
+            //                ddlStatus.DataBind();
+
+            //                // Se o texto do status estiver presente na lista, seleciona
+            //                ListItem itemSelecionado = ddlStatus.Items.FindByText(statusTexto);
+            //                if (itemSelecionado != null)
+            //                {
+            //                    itemSelecionado.Selected = true;
+            //                }
+            //                else if (!string.IsNullOrEmpty(statusTexto))
+            //                {
+            //                    // Se não estiver na lista, adiciona ele no topo
+            //                    ddlStatus.Items.Insert(0, new ListItem(statusTexto, "0"));
+            //                    ddlStatus.SelectedIndex = 0;
+            //                }
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Response.Write("Erro ao carregar status: " + ex.Message);
+            //            }
+            //        }
+            //    }
+
+
+            //    string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
+            //    string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
+            //    string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+
+            //    Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
+            //    HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
+
+            //    DateTime previsao, dataHora;
+            //    DateTime agora = DateTime.Now;
+
+            //    if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+            //    {
+            //        DateTime dataPrevisao = previsao.Date;
+            //        DateTime dataHoraComparacao = new DateTime(
+            //            dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day,
+            //            dataHora.Hour, dataHora.Minute, dataHora.Second
+            //        );
+
+            //        if (dataHoraComparacao < agora && (status == "Concluído" || status == "Pendente"))
+            //        {
+            //            lblAtendimento.Text = "Atrasado";
+            //            tdAtendimento.BgColor = "Red";
+            //            tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+            //        }
+            //        else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay
+            //                 && (status == "Concluído" || status == "Pendente"))
+            //        {
+            //            lblAtendimento.Text = "No Prazo";
+            //            tdAtendimento.BgColor = "Green";
+            //            tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+            //        }
+            //        else if (dataHoraComparacao > agora && status == "Concluído")
+            //        {
+            //            lblAtendimento.Text = "Antecipado";
+            //            tdAtendimento.BgColor = "Orange";
+            //            tdAtendimento.Attributes["style"] = "color: white; font-weight: bold;";
+            //        }
+            //    }
+            //}
+
+        }
+
+
+        protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            //if (e.CommandName == "Atualizar")
+            //{
+            //    string carga = e.CommandArgument.ToString();
+
+            //    // Recuperar os controles de dentro do item
+            //    TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
+            //    TextBox txtGate = (TextBox)e.Item.FindControl("txtGate");
+            //    DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+            //    TextBox txtChegadaOrigem = (TextBox)e.Item.FindControl("txtChegadaOrigem");
+            //    TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
+            //    TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+            //    TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
+            //    TextBox txtEntrada = (TextBox)e.Item.FindControl("txtEntrada");
+            //    TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
+            //    TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
+            //    TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
+            //    // continue com os demais campos que quiser atualizar...
+            //    if (txtCVA.Text != string.Empty)
+            //    {
+            //        // Exemplo: atualizando no banco
+            //        using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //        {
+            //            string query = @"UPDATE tbcargas SET 
+            //                    emissao=@emissao,
+            //                    cva = @cva, 
+            //                    gate = @gate, 
+            //                    status = @status, 
+            //                    chegadaorigem = @chegadaorigem, 
+            //                    saidaorigem = @saidaorigem,
+            //                    tempoagcarreg = @tempoagcarreg,
+            //                    chegadadestino = @chegadadestino,
+            //                    entradaplanta = @entradaplanta,
+            //                    saidaplanta = @saidaplanta,
+            //                    tempodentroplanta = @tempodentroplanta,
+            //                    idviagem=@idviagem,
+            //                    codmot=@codmot,
+            //                    frota=@frota,
+            //                    tempoesperagate=@tempoesperagate
+            //                    WHERE carga = @carga";
+
+            //            SqlCommand cmd = new SqlCommand(query, conn);
+            //            cmd.Parameters.AddWithValue("@carga", carga);
+            //            cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@gate", DateTime.Parse(txtGate.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+            //            cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+            //            cmd.Parameters.AddWithValue("@chegadaorigem", DateTime.Parse(txtChegadaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+            //            cmd.Parameters.AddWithValue("@saidaorigem", DateTime.Parse(txtSaidaOrigem.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+            //            cmd.Parameters.AddWithValue("@tempoagcarreg", txtAgCarreg.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@chegadadestino", DateTime.Parse(txtChegadaDestino.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+            //            cmd.Parameters.AddWithValue("@entradaplanta", DateTime.Parse(txtEntrada.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+            //            cmd.Parameters.AddWithValue("@saidaplanta", DateTime.Parse(txtSaidaPlanta.Text.Trim()).ToString("yyyy-MM-dd HH:mm"));
+            //            cmd.Parameters.AddWithValue("@tempodentroplanta", txtDentroPlanta.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@tempoesperagate", txtEsperaGate.Text.Trim());
+            //            cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+
+
+            //            // continue os parâmetros conforme seu banco
+
+            //            conn.Open();
+            //            cmd.ExecuteNonQuery();
+
+
+            //            string linha1 = "Coleta " + carga + ", cadastrado no sistema com sucesso.";
+            //            //string linha3 = "Verifique o código digitado: " + codigo + ".";
+            //            //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+            //            // Concatenando as linhas com '\n' para criar a mensagem
+            //            string mensagem = $"{linha1}";
+
+            //            string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+            //            //// Gerando o script JavaScript para exibir o alerta
+            //            string script = $"alert('{mensagemCodificada}');";
+
+            //            //// Registrando o script para execução no lado do cliente
+            //            ScriptManager.RegisterStartupScript(this, this.GetType(), "MensagemDeAlerta", script, true);
+            //        }
+
+            //        // Após atualizar, recarregar os dados no Repeater
+            //        AtualizarColetasVisiveis();
+            //    }
+            //    else
+            //    {
+            //        string linha1 = "Nao é possível atrelar a Coleta " + carga + " a esse Carregamento.";
+            //        //string linha3 = "Verifique o código digitado: " + codigo + ".";
+            //        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+            //        // Concatenando as linhas com '\n' para criar a mensagem
+            //        string mensagem = $"{linha1}";
+
+            //        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+            //        //// Gerando o script JavaScript para exibir o alerta
+            //        string script = $"alert('{mensagemCodificada}');";
+
+            //        //// Registrando o script para execução no lado do cliente
+            //        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+            //    }
+
+            //}
+            //else if (e.CommandName == "Remover")
+            //{
+            //    string carga = e.CommandArgument.ToString();
+            //    DataTable dados = ViewState["Coletas"] as DataTable;
+
+            //    if (dados != null)
+            //    {
+            //        DataRow[] linhas = dados.Select($"carga = '{carga}'");
+            //        foreach (DataRow linha in linhas)
+            //        {
+            //            dados.Rows.Remove(linha);
+            //        }
+
+            //        dados.AcceptChanges();
+
+            //        ViewState["Coletas"] = dados;
+            //        rptColetas.DataSource = dados;
+            //        rptColetas.DataBind();
+            //    }
+            //}
+        }
     }
 }

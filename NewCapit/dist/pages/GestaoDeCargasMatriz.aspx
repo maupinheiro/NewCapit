@@ -88,32 +88,33 @@
                                 <%--<asp:GridView ID="gvCargas" runat="server" CssClass="table table-striped" AutoGenerateColumns="False" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvCargas_PageIndexChanging" OnRowEditing="gvCargas_RowEditing" OnRowCancelingEdit="gvCargas_RowCancelingEdit"
                                     OnRowUpdating="gvCargas_RowUpdating">--%>
                                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
-        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
-                                    <Columns>
-                                        <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">
-                                            <ItemTemplate>
-                                                <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-info btn-sm"><i class="fas fa-edit"></i></i>
-                                                </asp:LinkButton>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:BoundField DataField="Id" HeaderText="ID" Visible="false" />
-                                        <asp:BoundField DataField="carga" HeaderText="Carga" />
-                                        <asp:BoundField DataField="emissao" HeaderText="Emissão" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
-                                        <asp:BoundField DataField="peso" HeaderText="Peso" />
-                                        <asp:BoundField DataField="status" HeaderText="Status" />
-                                        <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
-                                        <%--<asp:BoundField DataField="Valor" HeaderText="Valor" DataFormatString="{0:C}" />--%>
-                                        <asp:BoundField DataField="cliorigem" HeaderText="Remetente" />
-                                        <asp:BoundField DataField="cidorigem" HeaderText="Município" />
-                                        <asp:BoundField DataField="clidestino" HeaderText="Destinatário" />
-                                        <asp:BoundField DataField="ciddestino" HeaderText="Município" />
-                                    </Columns>
-                                </asp:GridView>
+                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                                        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
+                                        <Columns>
+                                            <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-info btn-sm"><i class="fas fa-edit"></i></i>
+                                                    </asp:LinkButton>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:BoundField DataField="Id" HeaderText="ID" Visible="false" />
+                                            <asp:BoundField DataField="carga" HeaderText="Carga" />
+                                            <asp:BoundField DataField="emissao" HeaderText="Emissão" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                                            <asp:BoundField DataField="peso" HeaderText="Peso" />
+                                            <asp:BoundField DataField="status" HeaderText="Status" />
+                                            <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
+                                            <%--<asp:BoundField DataField="Valor" HeaderText="Valor" DataFormatString="{0:C}" />--%>
+                                            <asp:BoundField DataField="cliorigem" HeaderText="Remetente" />
+                                            <asp:BoundField DataField="cidorigem" HeaderText="Município" />
+                                            <asp:BoundField DataField="clidestino" HeaderText="Destinatário" />
+                                            <asp:BoundField DataField="ciddestino" HeaderText="Município" />
+                                        </Columns>
+                                    </asp:GridView>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
     </div>
 

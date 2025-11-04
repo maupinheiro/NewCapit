@@ -15,6 +15,15 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
+        /// Controle novaTabelaDeFrete.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label novaTabelaDeFrete;
+
+        /// <summary>
         /// Controle cboFilial.
         /// </summary>
         /// <remarks>
@@ -300,7 +309,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboDeslocamento;
+        protected global::System.Web.UI.WebControls.TextBox cboDeslocamento;
 
         /// <summary>
         /// Controle cboTipoViagem.
@@ -321,13 +330,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList cboTipoVeiculo;
 
         /// <summary>
-        /// Controle txtLotacao.
+        /// Controle txtTotalFrete.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLotacao;
+        protected global::System.Web.UI.WebControls.TextBox txtTotalFrete;
 
         /// <summary>
         /// Controle cboTipoMaterial.
@@ -357,15 +366,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtVigenciaFinal;
 
         /// <summary>
-        /// Controle txtTotalFrete.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTotalFrete;
-
-        /// <summary>
         /// Controle ddlEmitePedagio.
         /// </summary>
         /// <remarks>
@@ -373,6 +373,33 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEmitePedagio;
+
+        /// <summary>
+        /// Controle ddlHoraParada.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlHoraParada;
+
+        /// <summary>
+        /// Controle txtFranquia.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFranquia;
+
+        /// <summary>
+        /// Controle txtValorFranquia.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtValorFranquia;
 
         /// <summary>
         /// Controle txtAdicional.
@@ -420,13 +447,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtOutros;
 
         /// <summary>
-        /// Controle DropDownList1.
+        /// Controle txtDespAdm.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.TextBox txtDespAdm;
 
         /// <summary>
         /// Controle txtFreteTNG.
@@ -465,6 +492,33 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList ddlFixoAgregado;
 
         /// <summary>
+        /// Controle txtPercTNGAgregado.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPercTNGAgregado;
+
+        /// <summary>
+        /// Controle txtVigenciaAgregadoInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVigenciaAgregadoInicial;
+
+        /// <summary>
+        /// Controle txtVigenciaAgregadoFinal.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVigenciaAgregadoFinal;
+
+        /// <summary>
         /// Controle txtPercentualAluguelCarreta.
         /// </summary>
         /// <remarks>
@@ -474,13 +528,49 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPercentualAluguelCarreta;
 
         /// <summary>
-        /// Controle txtPercTNGAgregado.
+        /// Controle txtFreteTerceiro.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPercTNGAgregado;
+        protected global::System.Web.UI.WebControls.TextBox txtFreteTerceiro;
+
+        /// <summary>
+        /// Controle ddlTerceiro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTerceiro;
+
+        /// <summary>
+        /// Controle txtPercTngTerceiro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPercTngTerceiro;
+
+        /// <summary>
+        /// Controle txtVigenciaTerceiroInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVigenciaTerceiroInicial;
+
+        /// <summary>
+        /// Controle txtVigenciaTerceiroFinal.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVigenciaTerceiroFinal;
 
         /// <summary>
         /// Controle txtCodAgregado.
@@ -492,13 +582,31 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCodAgregado;
 
         /// <summary>
-        /// Controle txtNomAgregado.
+        /// Controle cboNomAgregado.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNomAgregado;
+        protected global::System.Web.UI.WebControls.DropDownList cboNomAgregado;
+
+        /// <summary>
+        /// Controle txtCodTra.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodTra;
+
+        /// <summary>
+        /// Controle txtTransp.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTransp;
 
         /// <summary>
         /// Controle txtFreteEspecial.
@@ -537,13 +645,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPercTNGEspecial;
 
         /// <summary>
-        /// Controle txtMensagem.
+        /// Controle TextBox1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMensagem;
+        protected global::System.Web.UI.WebControls.TextBox TextBox1;
 
         /// <summary>
         /// Controle lblDtCadastro.

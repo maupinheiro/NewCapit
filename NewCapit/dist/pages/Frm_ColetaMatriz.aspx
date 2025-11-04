@@ -342,7 +342,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group">
-                                                    <span class="details">LICENCIMAENTO:</span>
+                                                    <span class="details">LICENCIAMENTO:</span>
                                                     <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                                                 </div>
                                             </div>
@@ -370,14 +370,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-1" id="DivPercurso" runat="server">
-                                                <div class="form-group">
-                                                    <span class="details">PERCURSO:</span>
-                                                    <div class="input-group">
-                                                        <asp:TextBox ID="txtPercurso" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         <div class="row g-3">
                                             <div class="col-md-1">
@@ -401,7 +394,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group">
-                                                    <span class="details">RASTREAMENTO:</span>
+                                                    <span class="details">MONITORAMENTO:</span>
                                                     <asp:TextBox ID="txtRastreamento" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                             </div>
@@ -410,163 +403,257 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-12">
-                                <div class="card card-outline card-info">
-                                    <div class="card-header">
-                                        <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados da Coleta/Entrega</h3>
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
+                                <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span class="details">ABERTURA:</span>
+                                            <asp:TextBox ID="txtCadastro" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
                                         </div>
-                                        <!-- /.card-tools -->
                                     </div>
-                                    <div class="card-body">
-                                        <div class="row g-3">
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">ABERTURA:</span>
-                                                    <asp:TextBox ID="txtCadastro" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">CARGA/SOLICITAÇÃO:</span>
-                                                    <asp:TextBox ID="txtCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" OnTextChanged="txtCarga_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">STATUS:</span>
-                                                    <asp:DropDownList ID="cboStatus" runat="server" CssClass="form-control" ReadOnly="true"></asp:DropDownList>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <span class="details">SITUAÇÃO:</span>
-                                                    <asp:TextBox ID="txtSituacao" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">FERROLENE:</span>
-                                                    <asp:TextBox ID="txtContFerrolene" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">SOLICITANTE:</span>
-                                                    <asp:TextBox ID="txtSolicitante" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">GERENCIADORA DE RISCO(GR):</span>
-                                                    <asp:TextBox ID="txtGR" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">MATERIAL:</span>
-                                                    <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control"></asp:DropDownList>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">PESO:</span>
-                                                    <asp:TextBox ID="txtPesoCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">CAP.CARGA:</span>
-                                                    <asp:TextBox ID="txtCapCarga" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" ForeColor="Red"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">CINTAS:</span>
-                                                    <asp:TextBox ID="txtCintas" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">CATRACAS:</span>
-                                                    <asp:TextBox ID="txtCatracas" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">O.T. CLIENTE:</span>
-                                                    <asp:TextBox ID="txtControleCli" Style="text-align: center" ReadOnly="true" runat="server" CssClass="form-control"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <span class="details">PEDAGIO:</span>
-                                                    <asp:TextBox ID="txtPedagio" Style="text-align: center" ReadOnly="true" runat="server" CssClass="form-control"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <!-- REMETENTE -->
-                                            <div class="form-group row">
-                                                <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">REMETENTE:</label>
-                                                <div class="col-md-1">
-                                                    <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <!-- DESTINATARIO -->
-                                            <div class="form-group row">
-                                                <label for="inputDestinatario" class="col-sm-1 col-form-label" style="text-align: right">DEST.:</label>
-                                                <div class="col-md-1">
-                                                    <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <asp:TextBox ID="cboDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <!-- PAGADOR -->
-                                            <div class="form-group row">
-                                                <label for="inputPagador" class="col-sm-1 col-form-label" style="text-align: right">PAGADOR:</label>
-                                                <div class="col-md-1">
-                                                    <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <asp:TextBox ID="txtPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <asp:TextBox ID="txtUFPagador" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span class="details">CARGA/SOLICITAÇÃO:</span>
+                                            <asp:TextBox ID="txtCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" OnTextChanged="txtCarga_TextChanged" AutoPostBack="true"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <!-- ./card-header -->
+                                        <div class="card-body">
+                                            <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
+                                            <asp:UpdatePanel ID="updColetas" runat="server">
+                                                <ContentTemplate>
+                                                    <asp:Repeater ID="rptColetas" runat="server" OnItemDataBound="rptColetas_ItemDataBound" OnItemCommand="rptColetas_ItemCommand">
+                                                        <HeaderTemplate>
+                                                            <table class="table table-bordered table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>CARGA</th>
+                                                                        <th>REMETENTE</th>
+                                                                        <th>PRESTAÇÃO DO SERVIÇO</th>
+                                                                        <th>DESTINATÁRIO</th>
+                                                                        <th>TERMINO DO SERVIÇO</th>
+                                                                        <th>PESO</th>
+                                                                        <th>AÇÕES</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                        </HeaderTemplate>
+                                                        <ItemTemplate>
+                                                            <tr data-widget="expandable-table" aria-expanded="false">
+                                                                <td>
+                                                                    <asp:Label ID="lblCarga" runat="server" Text='<%# Eval("carga") %>' /></td>
+                                                                <td><%# Eval("cliorigem") %></td>
+                                                                <td><%# Eval("cidcliorigem") %></td>
+                                                                <td><%# Eval("clidestino") %></td>
+                                                                <td><%# Eval("cidclidestino") %></td>
+                                                                <td><%# Eval("peso") %></td>
 
-                            <div class="col-md-12">
+                                                                <td>
+                                                                    <asp:Button ID="btnRemoverColeta" runat="server" Text="Remover" CssClass="btn btn-outline-danger" CommandName="Remover" CommandArgument='<%# Eval("carga") %>' />
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="expandable-body">
+                                                                <td colspan="12">
+                                                                    <div class="card card-outline card-info">
+                                                                        <div class="card-header">
+                                                                            <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados da Coleta/Entrega</h3>
+                                                                            <div class="card-tools">
+                                                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                                                    <i class="fas fa-minus"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                            <!-- /.card-tools -->
+                                                                        </div>
+                                                                        <div class="card-body">
+                                                                            <div class="row g-3">
+
+                                                                                <div class="col-md-2">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">STATUS:</span>
+                                                                                        <asp:DropDownList ID="cboStatus" runat="server" CssClass="form-control" ReadOnly="true"></asp:DropDownList>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-5">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">SITUAÇÃO:</span>
+                                                                                        <asp:TextBox ID="txtSituacao" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">FERROLENE:</span>
+                                                                                        <asp:TextBox ID="txtContFerrolene" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-2" id="DivPercurso" runat="server">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">PERCURSO:</span>
+                                                                                        <div class="input-group">
+                                                                                            <asp:TextBox ID="txtPercurso" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1" runat="server">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">DISTÂNCIA:</span>
+                                                                                        <div class="input-group">
+                                                                                            <asp:TextBox ID="txtDistancia" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1" runat="server">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">T.TIME:</span>
+                                                                                        <div class="input-group">
+                                                                                            <asp:TextBox ID="txtDuracao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="row g-3">
+                                                                                <div class="col-md-2">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">SOLICITANTE:</span>
+                                                                                        <asp:TextBox ID="txtSolicitante" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">GERENCIADORA DE RISCO(GR):</span>
+                                                                                        <asp:TextBox ID="txtGR" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">MATERIAL:</span>
+                                                                                        <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control"></asp:DropDownList>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">PESO:</span>
+                                                                                        <asp:TextBox ID="txtPesoCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">CAP.CARGA:</span>
+                                                                                        <asp:TextBox ID="txtCapCarga" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" ForeColor="Red"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">CINTAS:</span>
+                                                                                        <asp:TextBox ID="txtCintas" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">CATRACAS:</span>
+                                                                                        <asp:TextBox ID="txtCatracas" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">O.T. CLIENTE:</span>
+                                                                                        <asp:TextBox ID="txtControleCli" Style="text-align: center" ReadOnly="true" runat="server" CssClass="form-control"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <div class="form-group">
+                                                                                        <span class="details">PEDAGIO:</span>
+                                                                                        <asp:TextBox ID="txtPedagio" Style="text-align: center" ReadOnly="true" runat="server" CssClass="form-control"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <!-- REMETENTE -->
+                                                                                <div class="form-group row">
+                                                                                    <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">REMETENTE:</label>
+                                                                                    <div class="col-md-1">
+                                                                                        <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-5">
+                                                                                        <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-1">
+                                                                                        <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- DESTINATARIO -->
+                                                                                <div class="form-group row">
+                                                                                    <label for="inputDestinatario" class="col-sm-1 col-form-label" style="text-align: right">DEST.:</label>
+                                                                                    <div class="col-md-1">
+                                                                                        <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-5">
+                                                                                        <asp:TextBox ID="cboDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-1">
+                                                                                        <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- PAGADOR -->
+                                                                                <div class="form-group row">
+                                                                                    <label for="inputPagador" class="col-sm-1 col-form-label" style="text-align: right">PAGADOR:</label>
+                                                                                    <div class="col-md-1">
+                                                                                        <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-5">
+                                                                                        <asp:TextBox ID="txtPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-1">
+                                                                                        <asp:TextBox ID="txtUFPagador" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </ItemTemplate>
+                                                        <FooterTemplate>
+                                                            </tbody>
+                    </table>
+                                                        </FooterTemplate>
+                                                    </asp:Repeater>
+                                                </ContentTemplate>
+                                                <Triggers>
+                                                    <asp:AsyncPostBackTrigger ControlID="rptColetas" EventName="ItemCommand" />
+                                                </Triggers>
+                                            </asp:UpdatePanel>
+
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <%-- <div class="col-md-12">
+                                                           </div>--%>
+
+                            <%--<div class="col-md-12">
                                 <div class="card card-outline card-info">
                                     <div class="card-header">
                                         <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Pedido(s)</h3>
@@ -574,8 +661,7 @@
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
                                             </button>
-                                        </div>
-                                        <!-- /.card-tools -->
+                                        </div>                                          
                                     </div>
                                     <div class="card-body">
                                         <!-- PEDIDOS -->
@@ -639,10 +725,7 @@
                                                             </EditItemTemplate>
                                                         </asp:TemplateField>
 
-                                                        <asp:TemplateField HeaderText="Duração">
-                                                            <%--<ItemTemplate>
-                            <%# GetDuracaoHoras(Eval("iniciocar"), Eval("termcar")) %>
-                        </ItemTemplate>--%>
+                                                        <asp:TemplateField HeaderText="Duração">  
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Salvar" ShowHeader="True" ItemStyle-Width="9">
@@ -658,7 +741,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
+
                             <div class="col-md-12">
                                 <div class="row g-3">
                                     <div class="col-md-2">

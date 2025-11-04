@@ -23,12 +23,15 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
+                    txtUsuCadastro.Text = lblUsuario.Trim().ToUpper();
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
+                    txtUsuCadastro.Text = lblUsuario.Trim().ToUpper();
                 }
 
+                PreencherNumTabelaDeFrete();
                 PreencherComboRotas();
                 PreencherComboFiliais();               
                 PreencherComboTipoVeiculos();
@@ -36,9 +39,11 @@ namespace NewCapit.dist.pages
                 PreencherComboTipoViagens();              
                 PreencherComboConsignario();
                 PreencherComboPagador();
+                PreencherComboMotorista();
             }
             //DateTime dataHoraAtual = DateTime.Now;
             txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm"); 
             txtStatusRota.Text = "ATIVO";
         }
         private void PreencherComboFiliais()
@@ -101,6 +106,41 @@ namespace NewCapit.dist.pages
                     cboTipoMaterial.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cboTipoMaterial.DataBind();  // Realiza o binding dos dados                   
                     cboTipoMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        private void PreencherComboMotorista()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, codmot, nommot, codtra, transp FROM tbmotoristas where fl_exclusao is null and status = 'ATIVO' and tipomot != 'FUNCIONÁRIO' order by nommot";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    cboNomAgregado.DataSource = reader;
+                    cboNomAgregado.DataTextField = "nommot";  // Campo que será mostrado no ComboBox
+                    cboNomAgregado.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboNomAgregado.DataBind();  // Realiza o binding dos dados                   
+                    cboNomAgregado.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -286,7 +326,86 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        private void PreencherNumTabelaDeFrete()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT (tabela_frete + incremento) as ProximaTabela FROM tbcontadores";
 
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Crie o comando SQL
+                        //SqlCommand cmd = new SqlCommand(query, conn);
+
+                        // Execute o comando e obtenha os dados em um DataReader
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // Preencher o TextBox com o nome encontrado 
+                                novaTabelaDeFrete.Text = reader["ProximaTabela"].ToString();
+                            }
+                        }
+
+                    }
+                    string id = "1";
+
+                    // Verifica se o ID foi fornecido e é um número válido
+                    if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idConvertido))
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('ID invalido ou não fornecido.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        return;
+                    }
+                    string sql = @"UPDATE tbcontadores SET tabela_frete = @tabela_frete WHERE id = @id";
+                    try
+                    {
+                        using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                        using (SqlCommand cmd = new SqlCommand(sql, con))
+                        {
+                            cmd.Parameters.AddWithValue("@tabela_frete", novaTabelaDeFrete.Text);
+                            cmd.Parameters.AddWithValue("@id", idConvertido);
+
+                            con.Open();
+                            int rowsAffected = cmd.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                // atualiza  
+                            }
+                            else
+                            {
+                                // Acione o toast quando a página for carregada
+                                string script = "<script>showToast('Erro ao atualizar o número do carregamento.');</script>";
+                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            }
+
+                        }
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                        string script = $"alert('{mensagemErro}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Tratar erro
+                    //txtResultado.Text = "Erro: " + ex.Message;
+                }
+            }
+        }
         protected void txtCodConsignatario_TextChanged(object sender, EventArgs e)
         {
             if (txtCodConsignatario.Text != "")
@@ -533,7 +652,7 @@ namespace NewCapit.dist.pages
 
                         txtDistancia.Text = dt.Rows[0][18].ToString();
                         txtDuracao.Text = dt.Rows[0][19].ToString();
-                        cboDeslocamento.SelectedItem.Text = dt.Rows[0][20].ToString();
+                        cboDeslocamento.Text = dt.Rows[0][20].ToString();
                         return;
                     }
 
@@ -601,7 +720,7 @@ namespace NewCapit.dist.pages
 
                     txtDistancia.Text = reader["distancia"].ToString();
                     txtDuracao.Text = reader["tempo"].ToString();
-                    cboDeslocamento.SelectedItem.Text = reader["deslocamento"].ToString();
+                    cboDeslocamento.Text = reader["deslocamento"].ToString();
                     return;
 
                 }
@@ -615,5 +734,122 @@ namespace NewCapit.dist.pages
             //txtUFPagador.Text = string.Empty;
         }
 
+        protected void cboNomAgregado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(cboNomAgregado.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherCamposMotorista(idSelecionado);
+            }
+            else
+            {
+                LimparCamposMotorista();
+            }
+        }
+        private void PreencherCamposMotorista(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT codmot, nommot, codtra, transp FROM tbmotoristas WHERE id = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtCodAgregado.Text = reader["codmot"].ToString();
+                    cboNomAgregado.SelectedItem.Text = reader["nommot"].ToString();
+                    txtCodTra.Text = reader["codtra"].ToString();
+                    txtTransp.Text = reader["transp"].ToString();
+                    return;
+                }
+            }
+        }
+        // Função para limpar os campos
+        private void LimparCamposMotorista()
+        {
+            //txtCodPagador.Text = string.Empty;
+            //txtCidPagador.Text = string.Empty;
+            //txtUFPagador.Text = string.Empty;
+        }
+
+        protected void txtCodAgregado_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodAgregado.Text != "")
+            {
+                string cod = txtCodAgregado.Text;
+                string sql = "SELECT * FROM tbmotoristas where codmot = '" + cod + "' and status = 'ATIVO' and tipomot != 'FUNCIONÁRIO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][68].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('Agregado/Terceiro deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodAgregado.Text = "";
+                        txtCodAgregado.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][3].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('Agregado/Terceiro inativa no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodAgregado.Text = "";
+                        cboNomAgregado.SelectedItem.Text = "";
+                        txtCodTra.Text = "";
+                        txtTransp.Text = "";
+                        txtCodAgregado.Text = "";
+                        txtCodAgregado.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][44].ToString() == "FUNCIONÁRIO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('Motorista inválido, é funcionário.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodAgregado.Text = "";
+                        cboNomAgregado.SelectedItem.Text = "";
+                        txtCodTra.Text = "";
+                        txtTransp.Text = "";
+                        txtCodAgregado.Text = "";
+                        txtCodAgregado.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodAgregado.Text = dt.Rows[0][1].ToString();
+                        cboNomAgregado.SelectedItem.Text = dt.Rows[0][2].ToString();
+                        txtCodTra.Text = dt.Rows[0][29].ToString();
+                        txtTransp.Text = dt.Rows[0][30].ToString();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast('Agregado/Terceiro não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodAgregado.Text = "";
+                    cboNomAgregado.SelectedItem.Text = "";
+                    txtCodTra.Text = "";
+                    txtTransp.Text = "";
+
+                    txtCodAgregado.Text = "";
+                    txtCodAgregado.Focus();
+                    return;
+                }
+            }
+        }
     }
 }
