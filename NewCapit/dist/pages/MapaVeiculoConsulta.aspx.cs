@@ -107,38 +107,24 @@ namespace NewCapit.dist.pages
 
 
                     ico.iconAnchor = new GPoint(25, 10);
-                    if (dt.Rows[0][11].ToString() == "0")
-                    {
-                        ico.image = "../img/ico_truck.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "1")
-                    {
-                        ico.image = "../img/ico_truck1.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "2")
-                    {
-                        ico.image = "../img/ico_truck2.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "3")
-                    {
-                        ico.image = "../img/ico_truck3.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "4")
-                    {
-                        ico.image = "../img/ico_truck4.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "5")
-                    {
-                        ico.image = "../img/ico_truck5.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "6")
-                    {
-                        ico.image = "../img/ico_truck6.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "7")
-                    {
-                        ico.image = "../img/ico_truck7.png";
-                    }
+                    double direcao = 0;
+
+                    // Tenta converter o valor da célula
+                    double.TryParse(dt.Rows[0]["nr_direcao"]?.ToString(), out direcao);
+
+                    // Garante que esteja entre 0 e 359
+                    direcao = (direcao % 360 + 360) % 360;
+
+                    // Calcula o índice do ícone (0 a 7)
+                    int indiceIcone = (int)Math.Floor(direcao / 45.0);
+
+                    // Ajusta se por acaso for 8 (nunca deveria, mas é bom garantir)
+                    if (indiceIcone < 0 || indiceIcone > 7)
+                        indiceIcone = 0;
+
+                    // Define o ícone correspondente
+                    ico.image = $"../img/ico_truck{indiceIcone}.png";
+
                     GMarkerOptions mOpts = new GMarkerOptions();
                     mOpts.clickable = true;
                     mOpts.icon = ico;

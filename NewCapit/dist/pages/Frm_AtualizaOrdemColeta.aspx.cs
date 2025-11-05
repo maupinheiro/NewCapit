@@ -3074,42 +3074,49 @@ namespace NewCapit.dist.pages
 
 
                     ico.iconAnchor = new GPoint(25, 10);
-                    if (dt.Rows[0][11].ToString() == "0")
+                    string valor = dt.Rows[0][11]?.ToString() ?? "";
+
+                    if (valor.Length > 0)
                     {
-                        ico.image = "../img/ico_truck.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "1")
-                    {
-                        ico.image = "../img/ico_truck1.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "2")
-                    {
-                        ico.image = "../img/ico_truck2.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "3")
-                    {
-                        ico.image = "../img/ico_truck3.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "4")
-                    {
-                        ico.image = "../img/ico_truck4.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "5")
-                    {
-                        ico.image = "../img/ico_truck5.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "6")
-                    {
-                        ico.image = "../img/ico_truck6.png";
-                    }
-                    if (dt.Rows[0][11].ToString() == "7")
-                    {
-                        ico.image = "../img/ico_truck7.png";
+                        string prefixo = valor.Substring(0, 1);
+
+                        switch (prefixo)
+                        {
+                            case "0":
+                                ico.image = "../img/ico_truck.png";
+                                break;
+                            case "1":
+                                ico.image = "../img/ico_truck1.png";
+                                break;
+                            case "2":
+                                ico.image = "../img/ico_truck2.png";
+                                break;
+                            case "3":
+                                ico.image = "../img/ico_truck3.png";
+                                break;
+                            case "4":
+                                ico.image = "../img/ico_truck4.png";
+                                break;
+                            case "5":
+                                ico.image = "../img/ico_truck5.png";
+                                break;
+                            case "6":
+                                ico.image = "../img/ico_truck6.png";
+                                break;
+                            case "7":
+                                ico.image = "../img/ico_truck7.png";
+                                break;
+                            default:
+                                ico.image = "../img/ico_truck.png";
+                                break;
+                        }
                     }
                     else
                     {
+                        // caso valor esteja vazio ou nulo
                         ico.image = "../img/ico_truck.png";
                     }
+
                     GMarkerOptions mOpts = new GMarkerOptions();
                     mOpts.clickable = true;
                     mOpts.icon = ico;
