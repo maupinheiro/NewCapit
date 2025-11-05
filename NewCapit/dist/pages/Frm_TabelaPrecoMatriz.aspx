@@ -584,6 +584,13 @@
                                             <!-- /.card-header -->
                                             <div class="card-body">
                                                 <div class="row g-3">
+                                                    <label for="inputFilial" class="col-sm-4 col-form-label">PERCENTUAL SOBRE O VALOR DA NOTA FISCAL (%):</label>
+                                                    <br />
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtPercentualNF" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                    </div>                                                   
+                                                </div>
+                                                <div class="row g-3">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label for="inputMensagem" class="col-sm-2 col-form-label">MENSAGEM NO CTE:</label>
