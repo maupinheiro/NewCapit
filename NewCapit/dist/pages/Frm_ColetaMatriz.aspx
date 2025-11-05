@@ -766,7 +766,7 @@
                                         <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" OnClick="btnSalvar_Click" />
                                     </div>
                                     <div class="col-md-1">
-                                        <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                        <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
                                         </a>
                                     </div>
                                 </div>
