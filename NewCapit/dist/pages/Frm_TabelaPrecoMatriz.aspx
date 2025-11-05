@@ -440,9 +440,13 @@
                                                             <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
+                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">ALUGUEL TNG (%):</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercTNGAgregado" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">FRETE AGREGADO:</label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtFreteAgregadoComDesconto" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -454,9 +458,9 @@
                                                     <div class="col-sm-2">
                                                         <asp:TextBox ID="txtVigenciaAgregadoFinal" TextMode="Date" runat="server" CssClass="form-control"></asp:TextBox>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-3 col-form-label" style="text-align: right">ALUGUEL TNG (%):</label>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtPercTNGAgregado" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                     </div>
                                                 </div>
                                             </div>
@@ -596,7 +600,7 @@
                                                     <div class="form-group">
                                                         <!-- Button trigger modal -->
                                                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalGeraLotacao">
-                                                           Cadastrar Rota
+                                                            Cadastrar Rota
                                                         </button>
                                                     </div>
                                                 </div>

@@ -2182,7 +2182,7 @@ namespace NewCapit.dist.pages
                 ShowToastrInfo("Coleta cadastrada com sucesso!");
                 Thread.Sleep(5000);
                 //Chama a página de controle de carretas
-                Response.Redirect("/dist/pages/ControleCarretas.aspx");
+                Response.Redirect("/dist/pages/GestaoDeEntregasMatriz.aspx");
 
                 //}
                 //catch (Exception ex)

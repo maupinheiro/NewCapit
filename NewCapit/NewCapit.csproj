@@ -321,6 +321,7 @@
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeCargasMatriz.aspx" />
+    <Content Include="dist\pages\GestaoDeEntregasMatriz.aspx" />
     <Content Include="dist\pages\GestaoPostos.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
@@ -4711,6 +4712,13 @@
     </Compile>
     <Compile Include="dist\pages\GestaoDeCargasMatriz.aspx.designer.cs">
       <DependentUpon>GestaoDeCargasMatriz.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasMatriz.aspx.cs">
+      <DependentUpon>GestaoDeEntregasMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasMatriz.aspx.designer.cs">
+      <DependentUpon>GestaoDeEntregasMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoPostos.aspx.cs">
       <DependentUpon>GestaoPostos.aspx</DependentUpon>

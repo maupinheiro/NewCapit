@@ -492,13 +492,22 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList ddlFixoAgregado;
 
         /// <summary>
-        /// Controle txtPercTNGAgregado.
+        /// Controle txtPercentualAluguelCarreta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPercTNGAgregado;
+        protected global::System.Web.UI.WebControls.TextBox txtPercentualAluguelCarreta;
+
+        /// <summary>
+        /// Controle txtFreteAgregadoComDesconto.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFreteAgregadoComDesconto;
 
         /// <summary>
         /// Controle txtVigenciaAgregadoInicial.
@@ -519,13 +528,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtVigenciaAgregadoFinal;
 
         /// <summary>
-        /// Controle txtPercentualAluguelCarreta.
+        /// Controle txtPercTNGAgregado.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPercentualAluguelCarreta;
+        protected global::System.Web.UI.WebControls.TextBox txtPercTNGAgregado;
 
         /// <summary>
         /// Controle txtFreteTerceiro.
