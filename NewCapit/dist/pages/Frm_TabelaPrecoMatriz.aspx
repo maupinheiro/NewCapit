@@ -6,6 +6,101 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+       <!-- Bibliotecas necessárias -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+    function mascaraMoeda(campo) {
+        let valor = campo.value.replace(/\D/g, "");
+        valor = (valor / 100).toFixed(2) + "";
+        valor = valor.replace(".", ",");
+        valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        campo.value = valor;
+    }
+
+    function mascaraPercentual(campo) {
+        let valor = campo.value.replace(/\D/g, "");
+        if (valor.length > 3) valor = valor.substring(0, 3); // limite 100%
+        campo.value = valor;
+    }
+
+    function moedaParaNumero(valor) {
+        if (!valor) return 0;
+        return parseFloat(valor.replace(/\./g, "").replace(",", "."));
+    }
+
+    function calcularFrete() {
+        const freteCampo = document.getElementById("<%= txtFreteAgregado.ClientID %>");
+        const percentualCampo = document.getElementById("<%= txtPercentualAluguelCarreta.ClientID %>");
+        const totalCampo = document.getElementById("<%= txtFreteAgregadoComDesconto.ClientID %>");
+        const freteTNGCampo = document.getElementById("<%= txtFreteTNG.ClientID %>");
+        const percTNGCampo = document.getElementById("<%= txtPercTNGAgregado.ClientID %>");
+
+        const frete = moedaParaNumero(freteCampo.value);
+        const perc = parseFloat(percentualCampo.value) || 0;
+        const freteTNG = moedaParaNumero(freteTNGCampo.value);
+
+        // 1️⃣ Calcula o frete com desconto
+        const total = frete - (frete * (perc / 100));
+        totalCampo.value = total.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+
+        // 2️⃣ Calcula o percentual TNG
+        if (freteTNG > 0) {
+            const percTNG = 100 - ((frete / freteTNG) * 100);
+            percTNGCampo.value = percTNG.toFixed(2).replace(".", ",");
+        } else {
+            percTNGCampo.value = "";
+        }
+    }
+    function calcularFreteEspecial() {
+        const freteCampoEspecial = document.getElementById("<%= txtFreteEspecial.ClientID %>");
+         const percentualCampoEspecial = document.getElementById("<%= txtAluguelCarretaEspecial.ClientID %>");
+        const totalCampoEspecial = document.getElementById("<%= txtFreteEspecialComDesconto.ClientID %>");
+         const freteTNGCampo = document.getElementById("<%= txtFreteTNG.ClientID %>");
+         const percTNGCampoEspecial = document.getElementById("<%= txtPercTNGEspecial.ClientID %>");
+
+        const freteEspecial = moedaParaNumero(freteCampoEspecial.value);
+        const percEspecial = parseFloat(percentualCampoEspecial.value) || 0;
+         const freteTNG = moedaParaNumero(freteTNGCampo.value);
+
+         // 1️⃣ Calcula o frete com desconto
+         const total = freteEspecial - (freteEspecial * (percEspecial / 100));
+        totalCampoEspecial.value = total.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+
+         // 2️⃣ Calcula o percentual TNG
+         if (freteTNG > 0) {
+             const percTNGEspecial = 100 -((freteEspecial / freteTNG) * 100);
+             percTNGCampoEspecial.value = percTNGEspecial.toFixed(2).replace(".", ",");
+         } else {
+             percTNGCampoEspecial.value = "";
+         }
+     }
+    function calcularFreteTerceiro() {
+        const freteCampoTerceiro = document.getElementById("<%= txtFreteTerceiro.ClientID %>");
+        const freteTNGCampo = document.getElementById("<%= txtFreteTNG.ClientID %>");
+        const percTNGCampoTerceiro = document.getElementById("<%= txtPercTngTerceiro.ClientID %>");
+
+          const freteTerceiro = moedaParaNumero(freteCampoTerceiro.value);
+          const freteTNG = moedaParaNumero(freteTNGCampo.value);
+
+          
+          // 2️⃣ Calcula o percentual TNG
+          if (freteTNG > 0) {
+              const percTNGT = 100 - ((freteTerceiro / freteTNG) * 100);
+              percTNGCampoTerceiro.value = percTNGT.toFixed(2).replace(".", ",");
+          } else {
+              percTNGCampo.value = "";
+          }
+      }
+    document.addEventListener("DOMContentLoaded", calcularFrete);
+    document.addEventListener("DOMContentLoaded", calcularFreteTerceiro);
+    document.addEventListener("DOMContentLoaded", alcularFreteEspecial);
+</script>
+
+
+
 
     <div class="content-wrapper">
         <!-- Main content -->
@@ -396,7 +491,8 @@
                                                 <div class="form-group row">
                                                     <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VALOR DO FRETE:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtFreteTNG" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                       <asp:TextBox ID="txtFreteTNG" runat="server" CssClass="form-control"
+                                                                   oninput="mascaraMoeda(this);"></asp:TextBox>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
@@ -421,16 +517,18 @@
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
-                                                <!-- /.card-tools -->
                                             </div>
-                                            <!-- /.card-header -->
+
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VALOR DO FRETE:</label>
+                                                    <label class="col-sm-2 col-form-label text-right">VALOR DO FRETE:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtFreteAgregado" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtFreteAgregado" runat="server" CssClass="form-control"
+                                                            Style="text-align: center"
+                                                            oninput="mascaraMoeda(this); calcularFrete();" />
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
+
+                                                    <label class="col-sm-1 col-form-label text-right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
                                                         <asp:DropDownList ID="ddlFixoAgregado" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
@@ -440,31 +538,39 @@
                                                             <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">ALUGUEL TNG (%):</label>
+
+                                                    <label class="col-sm-2 col-form-label text-right">ALUGUEL TNG (%):</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control"
+                                                            Style="text-align: center"
+                                                            oninput="mascaraPercentual(this); calcularFrete();" />
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">FRETE AGREGADO:</label>
+
+                                                    <label class="col-sm-2 col-form-label text-right">FRETE AGREGADO:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtFreteAgregadoComDesconto" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtFreteAgregadoComDesconto" runat="server" CssClass="form-control"
+                                                            Style="text-align:center" ReadOnly="true" />
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group row">
-                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VIGÊNCIA INICIAL:</label>
+                                                    <label class="col-sm-2 col-form-label text-right">VIGÊNCIA INICIAL:</label>
                                                     <div class="col-sm-2">
                                                         <asp:TextBox ID="txtVigenciaAgregadoInicial" TextMode="Date" runat="server" CssClass="form-control"></asp:TextBox>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VIGÊNCIA FINAL:</label>
+
+                                                    <label class="col-sm-2 col-form-label text-right">VIGÊNCIA FINAL:</label>
                                                     <div class="col-sm-2">
                                                         <asp:TextBox ID="txtVigenciaAgregadoFinal" TextMode="Date" runat="server" CssClass="form-control"></asp:TextBox>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
+
+                                                    <label class="col-sm-1 col-form-label text-right">(%) TNG:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercTNGAgregado" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtPercTNGAgregado" runat="server" CssClass="form-control"
+                                                            Style="text-align:center" ReadOnly="true" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- /.card-body -->
                                         </div>
                                         <!-- Frete Terceiro -->
                                         <div class="card card-outline card-info collapsed-card">
@@ -482,7 +588,7 @@
                                                 <div class="form-group row">
                                                     <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VALOR DO FRETE:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtFreteTerceiro" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtFreteTerceiro" oninput="mascaraMoeda(this); calcularFreteTerceiro();" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
@@ -496,7 +602,7 @@
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercTngTerceiro" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtPercTngTerceiro" ReadOnly="true" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -546,10 +652,10 @@
                                                 <div class="form-group row">
                                                     <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">VALOR DO FRETE:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtFreteEspecial" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtFreteEspecial" runat="server" CssClass="form-control" oninput="mascaraMoeda(this); calcularFreteEspecial();" Style="text-align: center"></asp:TextBox>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-1">
                                                         <asp:DropDownList ID="ddlEspecial" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
@@ -560,13 +666,22 @@
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">ALUGUEL TNG (%):</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtAluguelCarretaEspecial" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtAluguelCarretaEspecial" oninput="mascaraPercentual(this); calcularFreteEspecial();" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
-                                                    <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercTNGEspecial" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
-                                                    </div>
+                                                    
+                                                    
                                                 </div>
+                                                  <div class="form-group row">
+                                                      <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">(%) TNG:</label>
+                                                      <div class="col-sm-2">
+                                                            <asp:TextBox ID="txtPercTNGEspecial" runat="server"  ReadOnly="true" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        </div>
+                                                         <label class="col-sm-2 col-form-label text-right">FRETE ESPECIAL:</label>
+                                                         <div class="col-sm-2">
+                                                             <asp:TextBox ID="txtFreteEspecialComDesconto" runat="server" CssClass="form-control"
+                                                                 Style="text-align:center" ReadOnly="true" />
+                                                         </div>
+                                                      </div>
                                             </div>
                                             <!-- /.card-body -->
                                         </div>
@@ -683,7 +798,8 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-1">
-                                    <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" />
+                                    <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" OnClick="btnAlterar_Click"
+                                        Text="Atualizar" />
                                 </div>
                                 <div class="col-md-1">
                                     <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Sair               
@@ -713,4 +829,5 @@
             </div>
         </div>
     </div>
+  
 </asp:Content>

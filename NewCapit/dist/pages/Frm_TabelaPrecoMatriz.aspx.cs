@@ -851,5 +851,10 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        protected void btnAlterar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
