@@ -877,7 +877,7 @@ namespace NewCapit.dist.pages
                             }
                             else
                             {
-                                //JORNADA PERNOITE INICIO DE JORNADA
+                                //c
                                 string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + login + " and ds_macro = 'INICIO DE JORNADA' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
                                 SqlDataAdapter adtpi = new SqlDataAdapter(sqli, con);
                                 DataTable dti = new DataTable();

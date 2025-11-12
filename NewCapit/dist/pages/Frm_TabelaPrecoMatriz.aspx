@@ -709,7 +709,7 @@
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label for="inputMensagem" class="col-sm-2 col-form-label">MENSAGEM NO CTE:</label>
-                                                            <asp:TextBox ID="TextBox1" class="form-control" runat="server" placeholder="Digite a mensagem que aparecerá no documento de transporte..."></asp:TextBox>
+                                                            <asp:TextBox ID="txtObservacao" class="form-control" runat="server" placeholder="Digite a mensagem que aparecerá no documento de transporte..."></asp:TextBox>
                                                         </div>
                                                     </div>
                                                 </div>
