@@ -320,6 +320,7 @@
     <Content Include="dist\pages\Frm_OrdemAbastecimento.aspx" />
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_TabelaPrecoMatriz.aspx" />
+    <Content Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx" />
     <Content Include="dist\pages\GestaoDeCargasMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeEntregasMatriz.aspx" />
     <Content Include="dist\pages\GestaoPostos.aspx" />
@@ -4705,6 +4706,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_TabelaPrecoMatriz.aspx.designer.cs">
       <DependentUpon>Frm_TabelaPrecoMatriz.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx.cs">
+      <DependentUpon>GerarTabelaDeAvaliacaoMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx.designer.cs">
+      <DependentUpon>GerarTabelaDeAvaliacaoMotoristas.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoDeCargasMatriz.aspx.cs">
       <DependentUpon>GestaoDeCargasMatriz.aspx</DependentUpon>

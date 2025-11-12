@@ -32,6 +32,27 @@ namespace DAL
                 }
             }
         }
+
+        public static DataTable FetchDataTableEntregasMatriz()
+        {
+            // alterado a query para verificar a coluna exclusao para itens excluídos            
+            string sql = "select c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2, '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.num_carregamento, c.emissao, c.situacao, c.status from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='1111' and situacao <> 'VIAGEM CONCLUIDA' order by c.emissao desc ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+
+                }
+            }
+        }
         public static DataTable FetchDataTable2(DateTime? dataInicio, DateTime? dataFim)
         {
             string sql = @"

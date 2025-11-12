@@ -911,7 +911,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(cs))
             {
 
-                string sqlc = "SELECT rota, desc_rota, deslocamento, distancia, tempo, situacao FROM tbrotasdeentregas where desc_rota='" + txtDesc_Rota.Text + "'";
+                string sqlc = "SELECT rota, desc_rota, deslocamento, distancia, tempo, situacao FROM tbrotasdeentregas where desc_rota='" + txtDesc_Rota.Text.Trim() + "'";
                 SqlDataAdapter adtp = new SqlDataAdapter(sqlc, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -920,7 +920,7 @@ namespace NewCapit.dist.pages
 
                 if (dt.Rows.Count > 0)
                 {
-                    string script = "<script>showToast('Rota jhá cadastrada no sistema, verifique.');</script>";
+                    string script = "<script>showToast('Rota já cadastrada no sistema, verifique.');</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                 }
                 else
@@ -932,7 +932,7 @@ namespace NewCapit.dist.pages
                                     codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,
                                     codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor,
                                     distancia, tempo, deslocamento, situacao,
-                                    data_cadastro, usuario_cadastro.)
+                                    data_cadastro, usuario_cadastro)
                                 VALUES
                                    (@rota, @desc_rota, @codigo_remetente, @nome_remetente, @cidade_remetente, @uf_remetente,
                                     @codigo_expedidor, @nome_expedidor, @cidade_expedidor, @uf_expedidor,
@@ -947,28 +947,28 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
                         cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = txtDesc_Rota.Text;
                         cmd.Parameters.Add("@codigo_remetente", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
-                        cmd.Parameters.Add("@nome_remetente", SqlDbType.NVarChar, 50).Value = cboRemetente.SelectedItem;
+                        cmd.Parameters.Add("@nome_remetente", SqlDbType.NVarChar, 50).Value = cboRemetente.SelectedItem.Text;
                         cmd.Parameters.Add("@cidade_remetente", SqlDbType.NVarChar, 50).Value = txtMunicipioRemetente.Text;
                         cmd.Parameters.Add("@uf_remetente", SqlDbType.NVarChar, 2).Value = txtUFRemetente.Text;
 
                         cmd.Parameters.Add("@codigo_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text);
-                        cmd.Parameters.Add("@nome_expedidor", SqlDbType.NVarChar, 50).Value = cboExpedidor.SelectedItem;
+                        cmd.Parameters.Add("@nome_expedidor", SqlDbType.NVarChar, 50).Value = cboExpedidor.SelectedItem.Text;
                         cmd.Parameters.Add("@cidade_expedidor", SqlDbType.NVarChar, 50).Value = txtCidExpedidor.Text;
                         cmd.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2).Value = txtUFExpedidor.Text;
 
                         cmd.Parameters.Add("@codigo_destinatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodDestinatario.Text);
-                        cmd.Parameters.Add("@nome_destinatario", SqlDbType.NVarChar, 50).Value = cboDestinatario.SelectedItem;
+                        cmd.Parameters.Add("@nome_destinatario", SqlDbType.NVarChar, 50).Value = cboDestinatario.SelectedItem.Text;
                         cmd.Parameters.Add("@cidade_destinatario", SqlDbType.NVarChar, 50).Value = txtMunicipioDestinatario.Text;
                         cmd.Parameters.Add("@uf_destinatario", SqlDbType.NVarChar, 2).Value = txtUFDestinatario.Text;
 
                         cmd.Parameters.Add("@codigo_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text);
-                        cmd.Parameters.Add("@nome_recebedor", SqlDbType.NVarChar, 50).Value = cboRecebedor.SelectedItem;
+                        cmd.Parameters.Add("@nome_recebedor", SqlDbType.NVarChar, 50).Value = cboRecebedor.SelectedItem.Text;
                         cmd.Parameters.Add("@cidade_recebedor", SqlDbType.NVarChar, 50).Value = txtCidRecebedor.Text;
                         cmd.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2).Value = txtUFRecebedor.Text;
 
                         cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = Convert.ToDecimal(txtDistancia.Text);
                         cmd.Parameters.Add("@tempo", SqlDbType.NVarChar, 16).Value = txtDuracao.Text;
-                        cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar, 20).Value = cboDeslocamento.SelectedValue;
+                        cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar, 20).Value = cboDeslocamento.SelectedItem.Text;
                         cmd.Parameters.Add("@situacao", SqlDbType.NVarChar, 7).Value = ddlStatus.SelectedValue;
 
                         // Datas: armazene como DateTime se a coluna for DateTime no banco
@@ -985,7 +985,7 @@ namespace NewCapit.dist.pages
                             if (linhasAfetadas > 0)
                             {
                                 // Acione o toast quando a página for carregada
-                                string script = "<script>showToast('Atualização realizada com sucesso.');</script>";
+                                string script = "<script>showToast('Cadastro realizado com sucesso.');</script>";
                                 ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                             }
                             else
@@ -995,16 +995,16 @@ namespace NewCapit.dist.pages
                                 ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
 
                             }
-                        }
+                    }
                         catch (Exception ex)
                         {
-                            //lblMensagem.Text = "Erro: " + ex.Message;
-                            // Acione o toast quando a página for carregada
-                            string script = "<script>showToast('Erro ao atualizar fornecedor.');</script>";
-                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        //lblMensagem.Text = "Erro: " + ex.Message;
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast('Erro ao atualizar rota.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
 
-                        }
                     }
+                }
                 }
 
 

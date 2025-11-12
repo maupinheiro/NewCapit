@@ -129,10 +129,6 @@
             "timeOut": "10000"
         };
     </script>
-
-
-
-
     <asp:ContentPlaceHolder ID="head" runat="server">
         <style>
             .img-custom {
@@ -640,13 +636,13 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Controle de Faltas</p>
                                         </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="pages/forms/editors.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Avaliação de Motoristas</p>
-                                        </a>
                                     </li>--%>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/GerarTabelaDeAvaliacaoMotoristas.aspx" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Gera Tabela Mensal Avaliar Motorista</p>
+                                        </a>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>

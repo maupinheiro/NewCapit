@@ -579,8 +579,8 @@ namespace NewCapit
                 }
             }
             comando.Parameters.AddWithValue("@aquisicao", txtDataAquisicao.Text.ToUpper());
-            try
-            {
+            //try
+            //{
                 con.Open();
                 comando.ExecuteNonQuery();
                 con.Close();
@@ -589,20 +589,20 @@ namespace NewCapit
                 //Chama a página de controle de carretas
                 Response.Redirect("/dist/pages/ControleCarretas.aspx");
 
-            }
-            catch (Exception ex)
-            {
-                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                ExibirToastErro("Erro ao cadastrar a placa da carreta: " + txtPlaca.Text.Trim() + " - " + message);
-                Thread.Sleep(5000);
-                //Chama a página de controle de carretas
-                //Response.Redirect("/dist/pages/ControleCarretas.aspx");
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+            //    ExibirToastErro("Erro ao cadastrar a placa da carreta: " + txtPlaca.Text.Trim() + " - " + message);
+            //    Thread.Sleep(5000);
+            //    //Chama a página de controle de carretas
+            //    //Response.Redirect("/dist/pages/ControleCarretas.aspx");
+            //}
 
-            finally
-            {
-                con.Close();
-            }
+            //finally
+            //{
+            //    con.Close();
+            //}
 
         }
 
