@@ -269,7 +269,7 @@
                                         <div class="form-group row">
                                             <label for="inputPagador" class="col-sm-1 col-form-label" style="text-align: right">PAGADOR:</label>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="cboPagador_SelectedIndexChanged"></asp:TextBox>
+                                                <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodPagador_TextChanged"></asp:TextBox>
                                             </div>
                                             <div class="col-md-5">
                                                 <asp:DropDownList ID="cboPagador" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboPagador_SelectedIndexChanged"></asp:DropDownList>
@@ -331,13 +331,7 @@
                                                     <asp:DropDownList ID="cboTipoVeiculo" runat="server" CssClass="form-control select2">
                                                     </asp:DropDownList>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">TOTAL DO FRETE:</span>
-                                                    <asp:TextBox ID="txtTotalFrete" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                                </div>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                         <!-- Dados do Frete -->
                                         <div class="card card-outline card-info collapsed-card">
@@ -363,7 +357,7 @@
                                                     <div class="col-sm-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-radio">
-                                                                <input class="custom-control-input custom-control-input-info custom-control-input-outline" type="radio" id="customRadioAgregado" name="customRadioTipo">
+                                                                <asp:RadioButton ID="rdbSim" CssClass="custom-control-input custom-control-input-info custom-control-input-outline" OnCheckedChanged="rdbSim_CheckedChanged" AutoPostBack="true" runat="server" />                                                              
                                                                 <label for="customRadioAgregado" class="custom-control-label">SIM</label>
                                                             </div>
                                                         </div>
@@ -371,7 +365,7 @@
                                                     <div class="col-sm-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-radio">
-                                                                <input class="custom-control-input custom-control-input-info custom-control-input-outline" type="radio" id="customRadioFrota" name="customRadioTipo">
+                                                               <asp:RadioButton ID="rdbNao" OnCheckedChanged="rdbNao_CheckedChanged" AutoPostBack="true" CssClass="custom-control-input custom-control-input-info custom-control-input-outline" runat="server" />
                                                                 <label for="customRadioFrota" class="custom-control-label">NÃO</label>
                                                             </div>
                                                         </div>
@@ -436,7 +430,7 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <span class="details">VALOR (HH:mm):</span>
-                                                            <asp:TextBox ID="txtValorFranquia" runat="server" CssClass="form-control"> 
+                                                            <asp:TextBox ID="txtValorFranquia" runat="server" CssClass="form-control" oninput="mascaraMoeda(this);"> 
                                                             </asp:TextBox>
                                                         </div>
                                                     </div>
@@ -444,13 +438,13 @@
                                                 <form class="form-horizontal">
                                                     <div class="card-body">
                                                         <div class="form-group row">
-                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ADIC.(%):</label>
+                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ADIC NF.(%):</label>
                                                             <div class="col-sm-1">
                                                                 <asp:TextBox ID="txtAdicional" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SEC-CAT:</label>
                                                             <div class="col-sm-1">
-                                                                <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                                <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">DESPACHO:</label>
                                                             <div class="col-sm-1">
@@ -458,11 +452,11 @@
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">PEDÁGIO:</label>
                                                             <div class="col-sm-1">
-                                                                <asp:TextBox ID="txtPedagio" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                                <asp:TextBox ID="txtPedagio" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">OUTROS:</label>
                                                             <div class="col-sm-1">
-                                                                <asp:TextBox ID="txtOutros" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                                <asp:TextBox ID="txtOutros" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ADM.(%):</label>
                                                             <div class="col-sm-1">
@@ -499,9 +493,7 @@
                                                         <asp:DropDownList ID="ddlValorFixoTng" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                            <asp:ListItem Value="KILO" Text="KILO"></asp:ListItem>
-                                                            <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
+                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>    
                                                         </asp:DropDownList>
                                                     </div>
                                                 </div>
@@ -533,9 +525,7 @@
                                                         <asp:DropDownList ID="ddlFixoAgregado" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                            <asp:ListItem Value="KILO" Text="KILO"></asp:ListItem>
-                                                            <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
+                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>    
                                                         </asp:DropDownList>
                                                     </div>
 
@@ -595,9 +585,7 @@
                                                         <asp:DropDownList ID="ddlTerceiro" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                            <asp:ListItem Value="KILO" Text="KILO"></asp:ListItem>
-                                                            <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
+                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem> 
                                                         </asp:DropDownList>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
@@ -659,9 +647,7 @@
                                                         <asp:DropDownList ID="ddlEspecial" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                            <asp:ListItem Value="KILO" Text="KILO"></asp:ListItem>
-                                                            <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
+                                                            <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>  
                                                         </asp:DropDownList>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">ALUGUEL TNG (%):</label>
@@ -697,14 +683,7 @@
                                                 <!-- /.card-tools -->
                                             </div>
                                             <!-- /.card-header -->
-                                            <div class="card-body">
-                                                <div class="row g-3">
-                                                    <label for="inputFilial" class="col-sm-4 col-form-label">PERCENTUAL SOBRE O VALOR DA NOTA FISCAL (%):</label>
-                                                    <br />
-                                                    <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtPercentualNF" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
-                                                    </div>                                                   
-                                                </div>
+                                            <div class="card-body">                                                
                                                 <div class="row g-3">
                                                     <div class="col-md-12">
                                                         <div class="form-group">

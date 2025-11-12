@@ -17,6 +17,7 @@ namespace NewCapit.dist.pages
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
+        string lotacaomin;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -33,18 +34,19 @@ namespace NewCapit.dist.pages
                     txtUsuCadastro.Text = lblUsuario.Trim().ToUpper();
                 }
 
-                PreencherNumTabelaDeFrete();
+
                 PreencherComboRotas();
-                PreencherComboFiliais();               
+                PreencherComboFiliais();
                 PreencherComboTipoVeiculos();
                 PreencherComboMateriais();
-                PreencherComboTipoViagens();              
+                PreencherComboTipoViagens();
                 PreencherComboConsignario();
                 PreencherComboPagador();
                 PreencherComboMotorista();
             }
-            //DateTime dataHoraAtual = DateTime.Now;
-            txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                PreencherNumTabelaDeFrete();
+                //DateTime dataHoraAtual = DateTime.Now;
+                txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm"); 
             txtStatusRota.Text = "ATIVO";
         }
@@ -923,7 +925,7 @@ namespace NewCapit.dist.pages
             frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros,
             total_frete, tipo_veiculo, tipo_material, data_cadastro, situacao,
             tipo_viagem, deslocamento, vigencia_inicial, vigencia_final,
-            lotacao_minima, lotacao_kg, valor_fixo_terceiro,
+            lotacao_minima, valor_fixo_terceiro,
             aluguel_carreta, desc_carreta, valor_fixo_tng,
             cod_proprietario, proprietario,
             valor_especial, desc_especial, valor_com_desconto_especial,
@@ -932,8 +934,8 @@ namespace NewCapit.dist.pages
             vigencia_inicial_agregado, vigencia_final_agregado,
             vigencia_inicial_terceiro, vigencia_final_terceiro,
             despesa_adm, codmot_especial, nommot_especial, codtra_especial,
-            transp_especial, valor_total_frete,
-            perc_frete_agregado, perc_frete_terceiro, perc_frete_especial, perc_sobre_valor_nf
+            transp_especial,
+            perc_frete_agregado, perc_frete_terceiro, perc_frete_especial
         )
         VALUES
         (
@@ -949,7 +951,7 @@ namespace NewCapit.dist.pages
             @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros,
             @total_frete, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao,
             @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final,
-            @lotacao_minima, @lotacao_kg, @valor_fixo_terceiro,
+            @lotacao_minima, @valor_fixo_terceiro,
             @aluguel_carreta, @desc_carreta, @valor_fixo_tng,
             @cod_proprietario, @proprietario,
             @valor_especial, @desc_especial, @valor_com_desconto_especial,
@@ -958,8 +960,8 @@ namespace NewCapit.dist.pages
             @vigencia_inicial_agregado, @vigencia_final_agregado,
             @vigencia_inicial_terceiro, @vigencia_final_terceiro,
             @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial,
-            @transp_especial, @valor_total_frete,
-            @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial, @perc_sobre_valor_nf
+            @transp_especial, 
+            @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial
         )";
 
                     using (SqlCommand cmd = new SqlCommand(sql, con))
@@ -973,8 +975,8 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text);
                         cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodConsignatario.Text);
                         cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = Convert.ToInt32(txtCodPagador.Text);
-                        cmd.Parameters.Add("@cod_proprietario", SqlDbType.Int).Value = Convert.ToInt32(txtCodProprietario.Text);
-                        cmd.Parameters.Add("@lotacao_kg", SqlDbType.Int).Value = Convert.ToInt32(txtLotacaoKg.Text);
+                        //cmd.Parameters.Add("@cod_proprietario", SqlDbType.Int).Value = Convert.ToInt32(txtCodProprietario.Text);
+                        //cmd.Parameters.Add("@lotacao_kg", SqlDbType.Int).Value = Convert.ToInt32(txtLotacaoKg.Text);
 
                         // Textos (nvarchar / varchar)
                         cmd.Parameters.Add("@desc_frete", SqlDbType.NVarChar).Value = descr_frete;
@@ -1004,9 +1006,9 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = txtStatusRota.Text;
                         cmd.Parameters.Add("@tipo_viagem", SqlDbType.NVarChar).Value = cboTipoViagem.SelectedItem.Text;
                         cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar).Value = cboDeslocamento.Text;
-                        cmd.Parameters.Add("@lotacao_minima", SqlDbType.NVarChar).Value = txtLotacaoMinima.Text;
-                        cmd.Parameters.Add("@valor_fixo_terceiro", SqlDbType.NVarChar).Value = txtValorFixoTerceiro.Text;
-                        cmd.Parameters.Add("@valor_fixo_tng", SqlDbType.NVarChar).Value = txtValorFixoTng.Text;
+                        cmd.Parameters.Add("@lotacao_minima", SqlDbType.NVarChar).Value = lotacaomin;
+                        cmd.Parameters.Add("@valor_fixo_terceiro", SqlDbType.NVarChar).Value = ddlTerceiro.SelectedItem.Text;
+                        cmd.Parameters.Add("@valor_fixo_tng", SqlDbType.NVarChar).Value = ddlValorFixoTng.SelectedItem.Text;
                         cmd.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text;
                         cmd.Parameters.Add("@cadastro_usuario", SqlDbType.NVarChar).Value = Session["usuario"].ToString();
                         cmd.Parameters.Add("@emitepedagio", SqlDbType.NVarChar).Value = ddlEmitePedagio.SelectedValue;
@@ -1042,12 +1044,10 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@valor_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteEspecial.Text);
                         cmd.Parameters.Add("@desc_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtAluguelCarretaEspecial.Text);
                         cmd.Parameters.Add("@valor_com_desconto_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteEspecialComDesconto.Text);
-                        cmd.Parameters.Add("@despesa_adm", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespAdm.Text);
-                        cmd.Parameters.Add("@valor_total_frete", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtTotalFrete.Text);
+                        cmd.Parameters.Add("@despesa_adm", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespAdm.Text);                        
                         cmd.Parameters.Add("@perc_frete_agregado", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGAgregado.Text);
                         cmd.Parameters.Add("@perc_frete_terceiro", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTngTerceiro.Text);
-                        cmd.Parameters.Add("@perc_frete_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGEspecial.Text);
-                        cmd.Parameters.Add("@perc_sobre_valor_nf", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercentualNF.Text);
+                        cmd.Parameters.Add("@perc_frete_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGEspecial.Text);                        
 
                         con.Open();
                         cmd.ExecuteNonQuery();
@@ -1083,5 +1083,18 @@ namespace NewCapit.dist.pages
             return 0m;
         }
 
+        protected void rdbNao_CheckedChanged(object sender, EventArgs e)
+        {
+            rdbNao.Checked = true;
+            rdbSim.Checked = false;
+            lotacaomin = "NAO";
+        }
+
+        protected void rdbSim_CheckedChanged(object sender, EventArgs e)
+        {
+            rdbSim.Checked = true;
+            rdbNao.Checked = false;
+            lotacaomin = "SIM";
+        }
     }
 }

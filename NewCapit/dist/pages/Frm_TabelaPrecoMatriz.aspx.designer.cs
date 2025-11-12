@@ -330,13 +330,22 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList cboTipoVeiculo;
 
         /// <summary>
-        /// Controle txtTotalFrete.
+        /// Controle rdbSim.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTotalFrete;
+        protected global::System.Web.UI.WebControls.RadioButton rdbSim;
+
+        /// <summary>
+        /// Controle rdbNao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton rdbNao;
 
         /// <summary>
         /// Controle cboTipoMaterial.
@@ -661,15 +670,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFreteEspecialComDesconto;
-
-        /// <summary>
-        /// Controle txtPercentualNF.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPercentualNF;
 
         /// <summary>
         /// Controle txtObservacao.
