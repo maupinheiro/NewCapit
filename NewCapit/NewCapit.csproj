@@ -216,7 +216,7 @@
     <Content Include="dist\img\credit\entregas.png" />
     <Content Include="dist\img\credit\veiculo.png" />
     <Content Include="dist\img\icon_loc.png" />
-    <Content Include="dist\img\ico_truck.png" />
+    <Content Include="dist\img\ico_truck0.png" />
     <Content Include="dist\img\ico_truck1.png" />
     <Content Include="dist\img\ico_truck2.png" />
     <Content Include="dist\img\ico_truck3.png" />
