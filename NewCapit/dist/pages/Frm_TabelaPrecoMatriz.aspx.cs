@@ -43,8 +43,9 @@ namespace NewCapit.dist.pages
                 PreencherComboConsignario();
                 PreencherComboPagador();
                 PreencherComboMotorista();
-            }
                 PreencherNumTabelaDeFrete();
+            }
+                
                 //DateTime dataHoraAtual = DateTime.Now;
                 txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm"); 
