@@ -60,20 +60,17 @@
                                     <label>Data Final:</label>
                                     <asp:TextBox ID="DataFim" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                                 </div>
-                                <%--<div class="col-md-5">
+                                <div class="col-md-5">
                                     <div class="select2-purple">
                                         <label>Filial:</label>
                                         <asp:DropDownList ID="ddlStatus" multiple="multiple" runat="server" CssClass="form-control select2"></asp:DropDownList>
                                     </div>
-                                </div>--%>
-
-
-
-
-                                <%--<div class="col-md-1">
+                                </div>
+                                <div class="col-md-1">
                                     <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnPesquisar_Click" />
-                                </div> --%>
+                                    <asp:Button ID="btnPesquisar" runat="server" Text="Selecionar" CssClass="btn btn-primary mb-3" OnClick="btnPesquisar_Click" />
+                                    <%--<asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnPesquisar_Click" />--%>
+                                </div> 
                                 <%-- <div class="col-md-1">
                                     <label>&nbsp;</label><br />
                                     <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnFiltrar_Click" />
@@ -93,9 +90,9 @@
                                                 </div>--%>
 
 
-                                                <div class="col-md-5">
+                                               <%-- <div class="col-md-5">
                                                     <asp:ListBox ID="ddlStatus" runat="server" SelectionMode="Multiple" CssClass="form-control"></asp:ListBox>
-                                                </div>
+                                                </div>--%>
 
                                                 <%--<div class="col-md-5">
      <div class="select2-purple">
@@ -104,25 +101,13 @@
      </div>
  </div>--%>
 
-                                                <asp:Button ID="btnPesquisar" runat="server" Text="Pesquisar" CssClass="btn btn-primary mb-3" OnClick="btnPesquisar_Click" />
+                                                
 
-                                                <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-striped table-bordered"></asp:GridView>
-                                                <!-- fim do teste -->
-
-
-
-
-
-
-
-
-
-
-                                                <%-- <div class="table-responsive">
-                                                    <asp:GridView runat="server" ID="gvListMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                                                 <div class="table-responsive">
+                                                    <asp:GridView runat="server" ID="gvPedidos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50"  ShowHeaderWhenEmpty="True">
                                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                                         <Columns>
-                                                            <%--tamanho da foto 45x45
+                                                            <%--tamanho da foto 45x45--%>
                                                 <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="FOTO" ControlStyle-Width="39" ItemStyle-Width="39" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
                                                 <asp:TemplateField HeaderText="CRACHÁ">
                                                     <itemtemplate>
@@ -154,15 +139,15 @@
                                                         <%# Eval("nucleo") %>
                                                     </itemtemplate>
                                                 </asp:TemplateField>
-                                                <!-- Mês -->
+                                                <%-- Mês
                                                 <asp:TemplateField HeaderText="MêS">
                                                     <itemtemplate>
-                                                        <%--<asp:Label ID="lblMes" runat="server"></asp:Label>--%>
-                                                <%--</itemtemplate>
-                                                </asp:TemplateField>
+                                                       <asp:Label ID="lblMes" runat="server"></asp:Label>
+                                                    </itemtemplate>
+                                                </asp:TemplateField>--%>
                                                 </Columns>
                                                     </asp:GridView>
-                                            </div>--%>
+                                            </div>
                                             </div>
                                             <!-- /.card-body -->
                                         </div>

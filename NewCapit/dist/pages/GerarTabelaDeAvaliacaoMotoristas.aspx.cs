@@ -112,7 +112,7 @@ namespace NewCapit.dist.pages
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string query = "SELECT codmot, nommot, cargo, tipomot, cadmot, frota, nucleo FROM tbmotoristas";
+                string query = "SELECT id, caminhofoto, codmot, nommot, cargo, tipomot, cadmot, frota, nucleo FROM tbmotoristas";
 
                 if (statusSelecionados != null && statusSelecionados.Length > 0)
                 {

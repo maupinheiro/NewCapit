@@ -18,6 +18,11 @@ namespace NewCapit.dist.pages
         string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
         string lotacaomin;
+        string radioSim;
+        string radioNao;
+        string customRadioFrota;
+        string customRadioAgregado;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -445,7 +450,7 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        cboRecebedor.Text = dt.Rows[0][1].ToString();
+                        cboConsignatario.SelectedItem.Text = dt.Rows[0][1].ToString();
                         txtCidConsignatario.Text = dt.Rows[0][2].ToString();
                         txtUFConsignatario.Text = dt.Rows[0][3].ToString();
                         return;
@@ -876,7 +881,13 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterStartupScript(this.GetType(), "CamposNulos",
                     "<script>alert('⚠️ Campos obrigatórios para gerar a descrição do frete não podem estar vazios.');</script>");
                 return;
-            }
+            }           
+
+            string valor = Request.Form["customRadioTipo"]; // nome do grupo
+            if (!string.IsNullOrEmpty(valor))
+                lotacaomin = valor;
+            else
+                lotacaomin = "NÃO";
 
             // 🔹 Monta o campo descr_frete
             string[] pagador = cboPagador.SelectedItem.Text.Split(' ');
@@ -928,10 +939,8 @@ namespace NewCapit.dist.pages
             tipo_viagem, deslocamento, vigencia_inicial, vigencia_final,
             lotacao_minima, valor_fixo_terceiro,
             aluguel_carreta, desc_carreta, valor_fixo_tng,
-            cod_proprietario, proprietario,
             valor_especial, desc_especial, valor_com_desconto_especial,
-            observação, cadastro_usuario, alteracao_data, alteracao_usuario,
-            fl_exclusao, emitepedagio,
+            observação, cadastro_usuario, emitepedagio,
             vigencia_inicial_agregado, vigencia_final_agregado,
             vigencia_inicial_terceiro, vigencia_final_terceiro,
             despesa_adm, codmot_especial, nommot_especial, codtra_especial,
@@ -954,10 +963,9 @@ namespace NewCapit.dist.pages
             @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final,
             @lotacao_minima, @valor_fixo_terceiro,
             @aluguel_carreta, @desc_carreta, @valor_fixo_tng,
-            @cod_proprietario, @proprietario,
             @valor_especial, @desc_especial, @valor_com_desconto_especial,
-            @observacao, @cadastro_usuario, @alteracao_data, @alteracao_usuario,
-            @fl_exclusao, @emitepedagio,
+            @observacao, @cadastro_usuario,
+            @emitepedagio,
             @vigencia_inicial_agregado, @vigencia_final_agregado,
             @vigencia_inicial_terceiro, @vigencia_final_terceiro,
             @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial,
@@ -1011,22 +1019,22 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@valor_fixo_terceiro", SqlDbType.NVarChar).Value = ddlTerceiro.SelectedItem.Text;
                         cmd.Parameters.Add("@valor_fixo_tng", SqlDbType.NVarChar).Value = ddlValorFixoTng.SelectedItem.Text;
                         cmd.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text;
-                        cmd.Parameters.Add("@cadastro_usuario", SqlDbType.NVarChar).Value = Session["usuario"].ToString();
+                        cmd.Parameters.Add("@cadastro_usuario", SqlDbType.NVarChar).Value = txtUsuCadastro.Text;
                         cmd.Parameters.Add("@emitepedagio", SqlDbType.NVarChar).Value = ddlEmitePedagio.SelectedValue;
                         cmd.Parameters.Add("@codmot_especial", SqlDbType.NChar).Value = txtCodAgregado.Text;
-                        cmd.Parameters.Add("@nommot_especial", SqlDbType.NVarChar).Value = cboNomAgregado.Text;
+                        cmd.Parameters.Add("@nommot_especial", SqlDbType.NVarChar).Value = cboNomAgregado.SelectedItem.Text ;
                         cmd.Parameters.Add("@codtra_especial", SqlDbType.NChar).Value = txtCodTra.Text;
                         cmd.Parameters.Add("@transp_especial", SqlDbType.NVarChar).Value = txtTransp.Text;
 
                         // Datas
-                        cmd.Parameters.Add("@vigencia_inicial", SqlDbType.Date).Value = Convert.ToDateTime(txtVigenciaInicial.Text);
-                        cmd.Parameters.Add("@vigencia_final", SqlDbType.Date).Value = Convert.ToDateTime(txtVigenciaFinal.Text);
-                        cmd.Parameters.Add("@vigencia_inicial_agregado", SqlDbType.Date).Value = Convert.ToDateTime(txtVigenciaAgregadoInicial.Text);
-                        cmd.Parameters.Add("@vigencia_final_agregado", SqlDbType.Date).Value = Convert.ToDateTime(txtVigenciaAgregadoFinal.Text);
-                        cmd.Parameters.Add("@vigencia_inicial_terceiro", SqlDbType.Date).Value = Convert.ToDateTime(txtVigenciaTerceiroInicial.Text);
-                        cmd.Parameters.Add("@vigencia_final_terceiro", SqlDbType.Date).Value = Convert.ToDateTime(txtVigenciaTerceiroFinal.Text);
+                        cmd.Parameters.Add("@vigencia_inicial", SqlDbType.Date).Value = SafeDateValue(txtVigenciaInicial.Text);
+                        cmd.Parameters.Add("@vigencia_final", SqlDbType.Date).Value = SafeDateValue(txtVigenciaFinal.Text);
+                        cmd.Parameters.Add("@vigencia_inicial_agregado", SqlDbType.Date).Value = SafeDateValue(txtVigenciaAgregadoInicial.Text);
+                        cmd.Parameters.Add("@vigencia_final_agregado", SqlDbType.Date).Value = SafeDateValue(txtVigenciaAgregadoFinal.Text);
+                        cmd.Parameters.Add("@vigencia_inicial_terceiro", SqlDbType.Date).Value = SafeDateValue(txtVigenciaTerceiroInicial.Text);
+                        cmd.Parameters.Add("@vigencia_final_terceiro", SqlDbType.Date).Value = SafeDateValue(txtVigenciaTerceiroFinal.Text);
                         cmd.Parameters.Add("@data_cadastro", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-                        cmd.Parameters.Add("@alteracao_data", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                        
 
                         // Campos decimais (usa seu método LimparMascaraMoeda)
                         cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDistancia.Text);
@@ -1082,20 +1090,6 @@ namespace NewCapit.dist.pages
                 return resultado;
             }
             return 0m;
-        }
-
-        protected void rdbNao_CheckedChanged(object sender, EventArgs e)
-        {
-            rdbNao.Checked = true;
-            rdbSim.Checked = false;
-            lotacaomin = "NAO";
-        }
-
-        protected void rdbSim_CheckedChanged(object sender, EventArgs e)
-        {
-            rdbSim.Checked = true;
-            rdbNao.Checked = false;
-            lotacaomin = "SIM";
-        }
+        }        
     }
 }
