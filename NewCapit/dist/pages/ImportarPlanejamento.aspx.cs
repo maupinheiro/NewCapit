@@ -12,6 +12,9 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
+using OfficeOpenXml;
+using System.IO.Packaging;
 
 namespace NewCapit.dist.pages
 {
@@ -179,7 +182,7 @@ namespace NewCapit.dist.pages
             foreach (GridViewRow row in gvListCargas.Rows)
             {
                 GerarNumero();
-                
+
                 int nr_carga = nrcarga;
 
                 string filial = LimparCelula(row.Cells[0].Text);
@@ -207,6 +210,13 @@ namespace NewCapit.dist.pages
                               viagemTipo, solicitacaoNumero, dataHora, peso, estudoRota, remessa, plantaSolicitante, nr_carga,
                               codigosNaoEncontrados);
                 AtualizaNumero();
+                if (filial == "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "toast",
+           "showToast('Importação concluída com sucesso!');", true);
+                    return;
+
+                }
             }
 
             // Exibir alerta caso existam códigos não encontrados
@@ -236,57 +246,57 @@ namespace NewCapit.dist.pages
                          codorigem, cliorigem, coddestino, clidestino, idviagem, ufcliorigem, 
                          ufclidestino, pedidos, cidorigem, ciddestino, cadastro,  
                          solicitante, empresa, rota, veiculo, quant_palet, tipo_viagem, solicitacoes, data_hora, 
-                         estudo_rota, remessa, andamento, codvworigem, codvwdestino, distancia)
+                         estudo_rota, remessa, andamento, codvworigem, codvwdestino, distancia, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor)
                      VALUES (
                          @carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, 
                          @codorigem, @cliorigem, @coddestino, @clidestino, @idviagem, @ufcliorigem, 
                          @ufclidestino, @pedidos, @cidorigem, @ciddestino, @cadastro,  
                          @solicitante, @empresa, @rota, @veiculo, @quant_palet, @tipo_viagem, @solicitacoes, @data_hora, 
-                         @estudo_rota, @remessa, @andamento, @codvworigem, @codvwdestino,@distancia)";
+                         @estudo_rota, @remessa, @andamento, @codvworigem, @codvwdestino,@distancia, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor)";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 //try
                 //{
-                    SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", conn);
-                    adpto.SelectCommand.Parameters.AddWithValue("@codvw", codOrigem);
-                    DataTable dto = new DataTable();
-                    adpto.Fill(dto);
+                SqlDataAdapter adpto = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", conn);
+                adpto.SelectCommand.Parameters.AddWithValue("@codvw", codOrigem);
+                DataTable dto = new DataTable();
+                adpto.Fill(dto);
 
-                    SqlDataAdapter adptd = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", conn);
-                    adptd.SelectCommand.Parameters.AddWithValue("@codvw", codDestino);
-                    DataTable dtd = new DataTable();
-                    adptd.Fill(dtd);
+                SqlDataAdapter adptd = new SqlDataAdapter("SELECT nomcli, cidcli, estcli, codcli FROM tbclientes WHERE codvw = @codvw", conn);
+                adptd.SelectCommand.Parameters.AddWithValue("@codvw", codDestino);
+                DataTable dtd = new DataTable();
+                adptd.Fill(dtd);
 
-                    
 
-                    if (dto.Rows.Count == 0)
-                        codigosNaoEncontrados.Add($"Cod Origem: {codOrigem} Nome: {coleta} ");
 
-                    if (dtd.Rows.Count == 0)
-                        codigosNaoEncontrados.Add($"Destino: {codDestino} Nome: {plantaDestino}");
+                if (dto.Rows.Count == 0)
+                    codigosNaoEncontrados.Add($"Cod Origem: {codOrigem} Nome: {coleta} ");
 
-                    if (dto.Rows.Count > 0 && dtd.Rows.Count > 0)
-                    {
-                        SqlDataAdapter adpta = new SqlDataAdapter("select Distancia from tbdistanciapremio where Origem=@Origem and UF_Origem=@UF_Origem and UF_Destino=@UF_Destino and Destino=@Destino", conn);
-                        adpta.SelectCommand.Parameters.AddWithValue("@UF_Origem", dto.Rows[0]["estcli"].ToString());
-                        adpta.SelectCommand.Parameters.AddWithValue("@Origem", dto.Rows[0]["cidcli"].ToString());
-                        adpta.SelectCommand.Parameters.AddWithValue("@UF_Destino", dtd.Rows[0]["estcli"].ToString());
-                        adpta.SelectCommand.Parameters.AddWithValue("@Destino", dtd.Rows[0]["cidcli"].ToString());
-                        DataTable dta = new DataTable();
-                        adpta.Fill(dta);
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                if (dtd.Rows.Count == 0)
+                    codigosNaoEncontrados.Add($"Destino: {codDestino} Nome: {plantaDestino}");
+
+                if (dto.Rows.Count > 0 && dtd.Rows.Count > 0)
+                {
+                    SqlDataAdapter adpta = new SqlDataAdapter("select Distancia from tbdistanciapremio where Origem=@Origem and UF_Origem=@UF_Origem and UF_Destino=@UF_Destino and Destino=@Destino", conn);
+                    adpta.SelectCommand.Parameters.AddWithValue("@UF_Origem", dto.Rows[0]["estcli"].ToString());
+                    adpta.SelectCommand.Parameters.AddWithValue("@Origem", dto.Rows[0]["cidcli"].ToString());
+                    adpta.SelectCommand.Parameters.AddWithValue("@UF_Destino", dtd.Rows[0]["estcli"].ToString());
+                    adpta.SelectCommand.Parameters.AddWithValue("@Destino", dtd.Rows[0]["cidcli"].ToString());
+                    DataTable dta = new DataTable();
+                    adpta.Fill(dta);
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@carga", nr_carga);
                         cmd.Parameters.AddWithValue("@emissao", DateTime.Now.ToString("yyyy-MM-dd HH:mm").ToString());
-                        cmd.Parameters.AddWithValue("@status", "PENDENTE");
+                        cmd.Parameters.AddWithValue("@status", "Pendente");
                         cmd.Parameters.AddWithValue("@tomador", plantaSolicitante);
-                        cmd.Parameters.AddWithValue("@entrega", "NORMAL");
+                        cmd.Parameters.AddWithValue("@entrega", "Normal");
                         cmd.Parameters.AddWithValue("@peso", SafeDecimalValue(peso));
-                        cmd.Parameters.AddWithValue("@material", "SOLICITAÇÃO");
+                        cmd.Parameters.AddWithValue("@material", "Solicitação");
                         cmd.Parameters.AddWithValue("@portao", codDestino);
-                        cmd.Parameters.AddWithValue("@situacao", "PRONTO");
-                       // cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
+                        cmd.Parameters.AddWithValue("@situacao", "Pronto");
+                        // cmd.Parameters.AddWithValue("@previsao", !string.IsNullOrEmpty(dataHora.TrimEnd()) && dataHora.TrimEnd().Length >= 10 ? dataHora.TrimEnd().Substring(0, 10) : string.Empty);
                         cmd.Parameters.AddWithValue("@previsao", SafeDateValueData(dataHora.TrimEnd()));
                         cmd.Parameters.AddWithValue("@codorigem", dto.Rows[0]["codcli"].ToString());
                         cmd.Parameters.AddWithValue("@cliorigem", dto.Rows[0]["nomcli"].ToString());
@@ -320,17 +330,34 @@ namespace NewCapit.dist.pages
                         {
                             cmd.Parameters.AddWithValue("@distancia", DBNull.Value);
                         }
-
-
-                        
-
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-                            conn.Close();
-                        
+                        if (viagemTipo.ToUpper().Contains("PRELIMINAR"))
+                        {
+                            cmd.Parameters.AddWithValue("@cod_expedidor", dto.Rows[0]["codcli"].ToString());
+                            cmd.Parameters.AddWithValue("@expedidor", dto.Rows[0]["nomcli"].ToString());
+                            cmd.Parameters.AddWithValue("@cid_expedidor", dto.Rows[0]["cidcli"].ToString());
+                            cmd.Parameters.AddWithValue("@uf_expedidor", dto.Rows[0]["estcli"].ToString());
+                            cmd.Parameters.AddWithValue("@cod_recebedor", "6111");
+                            cmd.Parameters.AddWithValue("@recebedor", "TRANSNOVAG - DIADEMA");
+                            cmd.Parameters.AddWithValue("@cid_recebedor", "DIADEMA");
+                            cmd.Parameters.AddWithValue("@uf_recebedor", "SP");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@cod_expedidor", dto.Rows[0]["codcli"].ToString());
+                            cmd.Parameters.AddWithValue("@expedidor", dto.Rows[0]["nomcli"].ToString());
+                            cmd.Parameters.AddWithValue("@cid_expedidor", dto.Rows[0]["cidcli"].ToString());
+                            cmd.Parameters.AddWithValue("@uf_expedidor", dto.Rows[0]["estcli"].ToString());
+                            cmd.Parameters.AddWithValue("@cod_recebedor", dtd.Rows[0]["codcli"].ToString());
+                            cmd.Parameters.AddWithValue("@recebedor", dtd.Rows[0]["nomcli"].ToString());
+                            cmd.Parameters.AddWithValue("@cid_recebedor", dtd.Rows[0]["cidcli"].ToString());
+                            cmd.Parameters.AddWithValue("@uf_recebedor", dtd.Rows[0]["estcli"].ToString());
 
                         }
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();                        
                     }
+                }
                 //}
                 //catch (Exception ex)
                 //{
@@ -389,7 +416,7 @@ namespace NewCapit.dist.pages
 
                 con.Close();
             }
-           
+
         }
         public void AtualizaNumero()
         {

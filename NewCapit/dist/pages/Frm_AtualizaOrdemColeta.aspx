@@ -1231,15 +1231,17 @@
                                     <br />
                                     <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar Ordem de Coleta" />
                                 </div>
-                            
+                                <div class="col-md-1"></div>
                                 <div class="col-md-2">
                                     <br />
                                     <asp:Button ID="btnImprimir" CssClass="btn btn-outline-warning  btn-lg" runat="server" Text="Imprimir Ordem de Coleta" OnClick="btnImprimir_Click" />
                                 </div>
+                                <div class="col-md-1"></div>
                                 <div class="col-md-2">
                                      <br />
                                     <asp:Button ID="btnEncerrar" CssClass="btn btn-outline-danger  btn-lg" runat="server" Text="Encerrar Ordem de Coleta" OnClick="btnEncerrar_Click" />
                                 </div>
+                                <div class="col-md-1"></div>
                                 <div class="col-md-2">
                                     <br />
                                     <a href="ConsultaEntregas.aspx" class="btn btn-outline-info btn-lg">Sair               

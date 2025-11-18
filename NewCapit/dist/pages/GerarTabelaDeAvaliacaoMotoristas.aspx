@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap4-multiselect/dist/css/bootstrap-multiselect.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap4-multiselect/dist/js/bootstrap-multiselect.min.js"></script>
 
-    <script>
+    <%-- <script>
         $(document).ready(function () {
             $('#<%= ddlStatus.ClientID %>').multiselect({
                 includeSelectAllOption: true,
@@ -20,7 +20,38 @@
                 allSelectedText: 'Todos selecionados'
             });
         });
+    </script>--%>
+    <style>
+        .btn-full {
+            width: 100% !important;
+            display: block;
+            text-align: center;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#ddlStatus').multiselect({
+                includeSelectAllOption: true,
+                onChange: function () { atualizarTextbox(); },
+                onSelectAll: function () { atualizarTextbox(); },
+                onDeselectAll: function () { atualizarTextbox(); }
+            });
+        });
+
+        function atualizarTextbox() {
+            let selecionados = $('#ddlStatus').val(); // array de valores selecionados
+
+            // junta os valores com traço
+            let texto = selecionados ? selecionados.join("_") : "";
+
+            // escreve na TextBox ASPX
+            $('#<%= txtSelecionados.ClientID %>').val(texto);
+        }
+
+
     </script>
+    
+
 
     <div class="content-wrapper">
         <section class="content">
@@ -53,28 +84,38 @@
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-2">
-                                    <label>Data Inicial:</label>
+                                    <label>Período:</label>
                                     <asp:TextBox ID="DataInicio" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                                 </div>
                                 <div class="col-md-2">
-                                    <label>Data Final:</label>
+                                    <label>&nbsp;</label>
                                     <asp:TextBox ID="DataFim" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                                 </div>
-                                <div class="col-md-5">
-                                    <div class="select2-purple">
-                                        <label>Filial:</label>
-                                        <asp:DropDownList ID="ddlStatus" multiple="multiple" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                <div class="col-md-2">
+                                    <!-- TextBox onde será exibido o valor -->
+                                    <label>&nbsp;</label>
+                                    <asp:TextBox ID="txtSelecionados" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="select2-purple">
+                                            <br />
+                                            <label>Filial:</label>
+                                             <%--<asp:DropDownList ID="ddlStatus" multiple="multiple" runat="server" CssClass="form-control select2"></asp:DropDownList>--%>
+                                            <asp:ListBox ID="ddlStatus" runat="server" SelectionMode="Multiple" CssClass="form-control select2"></asp:ListBox>
+                                           
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
-                                    <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnPesquisar" runat="server" Text="Selecionar" CssClass="btn btn-primary mb-3" OnClick="btnPesquisar_Click" />
-                                    <%--<asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnPesquisar_Click" />--%>
-                                </div> 
-                                <%-- <div class="col-md-1">
-                                    <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnFiltrar_Click" />
-                                </div>--%>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-1">
+                                        <%-- <label>&nbsp;</label><br />--%>
+                                        <%-- <div class="select2-purple">--%>
+                                        <asp:Button ID="btnPesquisar" runat="server" Text="Filtrar" CssClass="btn btn-warning" OnClick="btnPesquisar_Click" />
+                                    </div>
+                                </div>
                             </div>
                             <div class="container-fluid">
                                 <div class="row">
@@ -83,71 +124,51 @@
                                         <div class="card">
                                             <!-- /.card-header -->
                                             <div class="card-body">
-
-                                                <!-- testando aqui -->
-                                                <%-- <div class="mb-3">
-                                                    <asp:ListBox ID="ddlStatus" runat="server" SelectionMode="Multiple" CssClass="form-control"></asp:ListBox>
-                                                </div>--%>
-
-
-                                               <%-- <div class="col-md-5">
-                                                    <asp:ListBox ID="ddlStatus" runat="server" SelectionMode="Multiple" CssClass="form-control"></asp:ListBox>
-                                                </div>--%>
-
-                                                <%--<div class="col-md-5">
-     <div class="select2-purple">
-         <label>Filial:</label>
-         <asp:DropDownList ID="ddlStatus" multiple="multiple" runat="server" CssClass="form-control select2"></asp:DropDownList>
-     </div>
- </div>--%>
-
-                                                
-
-                                                 <div class="table-responsive">
-                                                    <asp:GridView runat="server" ID="gvPedidos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50"  ShowHeaderWhenEmpty="True">
+                                                <div class="table-responsive">
+                                                    <asp:GridView runat="server" ID="gvPedidos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50" ShowHeaderWhenEmpty="True">
                                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                                         <Columns>
                                                             <%--tamanho da foto 45x45--%>
-                                                <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="FOTO" ControlStyle-Width="39" ItemStyle-Width="39" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
-                                                <asp:TemplateField HeaderText="CRACHÁ">
-                                                    <itemtemplate>
-                                                        <%# Eval("codmot") %>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="NOME DO MOTORISTA">
-                                                    <itemtemplate>
-                                                        <%# Eval("nommot") %>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="CARGO">
-                                                    <itemtemplate>
-                                                        <%# Eval("cargo") %>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="ADMISSÃO">
-                                                    <itemtemplate>
-                                                        <%# Eval("cadmot", "{0:dd/MM/yyyy}") %>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="FROTA">
-                                                    <itemtemplate>
-                                                        <%# Eval("frota") %>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="FILIAL">
-                                                    <itemtemplate>
-                                                        <%# Eval("nucleo") %>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>
-                                                <%-- Mês
+                                                            <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="FOTO" ControlStyle-Width="39" ItemStyle-Width="39" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
+                                                            <asp:TemplateField HeaderText="CRACHÁ">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("codmot") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="NOME DO MOTORISTA">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("nommot") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="CARGO">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("cargo") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="ADMISSÃO">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("cadmot", "{0:dd/MM/yyyy}") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="FROTA">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("frota") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="FILIAL">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("nucleo") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <%-- Mês
                                                 <asp:TemplateField HeaderText="MêS">
                                                     <itemtemplate>
                                                        <asp:Label ID="lblMes" runat="server"></asp:Label>
                                                     </itemtemplate>
                                                 </asp:TemplateField>--%>
-                                                </Columns>
+                                                        </Columns>
                                                     </asp:GridView>
-                                            </div>
+                                                </div>
                                             </div>
                                             <!-- /.card-body -->
                                         </div>

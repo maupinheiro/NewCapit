@@ -41,6 +41,7 @@ namespace NewCapit.dist.pages
         string codmot, caminhofoto;
         string num_coleta;
         string status;
+        string situacao;
         string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade;
         GInfoWindow window;
         protected void Page_Load(object sender, EventArgs e)
@@ -730,9 +731,8 @@ namespace NewCapit.dist.pages
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Atualizar")
-            {
+            {   
                 string carga = e.CommandArgument.ToString();
-
 
                 // Recuperar os controles de dentro do item
                 TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
@@ -763,22 +763,27 @@ namespace NewCapit.dist.pages
                     if (chegada != null && saida != null && entrada != null && saidaPlanta != null)
                     {
                         status = "Concluido";
+                        situacao = "CONCLUIDO";
                     }
                     else if (chegada != null && saida != null && entrada != null)
                     {
                         status = "Ag. Descarga";
+                        situacao = "EM ANDAMENTO";
                     }
                     else if (chegada != null && saida != null)
                     {
                         status = "Em Transito";
+                        situacao = "EM ANDAMENTO";
                     }
                     else if (chegada != null)
                     {
                         status = "Ag. Carreg.";
+                        situacao = "EM ANDAMENTO";
                     }
                     else
                     {
                         status = "Pendente";
+                        situacao = "PENDENTE";
                     }
 
                     string query = @"UPDATE tbcargas SET 
@@ -821,7 +826,26 @@ namespace NewCapit.dist.pages
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
+                
+                // Atualizando a ordem de coleta 
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string queryCarregamento = @"UPDATE tbcarregamentos SET 
+                                situacao = @situacao
+                                WHERE num_carregamento = @num_carregamento";
 
+                    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
+                    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                    cmdCarregamento.Parameters.AddWithValue("@situacao", situacao);
+
+                    // continue os parâmetros conforme seu banco
+                    //string valorDigitado = txtCVA.Text.Trim();
+
+                    // Chama método que verifica no banco
+
+                    conn.Open();
+                    cmdCarregamento.ExecuteNonQuery();
+                }
                 // Após atualizar, recarregar os dados no Repeater
                 AtualizarColetasVisiveis();
             }
