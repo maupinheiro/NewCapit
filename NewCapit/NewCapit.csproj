@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
+    <Content Include="dist\pages\ConfereArquivo.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
     <Content Include="css\styleTabela.css" />
     <Content Include="dist\css\alt\AdminLTE-bootstrap-social.css" />
@@ -336,6 +337,7 @@
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="dist\pages\Frm_Rotas.aspx" />
+    <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4419,6 +4421,13 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ConfereArquivo.aspx.cs">
+      <DependentUpon>ConfereArquivo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ConfereArquivo.aspx.designer.cs">
+      <DependentUpon>ConfereArquivo.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Cnpj.cs" />
     <Compile Include="ConsultaAgregados.aspx.cs">
       <DependentUpon>ConsultaAgregados.aspx</DependentUpon>
@@ -4853,6 +4862,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_Rotas.aspx.designer.cs">
       <DependentUpon>Frm_Rotas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx.cs">
+      <DependentUpon>Frm_Alt_TabelaPrecoMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_Alt_TabelaPrecoMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
