@@ -401,7 +401,7 @@
                             <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Salvar" OnClick="btnSalvar_Click" />
                         </div>
                         <div class="col-md-1">
-                            <a href="GestaoDeCargas.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
                             </a>
                         </div>
                     </div>

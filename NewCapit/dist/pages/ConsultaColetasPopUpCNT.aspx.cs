@@ -21,10 +21,10 @@ namespace NewCapit.dist.pages
             if (!IsPostBack)
             {
                 PreencherComboResponsavel();
-                
+
                 CarregarGrid();
-               
-                               
+
+
             }
             if (Session["UsuarioLogado"] != null)
             {
@@ -60,12 +60,12 @@ namespace NewCapit.dist.pages
         private void CarregarGridPesquisa(string searchTerm)
         {
             var sql = new StringBuilder(@"
-                             SELECT id, carga, cva, atendimento, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, cliorigem, clidestino, veiculo, tipo_viagem, solicitacoes,peso,pedidos, andamento FROM tbcargas WHERE andamento = 'PENDENTE'  AND ISDATE(data_hora) = 1 ORDER BY CAST(data_hora AS datetime)");
+                             SELECT id, carga, cva, atendimento, CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora, cliorigem, clidestino, veiculo, tipo_viagem, solicitacoes, peso, pedidos, andamento FROM tbcargas WHERE andamento = 'PENDENTE' AND ISDATE(data_hora) = 1 ORDER BY CAST(data_hora AS datetime)");
 
             string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             using (var cmd = conn.CreateCommand())
-            { 
+            {
                 // Filtro por searchTerm (opcional)
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
@@ -82,15 +82,11 @@ namespace NewCapit.dist.pages
 
                     cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
                 }
-
-               
-
                 // Finaliza e executa
                 cmd.CommandText = sql.ToString();
                 conn.Open();
                 using (var reader = cmd.ExecuteReader())
                 {
-                    
                     DataTable dt = new DataTable();
                     dt.Load(reader);
                     GVColetas.DataSource = dt;
@@ -98,7 +94,7 @@ namespace NewCapit.dist.pages
                     conn.Close();
                 }
             }
-          
+
         }
         protected void myInput_TextChanged(object sender, EventArgs e)
         {
@@ -307,7 +303,7 @@ namespace NewCapit.dist.pages
                             using (SqlConnection connection = new SqlConnection(connStr))
                             {
                                 connection.Open();
-                                
+
                                 // Adiciona um manipulador de eventos para capturar mensagens PRINT
                                 // Renomeamos os parâmetros da lambda para 's' e 'args' para evitar conflito
                                 connection.InfoMessage += (s, args) =>
@@ -333,7 +329,7 @@ namespace NewCapit.dist.pages
                                     command.CommandType = CommandType.StoredProcedure;
                                     command.ExecuteNonQuery();
                                 }
-                                
+
                                 string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
                                 ClientScript.RegisterStartupScript(this.GetType(), "MotoristaDiferenteAlerta", script, true);
                                 // lblMensagens.Text += " Procedure executada com sucesso!"; // Mensagem de sucesso
