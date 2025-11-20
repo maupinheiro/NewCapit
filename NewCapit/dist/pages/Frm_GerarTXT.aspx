@@ -215,6 +215,10 @@
                             <asp:DropDownList ID="ddlEscolherArquivo" placeholder="Selecione um arquivo para baixar..." OnSelectedIndexChanged="ddlEscolherArquivo_SelectedIndexChanged" AutoPostBack="true" runat="server" CssClass="form-control"></asp:DropDownList>
 
                         </div>
+                          <div class="col-md-1">
+                              <br />
+                              <asp:Button ID="btnConferencia" runat="server" Text="Conferência do TXT" OnClick="btnConferencia_Click" CssClass="btn btn-outline-success" />
+                        </div>
                     </div>
 
                 </div>
