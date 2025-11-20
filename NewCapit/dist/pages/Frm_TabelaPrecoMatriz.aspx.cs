@@ -608,8 +608,8 @@ namespace NewCapit.dist.pages
         {
             if (txtRota.Text != "")
             {
-                string cod = txtRota.Text;
-                string sql = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento, fl_exclusao, situacao FROM tbrotasdeentregas where rota = '" + cod + "' and situacao = 'ATIVO' and fl_exclusao is null";
+                string cod = txtRota.Text.Trim();
+                string sql = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento, fl_exclusao, situacao FROM tbrotasdeentregas where rota = '" + cod + "' and situacao = 'ATIVA' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();

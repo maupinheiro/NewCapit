@@ -50,7 +50,7 @@
 
 
     </script>
-    
+
 
 
     <div class="content-wrapper">
@@ -84,7 +84,7 @@
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-2">
-                                    <label>Período:</label>
+                                    <label>Período de avaliação:</label>
                                     <asp:TextBox ID="DataInicio" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                                 </div>
                                 <div class="col-md-2">
@@ -98,22 +98,20 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-md-12">
+                                    <div class="col-md-9">
                                         <div class="select2-purple">
                                             <br />
                                             <label>Filial:</label>
-                                             <%--<asp:DropDownList ID="ddlStatus" multiple="multiple" runat="server" CssClass="form-control select2"></asp:DropDownList>--%>
                                             <asp:ListBox ID="ddlStatus" runat="server" SelectionMode="Multiple" CssClass="form-control select2"></asp:ListBox>
-                                           
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row mb-3">
                                     <div class="col-md-1">
-                                        <%-- <label>&nbsp;</label><br />--%>
-                                        <%-- <div class="select2-purple">--%>
+                                        <label>&nbsp;</label>
                                         <asp:Button ID="btnPesquisar" runat="server" Text="Filtrar" CssClass="btn btn-warning" OnClick="btnPesquisar_Click" />
+                                    </div>
+                                    <div class="col-md-1">
+                                         <label>&nbsp;</label>                                       
+                                        <asp:Button ID="btnGerarTabela" runat="server" Text="Gerar Avaliação" CssClass="btn btn-success" OnClick="btnGerarTabela_Click" />
                                     </div>
                                 </div>
                             </div>

@@ -107,7 +107,27 @@ namespace NewCapit.dist.pages
             CarregarMotoristas(selecionados);
         }
 
+        protected void btnGerarTabela_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
 
+                string sql = @"
+            IF NOT EXISTS(SELECT * FROM sys.tables WHERE name = 'ProdutosTemp')
+            BEGIN
+                CREATE TABLE ProdutosTemp (
+                    Id INT IDENTITY(1,1) PRIMARY KEY,
+                    Nome VARCHAR(100),
+                    Quantidade INT,
+                    Preco DECIMAL(18,2)
+                )
+            END";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 
 

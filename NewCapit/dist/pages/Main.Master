@@ -540,6 +540,10 @@
                                             <i class="fas fa-dollar-sign nav-icon"></i>
                                             <p>Gestão de Fretes</p>
                                         </a>
+                                        <a href="/dist/pages/SimuladorFrete.aspx" class="nav-link">
+                                            <i class="fas fa-dollar-sign nav-icon"></i>
+                                            <p>Simular Frete</p>
+                                        </a>
                                     </li>
                                 </ul>
                             </li>

@@ -334,6 +334,7 @@
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
+    <Content Include="dist\pages\SimuladorFrete.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="dist\pages\Frm_Rotas.aspx" />
     <Content Include="fotos\1010.jpg" />
@@ -4839,6 +4840,13 @@
     </Compile>
     <Compile Include="dist\pages\OrdemColetaImpressao.aspx.designer.cs">
       <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\SimuladorFrete.aspx.cs">
+      <DependentUpon>SimuladorFrete.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\SimuladorFrete.aspx.designer.cs">
+      <DependentUpon>SimuladorFrete.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>
