@@ -1381,7 +1381,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@vencimentolaudofumaca", SafeDateValue(txtOpacidade.Text));
                     cmd.Parameters.AddWithValue("@usualt", txtUsuarioAtual.Text.Trim().ToUpper()); // Usuário atual
                     cmd.Parameters.AddWithValue("@dtcalt", dataHoraAtual.ToString("dd/MM/yyyy HH:mm")); // Corrigido para DateTime
-                    cmd.Parameters.AddWithValue("@protocolocet", SafeDateValue(txtProtocoloCET.Text));
+                    cmd.Parameters.AddWithValue("@protocolocet", txtProtocoloCET.Text);
                     cmd.Parameters.AddWithValue("@venclicencacet", SafeDateValue(txtVencCET.Text));
                     cmd.Parameters.AddWithValue("@venclicenciamento", SafeDateValue(txtLicenciamento.Text));
                     cmd.Parameters.AddWithValue("@venccronotacografo", SafeDateValue(txtCronotacografo.Text));

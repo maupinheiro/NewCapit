@@ -914,7 +914,7 @@ namespace NewCapit.dist.pages
                     if (existe > 0)
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "Duplicado",
-                            "<script>alert('❌ Já existe um frete com a mesma descrição. Inclusão cancelada.');</script>");
+                            "<script>alert('❌ Já existe um frete com a mesma descrição: "+descr_frete+". Inclusão cancelada.');</script>");
                         return;
                     }
                 }
@@ -923,121 +923,55 @@ namespace NewCapit.dist.pages
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 {
                     string sql = @"
-        INSERT INTO tbtabeladefretes
-        (
-            cod_frete, desc_frete, rota, desc_rota,
-            cod_remetente, remetente, cid_remetente, uf_remetente,
-            cod_expedidor, expedidor, cid_expedidor, uf_expedidor,
-            cod_destinatario, destinatario, cid_destinatario, uf_destinatario,
-            cod_recebedor, recebedor, cid_recebedor, uf_recebedor,
-            cod_consignatario, consignatario, cid_consignatario, uf_consignatario,
-            cod_pagador, pagador, cid_pagador, uf_pagador,
-            nucleo, distancia, Tempo,
-            frete_tng, frete_agregado, frete_agregado_com_desc_carreta,
-            frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros,
-            total_frete, tipo_veiculo, tipo_material, data_cadastro, situacao,
-            tipo_viagem, deslocamento, vigencia_inicial, vigencia_final,
-            lotacao_minima, valor_fixo_terceiro,
-            aluguel_carreta, desc_carreta, valor_fixo_tng,
-            valor_especial, desc_especial, valor_com_desconto_especial,
-            observacao, cadastro_usuario, emitepedagio,
-            vigencia_inicial_agregado, vigencia_final_agregado,
-            vigencia_inicial_terceiro, vigencia_final_terceiro,
-            despesa_adm, codmot_especial, nommot_especial, codtra_especial,
-            transp_especial,
-            perc_frete_agregado, perc_frete_terceiro, perc_frete_especial
-        )
-        VALUES
-        (
-            @cod_frete, @desc_frete, @rota, @desc_rota,
-            @cod_remetente, @remetente, @cid_remetente, @uf_remetente,
-            @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor,
-            @cod_destinatario, @destinatario, @cid_destinatario, @uf_destinatario,
-            @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor,
-            @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario,
-            @cod_pagador, @pagador, @cid_pagador, @uf_pagador,
-            @nucleo, @distancia, @Tempo,
-            @frete_tng, @frete_agregado, @frete_agregado_com_desc_carreta,
-            @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros,
-            @total_frete, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao,
-            @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final,
-            @lotacao_minima, @valor_fixo_terceiro,
-            @aluguel_carreta, @desc_carreta, @valor_fixo_tng,
-            @valor_especial, @desc_especial, @valor_com_desconto_especial,
-            @observacao, @cadastro_usuario,
-            @emitepedagio,
-            @vigencia_inicial_agregado, @vigencia_final_agregado,
-            @vigencia_inicial_terceiro, @vigencia_final_terceiro,
-            @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial,
-            @transp_especial, 
-            @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial
-        )";
+                    INSERT INTO tbtabeladefretes
+                    (
+                        cod_frete, desc_frete, rota, desc_rota,  cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor,  cod_destinatario, destinatario, cid_destinatario, uf_destinatario,  cod_recebedor, recebedor, cid_recebedor, uf_recebedor,  cod_consignatario, consignatario, cid_consignatario, uf_consignatario,  cod_pagador, pagador, cid_pagador, uf_pagador,  nucleo, distancia, Tempo, frete_tng, frete_agregado, frete_agregado_com_desc_carreta, frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros, tipo_veiculo, tipo_material, data_cadastro, situacao, tipo_viagem, deslocamento, vigencia_inicial, vigencia_final, lotacao_minima, valor_fixo_terceiro, aluguel_carreta, desc_carreta, valor_fixo_tng, valor_especial, desc_especial, valor_com_desc_especial,  observacao, cadastro_usuario, emitepedagio, vigencial_inicial_agregado, vigencia_final_agregado, vigencia_inicial_terceiro, vigencia_final_terceiro, despesa_adm,  codmot_especial, nommot_especial, codtra_especial, transp_especial, perc_frete_agregado, perc_frete_terceiro, perc_frete_especial
+                    )
+                    VALUES
+                    (
+                        @cod_frete, @desc_frete, @rota, @desc_rota,  @cod_remetente, @remetente, @cid_remetente, @uf_remetente, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor,  @cod_destinatario, @destinatario, @cid_destinatario, @uf_destinatario, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor,  @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario,  @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @nucleo, @distancia, @Tempo, @frete_tng, @frete_agregado, @frete_agregado_com_desc_carreta, @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao, @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final, @lotacao_minima, @valor_fixo_terceiro, @aluguel_carreta, @desc_carreta, @valor_fixo_tng, @valor_especial, @desc_especial, @valor_com_desconto_especial, @observacao, @cadastro_usuario, @emitepedagio, @vigencia_inicial_agregado, @vigencia_final_agregado, @vigencia_inicial_terceiro, @vigencia_final_terceiro, @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial, @transp_especial, @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial                       
+                    )";
 
                     using (SqlCommand cmd = new SqlCommand(sql, con))
                     {
                         // Campos inteiros
                         cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(novaTabelaDeFrete.Text);
-                        cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
-                        cmd.Parameters.Add("@cod_remetente", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
-                        cmd.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text);
-                        cmd.Parameters.Add("@cod_destinatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodDestinatario.Text);
-                        cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text);
-                        cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodConsignatario.Text);
-                        cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = Convert.ToInt32(txtCodPagador.Text);
-                        //cmd.Parameters.Add("@cod_proprietario", SqlDbType.Int).Value = Convert.ToInt32(txtCodProprietario.Text);
-                        //cmd.Parameters.Add("@lotacao_kg", SqlDbType.Int).Value = Convert.ToInt32(txtLotacaoKg.Text);
-
-                        // Textos (nvarchar / varchar)
                         cmd.Parameters.Add("@desc_frete", SqlDbType.NVarChar).Value = descr_frete;
+                        cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
                         cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = cboRotas.SelectedItem.Text;
+                        cmd.Parameters.Add("@cod_remetente", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
                         cmd.Parameters.Add("@remetente", SqlDbType.NVarChar).Value = cboRemetente.Text;
                         cmd.Parameters.Add("@cid_remetente", SqlDbType.NVarChar).Value = txtMunicipioRemetente.Text;
                         cmd.Parameters.Add("@uf_remetente", SqlDbType.NVarChar).Value = txtUFRemetente.Text;
+                        cmd.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text);
                         cmd.Parameters.Add("@expedidor", SqlDbType.NVarChar).Value = cboExpedidor.Text;
                         cmd.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar).Value = txtCidExpedidor.Text;
                         cmd.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar).Value = txtUFExpedidor.Text;
+                        cmd.Parameters.Add("@cod_destinatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodDestinatario.Text);
                         cmd.Parameters.Add("@destinatario", SqlDbType.NVarChar).Value = cboDestinatario.Text;
                         cmd.Parameters.Add("@cid_destinatario", SqlDbType.NVarChar).Value = txtMunicipioDestinatario.Text;
                         cmd.Parameters.Add("@uf_destinatario", SqlDbType.NVarChar).Value = txtUFDestinatario.Text;
+                        cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text);
                         cmd.Parameters.Add("@recebedor", SqlDbType.NVarChar).Value = cboRecebedor.Text;
                         cmd.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar).Value = txtCidRecebedor.Text;
-                        cmd.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar).Value =txtUFRecebedor.Text;
-                        cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar).Value = cboConsignatario.SelectedItem.Text;
+                        cmd.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar).Value = txtUFRecebedor.Text;
+                        if (txtCodConsignatario.Text == "")
+                            cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = DBNull.Value;
+                        else
+                            cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodConsignatario.Text);
+                        if (cboConsignatario.SelectedItem.Text == "Selecione...")
+                            cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar).Value = DBNull.Value;
+                        else
+                            cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar).Value = cboConsignatario.SelectedItem.Text;
                         cmd.Parameters.Add("@cid_consignatario", SqlDbType.NVarChar).Value = txtCidConsignatario.Text;
                         cmd.Parameters.Add("@uf_consignatario", SqlDbType.NVarChar).Value = txtUFConsignatario.Text;
+                        cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = Convert.ToInt32(txtCodPagador.Text);
                         cmd.Parameters.Add("@pagador", SqlDbType.NVarChar).Value = cboPagador.SelectedItem.Text;
                         cmd.Parameters.Add("@cid_pagador", SqlDbType.NVarChar).Value = txtCidPagador.Text;
                         cmd.Parameters.Add("@uf_pagador", SqlDbType.NVarChar).Value = txtUFPagador.Text;
                         cmd.Parameters.Add("@nucleo", SqlDbType.NVarChar).Value = cboFilial.SelectedItem.Text;
-                        cmd.Parameters.Add("@Tempo", SqlDbType.NVarChar).Value = txtDuracao.Text;
-                        cmd.Parameters.Add("@tipo_veiculo", SqlDbType.NVarChar).Value = cboTipoVeiculo.SelectedItem.Text;
-                        cmd.Parameters.Add("@tipo_material", SqlDbType.NVarChar).Value = cboTipoMaterial.SelectedItem.Text;
-                        cmd.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = txtStatusRota.Text;
-                        cmd.Parameters.Add("@tipo_viagem", SqlDbType.NVarChar).Value = cboTipoViagem.SelectedItem.Text;
-                        cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar).Value = cboDeslocamento.Text;
-                        cmd.Parameters.Add("@lotacao_minima", SqlDbType.NVarChar).Value = lotacaomin;
-                        cmd.Parameters.Add("@valor_fixo_terceiro", SqlDbType.NVarChar).Value = ddlTerceiro.SelectedItem.Text;
-                        cmd.Parameters.Add("@valor_fixo_tng", SqlDbType.NVarChar).Value = ddlValorFixoTng.SelectedItem.Text;
-                        cmd.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text;
-                        cmd.Parameters.Add("@cadastro_usuario", SqlDbType.NVarChar).Value = txtUsuCadastro.Text;
-                        cmd.Parameters.Add("@emitepedagio", SqlDbType.NVarChar).Value = ddlEmitePedagio.SelectedValue;
-                        cmd.Parameters.Add("@codmot_especial", SqlDbType.NChar).Value = txtCodAgregado.Text;
-                        cmd.Parameters.Add("@nommot_especial", SqlDbType.NVarChar).Value = cboNomAgregado.SelectedItem.Text ;
-                        cmd.Parameters.Add("@codtra_especial", SqlDbType.NChar).Value = txtCodTra.Text;
-                        cmd.Parameters.Add("@transp_especial", SqlDbType.NVarChar).Value = txtTransp.Text;
-
-                        // Datas
-                        cmd.Parameters.Add("@vigencia_inicial", SqlDbType.Date).Value = SafeDateValue(txtVigenciaInicial.Text);
-                        cmd.Parameters.Add("@vigencia_final", SqlDbType.Date).Value = SafeDateValue(txtVigenciaFinal.Text);
-                        cmd.Parameters.Add("@vigencia_inicial_agregado", SqlDbType.Date).Value = SafeDateValue(txtVigenciaAgregadoInicial.Text);
-                        cmd.Parameters.Add("@vigencia_final_agregado", SqlDbType.Date).Value = SafeDateValue(txtVigenciaAgregadoFinal.Text);
-                        cmd.Parameters.Add("@vigencia_inicial_terceiro", SqlDbType.Date).Value = SafeDateValue(txtVigenciaTerceiroInicial.Text);
-                        cmd.Parameters.Add("@vigencia_final_terceiro", SqlDbType.Date).Value = SafeDateValue(txtVigenciaTerceiroFinal.Text);
-                        cmd.Parameters.Add("@data_cadastro", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-                        
-
-                        // Campos decimais (usa seu método LimparMascaraMoeda)
                         cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDistancia.Text);
+                        cmd.Parameters.Add("@Tempo", SqlDbType.NVarChar).Value = txtDuracao.Text;
                         cmd.Parameters.Add("@frete_tng", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteTNG.Text);
                         cmd.Parameters.Add("@frete_agregado", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteAgregado.Text);
                         cmd.Parameters.Add("@frete_agregado_com_desc_carreta", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteAgregadoComDesconto.Text);
@@ -1047,16 +981,37 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@despacho", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespacho.Text);
                         cmd.Parameters.Add("@pedagio", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPedagio.Text);
                         cmd.Parameters.Add("@outros", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtOutros.Text);
-                        cmd.Parameters.Add("@total_frete", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteTNG.Text);
+                        cmd.Parameters.Add("@tipo_veiculo", SqlDbType.NVarChar).Value = cboTipoVeiculo.SelectedItem.Text;
+                        cmd.Parameters.Add("@tipo_material", SqlDbType.NVarChar).Value = cboTipoMaterial.SelectedItem.Text;
+                        cmd.Parameters.Add("@data_cadastro", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                        cmd.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = txtStatusRota.Text;
+                        cmd.Parameters.Add("@tipo_viagem", SqlDbType.NVarChar).Value = cboTipoViagem.SelectedItem.Text;
+                        cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar).Value = cboDeslocamento.Text;
+                        cmd.Parameters.Add("@vigencia_inicial", SqlDbType.Date).Value = SafeDateValue(txtVigenciaInicial.Text);
+                        cmd.Parameters.Add("@vigencia_final", SqlDbType.Date).Value = SafeDateValue(txtVigenciaFinal.Text);
+                        cmd.Parameters.Add("@lotacao_minima", SqlDbType.NVarChar).Value = lotacaomin;
+                        cmd.Parameters.Add("@valor_fixo_terceiro", SqlDbType.NVarChar).Value = ddlTerceiro.SelectedItem.Text;
                         cmd.Parameters.Add("@aluguel_carreta", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercentualAluguelCarreta.Text);
                         cmd.Parameters.Add("@desc_carreta", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtAluguelCarretaEspecial.Text);
+                        cmd.Parameters.Add("@valor_fixo_tng", SqlDbType.NVarChar).Value = ddlValorFixoTng.SelectedItem.Text;
                         cmd.Parameters.Add("@valor_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteEspecial.Text);
                         cmd.Parameters.Add("@desc_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtAluguelCarretaEspecial.Text);
                         cmd.Parameters.Add("@valor_com_desconto_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteEspecialComDesconto.Text);
-                        cmd.Parameters.Add("@despesa_adm", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespAdm.Text);                        
+                        cmd.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text;
+                        cmd.Parameters.Add("@cadastro_usuario", SqlDbType.NVarChar).Value = txtUsuCadastro.Text;
+                        cmd.Parameters.Add("@emitepedagio", SqlDbType.NVarChar).Value = ddlEmitePedagio.SelectedValue;
+                        cmd.Parameters.Add("@vigencia_inicial_agregado", SqlDbType.Date).Value = SafeDateValue(txtVigenciaAgregadoInicial.Text);
+                        cmd.Parameters.Add("@vigencia_final_agregado", SqlDbType.Date).Value = SafeDateValue(txtVigenciaAgregadoFinal.Text);
+                        cmd.Parameters.Add("@vigencia_inicial_terceiro", SqlDbType.Date).Value = SafeDateValue(txtVigenciaTerceiroInicial.Text);
+                        cmd.Parameters.Add("@vigencia_final_terceiro", SqlDbType.Date).Value = SafeDateValue(txtVigenciaTerceiroFinal.Text);
+                        cmd.Parameters.Add("@despesa_adm", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespAdm.Text);
+                        cmd.Parameters.Add("@codmot_especial", SqlDbType.NChar).Value = txtCodAgregado.Text;
+                        cmd.Parameters.Add("@nommot_especial", SqlDbType.NVarChar).Value = cboNomAgregado.SelectedItem.Text;
+                        cmd.Parameters.Add("@codtra_especial", SqlDbType.NChar).Value = txtCodTra.Text;
+                        cmd.Parameters.Add("@transp_especial", SqlDbType.NVarChar).Value = txtTransp.Text;
                         cmd.Parameters.Add("@perc_frete_agregado", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGAgregado.Text);
                         cmd.Parameters.Add("@perc_frete_terceiro", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTngTerceiro.Text);
-                        cmd.Parameters.Add("@perc_frete_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGEspecial.Text);                        
+                        cmd.Parameters.Add("@perc_frete_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGEspecial.Text);
 
                         con.Open();
                         cmd.ExecuteNonQuery();
