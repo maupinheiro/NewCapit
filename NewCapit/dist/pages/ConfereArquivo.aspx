@@ -232,13 +232,11 @@
 
         <asp:BoundField DataField="Dia" HeaderText="Dia" />
 
-        <asp:BoundField DataField="InicioJornada" HeaderText="Início de jornada" />
+        <asp:BoundField DataField="Marcacao" HeaderText="Marcações" />
 
-        <asp:BoundField DataField="SaidaAlmoco" HeaderText="Saída Almoço" />
+        <asp:BoundField DataField="Status" HeaderText="Status" />
 
-        <asp:BoundField DataField="RetornoAlmoco" HeaderText="Retorno Almoço" />
-
-        <asp:BoundField DataField="FimJornada" HeaderText="Fim de jornada" />
+      
 
     </Columns>
 </asp:GridView>

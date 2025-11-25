@@ -501,7 +501,7 @@ namespace NewCapit.dist.pages
             //try
             //{
             // string sql1 = "select nr_cracha from tb_motorista_txt";
-            string sql1 = "select codmot  from tbmotoristas where ISNUMERIC(codmot)=1 ";
+            string sql1 = "select codmot  from tbmotoristas where ISNUMERIC(codmot)=1 and status='ATIVO' ";
 
 
 
@@ -2199,9 +2199,7 @@ namespace NewCapit.dist.pages
                                     sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and hr_posicao >='" + dti.Rows[0][0].ToString() + "' or cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).AddDays(1).ToString("yyyy-MM-dd") + "' and hr_posicao <= '" + dtf.Rows[0][0].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
                                     SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                     DataTable dt4 = new DataTable();
-                                    con.Open();
-                                    adtp4.Fill(dt4);
-                                    con.Close();
+                                    
 
                                     #region Jornada Noturna
 
@@ -3795,12 +3793,12 @@ namespace NewCapit.dist.pages
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
 
                                                     }
-                                                    else
-                                                    {
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //else
+                                                    //{
+                                                    //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                    //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
-                                                    }
+                                                    //}
                                                 }
                                                 else
                                                 {
@@ -5253,12 +5251,12 @@ namespace NewCapit.dist.pages
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
 
                                                         }
-                                                        else
-                                                        {
-                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        //else
+                                                        //{
+                                                        //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                        //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
-                                                        }
+                                                        //}
                                                     }
                                                     else
                                                     {
@@ -6762,16 +6760,15 @@ namespace NewCapit.dist.pages
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
 
                                                         }
-                                                        else
-                                                        {
-                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        //else
+                                                        //{
+                                                        //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                        //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
-                                                        }
+                                                        //}
                                                     }
                                                     else
                                                     {
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;2");
                                                     }
 
@@ -8222,12 +8219,12 @@ namespace NewCapit.dist.pages
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
 
                                                         }
-                                                        else
-                                                        {
-                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        //else
+                                                        //{
+                                                        //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                        //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
-                                                        }
+                                                        //}
                                                     }
                                                     else
                                                     {
@@ -9731,16 +9728,15 @@ namespace NewCapit.dist.pages
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
 
                                                 }
-                                                else
-                                                {
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                //else
+                                                //{
+                                                //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
-                                                }
+                                                //}
                                             }
                                             else
                                             {
-                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;2");
                                             }
 
@@ -11191,12 +11187,12 @@ namespace NewCapit.dist.pages
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
 
                                                 }
-                                                else
-                                                {
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                //else
+                                                //{
+                                                //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
-                                                }
+                                                //}
                                             }
                                             else
                                             {
