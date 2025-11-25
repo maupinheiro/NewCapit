@@ -635,12 +635,12 @@
                                             <p>Gestão</p>
                                         </a>
                                     </li>
-                                    <%--<li class="nav-item">
-                                        <a href="pages/forms/advanced.html" class="nav-link">
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/FreteMinimoANTT.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Faltas</p>
+                                            <p>Frete Mínimo ANTT</p>
                                         </a>
-                                    </li>--%>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/GerarTabelaDeAvaliacaoMotoristas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>

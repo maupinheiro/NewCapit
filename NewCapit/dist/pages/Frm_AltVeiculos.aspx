@@ -80,7 +80,7 @@
                 <br />
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;VEÍCULO - ATUALIZAÇÃO</h3>
+                        <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Veículo - Atualização</h3>
                     </div>
                 </div>
                 <div class="card card-danger" id="miDiv" runat="server" visible="false">

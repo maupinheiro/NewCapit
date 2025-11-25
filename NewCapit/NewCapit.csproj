@@ -298,6 +298,7 @@
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
+    <Content Include="dist\pages\FreteMinimoANTT.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltCarga.aspx" />
     <Content Include="dist\pages\Frm_AltCarreta.aspx" />
@@ -4555,6 +4556,13 @@
     </Compile>
     <Compile Include="dist\pages\demo_motorista21.aspx.designer.cs">
       <DependentUpon>demo_motorista21.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\FreteMinimoANTT.aspx.cs">
+      <DependentUpon>FreteMinimoANTT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\FreteMinimoANTT.aspx.designer.cs">
+      <DependentUpon>FreteMinimoANTT.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\FrmCadCarreta.aspx.cs">
       <DependentUpon>FrmCadCarreta.aspx</DependentUpon>
