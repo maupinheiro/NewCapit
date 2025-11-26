@@ -55,7 +55,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="card collapsed-card">
+                                    <div id="cardComposicao" runat="server" class="card collapsed-card">
+
                                         <div class="card-header">
                                             <h3 class="card-title">Composição do Frete</h3>
 
@@ -170,7 +171,7 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="card collapsed-card">
+                                    <div id="cardComposicao2" runat="server" class="card collapsed-card">
                                         <div class="card-header">
                                             <h3 class="card-title">Dados do Frete</h3>
 

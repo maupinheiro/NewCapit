@@ -12469,7 +12469,11 @@ namespace NewCapit
 							}
 								dtRow["Marcacao"] = string.Join(" ", marcacoes);
 								nrmarcacoes = marcacoes.Count;
-								if (nrmarcacoes == 2 || nrmarcacoes % 2 != 0)
+								if (nrmarcacoes == 2)
+								{
+									dtRow["Status"] = "Verificar saída antecipada ou jornada sem refeiç!";
+								}
+								else if (nrmarcacoes % 2 != 0)
 								{
 									dtRow["Status"] = "Marcação incorreta, verificar!";
 								}

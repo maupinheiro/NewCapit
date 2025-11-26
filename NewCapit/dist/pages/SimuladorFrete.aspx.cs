@@ -35,6 +35,8 @@ namespace NewCapit.dist.pages
                 DateTime dataHoraAtual = DateTime.Now;
                 CarregarModais();
                 CarregarGrid();
+                cardComposicao.Attributes["class"] = "card";
+                cardComposicao2.Attributes["class"] = "card";
             }
 
         }
