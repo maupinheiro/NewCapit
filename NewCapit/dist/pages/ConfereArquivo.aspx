@@ -5,7 +5,7 @@
 <html lang="pt-BR">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-   <title>Controle de Ponto RH</title>
+   <title>Acerto de Ponto dos Motoristas RH</title>
  <style>
      * {
          margin: 0;
@@ -191,7 +191,7 @@
      <!-- Título -->
 
      <div class="titulo">
-         <h1>Controle de ponto RH</h1>
+         <h1>Acerto de Ponto dos Motoristas</h1>
      </div>
              
      <!-- Seção de Motorista -->
@@ -200,7 +200,7 @@
          <div class="motorista-content">
              <div class="motorista-field">
                  <label for="motorista">Motorista:</label>
-                <asp:Label ID="lblCod" runat="server" Text=""></asp:Label> - <asp:Label ID="lblMotorista" runat="server" Text=""></asp:Label>
+                <asp:Label ID="lblCod" runat="server" Text=""></asp:Label> - <asp:Label ID="lblMotorista" runat="server" Text="" Width="600"></asp:Label>
              </div>
              <div></div>
         
