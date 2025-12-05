@@ -645,7 +645,7 @@ namespace NewCapit.dist.pages
 
                 for (int f = 0; f < dte.Rows.Count; f++)
                 {
-                    string sql3 = "select * from tb_parada where cod_cracha='" + dt1.Rows[x][0].ToString() + "' and dt_posicao_parada ='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM') OR cod_ref_parada in (2,3,4,14)) AND fl_deletado IS NULL   ORDER BY dt_posicao_parada, hr_posicao";
+                    string sql3 = "select * from tb_parada where cod_cracha='" + dt1.Rows[x][0].ToString() + "' and dt_posicao_parada ='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE','RETORNO PERNOITE') OR cod_ref_parada in (0,2,3,4,14,22)) AND fl_deletado IS NULL   ORDER BY dt_posicao_parada, hr_posicao";
                     SqlDataAdapter adtp3 = new SqlDataAdapter(sql3, con);
                     DataTable dt3 = new DataTable();
                     try
@@ -731,7 +731,7 @@ namespace NewCapit.dist.pages
                                 #region Jornada Normal
                                 //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
 
-                                sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
+                                sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE','RETORNO PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
                                 // string sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada between '" + txtDtInicial.Text + "' and '" + txtDtFinal.Text + "' order by dt_posicao_parada, hr_posicao";
                                 SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                 DataTable dt4 = new DataTable();
@@ -1107,11 +1107,10 @@ namespace NewCapit.dist.pages
                                             }
 
                                         }
-                                        //else
-                                        //{
-                                        //    write.WriteLine(cracha + ";" + data + ";" + hora + ";1;95");
-                                        //    write.WriteLine(cracha + ";" + data + ";" + hora + ";2;93");
-                                        //}
+                                        else
+                                        {
+                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01930000");
+                                        }
                                     }
                                     //FIM
                                     #endregion
@@ -1612,7 +1611,7 @@ namespace NewCapit.dist.pages
                                                 {
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                 }
@@ -1725,7 +1724,7 @@ namespace NewCapit.dist.pages
                                                         if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                         }
                                                         else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                         {
@@ -1879,7 +1878,7 @@ namespace NewCapit.dist.pages
                                                         if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                             // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                         }
@@ -1948,7 +1947,7 @@ namespace NewCapit.dist.pages
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                     }
                                                     else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -2109,6 +2108,15 @@ namespace NewCapit.dist.pages
 
                                                 // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                             }
+                                            else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                            {
+                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                            }
+
                                             //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                             //{
 
@@ -2160,7 +2168,38 @@ namespace NewCapit.dist.pages
 
                                     #endregion
 
+                                    #region RETORNO PERNOITE
+                                    //BLOCO RETORNO PERNOITE
+                                    if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                    {
+                                        int a = 0;
+                                        a = w - 1;
+                                        if (a >= 0)
+                                        {
+                                            if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                            {
 
+                                            }
+                                            else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                            {
+                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                            }
+
+
+                                        }
+                                        else
+                                        {
+                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                        }
+
+
+
+                                    }
+                                    //FIM
+                                    #endregion
 
                                     write.Flush();
                                     write.Close();
@@ -2196,7 +2235,7 @@ namespace NewCapit.dist.pages
 
                                 if (dti.Rows.Count > 0 && dtf.Rows.Count > 0)
                                 {
-                                    sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and hr_posicao >='" + dti.Rows[0][0].ToString() + "' or cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).AddDays(1).ToString("yyyy-MM-dd") + "' and hr_posicao <= '" + dtf.Rows[0][0].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
+                                    sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and hr_posicao >='" + dti.Rows[0][0].ToString() + "' or cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).AddDays(1).ToString("yyyy-MM-dd") + "' and hr_posicao <= '" + dtf.Rows[0][0].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE','RETORNO PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
                                     SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                     DataTable dt4 = new DataTable();
                                     
@@ -3061,7 +3100,7 @@ namespace NewCapit.dist.pages
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -3072,7 +3111,7 @@ namespace NewCapit.dist.pages
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
@@ -3185,7 +3224,7 @@ namespace NewCapit.dist.pages
                                                             if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                             }
                                                             else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                             {
@@ -3339,7 +3378,7 @@ namespace NewCapit.dist.pages
                                                             if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
@@ -3408,7 +3447,7 @@ namespace NewCapit.dist.pages
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -3569,6 +3608,15 @@ namespace NewCapit.dist.pages
 
                                                     // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                {
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                }
+
                                                 //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                 //{
 
@@ -3620,6 +3668,38 @@ namespace NewCapit.dist.pages
 
                                         #endregion
 
+                                        #region RETORNO PERNOITE
+                                        //BLOCO RETORNO PERNOITE
+                                        if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                        {
+                                            int a = 0;
+                                            a = w - 1;
+                                            if (a >= 0)
+                                            {
+                                                if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                {
+
+                                                }
+                                                else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                {
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                }
+
+
+                                            }
+                                            else
+                                            {
+                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                            }
+
+
+
+                                        }
+                                        //FIM
+                                        #endregion
 
                                         write.Flush();
                                         write.Close();
@@ -3632,7 +3712,7 @@ namespace NewCapit.dist.pages
                             }
 
                         }
-                        else if (dt3.Rows[0][6].ToString() == "REINICIO DE VIAGEM")
+                        else if (dt3.Rows[0][6].ToString() == "REINICIO DE VIAGEM" || dt3.Rows[0][6].ToString() == "RETORNO PERNOITE")
                         {
                             //VERIFICA SE A ULTIMA MARCAÇÃO DO DIA ANTERIOR É PARADA PERNOITE OU FIM DE VIAGEM
                             string sqlv = "select TOP 1 ds_macro from tb_parada where cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).AddDays(-1).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao  DESC ";
@@ -3663,7 +3743,7 @@ namespace NewCapit.dist.pages
                                         #region Jornada Normal
                                         //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
 
-                                        sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE') OR cod_ref_parada in (0,2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
+                                        sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE','RETORNO PERNOITE') OR cod_ref_parada in (0,2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
                                         // string sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada between '" + txtDtInicial.Text + "' and '" + txtDtFinal.Text + "' order by dt_posicao_parada, hr_posicao";
                                         SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                         DataTable dt4 = new DataTable();
@@ -4544,7 +4624,7 @@ namespace NewCapit.dist.pages
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                         }
@@ -4657,7 +4737,7 @@ namespace NewCapit.dist.pages
                                                                 if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                                 {
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 }
                                                                 else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                                 {
@@ -4811,7 +4891,7 @@ namespace NewCapit.dist.pages
                                                                 if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                                 {
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                     // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                                 }
@@ -4880,7 +4960,7 @@ namespace NewCapit.dist.pages
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                             }
                                                             else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -5041,6 +5121,15 @@ namespace NewCapit.dist.pages
 
                                                         // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                    {
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                    }
+
                                                     //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                     //{
 
@@ -5092,6 +5181,38 @@ namespace NewCapit.dist.pages
 
                                             #endregion
 
+                                            #region RETORNO PERNOITE
+                                            //BLOCO RETORNO PERNOITE
+                                            if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                            {
+                                                int a = 0;
+                                                a = w - 1;
+                                                if (a >= 0)
+                                                {
+                                                    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                    {
+
+                                                    }
+                                                    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                    {
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                    }
+
+
+                                                }
+                                                else
+                                                {
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                }
+
+
+
+                                            }
+                                            //FIM
+                                            #endregion
 
 
                                             write.Flush();
@@ -5109,7 +5230,7 @@ namespace NewCapit.dist.pages
                                     else
                                     {
                                         //JORNADA PERNOITE REINICIO DE VIAGEM
-                                        string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + dt1.Rows[x][0].ToString() + " and ds_macro = 'REINICIO DE VIAGEM' and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
+                                        string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + dt1.Rows[x][0].ToString() + " and ds_macro = 'REINICIO DE VIAGEM' and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and fl_deletado is null OR ds_macro = 'RETORNO PERNOITE' and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
                                         SqlDataAdapter adtpi = new SqlDataAdapter(sqli, con);
                                         DataTable dti = new DataTable();
                                         con.Open();
@@ -5131,7 +5252,7 @@ namespace NewCapit.dist.pages
 
 
                                             //sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + txtDtInicial.Text + "' order by dt_posicao_parada, hr_posicao";
-                                            sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and hr_posicao >='" + dti.Rows[0][0].ToString() + "' or cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).AddDays(1).ToString("yyyy-MM-dd") + "' and hr_posicao <= '" + dtf.Rows[0][0].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
+                                            sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and hr_posicao >='" + dti.Rows[0][0].ToString() + "' or cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).AddDays(1).ToString("yyyy-MM-dd") + "' and hr_posicao <= '" + dtf.Rows[0][0].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE','RETORNO PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
                                             // string sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada between '" + txtDtInicial.Text + "' and '" + txtDtFinal.Text + "' order by dt_posicao_parada, hr_posicao";
                                             SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                             DataTable dt4 = new DataTable();
@@ -5991,7 +6112,7 @@ namespace NewCapit.dist.pages
                                                 //BLOCO FIM DE JORMADA
                                                 if (c > 0)
                                                 {
-                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525")
+                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
                                                     {
                                                         int a = 0;
                                                         a = w - 1;
@@ -6002,7 +6123,7 @@ namespace NewCapit.dist.pages
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
@@ -6115,7 +6236,7 @@ namespace NewCapit.dist.pages
                                                                     if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                                     {
                                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                     }
                                                                     else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                                     {
@@ -6269,7 +6390,7 @@ namespace NewCapit.dist.pages
                                                                     if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                                     {
                                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                         // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                                     }
@@ -6338,7 +6459,7 @@ namespace NewCapit.dist.pages
                                                                 {
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -6499,6 +6620,15 @@ namespace NewCapit.dist.pages
 
                                                             // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                        {
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                        }
+
                                                         //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                         //{
 
@@ -6550,6 +6680,38 @@ namespace NewCapit.dist.pages
 
                                                 #endregion
 
+                                                #region RETORNO PERNOITE
+                                                //BLOCO RETORNO PERNOITE
+                                                if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                                {
+                                                    int a = 0;
+                                                    a = w - 1;
+                                                    if (a >= 0)
+                                                    {
+                                                        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                        {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                        {
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                        }
+
+                                                        
+                                                    }
+                                                    else
+                                                    {
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                    }
+
+
+
+                                                }
+                                                //FIM
+                                                #endregion
 
                                                 write.Flush();
                                                 write.Close();
@@ -6596,7 +6758,7 @@ namespace NewCapit.dist.pages
                                             #region Jornada Normal
                                             //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
 
-                                            sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and fl_deletado is null and hr_posicao >= '" + dtd.Rows[0][1].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
+                                            sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada='" + DateTime.Parse(dte.Rows[f][0].ToString()).ToString("yyyy-MM-dd") + "' and fl_deletado is null and hr_posicao >= '" + dtd.Rows[0][1].ToString() + "' AND (ds_macro IN ('INICIO DE JORNADA', 'INICIO JORNADA CAMINHAO', 'PARADA REFEICAO', 'FIM DE JORNADA','REINICIO DE VIAGEM','FIM DE VIAGEM', 'PARADA','PARADA INTERNA','INICIO DE VIAGEM','PARADA INTERNA','RETORNO REFEICAO','PARADA CLIENTE / FORNECEDOR','PARADA PERNOITE','RETORNO PERNOITE') OR cod_ref_parada in (2,3,4,14,22)) AND fl_deletado IS NULL ORDER BY dt_posicao_parada, hr_posicao";
                                             // string sql4 = "select dt_posicao_parada, hr_posicao, ds_macro,cod_transmissao, cod_cracha, isnull(cod_ref_parada,0) as cod_ref_parada, cod_idveiculo from tb_parada where fl_deletado is null and cod_cracha=" + dt1.Rows[x][0].ToString() + " and dt_posicao_parada between '" + txtDtInicial.Text + "' and '" + txtDtFinal.Text + "' order by dt_posicao_parada, hr_posicao";
                                             SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                             DataTable dt4 = new DataTable();
@@ -7500,7 +7662,7 @@ namespace NewCapit.dist.pages
                                                 //BLOCO FIM DE JORMADA
                                                 if (c > 0)
                                                 {
-                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525")
+                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
                                                     {
                                                         int a = 0;
                                                         a = w - 1;
@@ -7511,7 +7673,7 @@ namespace NewCapit.dist.pages
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
@@ -7624,7 +7786,7 @@ namespace NewCapit.dist.pages
                                                                     if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                                     {
                                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                     }
                                                                     else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                                     {
@@ -7778,7 +7940,7 @@ namespace NewCapit.dist.pages
                                                                     if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                                     {
                                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                         // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                                     }
@@ -7847,7 +8009,7 @@ namespace NewCapit.dist.pages
                                                                 {
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -8008,6 +8170,15 @@ namespace NewCapit.dist.pages
 
                                                             // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                        {
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                        }
+
                                                         //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                         //{
 
@@ -8057,6 +8228,39 @@ namespace NewCapit.dist.pages
 
                                                 }
 
+                                                #endregion
+
+                                                #region RETORNO PERNOITE
+                                                //BLOCO RETORNO PERNOITE
+                                                if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                                {
+                                                    int a = 0;
+                                                    a = w - 1;
+                                                    if (a >= 0)
+                                                    {
+                                                        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                        {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                        {
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                        }
+
+
+                                                    }
+                                                    else
+                                                    {
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                    }
+
+
+
+                                                }
+                                                //FIM
                                                 #endregion
 
                                                 write.Flush();
@@ -8959,7 +9163,7 @@ namespace NewCapit.dist.pages
                                                 //BLOCO FIM DE JORMADA
                                                 if (c > 0)
                                                 {
-                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525")
+                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
                                                     {
                                                         int a = 0;
                                                         a = w - 1;
@@ -8970,7 +9174,7 @@ namespace NewCapit.dist.pages
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
@@ -9083,7 +9287,7 @@ namespace NewCapit.dist.pages
                                                                     if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                                     {
                                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                     }
                                                                     else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                                     {
@@ -9237,7 +9441,7 @@ namespace NewCapit.dist.pages
                                                                     if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                                     {
                                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                         // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                                     }
@@ -9306,7 +9510,7 @@ namespace NewCapit.dist.pages
                                                                 {
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -9467,6 +9671,15 @@ namespace NewCapit.dist.pages
 
                                                             // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                        {
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                        }
+
                                                         //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                         //{
 
@@ -9518,6 +9731,38 @@ namespace NewCapit.dist.pages
 
                                                 #endregion
 
+                                                #region RETORNO PERNOITE
+                                                //BLOCO RETORNO PERNOITE
+                                                if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                                {
+                                                    int a = 0;
+                                                    a = w - 1;
+                                                    if (a >= 0)
+                                                    {
+                                                        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                        {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                        {
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                        }
+
+
+                                                    }
+                                                    else
+                                                    {
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                    }
+
+
+
+                                                }
+                                                //FIM
+                                                #endregion
 
                                                 write.Flush();
                                                 write.Close();
@@ -10468,7 +10713,7 @@ namespace NewCapit.dist.pages
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -10479,7 +10724,7 @@ namespace NewCapit.dist.pages
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
@@ -10592,7 +10837,7 @@ namespace NewCapit.dist.pages
                                                             if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                             }
                                                             else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                             {
@@ -10746,7 +10991,7 @@ namespace NewCapit.dist.pages
                                                             if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
@@ -10815,7 +11060,7 @@ namespace NewCapit.dist.pages
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -10976,6 +11221,15 @@ namespace NewCapit.dist.pages
 
                                                     // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                {
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                }
+
                                                 //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                 //{
 
@@ -11027,6 +11281,38 @@ namespace NewCapit.dist.pages
 
                                         #endregion
 
+                                        #region RETORNO PERNOITE
+                                        //BLOCO RETORNO PERNOITE
+                                        if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                        {
+                                            int a = 0;
+                                            a = w - 1;
+                                            if (a >= 0)
+                                            {
+                                                if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                {
+
+                                                }
+                                                else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                {
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                }
+
+
+                                            }
+                                            else
+                                            {
+                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                            }
+
+
+
+                                        }
+                                        //FIM
+                                        #endregion
                                         write.Flush();
                                         write.Close();
 
@@ -11927,7 +12213,7 @@ namespace NewCapit.dist.pages
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -11938,7 +12224,7 @@ namespace NewCapit.dist.pages
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;93");
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
@@ -12051,7 +12337,7 @@ namespace NewCapit.dist.pages
                                                             if (dt4.Rows[m][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[m][2].ToString() == "INICIO DE JORNADA")
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                             }
                                                             else if (dt4.Rows[m][2].ToString() == "FIM DE VIAGEM")
                                                             {
@@ -12205,7 +12491,7 @@ namespace NewCapit.dist.pages
                                                             if (dt4.Rows[a][2].ToString() == "FIM DE VIAGEM" || dt4.Rows[a][2].ToString() == "RETORNO REFEICAO" || dt4.Rows[a][2].ToString() == "INICIO DE JORNADA")
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
                                                                 // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
@@ -12274,7 +12560,7 @@ namespace NewCapit.dist.pages
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
@@ -12435,6 +12721,15 @@ namespace NewCapit.dist.pages
 
                                                     // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO REFEICAO")
+                                                {
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+
+                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";3;22");
+                                                }
+
                                                 //else if (dt4.Rows[a][2].ToString() == "PARADA INTERNA")
                                                 //{
 
@@ -12484,6 +12779,39 @@ namespace NewCapit.dist.pages
 
                                         }
 
+                                        #endregion
+
+                                        #region RETORNO PERNOITE
+                                        //BLOCO RETORNO PERNOITE
+                                        if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                        {
+                                            int a = 0;
+                                            a = w - 1;
+                                            if (a >= 0)
+                                            {
+                                                if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                {
+
+                                                }
+                                                else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                {
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                }
+
+
+                                            }
+                                            else
+                                            {
+                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                            }
+
+
+
+                                        }
+                                        //FIM
                                         #endregion
 
 
@@ -12542,7 +12870,7 @@ namespace NewCapit.dist.pages
             string script = $"alert('{mensagemCodificada}');";
 
             //// Registrando o script para execução no lado do cliente
-            //ClientScript.RegisterClientScriptBlock(this.GetType(), "MensagemDeAlerta", script, true);
+            ClientScript.RegisterClientScriptBlock(this.GetType(), "MensagemDeAlerta", script, true);
             txtDtInicial.Text = string.Empty;
             txtDtFinal.Text = string.Empty;
             txtCodMotorista.Text = string.Empty;

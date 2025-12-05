@@ -234,7 +234,7 @@
 
         <asp:BoundField DataField="Marcacao" HeaderText="Marcações" />
 
-        <asp:BoundField DataField="Status" HeaderText="Status" />
+      
 
       
 
