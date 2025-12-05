@@ -15,22 +15,22 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
-        /// Controle dataInicial.
+        /// Controle ddlMes.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dataInicial;
+        protected global::System.Web.UI.WebControls.DropDownList ddlMes;
 
         /// <summary>
-        /// Controle dataFinal.
+        /// Controle ddlAno.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dataFinal;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAno;
 
         /// <summary>
         /// Controle txtSelecionados.
@@ -58,15 +58,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnPesquisar;
-
-        /// <summary>
-        /// Controle btnGerarTabela.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGerarTabela;
 
         /// <summary>
         /// Controle gvMotoristas.

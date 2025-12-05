@@ -915,7 +915,7 @@ namespace NewCapit.dist.pages
                             }
 
                         }
-                        else if (dt3.Rows[0][6].ToString() == "REINICIO DE VIAGEM")
+                        else if (dt3.Rows[0][6].ToString() == "REINICIO DE VIAGEM" || dt3.Rows[0][6].ToString() == "RETORNO PERNOITE")
                         {
                             //VERIFICA SE A ULTIMA MARCAÇÃO DO DIA ANTERIOR É PARADA PERNOITE OU FIM DE VIAGEM
                             string sqlv = "select TOP 1 ds_macro from tb_parada where cod_cracha=" + login + " and dt_posicao_parada='" + DateTime.Parse(data).AddDays(-1).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao  DESC ";
@@ -956,7 +956,7 @@ namespace NewCapit.dist.pages
                                     else
                                     {
                                         //JORNADA PERNOITE REINICIO DE VIAGEM
-                                        string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + login + " and ds_macro = 'REINICIO DE VIAGEM' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
+                                        string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + login + " and ds_macro = 'REINICIO DE VIAGEM' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null OR ds_macro = 'RETORNO PERNOITE' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
                                         SqlDataAdapter adtpi = new SqlDataAdapter(sqli, con);
                                         DataTable dti = new DataTable();
                                         con.Open();
@@ -1274,7 +1274,7 @@ namespace NewCapit.dist.pages
 
                 if (dt3.Rows.Count > 0)
                 {
-                    if (dt3.Rows[0][6].ToString() == "FIM DE JORNADA" || dt3.Rows[0][6].ToString() == "PARADA PERNOITE" || dt3.Rows[0][6].ToString() == "PARADA REFEICAO" || dt3.Rows[0][6].ToString() == "RETORNO REFEICAO")
+                    if (dt3.Rows[0][6].ToString() == "FIM DE JORNADA" || dt3.Rows[0][6].ToString() == "PARADA PERNOITE" || dt3.Rows[0][6].ToString() == "PARADA REFEICAO" || dt3.Rows[0][6].ToString() == "RETORNO REFEICAO" || dt3.Rows[0][6].ToString() == "RETORNO PERNOITE")
                     {
                         //string sqlx = "select * from tb_parada where cod_cracha='" + login + "' and dt_posicao_parada='" + DateTime.Parse(txtData.Text).ToString("dd/MM/yyyy") + "' and fl_deletado is null and hr_posicao > '"+dt3.Rows[0][4].ToString()+"' order by hr_posicao ";
 
@@ -1286,7 +1286,7 @@ namespace NewCapit.dist.pages
                         adtpo.Fill(dto);
                         con.Close();
 
-                        if (dto.Rows[0][0].ToString() == "INICIO DE JORNADA" || dto.Rows[0][0].ToString() == "REINICIO DE VIAGEM")
+                        if (dto.Rows[0][0].ToString() == "INICIO DE JORNADA" || dto.Rows[0][0].ToString() == "REINICIO DE VIAGEM" || dto.Rows[0][0].ToString() == "RETORNO PERNOITE")
                         {
                             grdMotoristas.DataSource = dt;
                             grdMotoristas.DataBind();
@@ -1316,7 +1316,7 @@ namespace NewCapit.dist.pages
                                 adtpn.Fill(dtn);
                                 con.Close();
 
-                                string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + login + " and ds_macro = 'INICIO DE JORNADA' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null OR cod_cracha=" + login + " and ds_macro='REINICIO DE VIAGEM' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
+                                string sqli = "select top 1  hr_posicao from tb_parada where cod_cracha=" + login + " and ds_macro = 'INICIO DE JORNADA' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null OR cod_cracha=" + login + " and ds_macro='REINICIO DE VIAGEM' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null OR cod_cracha=" + login + " and ds_macro='RETORNO PERNOITE' and dt_posicao_parada='" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "' and fl_deletado is null order by hr_posicao";
                                 SqlDataAdapter adtpi = new SqlDataAdapter(sqli, con);
                                 DataTable dti = new DataTable();
                                 con.Open();

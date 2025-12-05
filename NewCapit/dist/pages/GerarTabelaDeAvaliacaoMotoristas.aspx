@@ -78,11 +78,40 @@
                             <div class="row mb-3">
                                 <div class="col-md-2">
                                     <label>Período de avaliação:</label>
-                                    <asp:TextBox ID="dataInicial" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    <asp:DropDownList ID="ddlMes" runat="server" CssClass="form-control">
+                                        <asp:ListItem Text="Selecione o Mês" Value=""></asp:ListItem>
+                                        <asp:ListItem Text="JAN" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="FEV" Value="2"></asp:ListItem>
+                                        <asp:ListItem Text="MAR" Value="3"></asp:ListItem>
+                                        <asp:ListItem Text="ABR" Value="4"></asp:ListItem>
+                                        <asp:ListItem Text="MAI" Value="5"></asp:ListItem>
+                                        <asp:ListItem Text="JUN" Value="6"></asp:ListItem>
+                                        <asp:ListItem Text="JUL" Value="7"></asp:ListItem>
+                                        <asp:ListItem Text="AGO" Value="8"></asp:ListItem>
+                                        <asp:ListItem Text="SET" Value="9"></asp:ListItem>
+                                        <asp:ListItem Text="OUT" Value="10"></asp:ListItem>
+                                        <asp:ListItem Text="NOV" Value="11"></asp:ListItem>
+                                        <asp:ListItem Text="DEZ" Value="12"></asp:ListItem>
+                                    </asp:DropDownList>
+                                    
                                 </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label>
-                                    <asp:TextBox ID="dataFinal" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    <asp:DropDownList ID="ddlAno" runat="server" CssClass="form-control">
+                                        <asp:ListItem Text="Selecione o Ano" Value=""></asp:ListItem>
+                                        <asp:ListItem Text="2025" Value="2025"></asp:ListItem>
+                                        <asp:ListItem Text="2026" Value="2026"></asp:ListItem>
+                                        <asp:ListItem Text="2027" Value="2027"></asp:ListItem>
+                                        <asp:ListItem Text="2028" Value="2028"></asp:ListItem>
+                                        <asp:ListItem Text="2029" Value="2029"></asp:ListItem>
+                                        <asp:ListItem Text="2030" Value="2030"></asp:ListItem>
+                                        <asp:ListItem Text="2031" Value="2031"></asp:ListItem>
+                                        <asp:ListItem Text="2032" Value="2032"></asp:ListItem>
+                                        <asp:ListItem Text="2033" Value="2033"></asp:ListItem>
+                                        <asp:ListItem Text="2034" Value="2034"></asp:ListItem>
+                                        <asp:ListItem Text="2035" Value="2035"></asp:ListItem>
+                                        <asp:ListItem Text="2036" Value="2036"></asp:ListItem>
+                                    </asp:DropDownList>
                                 </div>
                                 <div class="col-md-3">
                                     <!-- TextBox onde será exibido o valor -->
@@ -101,10 +130,10 @@
                                      <label>&nbsp;</label><br />
                                      <asp:Button ID="btnPesquisar" runat="server" Text="Filtrar" CssClass="btn btn-success" OnClick="btnPesquisar_Click" />   
                                 </div>
-                                <div class="col-md-2">
+                              <%--  <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <asp:Button ID="btnGerarTabela" runat="server" Text="Gerar Arquivo" CssClass="btn btn-success" Enabled="false" OnClick="btnGerarTabela_Click" />
-                                </div>
+                                </div>--%>
                             </div>
                             <%--</div>--%>
                             <div class="container-fluid">
@@ -115,7 +144,7 @@
                                             <!-- /.card-header -->
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    <asp:GridView runat="server" ID="gvMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50" ShowHeaderWhenEmpty="True">
+                                                    <asp:GridView runat="server" ID="gvMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="codmot" AllowPaging="True" PageSize="50" ShowHeaderWhenEmpty="True">
                                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                                         <Columns>
                                                             <%--tamanho da foto 45x45--%>
@@ -150,12 +179,17 @@
                                                                     <%# Eval("nucleo") %>
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
-                                                            <%-- Mês
-                                                <asp:TemplateField HeaderText="MêS">
-                                                    <itemtemplate>
-                                                       <asp:Label ID="lblMes" runat="server"></asp:Label>
-                                                    </itemtemplate>
-                                                </asp:TemplateField>--%>
+                                                    
+                                                    <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True" >
+                                                        <ItemTemplate>
+                                                            <br>
+                                                            <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Avaliar</asp:LinkButton>
+                                                          <%--  <a class="btn btn-danger btn-sm" href="#">
+                                                                <i class="fa fa-trash"></i>
+                                
+                                                            </a>--%>
+                                                        </ItemTemplate>
+                                                         </asp:TemplateField>
                                                         </Columns>
                                                     </asp:GridView>
                                                 </div>
