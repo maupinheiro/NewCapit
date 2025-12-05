@@ -82,6 +82,7 @@ namespace NewCapit.dist.pages
                 ddlRegioes.DataTextField = "regiao";
                 ddlRegioes.DataValueField = "id";
                 ddlRegioes.DataBind();
+                ddlRegioes.Items.Insert(0, new ListItem("--", "0"));
 
                 if (hdfRegiao.Value != string.Empty)
                 {

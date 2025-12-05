@@ -112,6 +112,8 @@
                                             <asp:BoundField DataField="veiculo" HeaderText="VEICULO" />
                                             <asp:BoundField DataField="tipo_viagem" HeaderText="VIAGEM" />
                                             <asp:BoundField DataField="rota" HeaderText="ROTA" />
+                                            <asp:BoundField DataField="plavei" HeaderText="PLACA" />
+                                            <asp:BoundField DataField="nommot" HeaderText="MOTORISTA" />
                                             <asp:BoundField DataField="andamento" HeaderText="SITUAÇÃO" Visible="false"/>
 
                                             <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">

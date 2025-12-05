@@ -82,6 +82,12 @@
                                         class="fas fa-boxes"></i>&nbsp;Nova Coleta/Entrega
                                     </a>
                                 </div>
+                                <div class="col-md-2">
+                                    <label>&nbsp;</label><br />
+                                    <a href="/dist/pages/ColetasMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i
+                                        class="fas fa-boxes"></i>&nbsp;Coleta
+                                    </a>
+                                </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <div class="custom-control custom-switch custom-switch-off-primary custom-switch-on-success">
@@ -149,7 +155,7 @@
                                                     </HeaderTemplate>
                                                     <ItemTemplate>
                                                         <tr onclick="toggleDetalhes(this)">
-                                                            <td style="text-align:center; vertical-align:middle;">
+                                                            <td style="text-align: center; vertical-align: middle;">
                                                                 <asp:LinkButton
                                                                     ID="lnkEditar"
                                                                     runat="server"
@@ -172,30 +178,30 @@
                                                                 <%# Eval("reboque1")  + " - " +  Eval("reboque2") %>
 
                                                             </td>
-                                                            <td style="text-align:center; vertical-align:middle;">
-                                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 45px;"/>
+                                                            <td style="text-align: center; vertical-align: middle;">
+                                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 45px;" />
                                                             </td>
                                                             <td>
                                                                 <%# Eval("codmotorista") + " - " + Eval("nomemotorista") %>
                                                                 <br />
                                                                 <%# Eval("codtra") + " - " + Eval("transportadora")%>  
                                                             </td>
-                                                            <td style="text-align:center; vertical-align:middle;">
+                                                            <td style="text-align: center; vertical-align: middle;">
                                                                 <%# Eval("num_carregamento") %>
                                                                 <br />
                                                                 <%# Eval("emissao", "{0:dd/MM/yyyy HH:mm}") %>
                                                             </td>
                                                             <td>
-                                                                <%# Eval("situacao") %>  
-                                                                <br /> 
+                                                                <%# Eval("situacao") %>
+                                                                <br />
                                                                 <%# Eval("status")%>  
                                                             </td>
                                                             <td>
                                                                 <div class="progress progress-xs">
                                                                     <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                                </div>                                                                
+                                                                </div>
                                                                 <span class="badge bg-danger">55%</span>
-                                                            </td>                                                           
+                                                            </td>
 
                                                         </tr>
                                                         <tr class="detalhes d-none">
@@ -208,7 +214,7 @@
                                                                                     <th>Carga</th>
                                                                                     <th>Status</th>
                                                                                     <th>Remetente/Expedidor</th>
-                                                                                    <th>Destinatário/Recebedor</th> 
+                                                                                    <th>Destinatário/Recebedor</th>
                                                                                     <th>Saída</th>
                                                                                     <th>Prev.Chegada</th>
                                                                                     <th>Chegada</th>
@@ -218,7 +224,7 @@
                                                                             <tbody>
                                                                     </HeaderTemplate>
                                                                     <ItemTemplate>
-                                                                      <tr>
+                                                                        <tr>
                                                                             <td>
                                                                                 <%# Eval("carga") %>
                                                                                 <br />

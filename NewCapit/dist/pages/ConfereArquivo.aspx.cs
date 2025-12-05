@@ -58,7 +58,7 @@ namespace NewCapit
 					//{
 					//    Session["DataTable"] = null;
 					//}
-					PaginaAtual = 1;
+					PaginaAtual = 0;
 
 
 					//gvPonto.DataSource = dtDados;

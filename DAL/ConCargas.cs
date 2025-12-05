@@ -33,6 +33,58 @@ namespace DAL
                 }
             }
         }
+
+        public static DataTable FetchDataTableCargasMatriz()
+        {
+            // alterado a query para verifica a coluna exclusao para itens excluídos            
+            string sql = "SELECT c.id, c.carga, c.previsao, c.status, c.cliorigem, c.clidestino, c.material, c.peso, c.entrega, c.codmot FROM tbcargas c  WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL and empresa = '1111'";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+
+                }
+            }
+        }
+        public static DataTable FetchDataTableCargasMatriz2(string searchTerm)
+        {
+            string sql = "SELECT c.id, c.carga, c.previsao, c.status, c.codorigem, c.cliorigem, c.coddestino, c.clidestino, c.material, c.peso, c.entrega, c.codmot, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.cod_pagador, c.pagador, c.cid_pagador, c.uf_pagador FROM tbcargas c  WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL and c.carga = @searchTerm";
+            
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@searchTerm", searchTerm);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
+        public static ConsultaCarga CheckCargasMatriz(ConsultaCarga carga)
+        {
+            // alterado a query para verifica a coluna exclusao para itens excluídos            
+            string sqlQuery = "SELECT * from tbcargas WHERE (carga=@carga)";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                return con.Query<ConsultaCarga>(sqlQuery, carga).FirstOrDefault();
+            }
+        }
+       
         public static DataTable FetchDataTableColetas()
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
@@ -47,16 +99,22 @@ namespace DAL
                                 c.estudo_rota, c.remessa, c.cva, c.gate, c.status,
                                 c.chegadaorigem, c.saidaorigem, c.tempoagcarreg,
                                 c.chegadadestino, c.entradaplanta, c.saidaplanta,
-                                c.tempodentroplanta, c.tempoesperagate,
-                                c.previsao, c.andamento,c.codmot
+                                c.tempodentroplanta, c.tempoesperagate,c.frota,
+                                c.previsao, c.andamento,c.codmot, cm.nommot, cv.plavei
                             FROM tbcargas c
                             OUTER APPLY (
                                 SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvworigem
                             ) co
                             OUTER APPLY (
                                 SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvwdestino
-                            ) cd
-                            WHERE c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL and data_hora between @datainicial and @datafinal  AND ISDATE(data_hora) = 1
+                            ) cd 
+                             OUTER APPLY (
+                                SELECT TOP 1 nommot FROM tbmotoristas WHERE codmot = c.codmot
+                            ) cm
+                            OUTER APPLY (
+                                SELECT TOP 1 plavei FROM tbveiculos WHERE codvei = c.frota
+                            ) cv
+                            WHERE c.empresa = 'CNT (CC)' AND c.fl_exclusao IS NULL and data_hora between @datainicial and @datafinal  AND ISDATE(data_hora) = 1 and codmot is not null
                             ";
 
 
@@ -82,9 +140,15 @@ namespace DAL
         public static DataTable FetchDataTablePesquisa(string searchTerm, string datainicial, string datafinal)
         {
             var sql = new StringBuilder(@"
-        SELECT ID, carga, cva, data_hora, solicitacoes, cliorigem, clidestino, veiculo, tipo_viagem, rota, atendimento, andamento,codmot 
-        FROM tbcargas 
-        WHERE fl_exclusao IS NULL  AND ISDATE(data_hora) = 1");
+        SELECT c.ID, c.carga, c.cva, c.data_hora, c.solicitacoes, c.cliorigem, c.clidestino, c.veiculo, c.tipo_viagem, c.rota, c.atendimento, c.andamento,c.codmot,c.frota, cm.nommot, cv.plavei 
+        FROM tbcargas c
+        OUTER APPLY (
+            SELECT TOP 1 nommot FROM tbmotoristas WHERE codmot = c.codmot
+        ) cm
+        OUTER APPLY (
+            SELECT TOP 1 plavei FROM tbveiculos WHERE codvei = c.frota
+        ) cv
+        WHERE fl_exclusao IS NULL  AND ISDATE(data_hora) = 1 and codmot is not null");
 
             using (var con = ConnectionUtil.GetConnection())
             using (var cmd = con.CreateCommand())
@@ -94,13 +158,13 @@ namespace DAL
                 {
                     sql.Append(@"
                 AND (
-                    data_hora LIKE @searchTerm OR 
-                    solicitacoes LIKE @searchTerm OR 
-                    veiculo LIKE @searchTerm OR 
-                    tipo_viagem LIKE @searchTerm OR 
-                    cliorigem LIKE @searchTerm OR 
-                    clidestino LIKE @searchTerm OR 
-                    cva LIKE @searchTerm
+                    c.data_hora LIKE @searchTerm OR 
+                    c.solicitacoes LIKE @searchTerm OR 
+                    c.veiculo LIKE @searchTerm OR 
+                    c.tipo_viagem LIKE @searchTerm OR 
+                    c.cliorigem LIKE @searchTerm OR 
+                    c.clidestino LIKE @searchTerm OR 
+                    c.cva LIKE @searchTerm
                 )");
 
                     cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
@@ -138,8 +202,6 @@ namespace DAL
                 }
             }
         }
-
-
         public static DataTable FetchDataTableColetas2(string searchTerm)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
