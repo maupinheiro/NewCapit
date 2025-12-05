@@ -31,7 +31,7 @@ namespace DAL
 
         public static DataTable FetchDataTable2(string searchTerm)
         {
-            string sql = "SELECT idcarreta, codcarreta, placacarreta, licenciamento, modelo, anocarreta, tiporeboque, descprop, nucleo, frota, placa_cavalo, ativo_inativo FROM tbcarretas where fl_exclusao is null and placacarreta LIKE @searchTerm or codcarreta LIKE @searchTerm or nucleo LIKE @searchTerm or descprop LIKE @searchTerm or licenciamento LIKE @searchTerm or modelo LIKE @searchTerm or tiporeboque LIKE @searchTerm ORDER BY codcarreta";
+            string sql = "SELECT idcarreta, codcarreta, placacarreta, CONVERT(varchar, licenciamento, 103) as licenciamento, modelo, anocarreta, tiporeboque, descprop, nucleo, frota, placa_cavalo, ativo_inativo FROM tbcarretas where fl_exclusao is null and placacarreta LIKE @searchTerm or codcarreta LIKE @searchTerm or nucleo LIKE @searchTerm or descprop LIKE @searchTerm or licenciamento LIKE @searchTerm or modelo LIKE @searchTerm or tiporeboque LIKE @searchTerm ORDER BY codcarreta";
 
             using (var con = ConnectionUtil.GetConnection())
             {

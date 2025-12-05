@@ -90,6 +90,12 @@
     <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
@@ -97,8 +103,23 @@
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.3\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.4.2.3\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.4.2.3\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.3\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.Core, Version=2.7.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.7.3\lib\net472\NPOI.Core.dll</HintPath>
@@ -111,6 +132,9 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats, Version=2.7.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.7.3\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
@@ -154,6 +178,9 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.DataVisualization.Design" />
     <Reference Include="System.Web.DynamicData" />
@@ -176,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
+    <Content Include="dist\pages\ColetasMatriz.aspx" />
     <Content Include="dist\pages\ConfereArquivo.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
     <Content Include="css\styleTabela.css" />
@@ -298,6 +326,7 @@
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
+    <Content Include="dist\pages\exempolos.aspx" />
     <Content Include="dist\pages\FreteMinimoANTT.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltCarga.aspx" />
@@ -4411,6 +4440,11 @@
     <Content Include="plugin\images\users\sonu.jpg" />
     <Content Include="plugin\images\users\varun.jpg" />
     <Content Include="plugin\images\weather-bg.jpg" />
+    <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.6.4.js" />
+    <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
     <Content Include="user_img\3.jpeg" />
     <Content Include="user_img\no_picture.png" />
     <Content Include="Web.config" />
@@ -4423,6 +4457,13 @@
     </Compile>
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ColetasMatriz.aspx.cs">
+      <DependentUpon>ColetasMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ColetasMatriz.aspx.designer.cs">
+      <DependentUpon>ColetasMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ConfereArquivo.aspx.cs">
       <DependentUpon>ConfereArquivo.aspx</DependentUpon>
@@ -4557,6 +4598,13 @@
     </Compile>
     <Compile Include="dist\pages\demo_motorista21.aspx.designer.cs">
       <DependentUpon>demo_motorista21.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\exempolos.aspx.cs">
+      <DependentUpon>exempolos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\exempolos.aspx.designer.cs">
+      <DependentUpon>exempolos.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\FreteMinimoANTT.aspx.cs">
       <DependentUpon>FreteMinimoANTT.aspx</DependentUpon>
@@ -4866,6 +4914,7 @@
     <Compile Include="dist\pages\OrdemColetaImpressao.aspx.designer.cs">
       <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\RastreamentoHub.cs" />
     <Compile Include="dist\pages\SimuladorFrete.aspx.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4873,6 +4922,7 @@
     <Compile Include="dist\pages\SimuladorFrete.aspx.designer.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Startup.cs" />
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5096,8 +5146,10 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.7.1\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

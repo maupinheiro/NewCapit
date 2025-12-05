@@ -116,19 +116,19 @@
                                              </span>
                                        </li>
                                       <li>
-                                          <span class="text-muted" style="font-size:smaller;">&nbsp&nbspPR - PARANÁ: </span>
+                                          <span class="text-muted" style="font-size:smaller;">&nbsp&nbspPARANÁ: </span>
                                              <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                                 <asp:Label ID="FrotaPR" runat="server" Text=""></asp:Label>
                                              </span>
                                       </li>
                                       <li>
-                                          <span class="text-muted" style="font-size:smaller;">&nbsp&nbspPE - PERNAMBUCO: </span>
+                                          <span class="text-muted" style="font-size:smaller;">&nbsp&nbspPERNAMBUCO: </span>
                                         <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                             <asp:Label ID="FrotaPE" runat="server" Text=""></asp:Label>
                                         </span>
                                       </li>
                                       <li>
-                                          <span class="text-muted" style="font-size:smaller;">&nbsp&nbspMG - MINAS GERAIS: </span>
+                                          <span class="text-muted" style="font-size:smaller;">&nbsp&nbspMINAS GERAIS: </span>
                                           <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                               <asp:Label ID="FrotaMINAS" runat="server" Text=""></asp:Label>
                                           </span>
@@ -191,17 +191,17 @@
                                                 <asp:Label ID="AgSC" runat="server" Text=""></asp:Label>
                                              </span>
                                        </li>
-                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPR - PARANÁ: </span>
+                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPARANÁ: </span>
                                              <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                                 <asp:Label ID="AgPR" runat="server" Text=""></asp:Label>
                                              </span>
                                       </li>
-                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPE - PERNAMBUCO: </span>
+                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPERNAMBUCO: </span>
                                         <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                             <asp:Label ID="AgPE" runat="server" Text=""></asp:Label>
                                         </span>
                                       </li>
-                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspMG - MINAS GERAIS: </span>
+                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspMINAS GERAIS: </span>
                                           <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                               <asp:Label ID="AgMG" runat="server" Text=""></asp:Label>
                                           </span>
@@ -218,7 +218,7 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-info"><i class="bi bi-check-circle"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Frota Ativa</span>
+                            <span class="info-box-text">Terceiros Ativos</span>
                             <span class="info-box-number">
                                 <asp:Label ID="TotalTerceiros" runat="server" Text=""></asp:Label>
                             </span>
@@ -264,17 +264,17 @@
                                                 <asp:Label ID="lbTerSCarlos" runat="server" Text=""></asp:Label>
                                              </span>
                                        </li>
-                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPR - PARANÁ: </span>
+                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPARANÁ: </span>
                                              <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                                 <asp:Label ID="lbTerPR" runat="server" Text=""></asp:Label>
                                              </span>
                                       </li>
-                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPE - PERNAMBUCO: </span>
+                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspPERNAMBUCO: </span>
                                         <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                             <asp:Label ID="lbTerPE" runat="server" Text=""></asp:Label>
                                         </span>
                                       </li>
-                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspMG - MINAS GERAIS: </span>
+                                      <li><span class="text-muted" style="font-size:smaller;">&nbsp&nbspMINAS GERAIS: </span>
                                           <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                               <asp:Label ID="lbTerMG" runat="server" Text=""></asp:Label>
                                           </span>

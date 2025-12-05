@@ -108,7 +108,7 @@
                                                     <th>ORD. COLETA</th>
                                                     <th>VEÍCULO</th>
                                                     <th>TIPO DE VEÍCULO</th> 
-                                                    <th>ATENDIMENTO</th>
+                                                    <th>ATENDIMENTO</th>                                                    
                                                     <th>AÇÃO</th>
                                                 </tr>
                                             </thead>

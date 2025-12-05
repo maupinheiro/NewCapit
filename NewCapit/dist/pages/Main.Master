@@ -569,6 +569,12 @@
                                             <p>Limite de Crédito</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/FreteMinimoANTT.aspx" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Frete Minimo ANTT</p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
