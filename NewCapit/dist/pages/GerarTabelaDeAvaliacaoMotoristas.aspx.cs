@@ -11,6 +11,7 @@ using System.Data;
 using System.Configuration;
 using System.Web.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Text;
 
 
 namespace NewCapit.dist.pages
@@ -39,6 +40,8 @@ namespace NewCapit.dist.pages
                 }
                 CarregarNucleo();
                 //   CarregarMotoristas();
+                this.btnGerarPlanilha.Visible = false;
+                this.btnImpmrimeMotoristas.Visible = false;
             }
 
         }
@@ -65,8 +68,8 @@ namespace NewCapit.dist.pages
             {
                 string query = @"
                                 SELECT 
-                                    m.id, m.caminhofoto, m.codmot, m.nommot, m.cargo, m.tipomot, 
-                                    m.cadmot, m.frota, m.nucleo 
+                                    a.id, m.caminhofoto, m.codmot, m.nommot, m.cargo, m.tipomot, 
+                                    m.cadmot, m.frota, m.nucleo, a.vl_total 
                                 FROM tbmotoristas AS m
                                 INNER JOIN tbavaliacaomotorista AS a ON m.codmot = a.cracha WHERE a.mes = @mes";
 
@@ -102,7 +105,7 @@ namespace NewCapit.dist.pages
                 gvMotoristas.DataSource = dt;
                 gvMotoristas.DataBind();
 
-
+                this.Botoes();
 
             }
         }
@@ -154,7 +157,24 @@ namespace NewCapit.dist.pages
             }
         }
 
-        
+        public void Botoes()
+        {
+            bool flag = false;
+            string cmdText = " SELECT CASE WHEN EXISTS ( SELECT 1 FROM tbavaliacaomotorista  WHERE mes = @mes AND vl_total IS NULL ) THEN 0 ELSE 1 END AS TodosAvaliados";
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand(cmdText, connection))
+                {
+                    sqlCommand.Parameters.AddWithValue("@mes", (object)"12/2025");
+                    connection.Open();
+                    flag = Convert.ToInt32(sqlCommand.ExecuteScalar()) == 1;
+                }
+            }
+            if (!flag)
+                return;
+            this.btnGerarPlanilha.Visible = true;
+            this.btnImpmrimeMotoristas.Visible = true;
+        }
 
         private object SafeDateValue(string input)
         {
@@ -177,6 +197,39 @@ namespace NewCapit.dist.pages
 
                
             }
+        }
+
+        protected void btnGerarPlanilha_Click(object sender, EventArgs e)
+        {
+            string selectCommandText = $"SELECT  cracha AS MATRICULA,  nome AS MOTORISTA,  funcao AS 'FUNCAO',  nucleo AS 'NUCLEO',  CASE  WHEN admissao LIKE '[1-2][0-9][0-9][0-9]-%'  THEN CONVERT(VARCHAR(10), CONVERT(DATE, admissao, 120), 103)   WHEN admissao LIKE '%/%' AND ISDATE(admissao) = 1 THEN CONVERT(VARCHAR(10), CONVERT(DATE, admissao, 103), 103) ELSE admissao END AS 'ADMISSAO', CAST(vl_total AS VARCHAR(10)) + '%' AS 'BONUS' FROM tbavaliacaomotorista  where mes='{this.ddlMes.SelectedValue.PadLeft(2, '0')}/{this.ddlAno.SelectedValue}' ";
+            DataTable dataTable = new DataTable();
+            using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommandText, this.conn))
+                sqlDataAdapter.Fill(dataTable);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("<table border='1'>");
+            stringBuilder.Append("<tr>");
+            foreach (DataColumn column in (InternalDataCollectionBase)dataTable.Columns)
+                stringBuilder.Append("<th>").Append(column.ColumnName).Append("</th>");
+            stringBuilder.Append("</tr>");
+            foreach (DataRow row in (InternalDataCollectionBase)dataTable.Rows)
+            {
+                stringBuilder.Append("<tr>");
+                foreach (object obj in row.ItemArray)
+                    stringBuilder.Append("<td>").Append(obj.ToString()).Append("</td>");
+                stringBuilder.Append("</tr>");
+            }
+            stringBuilder.Append("</table>");
+            this.Response.Clear();
+            this.Response.ContentType = "application/vnd.ms-excel";
+            this.Response.AddHeader("Content-Disposition", $"attachment; filename=AvaliacaoMotoristas_{this.ddlMes.SelectedItem.Text}_{this.ddlAno.SelectedItem.Text}.xls");
+            this.Response.Write(stringBuilder.ToString());
+            this.Response.End();
+        }
+
+        protected void btnImpmrimeMotoristas_Click(object sender, EventArgs e)
+        {
+            string script = $"window.open('{$"Frm_Impressao_Motorista.aspx?mes={this.ddlMes.SelectedValue.ToString()}&ano={this.ddlAno.SelectedItem.Text}"}', '_blank', 'width=900,height=780,scrollbars=yes,resizable=yes');";
+            this.ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
         }
     }
    

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Frm_AvaliaDesempenho.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AvaliaDesempenho" Async="true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Frm_Impressao_Motorista.aspx.cs" Inherits="NewCapit.dist.pages.Frm_Impressao_Motorista" Async="true" %>
 
 <html lang="pt-BR">
 
@@ -145,7 +145,7 @@
         margin: 0 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        zoom: 85%; /* 🔥 A CHAVE PARA CABER EM 1 PÁGINA */
+        zoom: 89%; /* 🔥 A CHAVE PARA CABER EM 1 PÁGINA */
     }
 
     .header,
@@ -201,6 +201,24 @@
     .no-print {
         display: none !important;
     }
+    .assinatura-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+        }
+
+        .linha-assinatura {
+            width: 300px;          /* tamanho da linha */
+            border-bottom: 1px solid #000;
+            margin: 0 auto;        /* centraliza */
+            height: 40px;          /* cria espaço para “assinar” */
+        }
+
+        .assinatura-nome {
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
     }
 </style>
     
@@ -210,7 +228,8 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         
    <div class="container">
-      
+       <asp:Repeater ID="Repeater1" OnItemDataBound="Repeater1_ItemDataBound" runat="server">
+           <ItemTemplate>
     <!-- Header -->
     <div class="header">
         <div class="header-top">
@@ -227,15 +246,15 @@
                 <button class="btn" onclick="window.print()">
                     <span>🖨️</span> Imprimir
                 </button>
-                    <asp:LinkButton ID="lnkSalvar" CssClass="btn" OnClick="lnkSalvar_Click" runat="server">Salvar</asp:LinkButton>
-                       <asp:LinkButton ID="lnkBaixar" CssClass="btn" runat="server" OnClick="lnkBaixar_Click"><span>⬇️</span> Baixar</asp:LinkButton>
+                   
+                      
               
                 
             </div>
         </div>
-
+       
         <!-- Dados do Motorista -->
-        <div class="motorista-info">
+    <div class="motorista-info">
               <div class="foto-placeholder">
                   <asp:Image ID="imgMotorista" runat="server" CssClass="rounded-circle float-center"
            Height="80" Width="80" AlternateText="User Image" />
@@ -271,8 +290,7 @@
         </div>
     </div>
 
-     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-     <ContentTemplate>
+    
     <!-- Tabela de Avaliação -->
     <div runat="server" class="table-container">
     <table>
@@ -298,9 +316,9 @@
                 <td class="item-name">Documentação</td>
                 <td class="item-descricao">Documentos preenchidos corretamente...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoDocumentacao" runat="server" Text="4%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_documentacao_1" GroupName="documentacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_documentacao_2" GroupName="documentacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_documentacao_3" GroupName="documentacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_documentacao_1" GroupName="documentacao" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_documentacao_2" GroupName="documentacao" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_documentacao_3" GroupName="documentacao" runat="server" Enabled="false" /></td>
             </tr>
 
             <!-- PONTUALIDADE -->
@@ -308,9 +326,9 @@
                 <td class="item-name">Pontualidade</td>
                 <td class="item-descricao">Cumprimento dos horários estabelecidos...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoPontualidade" runat="server" Text="2%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_pontualidade_1" GroupName="pontualidade" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_pontualidade_2" GroupName="pontualidade" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_pontualidade_3" GroupName="pontualidade" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_pontualidade_1" GroupName="pontualidade" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_pontualidade_2" GroupName="pontualidade" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_pontualidade_3" GroupName="pontualidade" runat="server" Enabled="false" /></td>
             </tr>
 
             <!-- SEGURANÇA DA CARGA -->
@@ -318,9 +336,9 @@
                 <td class="item-name">Segurança da Carga</td>
                 <td class="item-descricao">Distribuir, Cimar, Amarrar...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoSegurancaCarga" runat="server" Text="2%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_seguranca_1" GroupName="seguranca" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_seguranca_2" GroupName="seguranca" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_seguranca_3" GroupName="seguranca" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_seguranca_1" GroupName="seguranca" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_seguranca_2" GroupName="seguranca" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_seguranca_3" GroupName="seguranca" runat="server" Enabled="false" /></td>
             </tr>
 
             <!-- CARGA E DESCARGA -->
@@ -328,9 +346,9 @@
                 <td class="item-name">Carga e Descarga</td>
                 <td class="item-descricao">Conteúr carga e descarga...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoCargaDescarga" runat="server" Text="2%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_cargadescarga_1" GroupName="cargadescarga" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_cargadescarga_2" GroupName="cargadescarga" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_cargadescarga_3" GroupName="cargadescarga" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_cargadescarga_1" GroupName="cargadescarga" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_cargadescarga_2" GroupName="cargadescarga" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_cargadescarga_3" GroupName="cargadescarga" runat="server" Enabled="false" /></td>
             </tr>
 
             <!-- COMUNICAÇÃO -->
@@ -338,9 +356,9 @@
                 <td class="item-name">Comunicação</td>
                 <td class="item-descricao">Ligar para a programação...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoComunicacao" runat="server" Text="1%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_comunicacao_1" GroupName="comunicacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_comunicacao_2" GroupName="comunicacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_comunicacao_3" GroupName="comunicacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_comunicacao_1" GroupName="comunicacao" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_comunicacao_2" GroupName="comunicacao" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_comunicacao_3" GroupName="comunicacao" runat="server" Enabled="false" /></td>
             </tr>
 
             <!-- SEGURANÇA NO TRÂNSITO -->
@@ -348,9 +366,9 @@
                 <td class="item-name">Segurança no Trânsito</td>
                 <td class="item-descricao">Envolvimento em acidentes...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoSegurancaTransito" runat="server" Text="3%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_transito_1" GroupName="transito" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_transito_2" GroupName="transito" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_transito_3" GroupName="transito" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_transito_1" GroupName="transito" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_transito_2" GroupName="transito" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_transito_3" GroupName="transito" runat="server" Enabled="false" /></td>
             </tr>
 
             <!-- CONSUMO DE COMBUSTÍVEL -->
@@ -358,9 +376,9 @@
                 <td class="item-name">Consumo de Combustível</td>
                 <td class="item-descricao">Atingir a meta da média...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoConsumoCombustivel" runat="server" Text="3%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_combustivel_1" GroupName="combustivel" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_combustivel_2" GroupName="combustivel" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_combustivel_3" GroupName="combustivel" runat="server"  AutoPostBack="true" OnCheckedChanged="Recalcular"/></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_combustivel_1" GroupName="combustivel" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_combustivel_2" GroupName="combustivel" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_combustivel_3" GroupName="combustivel" runat="server"  Enabled="false"/></td>
             </tr>
 
             <!-- CONSERVAÇÃO DO VEÍCULO -->
@@ -368,9 +386,9 @@
                 <td class="item-name">Conservação do Veículo</td>
                 <td class="item-descricao">Conservação dos acessórios...</td>
                 <td class="item-peso"><asp:Label ID="lblPesoConservacaoVeiculo" runat="server" Text="3%"></asp:Label></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_conservacao_1" GroupName="conservacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_conservacao_2" GroupName="conservacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
-                <td class="checkbox-cell"><asp:RadioButton ID="rb_conservacao_3" GroupName="conservacao" runat="server" AutoPostBack="true" OnCheckedChanged="Recalcular" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_conservacao_1" GroupName="conservacao" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_conservacao_2" GroupName="conservacao" runat="server" Enabled="false" /></td>
+                <td class="checkbox-cell"><asp:RadioButton ID="rb_conservacao_3" GroupName="conservacao" runat="server" Enabled="false" /></td>
             </tr>
 
         </tbody>
@@ -402,8 +420,13 @@
             <div class="bonus-value"><asp:Label ID="lblResultadoTotal" runat="server" Text=""></asp:Label></div>
         </div>
     </div>
-               </ContentTemplate>
-   </asp:UpdatePanel>
+
+    <div class="assinatura-container">
+                    <div class="linha-assinatura"></div>
+                    <div class="assinatura-nome"><asp:Label ID="lblNomeAss" runat="server" Text=""></asp:Label></div>
+    </div>
+               </ItemTemplate>
+          </asp:Repeater>    
 </div>
          
     </form>
@@ -425,7 +448,7 @@
     document.querySelectorAll('tbody tr').forEach(row => {
         const checkboxes = row.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
+            checkbox.addEventListener('change', function() {
                 if (this.checked) {
                     checkboxes.forEach(cb => {
                         if (cb !== this) cb.checked = false;

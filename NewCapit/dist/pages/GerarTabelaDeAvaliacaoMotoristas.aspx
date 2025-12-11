@@ -120,7 +120,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-9">
+                                <div class="col-md-8">
                                     <div class="select2-purple">
                                         <label>Filial:</label>
                                         <asp:ListBox ID="ddlStatus" runat="server" SelectionMode="Multiple" CssClass="form-control select2"></asp:ListBox>
@@ -129,6 +129,14 @@
                                 <div class="col-md-1">
                                      <label>&nbsp;</label><br />
                                      <asp:Button ID="btnPesquisar" runat="server" Text="Filtrar" CssClass="btn btn-success" OnClick="btnPesquisar_Click" />   
+                                </div>
+                                 <div class="col-md-1">
+                                  <label>&nbsp;</label><br />
+                                  <asp:Button ID="btnGerarPlanilha" runat="server" Text="Gerar Planilha" CssClass="btn btn-warning" OnClick="btnGerarPlanilha_Click" />   
+                             </div>
+                            <div class="col-md-1">
+                                     <label>&nbsp;</label><br />
+                                     <asp:Button ID="btnImpmrimeMotoristas" runat="server" Text="Imprimir Relatórios" OnClick="btnImpmrimeMotoristas_Click" CssClass="btn btn-info" />   
                                 </div>
                               <%--  <div class="col-md-2">
                                     <label>&nbsp;</label><br />
@@ -144,7 +152,7 @@
                                             <!-- /.card-header -->
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    <asp:GridView runat="server" ID="gvMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="codmot" AllowPaging="True" PageSize="50" ShowHeaderWhenEmpty="True">
+                                                    <asp:GridView runat="server" ID="gvMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50" ShowHeaderWhenEmpty="True">
                                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                                         <Columns>
                                                             <%--tamanho da foto 45x45--%>
@@ -177,6 +185,11 @@
                                                             <asp:TemplateField HeaderText="FILIAL">
                                                                 <ItemTemplate>
                                                                     <%# Eval("nucleo") %>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="BONUS">
+                                                                <ItemTemplate>
+                                                                    <%# Eval("vl_total") %>
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
                                                     
