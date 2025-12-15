@@ -1747,7 +1747,7 @@ namespace NewCapit
                                                 marcacoes.Add(hora);
                                                 //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -1789,7 +1789,7 @@ namespace NewCapit
                                                 marcacoes.Add(hora);
                                                 //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                             }
@@ -3258,7 +3258,7 @@ namespace NewCapit
                                                     marcacoes.Add(hora);
                                                     //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -3300,7 +3300,7 @@ namespace NewCapit
                                                     marcacoes.Add(hora);
                                                     //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                 }
@@ -4814,7 +4814,7 @@ namespace NewCapit
                                                         marcacoes.Add(hora);
                                                         //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                        marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                        marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -4856,7 +4856,7 @@ namespace NewCapit
                                                         marcacoes.Add(hora);
                                                         //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                        marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                        marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                     }
@@ -6353,7 +6353,7 @@ namespace NewCapit
                                                             marcacoes.Add(hora);
                                                             //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -6395,7 +6395,7 @@ namespace NewCapit
                                                             marcacoes.Add(hora);
                                                             //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                         }
@@ -7944,7 +7944,7 @@ namespace NewCapit
                                                             marcacoes.Add(hora);
                                                             //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -7986,7 +7986,7 @@ namespace NewCapit
                                                             marcacoes.Add(hora);
                                                             //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                         }
@@ -9484,7 +9484,7 @@ namespace NewCapit
                                                             marcacoes.Add(hora);
                                                             //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -9526,7 +9526,7 @@ namespace NewCapit
                                                             marcacoes.Add(hora);
                                                             //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                            marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                         }
@@ -11074,7 +11074,7 @@ namespace NewCapit
                                                     marcacoes.Add(hora);
                                                     //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -11116,7 +11116,7 @@ namespace NewCapit
                                                     marcacoes.Add(hora);
                                                     //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                 }
@@ -12615,7 +12615,7 @@ namespace NewCapit
                                                     marcacoes.Add(hora);
                                                     //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
 
@@ -12657,7 +12657,7 @@ namespace NewCapit
                                                     marcacoes.Add(hora);
                                                     //WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;0102");
-                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm").Replace(":", ""));
+                                                    marcacoes.Add(DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm"));
 
 
                                                 }
