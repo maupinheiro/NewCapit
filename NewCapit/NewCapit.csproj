@@ -203,6 +203,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CadUsuario.aspx" />
+    <Content Include="dist\bandeiras\icone-espirito-santo.png" />
+    <Content Include="dist\bandeiras\icone-goias.png" />
+    <Content Include="dist\bandeiras\icone-mato-grosso-do-sul.png" />
+    <Content Include="dist\bandeiras\icone-paraiba.png" />
+    <Content Include="dist\bandeiras\icone-sergipe.png" />
     <Content Include="dist\pages\ColetasMatriz.aspx" />
     <Content Include="dist\pages\ConfereArquivo.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
@@ -4440,6 +4445,20 @@
     <Content Include="plugin\images\users\sonu.jpg" />
     <Content Include="plugin\images\users\varun.jpg" />
     <Content Include="plugin\images\weather-bg.jpg" />
+    <Content Include="dist\bandeiras\icone-distrito-federal.png" />
+    <Content Include="dist\bandeiras\icone-maranhao.png" />
+    <Content Include="dist\bandeiras\icone-mato-grosso.png" />
+    <Content Include="dist\bandeiras\icone-minas-gerais.png" />
+    <Content Include="dist\bandeiras\icone-para.png" />
+    <Content Include="dist\bandeiras\icone-parana.png" />
+    <Content Include="dist\bandeiras\icone-pernambuco.png" />
+    <Content Include="dist\bandeiras\icone-piaui.png" />
+    <Content Include="dist\bandeiras\icone-rio-grande-do-sul.png" />
+    <Content Include="dist\bandeiras\icone-rondonia.png" />
+    <Content Include="dist\bandeiras\icone-roraima.png" />
+    <Content Include="dist\bandeiras\icone-santa-catarina.png" />
+    <Content Include="dist\bandeiras\icone-sao-paulo.png" />
+    <Content Include="dist\bandeiras\icone-tocantins.png" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />

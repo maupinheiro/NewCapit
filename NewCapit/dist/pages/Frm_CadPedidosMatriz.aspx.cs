@@ -648,6 +648,7 @@ namespace NewCapit.dist.pages
                                     cmdUpdate.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
                                     cmdUpdate.Parameters.AddWithValue("@controledocliente", txtControleCliente.Text);
                                     cmdUpdate.Parameters.AddWithValue("@observacao", txtObservacao.Text.ToUpper());
+                                    cmdUpdate.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
                                     cmdUpdate.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
                                     cmdUpdate.Parameters.AddWithValue("@atualizacao", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
                                     cmdUpdate.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
@@ -690,7 +691,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@carga", novaCarga.Text);
                             comando.Parameters.AddWithValue("@emissao", txtCadastro.Text);
                             comando.Parameters.AddWithValue("@status", "Pendente");
-                            comando.Parameters.AddWithValue("@solicitante", cboSituacao.SelectedItem.Text);
+                            comando.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@peso", txtPeso.Text);
                             comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);

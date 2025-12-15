@@ -707,7 +707,7 @@ namespace NewCapit.dist.pages
                         {
                             // encontrou update
                             reader.Close();
-                            string sql = @"UPDATE tbpedidos SET carga = @carga, material = @material, peso = @peso, portao = @portao, situacao = @situacao, previsao = @previsao, entrega = @entrega, controledocliente = @controledocliente, observacao = @observacao, atualizacao = @atualizacao, gr = @gr, tomador = @tomador WHERE pedido = @pedido";
+                            string sql = @"UPDATE tbpedidos SET carga = @carga, material = @material, peso = @peso, portao = @portao, situacao = @situacao, previsao = @previsao, entrega = @entrega, controledocliente = @controledocliente, observacao = @observacao, atualizacao = @atualizacao, gr = @gr, tomador = @tomador, solicitante=@solicitante WHERE pedido = @pedido";
                             try
                             {
                                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -721,8 +721,9 @@ namespace NewCapit.dist.pages
                                     cmdUpdate.Parameters.AddWithValue("@previsao", DateTime.Parse(txtPrevEntrega.Text).ToString("yyyy-MM-dd"));
                                     cmdUpdate.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
                                     cmdUpdate.Parameters.AddWithValue("@controledocliente", txtControleCliente.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@observacao", txtObservacao.Text.ToUpper());
-                                    cmdUpdate.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
+                                    cmdUpdate.Parameters.AddWithValue("@observacao", txtObservacao.Text.ToUpper()); 
+                                    cmdUpdate.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
+                                    cmdUpdate.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);                                    
                                     cmdUpdate.Parameters.AddWithValue("@atualizacao", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
                                     cmdUpdate.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
                                     cmdUpdate.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
@@ -986,14 +987,14 @@ namespace NewCapit.dist.pages
                                 string script = "<script>showToast('Carga atualizada com sucesso!');</script>";
                                 ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                                 // atualiza  
-                                Response.Redirect("/dist/pages/GestaoDeCargas.aspx");                                
+                                Response.Redirect("/dist/pages/GestaoDeCargasMatriz.aspx");                                
                             }
                             else
                             {
                                 // Acione o toast quando a página for carregada
                                 string script = "<script>showToast('Erro ao atualizar a carga.');</script>";
                                 ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                                Response.Redirect("/dist/pages/GestaoDeCargas.aspx");
+                                Response.Redirect("/dist/pages/GestaoDeCargasMatriz.aspx");
                             }
 
                         }

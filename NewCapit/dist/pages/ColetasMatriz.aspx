@@ -6,12 +6,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Bootstrap CSS + JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <%--  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>--%>
 
 
     <style>
@@ -34,19 +38,22 @@
             margin-left: .5rem;
         }
     </style>
-
-
-
-    <%-- <script type="text/javascript">
+    <script type="text/javascript">
         function abrirModalTelefone() {
             // Pega valor do TextBox do Web Forms            
             var codigoFrota = document.getElementById('<%= txtCodFrota.ClientID %>').value;
 
             // Define o valor no TextBox do modal
-            document.getElementById('<%= txtCodFrota.ClientID %>').value = codigoFrota;
+            document.getElementById('<%= txtCodContato.ClientID %>').value = codigoFrota;
 
             //$('#telefoneModal').modal('show');
             $('#telefoneModal').modal({ backdrop: 'static', keyboard: false });
+        }
+    </script>
+    <script type="text/javascript">
+        function abrirModal() {
+            //$('#meuModal').modal('show');
+            $('#meuModal').modal({ backdrop: 'static', keyboard: false });
         }
     </script>
     <style>
@@ -113,19 +120,71 @@
                 }
             }
         }
-    </script>--%>
+    </script>
 
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
                 <br />
-                <div id="toastContainer" class="alert alert-warning alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
+                <!-- ALERTA BOOTSTRAP -->
+                <div id="divMsg" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsg" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgCNH" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgCNH" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgGR" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgGR" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
+                <div id="divMsgVeic" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgVeic" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgCET" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgCET" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgLinc" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgLinc" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgCrono" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgCrono" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgCarreta1" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgCarreta1" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div id="divMsgCarreta2" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgCarreta2" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
                 <div class="col-md-12">
+                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                       <ContentTemplate>
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -144,110 +203,385 @@
                             </div>
                             <!-- /.card-tools -->
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                          
-                                <div class="container mt-4">
+                        <div class="col-xl-12 col-md-12 mb-12">
+                            <br />
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info">
+                                    <%--tamanho da foto 39x39 60--%>
+                                    <img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-number">
+                                        <div class="row g-3">
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <span class="details">CÓDIGO:</span>
+                                                    <asp:TextBox ID="txtCodMotorista" Style="text-align: center" runat="server" CssClass="form-control font-weight-bold" OnTextChanged="btnBuscarMotorista_Click" AutoPostBack="true"></asp:TextBox>
 
-                                    <div class="input-group mb-3">
-                                        <asp:TextBox ID="txtCarga" CssClass="form-control" runat="server" placeholder="Digite o número da carga"></asp:TextBox>
-                                        <button class="btn btn-primary" type="button" onclick="buscarCarga()">Buscar</button>
-                                    </div>
-
-                                    <!-- Spinner -->
-                                    <div id="spinner" class="text-center my-3" style="display: none;">
-                                        <div class="spinner-border text-primary"></div>
-                                        <p>Carregando...</p>
-                                    </div>
-
-                                    <!-- Collapse CARGA (ABERTO AUTOMATICAMENTE) -->
-                                    <div class="accordion-item mb-3">
-                                        <h2 class="accordion-header" id="headingCarga">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseCarga" aria-expanded="true">
-                                                Dados da Carga
-                                            </button>
-                                        </h2>
-                                        <div id="collapseCarga" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-
-                                                <!-- MAPA -->
-                                                <div id="map" style="width: 100%; height: 300px;" class="mb-3 border"></div>
-
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4">
-                                                        <asp:Label ID="lblMotorista" CssClass="fw-bold" runat="server" Text="Motorista: -"></asp:Label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <asp:Label ID="lblStatus" CssClass="fw-bold" runat="server" Text="Status: -"></asp:Label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <asp:Label ID="lblVeiculo" CssClass="fw-bold" runat="server" Text="Veículo: -"></asp:Label>
-                                                    </div>
                                                 </div>
-
-                                                <!-- TELEMETRIA -->
-                                                <div class="alert alert-info">
-                                                    <asp:Label ID="lblTelemetria" runat="server" Text="Telemetria: -"></asp:Label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <span class="details">NOME DO MOTORISTA:</span>
+                                                    <asp:DropDownList ID="ddlMotorista" runat="server" CssClass="form-control select2"></asp:DropDownList>
                                                 </div>
-
-                                                <!-- GRID CARGA -->
-                                                <asp:GridView ID="gvCarga" CssClass="table table-striped table-bordered"
-                                                    AutoGenerateColumns="true" runat="server">
-                                                </asp:GridView>
-
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <span class="details">CONTATO:</span>
+                                                    <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <span class="details">FONE CORPORATIVO:</span>
+                                                    <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <span class="details">FROTA:</span>
+                                                    <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <span class="details">PLACA:</span>
+                                                    <asp:TextBox ID="txtPlaca" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1" id="reboque1" runat="server" visible="false">
+                                                <div class="form-group">
+                                                    <span class="details">REBOQUE:</span>
+                                                    <asp:TextBox ID="txtReboque1" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1" id="reboque2" runat="server" visible="false">
+                                                <div class="form-group">
+                                                    <span class="details">REBOQUE:</span>
+                                                    <asp:TextBox ID="txtReboque2" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <!-- Collapse PEDIDOS (FECHADO) -->
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingPedidos">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapsePedidos">
-                                                Pedidos da Carga
-                                            </button>
-                                        </h2>
-
-                                        <div id="collapsePedidos" class="accordion-collapse collapse">
-                                            <div class="accordion-body">
-
-                                                <asp:Label ID="lblTotalPedidos" CssClass="fw-bold mb-2" runat="server" Text=""></asp:Label><br />
-                                                <asp:Label ID="lblSomaValores" CssClass="fw-bold text-success mb-3" runat="server" Text=""></asp:Label>
-
-                                                <asp:GridView ID="gvPedidos" CssClass="table table-hover table-bordered"
-                                                    AutoGenerateColumns="true" runat="server">
-                                                </asp:GridView>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Botão enviar rota para WhatsApp -->
-                                    <button runat="server" id="btnWhats" class="btn btn-success mt-3" onserverclick="btnWhats_ServerClick">
-                                        Enviar rota para WhatsApp
-                                    </button>
                                 </div>
-
-                                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-                                <script>
-                                    function buscarCarga() {
-                                        document.getElementById("spinner").style.display = "block";
-                                        __doPostBack('<%= btnBuscar.ClientID %>', '');
-                                    }
-                                </script>
-
-                                <asp:Button ID="btnBuscar" runat="server" Text="Buscar" Style="display: none;" OnClick="btnBuscar_Click" />
-                           
-
+                            </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="card card-outline card-info">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados do Motorista/Veículo</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">FILIAL:</span>
+                                                <asp:TextBox ID="txtFilialMot" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">TIPO DE MOTORISTA:</span>
+                                                <asp:TextBox ID="txtTipoMot" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">FUNÇÃO:</span>
+                                                <asp:TextBox ID="txtFuncao" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">CPF:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCPF" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <span class="details">CARTÃO PAMCARD:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtNumCartao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <span class="details">MÊS/ANO:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtValCartao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- colunas invisiveis -->
+                                    <div class="row g-3" id="validarMotorista" runat="server" visible="false">
+                                        <div class="col-md-2" id="ETI" runat="server">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE E.T.I.:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtExameToxic" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE CNH:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtValCNH" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE GR.:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtValGR" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- fim das colunas invisiveis -->
+                                    <div class="row g-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">CELULAR PARTICULAR:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCelularParticular" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <span class="details">CÓDIGO:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCodTransportadora" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <span class="details">TRANSPORTADORA:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtTransportadora" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%-- Dados do veículo --%>
+                                    <div>
+                                        <hr />
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">TIPO DE VEÍCULO:</span>
+                                                <asp:TextBox ID="txtVeiculoTipo" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">VEICULO:</span>
+                                                <asp:TextBox ID="txtTipoVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="carretas" runat="server">
+                                            <div class="form-group">
+                                                <span class="details">CARRETA(S):</span>
+                                                <asp:TextBox ID="txtCarreta" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <span class="details">CONJUNTO:</span>
+                                                <asp:TextBox ID="txtConjunto" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- colunas invisiveis -->
+                                    <div class="row g-3" id="validarVeiculo" runat="server" visible="false">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE OPACIDADE:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtOpacidade" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="valCET" runat="server">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE LIC. CET:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCET" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">LICENCIAMENTO:</span>
+                                                <asp:TextBox ID="txtCRLVVeiculo" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="reb1" runat="server" visible="false">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE REBOQUE:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCRLVReb1" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="reb2" runat="server" visible="false">
+                                            <div class="form-group">
+                                                <span class="details">VALIDADE REBOQUE:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCRLVReb2" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" id="crono" runat="server">
+                                            <div class="form-group">
+                                                <span class="details">VAL. CRONO:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtCrono" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- fim das colunas invisiveis -->
+                                    <div class="row g-3">
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <span class="details">CÓDIGO:</span>
+                                                <asp:TextBox ID="txtCodProprietario" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <span class="details">PROPRIETÁRIO:</span>
+                                                <asp:TextBox ID="txtProprietario" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <span class="details">TECNOLOGIA:</span>
+                                                <asp:TextBox ID="txtTecnologia" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">MONITORAMENTO:</span>
+                                                <asp:TextBox ID="txtRastreamento" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.Cargas e Pedidos -->
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span class="details">ABERTURA:</span>
+                                            <asp:TextBox ID="txtCadastro" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span class="details">CARGA/SOLICITAÇÃO:</span>
+                                            <asp:TextBox ID="txtCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" OnTextChanged="btnAdd_Click" AutoPostBack="true"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Carga(s):</h4>
+                            <asp:GridView ID="gvCargas" runat="server" AutoGenerateColumns="False"
+                                CssClass="table table-bordered"
+                                DataKeyNames="carga"
+                                OnRowCommand="gvCargas_RowCommand">
+
+                                <Columns>
+                                    <asp:TemplateField HeaderText="AÇÃO" ShowHeader="True">
+                                        <ItemTemplate>
+
+                                            <asp:LinkButton ID="lnkRemover" runat="server" CommandName="Excluir"
+                                                CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i> Remover</asp:LinkButton>
+
+
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="carga" HeaderText="CARGA" />
+                                    <asp:BoundField DataField="previsao" HeaderText="PREVISÃO" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="cliorigem" HeaderText="ORIGEM" />
+                                    <asp:BoundField DataField="cidorigem" HeaderText="MUNICIPIO" />
+                                    <asp:BoundField DataField="ufcliorigem" HeaderText="UF" />
+                                    <asp:BoundField DataField="clidestino" HeaderText="DESTINO" />
+                                    <asp:BoundField DataField="ciddestino" HeaderText="MUNICIPIO" />
+                                    <asp:BoundField DataField="ufclidestino" HeaderText="UF" />
+
+                                    <asp:ButtonField CommandName="detalhes"
+                                        ButtonType="Button" Text="Pedido(s)" ControlStyle-CssClass="btn btn-info btn-sm" />
+                                </Columns>
+                            </asp:GridView>
+                            <hr />
+                            <h4>Pedido(s) da carga: &nbsp;<asp:Label ID="lblCargaSel" runat="server"></asp:Label></h4>
+                            <asp:GridView ID="gvPedidos" runat="server" AutoGenerateColumns="false" CssClass="table table-striped">
+                                <Columns>
+
+                                    <asp:BoundField DataField="carga" HeaderText="Carga" Visible="false" />
+                                    <asp:BoundField DataField="pedido" HeaderText="PEDIDO" />
+                                    <asp:BoundField DataField="emissao" HeaderText="EMISSÃO" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                                    <asp:BoundField DataField="material" HeaderText="MATERIAL" />
+                                    <asp:BoundField DataField="peso" HeaderText="PESO" />
+                                    <asp:BoundField DataField="portao" HeaderText="LOCAL" />
+                                    <asp:BoundField DataField="situacao" HeaderText="SITUAÇÃO" />
+                                    <asp:BoundField DataField="solicitante" HeaderText="SOLICITANTE" />
+                                    <asp:BoundField DataField="entrega" HeaderText="ENTREGA" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row g-3">
+                                <div class="col-md-1">
+                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" />
+                                </div>
+                                <div class="col-md-1">
+                                    <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
                     </div>
+                           </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="txtCodMotorista" />
+                             <asp:AsyncPostBackTrigger ControlID="txtCodFrota"  />
+                             <asp:AsyncPostBackTrigger ControlID="txtCarga"  />
+                             
+                        </Triggers>
+                        </asp:UpdatePanel>
                 </div>
 
             </div>
+
             <!-- Modal Bootstrap Cadastro de Telefone -->
-            <%--<div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
+            <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -261,7 +595,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <span class="details">CÓDIGO:</span>
-                                        <asp:TextBox ID="txtCodContato" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtCodContato" runat="server" class="form-control font-weight-bold"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -276,19 +610,19 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" />
+                            <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnCadContato_Click" />
                         </div>
                     </div>
                 </div>
-            </div>--%>
+            </div>
             <!-- Modal Bootstrap Incluir Coleta Vazia -->
-            <%--<div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true">
+            <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true"> 
                 <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                     <div class="modal-content">
                         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                             <ContentTemplate>
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="meuModalLabel">Inclusão de Viagem Veículo Vazio</h5>
+                                    <h5 class="modal-title" id="meuModalLabel">Inclusão de Viagem</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -304,13 +638,13 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <span class="details">ORIGEM:</span>
-                                                <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" class="form-control select2"></asp:DropDownList>
+                                                <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" CssClass="form-control select2"></asp:DropDownList>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <span class="details">VIAGEM:</span>
-                                                <asp:TextBox ID="novaCarga" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
+                                                <asp:TextBox ID="novaCargaVazia" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
 
                                             </div>
                                         </div>
@@ -339,7 +673,7 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <span class="details">DESTINO:</span>
-                                                <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-control select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged"></asp:DropDownList>
+                                                <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" CssClass="form-control select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged"></asp:DropDownList>
                                                 <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
                                             </div>
                                         </div>
@@ -368,20 +702,18 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                    <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" />
+                                    <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnSalvarColeta_Click" />
                                 </div>
                             </ContentTemplate>
                             <Triggers>
-                                <asp:AsyncPostBackTrigger ControlID="btnSalvarColeta" EventName="Click" />
+                               <asp:PostBackTrigger ControlID="btnSalvarColeta" />
                             </Triggers>
                         </asp:UpdatePanel>
 
 
                     </div>
                 </div>
-            </div>--%>
+            </div>
         </section>
     </div>
-
-    </span>
 </asp:Content>
