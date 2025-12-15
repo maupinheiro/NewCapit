@@ -84,7 +84,7 @@ namespace NewCapit.dist.pages
         {
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
                 this.id = HttpContext.Current.Request.QueryString["id"].ToString();
-            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter("select cracha, nome, funcao,admissao,nucleo,mes,frota from tbavaliacaomotorista where ISNUMERIC(cracha)=1 and id=" + this.id, this.con);
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter("select cracha, nome, funcao,admissao,nucleo,mes,frota, nm_usuario from tbavaliacaomotorista where ISNUMERIC(cracha)=1 and id=" + this.id, this.con);
             DataTable dataTable = new DataTable();
             this.con.Open();
             sqlDataAdapter.Fill(dataTable);
@@ -99,6 +99,8 @@ namespace NewCapit.dist.pages
             this.lblNucleo.Text = dataTable.Rows[0][4].ToString();
             this.lblMes.Text = dataTable.Rows[0][5].ToString();
             this.lblFrota.Text = dataTable.Rows[0][6].ToString();
+            this.lblUsuario.Text = dataTable.Rows[0][7].ToString();
+            this.lblNomeAss.Text = dataTable.Rows[0][1].ToString();
         }
 
         protected void Recalcular(object sender, EventArgs e) => this.CalcularTotal();

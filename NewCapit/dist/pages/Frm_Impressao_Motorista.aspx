@@ -287,6 +287,10 @@
                 <span class="motorista-info-label">MÊS:</span>
                 <span class="motorista-info-value"><asp:Label ID="lblMes" runat="server" Text=""></asp:Label></span>
             </div>
+            <div class="motorista-info-item">
+                <span class="motorista-info-label">AVALIADO POR:</span>
+                <span class="motorista-info-value"><asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></span>
+        </div>
         </div>
     </div>
 

@@ -201,7 +201,26 @@
     .no-print {
         display: none !important;
     }
+    .assinatura-container {
+width: 100%;
+text-align: center;
+margin-top: 40px;
     }
+
+    .linha-assinatura {
+        width: 300px;          /* tamanho da linha */
+        border-bottom: 1px solid #000;
+        margin: 0 auto;        /* centraliza */
+        height: 40px;          /* cria espaço para “assinar” */
+    }
+
+    .assinatura-nome {
+        margin-top: 5px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+   }
 </style>
     
 </head>
@@ -267,6 +286,10 @@
             <div class="motorista-info-item">
                 <span class="motorista-info-label">MÊS:</span>
                 <span class="motorista-info-value"><asp:Label ID="lblMes" runat="server" Text=""></asp:Label></span>
+            </div>
+            <div class="motorista-info-item">
+                <span class="motorista-info-label">AVALIADO POR:</span>
+                <span class="motorista-info-value"><asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></span>
             </div>
         </div>
     </div>
@@ -400,6 +423,10 @@
         <div class="bonus-box">
             <div class="bonus-label">BÔNUS</div>
             <div class="bonus-value"><asp:Label ID="lblResultadoTotal" runat="server" Text=""></asp:Label></div>
+        </div>
+         <div class="assinatura-container">
+                 <div class="linha-assinatura"></div>
+                 <div class="assinatura-nome"><asp:Label ID="lblNomeAss" runat="server" Text=""></asp:Label></div>
         </div>
     </div>
                </ContentTemplate>

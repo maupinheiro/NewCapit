@@ -12,6 +12,9 @@ using System.Configuration;
 using System.Web.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Text;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Office.Word;
+using System.Collections;
 
 
 namespace NewCapit.dist.pages
@@ -198,13 +201,31 @@ namespace NewCapit.dist.pages
                
             }
         }
-
-        protected void btnGerarPlanilha_Click(object sender, EventArgs e)
+        public void GeraPlanilha(string[] statusSelecionados = null)
         {
-            string selectCommandText = $"SELECT  cracha AS MATRICULA,  nome AS MOTORISTA,  funcao AS 'FUNCAO',  nucleo AS 'NUCLEO',  CASE  WHEN admissao LIKE '[1-2][0-9][0-9][0-9]-%'  THEN CONVERT(VARCHAR(10), CONVERT(DATE, admissao, 120), 103)   WHEN admissao LIKE '%/%' AND ISDATE(admissao) = 1 THEN CONVERT(VARCHAR(10), CONVERT(DATE, admissao, 103), 103) ELSE admissao END AS 'ADMISSAO', CAST(vl_total AS VARCHAR(10)) + '%' AS 'BONUS' FROM tbavaliacaomotorista  where mes='{this.ddlMes.SelectedValue.PadLeft(2, '0')}/{this.ddlAno.SelectedValue}' ";
+            
+            string selectCommandText = $"SELECT  cracha AS MATRICULA,  nome AS MOTORISTA,  funcao AS 'FUNCAO',  nucleo AS 'NUCLEO',  CASE  WHEN admissao LIKE '[1-2][0-9][0-9][0-9]-%'  THEN CONVERT(VARCHAR(10), CONVERT(DATE, admissao, 120), 103)   WHEN admissao LIKE '%/%' AND ISDATE(admissao) = 1 THEN CONVERT(VARCHAR(10), CONVERT(DATE, admissao, 103), 103) ELSE admissao END AS 'ADMISSAO', CAST(vl_total AS VARCHAR(10)) + '%' AS 'BONUS', observacao as 'OBSERVACAO' FROM tbavaliacaomotorista  where mes='{this.ddlMes.SelectedValue.PadLeft(2, '0')}/{this.ddlAno.SelectedValue}' ";
+            if (statusSelecionados != null && statusSelecionados.Length > 0)
+            {
+                string filtros = string.Join(",", statusSelecionados.Select((s, i) => "@status" + i));
+
+                selectCommandText += $" and nucleo IN ({filtros})";
+                     
+            }
+
+            SqlCommand cmd = new SqlCommand(selectCommandText, conn);
+
+            // Adiciona parâmetros dos núcleos selecionados
+            if (statusSelecionados != null)
+            {
+                for (int i = 0; i < statusSelecionados.Length; i++)
+                    cmd.Parameters.AddWithValue("@status" + i, statusSelecionados[i]);
+            }
+
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dataTable = new DataTable();
-            using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommandText, this.conn))
-                sqlDataAdapter.Fill(dataTable);
+            da.Fill(dataTable);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("<table border='1'>");
             stringBuilder.Append("<tr>");
@@ -225,11 +246,59 @@ namespace NewCapit.dist.pages
             this.Response.Write(stringBuilder.ToString());
             this.Response.End();
         }
+        
+
+        protected void btnGerarPlanilha_Click(object sender, EventArgs e)
+        {
+            string valores = Request.Form["ddlStatus"];
+            if (valores == "")
+            {
+                string script = "<script>showToast('Selecione pelo menos uma filial para gerar o arquivo!');</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                return;
+            }
+            else
+            {
+
+                if (!string.IsNullOrEmpty(valores))
+                {
+
+                    txtSelecionados.Text = nomeMes + "_" + "_" + valores;
+
+                }
+                string[] selecionados = ddlStatus.Items.Cast<System.Web.UI.WebControls.ListItem>()
+                    .Where(x => x.Selected)
+                    .Select(x => x.Value)
+                    .ToArray();
+                    GeraPlanilha(selecionados);
+
+            }
+        }
 
         protected void btnImpmrimeMotoristas_Click(object sender, EventArgs e)
         {
-            string script = $"window.open('{$"Frm_Impressao_Motorista.aspx?mes={this.ddlMes.SelectedValue.ToString()}&ano={this.ddlAno.SelectedItem.Text}"}', '_blank', 'width=900,height=780,scrollbars=yes,resizable=yes');";
-            this.ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+            //string script = $"window.open('{$"Frm_Impressao_Motorista.aspx?mes={this.ddlMes.SelectedValue.ToString()}&ano={this.ddlAno.SelectedItem.Text}"}', '_blank', 'width=900,height=780,scrollbars=yes,resizable=yes');";
+            //this.ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+            // Captura núcleos selecionados
+            string[] selecionados = ddlStatus.Items.Cast<System.Web.UI.WebControls.ListItem>()
+                .Where(x => x.Selected)
+                .Select(x => x.Value)
+                .ToArray();
+
+            if (selecionados.Length == 0)
+            {
+                string script = "<script>showToast('Selecione pelo menos uma filial para imprimir!');</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                return;
+            }
+
+            // Junta os valores em um string separado por vírgula
+            string nucleos = string.Join(",", selecionados);
+
+            string url = $"Frm_Impressao_Motorista.aspx?mes={this.ddlMes.SelectedValue}&ano={this.ddlAno.SelectedItem.Text}&nucleos={nucleos}";
+            string scriptOpen = $"window.open('{url}', '_blank', 'width=900,height=780,scrollbars=yes,resizable=yes');";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "openWindow", scriptOpen, true);
         }
     }
    

@@ -1,10 +1,12 @@
 ﻿using DAL;
 using Domain;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -35,21 +37,43 @@ namespace NewCapit.dist.pages
 
         private void CarregarDados()
         {
-            string str1 = this.Request.QueryString["mes"];
-            string str2 = this.Request.QueryString["ano"];
-            string cmdText = "SELECT  cracha,nome, funcao, admissao, nucleo, mes, frota, documentos, pontualidade, segcarga, cargaedescarga, comunicacao, segtransito, consumocomb, conservacao, observacao, vl_total, dt_avaliacao  FROM tbavaliacaomotorista   WHERE mes = @mes    ";
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            string mes = this.Request.QueryString["mes"];
+            string ano = this.Request.QueryString["ano"];
+            string nucleosStr = this.Request.QueryString["nucleos"]; // "A,B,C"
+
+            string cmdText = @"SELECT cracha, nome, funcao, admissao, nucleo, mes, frota, documentos, pontualidade,
+                              segcarga, cargaedescarga, comunicacao, segtransito, consumocomb, conservacao, 
+                              observacao, vl_total, dt_avaliacao, nm_usuario  
+                       FROM tbavaliacaomotorista   
+                       WHERE mes = @mes";
+
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            parametros.Add(new SqlParameter("@mes", $"{mes}/{ano}"));
+
+            if (!string.IsNullOrWhiteSpace(nucleosStr))
             {
-                using (SqlCommand selectCommand = new SqlCommand(cmdText, connection))
-                {
-                    selectCommand.Parameters.AddWithValue("@mes", (object)$"{str1}/{str2}");
-                    DataTable dataTable = new DataTable();
-                    new SqlDataAdapter(selectCommand).Fill(dataTable);
-                    this.Repeater1.DataSource = (object)dataTable;
-                    this.Repeater1.DataBind();
-                }
+                string[] nucleos = nucleosStr.Split(',');
+
+                string filtros = string.Join(",", nucleos.Select((s, i) => "@n" + i));
+                cmdText += $" AND nucleo IN ({filtros})";
+
+                for (int i = 0; i < nucleos.Length; i++)
+                    parametros.Add(new SqlParameter("@n" + i, nucleos[i]));
+            }
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlCommand selectCommand = new SqlCommand(cmdText, connection))
+            {
+                selectCommand.Parameters.AddRange(parametros.ToArray());
+
+                DataTable dataTable = new DataTable();
+                new SqlDataAdapter(selectCommand).Fill(dataTable);
+
+                this.Repeater1.DataSource = dataTable;
+                this.Repeater1.DataBind();
             }
         }
+
 
         protected void Repeater1_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -67,6 +91,7 @@ namespace NewCapit.dist.pages
             ((Label)e.Item.FindControl("lblNomeAss")).Text = dataItem["nome"].ToString().ToUpper();
             DateTime result;
             ((Label)e.Item.FindControl("lblDtAdmissao")).Text = DateTime.TryParse(dataItem["admissao"].ToString(), out result) ? result.ToString("dd/MM/yyyy") : "";
+            ((Label)e.Item.FindControl("lblUsuario")).Text = dataItem["nm_usuario"].ToString().ToUpper();
             ((Image)e.Item.FindControl("imgMotorista")).ImageUrl = this.ObterFoto(dataItem["cracha"].ToString());
             this.SelecionarRadioItem(dataItem["documentos"].ToString(), e, "rb_documentacao_1", "rb_documentacao_2", "rb_documentacao_3");
             this.SelecionarRadioItem(dataItem["pontualidade"].ToString(), e, "rb_pontualidade_1", "rb_pontualidade_2", "rb_pontualidade_3");
