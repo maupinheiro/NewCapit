@@ -32,6 +32,7 @@ using System.Drawing;
 using System.Web.Script.Serialization;
 using System.Text;
 using System.Windows.Interop;
+using DAL;
 
 
 namespace NewCapit.dist.pages
@@ -75,9 +76,10 @@ namespace NewCapit.dist.pages
                 PreencherClienteFinal();
 
                 Session["Cargas"] = CriarTabelaCargas();
+                
             }
-            CarregaFoto();
 
+            CarregaFoto();
         }
         private void PreencherNumColeta()
         {
@@ -172,7 +174,7 @@ namespace NewCapit.dist.pages
             {
                 if (ConsultaMotorista.status.Trim() != "INATIVO")
                 {
-                    if (txtCodMotorista.Text.Trim() != "")
+                    if (codmot != "")
                     {
                         fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
 
@@ -191,6 +193,7 @@ namespace NewCapit.dist.pages
             }
 
         }
+        
         private void PreencherComboMotoristas()
         {
             // Consulta SQL que retorna os dados desejados
@@ -881,6 +884,15 @@ namespace NewCapit.dist.pages
         }
         protected void btnPesquisarContato_Click(object sender, EventArgs e)
         {
+            divMsg.Visible = false;
+            divMsgCNH.Visible = false;
+            divMsgCarreta1.Visible = false;
+            divMsgCarreta2.Visible = false;
+            divMsgCET.Visible = false;
+            divMsgCrono.Visible = false;
+            divMsgGR.Visible = false;
+            divMsgLinc.Visible = false;
+            divMsgVeic.Visible = false;
             if (txtCodFrota.Text.Trim() != "")
             {
                 var codigo = txtCodFrota.Text.Trim();
@@ -909,6 +921,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnCadContato_Click(object sender, EventArgs e)
         {
+            
             string codigoFrota = txtCodContato.Text.Trim();
             string numeroTelefone = txtCadCelular.Text;
 
@@ -940,7 +953,7 @@ namespace NewCapit.dist.pages
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
                     }
                     // Opcional: limpar ou fechar modal                    
-                    ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "HideModal", "hideModal();", true);
                 }
                 catch (Exception ex)
                 {
@@ -1350,117 +1363,207 @@ namespace NewCapit.dist.pages
         {
             divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
             lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
             divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsg');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgCNH(string mensagem, string tipo = "warning")
         {
-            divMsgCNH.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgCNH.InnerText = mensagem;
-            divMsgCNH.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgCNH');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgGR(string mensagem, string tipo = "warning")
         {
-            divMsgGR.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgGR.InnerText = mensagem;
-            divMsgGR.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgGR');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgVeic(string mensagem, string tipo = "warning")
         {
-            divMsgVeic.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgVeic.InnerText = mensagem;
-            divMsgVeic.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgVeic');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgCrono(string mensagem, string tipo = "warning")
         {
-            divMsgCrono.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgCrono.InnerText = mensagem;
-            divMsgCrono.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgCrono');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgLinc(string mensagem, string tipo = "warning")
         {
-            divMsgLinc.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgLinc.InnerText = mensagem;
-            divMsgLinc.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgLinc');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgCET(string mensagem, string tipo = "warning")
         {
-            divMsgCET.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgCET.InnerText = mensagem;
-            divMsgCET.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgCET');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgCarreta1(string mensagem, string tipo = "warning")
         {
-            divMsgCarreta1.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgCarreta1.InnerText = mensagem;
-            divMsgCarreta1.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgCarreta1');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
         protected void MostrarMsgCarreta2(string mensagem, string tipo = "warning")
         {
-            divMsgCarreta2.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-            lblMsgCarreta2.InnerText = mensagem;
-            divMsgCarreta2.Style["display"] = "block";
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            // O Bootstrap 4/5 lida com a exibição/ocultação, mas para garantir que ele apareça
+            // após a atualização do UpdatePanel, podemos usar o 'block' ou simplesmente confiar
+            // que o UpdatePanel irá renderizar o HTML.
+            // Se o alerta estiver visível por padrão no HTML, não precisa do 'display: block'.
+            // Se ele estiver oculto por padrão (como no seu HTML original), mantenha o 'block'.
+            divMsg.Style["display"] = "block";
 
-            string script = @"setTimeout(function() {
-                        var div = document.getElementById('divMsgCarreta2');
-                        if (div) div.style.display = 'none';
-                      }, 5000);";
+            // 2. Injeta o script para fechar o alerta usando a API do Bootstrap após 5 segundos
+            string script = @"
+        $(document).ready(function() {
+            setTimeout(function() {
+                // Usa o seletor jQuery e a função 'alert('close')' do Bootstrap 4
+                $('#" + divMsg.ClientID + @"').alert('close');
+            }, 5000);
+        });";
 
+            // Registra o script. O ScriptManager garante que ele seja executado após o postback assíncrono.
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
 
