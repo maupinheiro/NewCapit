@@ -144,6 +144,7 @@
                                                                     <th>AÇÃO</th>
                                                                     <th>VEÍCULO</th>
                                                                     <th>PLACA</th>
+                                                                   <%-- <th>FOTO</th>--%>
                                                                     <th>MOTORISTA</th>
                                                                     <th>ORDEM COLETA</th>
                                                                     <th>ATENDIMENTO</th>
@@ -155,12 +156,21 @@
                                                     <ItemTemplate>
                                                         <tr onclick="toggleDetalhes(this)">
                                                             <td style="text-align: center; vertical-align: middle;">
-                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 45px;"  CommandName="Editar"
-                                                                 CommandArgument='<%# Eval("num_carregamento") %>'
-                                                                 OnCommand="lnkEditar_Command"
-                                                                 OnClientClick="event.stopPropagation();"  runat="server" />
-
-                                                              
+                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 45px;" runat="server"
+                                                                     CommandName="Editar"
+                                                                     CommandArgument='<%# Eval("num_carregamento") %>'
+                                                                     OnCommand="lnkEditar_Command"
+                                                                     OnClientClick="event.stopPropagation();"/>
+                                                              <%--  <asp:LinkButton
+                                                                    ID="lnkEditar"
+                                                                    runat="server"
+                                                                    class="btn btn-info"
+                                                                    CommandName="Editar"
+                                                                    CommandArgument='<%# Eval("num_carregamento") %>'
+                                                                    OnCommand="lnkEditar_Command"
+                                                                    OnClientClick="event.stopPropagation();">
+                                                                    <i class="fas fa-tasks"></i>
+                                                                </asp:LinkButton>--%>
                                                             </td>
                                                             <td>
                                                                 <%# Eval("veiculo") %>
@@ -173,7 +183,9 @@
                                                                 <%# Eval("reboque1")  + " - " +  Eval("reboque2") %>
 
                                                             </td>
-                                                          
+                                                           <%-- <td style="text-align: center; vertical-align: middle;">
+                                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 45px;" />
+                                                            </td>--%>
                                                             <td>
                                                                 <%# Eval("codmotorista") + " - " + Eval("nomemotorista") %>
                                                                 <br />

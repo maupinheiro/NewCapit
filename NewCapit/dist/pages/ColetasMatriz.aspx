@@ -121,7 +121,7 @@
             }
         }
     </script>
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         // Função para re-inicializar componentes Bootstrap
         function reInitializeBootstrap() {
             // Re-inicializa todos os alertas para que o botão de fechar funcione
@@ -145,7 +145,7 @@
         $(document).ready(function () {
             reInitializeBootstrap();
         });
-    </script>
+    </script>--%>
 
 
     <div class="content-wrapper">
@@ -588,7 +588,7 @@
                         <div class="col-md-12">
                             <div class="row g-3">
                                 <div class="col-md-1">
-                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" />
+                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg"  runat="server" Text="Cadastrar" />
                                 </div>
                                 <div class="col-md-1">
                                     <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
