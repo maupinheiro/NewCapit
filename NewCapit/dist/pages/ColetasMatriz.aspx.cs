@@ -230,6 +230,15 @@ namespace NewCapit.dist.pages
         }
         protected void btnBuscarMotorista_Click(object sender, EventArgs e)
         {
+            divMsg.Visible = true;
+            divMsgCNH.Visible = true;
+            divMsgCarreta1.Visible = true;
+            divMsgCarreta2.Visible = true;
+            divMsgCET.Visible = true;
+            divMsgCrono.Visible = true;
+            divMsgGR.Visible = true;
+            divMsgLinc.Visible = true;
+            divMsgVeic.Visible = true;
             if (string.IsNullOrEmpty(txtCodMotorista.Text))
             {
                 MostrarMsg("Digite o código do motorista!", "danger");
@@ -715,6 +724,15 @@ namespace NewCapit.dist.pages
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
+            divMsg.Visible = true;
+            divMsgCNH.Visible = false;
+            divMsgCarreta1.Visible = false;
+            divMsgCarreta2.Visible = false;
+            divMsgCET.Visible = false;
+            divMsgCrono.Visible = false;
+            divMsgGR.Visible = false;
+            divMsgLinc.Visible = false;
+            divMsgVeic.Visible = false;
             divMsg.Attributes["class"] = "alert alert-danger d-none";
 
             if (string.IsNullOrWhiteSpace(txtCarga.Text))
@@ -728,6 +746,7 @@ namespace NewCapit.dist.pages
 
         private void BuscarCargaNoBanco(string carga)
         {
+           
             // Recupera a lista atual
             DataTable lista = (DataTable)Session["Cargas"];
 
@@ -881,6 +900,15 @@ namespace NewCapit.dist.pages
         }
         protected void btnPesquisarContato_Click(object sender, EventArgs e)
         {
+            divMsg.Visible = false;
+            divMsgCNH.Visible = false;
+            divMsgCarreta1.Visible = false;
+            divMsgCarreta2.Visible = false;
+            divMsgCET.Visible = false;
+            divMsgCrono.Visible = false;
+            divMsgGR.Visible = false;
+            divMsgLinc.Visible = false;
+            divMsgVeic.Visible = false;
             if (txtCodFrota.Text.Trim() != "")
             {
                 var codigo = txtCodFrota.Text.Trim();

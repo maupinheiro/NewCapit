@@ -165,7 +165,7 @@ namespace NewCapit
             }
 
 
-            sql1 += " ) AS TBL WHERE NUMBER BETWEEN ((" + PaginaAtual + "-1)*1)+1 AND (" + PaginaAtual + "*1) ORDER BY codmot";
+            sql1 += " ) AS TBL WHERE NUMBER BETWEEN ((" + PaginaAtual + "-1)*1)+1 AND (" + PaginaAtual + "*1) ORDER BY NUMBER";
             SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
             DataTable dt1 = new DataTable();
 
@@ -243,7 +243,7 @@ namespace NewCapit
 
             // 1. Ajuste de Limites
             if (PaginaAtual < 0) PaginaAtual = 1;
-            if (PaginaAtual >= totalMotoristas) PaginaAtual = totalMotoristas > 0 ? totalMotoristas - 1 : 0;
+            if (PaginaAtual >= totalMotoristas) PaginaAtual = totalMotoristas > 0 ? totalMotoristas  : 0;
 
             // Esconde/mostra a seção se não houver dados
             pnlMotorista.Visible = totalMotoristas > 0;
@@ -273,7 +273,7 @@ namespace NewCapit
 
             // 5. ATUALIZA BOTÕES DE NAVEGAÇÃO
             lnkAnterior.Enabled = (PaginaAtual >= 0);
-            lnkProximo.Enabled = (PaginaAtual < totalMotoristas - 1);
+            lnkProximo.Enabled = (PaginaAtual < totalMotoristas );
             lblPaginaInfo.Text = $"Motorista {PaginaAtual} de {totalMotoristas}";
 
 

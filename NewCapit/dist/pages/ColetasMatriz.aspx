@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="ColetasMatriz.aspx.cs" Inherits="NewCapit.dist.pages.ColetasMatriz" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="ColetasMatriz.aspx.cs" Inherits="NewCapit.dist.pages.ColetasMatriz" EnableEventValidation="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -121,12 +121,41 @@
             }
         }
     </script>
+    <%--<script type="text/javascript">
+        // Função para re-inicializar componentes Bootstrap
+        function reInitializeBootstrap() {
+            // Re-inicializa todos os alertas para que o botão de fechar funcione
+            $('.alert').alert();
+
+            // Re-inicializa modais (se necessário)
+            $('.modal').modal({ show: false });
+        }
+
+        // Obtém a instância do PageRequestManager
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+
+        if (prm) {
+            // Adiciona um manipulador de eventos para o final de cada postback assíncrono
+            prm.add_endRequest(function (sender, args) {
+                reInitializeBootstrap();
+            });
+        }
+
+        // Executa a função também no carregamento inicial da página
+        $(document).ready(function () {
+            reInitializeBootstrap();
+        });
+    </script>--%>
+
 
     <div class="content-wrapper">
         <section class="content">
+            <asp:UpdatePanel ID="UpdatePanel3"  runat="server">
+    <ContentTemplate>
             <div class="container-fluid">
                 <br />
                 <!-- ALERTA BOOTSTRAP -->
+                
                 <div id="divMsg" runat="server"
                     class="alert alert-warning alert-dismissible fade show mt-3"
                     role="alert" style="display: none;">
@@ -182,9 +211,9 @@
                     <span id="lblMsgCarreta2" runat="server"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+                       
                 <div class="col-md-12">
-                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
-                       <ContentTemplate>
+                    
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -208,6 +237,7 @@
                             <div class="info-box">
                                 <span class="info-box-icon bg-info">
                                     <%--tamanho da foto 39x39 60--%>
+                                           
                                     <img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />
                                 </span>
                                 <div class="info-box-content">
@@ -558,7 +588,7 @@
                         <div class="col-md-12">
                             <div class="row g-3">
                                 <div class="col-md-1">
-                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Cadastrar" />
+                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg"  runat="server" Text="Cadastrar" />
                                 </div>
                                 <div class="col-md-1">
                                     <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
@@ -568,22 +598,24 @@
                         </div>
                         <br />
                     </div>
-                           </ContentTemplate>
-                        <Triggers>
-                            <asp:PostBackTrigger ControlID="txtCodMotorista" />
-                             <asp:AsyncPostBackTrigger ControlID="txtCodFrota"  />
-                             <asp:AsyncPostBackTrigger ControlID="txtCarga"  />
-                             
-                        </Triggers>
-                        </asp:UpdatePanel>
+                         
                 </div>
 
             </div>
+            </ContentTemplate>               
+                <Triggers>
+                    <asp:PostBackTrigger ControlID="txtCodMotorista" />
+                    <asp:PostBackTrigger ControlID="txtCodFrota" />
+                    <asp:PostBackTrigger ControlID="txtCarga" />
+                </Triggers>
+                </asp:UpdatePanel>
 
             <!-- Modal Bootstrap Cadastro de Telefone -->
             <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
+                        <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                            <ContentTemplate>
                         <div class="modal-header">
                             <h5 class="modal-title" id="telefoneModalLabel">Cadastrar Contato</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
@@ -612,6 +644,11 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                             <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnCadContato_Click" />
                         </div>
+                                </ContentTemplate>
+                            <Triggers>
+                                <asp:PostBackTrigger ControlID="btnCadContato" />
+                            </Triggers>
+                            </asp:UpdatePanel>
                     </div>
                 </div>
             </div>
