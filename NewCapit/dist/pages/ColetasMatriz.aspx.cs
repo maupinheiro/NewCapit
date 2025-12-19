@@ -1469,7 +1469,7 @@ namespace NewCapit.dist.pages
         // Enviar rota via WhatsApp
         protected void btnWhats_ServerClick(object sender, EventArgs e)
         {
-            string telefone = "55999999999";
+            string telefone = "5511982300498";
             string mensagem = "Segue a rota da carga " + txtCarga.Text;
 
             Response.Redirect("https://wa.me/" + telefone + "?text=" + Server.UrlEncode(mensagem));

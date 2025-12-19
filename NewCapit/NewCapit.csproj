@@ -385,6 +385,7 @@
     <Content Include="dist\pages\Frm_EditarColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
     <Content Include="dist\pages\Frm_Impressao_Motorista.aspx" />
+    <Content Include="dist\pages\Frm_ImpSolVWMatriz.aspx" />
     <Content Include="dist\pages\Frm_OrdemAbastecimento.aspx" />
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_TabelaPrecoMatriz.aspx" />
@@ -4816,6 +4817,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_Impressao_Motorista.aspx.designer.cs">
       <DependentUpon>Frm_Impressao_Motorista.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_ImpSolVWMatriz.aspx.cs">
+      <DependentUpon>Frm_ImpSolVWMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_ImpSolVWMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_ImpSolVWMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_OrdemAbastecimento.aspx.cs">
       <DependentUpon>Frm_OrdemAbastecimento.aspx</DependentUpon>

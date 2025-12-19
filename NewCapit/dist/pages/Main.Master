@@ -404,30 +404,21 @@
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
-                                                    <i class="fas fa-shipping-fast nav-icon"></i>
+                                                    <i class="fas fa-boxes nav-icon"></i>
                                                     <p>Cargas</p>
-                                                </a>
-                                                <%--<ul class="nav nav-treeview">
-                                                    <li class="nav-item">
-                                                        <a href="/dist/pages/Frm_Coleta.aspx" class="nav-link">
-                                                            <i class="fas fa-pallet nav-icon"></i>
-                                                            <p>Entregas</p>
-                                                        </a>
-                                                    </li>--%>
-                                                <%-- <li class="nav-item">
-                                                        <a href="pages/tables/jsgrid.html" class="nav-link">
-                                                            <i class="fas fa-calendar-alt nav-icon"></i>
-                                                            <p>Solicitações VW</p>
-                                                        </a>
-                                                    </li>   --%>
-                                                <%--</ul>--%>
+                                                </a>                                                
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/dist/pages/Frm_ImpSolVWMatriz.aspx" class="nav-link">
+                                                    <i class="far fa-folder-open nav-icon"></i>
+                                                    <p>Imp. Solic. VW</p> 
+                                                </a>                                           
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link">
                                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                                     <p>
-                                                        Coletas/Entregas               
-                                                     <i class="fas fa-angle-left right"></i>
+                                                        Coletas/Entregas 
                                                     </p>
                                                 </a>
                                                 <%--<ul class="nav nav-treeview">
@@ -639,12 +630,6 @@
                                         <a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Gestão</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/dist/pages/FreteMinimoANTT.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Frete Mínimo ANTT</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
