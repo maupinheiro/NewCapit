@@ -56,7 +56,7 @@ namespace DAL
         }
         public static DataTable FetchDataTableCargasMatriz2(string searchTerm)
         {
-            string sql = "SELECT c.id, c.carga, c.previsao, c.status, c.codorigem, c.cliorigem, c.coddestino, c.clidestino, c.material, c.peso, c.entrega, c.codmot, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.cod_pagador, c.pagador, c.cid_pagador, c.uf_pagador FROM tbcargas c  WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL and c.carga = @searchTerm";
+            string sql = "SELECT c.id, c.carga, c.previsao, c.status, c.codorigem, c.cliorigem, c.coddestino, c.clidestino, c.material, c.peso, c.entrega, c.codmot, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.cod_pagador, c.pagador, c.cid_pagador, c.uf_pagador FROM tbcargas c  WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL and c.idviagem = @searchTerm";
             
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -229,6 +229,27 @@ namespace DAL
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
             string sql = "SELECT id, carga,cva, data_hora,  (select top 1  codvw+ '/' + codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao FROM tbcargas WHERE  empresa = 'CNT (CC)' and fl_exclusao is null and idviagem=@idviagem order by data_hora ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@idviagem", idviagem);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
+        public static DataTable FetchDataTableColetas4(string idviagem)
+        {
+            // alterado a query para verifica a coluna exclusao para itens excluídos            
+            string sql = "SELECT id, carga,cva, data_hora,  (select top 1  codvw+ '/' + codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao FROM tbcargas WHERE fl_exclusao is null and idviagem=@idviagem order by data_hora ";
 
             using (var con = ConnectionUtil.GetConnection())
             {

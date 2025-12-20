@@ -456,22 +456,31 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtRastreamento;
 
         /// <summary>
-        /// Controle hdLat.
+        /// Controle updMapa.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdLat;
+        protected global::System.Web.UI.UpdatePanel updMapa;
 
         /// <summary>
-        /// Controle hdLng.
+        /// Controle tmAtualizaMapa.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdLng;
+        protected global::System.Web.UI.Timer tmAtualizaMapa;
+
+        /// <summary>
+        /// Controle GMap1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::Subgurim.Controles.GMap GMap1;
 
         /// <summary>
         /// Controle rptColetas.
