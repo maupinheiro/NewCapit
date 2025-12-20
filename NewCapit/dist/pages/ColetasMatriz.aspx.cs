@@ -1534,7 +1534,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@nomemotorista", ddlMotorista.SelectedItem.Text);
                         cmd.Parameters.AddWithValue("@cpf", SafeValue(txtCPF.Text));
                         cmd.Parameters.AddWithValue("@cartaopedagio", SafeValue(txtNumCartao.Text));
-                        cmd.Parameters.AddWithValue("@valcartao", SafeDateValue(txtValCartao.Text));
+                        cmd.Parameters.AddWithValue("@valcartao", txtValCartao.Text);
                         cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelularParticular.Text));
                         cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
                         cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
@@ -1557,15 +1557,15 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                         cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
 
-                        cmd.Parameters.AddWithValue("@empresa", "MATRIZ");
+                        cmd.Parameters.AddWithValue("@empresa", "1111");
                         cmd.Parameters.AddWithValue("@dtcad", DateTime.Now);
                         cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
                         cmd.Parameters.AddWithValue("@situacao", "EM ANDAMENTO");
                         cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
                         cmd.Parameters.AddWithValue("@codtranspmotorista", SafeValue(txtCodTransportadora.Text));
                         cmd.Parameters.AddWithValue("@nomtranspmotorista", SafeValue(txtTransportadora.Text));
-                        cmd.Parameters.AddWithValue("@venccronotacografo", SafeValue(txtCrono.Text));
-                        cmd.Parameters.AddWithValue("@valopacidade", SafeValue(txtOpacidade.Text));
+                        cmd.Parameters.AddWithValue("@venccronotacografo", SafeDateValue(txtCrono.Text));
+                        cmd.Parameters.AddWithValue("@valopacidade", SafeDateValue(txtOpacidade.Text));
 
                         cmd.ExecuteNonQuery();
 
@@ -1668,6 +1668,14 @@ namespace NewCapit.dist.pages
             DateTime dt;
             if (DateTime.TryParse(input, out dt))
                 return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
+        }
+        private object SafeDateTimeValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd HH:mm:ss");
             else
                 return DBNull.Value;
         }

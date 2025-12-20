@@ -562,52 +562,6 @@ namespace NewCapit.dist.pages
             txtProprietario.Text = dt.Rows[0][13].ToString();
             txtCodTransportadora.Text = dt.Rows[0][145].ToString();
             txtTransportadora.Text = dt.Rows[0][146].ToString();
-            //idveiculo = BigInteger.Parse(dt.Rows[0][170].ToString());
-
-            
-            int id = Convert.ToInt32(dt.Rows[0][170].ToString());
-
-            bool encontrado = false;
-            string lat = "";
-            string lon = "";
-            string mensagem = "Rastreador não encontrado ou sem sinal.";
-
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-            {
-                string sqlVeiculo = @"
-                    SELECT TOP 1 ds_lat, ds_long
-                    FROM tb_transmissao 
-                    WHERE nr_idveiculo = @id
-                    ORDER BY dt_posicao DESC";
-
-                SqlCommand cmd = new SqlCommand(sqlVeiculo, con);
-                cmd.Parameters.AddWithValue("@id", id);
-
-                con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
-
-                if (dr.Read())
-                {
-                    lat = dr["ds_lat"].ToString();
-                    lon = dr["ds_long"].ToString();
-                    hdLat.Value = dr["ds_lat"].ToString();
-                    hdLng.Value = dr["ds_long"].ToString();                   
-                    mensagem = "";
-                }
-
-            }
-            var retorno = new
-            {
-                encontrado = encontrado,
-                lat = lat,
-                lng = lon,
-                mensagem = mensagem
-            };
-
-
-
-
-
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);

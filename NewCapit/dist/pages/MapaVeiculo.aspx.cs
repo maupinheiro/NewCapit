@@ -175,7 +175,7 @@ namespace NewCapit.dist.pages
 
 
                 ico.iconAnchor = new GPoint(25, 10);
-                string valor = dt.Rows[0][11]?.ToString() ?? "";
+                string valor = dt.Rows[0][8]?.ToString() ?? "";
 
                 if (valor.Length > 0)
                 {
