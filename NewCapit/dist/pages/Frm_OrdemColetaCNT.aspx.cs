@@ -32,12 +32,12 @@ namespace NewCapit.dist.pages
             {
                 if (Session["UsuarioLogado"] != null)
                 {
-                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();                                              
                     var lblUsuario = nomeUsuario;
                     txtUsuCadastro.Text = nomeUsuario;
                 }
                 else
-                {
+                {    
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.asapx");
                 }

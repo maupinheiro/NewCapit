@@ -774,7 +774,7 @@ namespace NewCapit.dist.pages
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     using (SqlCommand cmd = new SqlCommand(@"
-            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino
+            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status
             FROM tbcargas
             WHERE carga = @c
         ", conn))
@@ -789,6 +789,13 @@ namespace NewCapit.dist.pages
                         if (dt.Rows.Count == 0)
                         {
                             MostrarMsg("Carga NÃO encontrada!");
+                            txtCarga.Text = "";
+                            txtCarga.Focus();
+                            return;
+                        }
+                        else if (dt.Rows[0][9].ToString() != "Pendente")
+                        {
+                            MostrarMsg("Carga já atrelada a outra coleta!");
                             txtCarga.Text = "";
                             txtCarga.Focus();
                             return;
@@ -1478,6 +1485,193 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+
+        protected void btnSalvar_Click(object sender, EventArgs e)
+        {
+            string cs = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                conn.Open();
+
+                SqlTransaction tran = conn.BeginTransaction();
+
+                try
+                {
+                    string nomeUsuario = Session["UsuarioLogado"]?.ToString() ?? "";
+
+                    #region INSERT tbcarregamentos
+
+                    string insert = @"
+                INSERT INTO tbcarregamentos (
+                    num_carregamento, codmotorista, nucleo, tipomot, valtoxicologico, venccnh, valgr, foto, nomemotorista, cpf,
+                    cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, valcet, valcrlvveiculo,
+                    valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
+                    tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa, dtcad, usucad,
+                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade
+                )
+                VALUES (
+                    @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
+                    @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @valcet, @valcrlvveiculo,
+                    @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
+                    @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa, @dtcad, @usucad,
+                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade
+                )";
+
+                    using (SqlCommand cmd = new SqlCommand(insert, conn, tran))
+                    {
+                        cmd.Parameters.AddWithValue("@num_carregamento", SafeValue(novaColeta.Text));
+                        cmd.Parameters.AddWithValue("@codmotorista", SafeValue(txtCodMotorista.Text));
+                        cmd.Parameters.AddWithValue("@nucleo", SafeValue(txtFilialMot.Text));
+                        cmd.Parameters.AddWithValue("@tipomot", SafeValue(txtTipoMot.Text));
+
+                        cmd.Parameters.AddWithValue("@valtoxicologico", SafeDateValue(txtExameToxic.Text));
+                        cmd.Parameters.AddWithValue("@venccnh", SafeDateValue(txtValCNH.Text));
+                        cmd.Parameters.AddWithValue("@valgr", SafeDateValue(txtValGR.Text));
+
+                        cmd.Parameters.AddWithValue("@foto", SafeValue(fotoMotorista));
+
+                        cmd.Parameters.AddWithValue("@nomemotorista", ddlMotorista.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@cpf", SafeValue(txtCPF.Text));
+                        cmd.Parameters.AddWithValue("@cartaopedagio", SafeValue(txtNumCartao.Text));
+                        cmd.Parameters.AddWithValue("@valcartao", SafeDateValue(txtValCartao.Text));
+                        cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelularParticular.Text));
+                        cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
+                        cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
+
+                        cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
+                        cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
+                        cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
+                        cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
+
+                        cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
+                        cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
+                        cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
+                        cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
+                        cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
+                        cmd.Parameters.AddWithValue("@tecnologia", SafeValue(txtTecnologia.Text));
+                        cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
+                        cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
+                        cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
+                        cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
+                        cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
+                        cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
+
+                        cmd.Parameters.AddWithValue("@empresa", "MATRIZ");
+                        cmd.Parameters.AddWithValue("@dtcad", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
+                        cmd.Parameters.AddWithValue("@situacao", "EM ANDAMENTO");
+                        cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
+                        cmd.Parameters.AddWithValue("@codtranspmotorista", SafeValue(txtCodTransportadora.Text));
+                        cmd.Parameters.AddWithValue("@nomtranspmotorista", SafeValue(txtTransportadora.Text));
+                        cmd.Parameters.AddWithValue("@venccronotacografo", SafeValue(txtCrono.Text));
+                        cmd.Parameters.AddWithValue("@valopacidade", SafeValue(txtOpacidade.Text));
+
+                        cmd.ExecuteNonQuery();
+
+                    }
+
+                    #endregion
+
+                    #region UPDATE tbcargas
+
+                    foreach (GridViewRow row in gvCargas.Rows)
+                    {
+                        if (row.RowType != DataControlRowType.DataRow) continue;
+
+                        string carga = gvCargas.DataKeys[row.RowIndex].Value.ToString();
+
+                        string updateCargas = @"
+                    UPDATE tbcargas SET
+                        emissao = @emissao,
+                        idviagem = @idviagem,
+                        codmot = @codmot,
+                        frota = @frota,
+                        status = @status,
+                        andamento = @andamento,
+                        atendimento = @atendimento,
+                        funcaomot = @funcaomot
+                    WHERE carga = @carga";
+
+                        using (SqlCommand cmd = new SqlCommand(updateCargas, conn, tran))
+                        {
+                            cmd.Parameters.Add("@carga", SqlDbType.VarChar).Value = carga;
+                            cmd.Parameters.Add("@idviagem", SqlDbType.VarChar).Value = novaColeta.Text;
+                            cmd.Parameters.Add("@codmot", SqlDbType.VarChar).Value = txtCodMotorista.Text;
+                            cmd.Parameters.Add("@frota", SqlDbType.VarChar).Value = txtCodFrota.Text;
+                            cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = "Ag. Carregamento";
+                            cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "EM ANDAMENTO";
+                            cmd.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";
+                            cmd.Parameters.Add("@funcaomot", SqlDbType.VarChar).Value = txtFuncao.Text;
+                            cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    #endregion
+
+                    #region UPDATE tbpedidos
+
+                    foreach (GridViewRow row in gvPedidos.Rows)
+                    {
+                        if (row.RowType != DataControlRowType.DataRow) continue;
+
+                        string carga = row.Cells[0].Text;
+
+                        string updatePedidos = @"
+                    UPDATE tbpedidos SET
+                        emissao = @emissao,
+                        idviagem = @idviagem,
+                        status = @status,
+                        andamento = @andamento,
+                        atendimento = @atendimento
+                    WHERE carga = @carga";
+
+                        using (SqlCommand cmd = new SqlCommand(updatePedidos, conn, tran))
+                        {
+                            cmd.Parameters.Add("@carga", SqlDbType.VarChar).Value = carga;
+                            cmd.Parameters.Add("@idviagem", SqlDbType.VarChar).Value = novaColeta.Text;
+                            cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = "Ag. Carregamento";
+                            cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "EM ANDAMENTO";
+                            cmd.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";
+                            cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    #endregion
+
+                    tran.Commit();
+
+                    Response.Redirect("GestaoDeEntregasMatriz.aspx", false);
+                    Context.ApplicationInstance.CompleteRequest();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw; // ou logar e exibir mensagem controlada
+                }
+            }
+        }
+
+
+        private object SafeValue(string input)
+        {
+            return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
+
+
+        }
+        private object SafeDateValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
+        }
+
         protected void MostrarMsgCarreta2(string mensagem, string tipo = "warning")
         {
             divMsgCarreta2.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";

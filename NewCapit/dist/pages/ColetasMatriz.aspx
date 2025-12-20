@@ -569,7 +569,7 @@
                             </asp:GridView>
                             <hr />
                             <h4>Pedido(s) da carga: &nbsp;<asp:Label ID="lblCargaSel" runat="server"></asp:Label></h4>
-                            <asp:GridView ID="gvPedidos" runat="server" AutoGenerateColumns="false" CssClass="table table-striped">
+                            <asp:GridView ID="gvPedidos" runat="server" AutoGenerateColumns="false" DataKeyNames="pedido" CssClass="table table-striped">
                                 <Columns>
 
                                     <asp:BoundField DataField="carga" HeaderText="Carga" Visible="false" />
@@ -588,7 +588,7 @@
                         <div class="col-md-12">
                             <div class="row g-3">
                                 <div class="col-md-1">
-                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg"  runat="server" Text="Cadastrar" />
+                                    <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg" OnClick="btnSalvar_Click"  runat="server" Text="Cadastrar" />
                                 </div>
                                 <div class="col-md-1">
                                     <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
@@ -607,6 +607,7 @@
                     <asp:PostBackTrigger ControlID="txtCodMotorista" />
                     <asp:PostBackTrigger ControlID="txtCodFrota" />
                     <asp:PostBackTrigger ControlID="txtCarga" />
+                    <asp:PostBackTrigger ControlID="btnSalvar" />
                 </Triggers>
                 </asp:UpdatePanel>
 
