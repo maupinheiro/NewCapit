@@ -76,12 +76,12 @@
                                     <label>&nbsp;</label><br />
                                     <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
                                 </div>
-                                <div class="col-md-2">
+                               <%-- <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <a href="/dist/pages/Frm_ColetaMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i
                                         class="fas fa-boxes"></i>&nbsp;Nova Coleta/Entrega
                                     </a>
-                                </div>
+                                </div>--%>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <a href="/dist/pages/ColetasMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i
@@ -140,7 +140,7 @@
                                                     <HeaderTemplate>
                                                         <table class="table table-bordered table-hover">
                                                             <thead>
-                                                                <tr>
+                                                                <tr text-align: center;>
                                                                     <th>AÇÃO</th>
                                                                     <th>VEÍCULO</th>
                                                                     <th>PLACA</th>

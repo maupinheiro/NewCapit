@@ -368,6 +368,7 @@
     <Content Include="dist\pages\Frm_AltCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AltFornecedor.aspx" />
+    <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
     <Content Include="dist\pages\Frm_AvaliaDesempenho.aspx" />
     <Content Include="dist\pages\Frm_CadCargasMatriz.aspx" />
@@ -4698,6 +4699,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_AltFornecedor.aspx.designer.cs">
       <DependentUpon>Frm_AltFornecedor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.cs">
+      <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_AtualizaOrdemColeta.aspx.cs">
       <DependentUpon>Frm_AtualizaOrdemColeta.aspx</DependentUpon>

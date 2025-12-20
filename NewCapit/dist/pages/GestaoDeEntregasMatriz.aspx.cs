@@ -185,7 +185,7 @@ namespace NewCapit.dist.pages
             if (e.CommandName == "Editar")
             {
                 string numCarregamento = e.CommandArgument.ToString();
-                string url = $"Frm_AtualizaOrdemColeta.aspx?carregamento={numCarregamento}";
+                string url = $"Frm_AtualizaColetaMatriz.aspx?carregamento={numCarregamento}";
                 Response.Redirect(url);
             }
         }
