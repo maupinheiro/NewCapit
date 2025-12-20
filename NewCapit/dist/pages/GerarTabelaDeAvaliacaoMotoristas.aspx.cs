@@ -85,6 +85,7 @@ namespace NewCapit.dist.pages
                           + " AND ISNUMERIC(m.codmot) = 1";
                         
                 }
+                query += " ORDER BY CAST(a.cracha AS INT)";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -162,13 +163,14 @@ namespace NewCapit.dist.pages
 
         public void Botoes()
         {
+            string mesano = ddlMes.SelectedItem.Text+"/"+ddlAno.SelectedItem.Text;
             bool flag = false;
             string cmdText = " SELECT CASE WHEN EXISTS ( SELECT 1 FROM tbavaliacaomotorista  WHERE mes = @mes AND vl_total IS NULL ) THEN 0 ELSE 1 END AS TodosAvaliados";
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand(cmdText, connection))
                 {
-                    sqlCommand.Parameters.AddWithValue("@mes", (object)"12/2025");
+                    sqlCommand.Parameters.AddWithValue("@mes", (object)mesano);
                     connection.Open();
                     flag = Convert.ToInt32(sqlCommand.ExecuteScalar()) == 1;
                 }
@@ -212,6 +214,7 @@ namespace NewCapit.dist.pages
                 selectCommandText += $" and nucleo IN ({filtros})";
                      
             }
+            selectCommandText += " ORDER BY CAST(cracha AS INT)";
 
             SqlCommand cmd = new SqlCommand(selectCommandText, conn);
 

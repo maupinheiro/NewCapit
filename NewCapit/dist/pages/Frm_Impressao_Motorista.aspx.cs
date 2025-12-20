@@ -45,7 +45,7 @@ namespace NewCapit.dist.pages
                               segcarga, cargaedescarga, comunicacao, segtransito, consumocomb, conservacao, 
                               observacao, vl_total, dt_avaliacao, nm_usuario  
                        FROM tbavaliacaomotorista   
-                       WHERE mes = @mes";
+                       WHERE mes = @mes ";
 
             List<SqlParameter> parametros = new List<SqlParameter>();
             parametros.Add(new SqlParameter("@mes", $"{mes}/{ano}"));
@@ -60,6 +60,7 @@ namespace NewCapit.dist.pages
                 for (int i = 0; i < nucleos.Length; i++)
                     parametros.Add(new SqlParameter("@n" + i, nucleos[i]));
             }
+            cmdText += " ORDER BY CAST(cracha AS INT)";
 
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             using (SqlCommand selectCommand = new SqlCommand(cmdText, connection))

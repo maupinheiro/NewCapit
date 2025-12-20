@@ -120,33 +120,34 @@
                                                             </ContentTemplate>
                                                         </asp:UpdatePanel>--%>
 
-                                                        <asp:UpdatePanel ID="upd" runat="server" UpdateMode="Conditional">
-                                                            <ContentTemplate>
+                                                          <asp:UpdatePanel ID="upd" runat="server" UpdateMode="Conditional">
+                                                                    <ContentTemplate>
 
-                                                                <asp:Button ID="btnImportar" runat="server"
-                                                                    Text="Importar Arquivos"
-                                                                    CssClass="btn btn-primary"
-                                                                    OnClick="btnImportar_Click" />
+                                                                        <asp:Button ID="btnImportar" runat="server"
+                                                                            Text="Importar Arquivos"
+                                                                            CssClass="btn btn-primary"
+                                                                            OnClick="btnImportar_Click" />
 
-                                                                <br />
-                                                                <br />
+                                                                        <br /><br />
 
-                                                                <div class="progress">
-                                                                    <div id="barProgresso" runat="server"
-                                                                        class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                        role="progressbar"
-                                                                        style="width: 0%">
-                                                                        0%
-                                                                    </div>
-                                                                </div>
+                                                                        <div class="progress">
+                                                                            <div id="barProgresso" runat="server"
+                                                                                class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                                role="progressbar"
+                                                                                style="width: 0%">
+                                                                                0%
+                                                                            </div>
+                                                                        </div>
 
-                                                                <br />
+                                                                        <br />
 
-                                                                <asp:Label ID="lblStatus" runat="server"
-                                                                    CssClass="alert alert-info" />
+                                                                        <asp:Label ID="lblStatus" runat="server"
+                                                                            CssClass="alert alert-info" />
 
-                                                            </ContentTemplate>
-                                                        </asp:UpdatePanel>
+                                                                    </ContentTemplate>
+                                                                </asp:UpdatePanel>
+
+
 
                                                     </div>
                                                 </div>
