@@ -462,7 +462,7 @@
                             <div class="row g-3">
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <img src="<%=fotoMotorista%>" class="rounded-circle float-center" height="80" width="80" alt="User Image">
+                                        <img src="<%=fotoMotorista%>"  class="rounded-circle float-center" height="80" width="80" alt="User Image">
                                     </div>
                                 </div>
                                 <div class="col-md-1">
@@ -806,59 +806,17 @@
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <div id="msg" class="alert alert-danger" style="display: none"></div>
-                                    
+                                        <asp:UpdatePanel ID="updMapa" runat="server">
+                                            <ContentTemplate>
+                                                <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="60000" OnTick="tmAtualizaMapa_Tick" />
+                                                <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="570px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True" />
+                                            </ContentTemplate>
+                                            <Triggers>
+                                                <asp:AsyncPostBackTrigger ControlID="tmAtualizaMapa" EventName="Tick" />
+                                            </Triggers>
+                                        </asp:UpdatePanel>
 
-                                    <%-- <asp:UpdatePanel ID="updMapa" runat="server">
-                                        <ContentTemplate>
-                                            <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="60000" OnTick="tmAtualizaMapa_Tick" />
-                                            <%-- <cc1:gmap id="GMap1" runat="server" width="100%" height="570px" key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableserverevents="True" />--%>
-                                    <!-- Mapa -->
-                                            <div id="map" style="width: 100%; height: 400px;"></div>
-
-                                            <!-- Campos escondidos (opcional, se quiser usar no C#) -->
-                                            <asp:HiddenField ID="hdLat" runat="server" />
-                                            <asp:HiddenField ID="hdLng" runat="server" />
-
-                                            <!-- Google Maps -->
-                                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww&callback=initMap" async defer></script>
-
-                                            <script>
-                                                var map;
-                                                var marker;
-
-                                                function initMap() {
-                                                    var lat = lat //-15.77972; // Brasília (padrão)
-                                                    var lon = lng //-47.92972;
-
-                                                    map = new google.maps.Map(document.getElementById('map'), {
-                                                        zoom: 6,
-                                                        center: { lat: lat, lon: lon }
-                                                    });
-
-                                                    marker = new google.maps.Marker({
-                                                        position: { lat: lat, lon: lon },
-                                                        map: map,
-                                                        draggable: true
-                                                    });
-
-                                                    // Quando arrastar o marcador
-                                                    marker.addListener('dragend', function (e) {
-                                                        document.getElementById('<%= hdLat.ClientID %>').value = e.latLng.lat();
-            document.getElementById('<%= hdLng.ClientID %>').value = e.latLng.lon();
-        });
-                                                }
-                                            </script>
-
-
-
-
-                                        <%--</ContentTemplate>
-                                        <Triggers>
-                                            <asp:AsyncPostBackTrigger ControlID="tmAtualizaMapa" EventName="Tick" />
-                                        </Triggers>
-                                    </asp:UpdatePanel>--%>
-                                </div>
+                                    </div>
                             </div>
 
 
@@ -889,19 +847,20 @@
                                                 </HeaderTemplate>
                                                 <ItemTemplate>
                                                     <tr data-widget="expandable-table" aria-expanded="false">
-                                                        <td><%# Eval("cva") %></td>
-                                                        <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                        <%--<td><%# Eval("CodigoO") %></td>--%>
+                                                        <td><%# Eval("carga") %></td>
                                                         <td><%# Eval("cliorigem") %></td>
-                                                        <%--<td><%# Eval("CodigoD") %></td>--%>
-                                                        <td><%# Eval("clidestino") %></td>
+                                                       <td><%# Eval("clidestino") %></td>
+                                                        <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                         <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                         <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                         <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                         <td><%# Eval("status") %></td>
                                                         <%--<td><%# Eval("atendimento") %></td>--%>
                                                         <td runat="server" id="tdAtendimento">
                                                             <asp:Label ID="lblAtendimento" runat="server" />
                                                         </td>
                                                     </tr>
-                                                    <%--<tr class="expandable-body">
+                                                    <tr class="expandable-body">
                                                         <td colspan="12">
                                                             <div class="card card-outline card-info collapsed-card">
                                                                 <div class="card-header">
@@ -1202,7 +1161,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                    </tr>--%>
+                                                    </tr>
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     </tbody>

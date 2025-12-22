@@ -86,9 +86,9 @@ namespace NewCapit.dist.pages
                 lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
                 PreencherComboMotoristas();
-                CarregaDados();               
-                
+                CarregaDados();
 
+                 CarregaMap(txtPlaca.Text);
                 //PreencherComboStatus();
                 //PreencherNumColeta();
                 //fotoMotorista = "../../fotos/usuario.jpg";
@@ -1446,7 +1446,7 @@ namespace NewCapit.dist.pages
         private void CarregarColetas(string idviagem = "")
         {
             // Obtem os dados atuais (novos dados)
-            var novosDados = DAL.ConCargas.FetchDataTableColetas3(idviagem);
+            var novosDados = DAL.ConCargas.FetchDataTableColetas4(idviagem);
 
             // Verifica se há dados anteriores no ViewState
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
@@ -2803,7 +2803,10 @@ namespace NewCapit.dist.pages
                     /* GInfoWindow window2 = new GInfoWindow(marker, latlng1.ToString(), false, GListener.Event.mouseover);
                      GMap1.Add(window2);*/
 
-                    //GMap1.Add(marker);
+                    GMap1.Add(marker);
+                    GMap1.Add(window);
+                    GMap1.setCenter(latlng1);
+                    GMap1.GZoom = 18;
                 }
                 catch
                 {
