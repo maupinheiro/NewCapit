@@ -30,6 +30,9 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
+
+                    txtUsuCadastro.Text = nomeUsuario;
+                    txtUsuAlteracao.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 }
                 else
                 {
@@ -689,7 +692,7 @@ namespace NewCapit.dist.pages
                             SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                             comando.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
                             comando.Parameters.AddWithValue("@carga", novaCarga.Text);
-                            comando.Parameters.AddWithValue("@emissao", txtCadastro.Text);
+                            comando.Parameters.AddWithValue("@emissao", SafeDateTimeValue(txtCadastro.Text));
                             comando.Parameters.AddWithValue("@status", "Pendente");
                             comando.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
@@ -697,7 +700,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);
-                            comando.Parameters.AddWithValue("@previsao", DateTime.Parse(txtPrevEntrega.Text).ToString("yyyy-MM-dd"));
+                            comando.Parameters.AddWithValue("@previsao", SafeDateValue(txtPrevEntrega.Text));
                             comando.Parameters.AddWithValue("@codorigem", txtCodRemetente.Text);
                             comando.Parameters.AddWithValue("@cliorigem", cboRemetente.Text);
                             comando.Parameters.AddWithValue("@coddestino", txtCodDestinatario.Text);
@@ -847,7 +850,7 @@ namespace NewCapit.dist.pages
 
                     SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                     comando.Parameters.AddWithValue("@carga", novaCarga.Text);
-                    comando.Parameters.AddWithValue("@emissao", DateTime.Parse(txtCadastro.Text).ToString("yyyy-MM-dd HH:mm"));
+                    comando.Parameters.AddWithValue("@emissao", SafeDateTimeValue(txtCadastro.Text));
                     comando.Parameters.AddWithValue("@status", "Pendente");
                     //comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
                     comando.Parameters.AddWithValue("@tomador", cboFrete.SelectedItem.Text);
@@ -856,7 +859,7 @@ namespace NewCapit.dist.pages
                     comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
                     comando.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@previsao", DateTime.Parse(txtPrevEntrega.Text).ToString("yyyy-MM-dd"));
+                    comando.Parameters.AddWithValue("@previsao", SafeDateValue(txtPrevEntrega.Text));
                     comando.Parameters.AddWithValue("@codorigem", txtCodRemetente.Text);
                     comando.Parameters.AddWithValue("@cliorigem", cboRemetente.Text);
                     comando.Parameters.AddWithValue("@coddestino", txtCodDestinatario.Text);
@@ -925,6 +928,22 @@ namespace NewCapit.dist.pages
             }
         }
 
+        private object SafeDateTimeValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd HH:mm:ss");
+            else
+                return DBNull.Value;
+        }
+        private object SafeDateValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
+        }
         protected void txtPrevEntrega_TextChanged(object sender, EventArgs e)
         {
             if (txtPrevEntrega.Text != "")
