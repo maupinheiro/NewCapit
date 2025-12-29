@@ -1511,14 +1511,6 @@ namespace NewCapit.dist.pages
                             codcontato = @codcontato,
                             fonecorporativo = @fonecorporativo,
                             empresa = @empresa,
-                            codcliinicioprestacao =	@codcliinicioprestacao,
-                            nomcliinicioprestacao =	@nomcliinicioprestacao,
-                            cidcliinicioprestacao =	@cidcliinicioprestacao,
-                            estcliinicioprestacao =	@estcliinicioprestacao,
-                            codclifimprestacao = @codclifimprestacao,
-                            nomclifimprestacao = @nomclifimprestacao,	
-                            cidclifimprestacao = @cidclifimprestacao,	
-                            estclifimprestacao = @estclifimprestacao,
                             dtalt = @dtalt,
                             status = @status,                            
                             usualt = @usualt
@@ -1570,7 +1562,7 @@ namespace NewCapit.dist.pages
                 //cmd.Parameters.AddWithValue("@almoco", SafeValue(txtAlmoco.Text));
                 //cmd.Parameters.AddWithValue("@janta", SafeValue(txtJanta.Text));
 
-                cmd.Parameters.AddWithValue("@empresa", SafeValue("CNT (CC)"));
+                cmd.Parameters.AddWithValue("@empresa", SafeValue("1111"));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usualt", nomeUsuario);
 

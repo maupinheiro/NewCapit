@@ -1624,8 +1624,8 @@ namespace NewCapit.dist.pages
                         emissao = @emissao,
                         idviagem = @idviagem,
                         status = @status,
-                        andamento = @andamento,
-                        atendimento = @atendimento
+                        andamento = @andamento
+                        
                     WHERE carga = @carga";
 
                         using (SqlCommand cmd = new SqlCommand(updatePedidos, conn, tran))
@@ -1634,7 +1634,6 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.Add("@idviagem", SqlDbType.VarChar).Value = novaColeta.Text;
                             cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = "Ag. Carregamento";
                             cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "EM ANDAMENTO";
-                            cmd.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";
                             cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
 
                             cmd.ExecuteNonQuery();

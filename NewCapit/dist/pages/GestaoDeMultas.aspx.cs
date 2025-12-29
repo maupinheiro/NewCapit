@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Globalization;
 using System.IO;
+using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
@@ -22,7 +23,142 @@ namespace NewCapit.dist.pages
             {
                 ddlStatus.SelectedValue = "Pendente"; // padrão
                 CarregarGrid("Pendente");
+                //CarregarArtigos();
+                PreencherClienteInicial();
             }
+        }
+
+        private void PreencherClienteInicial()
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT id, artigo_inciso_CTB FROM tbcodigoevalordasinfracoes ORDER BY artigo_inciso_CTB";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                try
+                {
+                    // Abra a conexão com o banco de dados
+                    conn.Open();
+
+                    // Crie o comando SQL
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Execute o comando e obtenha os dados em um DataReader
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Preencher o ComboBox com os dados do DataReader
+                    ddlNomeMotorista.DataSource = reader;
+                    ddlNomeMotorista.DataTextField = "artigo_inciso_CTB";  // Campo que será mostrado no ComboBox
+                    ddlNomeMotorista.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    ddlNomeMotorista.DataBind();  // Realiza o binding dos dados                   
+                    ddlNomeMotorista.Items.Insert(0, new System.Web.UI.WebControls.ListItem("...", "0"));
+                    // Feche o reader
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Trate exceções
+                    Response.Write("Erro: " + ex.Message);
+                }
+            }
+        }
+        protected void ddlArtigo_TextChanged(object sender, EventArgs e)
+        {
+            txtCodigo_Infracao.Text = ddlArtigo.SelectedValue;
+        }
+        protected void txtCodigo_Infracao_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodigo_Infracao.Text != "")
+            {
+
+                string codigoInfracao = txtCodigo_Infracao.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT artigo_inciso_CTB, pontos, codigo, descricao, gravidade, responsavel, autuador, valorcomindicacao, valorsemindicacao FROM tbcodigoevalordasinfracoes WHERE id = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoInfracao);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                txtCodigo_Infracao.Text = reader["codigo"].ToString();
+                                ddlArtigo.SelectedItem.Text = reader["artigo_inciso_CTB"].ToString();
+                                //txtMunicipioOrigem.Text = reader["cidcli"].ToString();
+                                //txtUfOrigem.Text = reader["estcli"].ToString();
+                                //codCliFinal.Focus();
+                            }
+                            else
+                            {
+                                ddlArtigo.SelectedItem.Text = "Selecione...";
+                                txtCodigo_Infracao.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCodigo_Infracao.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+        private void CarregarArtigos()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(
+                    "SELECT id, artigo_inciso_CTB FROM tbcodigoevalordasinfracoes ORDER BY artigo_inciso_CTB", conn);
+
+                conn.Open();
+               // ddlArtigo.DataSource = cmd.ExecuteReader();
+               // ddlArtigo.DataTextField = "artigo_inciso_CTB";
+               // ddlArtigo.DataValueField = "id";
+               // ddlArtigo.DataBind();
+            }
+
+            ddlArtigo.Items.Insert(0, new ListItem("Selecione...", ""));
+        }
+        [System.Web.Services.WebMethod]
+        public static Artigo BuscarArtigo(int id)
+        {
+            Artigo art = new Artigo();
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(@"
+            SELECT artigo_inciso_CTB, pontos, codigo, descricao, gravidade, responsavel, autuador, valorcomindicacao, valorsemindicacao
+            FROM tbcodigoevalordasinfracoes
+            WHERE id = @id", conn);
+
+                cmd.Parameters.AddWithValue("@ig", id);
+
+                conn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    art.codigo = dr["codigo"].ToString();
+                    art.pontos = dr["pontos"].ToString();
+                    art.gravidade = dr["gravidade"].ToString();
+                }
+            }
+
+            return art;
+        }
+        public class Artigo
+        {
+            public string codigo { get; set; }
+            public string pontos { get; set; }
+            public string gravidade { get; set; }
         }
 
         protected void ddlStatus_SelectedIndexChanged(object sender, EventArgs e)
@@ -91,9 +227,15 @@ namespace NewCapit.dist.pages
 
         private void AbrirModal()
         {
+            //ScriptManager.RegisterStartupScript(this, GetType(),
+            //    "abrirModal",
+            //    "abrirModalProcesso();", true);
+
             ScriptManager.RegisterStartupScript(this, GetType(),
-                "abrirModal",
-                "abrirModalProcesso();", true);
+               "abrirModal",
+               "abrirModal();", true);
+
+            
         }
 
         protected void btnPesquisarModal_Click(object sender, EventArgs e)
