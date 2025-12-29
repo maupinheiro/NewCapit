@@ -76,7 +76,7 @@ namespace NewCapit
             }
             else
             {
-                foto = "../../fotos/usuario.jpg";
+                foto = "../../fotos/motoristasemfoto.jpg";
             }
            
            

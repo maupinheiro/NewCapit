@@ -28,6 +28,7 @@ namespace Domain
         public string vencimentolaudofumaca { get; set; }
         public string venccronotacografo { get; set; }
         public string cap { get; set; }
+        public string protocolocet { get; set; }
     }
     
 }

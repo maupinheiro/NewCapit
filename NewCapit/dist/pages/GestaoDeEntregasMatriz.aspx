@@ -156,7 +156,7 @@
                                                     <ItemTemplate>
                                                         <tr onclick="toggleDetalhes(this)">
                                                             <td style="text-align: center; vertical-align: middle;">
-                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 45px;" runat="server"
+                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 60px; height:60px;" runat="server"
                                                                      CommandName="Editar"
                                                                      CommandArgument='<%# Eval("num_carregamento") %>'
                                                                      OnCommand="lnkEditar_Command"

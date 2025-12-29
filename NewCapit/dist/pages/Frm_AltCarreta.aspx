@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <%-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>--%>
-    <style>
+    <%--<style>
         .fonte-menor {
             font-size: 10px;
         }
@@ -14,7 +14,7 @@
         body {
             font-size: 12px; /* ou menor, como 10px */
         }
-    </style>
+    </style>--%>
     
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -574,7 +574,7 @@
                         <asp:Button ID="btnAltualizaCarreta" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvarCarreta_Click" />
                     </div>
                     <div class="col-md-1">
-                        <a href="ControleCarretas.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                        <a href="ControleCarretas.aspx" class="btn btn-outline-danger btn-lg">Fechar              
                         </a>
                     </div>
                 </div>

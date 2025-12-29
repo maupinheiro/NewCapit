@@ -1661,7 +1661,7 @@ namespace NewCapit.dist.pages
                             //// Registrando o script para execução no lado do cliente
                             ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                            //fotoMotorista = "../../fotos/usuario.jpg";
+                            //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                             txtCodVeiculo.Text = "";
                             txtPlaca.Text = "";
                             txtReboque1.Text = "";
@@ -1711,7 +1711,7 @@ namespace NewCapit.dist.pages
                                     //// Registrando o script para execução no lado do cliente
                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
@@ -1756,7 +1756,7 @@ namespace NewCapit.dist.pages
                                     //// Registrando o script para execução no lado do cliente
                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
@@ -1802,7 +1802,7 @@ namespace NewCapit.dist.pages
                                     //// Registrando o script para execução no lado do cliente
                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
@@ -1842,7 +1842,7 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
@@ -1886,7 +1886,7 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
@@ -1930,7 +1930,7 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";

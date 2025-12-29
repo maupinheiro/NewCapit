@@ -55,7 +55,7 @@ namespace NewCapit.dist.pages
             }
             if (txtMotorista.Text.Trim() == string.Empty)
             {
-                fotoMotorista = "../../fotos/usuario.jpg";
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
             }
             else
             {
@@ -68,7 +68,7 @@ namespace NewCapit.dist.pages
             // Verifica se o controle txtMotorista existe
             if (txtMotorista == null || string.IsNullOrWhiteSpace(txtMotorista.Text))
             {
-                fotoMotorista = "../../fotos/usuario.jpg";
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                 return;
             }
 
@@ -94,12 +94,12 @@ namespace NewCapit.dist.pages
 
                         if (!File.Exists(caminhoFisico))
                         {
-                            fotoMotorista = "../../fotos/usuario.jpg";
+                            fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                         }
                     }
                     else
                     {
-                        fotoMotorista = "../../fotos/usuario.jpg";
+                        fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                     }
                 }
                 else
@@ -109,7 +109,7 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                fotoMotorista = "../../fotos/usuario.jpg";
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
             }
         }
 

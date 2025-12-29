@@ -15,6 +15,168 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
+        /// Controle divMsg.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsg;
+
+        /// <summary>
+        /// Controle lblMsgGeral.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgGeral;
+
+        /// <summary>
+        /// Controle divMsgCNH.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgCNH;
+
+        /// <summary>
+        /// Controle lblMsgCNH.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgCNH;
+
+        /// <summary>
+        /// Controle divMsgGR.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgGR;
+
+        /// <summary>
+        /// Controle lblMsgGR.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgGR;
+
+        /// <summary>
+        /// Controle divMsgVeic.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgVeic;
+
+        /// <summary>
+        /// Controle lblMsgVeic.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgVeic;
+
+        /// <summary>
+        /// Controle divMsgCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgCET;
+
+        /// <summary>
+        /// Controle lblMsgCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgCET;
+
+        /// <summary>
+        /// Controle divMsgLinc.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgLinc;
+
+        /// <summary>
+        /// Controle lblMsgLinc.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgLinc;
+
+        /// <summary>
+        /// Controle divMsgCrono.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgCrono;
+
+        /// <summary>
+        /// Controle lblMsgCrono.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgCrono;
+
+        /// <summary>
+        /// Controle divMsgCarreta1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgCarreta1;
+
+        /// <summary>
+        /// Controle lblMsgCarreta1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgCarreta1;
+
+        /// <summary>
+        /// Controle divMsgCarreta2.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgCarreta2;
+
+        /// <summary>
+        /// Controle lblMsgCarreta2.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgCarreta2;
+
+        /// <summary>
         /// Controle novaColeta.
         /// </summary>
         /// <remarks>
@@ -195,6 +357,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtLibGR;
 
         /// <summary>
+        /// Controle txtLiberacao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLiberacao;
+
+        /// <summary>
         /// Controle txtCelular.
         /// </summary>
         /// <remarks>
@@ -303,15 +474,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDesengate;
 
         /// <summary>
-        /// Controle txtFilialVeicCNT.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFilialVeicCNT;
-
-        /// <summary>
         /// Controle txtVeiculoTipo.
         /// </summary>
         /// <remarks>
@@ -375,6 +537,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCET;
 
         /// <summary>
+        /// Controle txtProtocoloCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtProtocoloCET;
+
+        /// <summary>
         /// Controle txtCRLVVeiculo.
         /// </summary>
         /// <remarks>
@@ -382,6 +553,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCRLVVeiculo;
+
+        /// <summary>
+        /// Controle txtCrono.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCrono;
 
         /// <summary>
         /// Controle reb1.
@@ -438,6 +618,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtProprietario;
 
         /// <summary>
+        /// Controle txtCPF_CNPJ.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCPF_CNPJ;
+
+        /// <summary>
         /// Controle txtTecnologia.
         /// </summary>
         /// <remarks>
@@ -454,6 +643,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRastreamento;
+
+        /// <summary>
+        /// Controle divMsgMapa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsgMapa;
+
+        /// <summary>
+        /// Controle lblMsgMapa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgMapa;
 
         /// <summary>
         /// Controle updMapa.
@@ -481,6 +688,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::Subgurim.Controles.GMap GMap1;
+
+        /// <summary>
+        /// Controle hdIdCarga.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdIdCarga;
 
         /// <summary>
         /// Controle rptColetas.

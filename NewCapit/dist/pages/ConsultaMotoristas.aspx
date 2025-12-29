@@ -172,17 +172,17 @@
                               <asp:Label ID="AgSC" runat="server" Text=""></asp:Label>
                            </span>
                      </li>
-                     <li><span>PR - PARANÁ: </span>
+                     <li><span>PARANÁ: </span>
                            <span class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                               <asp:Label ID="AgPR" runat="server" Text=""></asp:Label>
                            </span>
                      </li>
-                     <li><span>PE - PERNAMBUCO: </span>
+                     <li><span>PERNAMBUCO: </span>
                       <span class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                           <asp:Label ID="AgPE" runat="server" Text=""></asp:Label>
                       </span>
                      </li>
-                     <li><span>MG - MINAS GERAIS: </span>
+                     <li><span>MINAS GERAIS: </span>
                         <span class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                             <asp:Label ID="AgMG" runat="server" Text=""></asp:Label>
                         </span>
@@ -273,7 +273,8 @@
                     <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                 <Columns>
                     <%--tamanho da foto 45x45--%>
-                    <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="39" ItemStyle-Width="39" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
+                    <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="60" ItemStyle-Width="60" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
+                    
                     <asp:TemplateField HeaderText="MOTORISTA">
                         <ItemTemplate>
                             <!-- <%# Eval("codmot") + " - " + Eval("nommot")%> -->

@@ -289,7 +289,7 @@
             </div>
        </div>
        <!-- Grid -->
-       <div class="card shadow mb-4"> 
+       <div class="card shadow md-4"> 
             <div class="card-header">
                        <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
                     </div>
