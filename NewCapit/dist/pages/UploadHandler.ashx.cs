@@ -16,27 +16,25 @@ namespace NewCapit.dist.pages
         {
             var files = context.Request.Files;
 
-            string pastaDestino = context.Server.MapPath("~/ImportacaoTemp/");
+            string pastaDestino = context.Server.MapPath("../../ImportacaoTemp/");
             if (!Directory.Exists(pastaDestino))
                 Directory.CreateDirectory(pastaDestino);
 
-            foreach (string key in files)
+            for (int i = 0; i < files.Count; i++)
             {
-                var file = files[key];
+                var file = files[i];
+                string nome = Path.GetFileName(file.FileName).ToUpper();
 
-                string nome = Path.GetFileName(file.FileName);
-
-                // 🔎 filtro: começa com SG e termina com .txt
-                if (!nome.StartsWith("SG", StringComparison.OrdinalIgnoreCase) ||
-                    !nome.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
-                {
-                    continue; // pula o arquivo
-                }
+                // trava de segurança
+                if (!nome.StartsWith("SG") || !nome.EndsWith(".TXT"))
+                    continue;
 
                 file.SaveAs(Path.Combine(pastaDestino, nome));
             }
-        }
 
+            context.Response.StatusCode = 200;
+            context.Response.Write("OK");
+        }
 
         public bool IsReusable => false;
     }

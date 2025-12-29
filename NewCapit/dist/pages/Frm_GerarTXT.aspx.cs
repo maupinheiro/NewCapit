@@ -4576,8 +4576,8 @@ namespace NewCapit.dist.pages
 
                                                     else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                     {
-                                                        if (g >= 0)
-                                                        {
+                                                        //if (g >= 0)
+                                                        //{
                                                             //if (dt4.Rows[g][2].ToString() == "PARADA PERNOITE")
                                                             //{
                                                             //    write.WriteLine(cracha + ";" + data + ";" + hora + ";1;2");
@@ -4587,7 +4587,7 @@ namespace NewCapit.dist.pages
                                                             //{
                                                             //    write.WriteLine(cracha + ";" + data + ";" + hora + ";1;2");
                                                             //}
-                                                        }
+                                                        //}
                                                         //else
                                                         //{
                                                         //    write.WriteLine(cracha + ";" + data + ";" + hora + ";1;2");
@@ -4683,6 +4683,12 @@ namespace NewCapit.dist.pages
                                                                             // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                         }
                                                                     }
+                                                                    else
+                                                                    {
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -4690,6 +4696,8 @@ namespace NewCapit.dist.pages
                                                                     write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
                                                                     // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                 }
+
+
 
                                                             }
                                                             else
@@ -4699,7 +4707,7 @@ namespace NewCapit.dist.pages
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-
+                                                            
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {

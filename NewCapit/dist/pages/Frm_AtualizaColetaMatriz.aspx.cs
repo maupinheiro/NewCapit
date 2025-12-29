@@ -1670,8 +1670,8 @@ namespace NewCapit.dist.pages
                 con.Open();
 
 
-                gvPedidos.DataSource = cmd.ExecuteReader();
-                gvPedidos.DataBind();
+                //gvPedidos.DataSource = cmd.ExecuteReader();
+                //gvPedidos.DataBind();
             }
         }
         protected string CalcularTempo(object inicio, object fim)
@@ -1700,8 +1700,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
 
                 conn.Open();
-                gvPedidos.DataSource = cmd.ExecuteReader();
-                gvPedidos.DataBind();
+                //gvPedidos.DataSource = cmd.ExecuteReader();
+                //gvPedidos.DataBind();
             }
         }
         void GetMotoristas(DropDownList ddl)

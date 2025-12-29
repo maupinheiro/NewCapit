@@ -57,7 +57,61 @@
             return !erro;  // Se tiver erro, cancela o postback
         }
 
+
     </script>--%>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const input = document.getElementById("folderInput");
+            const resumo = document.getElementById("lblResumo");
+
+            window.abrirPasta = function () {
+                input.click();
+            };
+
+            input.addEventListener("change", function () {
+
+                const files = input.files;
+                if (!files || files.length === 0) {
+                    alert("Selecione uma pasta");
+                    return;
+                }
+
+                const formData = new FormData();
+                let totalValidos = 0;
+
+                for (let file of files) {
+                    const nome = file.name.toUpperCase();
+                    if (nome.startsWith("SG") && nome.endsWith(".TXT")) {
+                        totalValidos++;
+                        formData.append("files", file);
+                    }
+                }
+
+                if (totalValidos === 0) {
+                    resumo.innerText = "Nenhum arquivo SG*.txt encontrado";
+                    return;
+                }
+
+                resumo.innerText = `${totalValidos} arquivos SG*.txt encontrados`;
+
+                fetch("UploadHandler.ashx", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(resp => {
+                        if (!resp.ok) throw new Error("Erro no upload");
+                        iniciar(); // 🔥 agora sim
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Erro ao enviar arquivos");
+                    });
+            });
+
+        });
+    </script>
+
     <script>
         function enviarPasta() {
             const input = document.getElementById("folderInput");
@@ -156,35 +210,49 @@
             fetch('Frm_ImpSolVWMatriz.aspx/IniciarImportacao', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
-            });
+            })
+                .then(resp => {
+                    if (!resp.ok) throw new Error("Erro ao iniciar importação");
 
-            let timer = setInterval(() => {
+                    // 👉 Só começa o progresso DEPOIS que iniciou
+                    let timer = setInterval(() => {
 
-                fetch('Frm_ImpSolVWMatriz.aspx/Progresso', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                })
-                    .then(r => r.json())
-                    .then(r => {
-                        let d = r.d;
+                        fetch('Frm_ImpSolVWMatriz.aspx/Progresso', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        })
+                            .then(r => r.json())
+                            .then(r => {
+                                let d = r.d;
 
-                        let bar = document.getElementById('<%= barProgresso.ClientID %>');
-            bar.style.width = d.percentual + '%';
-            bar.innerText = d.percentual + '%';
+                                let bar = document.getElementById('<%= barProgresso.ClientID %>');
+                bar.style.width = d.percentual + '%';
+                bar.innerText = d.percentual + '%';
 
-            document.getElementById('<%= lblStatus.ClientID %>')
-                .innerText = `Processando ${d.atual} de ${d.total}`;
-
-            if (d.concluido) {
-                clearInterval(timer);
                 document.getElementById('<%= lblStatus.ClientID %>')
-                    .innerText = '✅ Concluído';
-            }
-        });
+                    .innerText = `Processando ${d.atual} de ${d.total}`;
 
-    }, 500);
+                if (d.concluido) {
+                    clearInterval(timer);
+                    document.getElementById('<%= lblStatus.ClientID %>')
+                        .innerText = '✅ Concluído';
+                }
+            })
+                .catch(err => {
+                    console.error(err);
+                    clearInterval(timer);
+                    alert("Erro ao consultar progresso");
+                });
+
+        }, 500);
+    })
+                .catch(err => {
+                    console.error(err);
+                    alert("Erro ao iniciar importação");
+                });
         }
     </script>
+
 
 
     <div class="content-wrapper">
@@ -235,22 +303,19 @@
                                                           <asp:UpdatePanel ID="upd" runat="server" UpdateMode="Conditional">
                                                                     <ContentTemplate>
                                                                         <div class="col-md-3">
-                                                                            <input
-                                                                           type="file"
-                                                                           id="folderInput"
-                                                                           webkitdirectory
-                                                                           style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;"/>
-                                                                            <button type="button" class="btn btn-primary" onclick="abrirPasta()">
-                                                                            Selecionar pasta
-                                                                        </button>
-                                                                            <div id="lblResumo" class="mt-2"></div>
+                                                                           <input type="file" id="folderInput" webkitdirectory multiple style="display:none" />
+                                                                            <button type="button" onclick="abrirPasta()" class="btn btn-primary">
+                                                                                Selecionar pasta e importar Arquivos
+                                                                            </button><br />
+
+                                                                            <span id="lblResumo"></span>
                                                                         </div>
-                                                                          <div class="col-md-3">
+                                                                         <%-- <div class="col-md-3">
                                                                                <asp:Button ID="btnImportar" runat="server"
                                                                                  Text="Importar Arquivos"
                                                                                  CssClass="btn btn-primary"
                                                                                  OnClientClick="enviarPasta(); return false;" />
-                                                                          </div>
+                                                                          </div>--%>
                                                                      
                                                                          
 

@@ -434,7 +434,7 @@
             tab.addEventListener('shown.bs.tab', function (e) {
 
                 let alvo = e.target.getAttribute("data-bs-target");
-                let idCarga = document.getElementById('<%= hdIdCarga.ClientID %>').value;
+                <%--let idCarga = document.getElementById('<%= hdIdCarga.ClientID %>').value;--%>
 
         if (!idCarga) {
             document.querySelector(alvo).innerHTML =
@@ -1402,7 +1402,7 @@
                         <asp:BoundField DataField="material" HeaderText="Material" />
                         <asp:BoundField DataField="portao" HeaderText="Portão" />
 
-                        <!-- MOTORISTA (SELECT2) -->
+                       
                         <asp:TemplateField HeaderText="Motorista">
                             <ItemTemplate>
                                 <asp:DropDownList ID="ddlMotCar"
@@ -1412,7 +1412,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <!-- INICIO CARREGAMENTO -->
+                       
                         <asp:TemplateField HeaderText="Início">
                             <ItemTemplate>
                                 <asp:TextBox ID="txtInicioCar"
@@ -1423,7 +1423,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <!-- FIM CARREGAMENTO -->
+                       
                         <asp:TemplateField HeaderText="Fim">
                             <ItemTemplate>
                                 <asp:TextBox ID="txtTermCar"
@@ -1434,7 +1434,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <!-- TEMPO -->
+                        
                         <asp:TemplateField HeaderText="Tempo">
                             <ItemTemplate>
                                 <%# CalcularTempo(Eval("iniciocar"), Eval("termcar")) %>
