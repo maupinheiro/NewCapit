@@ -91,7 +91,7 @@
                     alert("Imagem muito grande. Tamanho máximo permitido: 1MB.");
                     fileInput.value = "";
                     hidden.value = "";
-                    preview.src = '<%= ResolveUrl("/fotos/usuario.jpg") %>';
+                    preview.src = '<%= ResolveUrl("/fotos/motoristasemfoto.jpg") %>';
                     e.preventDefault(); // <--- bloqueia envio (só por segurança extra)
                     return false;
                 }
@@ -182,7 +182,7 @@
                         <asp:FileUpload ID="FileUpload2" runat="server" Style="display: none;" />
                         <asp:HiddenField ID="hiddenImage" runat="server" />
                         <img id="preview"
-                            src='<%= ResolveUrl("/fotos/usuario.jpg") %>'
+                            src='<%= ResolveUrl("/fotos/motoristasemfoto.jpg") %>'
                             alt="Selecione a foto"
                             onclick="document.getElementById('<%= FileUpload1.ClientID %>').click();"
                             style="cursor: pointer; width: 80px; height: 80px;" />

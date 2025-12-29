@@ -40,7 +40,7 @@ namespace NewCapit.dist.pages
                 }
                 if (txtCodMotorista.Text == "")
                 {
-                    fotoMotorista = "../../fotos/usuario.JPG";
+                    fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                 }
 
                 DateTime dataHoraAtual = DateTime.Now;
@@ -371,7 +371,7 @@ namespace NewCapit.dist.pages
                         }
                         else
                         {
-                            fotoMotorista = "../../fotos/usuario.JPG";
+                            fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                         }
                     }
 

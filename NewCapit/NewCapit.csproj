@@ -423,6 +423,7 @@
     <Content Include="fotos\31235.JPG" />
     <Content Include="fotos\820.JPG" />
     <Content Include="fotos\999.JPG" />
+    <Content Include="fotos\motoristasemfoto.jpg" />
     <Content Include="fotos\T6104.JPG" />
     <Content Include="fotos\T6786.JPG" />
     <Content Include="fotos\T7670.jpg" />
@@ -595,7 +596,6 @@
     <Content Include="fotos\8593Capturar.JPG" />
     <Content Include="fotos\958.JPG" />
     <Content Include="fotos\989.JPG" />
-    <Content Include="fotos\foto.gif" />
     <Content Include="fotos\notificacao.jpeg" />
     <Content Include="fotos\T10.JPG" />
     <Content Include="fotos\T1003.JPG" />

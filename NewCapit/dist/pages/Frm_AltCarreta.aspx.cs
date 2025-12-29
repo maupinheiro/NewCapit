@@ -11,6 +11,7 @@ using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DocumentFormat.OpenXml.Office.Word;
 using NPOI.POIFS.Crypt.Dsig;
 
 namespace NewCapit.dist.pages
@@ -497,6 +498,46 @@ namespace NewCapit.dist.pages
         //    txtPlaca.Text.ToUpper();
         //    ddlEstados.Focus();
         //}
+        void AddDate(SqlCommand cmd, string nome, string valor)
+        {
+            if (DateTime.TryParseExact(valor, "dd/MM/yyyy",
+                CultureInfo.GetCultureInfo("pt-BR"),
+                DateTimeStyles.None, out DateTime data))
+            {
+                cmd.Parameters.Add(nome, SqlDbType.DateTime).Value = data;
+            }
+            else
+            {
+                cmd.Parameters.Add(nome, SqlDbType.DateTime).Value = DBNull.Value;
+            }
+        }
+
+        void AddDecimal(SqlCommand cmd, string nome, string valor)
+        {
+            if (decimal.TryParse(valor.Replace(',', '.'),
+                NumberStyles.Any,
+                CultureInfo.InvariantCulture,
+                out decimal numero))
+            {
+                cmd.Parameters.Add(nome, SqlDbType.Decimal).Value = numero;
+            }
+            else
+            {
+                cmd.Parameters.Add(nome, SqlDbType.Decimal).Value = DBNull.Value;
+            }
+        }
+
+        void AddString(SqlCommand cmd, string nome, string valor)
+        {
+            SqlParameter p = cmd.Parameters.Add(nome, SqlDbType.VarChar);
+
+            if (string.IsNullOrWhiteSpace(valor))
+                p.Value = DBNull.Value;
+            else
+                p.Value = valor.Trim().ToUpper();
+        }
+
+
         protected void btnSalvarCarreta_Click(object sender, EventArgs e)
         {
             
@@ -504,136 +545,114 @@ namespace NewCapit.dist.pages
             {
                 idCarreta = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-
-
             string codigoTNG = idCarreta;
+            string sql = @"UPDATE tbcarretas SET
+            modelo=@modelo,
+            tipocarreta=@tipocarreta,
+            anocarreta=@anocarreta,
+            tiporeboque=@tiporeboque,
+            codprop=@codprop,
+            descprop=@descprop,
+            nucleo=@nucleo,
+            ativo_inativo=@ativo_inativo,
+            marca=@marca,
+            renavan=@renavan,
+            cor=@cor,
+            antt=@antt,
+            codrastreador=@codrastreador,
+            tecnologia=@tecnologia,
+            idrastreador=@idrastreador,
+            comunicacao=@comunicacao,
+            chassi=@chassi,
+            licenciamento=@licenciamento,
+            kilometragem=@kilometragem,
+            carretaalugada=@carretaalugada,
+            alugada_de=@alugada_de,
+            cnpj_de=@cnpj_de,
+            inicio_contrato=@inicio_contrato,
+            termino_contrato=@termino_contrato,
+            uf_placa_carreta=@uf_placa_carreta,
+            municipio_placa_carreta=@municipio_placa_carreta,
+            patrimonio=@patrimonio,
+            alterado_por=@alterado_por,
+            data_alteracao=@data_alteracao,
+            tara=@tara,
+            comprimento=@comprimento,
+            largura=@largura,
+            altura=@altura,
+            aquisicao=@aquisicao,
+            data_inativo=@data_inativo,
+            motivo_inativacao=@motivo_inativacao
+            WHERE idcarreta=@idCarreta";
+            using (SqlCommand cmd = new SqlCommand(sql, con))
+            {
+                AddString(cmd, "@modelo", txtModelo.Text);
+                AddString(cmd, "@tipocarreta", ddlCarroceria.SelectedItem.Text);
+                AddString(cmd, "@anocarreta", txtAno.Text);
+                AddString(cmd, "@tiporeboque", ddlTipo.SelectedItem.Text);
+                AddString(cmd, "@codprop", txtCodTra.Text);
+                AddString(cmd, "@descprop", ddlAgregados.SelectedItem.Text);
+                AddString(cmd, "@nucleo", cbFiliais.SelectedItem.Text);
+                AddString(cmd, "@marca", ddlMarca.SelectedItem.Text);
+                AddString(cmd, "@renavan", txtRenavam.Text);
+                AddString(cmd, "@cor", ddlCor.SelectedItem.Text);
+                AddString(cmd, "@antt", txtAntt.Text);
+                AddString(cmd, "@codrastreador", txtCodRastreador.Text);
+                AddString(cmd, "@tecnologia", ddlTecnologia.SelectedItem.Text);
+                AddString(cmd, "@idrastreador", txtId.Text);
+                AddString(cmd, "@comunicacao", ddlComunicacao.SelectedItem.Text);
+                AddString(cmd, "@chassi", txtChassi.Text);
+                AddString(cmd, "@kilometragem", txtOdometro.Text);
+                AddString(cmd, "@carretaalugada", ddlCarreta.SelectedItem.Text);
+                AddString(cmd, "@alugada_de", txtAlugada_De.Text);
+                AddString(cmd, "@cnpj_de", txtCNPJ.Text);
+                AddString(cmd, "@uf_placa_carreta", ddlEstados.SelectedItem.Text);
+                AddString(cmd, "@municipio_placa_carreta", ddlCidades.SelectedItem.Text);
+                AddString(cmd, "@patrimonio", txtControlePatrimonio.Text);
+                AddString(cmd, "@motivo_inativacao", txtMotivo_Inativacao.Text);
+                AddString(cmd, "@alterado_por", Alterado_Por.Text);
+                AddString(cmd, "@ativo_inativo", ddlSituacao.SelectedItem.Text);
 
-            string sqlSalvarCarreta = "UPDATE tbcarretas SET modelo=@modelo, tipocarreta=@tipocarreta, anocarreta=@anocarreta, tiporeboque=@tiporeboque, codprop=@codprop, descprop=@descprop, nucleo=@nucleo, ativo_inativo=@ativo_inativo, marca=@marca, renavan=@renavan, cor=@cor, antt=@antt, codrastreador=@codrastreador, tecnologia=@tecnologia, idrastreador=@idrastreador, comunicacao=@comunicacao, chassi=@chassi, licenciamento=@licenciamento, kilometragem=@kilometragem, carretaalugada=@carretaalugada, alugada_de=@alugada_de, cnpj_de=@cnpj_de, inicio_contrato=@inicio_contrato, termino_contrato=@termino_contrato, uf_placa_carreta=@uf_placa_carreta, municipio_placa_carreta=@municipio_placa_carreta, patrimonio=@patrimonio, alterado_por=@alterado_por, data_alteracao=@data_alteracao, tara=@tara, comprimento=@comprimento, largura=@largura, altura=@altura, aquisicao=@aquisicao, data_inativo=@data_inativo, motivo_inativacao=@motivo_inativacao WHERE idcarreta = @idCarreta";
-           
-            SqlCommand comando = new SqlCommand(sqlSalvarCarreta, con);            
-            comando.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());            
-            comando.Parameters.AddWithValue("@tipocarreta", ddlCarroceria.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@anocarreta", txtAno.Text);
-            comando.Parameters.AddWithValue("@tiporeboque", ddlTipo.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codprop", txtCodTra.Text.Trim().ToUpper());
-            comando.Parameters.AddWithValue("@descprop", ddlAgregados.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.Text.ToUpper());            
-            comando.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@renavan", txtRenavam.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@antt", txtAntt.Text.ToUpper());
-            comando.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tecnologia", ddlTecnologia.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@idrastreador", txtId.Text);
-            comando.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@chassi", txtChassi.Text.ToUpper());
-            comando.Parameters.AddWithValue("@licenciamento", SafeDateValue(txtLicenciamento.Text));
-            comando.Parameters.AddWithValue("@kilometragem", txtOdometro.Text);
-            comando.Parameters.AddWithValue("@carretaalugada", ddlCarreta.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@alugada_de", txtAlugada_De.Text.ToUpper());
-            comando.Parameters.AddWithValue("@cnpj_de", txtCNPJ.Text);
-            comando.Parameters.AddWithValue("@inicio_contrato", txtInicioContrato.Text.ToUpper());
-            comando.Parameters.AddWithValue("@termino_contrato", txtTerminoContrato.Text);
-            comando.Parameters.AddWithValue("@uf_placa_carreta", ddlEstados.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@municipio_placa_carreta", ddlCidades.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@data_cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm"));
-            comando.Parameters.AddWithValue("@cadastrado_por", txtCadastradoPor.Text.Trim().ToUpper());
-            comando.Parameters.AddWithValue("@dt_cadastro", dataHoraAtual.ToString("dd/MM/yyyy"));
-            comando.Parameters.AddWithValue("@patrimonio", txtControlePatrimonio.Text.ToUpper());
-            comando.Parameters.AddWithValue("@tara", txtTara.Text);
-            comando.Parameters.AddWithValue("@aquisicao", txtDataAquisicao.Text);
-            if (txtComprimento.Text != "")
-            {
-                string entradaComprimento = txtComprimento.Text.Trim();
-                // Substitui vírgula por ponto
-                string formatado = entradaComprimento.Replace(',', '.');
-                
-                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
-                {
-                    comando.Parameters.AddWithValue("@comprimento", numero.ToString(CultureInfo.InvariantCulture)); 
-                }
-            }
-            if (txtLargura.Text != "")
-            {
-                string entradaLargura = txtLargura.Text.Trim();
-                // Substitui vírgula por ponto
-                string formatado = entradaLargura.Replace(',', '.');                
-                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
-                {
-                    comando.Parameters.AddWithValue("@largura", numero.ToString(CultureInfo.InvariantCulture));
-                }
-            }
-            if (txtAltura.Text != "")
-            {
-                string entradaAltura = txtAltura.Text.Trim();
-                // Substitui vírgula por ponto
-                string formatado = entradaAltura.Replace(',', '.');                
-                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
-                {
-                    comando.Parameters.AddWithValue("@altura", numero.ToString(CultureInfo.InvariantCulture));
-                }
-            }
-            comando.Parameters.AddWithValue("@data_inativo", txtData_Inativo.Text);
-            comando.Parameters.AddWithValue("@motivo_inativacao", txtMotivo_Inativacao.Text);
-            comando.Parameters.AddWithValue("@alterado_por", Alterado_Por.Text.ToString().ToUpper());
-            comando.Parameters.AddWithValue("@data_alteracao", dataHoraAtual.ToString("dd/MM/yyyy HH:mm"));
-            comando.Parameters.AddWithValue("@ativo_inativo", ddlSituacao.SelectedItem.Text.ToUpper());
-            comando.Parameters.AddWithValue("@idCarreta", idCarreta);
+                AddDate(cmd, "@licenciamento", txtLicenciamento.Text);
+                AddDate(cmd, "@inicio_contrato", txtInicioContrato.Text);
+                AddDate(cmd, "@termino_contrato", txtTerminoContrato.Text);
+                AddDate(cmd, "@aquisicao", txtDataAquisicao.Text);
+                AddDate(cmd, "@data_inativo", txtData_Inativo.Text);
 
-            try
-            {
+                AddDecimal(cmd, "@comprimento", txtComprimento.Text);
+                AddDecimal(cmd, "@largura", txtLargura.Text);
+                AddDecimal(cmd, "@altura", txtAltura.Text);
+                AddDecimal(cmd, "@tara", txtTara.Text);
+
+                cmd.Parameters.Add("@data_alteracao", SqlDbType.DateTime).Value = DateTime.Now;
+                cmd.Parameters.Add("@idCarreta", SqlDbType.Int).Value = idCarreta;
+
                 con.Open();
-                comando.ExecuteNonQuery();
-                con.Close();
-                ExibirToastCadastro("Atualização realizada com sucesso!");
-                Thread.Sleep(5000);
-                //Chama a página de controle de carretas
-                Response.Redirect("/dist/pages/ControleCarretas.aspx");
-
-            }
-            catch (Exception ex)
-            {
-                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-        ExibirToastErro("Erro ao atualizar a placa da carreta: " + txtPlaca.Text.Trim() + " - " + message);
-        Thread.Sleep(5000);
-                //Chama a página de controle de carretas
-                Response.Redirect("/dist/pages/ControleCarretas.aspx");
-            }
-            finally
-            {
-                con.Close();
+                cmd.ExecuteNonQuery();
             }
 
-        }
-        //protected void txtCodVei_TextChanged(object sender, EventArgs e)
-        //{
-        //    if (txtCodVei.Text != "")
-        //    {
-        //        string termo = txtCodVei.Text.ToUpper();
-        //        string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            con.Close();
+            ExibirToastCadastro("Atualização realizada com sucesso!");
+            Thread.Sleep(5000);
+            //Chama a página de controle de carretas
+            Response.Redirect("/dist/pages/ControleCarretas.aspx");
 
-        //        using (SqlConnection conn = new SqlConnection(strConn))
-        //        {
-        //            string query = "SELECT TOP 1 placacarreta, codcarreta FROM tbcarretas WHERE codcarreta LIKE @termo";
-        //            SqlCommand cmd = new SqlCommand(query, conn);
-        //            cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-        //            conn.Open();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
+            //ExibirToastErro("Erro ao atualizar a placa da carreta: " + txtPlaca.Text.Trim() + " - " + message);
+            //Thread.Sleep(5000);
+            //        //Chama a página de controle de carretas
+            //        Response.Redirect("/dist/pages/ControleCarretas.aspx");
+            //    }
+            //    finally
+            //    {
+            //        con.Close();
+            //    }
 
-        //            object res = cmd.ExecuteScalar();
-        //            if (res != null)
-        //            {
-        //                ExibirToastErro("Código carreta: " + txtCodVei.Text.Trim() + ", já cadastrado no sistema.");
-        //                Thread.Sleep(5000);
-        //                txtCodVei.Text = "";
-        //                txtCodVei.Focus();
-        //                return;
-        //            }
-        //        }
-        //        //txtCodVei.Text.ToUpper();
-        //        //ddlTipo.Focus();
-
-        //    }
-        //}
+            }
+           
         protected void ExibirToastCadastro(string mensagem)
         {
             string script = $@"

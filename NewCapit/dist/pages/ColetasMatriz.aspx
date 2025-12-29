@@ -235,10 +235,14 @@
                         <div class="col-xl-12 col-md-12 mb-12">
                             <br />
                             <div class="info-box">
-                                <span class="info-box-icon bg-info">
-                                    <%--tamanho da foto 39x39 60--%>
-                                           
-                                    <img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />
+                                <%--rounded-circle border--%>
+                                <span class="info-box-icon bg-info">  
+                                    <img src="<%=fotoMotorista%>" class="mg-thumbnail float-center" width="70px" height="75px" alt="" />    
+                                <%--<asp:Image ID="imgFoto" runat="server"
+                                     Width="60"
+                                     Height="80"
+                                     CssClass="mg-thumbnail border" />--%>
+
                                 </span>
                                 <div class="info-box-content">
                                     <span class="info-box-number">
@@ -253,7 +257,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <span class="details">NOME DO MOTORISTA:</span>
-                                                    <asp:DropDownList ID="ddlMotorista" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                                    <asp:DropDownList ID="ddlMotorista" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged"></asp:DropDownList>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
@@ -271,7 +275,7 @@
                                             <div class="col-md-1">
                                                 <div class="form-group">
                                                     <span class="details">FROTA:</span>
-                                                    <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
+                                                    <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
@@ -363,7 +367,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-1">
                                             <div class="form-group">
                                                 <span class="details">VALIDADE CNH:</span>
                                                 <div class="input-group">
@@ -371,11 +375,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                         <div class="col-md-1">
+                                             <div class="form-group">
+                                                 <span class="details">LIBERA GR:</span>
+                                                 <div class="input-group">
+                                                     <asp:TextBox ID="txtLiberacaoGR" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                        <div class="col-md-1">
                                             <div class="form-group">
                                                 <span class="details">VALIDADE GR.:</span>
                                                 <div class="input-group">
                                                     <asp:TextBox ID="txtValGR" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <span class="details">PROT CET:</span>
+                                                <div class="input-group">
+                                                    <asp:TextBox ID="txtNumProtCET" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -501,8 +521,13 @@
                                                 <asp:TextBox ID="txtProprietario" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                             </div>
                                         </div>
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
+    <div class="form-group">
+        <span class="details">TECNOLOGIA:</span>
+        <asp:TextBox ID="txtCPF_CNPJ" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+    </div>
+</div>
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <span class="details">TECNOLOGIA:</span>
                                                 <asp:TextBox ID="txtTecnologia" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>

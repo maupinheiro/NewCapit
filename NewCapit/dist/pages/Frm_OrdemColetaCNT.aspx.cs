@@ -43,7 +43,7 @@ namespace NewCapit.dist.pages
                 }
                 if (txtCodMotorista.Text == "")
                 {
-                    fotoMotorista = "../../fotos/usuario.JPG";
+                    fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                 }
 
                 DateTime dataHoraAtual = DateTime.Now;
@@ -473,7 +473,7 @@ namespace NewCapit.dist.pages
                         }
                         else
                         {
-                            fotoMotorista = "../../fotos/usuario.jpg";
+                            fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                         }
                     }
 
@@ -1062,7 +1062,7 @@ namespace NewCapit.dist.pages
                                         }
                                         else
                                         {
-                                            fotoMotorista = "../../fotos/usuario.jpg";
+                                            fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                         }
                                     }
                                     string nomeUsuario = txtUsuCadastro.Text;
@@ -1454,7 +1454,7 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                fotoMotorista = "../../fotos/usuario.jpg";
+                                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodMotorista.Text = "";
                                 txtCodMotorista.Focus();
 
@@ -1463,7 +1463,7 @@ namespace NewCapit.dist.pages
                             {
                                 if (ConsultaMotorista.caminhofoto == null || ConsultaMotorista.caminhofoto == "")
                                 {
-                                    fotoMotorista = "../../fotos/usuario.jpg";
+                                    fotoMotorista = "../../fotos/motoristasemfoto.jpg";
 
                                 }
                                 else
@@ -1478,7 +1478,7 @@ namespace NewCapit.dist.pages
                                     }
                                     else
                                     {
-                                        fotoMotorista = "../../fotos/usuario.jpg";
+                                        fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     }
 
                                 }
@@ -1621,7 +1621,7 @@ namespace NewCapit.dist.pages
                                             //// Registrando o script para execução no lado do cliente
                                             ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                            //fotoMotorista = "../../fotos/usuario.jpg";
+                                            //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                             // txtCodVeiculo.Text = "";
                                             txtPlaca.Text = "";
                                             txtReboque1.Text = "";
@@ -1673,7 +1673,7 @@ namespace NewCapit.dist.pages
                                                     //// Registrando o script para execução no lado do cliente
                                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                                     //txtCodVeiculo.Text = "";
                                                     txtPlaca.Text = "";
                                                     txtReboque1.Text = "";
@@ -1720,7 +1720,7 @@ namespace NewCapit.dist.pages
                                                     //// Registrando o script para execução no lado do cliente
                                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                                     //txtCodVeiculo.Text = "";
                                                     txtPlaca.Text = "";
                                                     txtReboque1.Text = "";
@@ -1768,7 +1768,7 @@ namespace NewCapit.dist.pages
                                                     //// Registrando o script para execução no lado do cliente
                                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                                     // txtCodVeiculo.Text = "";
                                                     txtPlaca.Text = "";
                                                     txtReboque1.Text = "";
@@ -1810,7 +1810,7 @@ namespace NewCapit.dist.pages
                                                 //// Registrando o script para execução no lado do cliente
                                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                                 //txtCodVeiculo.Text = "";
                                                 txtPlaca.Text = "";
                                                 txtReboque1.Text = "";
@@ -1855,7 +1855,7 @@ namespace NewCapit.dist.pages
                                                 //// Registrando o script para execução no lado do cliente
                                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                                 //txtCodVeiculo.Text = "";
                                                 txtPlaca.Text = "";
                                                 txtReboque1.Text = "";
@@ -1901,7 +1901,7 @@ namespace NewCapit.dist.pages
                                                 //// Registrando o script para execução no lado do cliente
                                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                                 //txtCodVeiculo.Text = "";
                                                 txtPlaca.Text = "";
                                                 txtReboque1.Text = "";

@@ -17,6 +17,7 @@ namespace Domain
         public DateTime venccnh { get; set; }
         public string fone2 { get; set; }
         public string validade { get; set; }
+        public string codliberacao { get; set; }    
         public string cartaomot { get; set; }
         public string venccartao { get; set; }
         public string venceti {  get; set; }

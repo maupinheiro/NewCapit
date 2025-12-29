@@ -264,7 +264,7 @@ namespace NewCapit.dist.pages
             }
             if (txtCodMotorista.Text.Trim() == string.Empty)
             {
-                fotoMotorista = "../../fotos/usuario.jpg";
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
             }
             else
             {
@@ -294,7 +294,7 @@ namespace NewCapit.dist.pages
                         }
                         else
                         {
-                            fotoMotorista = "../../fotos/usuario.jpg";
+                            fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                         }
                     }
 
@@ -399,7 +399,7 @@ namespace NewCapit.dist.pages
                         //    }
                         //    else
                         //    {
-                        //        fotoMotorista = "../../fotos/usuario.jpg";
+                        //        fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                         //    }
                         //}
                         string razaoSocial = ConsultaMotorista.nommot;
@@ -439,7 +439,7 @@ namespace NewCapit.dist.pages
                         //    }
                         //    else
                         //    {
-                        //        fotoMotorista = "../../fotos/usuario.jpg";
+                        //        fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                         //    }
                         //}
 
@@ -485,7 +485,7 @@ namespace NewCapit.dist.pages
                     //// Registrando o script para execução no lado do cliente
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                    fotoMotorista = "../../fotos/usuario.jpg";
+                    fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                     txtCodMotorista.Text = "";
                     txtCodMotorista.Focus();
 
