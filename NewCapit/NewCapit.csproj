@@ -4493,6 +4493,7 @@
     <Content Include="dist\bandeiras\icone-santa-catarina.png" />
     <Content Include="dist\bandeiras\icone-sao-paulo.png" />
     <Content Include="dist\bandeiras\icone-tocantins.png" />
+    <Content Include="dist\pages\UploadHandler.ashx" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
@@ -5003,6 +5004,9 @@
     <Compile Include="dist\pages\SimuladorFrete.aspx.designer.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\UploadHandler.ashx.cs">
+      <DependentUpon>UploadHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>
@@ -5174,6 +5178,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ImportacaoTemp\" />
     <Folder Include="Models\" />
     <Folder Include="pdfs\" />
     <Folder Include="plugin\bower_components\etc\" />

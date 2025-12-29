@@ -58,6 +58,134 @@
         }
 
     </script>--%>
+    <script>
+        function enviarPasta() {
+            const input = document.getElementById("folderInput");
+            const files = input.files;
+
+            if (!files || files.length === 0) {
+                alert("Selecione uma pasta");
+                return;
+            }
+
+            const formData = new FormData();
+            let totalValidos = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const nome = files[i].name.toUpperCase();
+
+                if (nome.startsWith("SG") && nome.endsWith(".TXT")) {
+                    totalValidos++;
+                    formData.append("files", files[i]);
+                }
+            }
+
+            if (totalValidos === 0) {
+                alert("Nenhum arquivo SG*.txt encontrado");
+                return;
+            }
+
+            alert('Serão importados ${totalValidos} arquivos SG*.txt');
+
+
+            if (!encontrouArquivoValido) {
+                alert("Nenhum arquivo SG*.txt encontrado na pasta selecionada");
+                return;
+            }
+
+            fetch("UploadHandler.ashx", {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                // segue seu fluxo normal
+                iniciar();
+            }).catch(err => {
+                console.error(err);
+                alert("Erro ao enviar arquivos");
+            });
+        }
+    </script>
+  <script>
+      function abrirPasta() {
+          document.getElementById("folderInput").click();
+      }
+
+      document.getElementById("folderInput").addEventListener("change", function () {
+          const files = this.files;
+          let totalValidos = 0;
+          const formData = new FormData();
+
+          for (let file of files) {
+              const nome = file.name.toUpperCase();
+              if (nome.startsWith("SG") && nome.endsWith(".TXT")) {
+                  totalValidos++;
+                  formData.append("files", file);
+              }
+          }
+
+          if (totalValidos === 0) {
+              document.getElementById("lblResumo").innerText =
+                  "Nenhum arquivo SG*.txt encontrado na pasta selecionada";
+              return;
+          }
+
+          document.getElementById("lblResumo").innerText =
+              `${totalValidos} arquivos SG*.txt encontrados`;
+
+          fetch("UploadHandler.ashx", {
+              method: "POST",
+              body: formData
+          })
+              .then(resp => {
+                  if (!resp.ok) throw new Error("Erro no upload");
+                  // 👉 AGORA sim
+                  iniciar();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              })
+              .catch(err => {
+                  console.error(err);
+                  alert("Erro ao enviar arquivos");
+              });
+      });
+  </script>
+
+
+
+    <script>
+        function iniciar() {
+
+            fetch('Frm_ImpSolVWMatriz.aspx/IniciarImportacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            let timer = setInterval(() => {
+
+                fetch('Frm_ImpSolVWMatriz.aspx/Progresso', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                    .then(r => r.json())
+                    .then(r => {
+                        let d = r.d;
+
+                        let bar = document.getElementById('<%= barProgresso.ClientID %>');
+            bar.style.width = d.percentual + '%';
+            bar.innerText = d.percentual + '%';
+
+            document.getElementById('<%= lblStatus.ClientID %>')
+                .innerText = `Processando ${d.atual} de ${d.total}`;
+
+            if (d.concluido) {
+                clearInterval(timer);
+                document.getElementById('<%= lblStatus.ClientID %>')
+                    .innerText = '✅ Concluído';
+            }
+        });
+
+    }, 500);
+        }
+    </script>
+
 
     <div class="content-wrapper">
         <section class="content">
@@ -102,40 +230,46 @@
                                                 <div class="row g-3">
                                                     <div class="col-md-12">
 
-                                                        <%--<asp:UpdatePanel runat="server">
-                                                            <ContentTemplate>
-
-                                                                <asp:Button ID="btnImportar" runat="server"
-                                                                    Text="Importar Arquivos"
-                                                                    CssClass="btn btn-primary"
-                                                                    OnClick="btnImportar_Click" />
-
-                                                                <br />
-                                                                <br />
-
-                                                                <asp:Label ID="lblProgresso" runat="server"
-                                                                    CssClass="alert alert-info"
-                                                                    Visible="false" />
-
-                                                            </ContentTemplate>
-                                                        </asp:UpdatePanel>--%>
+                                                      
 
                                                           <asp:UpdatePanel ID="upd" runat="server" UpdateMode="Conditional">
                                                                     <ContentTemplate>
+                                                                        <div class="col-md-3">
+                                                                            <input
+                                                                           type="file"
+                                                                           id="folderInput"
+                                                                           webkitdirectory
+                                                                           style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;"/>
+                                                                            <button type="button" class="btn btn-primary" onclick="abrirPasta()">
+                                                                            Selecionar pasta
+                                                                        </button>
+                                                                            <div id="lblResumo" class="mt-2"></div>
+                                                                        </div>
+                                                                          <div class="col-md-3">
+                                                                               <asp:Button ID="btnImportar" runat="server"
+                                                                                 Text="Importar Arquivos"
+                                                                                 CssClass="btn btn-primary"
+                                                                                 OnClientClick="enviarPasta(); return false;" />
+                                                                          </div>
+                                                                     
+                                                                         
 
-                                                                        <asp:Button ID="btnImportar" runat="server"
-                                                                            Text="Importar Arquivos"
-                                                                            CssClass="btn btn-primary"
-                                                                            OnClick="btnImportar_Click" />
+                                                                            
+
+                                                                            
+
+
+                                                                       
+
 
                                                                         <br /><br />
-
+                                                                       
                                                                         <div class="progress">
                                                                             <div id="barProgresso" runat="server"
                                                                                 class="progress-bar progress-bar-striped progress-bar-animated"
                                                                                 role="progressbar"
                                                                                 style="width: 0%">
-                                                                                0%
+                                                                                
                                                                             </div>
                                                                         </div>
 
