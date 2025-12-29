@@ -37,6 +37,9 @@ using System.Drawing;
 using System.Numerics;
 using System.Web.Script.Serialization;
 using System.Security.Principal;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Text;
+using System.Web.Services;
 
 
 namespace NewCapit.dist.pages
@@ -58,17 +61,6 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-               
-
-                
-
-                //var obj = new { lat = lat, lng = lng };
-                //JavaScriptSerializer js = new JavaScriptSerializer();
-                //Response.Write(js.Serialize(obj));
-                //Response.End();
-
-
-
                 if (Session["UsuarioLogado"] != null)
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
@@ -84,16 +76,13 @@ namespace NewCapit.dist.pages
                 }
                 DateTime dataHoraAtual = DateTime.Now;
                 lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-
+                fotoMotorista = "/fotos/motoristasemfoto.jpg";
                 PreencherComboMotoristas();
                 CarregaDados();
-
-                 CarregaMap(txtPlaca.Text);
-                //PreencherComboStatus();
-                //PreencherNumColeta();
-                //fotoMotorista = "../../fotos/usuario.jpg";
+                CarregaMap(txtPlaca.Text);               
 
             }
+            //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
         }
 
@@ -120,7 +109,7 @@ namespace NewCapit.dist.pages
                         }
                         else
                         {
-                            fotoMotorista = "../../fotos/usuario.jpg";
+                            fotoMotorista = "/fotos/motoristasemfoto.jpg";
                         }
                     }
 
@@ -185,10 +174,6 @@ namespace NewCapit.dist.pages
                     txtLibGR.ForeColor = System.Drawing.Color.White;
                     txtLibGR.Text = txtLibGR.Text + " (Vencida)";
                 }
-
-
-
-
             }
             txtTipoMot.Text = dt.Rows[0][128].ToString();
 
@@ -286,7 +271,7 @@ namespace NewCapit.dist.pages
             {
                 ETI.Visible = false;
             }
-            ddlMotorista.Items.Insert(0, new ListItem(dt.Rows[0][5].ToString(), ""));
+            ddlMotorista.Items.Insert(0, new System.Web.UI.WebControls.ListItem(dt.Rows[0][5].ToString(), ""));
             txtCPF.Text = dt.Rows[0][80].ToString();
             txtCartao.Text = dt.Rows[0][81].ToString();
             string val = dt.Rows[0][131].ToString();
@@ -306,15 +291,14 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                fotoMotorista = "../../fotos/usuario.jpg";
+                fotoMotorista = "/fotos/motoristasemfoto.jpg";
             }
 
             txtUsuCadastro.Text = dt.Rows[0][76].ToString();
-            lblDtCadastro.Text = DateTime.Parse(dt.Rows[0][77].ToString()).ToString("dd/MM/yyyy");
+            lblDtCadastro.Text = DateTime.Parse(dt.Rows[0][77].ToString()).ToString("dd/MM/yyyy HH:mm");
             txtCodFrota.Text = dt.Rows[0][7].ToString();
             txtFoneCorp.Text = dt.Rows[0][9].ToString();
-            txtCodVeiculo.Text = dt.Rows[0][15].ToString(); //+ "/" + dt.Rows[0][13].ToString();
-            txtFilialVeicCNT.Text = dt.Rows[0][133].ToString();
+            txtCodVeiculo.Text = dt.Rows[0][15].ToString(); //+ "/" + dt.Rows[0][13].ToString();            
             txtPlaca.Text = dt.Rows[0][16].ToString();
             CarregaMap(dt.Rows[0][16].ToString());
             txtVeiculoTipo.Text = dt.Rows[0][132].ToString();
@@ -562,14 +546,15 @@ namespace NewCapit.dist.pages
             txtProprietario.Text = dt.Rows[0][13].ToString();
             txtCodTransportadora.Text = dt.Rows[0][145].ToString();
             txtTransportadora.Text = dt.Rows[0][146].ToString();
+            txtLiberacao.Text = dt.Rows[0][171].ToString();
+            txtProtocoloCET.Text = dt.Rows[0][172].ToString();            
+
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);
 
 
         }
-
-
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem)
@@ -596,7 +581,7 @@ namespace NewCapit.dist.pages
                     var drv = (HiddenField)e.Item.FindControl("hdfStatus"); ;
                     string statusDaColeta = drv.Value;  // o nome da coluna do seu DataTable
                     // opcional: insere item em branco no topo
-                    ddlStatus.Items.Insert(0, new ListItem(statusDaColeta, "0"));
+                    ddlStatus.Items.Insert(0, new System.Web.UI.WebControls.ListItem(statusDaColeta, "0"));
                 }
                 catch (Exception ex)
                 {
@@ -852,10 +837,12 @@ namespace NewCapit.dist.pages
             {
                 int id = Convert.ToInt32(e.CommandArgument);
                 string idCarga = id.ToString(); // esse valor viria da lógica do seu código
-
-                string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
-                string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
-                ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
+                hdIdCarga.Value = idCarga;
+                Session["idCarga"] = idCarga;
+                GetPedidos();
+                //string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
+                //string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
+                //ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
             }
         }
 
@@ -1015,7 +1002,6 @@ namespace NewCapit.dist.pages
                         txtPlaca.Text = "";
                         txtReboque1.Text = "";
                         txtReboque2.Text = "";
-                        txtFilialVeicCNT.Text = "";
                         txtVeiculoTipo.Text = "";
                         txtTipoVeiculo.Text = "";
                         txtCarreta.Text = "";
@@ -1033,8 +1019,6 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-
-                        txtFilialVeicCNT.Text = ConsultaVeiculo.nucleo;
                         txtVeiculoTipo.Text = ConsultaVeiculo.tipoveiculo;
                         txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
                         txtCET.Text = ConsultaVeiculo.venclicencacet;
@@ -1069,12 +1053,11 @@ namespace NewCapit.dist.pages
                             //// Registrando o script para execução no lado do cliente
                             ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                            //fotoMotorista = "../../fotos/usuario.jpg";
+                            //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                             txtCodVeiculo.Text = "";
                             txtPlaca.Text = "";
                             txtReboque1.Text = "";
                             txtReboque2.Text = "";
-                            txtFilialVeicCNT.Text = "";
                             txtVeiculoTipo.Text = "";
                             txtTipoVeiculo.Text = "";
                             txtCarreta.Text = "";
@@ -1120,12 +1103,11 @@ namespace NewCapit.dist.pages
                                     //// Registrando o script para execução no lado do cliente
                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";
-                                    txtFilialVeicCNT.Text = "";
+                                    txtReboque2.Text = "";                                    
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1166,12 +1148,11 @@ namespace NewCapit.dist.pages
                                     //// Registrando o script para execução no lado do cliente
                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";
-                                    txtFilialVeicCNT.Text = "";
+                                    txtReboque2.Text = "";                                    
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1213,12 +1194,11 @@ namespace NewCapit.dist.pages
                                     //// Registrando o script para execução no lado do cliente
                                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                    //fotoMotorista = "../../fotos/usuario.jpg";
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";
-                                    txtFilialVeicCNT.Text = "";
+                                    txtReboque2.Text = "";                                    
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1254,12 +1234,11 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";
-                                txtFilialVeicCNT.Text = "";
+                                txtReboque2.Text = "";                                
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1299,12 +1278,11 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";
-                                txtFilialVeicCNT.Text = "";
+                                txtReboque2.Text = "";                                
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1344,12 +1322,11 @@ namespace NewCapit.dist.pages
                                 //// Registrando o script para execução no lado do cliente
                                 ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-                                //fotoMotorista = "../../fotos/usuario.jpg";
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";
-                                txtFilialVeicCNT.Text = "";
+                                txtReboque2.Text = "";                                
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1446,7 +1423,7 @@ namespace NewCapit.dist.pages
         private void CarregarColetas(string idviagem = "")
         {
             // Obtem os dados atuais (novos dados)
-            var novosDados = DAL.ConCargas.FetchDataTableColetas4(idviagem);
+            var novosDados = DAL.ConCargas.FetchDataTableColetasMatriz4(idviagem);
 
             // Verifica se há dados anteriores no ViewState
             DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
@@ -1512,7 +1489,9 @@ namespace NewCapit.dist.pages
                             fonecorporativo = @fonecorporativo,
                             empresa = @empresa,
                             dtalt = @dtalt,
-                            status = @status,                            
+                            status = @status, 
+                            numero_gr = @numero_gr,
+                            numero_protocolo_cet = numero_protocolo_cet,
                             usualt = @usualt
                             WHERE num_carregamento = @num_carregamento";
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1535,7 +1514,6 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelular.Text));
                 cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
                 cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
-                cmd.Parameters.AddWithValue("@filialveiculo", SafeValue(txtFilialVeicCNT.Text));
                 cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
                 cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
                 cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
@@ -1554,8 +1532,9 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
-               
-                
+                cmd.Parameters.AddWithValue("@numero_gr", SafeValue(txtLiberacao.Text));
+                cmd.Parameters.AddWithValue("@numero_protocolo_cet", SafeValue(txtProtocoloCET.Text));
+
                 //cmd.Parameters.AddWithValue("@comissao", SafeValue(txtComissao.Text));
                 //cmd.Parameters.AddWithValue("@vlpernoite", SafeValue(txtPernoite.Text));
                 //cmd.Parameters.AddWithValue("@cafe", SafeValue(txtCafe.Text));
@@ -1665,689 +1644,112 @@ namespace NewCapit.dist.pages
                 rptColetas.DataBind();
             }
         }
-        protected void txtCodMotorista_TextChanged(object sender, EventArgs e)
-        {
-            if (txtCodMotorista.Text.Trim() == "")
-            {
-                string nomeUsuario = txtUsuCadastro.Text;
-
-                string linha1 = "Olá, " + nomeUsuario + "!";
-                string linha2 = "Por favor, digite o código do motorista.";
-
-                // Concatenando as linhas com '\n' para criar a mensagem
-                string mensagem = $"{linha1}\n{linha2}";
-
-                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                // Gerando o script JavaScript para exibir o alerta
-                string script = $"alert('{mensagemCodificada}');";
-
-                // Registrando o script para execução no lado do cliente
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                txtCodMotorista.Focus();
-
-            }
-            else
-            {
-                var codigo = txtCodMotorista.Text.Trim();
-                var obj = new Domain.ConsultaMotorista
-                {
-                    codmot = codigo
-                };
-                var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
-                if (ConsultaMotorista != null)
-                {
-                    if (ConsultaMotorista.status.Trim() == "INATIVO")
-                    {
-                        if (txtCodMotorista.Text.Trim() != "")
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-
-                            String path = Server.MapPath("../../fotos/");
-                            string file = fotoMotorista;
-                            if (File.Exists(path + file))
-                            {
-                                fotoMotorista = "../../fotos/" + file + "";
-                            }
-                            else
-                            {
-                                fotoMotorista = "../../fotos/usuario.jpg";
-                            }
-                        }
-                        string nomeUsuario = txtUsuCadastro.Text;
-                        string razaoSocial = ConsultaMotorista.nommot;
-                        string unidade = ConsultaMotorista.nucleo;
-
-                        string linha1 = "Olá, " + nomeUsuario + "!";
-                        string linha2 = "Código " + codigo + ", excluido ou inativo no sistema.";
-                        string linha3 = "Motorista: " + razaoSocial + ".";
-                        string linha4 = "Filial: " + unidade + ". Por favor, verifique.";
-
-                        // Concatenando as linhas com '\n' para criar a mensagem
-                        string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
-
-                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                        // Gerando o script JavaScript para exibir o alerta
-                        string script = $"alert('{mensagemCodificada}');";
-
-                        // Registrando o script para execução no lado do cliente
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                        txtCodMotorista.Text = "";
-                        txtCodMotorista.Focus();
-                    }
-                    else
-                    {
-                        txtFilialMot.Text = ConsultaMotorista.nucleo;
-                        txtTipoMot.Text = ConsultaMotorista.tipomot;
-                        txtExameToxic.Text = ConsultaMotorista.venceti;
-                        txtCNH.Text = ConsultaMotorista.venccnh.ToString();
-                        //txtLibGR.Text = ConsultaMotorista.validade.ToString() ?? "";
-                        // ddlMotorista.Items.Insert(0, new ListItem(ConsultaMotorista.nommot, ""));
-                        ddlMotorista.SelectedItem.Text = ConsultaMotorista.nommot;
-                        txtCPF.Text = ConsultaMotorista.cpf;
-                        txtCartao.Text = ConsultaMotorista.cartaomot;
-                        txtValCartao.Text = ConsultaMotorista.venccartao;
-                        txtCelular.Text = ConsultaMotorista.fone2;
-                        txtCodTransportadora.Text = ConsultaMotorista.codtra;
-                        txtTransportadora.Text = ConsultaMotorista.transp;
-
-                        if (ConsultaMotorista.tipomot.Trim() == "AGREGADO" || ConsultaMotorista.tipomot.Trim() == "TERCEIRO")
-                        {
-                            txtCodVeiculo.Text = ConsultaMotorista.codvei;
-                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
-                            txtPlaca.Text = ConsultaMotorista.placa;
-                            txtVeiculoTipo.Text = ConsultaMotorista.tipomot;
-                            txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
-                            txtReboque1.Text = ConsultaMotorista.reboque1;
-                            txtReboque2.Text = ConsultaMotorista.reboque2;
-                            ETI.Visible = false;
-                            var codigoAgregado = txtCodVeiculo.Text.Trim();
-
-                            var objVeiculo = new Domain.ConsultaVeiculo
-                            {
-                                codvei = codigoAgregado
-                            };
-                            var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
-                            if (ConsultaVeiculo != null)
-                            {
-                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
-                                txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
-                                txtCET.Text = ConsultaVeiculo.venclicencacet;
-                                txtCarreta.Text = ConsultaVeiculo.tiporeboque;
-                                txtTecnologia.Text = ConsultaVeiculo.rastreador;
-                                txtRastreamento.Text = ConsultaVeiculo.rastreamento;
-                                txtConjunto.Text = ConsultaVeiculo.tipocarreta;
-                                txtCodProprietario.Text = ConsultaVeiculo.codtra;
-                                txtProprietario.Text = ConsultaVeiculo.transp;
-
-                            }
-                        }
-                        else if (ConsultaMotorista.tipomot.Trim() == "FUNCIONÁRIO")
-                        {
-                            txtCodVeiculo.Text = ConsultaMotorista.frota;
-                            txtFilialVeicCNT.Text = ConsultaMotorista.nucleo;
-                            txtPlaca.Text = ConsultaMotorista.placa;
-                            txtVeiculoTipo.Text = "FROTA";
-                            txtTipoVeiculo.Text = ConsultaMotorista.tipoveiculo;
-                            txtReboque1.Text = ConsultaMotorista.reboque1;
-                            txtReboque2.Text = ConsultaMotorista.reboque2;
-                            ETI.Visible = true;
-                            var codigoAgregado = txtCodVeiculo.Text.Trim();
-
-                            var objVeiculo = new Domain.ConsultaVeiculo
-                            {
-                                codvei = codigoAgregado
-                            };
-                            var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(objVeiculo);
-                            if (ConsultaVeiculo != null)
-                            {
-                                txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
-                                txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
-                                txtCET.Text = ConsultaVeiculo.venclicencacet;
-                                txtCarreta.Text = ConsultaVeiculo.tiporeboque;
-                                txtTecnologia.Text = ConsultaVeiculo.rastreador;
-                                txtRastreamento.Text = ConsultaVeiculo.rastreamento;
-                                txtConjunto.Text = ConsultaVeiculo.tipocarreta;
-                                txtCodProprietario.Text = ConsultaVeiculo.codtra;
-                                txtProprietario.Text = ConsultaVeiculo.transp;
-
-                            }
-                            // pesquisar validade do Exame Toxicologico
-                            if (txtExameToxic.Text != "")
-                            {
-                                DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                                DateTime dataETI = Convert.ToDateTime(txtExameToxic.Text).Date; ;
-
-                                TimeSpan diferencaETI = dataETI - dataHoje;
-                                // Agora você pode comparar a diferença
-                                if (diferencaETI.TotalDays < 30)
-                                {
-                                    txtExameToxic.BackColor = System.Drawing.Color.Khaki;
-                                    txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
-                                    string nomeUsuario = txtUsuCadastro.Text;
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "O Exame Toxicologico do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
-                                    string linha3 = "Data de vencimento: " + dataETI.ToString("dd/MM/yyyy") + ".";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                }
-                                else if (diferencaETI.TotalDays <= 0)
-                                {
-                                    txtExameToxic.BackColor = System.Drawing.Color.Red;
-                                    txtExameToxic.ForeColor = System.Drawing.Color.White;
-                                    string nomeUsuario = txtUsuCadastro.Text;
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "O Exame Toxicologico do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está vencido.";
-                                    string linha3 = "Data do vencimento: " + dataETI.ToString("dd/MM/yyyy") + ".";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                    txtCodMotorista.Text = "";
-                                    txtCodMotorista.Focus();
-
-                                }
-                                else
-                                {
-                                    if (txtExameToxic.Text == "")
-                                    {
-                                        string nomeUsuario = txtUsuCadastro.Text;
-                                        string linha1 = "Olá, " + nomeUsuario + "!";
-                                        string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não tem Exame Toxicologico, lançado no sistema.";
-                                        string linha3 = "Verifique, por favor.";
-                                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                        // Concatenando as linhas com '\n' para criar a mensagem
-                                        string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                        //// Gerando o script JavaScript para exibir o alerta
-                                        string script = $"alert('{mensagemCodificada}');";
-                                        //// Registrando o script para execução no lado do cliente
-                                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                        txtCodMotorista.Text = "";
-                                        txtCodMotorista.Focus();
-
-                                    }
-                                    else
-                                    {
-                                        txtExameToxic.BackColor = System.Drawing.Color.LightGray;
-                                        txtExameToxic.ForeColor = System.Drawing.Color.Black;
-                                    }
-                                }
-                            }
-                        }
-                        // Pesquisar validade da CNH
-                        if (txtCNH.Text != "")
-                        {
-                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                            DateTime dataCNH = Convert.ToDateTime(txtCNH.Text).Date; ;
-
-                            TimeSpan diferenca = dataCNH - dataHoje;
-                            // Agora você pode comparar a diferença
-                            if (diferenca.TotalDays < 30)
-                            {
-                                txtCNH.BackColor = System.Drawing.Color.Khaki;
-                                txtCNH.ForeColor = System.Drawing.Color.OrangeRed;
-                                string nomeUsuario = txtUsuCadastro.Text;
-                                string linha1 = "Olá, " + nomeUsuario + "!";
-                                string linha2 = "A CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
-                                string linha3 = "Data de vencimento: " + dataCNH.ToString("dd/MM/yyyy") + ".";
-                                //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                // Concatenando as linhas com '\n' para criar a mensagem
-                                string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                //// Gerando o script JavaScript para exibir o alerta
-                                string script = $"alert('{mensagemCodificada}');";
-                                //// Registrando o script para execução no lado do cliente
-                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                            }
-                            else if (diferenca.TotalDays <= 0)
-                            {
-                                txtCNH.BackColor = System.Drawing.Color.Red;
-                                txtCNH.ForeColor = System.Drawing.Color.White;
-                                string nomeUsuario = txtUsuCadastro.Text;
-                                string linha1 = "Olá, " + nomeUsuario + "!";
-                                string linha2 = "A CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está vencida.";
-                                string linha3 = "Data de vencimento: " + dataCNH.ToString("dd/MM/yyyy") + ".";
-                                //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                // Concatenando as linhas com '\n' para criar a mensagem
-                                string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                //// Gerando o script JavaScript para exibir o alerta
-                                string script = $"alert('{mensagemCodificada}');";
-                                //// Registrando o script para execução no lado do cliente
-                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                txtCodMotorista.Text = "";
-                                txtCodMotorista.Focus();
-
-                            }
-                            else
-                            {
-                                if (txtCNH.Text == "")
-                                {
-                                    string nomeUsuario = txtUsuCadastro.Text;
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não tem validade de CNH, lançada no sistema.";
-                                    string linha3 = "Verifique, por favor.";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                    txtCodMotorista.Text = "";
-                                    txtCodMotorista.Focus();
-
-                                }
-                                else
-                                {
-                                    txtCNH.BackColor = System.Drawing.Color.LightGray;
-                                    txtCNH.ForeColor = System.Drawing.Color.Black;
-                                }
-                            }
-                        }
-
-                        // pesquisar validade da liberação GR
-                        if (!string.IsNullOrWhiteSpace(txtLibGR.Text))
-                        {
-                            DateTime dataHoje = DateTime.Now;
-                            DateTime dataGR;
-                            if (DateTime.TryParseExact(txtLibGR.Text.Trim(), "dd/MM/yyyy",
-                               System.Globalization.CultureInfo.InvariantCulture,
-                               System.Globalization.DateTimeStyles.None,
-                               out dataGR))
-                            {
-
-                                TimeSpan diferencaGR = dataGR - dataHoje;
-                                // Agora você pode comparar a diferença
-                                if (diferencaGR.TotalDays < 30 && diferencaGR.TotalDays > 0)
-                                {
-                                    txtExameToxic.BackColor = System.Drawing.Color.Khaki;
-                                    txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
-                                    string nomeUsuario = txtUsuCadastro.Text;
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "A liberãção de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em menos de 30 dias.";
-                                    string linha3 = "Data de vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                }
-                                else if (diferencaGR.TotalDays <= 0)
-                                {
-                                    txtExameToxic.BackColor = System.Drawing.Color.Red;
-                                    txtExameToxic.ForeColor = System.Drawing.Color.White;
-                                    string nomeUsuario = txtUsuCadastro.Text;
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "A liberação de risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está vencida.";
-                                    string linha3 = "Data do vencimento: " + dataGR.ToString("dd/MM/yyyy") + ".";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                    txtCodMotorista.Text = "";
-                                    txtCodMotorista.Focus();
-
-                                }
-                            }
-                            else
-                            {
-                                if (txtLibGR.Text == "")
-                                {
-                                    string nomeUsuario = txtUsuCadastro.Text;
-                                    string linha1 = "Olá, " + nomeUsuario + "!";
-                                    string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não tem liberação de risco cadastrada.";
-                                    string linha3 = "Verifique, por favor.";
-                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-                                    // Concatenando as linhas com '\n' para criar a mensagem
-                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                                    //// Gerando o script JavaScript para exibir o alerta
-                                    string script = $"alert('{mensagemCodificada}');";
-                                    //// Registrando o script para execução no lado do cliente
-                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                                    txtCodMotorista.Text = "";
-                                    txtCodMotorista.Focus();
-
-                                }
-
-                                else
-                                {
-                                    txtLibGR.BackColor = System.Drawing.Color.LightGray;
-                                    txtLibGR.ForeColor = System.Drawing.Color.Black;
-                                }
-                            }
-                        }
-
-
-                        //pesquisar primeiro reboque
-                        //if (txtReboque1.Text.Trim() != "")
-                        //{
-                        //    var placaReboque1 = txtReboque1.Text.Trim();
-
-                        //    var objCarreta = new Domain.ConsultaReboque
-                        //    {
-                        //        placacarreta = placaReboque1
-                        //    };
-                        //    var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
-                        //    if (ConsultaReboque != null)
-                        //    {
-                        //        txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
-                        //    }
-                        //}
-
-                        //pesquisar segundo reboque
-                        //if (txtReboque2.Text.Trim() != "")
-                        //{
-                        //    var placaReboque2 = txtReboque2.Text.Trim();
-
-                        //    var objCarreta = new Domain.ConsultaReboque
-                        //    {
-                        //        placacarreta = placaReboque2
-                        //    };
-                        //    var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
-                        //    if (ConsultaReboque != null)
-                        //    {
-                        //        txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
-                        //    }
-                        //}
-                        //txtCodVeiculo.Focus();
-
-                        // Pesquisar validade do Laudo de Fumaça
-                        if (txtOpacidade.Text != "")
-                        {
-                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                            DateTime dataOpacidade = Convert.ToDateTime(txtOpacidade.Text).Date;
-                            txtOpacidade.Text = dataOpacidade.ToString("dd/MM/yyyy");
-                            TimeSpan diferencaOpacidade = dataOpacidade - dataHoje;
-                            // Agora você pode comparar a diferença
-                            if (diferencaOpacidade.TotalDays >= 1 && diferencaOpacidade.TotalDays <= 30)
-                            {
-                                txtOpacidade.BackColor = System.Drawing.Color.Khaki;
-                                txtOpacidade.ForeColor = System.Drawing.Color.OrangeRed;
-                                // Acione o toast quando a página for carregada
-                                //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
-                                //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-
-                                ShowToastrWarningVeiculo("Laudo de Opacidade do Veículo, vence em menos de 30 dias!");
-                                // txtCodFrota.Focus();
-                            }
-                            if (diferencaOpacidade.TotalDays <= 0)
-                            {
-                                txtOpacidade.BackColor = System.Drawing.Color.Red;
-                                txtOpacidade.ForeColor = System.Drawing.Color.White;
-                                ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, está vencido!");
-                                txtCodVeiculo.Text = "";
-                                txtCodVeiculo.Focus();
-                            }
-                            else
-                            {
-                                if (txtOpacidade.Text == "")
-                                {
-                                    txtOpacidade.BackColor = System.Drawing.Color.Red;
-                                    txtOpacidade.ForeColor = System.Drawing.Color.White;
-                                    ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, não encontrado no sistema!");
-                                    txtOpacidade.Text = "";
-                                    txtOpacidade.Focus();
-                                }
-                            }
-                        }
-
-                        // Pesquisar validade da Licença CET
-                        if (txtVeiculoTipo.Text == "FROTA")
-                        {
-                            if (txtCET.Text != "")
-                            {
-                                DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                                DateTime dataCET = Convert.ToDateTime(txtOpacidade.Text).Date;
-                                txtCET.Text = dataCET.ToString("dd/MM/yyyy");
-                                TimeSpan diferencaCET = dataCET - dataHoje;
-                                // Agora você pode comparar a diferença
-                                if (diferencaCET.TotalDays >= 1 && diferencaCET.TotalDays <= 30)
-                                {
-                                    txtCET.BackColor = System.Drawing.Color.Khaki;
-                                    txtCET.ForeColor = System.Drawing.Color.OrangeRed;
-                                    // Acione o toast quando a página for carregada
-                                    //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
-                                    //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-
-                                    ShowToastrWarningVeiculo("Autorização CET do veículo, vence em menos de 30 dias!");
-                                    // txtCodFrota.Focus();
-                                }
-                                if (diferencaCET.TotalDays <= 0)
-                                {
-                                    txtCET.BackColor = System.Drawing.Color.Red;
-                                    txtCET.ForeColor = System.Drawing.Color.White;
-                                    ShowToastrErrorVeiculo("Autorização CET do veículo, está vencida. Pare o veículo imediatamente!");
-                                    txtCodVeiculo.Text = "";
-                                    txtCodVeiculo.Focus();
-                                }
-                                else
-                                {
-                                    if (txtCET.Text == "")
-                                    {
-                                        txtCET.BackColor = System.Drawing.Color.Red;
-                                        txtCET.ForeColor = System.Drawing.Color.White;
-                                        ShowToastrErrorVeiculo("Laudo de Opacidade do Veículo, não encontrado no sistema!");
-                                        txtCET.Text = "";
-                                        txtCET.Focus();
-                                    }
-                                }
-                            }
-
-                        }
-
-                        // pesquisar primeiro reboque
-                        if (txtReboque1.Text != "")
-                        {
-                            var placaReboque1 = txtReboque1.Text.Trim();
-
-                            var objCarreta = new Domain.ConsultaReboque
-                            {
-                                placacarreta = placaReboque1
-                            };
-                            var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
-                            if (ConsultaReboque != null)
-                            {
-                                txtCRLVReb1.Text = ConsultaReboque.licenciamento.Trim().ToString();
-                            }
-                        }
-
-                        // pesquisar segundo reboque
-                        if (txtReboque2.Text != "")
-                        {
-                            var placaReboque2 = txtReboque2.Text.Trim();
-
-                            var objCarreta = new Domain.ConsultaReboque
-                            {
-                                placacarreta = placaReboque2
-                            };
-                            var ConsultaReboque = DAL.UsersDAL.CheckReboque(objCarreta);
-                            if (ConsultaReboque != null)
-                            {
-                                //txtCRLVReb2.Text = ConsultaReboque.licenciamento.Trim().ToString();
-                            }
-                        }
-
-                        // Pesquisar licenciamento do veiculo
-                        if (txtCRLVVeiculo.Text != "")
-                        {
-                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                            DateTime dataPlaca = Convert.ToDateTime(txtCRLVVeiculo.Text).Date;
-                            txtCRLVVeiculo.Text = dataPlaca.ToString("dd/MM/yyyy");
-                            TimeSpan diferencaPlaca = dataPlaca - dataHoje;
-                            // Agora você pode comparar a diferença
-                            if (diferencaPlaca.TotalDays >= 1 && diferencaPlaca.TotalDays <= 30)
-                            {
-                                txtCRLVVeiculo.BackColor = System.Drawing.Color.Khaki;
-                                txtCRLVVeiculo.ForeColor = System.Drawing.Color.OrangeRed;
-                                // Acione o toast quando a página for carregada
-                                //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
-                                //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-
-                                ShowToastrWarningVeiculo("Licenciamento do Veículo, vence em menos de 30 dias!");
-                                // txtCodFrota.Focus();
-                            }
-                            if (diferencaPlaca.TotalDays <= 0)
-                            {
-                                txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
-                                txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
-                                ShowToastrErrorVeiculo("Licenciamento do veículo, está vencido!");
-                                txtCodVeiculo.Text = "";
-                                txtCodVeiculo.Focus();
-                            }
-                            else
-                            {
-                                if (txtCRLVVeiculo.Text == "")
-                                {
-                                    txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
-                                    txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
-                                    ShowToastrErrorVeiculo("Veículo sem licenciamento lançado!");
-                                    txtCodVeiculo.Text = "";
-                                    txtCodVeiculo.Focus();
-                                }
-                            }
-                        }
-
-                        // Pesquisar licenciamento da carreta 1
-                        if (txtCRLVReb1.Text != "")
-                        {
-                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                            DateTime dataReboque1 = Convert.ToDateTime(txtCRLVReb1.Text).Date;
-                            txtCRLVReb1.Text = dataReboque1.ToString("dd/MM/yyyy");
-                            TimeSpan diferencaReboque1 = dataReboque1 - dataHoje;
-                            // Agora você pode comparar a diferença
-                            if (diferencaReboque1.TotalDays >= 1 && diferencaReboque1.TotalDays <= 30)
-                            {
-                                txtCRLVReb1.BackColor = System.Drawing.Color.Khaki;
-                                txtCRLVReb1.ForeColor = System.Drawing.Color.OrangeRed;
-                                // Acione o toast quando a página for carregada
-                                //string script = "<script>showToast('Validade da CNH do motorista, vence em menos de 30 dias!');</script>";
-                                //ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-
-                                ShowToastrWarningVeiculo("Licenciamento da Carreta, vence em menos de 30 dias!");
-                                // txtCodFrota.Focus();
-                            }
-                            if (diferencaReboque1.TotalDays <= 0)
-                            {
-                                txtCRLVReb1.BackColor = System.Drawing.Color.Red;
-                                txtCRLVReb1.ForeColor = System.Drawing.Color.White;
-                                ShowToastrErrorVeiculo("Licenciamento da carreta, está vencido!");
-                                txtCodVeiculo.Text = "";
-                                txtCodVeiculo.Focus();
-                            }
-                            else
-                            {
-                                if (txtCRLVReb1.Text == "")
-                                {
-                                    txtCRLVReb1.BackColor = System.Drawing.Color.Red;
-                                    txtCRLVReb1.ForeColor = System.Drawing.Color.White;
-                                    ShowToastrErrorVeiculo("Carreta sem licenciamento lançado!");
-                                    txtCodVeiculo.Text = "";
-                                    txtCodVeiculo.Focus();
-                                }
-                            }
-                        }
-
-                        // Pesquisar licenciamento da carreta 2
-                        if (txtCRLVReb2.Text != "")
-                        {
-                            DateTime dataHoje = Convert.ToDateTime(DateTime.Now.Date);
-                            DateTime dataReboque2 = Convert.ToDateTime(txtCRLVReb2.Text).Date;
-                            txtCRLVReb2.Text = dataReboque2.ToString("dd/MM/yyyy");
-                            TimeSpan diferencaReboque2 = dataReboque2 - dataHoje;
-                            // Agora você pode comparar a diferença
-                            if (diferencaReboque2.TotalDays >= 1 && diferencaReboque2.TotalDays <= 30)
-                            {
-                                txtCRLVReb2.BackColor = System.Drawing.Color.Khaki;
-                                txtCRLVReb2.ForeColor = System.Drawing.Color.OrangeRed;
-
-                                ShowToastrWarningVeiculo("Licenciamento da Carreta, vence em menos de 30 dias!");
-                                // txtCodFrota.Focus();
-                            }
-                            if (diferencaReboque2.TotalDays <= 0)
-                            {
-                                txtCRLVReb2.BackColor = System.Drawing.Color.Red;
-                                txtCRLVReb2.ForeColor = System.Drawing.Color.White;
-                                ShowToastrErrorVeiculo("Licenciamento da carreta, está vencido!");
-                                txtCodVeiculo.Text = "";
-                                txtCodVeiculo.Focus();
-                            }
-                            else
-                            {
-                                if (txtCRLVReb2.Text == "")
-                                {
-                                    txtCRLVReb2.BackColor = System.Drawing.Color.Red;
-                                    txtCRLVReb2.ForeColor = System.Drawing.Color.White;
-                                    ShowToastrErrorVeiculo("Carreta sem licenciamento lançado!");
-                                    txtCodVeiculo.Text = "";
-                                    txtCodVeiculo.Focus();
-                                }
-                            }
-                        }
-
-                    }
-                }
-                else
-                {
-                    string nomeUsuario = txtUsuCadastro.Text;
-                    string linha1 = "Olá, " + nomeUsuario + "!";
-                    string linha2 = "Motorista " + codigo + ", não cadastrado no sistema.";
-                    string linha3 = "Verifique o código digitado: " + codigo + ".";
-                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
-
-                    // Concatenando as linhas com '\n' para criar a mensagem
-                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
-
-                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                    //// Gerando o script JavaScript para exibir o alerta
-                    string script = $"alert('{mensagemCodificada}');";
-
-                    //// Registrando o script para execução no lado do cliente
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                    fotoMotorista = "../../fotos/usuario.jpg";
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-
-                }
-
-            }
-
-        }
-        
         protected void btnFechar_Click(object sender, EventArgs e)
         {
             // Opcional: limpar ou fechar modal
             ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
-            //ScriptManager.RegisterStartupScript(
-            //                                        this,
-            //                                        this.GetType(),
-            //                                        "fecharModalOcorrencia",
-            //                                        "$('#modalOcorrencia').modal('hide'); $('.modal-backdrop').remove(); $('body').removeClass('modal-open');",
-            //                                        true
-            //                                    );
-        }     
+            
+        }
+        void GetPedidos()
+        {
+            if (string.IsNullOrEmpty(hdIdCarga.Value))
+                return;
 
-        [System.Web.Services.WebMethod]
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"SELECT pedido, emissao, peso, material, portao,
+                              iniciocar, termcar
+                       FROM tbpedidos
+                       WHERE id = @idCarga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add("@idCarga", SqlDbType.Int)
+                               .Value = int.Parse(hdIdCarga.Value);
+
+                con.Open();
+
+
+                //gvPedidos.DataSource = cmd.ExecuteReader();
+                //gvPedidos.DataBind();
+            }
+        }
+        protected string CalcularTempo(object inicio, object fim)
+        {
+            if (inicio == DBNull.Value || fim == DBNull.Value)
+                return "";
+
+            DateTime dtInicio = Convert.ToDateTime(inicio);
+            DateTime dtFim = Convert.ToDateTime(fim);
+
+            TimeSpan tempo = dtFim - dtInicio;
+
+            return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
+        }
+
+        void CarregarPedidos(int idCarga)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sql = @"SELECT pedido, emissao, peso, material, portao,
+                              iniciocar, termcar
+                       FROM tbPedidos
+                       WHERE id = @idCarga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
+
+                conn.Open();
+                //gvPedidos.DataSource = cmd.ExecuteReader();
+                //gvPedidos.DataBind();
+            }
+        }
+        void GetMotoristas(DropDownList ddl)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(
+                    "SELECT id, nommot FROM tbMotoristas where status = 'ATIVO'", conn);
+
+                con.Open();
+                ddl.DataSource = cmd.ExecuteReader();
+                ddl.DataTextField = "nommot";
+                ddl.DataValueField = "id";
+                ddl.DataBind();
+            }
+
+            //ddl.Items.Insert(0, new ListItem("Selecione", ""));
+        }
+
+        protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+            // Select2 Motoristas
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+                if (ddl != null)
+                {
+                    GetMotoristas(ddl);
+                }
+            }
+
+            // Calcular tempo
+            DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
+            DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
+
+            Label lblTempo = (Label)e.Row.FindControl("lblTempo");
+
+            if (inicio.HasValue && fim.HasValue)
+            {
+                TimeSpan t = fim.Value - inicio.Value;
+                lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+            }
+        }
+
+        [System.Web.Services.WebMethod]          
         public static bool VerificarCVA(string numeroCVA)
         {
             bool existe = false;
@@ -2427,10 +1829,6 @@ namespace NewCapit.dist.pages
                 //}                
             }
         }
-        
-        
-
-        
         public void CalculaInicioPrestacao(string CidadiInicio, string UfInicio)
         {
             if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
@@ -2489,7 +1887,6 @@ namespace NewCapit.dist.pages
 
 
         }
-
         public void CalculaFimPrestacao(string CidadiFim, string UfFim)
         {
             if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
@@ -2548,9 +1945,6 @@ namespace NewCapit.dist.pages
 
 
         }
-
-       
-
         public void CalculaPremio(decimal kmtotalcoleta)
         {
             if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["carregamento"]))
@@ -2623,19 +2017,505 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         public void InserePremioMotorista()
         {
 
         }
-
-
         protected void btnEncerrar_Click(object sender, EventArgs e)
         {
 
         }
 
-        
+        protected void txtCodMotorista_TextChanged(object sender, EventArgs e)
+        {
+            divMsg.Visible = true;
+            divMsgCNH.Visible = true;
+            divMsgCarreta1.Visible = true;
+            divMsgCarreta2.Visible = true;
+            divMsgCET.Visible = true;
+            divMsgCrono.Visible = true;
+            divMsgGR.Visible = true;
+            divMsgLinc.Visible = true;
+            divMsgVeic.Visible = true;
+
+            if (string.IsNullOrEmpty(txtCodMotorista.Text))
+            {
+                MostrarMsg("Digite o código do motorista!", "danger");
+                return;
+            }
+
+            string sql = @"SELECT codmot, nommot, status, cargo, nucleo, cpf, venccnh, codliberacao, validade, venceti, cartaomot, tipomot, venccartao, ISNULL(caminhofoto, '/fotos/motoristasemfoto.jpg') AS caminhofoto,fone2, codtra, transp, frota 
+                   FROM tbmotoristas 
+                   WHERE codmot = @id";
+
+            //using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(sql, con))
+            {
+                cmd.Parameters.AddWithValue("@id", txtCodMotorista.Text);
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+                da.Fill(dt);
+
+                if (dt.Rows.Count == 0)
+                {
+                    MostrarMsg("Motorista: " + txtCodMotorista.Text.Trim() + ", não cadastrado no sistema. Verifique!", "danger");
+                    fotoMotorista = "/fotos/motoristasemfoto.jpg";
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                    return;
+                }
+
+                txtCodMotorista.Text = dt.Rows[0]["codmot"].ToString();
+                ddlMotorista.SelectedItem.Text = dt.Rows[0]["nommot"].ToString();
+                txtFilialMot.Text = dt.Rows[0]["nucleo"].ToString();
+                txtTipoMot.Text = dt.Rows[0]["tipomot"].ToString();
+                txtFuncao.Text = dt.Rows[0]["cargo"].ToString();
+                txtExameToxic.Text = Convert.ToDateTime(dt.Rows[0]["venceti"]).ToString("dd/MM/yyyy");
+                txtCNH.Text = Convert.ToDateTime(dt.Rows[0]["venccnh"]).ToString("dd/MM/yyyy");
+                txtLibGR.Text = Convert.ToDateTime(dt.Rows[0]["validade"]).ToString("dd/MM/yyyy");
+                txtCelular.Text = dt.Rows[0]["fone2"].ToString();
+                txtCPF.Text = dt.Rows[0]["cpf"].ToString();
+                txtCartao.Text = dt.Rows[0]["cartaomot"].ToString();
+                txtValCartao.Text = dt.Rows[0]["venccartao"].ToString();
+                txtCodTransportadora.Text = dt.Rows[0]["codtra"].ToString();
+                txtTransportadora.Text = dt.Rows[0]["transp"].ToString();
+                fotoMotorista = dt.Rows[0]["caminhofoto"].ToString();
+                txtLiberacao.Text = dt.Rows[0]["codliberacao"].ToString();
+                              
+                // valida Exame Toxicologico
+                if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
+                {
+                    DateTime dataETI;
+                    if (!DateTime.TryParse(txtExameToxic.Text, out dataETI))
+                    {
+                        MostrarMsg("Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançado. Verifique", "danger");
+
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+
+                    }
+                    else
+                    {
+                        DateTime validadeET = Convert.ToDateTime(dt.Rows[0]["venceti"]);
+                        TimeSpan diferencaET = validadeET - DateTime.Today;
+
+                        if (validadeET < DateTime.Today)
+                        {
+                            MostrarMsg("Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDO. Verifique!", "danger");
+                            txtExameToxic.BackColor = System.Drawing.Color.Red;
+                            txtExameToxic.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaET.TotalDays <= 30)
+                        {
+                            MostrarMsg("Atenção! Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaET.Days + " dias.", "warning");
+                            txtExameToxic.BackColor = System.Drawing.Color.Khaki;
+                            txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
+
+                }
+
+
+                // valida CNH
+                DateTime dataCNH;
+                if (!DateTime.TryParse(txtCNH.Text, out dataCNH))
+                {
+                    MostrarMsgCNH("Validade da CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                }
+                else
+                {
+                    // valida cnh
+                    DateTime validadeCNH = Convert.ToDateTime(dt.Rows[0]["venccnh"]);
+                    TimeSpan diferencaCNH = validadeCNH - DateTime.Today;
+
+                    if (validadeCNH < DateTime.Today)
+                    {
+                        MostrarMsgCNH("CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!", "danger");
+                        txtCNH.BackColor = System.Drawing.Color.Red;
+                        txtCNH.ForeColor = System.Drawing.Color.White;
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else if (diferencaCNH.TotalDays <= 30)
+                    {
+                        MostrarMsgCNH("Atenção! A CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaCNH.Days + " dias.", "warning");
+                        txtCNH.BackColor = System.Drawing.Color.Khaki;
+                        txtCNH.ForeColor = System.Drawing.Color.OrangeRed;
+                    }
+                }
+
+                // valida GR
+                DateTime dataGR;
+                if (!DateTime.TryParse(txtLibGR.Text, out dataGR))
+                {
+                    MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                }
+                else
+                {
+                    // valida liberação de risco 
+                    DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
+                    TimeSpan diferencaGR = validadeGR - DateTime.Today;
+
+                    if (validadeGR < DateTime.Today)
+                    {
+                        MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
+                        txtLibGR.BackColor = System.Drawing.Color.Red;
+                        txtLibGR.ForeColor = System.Drawing.Color.White;
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else if (diferencaGR.TotalDays <= 30)
+                    {
+                        MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
+                        txtLibGR.BackColor = System.Drawing.Color.Khaki;
+                        txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
+                    }
+                }
+
+                txtCodVeiculo.Text = dt.Rows[0]["frota"].ToString();
+
+            }
+
+            //if(txtTipoMot.Text != "FUNCIONÁRIO")
+            //{
+                //Dados do veiculos
+                string sqlVeiculos = @"SELECT codvei, plavei, reboque1, reboque2, tipoveiculo, tipvei, tiporeboque, tipocarreta, vencimentolaudofumaca, venclicenciamento, codtra, transp, venclicencacet, protocolocet, venccronotacografo, rastreamento, rastreador, ativo_inativo, fl_exclusao
+                       FROM tbveiculos 
+                       WHERE codvei = @idVeiculo AND ativo_inativo = 'ATIVO' AND fl_exclusao IS NULL";
+                using (SqlCommand cmdVeiculos = new SqlCommand(sqlVeiculos, con))
+                {
+                    cmdVeiculos.Parameters.AddWithValue("@idVeiculo", txtCodVeiculo.Text.Trim());
+
+                    DataTable dtVeiculos = new DataTable();
+                    SqlDataAdapter daVeiculos = new SqlDataAdapter(cmdVeiculos);
+
+                    daVeiculos.Fill(dtVeiculos);
+
+                    if (dtVeiculos.Rows.Count == 0)
+                    {
+                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Veículo NÂO encontrado na base de dados ou INATIVO. Verifique!", "danger");
+                        //LimparCamposMotorista();
+                        return;
+                    }
+
+                    if (dtVeiculos.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtVeiculos.Rows[0]["fl_exclusao"].ToString() == "S")
+                    {
+                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Veículo INATIVO ou EXCLUIDO da base de dados. Verique!", "danger");
+                        //LimparCamposMotorista();
+                        return;
+
+                    }
+
+                    if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO TRUCADO")
+                    {
+                        carretas.Visible = true;
+                        reboque1.Visible = true;
+                    }
+                    else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO SIMPLES")
+                    {
+                        carretas.Visible = true;
+                        reboque1.Visible = true;
+                    }
+                    else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO 4 EIXOS")
+                    {
+                        carretas.Visible = true;
+                        reboque1.Visible = true;
+                    }
+                    else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "BITREM")
+                    {
+                        carretas.Visible = true;
+                        reboque1.Visible = true;
+                        reboque2.Visible = true;
+                    }
+                    else
+                    {
+                        carretas.Visible = false;
+                        reboque1.Visible = false;
+                        reboque2.Visible = false;
+                    }
+
+
+                    // Dados do veículo
+                    txtCodVeiculo.Text = dtVeiculos.Rows[0]["codvei"].ToString();
+                    txtPlaca.Text = dtVeiculos.Rows[0]["plavei"].ToString();
+                    txtReboque1.Text = dtVeiculos.Rows[0]["reboque1"].ToString();
+                    txtReboque2.Text = dtVeiculos.Rows[0]["reboque2"].ToString();
+
+                    txtVeiculoTipo.Text = dtVeiculos.Rows[0]["tipoveiculo"].ToString();
+                    txtTipoVeiculo.Text = dtVeiculos.Rows[0]["tipvei"].ToString().Trim();
+                    txtCarreta.Text = dtVeiculos.Rows[0]["tiporeboque"].ToString();
+                    txtConjunto.Text = dtVeiculos.Rows[0]["tipocarreta"].ToString();
+                    txtCodProprietario.Text = dtVeiculos.Rows[0]["codtra"].ToString();
+                    txtProprietario.Text = dtVeiculos.Rows[0]["transp"].ToString();
+                    txtTecnologia.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
+                    txtRastreamento.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
+
+                    txtOpacidade.Text = dtVeiculos.Rows[0]["vencimentolaudofumaca"].ToString();
+                    txtCET.Text = dtVeiculos.Rows[0]["venclicencacet"].ToString();
+                    txtProtocoloCET.Text = dtVeiculos.Rows[0]["protocolocet"].ToString();
+                    txtCRLVVeiculo.Text = dtVeiculos.Rows[0]["venclicenciamento"].ToString();
+                    txtCrono.Text = dtVeiculos.Rows[0]["venccronotacografo"].ToString();
+
+
+
+                    // valida Laudo de Fumaça
+                    DateTime dataOpacidade;
+                    if (!DateTime.TryParse(txtOpacidade.Text, out dataOpacidade))
+                    {
+                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Laudo de OPACIDADE(Fumaça), não foi lançado.", "danger");
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        DateTime validadeOpacidade = Convert.ToDateTime(dtVeiculos.Rows[0]["vencimentolaudofumaca"]);
+                        TimeSpan diferencaOpacidade = validadeOpacidade - DateTime.Today;
+
+                        if (validadeOpacidade < DateTime.Today)
+                        {
+                            MostrarMsgVeic(txtPlaca.Text.Trim() + " - Laudo de OPACIDADE(Fumaça), está VENCIDO.", "danger");
+                            txtOpacidade.BackColor = System.Drawing.Color.Red;
+                            txtOpacidade.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaOpacidade.TotalDays <= 30)
+                        {
+                            MostrarMsgVeic(txtPlaca.Text.Trim() + " - Atenção! Laudo de OPACIDADE(Fumaça) vence em " + diferencaOpacidade.Days + " dias.", "warning");
+                            txtOpacidade.BackColor = System.Drawing.Color.Khaki;
+                            txtOpacidade.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
+
+                    // valida Cronotacografo
+                    DateTime dataCrono;
+                    if (!DateTime.TryParse(txtCrono.Text, out dataCrono))
+                    {
+                        MostrarMsgCrono(txtPlaca.Text.Trim() + " - Laudo do CRONOTACOGRAFO, não foi lançado. Verifique!", "danger");
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        DateTime validadeCrono = Convert.ToDateTime(dtVeiculos.Rows[0]["venccronotacografo"]);
+                        TimeSpan diferencaCrono = validadeCrono - DateTime.Today;
+
+                        if (validadeCrono < DateTime.Today)
+                        {
+                            MostrarMsgCrono(txtPlaca.Text.Trim() + " - Laudo do CRONOTACOGRAFO, está VENCIDO. Verifique!", "danger");
+                            txtCrono.BackColor = System.Drawing.Color.Red;
+                            txtCrono.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaCrono.TotalDays <= 30)
+                        {
+                            MostrarMsgCrono(txtPlaca.Text.Trim() + " - Atenção! Laudo do CRONOTACOGRAFO vence em " + diferencaCrono.Days + " dias.", "warning");
+                            txtCrono.BackColor = System.Drawing.Color.Khaki;
+                            txtCrono.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
+
+                    // valida Licenciamento
+                    DateTime dataLinc;
+                    if (!DateTime.TryParse(txtCRLVVeiculo.Text, out dataLinc))
+                    {
+                        MostrarMsgLinc(txtPlaca.Text.Trim() + " - LICENCIAMENTO do veículo, não foi lançado. Verifique!", "danger");
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        DateTime validadeLinc = Convert.ToDateTime(dtVeiculos.Rows[0]["vencimentolaudofumaca"]);
+                        TimeSpan diferencaLinc = validadeLinc - DateTime.Today;
+
+                        if (validadeLinc < DateTime.Today)
+                        {
+                            MostrarMsgLinc(txtPlaca.Text.Trim() + " - LICENCIAMENTO do veículo, está VENCIDO. Verifique!", "danger");
+                            txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
+                            txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaLinc.TotalDays <= 30)
+                        {
+                            MostrarMsgLinc(txtPlaca.Text.Trim() + " - Atenção! LICENCIAMENTO do veículo, vence em " + diferencaLinc.Days + " dias.", "warning");
+                            txtCRLVVeiculo.BackColor = System.Drawing.Color.Khaki;
+                            txtCRLVVeiculo.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
+
+                    // valida CET
+                    DateTime dataCET;
+                    if (!DateTime.TryParse(txtCET.Text, out dataCET))
+                    {
+                        MostrarMsgCET(txtPlaca.Text.Trim() + " - LICENÇA CET para o veículo, não foi lançado. Verifique!", "danger");
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        DateTime validadeCET = Convert.ToDateTime(dtVeiculos.Rows[0]["venclicencacet"]);
+                        TimeSpan diferencaCET = validadeCET - DateTime.Today;
+
+                        if (validadeCET < DateTime.Today)
+                        {
+                            MostrarMsgCET(txtPlaca.Text.Trim() + " - LICENÇA CET do veículo, está VENCIDA. Verifique!", "danger");
+                            txtCET.BackColor = System.Drawing.Color.Red;
+                            txtCET.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaCET.TotalDays <= 30)
+                        {
+                            MostrarMsgCET(txtPlaca.Text.Trim() + " - Atenção! LICENÇA CET do veículo, vence em " + diferencaCET.Days + " dias.", "warning");
+                            txtCET.BackColor = System.Drawing.Color.Khaki;
+                            txtCET.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
+
+
+
+                }
+
+                // Dados da primeira carreta
+                if (txtReboque1.Text != "")
+                {
+                    string sqlCarreta1 = @"SELECT placacarreta, licenciamento, ativo_inativo, fl_exclusao
+                       FROM tbcarretas 
+                       WHERE placacarreta = @idCarreta1 AND ativo_inativo = 'ATIVO' AND fl_exclusao IS NULL";
+                    using (SqlCommand cmdCarreta1 = new SqlCommand(sqlCarreta1, con))
+                    {
+                        cmdCarreta1.Parameters.AddWithValue("@idCarreta1", txtReboque1.Text.Trim());
+
+                        DataTable dtCarreta1 = new DataTable();
+                        SqlDataAdapter daCarreta1 = new SqlDataAdapter(cmdCarreta1);
+
+                        daCarreta1.Fill(dtCarreta1);
+
+                        if (dtCarreta1.Rows.Count == 0)
+                        {
+                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Carreta NÂO encontrada na base de dados ou INATIVA. Verifique!", "danger");
+                            //LimparCamposMotorista();
+                            return;
+                        }
+
+                        if (dtCarreta1.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtCarreta1.Rows[0]["fl_exclusao"].ToString() == "S")
+                        {
+                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Carreta INATIVA ou EXCLUIDA da base de dados. Verique!", "danger");
+                            //LimparCamposMotorista();
+                            return;
+
+                        }
+
+                        // Dados da Carreta 
+                        txtCRLVReb1.Text = dtCarreta1.Rows[0]["licenciamento"].ToString();
+                        // valida Licenciamento reboque 1
+                        DateTime dataLincReb1;
+                        if (!DateTime.TryParse(txtCRLVReb1.Text, out dataLincReb1))
+                        {
+                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - LICENCIAMENTO da carreta, não foi lançado. Verifique!", "danger");
+                            //return;
+                        }
+                        else
+                        {
+                            DateTime validadeLincReb1 = Convert.ToDateTime(dtCarreta1.Rows[0]["licenciamento"]);
+                            TimeSpan diferencaLincReb1 = validadeLincReb1 - DateTime.Today;
+
+                            if (validadeLincReb1 < DateTime.Today)
+                            {
+                                MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - LICENCIAMENTO da carreta, está VENCIDO. Verifique!", "danger");
+                                txtCRLVReb1.BackColor = System.Drawing.Color.Red;
+                                txtCRLVReb1.ForeColor = System.Drawing.Color.White;
+                            }
+                            else if (diferencaLincReb1.TotalDays <= 30)
+                            {
+                                MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Atenção! LICENCIAMENTO da carreta, vence em " + diferencaLincReb1.Days + " dias.", "warning");
+                                txtCRLVReb1.BackColor = System.Drawing.Color.Khaki;
+                                txtCRLVReb1.ForeColor = System.Drawing.Color.OrangeRed;
+                            }
+                        }
+                    }
+
+                }
+
+
+                // Dados da segunda carreta
+                if (txtReboque2.Text != "")
+            {
+                string sqlCarreta2 = @"SELECT placacarreta, licenciamento, ativo_inativo, fl_exclusao
+                   FROM tbcarretas 
+                   WHERE placacarreta = @idCarreta2 AND ativo_inativo = 'ATIVO' AND fl_exclusao IS NULL";
+                using (SqlCommand cmdCarreta2 = new SqlCommand(sqlCarreta2, con))
+                {
+                    cmdCarreta2.Parameters.AddWithValue("@idCarreta2", txtReboque2.Text.Trim());
+
+                    DataTable dtCarreta2 = new DataTable();
+                    SqlDataAdapter daCarreta2 = new SqlDataAdapter(cmdCarreta2);
+
+                    daCarreta2.Fill(dtCarreta2);
+
+                    if (dtCarreta2.Rows.Count == 0)
+                    {
+                        MostrarMsgCarreta2(txtReboque2.Text.Trim() + " - Carreta NÂO encontrada na base de dados ou INATIVA. Verifique!", "danger");
+                        //LimparCamposMotorista();
+                        return;
+                    }
+
+                    if (dtCarreta2.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtCarreta2.Rows[0]["fl_exclusao"].ToString() == "S")
+                    {
+                        MostrarMsgCarreta2(txtReboque2.Text.Trim() + " - Carreta INATIVA ou EXCLUIDA da base de dados. Verique!", "danger");
+                        //LimparCamposMotorista();
+                        return;
+
+                    }
+
+                    // Dados da Carreta 2
+                    txtCRLVReb2.Text = dtCarreta2.Rows[0]["licenciamento"].ToString();
+                    // valida Licenciamento reboque 1
+                    DateTime dataLincReb2;
+                    if (!DateTime.TryParse(txtCRLVReb2.Text, out dataLincReb2))
+                    {
+                        MostrarMsgCarreta2(txtReboque2.Text.Trim() + " - LICENCIAMENTO da carreta, não foi lançado. Verifique!", "danger");
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else
+                    {
+                        DateTime validadeLincReb2 = Convert.ToDateTime(dtCarreta2.Rows[0]["licenciamento"]);
+                        TimeSpan diferencaLincReb2 = validadeLincReb2 - DateTime.Today;
+
+                        if (validadeLincReb2 < DateTime.Today)
+                        {
+                            MostrarMsgCarreta2(txtReboque2.Text.Trim() + " - LICENCIAMENTO da carreta, está VENCIDO. Verifique!", "danger");
+                            txtCRLVReb2.BackColor = System.Drawing.Color.Red;
+                            txtCRLVReb2.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaLincReb2.TotalDays <= 30)
+                        {
+                            MostrarMsgCarreta2(txtReboque2.Text.Trim() + " - Atenção! LICENCIAMENTO da carreta, vence em " + diferencaLincReb2.Days + " dias.", "warning");
+                            txtCRLVReb2.BackColor = System.Drawing.Color.Khaki;
+                            txtCRLVReb2.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
+                }
+
+            }
+            //}
+
+
+        }
+
         protected void ExibirToastErro(string mensagem)
         {
             string script = $@"
@@ -2648,7 +2528,6 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
-
         private void ShowToastrSuccess(string message)
         {
             string script = $"showSuccessToast('{message}');";
@@ -2670,7 +2549,6 @@ namespace NewCapit.dist.pages
             string script = $"showWarningToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
         }
-
         private void ShowToastrSuccessVeiculo(string message)
         {
             string script = $"showSuccessToast('{message}');";
@@ -2813,25 +2691,38 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                string linha1 = "Placa não encontrada no sistema.";
+                //string linha1 = "Placa não encontrada no sistema.";
 
 
-                // Concatenando as linhas com '\n' para criar a mensagem
-                string mensagem = $"{linha1}";
+                //// Concatenando as linhas com '\n' para criar a mensagem
+                //string mensagem = $"{linha1}";
 
-                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
-                // Gerando o script JavaScript para exibir o alerta
-                string script = $"alert('{mensagemCodificada}');";
+                //string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                //// Gerando o script JavaScript para exibir o alerta
+                //string script = $"alert('{mensagemCodificada}');";
 
-                // Registrando o script para execução no lado do cliente
-                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                //// Registrando o script para execução no lado do cliente
+                //ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
 
-
+                MostrarMsgMapa(txtPlaca.Text.Trim() + " Sinal do veículo não direcionado a base de dados.", "info");
             }
 
 
 
 
+        }
+        protected void MostrarMsgMapa(string mensagem, string tipo = "info")
+        {
+            divMsgMapa.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgMapa.InnerText = mensagem;
+            divMsgMapa.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgMapa');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
 
         protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
@@ -2842,5 +2733,123 @@ namespace NewCapit.dist.pages
                 CarregaMap(ds_placa);
             }
         }
+        protected void MostrarMsg(string mensagem, string tipo = "warning")
+        {
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgGeral.InnerText = mensagem;
+            divMsg.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsg');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgCNH(string mensagem, string tipo = "warning")
+        {
+            divMsgCNH.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgCNH.InnerText = mensagem;
+            divMsgCNH.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgCNH');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgGR(string mensagem, string tipo = "warning")
+        {
+            divMsgGR.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgGR.InnerText = mensagem;
+            divMsgGR.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgGR');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgVeic(string mensagem, string tipo = "warning")
+        {
+            divMsgVeic.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgVeic.InnerText = mensagem;
+            divMsgVeic.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgVeic');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgCrono(string mensagem, string tipo = "warning")
+        {
+            divMsgCrono.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgCrono.InnerText = mensagem;
+            divMsgCrono.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgCrono');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgLinc(string mensagem, string tipo = "warning")
+        {
+            divMsgLinc.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgLinc.InnerText = mensagem;
+            divMsgLinc.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgLinc');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgCET(string mensagem, string tipo = "warning")
+        {
+            divMsgCET.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgCET.InnerText = mensagem;
+            divMsgCET.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgCET');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgCarreta1(string mensagem, string tipo = "warning")
+        {
+            divMsgCarreta1.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgCarreta1.InnerText = mensagem;
+            divMsgCarreta1.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgCarreta1');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        protected void MostrarMsgCarreta2(string mensagem, string tipo = "warning")
+        {
+            divMsgCarreta1.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgCarreta2.InnerText = mensagem;
+            divMsgCarreta2.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsgCarreta2');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+        
     }
 }

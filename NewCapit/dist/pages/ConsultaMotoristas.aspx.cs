@@ -15,6 +15,7 @@ namespace NewCapit
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         private SqlCommand cmd;
+        string caminhofoto;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -41,7 +42,7 @@ namespace NewCapit
             ContagemMotorista();
 
         }
-
+       
         private void listarMotoristas()
         {
 
@@ -128,7 +129,7 @@ namespace NewCapit
             con.Close();
             FrotaCNT.Text = dtDistCNT.Rows[0][0].ToString();
 
-            string sqlDistMinas = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'MG - MINAS GERAIS' and fl_exclusao is null";
+            string sqlDistMinas = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'MINAS GERAIS' and fl_exclusao is null";
             SqlDataAdapter adptDistMinas = new SqlDataAdapter(sqlDistMinas, con);
             DataTable dtDistMinas = new DataTable();
             con.Open();
@@ -152,7 +153,7 @@ namespace NewCapit
             con.Close();
             FrotaIpiranga.Text = dtDistIpiranga.Rows[0][0].ToString();
 
-            string sqlDistPE = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'PE - PERNAMBUCO' and fl_exclusao is null";
+            string sqlDistPE = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'PERNAMBUCO' and fl_exclusao is null";
             SqlDataAdapter adptDistPE = new SqlDataAdapter(sqlDistPE, con);
             DataTable dtDistPE = new DataTable();
             con.Open();
@@ -184,7 +185,7 @@ namespace NewCapit
             con.Close();
             FrotaSC.Text = dtDistSC.Rows[0][0].ToString();
 
-            string sqlDistPR = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'PR - PARANA' and fl_exclusao is null";
+            string sqlDistPR = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'FUNCIONÁRIO' and nucleo = 'PARANA' and fl_exclusao is null";
             SqlDataAdapter adptDistPR = new SqlDataAdapter(sqlDistPR, con);
             DataTable dtDistPR = new DataTable();
             con.Open();
@@ -201,7 +202,7 @@ namespace NewCapit
             con.Close();
             AgCNT.Text = dtDistAgCNT.Rows[0][0].ToString();
 
-            string sqlDistAgMinas = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'MG - MINAS GERAIS' and fl_exclusao is null";
+            string sqlDistAgMinas = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'MINAS GERAIS' and fl_exclusao is null";
             SqlDataAdapter adptDistAgMinas = new SqlDataAdapter(sqlDistAgMinas, con);
             DataTable dtDistAgMinas = new DataTable();
             con.Open();
@@ -225,7 +226,7 @@ namespace NewCapit
             con.Close();
             AgIpiranga.Text = dtDistAgIpiranga.Rows[0][0].ToString();
 
-            string sqlDistAgPE = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'PE - PERNAMBUCO' and fl_exclusao is null";
+            string sqlDistAgPE = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'PERNAMBUCO' and fl_exclusao is null";
             SqlDataAdapter adptDistAgPE = new SqlDataAdapter(sqlDistAgPE, con);
             DataTable dtDistAgPE = new DataTable();
             con.Open();
@@ -257,7 +258,7 @@ namespace NewCapit
             con.Close();
             AgSC.Text = dtDistAgSC.Rows[0][0].ToString();
 
-            string sqlDistAgPR = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'PR - PARANA' and fl_exclusao is null";
+            string sqlDistAgPR = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'AGREGADO' and nucleo = 'PARANA' and fl_exclusao is null";
             SqlDataAdapter adptDistAgPR = new SqlDataAdapter(sqlDistAgPR, con);
             DataTable dtDistAgPR = new DataTable();
             con.Open();
@@ -274,7 +275,7 @@ namespace NewCapit
             con.Close();
             TCNT.Text = dtDistTCNT.Rows[0][0].ToString();
 
-            string sqlDistTMG = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'MG - MINAS GERAIS' and fl_exclusao is null";
+            string sqlDistTMG = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'MINAS GERAIS' and fl_exclusao is null";
             SqlDataAdapter adptDistTMG = new SqlDataAdapter(sqlDistTMG, con);
             DataTable dtDistTMG = new DataTable();
             con.Open();
@@ -298,7 +299,7 @@ namespace NewCapit
             con.Close();
             TIpiranga.Text = dtDistTIpiranga.Rows[0][0].ToString();
 
-            string sqlDistTPE = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'PE - PERNAMBUCO' and fl_exclusao is null";
+            string sqlDistTPE = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'PERNAMBUCO' and fl_exclusao is null";
             SqlDataAdapter adptDistTPE = new SqlDataAdapter(sqlDistTPE, con);
             DataTable dtDistTPE = new DataTable();
             con.Open();
@@ -330,7 +331,7 @@ namespace NewCapit
             con.Close();
             TSC.Text = dtDistTSC.Rows[0][0].ToString();
 
-            string sqlDistTPR = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'PR - PARANA' and fl_exclusao is null";
+            string sqlDistTPR = "select count(*) from tbmotoristas where status = 'ATIVO' and tipomot = 'TERCEIRO' and nucleo = 'PARANA' and fl_exclusao is null";
             SqlDataAdapter adptDistTPR = new SqlDataAdapter(sqlDistTPR, con);
             DataTable dtDistTPR = new DataTable();
             con.Open();

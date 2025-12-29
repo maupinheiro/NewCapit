@@ -9,61 +9,67 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DocumentFormat.OpenXml.Vml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Asn1.Cmp;
+using System.Threading.Tasks;
 
 namespace NewCapit.dist.pages
 {
 
     public partial class Frm_ImpSolVWMatriz : System.Web.UI.Page
     {
+        private static int _total = 0;
+        private static int _atual = 0;
+        private static bool _concluido = false;
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         DateTime dataHoraAtual = DateTime.Now;
-        string numSolic;
-        string lblTipoGeracao;
-        string lblTipoSolicitacao;
-        string lblPlanta;
-        string lblOrigem;
-        string lblDestino;
-        string lblCadastro;
-        string lblHoraCadastro;
-        string lblColeta;
-        string lblHora;
-        string lblTipoVeiculo;
-        decimal pesoTotal;
-        string codPlanta;
-        string grPlanta;
-        string nomePlanta;
-        string codCliOrigem;
-        string razCliOrigem;
-        string cidCliOrigem;
-        string estCliOrigem;
-        string codCliDestino;
-        string razCliDestino;
-        string cidCliDestino;
-        string estCliDestino;
-        string codigoTipoGeracao;
-        string codvwTipoGeracao;
-        string descricaoTipoGeracao;
-        string codigoTipoSolicitacao;
-        string codvwTipoSolicitacao;
-        string descricaoTipoSolicitacao;
-        string codigoTipoVeiculo;
-        string codvwTipoVeiculo;
-        string descricaoTipoVeiculo;
-        string codCliExpedidor;
-        string razCliExpedidor;
-        string cidCliExpedidor;
-        string estCliExpedidor;
-        string codCliRecebedor;
-        string razCliRecebedor;
-        string cidCliRecebedor;
-        string estCliRecebedor;
-        decimal sPeso;
+        private static string numSolic;
+        private static string lblTipoGeracao;
+        private static string lblTipoSolicitacao;
+        private static string lblPlanta;
+        private static string lblOrigem;
+        private static string lblDestino;
+        private static string lblCadastro;
+        private static string lblHoraCadastro;
+        private static string lblColeta;
+        private static string lblHora;
+        private static string lblTipoVeiculo;
+        private static decimal pesoTotal;
+        private static string codPlanta;
+        private static string grPlanta;
+        private static string nomePlanta;
+        private static string codCliOrigem;
+        private static string razCliOrigem;
+        private static string cidCliOrigem;
+        private static string estCliOrigem;
+        private static string codCliDestino;
+        private static string razCliDestino;
+        private static string cidCliDestino;
+        private static string estCliDestino;
+        private static string codigoTipoGeracao;
+        private static string codvwTipoGeracao;
+        private static string descricaoTipoGeracao;
+        private static string codigoTipoSolicitacao;
+        private static string codvwTipoSolicitacao;
+        private static string descricaoTipoSolicitacao;
+        private static string codigoTipoVeiculo;
+        private static string codvwTipoVeiculo;
+        private static string descricaoTipoVeiculo;
+        private static string codCliExpedidor;
+        private static string razCliExpedidor;
+        private static string cidCliExpedidor;
+        private static string estCliExpedidor;
+        private static string codCliRecebedor;
+        private static string razCliRecebedor;
+        private static string cidCliRecebedor;
+        private static string estCliRecebedor;
+        private static decimal sPeso;
+        private static string usuario;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -73,6 +79,7 @@ namespace NewCapit.dist.pages
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
                     txtUsuario.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + lblUsuario.ToUpper();
+                    usuario = nomeUsuario;
                 }
                 else
                 {
@@ -84,40 +91,91 @@ namespace NewCapit.dist.pages
             }
 
         }
-        protected void btnImportar_Click(object sender, EventArgs e)
+        //protected void btnImportar_Click(object sender, EventArgs e)
+        //{
+        //    string pastaDownloads = System.IO.Path.Combine(
+        //        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+        //        "Downloads");
+
+        //    string[] arquivos = Directory.GetFiles(pastaDownloads, "SG*.txt");
+
+        //    if (arquivos.Length == 0)
+        //    {
+        //        lblStatus.Text = "Nenhum arquivo encontrado.";
+        //        return;
+        //    }
+
+
+
+
+        //    using (SqlConnection conn = new SqlConnection(
+        //        WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        conn.Open();
+
+        //        int atual = 0;
+
+        //        foreach (string arquivo in arquivos)
+        //        {
+        //            ProcessarArquivo(conn, arquivo);
+        //            atual++;
+        //            File.Delete(arquivo);
+        //            AtualizarBarra(atual, arquivos.Length);
+
+        //        }
+
+
+        //    }
+
+        //    lblStatus.Text = $"✅ Importação finalizada com sucesso! {arquivos.Length} arquivo(s) importado(s).";
+
+        //}
+        [WebMethod]
+        public static void IniciarImportacao()
         {
-            string pastaDownloads = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                "Downloads");
+            _concluido = false;
+            _atual = 0;
 
-            string[] arquivos = Directory.GetFiles(pastaDownloads, "SG*.txt");
+            string pasta = HttpContext.Current.Server.MapPath("../../ImportacaoTemp/");
 
-            if (arquivos.Length == 0)
+            string[] arquivos = Directory.GetFiles(pasta, "SG*.txt");
+            _total = arquivos.Length;
+
+            Task.Run(() =>
             {
-                lblStatus.Text = "Nenhum arquivo encontrado.";
-                return;
-            }
-
-            using (SqlConnection conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                conn.Open();
-
-                int atual = 0;
-
-                foreach (string arquivo in arquivos)
+                using (SqlConnection conn = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 {
-                    ProcessarArquivo(conn, arquivo);
-                    atual++;
-                    AtualizarBarra(atual, arquivos.Length);
-                }
-            }
+                    conn.Open();
 
-            lblStatus.Text = $"✅ Importação finalizada com sucesso! {arquivos.Length} arquivo(s) importado(s).";
+                    foreach (string arquivo in arquivos)
+                    {
+                        // sua função real
+                        ProcessarArquivo(conn, arquivo);
+
+                        File.Delete(arquivo);
+                        _atual++;
+                    }
+                }
+
+                _concluido = true;
+            });
+        }
+        [WebMethod]
+        public static object Progresso()
+        {
+            int percentual = _total == 0 ? 0 : (_atual * 100 / _total);
+
+            return new
+            {
+                atual = _atual,
+                total = _total,
+                percentual = percentual,
+                concluido = _concluido
+            };
         }
 
-        
-        private void ProcessarArquivo(SqlConnection conn, string arquivo)
+        private static void ProcessarArquivo(SqlConnection conn, string arquivo)
         {
             string[] linhas = File.ReadAllLines(arquivo);
 
@@ -451,7 +509,7 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.AddWithValue("@cidorigem", cidCliOrigem);
                             cmd.Parameters.AddWithValue("@ciddestino", cidCliDestino);
                             cmd.Parameters.AddWithValue("@gr", grPlanta);
-                            cmd.Parameters.AddWithValue("@cadastro", txtUsuario.Text.ToUpper());
+                            cmd.Parameters.AddWithValue("@cadastro", usuario.ToUpper());
                             cmd.Parameters.AddWithValue("@atualizacao", DBNull.Value);
                             cmd.Parameters.AddWithValue("@motcar", DBNull.Value);
                             cmd.Parameters.AddWithValue("@iniciocar", DBNull.Value);
@@ -504,7 +562,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@ufclidestino", estCliDestino);
                     cmd.Parameters.AddWithValue("@cidorigem", cidCliOrigem);
                     cmd.Parameters.AddWithValue("@ciddestino", cidCliDestino);
-                    cmd.Parameters.AddWithValue("@cadastro", txtUsuario.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@cadastro", usuario.ToUpper());
                     cmd.Parameters.AddWithValue("@gr", grPlanta);
                     cmd.Parameters.AddWithValue("@solicitante", planta);
                     cmd.Parameters.AddWithValue("@empresa", "1111");
@@ -533,7 +591,7 @@ namespace NewCapit.dist.pages
         }
 
 
-        private bool CargaJaExiste(SqlConnection conn, string carga)
+        private static bool CargaJaExiste(SqlConnection conn, string carga)
         {
             using (SqlCommand cmd = new SqlCommand(
                 "SELECT 1 FROM tbcargas WHERE carga = @carga", conn))
@@ -542,7 +600,7 @@ namespace NewCapit.dist.pages
                 return cmd.ExecuteScalar() != null;
             }
         }
-        private bool PedidoJaExiste(SqlConnection conn, string pedido)
+        private static bool PedidoJaExiste(SqlConnection conn, string pedido)
         {
             using (SqlCommand cmd = new SqlCommand(
                 "SELECT 1 FROM tbpedidos WHERE pedido = @pedido", conn))
@@ -553,7 +611,8 @@ namespace NewCapit.dist.pages
         }
         private void AtualizarBarra(int atual, int total)
         {
-            int percentual = (int)((double)atual / total * 100);
+            int percentual = 0;
+            percentual = (int)((double)atual / total * 100);
 
             barProgresso.Style["width"] = percentual + "%";
             barProgresso.InnerText = percentual + "%";
@@ -572,7 +631,7 @@ namespace NewCapit.dist.pages
             }
         }
 
-        private object SafeDateTimeValue(string input)
+        private static object SafeDateTimeValue(string input)
         {
             DateTime dt;
             if (DateTime.TryParse(input, out dt))
@@ -580,7 +639,7 @@ namespace NewCapit.dist.pages
             else
                 return DBNull.Value;
         }
-        private object SafeDateValue(string input)
+        private static object SafeDateValue(string input)
         {
             DateTime dt;
             if (DateTime.TryParse(input, out dt))
@@ -588,121 +647,9 @@ namespace NewCapit.dist.pages
             else
                 return DBNull.Value;
         }
-        //protected void MostrarMsg(string mensagem, string tipo = "warning")
-        //{
-        //    divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
-        //    lblMsg.InnerText = mensagem;
-        //    divMsg.Style["display"] = "block";
 
-        //    string script = @"setTimeout(function() {
-        //                var div = document.getElementById('divMsg');
-        //                if (div) div.style.display = 'none';
-        //              }, 5000);";
+        
 
-        //    ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
-        //}
-
-        //protected void btnImportar_Click(object sender, EventArgs e)
-        //{
-        //    string pastaDownloads = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-        //"Downloads");
-
-        //    // pegar apenas arquivos SG*.txt
-        //    // var arquivos = Directory.GetFiles(pastaDownloads, "SG*.txt");
-
-
-        //    string[] arquivos = Directory.GetFiles(pastaDownloads, "SG*.txt");
-        //    int totalArquivos = arquivos.Length;
-        //    int arquivosProcessados = 0;
-        //    lblProgresso.Visible = true;
-
-        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-        //    {
-        //        conn.Open();
-
-        //        int totalArquivos = arquivos.Length;
-        //        int arquivoAtual = 0;
-
-        //        foreach (string arquivo in arquivos)
-        //        {
-        //            arquivoAtual++;
-
-        //            string nomeArquivo = System.IO.Path.GetFileName(arquivo);
-
-        //            // 🔒 EVITAR ARQUIVO REPETIDO
-        //            if (ArquivoJaImportado(conn, nomeArquivo))
-        //            {
-        //                lblProgresso.Text = $"Arquivo {nomeArquivo} já importado – ignorado.";
-        //                continue;
-        //            }
-
-        //            string[] linhas = File.ReadAllLines(arquivo);
-
-        //            //if (linhas.Length != 10)
-        //            //    throw new Exception($"Arquivo {nomeArquivo} não possui 10 linhas.");
-
-        //            int linhaNumero = 0;
-
-        //            foreach (string linha in linhas)
-        //            {
-        //                linhaNumero++;
-
-        //                if (linha.Substring(0, 2) == "01")
-        //                {
-        //                    // Processar linha do tipo 01
-        //                    // 🧱 POSIÇÕES FIXAS
-        //                    string numSolic = linha.Substring(2, 10).Trim();
-        //                    String lblTipoGeracao = linha.Substring(12, 4).Trim();
-        //                    String lblTipoSolicitacao = linha.Substring(16, 7).Trim();
-        //                    String lblPlanta = linha.Substring(23, 2).Trim();
-        //                    String lblOrigem = linha.Substring(25, 4).Trim();
-        //                    String lblDestino = linha.Substring(29, 4).Trim();
-        //                    String lblCadastro = linha.Substring(33, 10).Trim();
-        //                    String lblHoraCadastro = linha.Substring(43, 5).Trim();
-        //                    String lblColeta = linha.Substring(51, 10).Trim();
-        //                    String lblHora = linha.Substring(61, 5).Trim();
-        //                    String lblTipoVeiculo = linha.Substring(70, 4).Trim();
-
-        //                    string sql = "INSERT INTO tbcargas (carga) VALUES (@numSolic)";
-
-        //                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-        //                    {
-        //                        cmd.Parameters.Add("@numSolic", SqlDbType.Int).Value = numSolic;
-        //                        cmd.ExecuteNonQuery();
-        //                    }
-
-        //                }
-        //                else if (linha.Substring(0, 10) == "02")
-        //                {
-        //                    // Processar linha do tipo 02
-        //                }                        
-        //            }
-
-        //            // 📝 Marca arquivo como importado
-        //            using (SqlCommand cmd = new SqlCommand(
-        //                "INSERT INTO ImportacaoArquivo (NomeArquivo) VALUES (@NomeArquivo)", conn))
-        //            {
-        //                cmd.Parameters.AddWithValue("@NomeArquivo", nomeArquivo);
-        //                cmd.ExecuteNonQuery();
-        //            }
-
-        //            // 📊 PROGRESSO NA TELA
-        //            lblProgresso.Text = $"Importando {arquivoAtual} de {totalArquivos} arquivos...";
-        //            Thread.Sleep(300); // apenas para visualizar o progresso
-        //        }
-
-        //        lblProgresso.Text = "✅ Importação concluída com sucesso!";
-        //    }
-        //}
-        //private bool ArquivoJaImportado(SqlConnection conn, string nomeArquivo)
-        //{
-        //    using (SqlCommand cmd = new SqlCommand(
-        //        "SELECT COUNT(1) FROM ImportacaoArquivo WHERE NomeArquivo = @NomeArquivo", conn))
-        //    {
-        //        cmd.Parameters.AddWithValue("@NomeArquivo", nomeArquivo);
-        //        return (int)cmd.ExecuteScalar() > 0;
-        //    }
-        //}
 
     }
 }

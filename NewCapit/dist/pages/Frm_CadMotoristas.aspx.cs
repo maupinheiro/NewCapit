@@ -57,7 +57,7 @@ namespace NewCapit.dist.pages
             txtDtCad.Text = dataHoraAtual.ToString("dd/MM/yyyy");
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
 
-            string defaultImage = ResolveUrl("/fotos/usuario.jpg");
+            string defaultImage = ResolveUrl("/fotos/motoristasemfoto.jpg");
             string base64 = hiddenImage.Value;
 
             // Validar se a imagem em base64 não é muito grande (por exemplo, maior que 1.3MB em texto base64)

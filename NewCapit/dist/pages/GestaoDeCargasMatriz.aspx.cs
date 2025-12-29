@@ -71,8 +71,7 @@ namespace NewCapit.dist.pages
                 if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
                     cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedValue);
                 query += @"
-            GROUP BY CONVERT(VARCHAR(10), previsao, 103)
-            ORDER BY CONVERT(DATE, previsao) ";
+                ORDER BY emissao DESC) ";
 
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

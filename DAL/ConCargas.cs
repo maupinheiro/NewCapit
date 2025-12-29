@@ -37,7 +37,7 @@ namespace DAL
         public static DataTable FetchDataTableCargasMatriz()
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT c.id, c.carga, c.previsao, c.status, c.cliorigem, c.clidestino, c.material, c.peso, c.entrega, c.codmot FROM tbcargas c  WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL and empresa = '1111'";
+            string sql = "SELECT c.id, c.carga, c.previsao, c.status, c.codorigem, c.cliorigem, c.cidorigem, c.ufcliorigem, c.coddestino, c.clidestino, c.ciddestino, c.ufclidestino, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, cc.id_recebedor, c.uf_recebedor, c.cod_consignatario, c.consignatario, c.cid_consignatario, c.uf_consignatario, ccod_pagador, c.pagador, c.cid_pagador, c.uf_pagador, c.material, c.peso, c.entrega, c.codmot FROM tbcargas c  WHERE c.status = 'Pendente' AND c.fl_exclusao IS NULL and empresa = '1111'";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -84,7 +84,28 @@ namespace DAL
                 return con.Query<ConsultaCarga>(sqlQuery, carga).FirstOrDefault();
             }
         }
-       
+        public static DataTable FetchDataTableColetasMatriz4(string idviagem)
+        {
+            // alterado a query para verifica a coluna exclusao para itens excluídos            
+            string sql = "SELECT id, carga, cva, codorigem, cliorigem, cidorigem, ufcliorigem, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, coddestino, clidestino, ciddestino, ufclidestino, cod_recebedor, recebedor, cid_recebedor, uf_recebedor,cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, data_hora, deslocamento, distancia, emitepedagio, duracao,solicitante, gr, entrega, material, centro_custo_solicitacao,conta_debito_solicitacao, catracas, redes, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao, ot, cva,   atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao FROM tbcargas WHERE fl_exclusao is null and idviagem=@idviagem order by data_hora ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@idviagem", idviagem);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
+
         public static DataTable FetchDataTableColetas()
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            

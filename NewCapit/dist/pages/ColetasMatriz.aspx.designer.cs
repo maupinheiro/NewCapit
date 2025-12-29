@@ -375,6 +375,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtValCNH;
 
         /// <summary>
+        /// Controle txtLiberacaoGR.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLiberacaoGR;
+
+        /// <summary>
         /// Controle txtValGR.
         /// </summary>
         /// <remarks>
@@ -382,6 +391,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtValGR;
+
+        /// <summary>
+        /// Controle txtNumProtCET.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNumProtCET;
 
         /// <summary>
         /// Controle txtCelularParticular.
@@ -571,6 +589,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProprietario;
+
+        /// <summary>
+        /// Controle txtCPF_CNPJ.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCPF_CNPJ;
 
         /// <summary>
         /// Controle txtTecnologia.

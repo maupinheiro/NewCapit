@@ -110,7 +110,7 @@ namespace NewCapit.dist.pages
             {
                 codmot = cracha
             });
-            string str = "../../fotos/usuario.jpg";
+            string str = "../../fotos/motoristasemfoto.jpg";
             if (consultaMotorista != null)
             {
                 if (!string.Equals(consultaMotorista.status?.Trim(), "INATIVO", StringComparison.OrdinalIgnoreCase))
@@ -118,7 +118,7 @@ namespace NewCapit.dist.pages
                     if (!string.IsNullOrWhiteSpace(consultaMotorista.caminhofoto))
                     {
                         string path = "../.." + consultaMotorista.caminhofoto.Trim();
-                        str = File.Exists(this.Server.MapPath(path)) ? path : "../../fotos/usuario.jpg";
+                        str = File.Exists(this.Server.MapPath(path)) ? path : "../../fotos/motoristasemfoto.jpg";
                     }
                 }
                 else
