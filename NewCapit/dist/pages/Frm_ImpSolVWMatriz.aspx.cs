@@ -648,8 +648,9 @@ namespace NewCapit.dist.pages
                 return DBNull.Value;
         }
 
-        
-
-
+        protected void btnSair_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("GestaoDeCargasMatriz.aspx");
+        }
     }
 }

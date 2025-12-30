@@ -264,7 +264,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <h3 class="card-title"><i class="fas fa-chart-line"></i>&nbsp;Importação de Frete Mínimo ANTT</h3>
+                                <h3 class="card-title"><i class="fas fa-chart-line"></i>&nbsp;Importação de Solicitações Volkswagen</h3>
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
@@ -365,7 +365,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <asp:Button ID="btnSair" runat="server" CssClass="btn btn-outline-info float-right"
+                                                            <asp:Button ID="btnSair" runat="server" CssClass="btn btn-outline-info float-right" OnClick="btnSair_Click"
                                                                 Text="Sair" />
                                                         </div>
                                                     </div>
