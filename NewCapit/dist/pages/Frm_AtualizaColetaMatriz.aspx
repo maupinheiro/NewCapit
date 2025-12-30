@@ -991,7 +991,7 @@
     <div class="row g-3">
     <div class="col-md-12">
     <div class="card">
-        <asp:HiddenField ID="hdIdCarga" runat="server" />
+        <%--<asp:HiddenField ID="hdIdCarga" runat="server" />--%>
     <!-- ./card-header -->
     <div class="card-body">
     <asp:Repeater ID="rptColetas" runat="server" OnItemDataBound="rptColetas_ItemDataBound" OnItemCommand="rptColetas_ItemCommand">
@@ -1326,7 +1326,7 @@
 
     <ContentTemplate>
         <!-- HiddenField da carga -->
-        <asp:HiddenField ID="hdIdCarga" runat="server" />
+       <%-- <asp:HiddenField ID="hdIdCarga" runat="server" />--%>
 
     <!-- COLE AS ABAS AQUI -->
     <ul class="nav nav-tabs" id="tabsPedido" role="tablist">
