@@ -434,7 +434,7 @@
             tab.addEventListener('shown.bs.tab', function (e) {
 
                 let alvo = e.target.getAttribute("data-bs-target");
-                <%--let idCarga = document.getElementById('<%= hdIdCarga.ClientID %>').value;--%>
+                let idCarga = document.getElementById('<%= hdIdCarga.ClientID %>').value;
 
         if (!idCarga) {
             document.querySelector(alvo).innerHTML =
@@ -1326,7 +1326,7 @@
 
     <ContentTemplate>
         <!-- HiddenField da carga -->
-        <asp:HiddenField ID="hdIdCarga" runat="server" />
+       <%-- <asp:HiddenField ID="hdIdCarga" runat="server" />--%>
 
     <!-- COLE AS ABAS AQUI -->
     <ul class="nav nav-tabs" id="tabsPedido" role="tablist">
@@ -1382,67 +1382,122 @@
 <div class="tab-content border border-top-0 p-3">
 
             <!-- ABA PEDIDOS -->
+
+    <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped"
+AutoGenerateColumns="False"
+OnRowDataBound="gvPedidos_RowDataBound">
+        <Columns>
+
+    <asp:BoundField DataField="pedido" HeaderText="Pedido" />
+
+    <asp:BoundField DataField="emissao"
+        HeaderText="Emissão"
+        DataFormatString="{0:dd/MM/yyyy}" />
+
+    <asp:BoundField DataField="peso" HeaderText="Peso" />
+    <asp:BoundField DataField="material" HeaderText="Material" />
+    <asp:BoundField DataField="portao" HeaderText="Portão" />
+
+   
+    <asp:TemplateField HeaderText="Motorista">
+        <ItemTemplate>
+            <asp:DropDownList ID="ddlMotCar"
+                runat="server"
+                CssClass="form-select select2">
+            </asp:DropDownList>
+        </ItemTemplate>
+    </asp:TemplateField>
+
+   
+    <asp:TemplateField HeaderText="Início">
+        <ItemTemplate>
+            <asp:TextBox ID="txtInicioCar"
+                runat="server"
+                CssClass="form-control"
+                Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
+            </asp:TextBox>
+        </ItemTemplate>
+    </asp:TemplateField>
+
+   
+    <asp:TemplateField HeaderText="Fim">
+        <ItemTemplate>
+            <asp:TextBox ID="txtTermCar"
+                runat="server"
+                CssClass="form-control"
+                Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}") %>'>
+            </asp:TextBox>
+        </ItemTemplate>
+    </asp:TemplateField>
+
+    
+    <asp:TemplateField HeaderText="Tempo">
+        <ItemTemplate>
+            <%# CalcularTempo(Eval("iniciocar"), Eval("termcar")) %>
+        </ItemTemplate>
+    </asp:TemplateField>
+
+</Columns>
+    </asp:GridView>
+
             <div class="tab-pane fade show active" id="tabPedidos">
+                  <asp:GridView ID="GridView1" runat="server" CssClass="table table-sm table-striped"
+AutoGenerateColumns="False"
+OnRowDataBound="gvPedidos_RowDataBound">
+        <Columns>
 
-                <asp:GridView ID="gvPedidos"
-                    runat="server"
-                    CssClass="table table-sm table-striped"
-                    AutoGenerateColumns="False"
-                    OnRowDataBound="gvPedidos_RowDataBound">
+    <asp:BoundField DataField="pedido" HeaderText="Pedido" />
 
-                    <Columns>
+    <asp:BoundField DataField="emissao"
+        HeaderText="Emissão"
+        DataFormatString="{0:dd/MM/yyyy}" />
 
-                        <asp:BoundField DataField="pedido" HeaderText="Pedido" />
+    <asp:BoundField DataField="peso" HeaderText="Peso" />
+    <asp:BoundField DataField="material" HeaderText="Material" />
+    <asp:BoundField DataField="portao" HeaderText="Portão" />
 
-                        <asp:BoundField DataField="emissao"
-                            HeaderText="Emissão"
-                            DataFormatString="{0:dd/MM/yyyy}" />
+   
+    <asp:TemplateField HeaderText="Motorista">
+        <ItemTemplate>
+            <asp:DropDownList ID="ddlMotCar"
+                runat="server"
+                CssClass="form-select select2">
+            </asp:DropDownList>
+        </ItemTemplate>
+    </asp:TemplateField>
 
-                        <asp:BoundField DataField="peso" HeaderText="Peso" />
-                        <asp:BoundField DataField="material" HeaderText="Material" />
-                        <asp:BoundField DataField="portao" HeaderText="Portão" />
+   
+    <asp:TemplateField HeaderText="Início">
+        <ItemTemplate>
+            <asp:TextBox ID="txtInicioCar"
+                runat="server"
+                CssClass="form-control"
+                Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
+            </asp:TextBox>
+        </ItemTemplate>
+    </asp:TemplateField>
 
-                       
-                        <asp:TemplateField HeaderText="Motorista">
-                            <ItemTemplate>
-                                <asp:DropDownList ID="ddlMotCar"
-                                    runat="server"
-                                    CssClass="form-select select2">
-                                </asp:DropDownList>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+   
+    <asp:TemplateField HeaderText="Fim">
+        <ItemTemplate>
+            <asp:TextBox ID="txtTermCar"
+                runat="server"
+                CssClass="form-control"
+                Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}") %>'>
+            </asp:TextBox>
+        </ItemTemplate>
+    </asp:TemplateField>
 
-                       
-                        <asp:TemplateField HeaderText="Início">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtInicioCar"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
-                                </asp:TextBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+    
+    <asp:TemplateField HeaderText="Tempo">
+        <ItemTemplate>
+            <%# CalcularTempo(Eval("iniciocar"), Eval("termcar")) %>
+        </ItemTemplate>
+    </asp:TemplateField>
 
-                       
-                        <asp:TemplateField HeaderText="Fim">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtTermCar"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}") %>'>
-                                </asp:TextBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-
-                        
-                        <asp:TemplateField HeaderText="Tempo">
-                            <ItemTemplate>
-                                <%# CalcularTempo(Eval("iniciocar"), Eval("termcar")) %>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-
-                    </Columns>
-                </asp:GridView>
+</Columns>
+    </asp:GridView>
+                
 
             </div>
         </div>

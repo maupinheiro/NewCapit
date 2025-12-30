@@ -1669,9 +1669,9 @@ namespace NewCapit.dist.pages
 
                 con.Open();
 
-
-                //gvPedidos.DataSource = cmd.ExecuteReader();
-                //gvPedidos.DataBind();
+                
+                gvPedidos.DataSource = cmd.ExecuteReader();
+                gvPedidos.DataBind();
             }
         }
         protected string CalcularTempo(object inicio, object fim)
