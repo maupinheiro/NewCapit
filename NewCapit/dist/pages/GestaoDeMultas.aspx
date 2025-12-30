@@ -3,153 +3,105 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-<!-- Bootstrap CSS + JS -->
-<%--  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>--%>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function aplicarMascara(input, mascara) {
-                input.addEventListener("input", function () {
-                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
-                    let resultado = "";
-                    let posicao = 0;
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                    for (let i = 0; i < mascara.length; i++) {
-                        if (mascara[i] === "0") {
-                            if (valor[posicao]) {
-                                resultado += valor[posicao];
-                                posicao++;
-                            } else {
-                                break;
-                            }
-                        } else {
-                            resultado += mascara[i];
-                        }
-                    }
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+       
+   <%--<script>
 
-                    input.value = resultado;
-                });
-            }
+       function aplicarMascaras() {
 
-            // Pegando os elementos no ASP.NET
-            let txtData = document.getElementById("<%= txtData.ClientID %>");
-            if (txtData) aplicarMascara(txtData, "00/00/0000 00:00");
-        });
-    </script>   
+           $('input.data').mask('00/00/0000');
+
+           $('input.datahora').mask('00/00/0000 00:00');
+
+           $('input.hora').mask('00:00');
+
+           $('input.moeda').mask('000.000.000,00', {
+               reverse: true
+           });
+       }
+
+       // carregamento inicial
+       $(document).ready(function () {
+           aplicarMascaras();
+       });
+
+       // após AutoPostBack parcial (UpdatePanel)
+       Sys.WebForms.PageRequestManager
+           .getInstance()
+           .add_endRequest(function () {
+               aplicarMascaras();
+           });
+
+   </script>--%>
+
+
+
     <script>
         function abrirModalProcesso() {
             var modalEl = document.getElementById('mdlProcesso');
             var modal = new bootstrap.Modal(modalEl);
             modal.show();
         }
-
-        function abrirModal() {
-           //$('#meuModal').modal('show');
-           // $('#meuModal').modal({ backdrop: 'static', keyboard: false });
-            var modalEl = document.getElementById('meuModal');
-            var modal = new bootstrap.Modal(modalEl);
-            modal.show();
-        }
-    
-
         function mascaraDataHora(campo) {
             let v = campo.value.replace(/\D/g, '');
 
-            if (v.length >= 3)
-                v = v.replace(/(\d{2})(\d)/, '$1/$2');
-            if (v.length >= 6)
-                v = v.replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
-            if (v.length >= 11)
-                v = v.replace(/(\d{4})(\d)/, '$1 $2');
-            if (v.length >= 14)
-                v = v.replace(/(\d{2})(\d)/, '$1:$2');
+            if (v.length > 12)
+                v = v.substring(0, 12);
 
-            campo.value = v;
-        }
-
-    </script>
-    <script>
-        $(document).ready(function () {
-
-            var ddlArtigo = $('#<%= ddlArtigo.ClientID %>');
-
-        // Inicializa o Select2 apenas uma vez
-        ddlArtigo.select2({
-            dropdownParent: $('#mdlProcesso'),
-            placeholder: "Selecione...",
-            allowClear: true,
-            width: '100%'
-        });
-
-        // Garante que o Select2 funcione corretamente ao abrir o modal
-        $('#mdlProcesso').on('shown.bs.modal', function () {
-            ddlArtigo.select2('destroy').select2({
-                dropdownParent: $('#mdlProcesso'),
-                placeholder: "Selecione...",
-                allowClear: true,
-                width: '100%'
-            });
-        });
-
-        // Evento change funcionando corretamente
-        ddlArtigo.on('change', function () {
-            var id = $(this).val();
-
-            if (id && id !== "") {
-                buscarDadosCliente(id);
-            } else {
-                limparCampos();
+            if (v.length >= 9) {
+                campo.value =
+                    v.substring(0, 2) + '/' +
+                    v.substring(2, 4) + '/' +
+                    v.substring(4, 8) + ' ' +
+                    v.substring(8, 10) +
+                    (v.length >= 11 ? ':' + v.substring(10, 12) : '');
             }
-        });
-    });
-
-        function limparCampos() {
-            $('#<%= txtCodigo_Infracao.ClientID %>').val('');
-        $('#<%= txtPontos.ClientID %>').val('');
-        $('#<%= txtGravidade.ClientID %>').val('');
+            else if (v.length >= 5) {
+                campo.value =
+                    v.substring(0, 2) + '/' +
+                    v.substring(2, 4) + '/' +
+                    v.substring(4, 8);
+            }
+            else if (v.length >= 3) {
+                campo.value =
+                    v.substring(0, 2) + '/' +
+                    v.substring(2, 4);
+            }
+            else {
+                campo.value = v;
+            }
         }
+
+
     </script>
-
-
     <script>
-        function buscarDadosArtigo(id) {
-            $.ajax({
-                type: "POST",
-                url: "GestaoDeMultas.aspx/BuscarArtigo",
-                data: JSON.stringify({ id: id }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (r) {
-                    $('#<%= txtCodigo_Infracao.ID %>').val(r.d.codigo);
-                    $('#<%= txtPontos.ID %>').val(r.d.pontos);
-                    $('#<%= txtGravidade.ID %>').val(r.d.gravidade);
-                },
-                error: function () {
-                    alert("Erro ao buscar dados.");
-                }
-            });
+        function formatarMoeda(campo) {
+            let valor = campo.value.replace(/\D/g, "");
+            if (valor === "") return;
+
+            valor = (valor / 100).toFixed(2) + "";
+            valor = valor.replace(".", ",");
+            valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            campo.value = "R$ " + valor;
         }
     </script>
+   
     <div class="content-wrapper">
-       
+        <asp:ScriptManagerProxy ID="ScriptManagerProxy1" runat="server" />
         <section class="content">
-            <div class="container-fluid">
-                <br />
-                <div id="toastContainerVermelho" class="alert alert-danger alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
-                </div>
+            <div class="container-fluid">               
+                
                 <div class="col-md-12">
                     <div class="card card-info">
                         <div class="card-header">
@@ -177,7 +129,7 @@
                                     <div class="col-md-4">
                                         <asp:TextBox ID="txtPesquisar" runat="server"
                                             CssClass="form-control"
-                                            placeholder="Pesquisar por veículo ou motorista ou processo" />
+                                            placeholder="Pesquisar placa, por codigo, nome do motorista ou processo ... " />
                                     </div>
 
                                     <div class="col-md-3">
@@ -270,216 +222,280 @@
                         </div>
                     </div>
                 </div>
-                
-            </div>
-            <!-- Modal Processo -->
-            <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true"> 
-                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                    <div class="modal-content">
-                        <asp:UpdatePanel ID="UpdatePanel2" runat="server">
-                            <ContentTemplate>
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="meuModalLabel">Inclusão de Viagem</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-3">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <span class="details">CÓDIGO:</span>
-                                                <asp:TextBox ID="txtCodMotorista" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="txtCodigo_Infracao_TextChanged"></asp:TextBox>
+                <!-- form INCLUIR e CONSULTAR processo -->
+                <div class="modal fade" id="mdlProcesso" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-centered"">
+                        <div class="modal-content">                            
+                            <div class="modal-header">
+                                <h5 class="modal-title">Multa/Processo</h5>
+                                <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal">
+                                </button>
+                            </div>
+                            <!-- UPDATEPANEL SÓ NO CONTEÚDO -->
+                            <asp:UpdatePanel ID="UpdatePanel1" runat="server">                                
+                                <ContentTemplate>                                                                   
+                                    <div class="modal-body">                                       
+                                        <asp:HiddenField ID="hfStatus" runat="server" />
+                                        <div class="col-xl-12 col-md-12 mb-12">
+
+                                            <div id="divMsg" runat="server"
+                                                class="alert alert-info alert-dismissible fade show mt-3"
+                                                role="alert" style="display: none;">
+                                                <span id="lblMsg" runat="server"></span>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                             </div>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <span class="details">ORIGEM:</span>
-                                                <asp:DropDownList ID="ddlNomeMotorista" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlArtigo_TextChanged" CssClass="form-control select2"></asp:DropDownList>
+                                            <div class="row g-3">
+                                                     <div class="col-md-1">                                                         
+                                                         <asp:Image ID="imgFoto" runat="server"
+                                                             CssClass="img-thumbnail"
+                                                             Style="width:80px;height:80px;object-fit:cover;"
+                                                             AlternateText="Foto"
+                                                             ImageUrl="/fotos/motoristasemfoto.jpg" />
+                                                     </div>
+                                                <div class="col-md-2">
+                                                    <label>Nº Processo:</label>
+                                                    <asp:TextBox ID="txtProcessoModal" runat="server" CssClass="form-control" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label>Nº AIT:</label>
+                                                    <asp:TextBox ID="txtAIT" runat="server" CssClass="form-control" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label>Data</label>
+                                                    <asp:TextBox 
+                                                            ID="txtData"
+                                                            runat="server"
+                                                            CssClass="form-control"
+                                                            AutoPostBack="true"
+                                                            OnTextChanged="txtData_TextChanged"
+                                                            oninput="mascaraDataHora(this);" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label>&nbsp;</label><br />                                                   
+                                                    <asp:TextBox ID="txtDia" runat="server" CssClass="form-control" ReadOnly="true" Style="text-align: center" />
+                                                </div>                                                
+                                                <div class="col-md-2">
+                                                    <label>Lançamento:</label>
+                                                    <asp:TextBox ID="txtLancamento" runat="server" CssClass="form-control" Enabled="false" Style="text-align: center" />
+                                                </div>
+                                                <div class="col-md-1" id="colunaID" runat="server" visible="false">
+                                                    <label>Id:</label>
+                                                    <asp:TextBox ID="txtId" runat="server" CssClass="form-control" Enabled="false" Style="text-align: center" />
+                                                </div>
                                             </div>
-                                        </div>                                       
+                                            <br />
+                                            <div class="row g3">
+                                                <div class="col-md-2">
+                                                    <label>Código:</label>
+                                                    <asp:TextBox ID="txtCodigo_Infracao" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodigo_Infracao_TextChanged" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Fundamento CTB:</label>
+                                                        <asp:DropDownList ID="ddlArtigo" runat="server" CssClass="form-control"></asp:DropDownList>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <label>Pontos:</label>
+                                                        <asp:TextBox ID="txtPontos" runat="server" CssClass="form-control" Style="text-align: center" Enabled="false"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <%--<span class="details">Gravidade:</span>--%>
+                                                        <label>Gravidade:</label>
+                                                        <asp:TextBox ID="txtGravidade" runat="server" CssClass="form-control" Style="text-align: center" Enabled="false"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Infrator:</label>
+                                                        <asp:TextBox ID="txtInfrator" runat="server" CssClass="form-control" Style="text-align: center" Enabled="false"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label>Competência:</label>
+                                                        <asp:TextBox ID="txtCompetencia" runat="server" CssClass="form-control" Style="text-align: center" Enabled="false"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                            <div class="row g-3">
+                                                <div class="col-md-12">
+                                                     <div class="form-group">
+                                                        <label>Descrição da Multa/Motivo:</label>
+                                                        <asp:TextBox ID="txtdesc_multa" runat="server" CssClass="form-control" Enabled="false" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Local de Multa:</label>
+                                                        <asp:TextBox ID="txtLocalMulta" runat="server" CssClass="form-control"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Providência Tomada:</label>
+                                                    <asp:TextBox ID="txtProvidencia" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="row-3">
+                                                <div class="card-header">
+                                                    <form class="form-horizontal">
+                                                        <div class="card-body">                                                            
+                                                            <div class="form-group row">
+                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right"> Valor Sem Indicação:</label>
+                                                                <div class="col-md-2">
+                                                                    <asp:TextBox ID="txtValorsd" runat="server" CssClass="form-control"  onblur="formatarMoeda(this)" ></asp:TextBox>
+                                                                </div>
+
+                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Valor Com Indicação:</label>
+                                                                <div class="col-md-2">
+                                                                    <asp:TextBox ID="txtValorcd" runat="server" CssClass="form-control"  onblur="formatarMoeda(this)" ></asp:TextBox>
+                                                                </div>
+                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Indicar Até:</label>
+                                                                <div class="col-md-2">
+                                                                    <asp:TextBox ID="txtVencimento" runat="server" CssClass="form-control" ></asp:TextBox>
+                                                                </div> 
+                                                            </div>                                                            
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>                                           
+                                           
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                     <label>Código:</label>
+                                                     <asp:TextBox ID="txtCodMot" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodMot_TextChanged" />
+                                                </div>
+                                                <div class="col-md-7">
+                                                     <label>Nome do Motorista:</label>
+                                                     <asp:TextBox ID="txtNome"
+                                                         runat="server"
+                                                         CssClass="form-control" Enabled="false" />
+                                                </div>
+                                                
+                                                <div class="col-md-3">
+                                                     <label>Núcleo:</label>
+                                                     <asp:TextBox ID="txtNucleo"
+                                                         runat="server"
+                                                         CssClass="form-control" Enabled="false" />
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <label>Frota:</label>
+                                                    <asp:TextBox ID="txtFrota" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtFrota_TextChanged" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label>Placa:</label>
+                                                    <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" Enabled="false"/>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label>Equip:</label>
+                                                    <asp:TextBox ID="txtEquipamento" runat="server" CssClass="form-control" Enabled="false" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                     <label>Transportadora:</label>
+                                                     <asp:TextBox ID="txtTransportadora"
+                                                         runat="server"
+                                                         CssClass="form-control" Enabled="false" />
+                                                </div>
+                                            </div>                                            
+                                            <br />
+                                            <div class="row g-3">
+                                                <div class="card-header">
+                                                    <form class="form-horizontal">
+                                                        <div class="card-body">                                                            
+                                                            <div class="form-group row">
+                                                                <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Dep. de Transporte Em:</label>
+                                                                <div class="col-md-2">
+                                                                    <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control" ></asp:TextBox>
+                                                                </div>
+
+                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Recebido Por:</label>
+                                                                <div class="col-md-4">
+                                                                    <asp:TextBox ID="txtRecebido_Por" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                                                </div>
+                                                            </div>                                                            
+                                                            <div class="form-group row">
+                                                                <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Controle Em:</label>
+                                                                <div class="col-md-2">
+                                                                    <asp:TextBox ID="txtEnvio_dcp" runat="server" CssClass="form-control" ></asp:TextBox>
+                                                                </div>
+
+                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Baixado Por:</label>
+                                                                <div class="col-md-4">
+                                                                    <asp:TextBox ID="txtBaixado_por" runat="server" CssClass="form-control" Enabled="false" ></asp:TextBox>
+                                                                </div>
+                                                            </div>
+                                                           
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                     </div>                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                    <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary"  />
-                                </div>
-                            </ContentTemplate>                            
-                        </asp:UpdatePanel>
+                                    
+                                    <div class="modal-footer">
 
+                                        <div class="container-fluid">
+                                            <div class="row align-items-center">
 
-                    </div>
-                </div>
-            </div>
-          
+                                                <!-- ESQUERDA -->
+                                                <div class="col-auto">
+                                                    <asp:TextBox ID="txtStatus"
+                                                        runat="server"
+                                                        CssClass="form-control form-control-sm" Style="text-align: center"
+                                                         />                                                       
+                                                </div>
 
+                                                <!-- ESPAÇO FLEXÍVEL -->
+                                                <div class="col"></div>
 
+                                                <!-- DIREITA -->
+                                                <div class="col-auto text-end">
+                                                    <asp:Button ID="btnPesquisarModal"
+                                                        runat="server"
+                                                        Text="Pesquisar"
+                                                        CssClass="btn btn-info btn-sm ms-2"
+                                                        OnClick="btnPesquisarModal_Click"
+                                                        UseSubmitBehavior="false" />
 
+                                                    <asp:Button ID="btnSalvar"
+                                                        runat="server"
+                                                        Text="Salvar"
+                                                        CssClass="btn btn-success btn-sm ms-2"
+                                                        OnClick="btnSalvar_Click"
+                                                        UseSubmitBehavior="false" />
 
+                                                    <asp:Button ID="btnFechar"
+                                                        runat="server"
+                                                        Text="Fechar"
+                                                        CssClass="btn btn-secondary btn-sm ms-2"
+                                                        data-bs-dismiss="modal" />
+                                                </div>
 
-            <!-- form INCLUIR e CONSULTAR processo -->
-            <div class="modal fade" id="mdlProcesso" tabindex="-1">
-                <div class="modal-dialog modal-xl modal-dialog-centered"">
-                    <div class="modal-content">                            
-                        <div class="modal-header">
-                            <h5 class="modal-title">Multa/Processo</h5>
-                            <button type="button" class="btn-close"
-                                data-bs-dismiss="modal">
-                            </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+
                         </div>
-
-                        <!-- UPDATEPANEL SÓ NO CONTEÚDO -->
-                        <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
-                            <ContentTemplate>
-
-                                <div class="modal-body">
-
-                                    <asp:HiddenField ID="hfStatus" runat="server" />
-                                    <div class="col-xl-12 col-md-12 mb-12">
-                                        <div class="row g-3">
-                                                 <div class="col-md-1">
-                                                     <%--<label>&nbsp;</label><br /> --%>
-                                                     <asp:Image ID="imgFoto" runat="server"
-                                                         CssClass="img-thumbnail"
-                                                         Style="width:80px;height:80px;object-fit:cover;"
-                                                         AlternateText="Foto"
-                                                         ImageUrl="/fotos/usuario.jpg" />
-                                                 </div>
-                                            <div class="col-md-2">
-                                                <label>Nº Processo:</label>
-                                                <asp:TextBox ID="txtProcessoModal" runat="server" CssClass="form-control" />
-                                            </div>
-                                                                                             <div class="col-md-2">
-                                                <label>Nº AIT:</label>
-                                                <asp:TextBox ID="txtAIT" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>Data</label>
-                                                <asp:TextBox ID="txtData" runat="server" CssClass="form-control"  AutoPostBack="true" OnTextChanged="txtData_TextChanged"  />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>&nbsp;</label><br />                                                   
-                                                <asp:TextBox ID="txtDia" runat="server" CssClass="form-control" Enabled="false" Style="text-align: center" />
-                                            </div>                                                
-                                            <div class="col-md-2">
-                                                <label>Lançamento:</label>
-                                                <asp:TextBox ID="txtLancamento" runat="server" CssClass="form-control" Enabled="false" Style="text-align: center" />
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label>Id:</label>
-                                                <asp:TextBox ID="txtId" runat="server" CssClass="form-control" Enabled="false" Style="text-align: center" />
-                                            </div>
-                                        </div>
-                           
-                                        <br />
-                                        <div class="row g-3">
-                                            <div class="col-md-1">
-                                                 <label>Código:</label>
-                                                 <asp:TextBox ID="txtCodMot" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-6">
-                                                 <label>Nome do Motorista:</label>
-                                                 <asp:TextBox ID="txtNome"
-                                                     runat="server"
-                                                     CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label>Frota:</label>
-                                                <asp:TextBox ID="txtFrota" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>Placa:</label>
-                                                <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>Equip:</label>
-                                                <asp:TextBox ID="txtEquipamento" runat="server" CssClass="form-control" />
-                                            </div>
-                                
-                                        </div>
-                            
-                                        <br />
-                                        <div class="row g-3">
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <span class="details">CÓDIGO:</span>
-                                                    <asp:TextBox ID="txtCodigo_Infracao" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="txtCodigo_Infracao_TextChanged"></asp:TextBox>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <span class="details">ORIGEM:</span>
-                                                    <asp:DropDownList ID="ddlArtigo" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlArtigo_TextChanged" CssClass="form-control select2"></asp:DropDownList>
-                                                </div>
-                                            </div>
-                                
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-md-1">
-                                                <label>Infração:</label>
-                                                <asp:TextBox ID="txtCodigo_Infracao2" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                 <label>Artigo:</label>
-                                                 <asp:DropDownList ID="ddlArtigo2" runat="server" CssClass="form-control select2">
-                                                 </asp:DropDownList>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Descrição da Infração:</label>
-                                                <asp:TextBox ID="txtDescricao_Infracao" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2" />
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label>Pontos:</label>
-                                                <asp:TextBox ID="txtPontos" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-1">
-                                                 <label>Gravidade:</label>
-                                                 <asp:TextBox ID="txtGravidade" runat="server" CssClass="form-control" />
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label>Órgão Autuador:</label>
-                                                <asp:TextBox ID="txtOrgao_Autuador" runat="server" CssClass="form-control" />
-                                                </div>
-
-
-
-
-                       
-
-                        
-
-                        
-
-                                </div>
-                                <br />
-                                <div class="modal-footer">
-                                    <asp:Button ID="btnPesquisarModal"
-                                        runat="server"
-                                        Text="Pesquisar"
-                                        CssClass="btn btn-info"
-                                        OnClick="btnPesquisarModal_Click"
-                                        UseSubmitBehavior="false" />
-
-                                    <asp:Button ID="btnSalvar"
-                                        runat="server"
-                                        Text="Salvar"
-                                        CssClass="btn btn-success"
-                                        OnClick="btnSalvar_Click"
-                                        UseSubmitBehavior="false" />
-
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal">
-                                        Fechar
-                                    </button>
-                                </div>
-
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
-
                     </div>
                 </div>
             </div>
         </section>
     </div>
 </asp:Content>
+

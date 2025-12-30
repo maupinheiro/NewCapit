@@ -417,7 +417,7 @@ namespace NewCapit.dist.pages
                     ddlValorFixoTng.SelectedItem.Text =  dr["valor_fixo_tng"].ToString();
                     ddlEmitePedagio.Items.Insert(0, new ListItem(dr["emitepedagio"].ToString())); 
                     cboNomAgregado.SelectedItem.Text= dr["nommot_especial"].ToString();
-                    txtCadastro.Text = dr["cadastro_usuaro"].ToString();
+                    txtCadastro.Text = dr["cadastro_usuario"].ToString();
                     lblDtCadastro.Text = dr["data_cadastro"].ToString();
                     //ddlHoraParada.SelectedItem.Text=
                     rota = dr["rota"].ToString();
