@@ -1093,10 +1093,10 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@recebedor", SqlDbType.NVarChar).Value = cboRecebedor.Text;
                     cmd.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar).Value = txtCidRecebedor.Text;
                     cmd.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar).Value = txtUFRecebedor.Text;
-                    cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = Convert.ToInt32(txtCodConsignatario.Text);
-                    cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar).Value = cboConsignatario.SelectedItem.Text;
-                    cmd.Parameters.Add("@cid_consignatario", SqlDbType.NVarChar).Value = txtCidConsignatario.Text;
-                    cmd.Parameters.Add("@uf_consignatario", SqlDbType.NVarChar).Value = txtUFConsignatario.Text;
+                    cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = DbParse.Int(txtCodConsignatario.Text);
+                    cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar).Value = DbParse.String(cboConsignatario.SelectedItem.Text);
+                    cmd.Parameters.Add("@cid_consignatario", SqlDbType.NVarChar).Value = DbParse.String(txtCidConsignatario.Text);
+                    cmd.Parameters.Add("@uf_consignatario", SqlDbType.NVarChar).Value = DbParse.String(txtUFConsignatario.Text);
                     cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = Convert.ToInt32(txtCodPagador.Text);
                     cmd.Parameters.Add("@pagador", SqlDbType.NVarChar).Value = cboPagador.SelectedItem.Text;
                     cmd.Parameters.Add("@cid_pagador", SqlDbType.NVarChar).Value = txtCidPagador.Text;
@@ -1153,6 +1153,21 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterStartupScript(this.GetType(), "Sucesso",
                     "<script>alert('✅ Frete atualizado com sucesso!');</script>");
             }
+        }
+        public static class DbParse
+        {
+            public static object Int(string v)
+                => int.TryParse(v, out int i) ? i : (object)DBNull.Value;
+
+            public static object Decimal(string v)
+                => decimal.TryParse(v, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal d)
+                   ? d : (object)DBNull.Value;
+
+            public static object Date(string v)
+                => DateTime.TryParse(v, out DateTime dt) ? dt : (object)DBNull.Value;
+
+            public static object String(string v)
+                => string.IsNullOrWhiteSpace(v) ? (object)DBNull.Value : v.Trim();
         }
 
         private object SafeDateValue(string input)

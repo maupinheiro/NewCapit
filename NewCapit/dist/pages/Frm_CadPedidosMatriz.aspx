@@ -264,6 +264,12 @@
                                 <asp:TextBox ID="txtPedagio" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                             </div>
                         </div>
+                        <div class="col-md-1">
+                        <label for="inputFilial" style="text-align: right">LOTAÇÃO:</label>
+                        <div class="form-group">
+                            <asp:TextBox ID="txtLotacao" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                        </div>
+                    </div>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-12">
@@ -280,10 +286,10 @@
                                 <asp:TextBox ID="txtNumPedido" onkeypress="return apenasNumeros(event);" class="form-control" runat="server" OnTextChanged="txtNumPedido_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">MATERIAL:</label>
-                                <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control"></asp:DropDownList>
+                                <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="cboMaterial_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -313,7 +319,7 @@
                                 <asp:TextBox ID="txtControleCliente" runat="server" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">PREV. ENTREGA:</label>
                                 <asp:TextBox ID="txtPrevEntrega" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10" OnTextChanged="txtPrevEntrega_TextChanged" AutoPostBack="true"></asp:TextBox>                               

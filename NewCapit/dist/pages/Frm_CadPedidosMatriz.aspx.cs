@@ -203,7 +203,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboMateriais()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, descricao FROM tbtipomaterial";
+            string query = "SELECT codigo, descricao, lotacao FROM tbtipodematerial where status = 'ATIVO' ORDER BY descricao";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -222,7 +222,7 @@ namespace NewCapit.dist.pages
                     // Preencher o ComboBox com os dados do DataReader
                     cboMaterial.DataSource = reader;
                     cboMaterial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cboMaterial.DataValueField = "id";  // Campo que será o valor de cada item                    
+                    cboMaterial.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cboMaterial.DataBind();  // Realiza o binding dos dados                   
                     cboMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
@@ -235,6 +235,35 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        protected void cboMaterial_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(cboMaterial.SelectedItem.Text))
+            {
+                txtLotacao.Text = "";
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sql = @"SELECT lotacao 
+                       FROM tbtipodematerial 
+                       WHERE descricao = @descricao";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@descricao", cboMaterial.SelectedItem.Text);
+
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                        txtLotacao.Text = result.ToString();
+                    else
+                        txtLotacao.Text = "";
+                }
+            }
+        }
+
         private void PreencherComboDeposito()
         {
             // Consulta SQL que retorna os dados desejados
@@ -636,7 +665,7 @@ namespace NewCapit.dist.pages
                         {
                             // encontrou update
                             reader.Close();
-                            string sql = @"UPDATE tbpedidos SET carga = @carga, material = @material, peso = @peso, portao = @portao, situacao = @situacao, previsao = @previsao, entrega = @entrega, controledocliente = @controledocliente, observacao = @observacao, atualizacao = @atualizacao, gr = @gr, tomador = @tomador WHERE pedido = @pedido";
+                            string sql = @"UPDATE tbpedidos SET carga = @carga, material = @material, peso = REPLACE(@peso, ',', '.'), portao = @portao, situacao = @situacao, previsao = @previsao, entrega = @entrega, controledocliente = @controledocliente, observacao = @observacao, atualizacao = @atualizacao, gr = @gr, tomador = @tomador WHERE pedido = @pedido, lotacao=@lotacao";
                             try
                             {
                                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -656,6 +685,7 @@ namespace NewCapit.dist.pages
                                     cmdUpdate.Parameters.AddWithValue("@atualizacao", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
                                     cmdUpdate.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
                                     cmdUpdate.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
+                                    cmdUpdate.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
                                     con.Open();
                                     int rowsAffected = cmdUpdate.ExecuteNonQuery();
                                     if (rowsAffected > 0)
@@ -686,8 +716,8 @@ namespace NewCapit.dist.pages
                         else
                         {
                             conn.Close();
-                            string sqlSalvarPedido = "insert into tbpedidos " + "(pedido, carga, emissao, status, solicitante, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, andamento, ufcliorigem, ufclidestino, tomador, cidorigem, ciddestino, gr, cadastro)" +
-              "values" + "(@pedido, @carga, @emissao, @status, @solicitante, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @andamento, @ufcliorigem, @ufclidestino, @tomador, @cidorigem, @ciddestino, @gr, @cadastro)";
+                            string sqlSalvarPedido = "insert into tbpedidos " + "(pedido, carga, emissao, status, solicitante, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, andamento, ufcliorigem, ufclidestino, tomador, cidorigem, ciddestino, gr, cadastro, lotacao)" +
+              "values" + "(@pedido, @carga, @emissao, @status, @solicitante, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @andamento, @ufcliorigem, @ufclidestino, @tomador, @cidorigem, @ciddestino, @gr, @cadastro, @lotacao)";
 
                             SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                             comando.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
@@ -714,18 +744,18 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text);
                             comando.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
-
+                            comando.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
                             try
                             {
                                 conn.Open();
                                 comando.ExecuteNonQuery();
                                 conn.Close();
                                 // Acione o toast quando a página for carregada
-                                string script = "<script>showToast('Pedido cadastrado com sucesso!');</script>";
-                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                                       string script = "<script>showToast('Pedido cadastrado com sucesso!');</script>";
+                                       ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                                 // atualiza  
-                                txtNumPedido.Text = "";
-                                txtNumPedido.Focus();
+                                        txtNumPedido.Text = "";
+                                       txtNumPedido.Focus();
 
                             }
                             catch (Exception ex)

@@ -11,458 +11,395 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class Frm_CadPedidos
+    public partial class Frm_DistanciaEntreCidades
     {
 
         /// <summary>
-        /// Controle novaCarga.
+        /// Controle ScriptManagerProxy1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label novaCarga;
+        protected global::System.Web.UI.ScriptManagerProxy ScriptManagerProxy1;
 
         /// <summary>
-        /// Controle cbSolicitantes.
+        /// Controle txtPesquisar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cbSolicitantes;
+        protected global::System.Web.UI.WebControls.TextBox txtPesquisar;
 
         /// <summary>
-        /// Controle cboGR.
+        /// Controle ddlStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboGR;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
         /// <summary>
-        /// Controle txtCadastro.
+        /// Controle btnPesquisar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCadastro;
+        protected global::System.Web.UI.WebControls.Button btnPesquisar;
 
         /// <summary>
-        /// Controle txtFrete.
+        /// Controle btnAbrirModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFrete;
+        protected global::System.Web.UI.WebControls.Button btnAbrirModal;
 
         /// <summary>
-        /// Controle cboFrete.
+        /// Controle gvProcessos.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboFrete;
+        protected global::System.Web.UI.WebControls.GridView gvProcessos;
 
         /// <summary>
-        /// Controle txtCodRemetente.
+        /// Controle UpdatePanel1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodRemetente;
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
 
         /// <summary>
-        /// Controle cboRemetente.
+        /// Controle hfStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRemetente;
+        protected global::System.Web.UI.WebControls.HiddenField hfStatus;
 
         /// <summary>
-        /// Controle txtMunicipioRemetente.
+        /// Controle divMsg.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMunicipioRemetente;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsg;
 
         /// <summary>
-        /// Controle txtUFRemetente.
+        /// Controle lblMsg.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFRemetente;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsg;
 
         /// <summary>
-        /// Controle txtCodExpedidor.
+        /// Controle imgFoto.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodExpedidor;
+        protected global::System.Web.UI.WebControls.Image imgFoto;
 
         /// <summary>
-        /// Controle cboExpedidor.
+        /// Controle txtProcessoModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboExpedidor;
+        protected global::System.Web.UI.WebControls.TextBox txtProcessoModal;
 
         /// <summary>
-        /// Controle txtCidExpedidor.
+        /// Controle txtAIT.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCidExpedidor;
+        protected global::System.Web.UI.WebControls.TextBox txtAIT;
 
         /// <summary>
-        /// Controle txtUFExpedidor.
+        /// Controle txtData.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFExpedidor;
+        protected global::System.Web.UI.WebControls.TextBox txtData;
 
         /// <summary>
-        /// Controle txtCodDestinatario.
+        /// Controle txtDia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodDestinatario;
+        protected global::System.Web.UI.WebControls.TextBox txtDia;
 
         /// <summary>
-        /// Controle cboDestinatario.
+        /// Controle txtLancamento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboDestinatario;
+        protected global::System.Web.UI.WebControls.TextBox txtLancamento;
 
         /// <summary>
-        /// Controle txtMunicipioDestinatario.
+        /// Controle colunaID.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMunicipioDestinatario;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl colunaID;
 
         /// <summary>
-        /// Controle txtUFDestinatario.
+        /// Controle txtId.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFDestinatario;
+        protected global::System.Web.UI.WebControls.TextBox txtId;
 
         /// <summary>
-        /// Controle txtCodRecebedor.
+        /// Controle txtCodigo_Infracao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodRecebedor;
+        protected global::System.Web.UI.WebControls.TextBox txtCodigo_Infracao;
 
         /// <summary>
-        /// Controle cboRecebedor.
+        /// Controle ddlArtigo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRecebedor;
+        protected global::System.Web.UI.WebControls.DropDownList ddlArtigo;
 
         /// <summary>
-        /// Controle txtCidRecebedor.
+        /// Controle txtPontos.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCidRecebedor;
+        protected global::System.Web.UI.WebControls.TextBox txtPontos;
 
         /// <summary>
-        /// Controle txtUFRecebedor.
+        /// Controle txtGravidade.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFRecebedor;
+        protected global::System.Web.UI.WebControls.TextBox txtGravidade;
 
         /// <summary>
-        /// Controle txtCodConsignatario.
+        /// Controle txtInfrator.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodConsignatario;
+        protected global::System.Web.UI.WebControls.TextBox txtInfrator;
 
         /// <summary>
-        /// Controle txtConsignatario.
+        /// Controle txtCompetencia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtConsignatario;
+        protected global::System.Web.UI.WebControls.TextBox txtCompetencia;
 
         /// <summary>
-        /// Controle txtCidConsignatario.
+        /// Controle txtdesc_multa.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCidConsignatario;
+        protected global::System.Web.UI.WebControls.TextBox txtdesc_multa;
 
         /// <summary>
-        /// Controle txtUFConsignatario.
+        /// Controle txtLocalMulta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFConsignatario;
+        protected global::System.Web.UI.WebControls.TextBox txtLocalMulta;
 
         /// <summary>
-        /// Controle txtCodPagador.
+        /// Controle txtProvidencia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodPagador;
+        protected global::System.Web.UI.WebControls.TextBox txtProvidencia;
 
         /// <summary>
-        /// Controle txtPagador.
+        /// Controle txtValorsd.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPagador;
+        protected global::System.Web.UI.WebControls.TextBox txtValorsd;
 
         /// <summary>
-        /// Controle txtCidPagador.
+        /// Controle txtValorcd.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCidPagador;
+        protected global::System.Web.UI.WebControls.TextBox txtValorcd;
 
         /// <summary>
-        /// Controle txtUFPagador.
+        /// Controle txtVencimento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUFPagador;
+        protected global::System.Web.UI.WebControls.TextBox txtVencimento;
 
         /// <summary>
-        /// Controle txtFilial.
+        /// Controle txtCodMot.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFilial;
+        protected global::System.Web.UI.WebControls.TextBox txtCodMot;
 
         /// <summary>
-        /// Controle txtTipoVeiculo.
+        /// Controle txtNome.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTipoVeiculo;
+        protected global::System.Web.UI.WebControls.TextBox txtNome;
 
         /// <summary>
-        /// Controle txtDistancia.
+        /// Controle txtNucleo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDistancia;
+        protected global::System.Web.UI.WebControls.TextBox txtNucleo;
 
         /// <summary>
-        /// Controle txtDeslocamento.
+        /// Controle txtFrota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDeslocamento;
+        protected global::System.Web.UI.WebControls.TextBox txtFrota;
 
         /// <summary>
-        /// Controle txtDuracao.
+        /// Controle txtPlaca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDuracao;
+        protected global::System.Web.UI.WebControls.TextBox txtPlaca;
 
         /// <summary>
-        /// Controle txtPedagio.
+        /// Controle txtEquipamento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPedagio;
+        protected global::System.Web.UI.WebControls.TextBox txtEquipamento;
 
         /// <summary>
-        /// Controle txtLotacao.
+        /// Controle txtTransportadora.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLotacao;
+        protected global::System.Web.UI.WebControls.TextBox txtTransportadora;
 
         /// <summary>
-        /// Controle txtObservacao.
+        /// Controle txtEnvio_transp.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObservacao;
+        protected global::System.Web.UI.WebControls.TextBox txtEnvio_transp;
 
         /// <summary>
-        /// Controle txtNumPedido.
+        /// Controle txtRecebido_Por.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumPedido;
+        protected global::System.Web.UI.WebControls.TextBox txtRecebido_Por;
 
         /// <summary>
-        /// Controle cboMaterial.
+        /// Controle txtEnvio_dcp.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboMaterial;
+        protected global::System.Web.UI.WebControls.TextBox txtEnvio_dcp;
 
         /// <summary>
-        /// Controle txtPeso.
+        /// Controle txtBaixado_por.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPeso;
+        protected global::System.Web.UI.WebControls.TextBox txtBaixado_por;
 
         /// <summary>
-        /// Controle cboDeposito.
+        /// Controle txtStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboDeposito;
+        protected global::System.Web.UI.WebControls.TextBox txtStatus;
 
         /// <summary>
-        /// Controle cboSituacao.
+        /// Controle btnPesquisarModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboSituacao;
-
-        /// <summary>
-        /// Controle txtControleCliente.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtControleCliente;
-
-        /// <summary>
-        /// Controle txtPrevEntrega.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrevEntrega;
-
-        /// <summary>
-        /// Controle cboEntrega.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboEntrega;
-
-        /// <summary>
-        /// Controle btnAdicionar.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAdicionar;
-
-        /// <summary>
-        /// Controle gvPedidos.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvPedidos;
-
-        /// <summary>
-        /// Controle txtUsuCadastro.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
-
-        /// <summary>
-        /// Controle txtUsuAlteracao.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUsuAlteracao;
+        protected global::System.Web.UI.WebControls.Button btnPesquisarModal;
 
         /// <summary>
         /// Controle btnSalvar.
@@ -472,5 +409,14 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSalvar;
+
+        /// <summary>
+        /// Controle btnFechar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnFechar;
     }
 }

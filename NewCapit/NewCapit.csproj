@@ -382,6 +382,7 @@
     <Content Include="dist\pages\Frm_ColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_Comissoes.aspx" />
     <Content Include="dist\pages\Frm_DiarioDeBordo.aspx" />
+    <Content Include="dist\pages\Frm_DistanciaEntreCidades.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
     <Content Include="dist\pages\Frm_EditarColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
@@ -4799,6 +4800,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_DiarioDeBordo.aspx.designer.cs">
       <DependentUpon>Frm_DiarioDeBordo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_DistanciaEntreCidades.aspx.cs">
+      <DependentUpon>Frm_DistanciaEntreCidades.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_DistanciaEntreCidades.aspx.designer.cs">
+      <DependentUpon>Frm_DistanciaEntreCidades.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\Frm_EditarColeta.aspx.cs">
       <DependentUpon>Frm_EditarColeta.aspx</DependentUpon>

@@ -262,10 +262,10 @@
                                                 <asp:DropDownList ID="cboConsignatario" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboConsignatario_SelectedIndexChanged"></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="txtCidConsignatario" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txtCidConsignatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtUFConsignatario" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txtUFConsignatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                         </div>
                                         <!-- PAGADOR -->
@@ -278,10 +278,10 @@
                                                 <asp:DropDownList ID="cboPagador" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboPagador_SelectedIndexChanged"></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtUFPagador" Style="text-align: center" runat="server" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txtUFPagador" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                         </div>
 
@@ -784,7 +784,7 @@
                                         Text="Atualizar" />
                                 </div>
                                 <div class="col-md-1">
-                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Fechar               
                                     </a>
                                 </div>
                             </div>

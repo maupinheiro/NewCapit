@@ -164,7 +164,11 @@ namespace NewCapit.dist.pages
         private void PreencherComboTipoVeiculos()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codigo, descricao FROM tbtipoveic order by descricao";
+            string query = @"
+            SELECT DISTINCT RTRIM(LTRIM(descricao_tng)) AS descricao_tng
+            FROM tbtipoveic
+            WHERE descricao_tng IS NOT NULL
+            ORDER BY descricao_tng";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -182,8 +186,8 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     cboTipoVeiculo.DataSource = reader;
-                    cboTipoVeiculo.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cboTipoVeiculo.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+                    cboTipoVeiculo.DataTextField = "descricao_tng";  // Campo que será mostrado no ComboBox
+                    cboTipoVeiculo.DataValueField = "descricao_tng";  // Campo que será o valor de cada item                    
                     cboTipoVeiculo.DataBind();  // Realiza o binding dos dados                   
                     cboTipoVeiculo.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
@@ -234,7 +238,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboConsignario()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes order by nomcli";
+            string query = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where ativo_inativo = 'ATIVO' order by razcli";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -252,7 +256,7 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     cboConsignatario.DataSource = reader;
-                    cboConsignatario.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    cboConsignatario.DataTextField = "razcli";  // Campo que será mostrado no ComboBox
                     cboConsignatario.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     cboConsignatario.DataBind();  // Realiza o binding dos dados                   
                     cboConsignatario.Items.Insert(0, new ListItem("Selecione...", "0"));
@@ -269,7 +273,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboPagador()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes order by nomcli";
+            string query = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where ativo_inativo = 'ATIVO' order by razcli";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -287,7 +291,7 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     cboPagador.DataSource = reader;
-                    cboPagador.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    cboPagador.DataTextField = "razcli";  // Campo que será mostrado no ComboBox
                     cboPagador.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     cboPagador.DataBind();  // Realiza o binding dos dados                   
                     cboPagador.Items.Insert(0, new ListItem("Selecione...", "0"));
@@ -421,7 +425,7 @@ namespace NewCapit.dist.pages
             if (txtCodConsignatario.Text != "")
             {
                 string cod = txtCodConsignatario.Text;
-                string sql = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -489,7 +493,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -515,7 +519,7 @@ namespace NewCapit.dist.pages
             if (txtCodPagador.Text != "")
             {
                 string cod = txtCodPagador.Text;
-                string sql = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -583,7 +587,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -609,7 +613,7 @@ namespace NewCapit.dist.pages
             if (txtRota.Text != "")
             {
                 string cod = txtRota.Text.Trim();
-                string sql = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento, fl_exclusao, situacao FROM tbrotasdeentregas where rota = '" + cod + "' and situacao = 'ATIVA' and fl_exclusao is null";
+                string sql = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario,codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento, fl_exclusao, situacao FROM tbrotasdeentregas where rota = '" + cod + "' and situacao = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -925,11 +929,11 @@ namespace NewCapit.dist.pages
                     string sql = @"
                     INSERT INTO tbtabeladefretes
                     (
-                        cod_frete, desc_frete, rota, desc_rota,  cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor,  cod_destinatario, destinatario, cid_destinatario, uf_destinatario,  cod_recebedor, recebedor, cid_recebedor, uf_recebedor,  cod_consignatario, consignatario, cid_consignatario, uf_consignatario,  cod_pagador, pagador, cid_pagador, uf_pagador,  nucleo, distancia, Tempo, frete_tng, frete_agregado, frete_agregado_com_desc_carreta, frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros, tipo_veiculo, tipo_material, data_cadastro, situacao, tipo_viagem, deslocamento, vigencia_inicial, vigencia_final, lotacao_minima, valor_fixo_terceiro, aluguel_carreta, desc_carreta, valor_fixo_tng, valor_especial, desc_especial, valor_com_desc_especial,  observacao, cadastro_usuario, emitepedagio, vigencial_inicial_agregado, vigencia_final_agregado, vigencia_inicial_terceiro, vigencia_final_terceiro, despesa_adm,  codmot_especial, nommot_especial, codtra_especial, transp_especial, perc_frete_agregado, perc_frete_terceiro, perc_frete_especial
+                        cod_frete, desc_frete, rota, desc_rota,  cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor,  cod_destinatario, destinatario, cid_destinatario, uf_destinatario,  cod_recebedor, recebedor, cid_recebedor, uf_recebedor,  cod_consignatario, consignatario, cid_consignatario, uf_consignatario,  cod_pagador, pagador, cid_pagador, uf_pagador,  nucleo, distancia, Tempo, frete_tng, frete_agregado, frete_agregado_com_desc_carreta, frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros, tipo_veiculo, tipo_material, data_cadastro, situacao, tipo_viagem, deslocamento, vigencia_inicial, vigencia_final, lotacao_minima, valor_fixo_terceiro, aluguel_carreta, desc_carreta, valor_fixo_tng, valor_especial, desc_especial, valor_com_desconto_especial,  observacao, cadastro_usuario, emitepedagio, vigencia_inicial_agregado, vigencia_final_agregado, vigencia_inicial_terceiro, vigencia_final_terceiro, despesa_adm,  codmot_especial, nommot_especial, codtra_especial, transp_especial, perc_frete_agregado, perc_frete_terceiro, perc_frete_especial
                     )
                     VALUES
                     (
-                        @cod_frete, @desc_frete, @rota, @desc_rota,  @cod_remetente, @remetente, @cid_remetente, @uf_remetente, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor,  @cod_destinatario, @destinatario, @cid_destinatario, @uf_destinatario, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor,  @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario,  @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @nucleo, @distancia, @Tempo, @frete_tng, @frete_agregado, @frete_agregado_com_desc_carreta, @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao, @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final, @lotacao_minima, @valor_fixo_terceiro, @aluguel_carreta, @desc_carreta, @valor_fixo_tng, @valor_especial, @desc_especial, @valor_com_desconto_especial, @observacao, @cadastro_usuario, @emitepedagio, @vigencia_inicial_agregado, @vigencia_final_agregado, @vigencia_inicial_terceiro, @vigencia_final_terceiro, @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial, @transp_especial, @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial                       
+                        @cod_frete, @desc_frete, @rota, @desc_rota,  @cod_remetente, @remetente, @cid_remetente, @uf_remetente, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor,  @cod_destinatario, @destinatario, @cid_destinatario, @uf_destinatario, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor,  @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario,  @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @nucleo, @distancia, @Tempo, @frete_tng, @frete_agregado, @frete_agregado_com_desc_carreta, @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao, @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final, @lotacao_minima, @valor_fixo_terceiro, @aluguel_carreta, @desc_carreta, @valor_fixo_tng, @valor_especial, @desc_especial, @valor_com_desconto_especial, @observacao, @cadastro_usuario, @emitepedagio, @vigencia_inicial_agregado, @vigencia_final_agregado, @vigencia_inicial_terceiro, @vigencia_final_terceiro, @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial, @transp_especial, @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial                      
                     )";
 
                     using (SqlCommand cmd = new SqlCommand(sql, con))
@@ -1022,6 +1026,8 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterStartupScript(this.GetType(), "Sucesso",
                     "<script>alert('✅ Frete cadastrado com sucesso!');</script>");
             }
+            Response.Redirect("/dist/pages/ConsultaFretes.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
         }
         private object SafeDateValue(string input)
         {

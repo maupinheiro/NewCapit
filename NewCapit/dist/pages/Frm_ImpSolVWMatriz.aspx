@@ -193,7 +193,7 @@
               .then(resp => {
                   if (!resp.ok) throw new Error("Erro no upload");
                   // 👉 AGORA sim
-                  iniciar();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                  iniciar();                                                                
               })
               .catch(err => {
                   console.error(err);
@@ -252,9 +252,6 @@
                 });
         }
     </script>
-
-
-
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -278,6 +275,10 @@
                                 </button>
                             </div>
                             <!-- /.card-tools -->
+                        </div>
+                        <div id="divMsg" runat="server" style="display:none">
+                            <asp:Label ID="lblMsg" runat="server"></asp:Label>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                         <div class="card-body">
                             <h3>
@@ -316,17 +317,6 @@
                                                                                  CssClass="btn btn-primary"
                                                                                  OnClientClick="enviarPasta(); return false;" />
                                                                           </div>--%>
-                                                                     
-                                                                         
-
-                                                                            
-
-                                                                            
-
-
-                                                                       
-
-
                                                                         <br /><br />
                                                                        
                                                                         <div class="progress">
@@ -338,7 +328,7 @@
                                                                             </div>
                                                                         </div>
 
-                                                                        <br />
+                                                                        <br /><br />
 
                                                                         <asp:Label ID="lblStatus" runat="server"
                                                                             CssClass="alert alert-info" />
@@ -365,8 +355,8 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <asp:Button ID="btnSair" runat="server" CssClass="btn btn-outline-info float-right" OnClick="btnSair_Click"
-                                                                Text="Sair" />
+                                                            <asp:Button ID="btnSair" runat="server" CssClass="btn btn-danger float-right" OnClick="btnSair_Click"
+                                                                Text="Fechar" />
                                                         </div>
                                                     </div>
                                                 </div>

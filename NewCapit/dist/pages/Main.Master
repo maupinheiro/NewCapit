@@ -535,6 +535,10 @@
                                             <i class="fas fa-dollar-sign nav-icon"></i>
                                             <p>Simular Frete</p>
                                         </a>
+                                        <a href="/dist/pages/Frm_DistanciaEntreCidades.aspx" class="nav-link">
+                                            <i class="fas fa-dollar-sign nav-icon"></i>
+                                            <p>Distância entre Cidades</p>
+                                        </a>
                                     </li>
                                 </ul>
                             </li>

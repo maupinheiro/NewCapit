@@ -659,7 +659,7 @@ namespace NewCapit.dist.pages
                         string ufExpedidor = txtUFExpedidor.Text.Trim();
                         string cidadeRecebedor = txtCidRecebedor.Text.Trim();
                         string ufRecebedor = txtUFRecebedor.Text.Trim();
-                        string sqlPesquisa = "SELECT UF_Origem, Origem, UF_Destino, Destino, Distancia FROM tbdistanciapremio WHERE UF_Origem = '" + ufExpedidor + "' AND Origem = '" + cidadeExpedidor + "' AND UF_Destino = '" + ufRecebedor + "' AND destino = '" + cidadeRecebedor + "'";
+                        string sqlPesquisa = "SELECT UF_Origem, Origem, UF_Destino, Destino, Distancia FROM tbdistanciapremio WHERE UF_Origem = '" + ufExpedidor + "' AND Origem COLLATE Latin1_General_CI_AI = '" + cidadeExpedidor + "' AND UF_Destino = '" + ufRecebedor + "' AND destino COLLATE Latin1_General_CI_AI = '" + cidadeRecebedor + "'";
                         SqlDataAdapter daPesquisa = new SqlDataAdapter(sqlPesquisa, conn);
                         DataTable dtPesquisa = new DataTable();
                         conn.Open();

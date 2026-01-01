@@ -32,6 +32,7 @@ using System.Drawing;
 using System.Web.Script.Serialization;
 using System.Text;
 using System.Windows.Interop;
+using System.Windows.Media.Media3D;
 
 
 namespace NewCapit.dist.pages
@@ -44,6 +45,7 @@ namespace NewCapit.dist.pages
         string codFrota;
         string num_coleta;
         DateTime dataHoraAtual = DateTime.Now;
+        double distancia;
         string sDuracao, sPercurso;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -488,8 +490,8 @@ namespace NewCapit.dist.pages
                 txtConjunto.Text = dtVeiculos.Rows[0]["tipocarreta"].ToString();
                 txtCodProprietario.Text = dtVeiculos.Rows[0]["codtra"].ToString();
                 txtProprietario.Text = dtVeiculos.Rows[0]["transp"].ToString();
-                txtTecnologia.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
-                txtRastreamento.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
+                txtTecnologia.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
+                txtRastreamento.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
 
                 txtOpacidade.Text = dtVeiculos.Rows[0]["vencimentolaudofumaca"].ToString();
                 txtCET.Text = dtVeiculos.Rows[0]["venclicencacet"].ToString();
@@ -745,8 +747,31 @@ namespace NewCapit.dist.pages
 
             }
 
+            //Dados do proprietario
+            string sqlProprietario = @"SELECT codtra, nomtra, cnpj
+                   FROM tbtransportadoras 
+                   WHERE codtra = @codtra";
+            using (SqlCommand cmdProprietario = new SqlCommand(sqlProprietario, conn))
+            {
+                cmdProprietario.Parameters.AddWithValue("@codtra", txtCodProprietario.Text.Trim());
 
-           
+                DataTable dtProprietario = new DataTable();
+                SqlDataAdapter daProprietario = new SqlDataAdapter(cmdProprietario);
+
+                daProprietario.Fill(dtProprietario);
+
+                if (dtProprietario.Rows.Count == 0)
+                {
+                    txtCPF_CNPJ.Text = "00.000.000/0000-00";
+                }
+                else
+                {
+                    txtCPF_CNPJ.Text = dtProprietario.Rows[0]["cnpj"].ToString();
+                }
+            }
+
+
+
         }
 
         private DataTable CriarTabelaCargas()
@@ -1182,8 +1207,7 @@ namespace NewCapit.dist.pages
         }
 
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
-        {
-            
+        {            
             string novaCarga = novaCargaVazia.Text.Trim();
             int numCarga = int.Parse(novaCargaVazia.Text.Trim());
             string codigoOrigem = codCliInicial.Text.Trim();
@@ -1194,21 +1218,21 @@ namespace NewCapit.dist.pages
             string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
             string ufDestino = txtUfDestino.Text.Trim().ToUpper();
-            double distancia = double.Parse(txtDistancia.Text.Trim());
-
+            double distancia = double.Parse(txtDistancia.Text.Trim()); 
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
                 cmd.Parameters.AddWithValue("@entrega", "NORMAL");
                 cmd.Parameters.AddWithValue("@peso", "0"); // ou valor padrão
                 cmd.Parameters.AddWithValue("@material", "Vazio"); // ou valor padrão
-                cmd.Parameters.AddWithValue("@portao", "vz"); // ou valor padrão
-                cmd.Parameters.AddWithValue("@situacao", "Pendente");
+                cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
+                cmd.Parameters.AddWithValue("@situacao", "Pendente");                
+                cmd.Parameters.AddWithValue("@tomador", "TRANSNOVAG");
                 cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
                 cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
                 cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
@@ -1221,6 +1245,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
                 cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                 cmd.Parameters.AddWithValue("@distancia", distancia);
+                cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
 
                 // Abrindo a conexão e executando a query
                 conn.Open();
@@ -1231,14 +1256,14 @@ namespace NewCapit.dist.pages
                     txtCarga.Text = novaCarga;
                     
                     BuscarCargaNoBanco(novaCarga);
-
-                    ScriptManager.RegisterStartupScript(
-                        this,
-                        this.GetType(),
-                        "FechaModal",
-                        "$('#meuModal').modal('hide');",
-                        true
-                    );
+                   // txtCarga.Text = novaCargaVazia.Text.Trim();
+                    //ScriptManager.RegisterStartupScript(
+                    //    this,
+                    //    this.GetType(),
+                    //    "FechaModal",
+                    //    "$('#meuModal').modal('hide');",
+                    //    true
+                    //);
                 }
                
                 else
@@ -1247,7 +1272,14 @@ namespace NewCapit.dist.pages
                     string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
                     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
                 }
-               
+                ScriptManager.RegisterStartupScript(
+                        this,
+                        this.GetType(),
+                        "FechaModal",
+                        "$('#meuModal').modal('hide');",
+                        true
+                    );
+
             }
 
         }
@@ -1541,6 +1573,17 @@ namespace NewCapit.dist.pages
         {
             string cs = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
 
+            // 🔹 Monta o campo descr_frete
+            //string[] pagador = cboPagador.SelectedItem.Text.Split(' ');
+            //string[] remetente = cboRemetente.Text.Split(' ');
+            //string[] expedidor = cboExpedidor.Text.Split(' ');
+            //string[] destinatario = cboDestinatario.Text.Split(' ');
+            //string[] recebedor = cboRecebedor.Text.Split(' ');
+            
+            //string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Exped./Recb.: {txtCodExpedidor.Text} - {expedidor[0]}({txtCidExpedidor.Text}/{txtUFExpedidor.Text}) x {txtCodRecebedor.Text} - {recebedor[0]}({txtCidRecebedor.Text}/{txtUFRecebedor.Text}) - Material: {cboTipoMaterial.SelectedItem.Text} - Veículo: {cboTipoVeiculo.SelectedItem.Text}";
+
+            //, cod_pagador, pagador, remetente, cod_expedidor,expedidor, uf_expedidor, cid_expedidor, destinatario, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, material, tipoveiculo
+
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 conn.Open();
@@ -1559,14 +1602,14 @@ namespace NewCapit.dist.pages
                     cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, valcet, valcrlvveiculo,
                     valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
                     tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa, dtcad, usucad,
-                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet
+                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario
                 )
                 VALUES (
                     @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                     @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @valcet, @valcrlvveiculo,
                     @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
                     @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa, @dtcad, @usucad,
-                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet
+                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario
                 )";
 
                     using (SqlCommand cmd = new SqlCommand(insert, conn, tran))
@@ -1619,6 +1662,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.AddWithValue("@emissao", DateTime.Now);
                         cmd.Parameters.AddWithValue("@numero_gr", txtLiberacaoGR.Text);
                         cmd.Parameters.AddWithValue("@numero_protocolo_cet", txtNumProtCET.Text);
+                        cmd.Parameters.AddWithValue("@cpf_cnpj_proprietario", txtCPF_CNPJ.Text.Trim());
                         cmd.ExecuteNonQuery();
                     }
 
@@ -1960,8 +2004,8 @@ namespace NewCapit.dist.pages
                 txtConjunto.Text = dtVeiculos.Rows[0]["tipocarreta"].ToString();
                 txtCodProprietario.Text = dtVeiculos.Rows[0]["codtra"].ToString();
                 txtProprietario.Text = dtVeiculos.Rows[0]["transp"].ToString();
-                txtTecnologia.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
-                txtRastreamento.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
+                txtTecnologia.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
+                txtRastreamento.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
 
                 txtOpacidade.Text = dtVeiculos.Rows[0]["vencimentolaudofumaca"].ToString();
                 txtCET.Text = dtVeiculos.Rows[0]["venclicencacet"].ToString();
@@ -2152,6 +2196,28 @@ namespace NewCapit.dist.pages
 
             }
 
+            //Dados do proprietario
+            string sqlProprietario = @"SELECT codtra, nomtra, cnpj
+                   FROM tbtransportadoras 
+                   WHERE codtra = @codtra";
+            using (SqlCommand cmdProprietario = new SqlCommand(sqlProprietario, conn))
+            {
+                cmdProprietario.Parameters.AddWithValue("@codtra", txtCodProprietario.Text.Trim());
+
+                DataTable dtProprietario = new DataTable();
+                SqlDataAdapter daProprietario = new SqlDataAdapter(cmdProprietario);
+
+                daProprietario.Fill(dtProprietario);
+
+                if (dtProprietario.Rows.Count == 0)
+                {
+                    txtCPF_CNPJ.Text = "00.000.000/0000-00";
+                }
+                else
+                {
+                    txtCPF_CNPJ.Text = dtProprietario.Rows[0]["cnpj"].ToString();
+                }
+            }
 
             // Dados da segunda carreta
             if (txtReboque2.Text != "")
