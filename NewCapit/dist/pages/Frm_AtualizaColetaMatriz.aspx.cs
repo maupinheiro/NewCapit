@@ -552,6 +552,7 @@ namespace NewCapit.dist.pages
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);
+            //GetPedidos();
 
 
         }
@@ -641,11 +642,62 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+            if (e.Item.ItemType == ListItemType.Item ||
+         e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                HiddenField hdIdCarga =
+                    (HiddenField)e.Item.FindControl("hdIdCarga");
+
+                GridView gvPedidos =
+                    (GridView)e.Item.FindControl("gvPedidos");
+
+                UpdatePanel upd =
+                    (UpdatePanel)e.Item.FindControl("updTabs");
+
+                if (hdIdCarga != null && gvPedidos != null)
+                {
+                    int idCarga;
+                    if (int.TryParse(hdIdCarga.Value, out idCarga))
+                    {
+                        CarregarPedidos(idCarga, gvPedidos);
+
+                        // força renderização do conteúdo
+                        //upd.Update();
+                    }
+                }
+            }
 
 
 
 
         }
+
+        private void CarregarPedidos(int idCarga, GridView gv)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"SELECT pedido, emissao, peso, material, portao,
+                              iniciocar, termcar
+                       FROM tbpedidos
+                       WHERE carga = @idCarga";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        gv.DataSource = dr;
+                        gv.DataBind();
+                    }
+
+                }
+            }
+        }
+
+
 
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
@@ -837,9 +889,9 @@ namespace NewCapit.dist.pages
             {
                 int id = Convert.ToInt32(e.CommandArgument);
                 string idCarga = id.ToString(); // esse valor viria da lógica do seu código
-                hdIdCarga.Value = idCarga;
+                //hdIdCarga.Value = idCarga;
                 Session["idCarga"] = idCarga;
-                GetPedidos();
+                //GetPedidos();
                 //string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
                 //string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
                 //ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
@@ -1650,30 +1702,36 @@ namespace NewCapit.dist.pages
             ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
 
         }
-        void GetPedidos()
-        {
-            if (string.IsNullOrEmpty(hdIdCarga.Value))
-                return;
+        //void GetPedidos()
+        //{
+        //    if (string.IsNullOrEmpty(hdIdCarga.Value))
+        //        return;
 
-            using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-            {
-                string sql = @"SELECT pedido, emissao, peso, material, portao,
-                              iniciocar, termcar
-                       FROM tbpedidos
-                       WHERE id = @idCarga";
+        //    using (SqlConnection conn = new SqlConnection(
+        //        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //    {
+        //        string sql = @"SELECT pedido, emissao, peso, material, portao,
+        //                      iniciocar, termcar
+        //               FROM tbpedidos
+        //               WHERE carga = @idCarga";
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add("@idCarga", SqlDbType.Int)
-                               .Value = int.Parse(hdIdCarga.Value);
+        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
+        //        {
+        //            cmd.Parameters.Add("@idCarga", SqlDbType.Int)
+        //                           .Value = int.Parse(hdIdCarga.Value);
 
-                con.Open();
+        //            conn.Open();
 
 
-                //gvPedidos.DataSource = cmd.ExecuteReader();
-                //gvPedidos.DataBind();
-            }
-        }
+
+        //            gvPedidos.DataSource = cmd.ExecuteReader();
+        //            gvPedidos.DataBind();
+        //        }
+        //    }
+        //}
+
+        
+
         protected string CalcularTempo(object inicio, object fim)
         {
             if (inicio == DBNull.Value || fim == DBNull.Value)
@@ -1685,6 +1743,8 @@ namespace NewCapit.dist.pages
             TimeSpan tempo = dtFim - dtInicio;
 
             return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
+
+            
         }
 
         void CarregarPedidos(int idCarga)
@@ -1707,16 +1767,22 @@ namespace NewCapit.dist.pages
         void GetMotoristas(DropDownList ddl)
         {
             using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT id, nommot FROM tbMotoristas where status = 'ATIVO'", conn);
+                string sql = "SELECT id, nommot FROM tbmotoristas";
 
-                con.Open();
-                ddl.DataSource = cmd.ExecuteReader();
-                ddl.DataTextField = "nommot";
-                ddl.DataValueField = "id";
-                ddl.DataBind();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        ddl.DataSource = dr;
+                        ddl.DataTextField = "nommot";
+                        ddl.DataValueField = "id";
+                        ddl.DataBind();
+                    }
+                }
             }
 
             //ddl.Items.Insert(0, new ListItem("Selecione", ""));

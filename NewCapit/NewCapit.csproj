@@ -368,7 +368,6 @@
     <Content Include="dist\pages\Frm_AltCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_AltFornecedor.aspx" />
-    <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_AtualizaOrdemColeta.aspx" />
     <Content Include="dist\pages\Frm_AvaliaDesempenho.aspx" />
     <Content Include="dist\pages\Frm_CadCargasMatriz.aspx" />
@@ -410,6 +409,7 @@
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="dist\pages\Frm_Rotas.aspx" />
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
+    <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4703,13 +4703,6 @@
     <Compile Include="dist\pages\Frm_AltFornecedor.aspx.designer.cs">
       <DependentUpon>Frm_AltFornecedor.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.cs">
-      <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.designer.cs">
-      <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\Frm_AtualizaOrdemColeta.aspx.cs">
       <DependentUpon>Frm_AtualizaOrdemColeta.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5014,6 +5007,13 @@
     </Compile>
     <Compile Include="dist\pages\UploadHandler.ashx.cs">
       <DependentUpon>UploadHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.cs">
+      <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.designer.cs">
+      <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
