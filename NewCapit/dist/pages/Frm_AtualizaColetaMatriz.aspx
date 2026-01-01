@@ -1,5 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaColetaMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaColetaMatriz" %>
-
 <%@ Register Assembly="GMaps" Namespace="Subgurim.Controles" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -17,502 +16,190 @@
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
+
+        /* =========================
+           FUNÇÕES GLOBAIS (MODAIS)
+        ========================= */
         function fecharModalOcorrencia() {
             $('#modalOcorrencia').modal('hide');
         }
-    </script>
-    <style>
-        .fonte-menor {
-            font-size: 10px;
-        }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function aplicarMascara(input, mascara) {
-                input.addEventListener("input", function () {
-                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
-                    let resultado = "";
-                    let posicao = 0;
 
-                    for (let i = 0; i < mascara.length; i++) {
-                        if (mascara[i] === "0") {
-                            if (valor[posicao]) {
-                                resultado += valor[posicao];
-                                posicao++;
-                            } else {
-                                break;
-                            }
-                        } else {
-                            resultado += mascara[i];
-                        }
-                    }
-
-                    input.value = resultado;
-                });
-            }
-
-            // Pegando os elementos no ASP.NET            
-            let txtCadCelular = document.getElementById("<%= txtCadCelular.ClientID %>");
-            if (txtCadCelular) aplicarMascara(txtCadCelular, "(00) 0 0000-0000");
-        });
-    </script>
-    <script type="text/javascript">
         function abrirModalTelefone() {
-            // Pega valor do TextBox do Web Forms            
             var codigoFrota = document.getElementById('<%= txtCodFrota.ClientID %>').value;
+    document.getElementById('<%= txtCodContato.ClientID %>').value = codigoFrota;
 
-            // Define o valor no TextBox do modal
-            document.getElementById('<%= txtCodContato.ClientID %>').value = codigoFrota;
+    $('#telefoneModal').modal({ backdrop: 'static', keyboard: false });
+}
 
-            //$('#telefoneModal').modal('show');
-            $('#telefoneModal').modal({ backdrop: 'static', keyboard: false });
-        }
-    </script>
-    <script>
-        // Função para converter o formato "Xh Ymin" para minutos totais.
-        function converterTempoParaMinutos(tempoStr) {
-            if (!tempoStr || typeof tempoStr !== 'string' || tempoStr.includes("Inválido")) {
-                return 0;
-            }
-            const partesHoras = tempoStr.split('h');
-            const horas = parseInt(partesHoras[0], 10) || 0;
-            const partesMinutos = (partesHoras[1] || '').split('min');
-            const minutos = parseInt(partesMinutos[0], 10) || 0;
-            return (horas * 60) + minutos;
-        }
+/* =========================
+   MÁSCARA CELULAR
+========================= */
+function aplicarMascaraTelefone() {
+    const input = document.getElementById("<%= txtCadCelular.ClientID %>");
+            if (!input) return;
 
-        // NOVA FUNÇÃO: Atualiza o status e o estilo dos campos de tempo.
-        function atualizarStatusECores(item) {
-            const ddlStatus = item.querySelector('.ddlStatus');
-            if (!ddlStatus) return;
+            input.addEventListener("input", function () {
+                let valor = this.value.replace(/\D/g, "");
+                let resultado = "";
+                let pos = 0;
+                const mascara = "(00) 0 0000-0000";
 
-            const txtChegadaOrigem = item.querySelector('.chegada');
-            const txtSaidaOrigem = item.querySelector('.saida');
-            const txtChegadaDestino = item.querySelector('.chegada-planta');
-            const txtSaidaPlanta = item.querySelector('.saida-planta');
-
-            const txtAgCarreg = item.querySelector('.espera');
-            const txtEsperaGate = item.querySelector('.espera-gate');
-            const txtDentroPlanta = item.querySelector('.dentro-planta');
-
-            // 1. Atualiza o Status baseado no preenchimento dos campos
-            if (txtSaidaPlanta && txtSaidaPlanta.value) {
-                ddlStatus.value = 'Concluido';
-            } else if (txtChegadaDestino && txtChegadaDestino.value) {
-                ddlStatus.value = 'Ag. Descarga';
-            } else if (txtSaidaOrigem && txtSaidaOrigem.value) {
-                ddlStatus.value = 'Em Transito';
-            } else if (txtChegadaOrigem && txtChegadaOrigem.value) {
-                ddlStatus.value = 'Ag. Carreg.';
-            }
-
-            // 2. Verifica o tempo e aplica o estilo (fundo vermelho, letra branca)
-            // Limite de 90 minutos (1h 30min)
-            const limiteMinutos = 90;
-
-            // Verifica txtAgCarreg
-            if (txtAgCarreg) {
-                const tempoAgCarreg = converterTempoParaMinutos(txtAgCarreg.value);
-                if (tempoAgCarreg > limiteMinutos) {
-                    txtAgCarreg.style.backgroundColor = 'red';
-                    txtAgCarreg.style.color = 'white';
-                } else {
-                    txtAgCarreg.style.backgroundColor = '';
-                    txtAgCarreg.style.color = '';
-                }
-            }
-
-            // Verifica txtEsperaGate
-            if (txtEsperaGate) {
-                const tempoEsperaGate = converterTempoParaMinutos(txtEsperaGate.value);
-                if (tempoEsperaGate > limiteMinutos) {
-                    txtEsperaGate.style.backgroundColor = 'red';
-                    txtEsperaGate.style.color = 'white';
-                } else {
-                    txtEsperaGate.style.backgroundColor = '';
-                    txtEsperaGate.style.color = '';
-                }
-            }
-
-            // Verifica txtDentroPlanta
-            if (txtDentroPlanta) {
-                const tempoDentroPlanta = converterTempoParaMinutos(txtDentroPlanta.value);
-                if (tempoDentroPlanta > limiteMinutos) {
-                    txtDentroPlanta.style.backgroundColor = 'red';
-                    txtDentroPlanta.style.color = 'white';
-                } else {
-                    txtDentroPlanta.style.backgroundColor = '';
-                    txtDentroPlanta.style.color = '';
-                }
-            }
-        }
-
-        function calcularTempoAgCarreg(item) {
-            const chegada = item.querySelector('.chegada').value;
-            const saida = item.querySelector('.saida').value;
-            const espera = item.querySelector('.espera');
-
-            if (chegada && saida) {
-                const dtChegada = new Date(chegada);
-                const dtSaida = new Date(saida);
-
-                if (!isNaN(dtChegada) && !isNaN(dtSaida)) {
-                    const diffMs = dtSaida - dtChegada;
-
-                    if (diffMs < 0) {
-                        espera.value = "Inválido";
-                        return;
+                for (let i = 0; i < mascara.length; i++) {
+                    if (mascara[i] === "0") {
+                        if (valor[pos]) resultado += valor[pos++];
+                        else break;
+                    } else {
+                        resultado += mascara[i];
                     }
-
-                    const diffMin = Math.floor(diffMs / 60000);
-                    const horas = Math.floor(diffMin / 60);
-                    const minutos = diffMin % 60;
-
-                    espera.value = `${horas}h ${minutos}min`;
-                } else {
-                    espera.value = '';
                 }
-            }
-            // Chama a função de atualização após o cálculo
-            atualizarStatusECores(item);
-        }
-
-        function calcularTempoEsperaGate(item) {
-            const chegadaPlanta = item.querySelector('.chegada-planta').value;
-            const entrada = item.querySelector('.entrada-planta').value;
-            const esperaGate = item.querySelector('.espera-gate');
-
-            if (chegadaPlanta && entrada) {
-                const dtChegadaPlanta = new Date(chegadaPlanta);
-                const dtEntrada = new Date(entrada);
-
-                if (!isNaN(dtChegadaPlanta) && !isNaN(dtEntrada)) {
-                    const diffMs = dtEntrada - dtChegadaPlanta;
-
-                    if (diffMs < 0) {
-                        esperaGate.value = "Inválido";
-                        return;
-                    }
-
-                    const diffMin = Math.floor(diffMs / 60000);
-                    const horas = Math.floor(diffMin / 60);
-                    const minutos = diffMin % 60;
-
-                    esperaGate.value = `${horas}h ${minutos}min`;
-                } else {
-                    esperaGate.value = '';
-                }
-            }
-            // Chama a função de atualização após o cálculo
-            atualizarStatusECores(item);
-        }
-
-        function calcularTempoDentroPlanta(item) {
-            const entrada = item.querySelector('.entrada-planta')?.value;
-            const saida = item.querySelector('.saida-planta')?.value;
-            const dentro = item.querySelector('.dentro-planta');
-
-            if (entrada && saida) {
-                const dtEntrada = new Date(entrada);
-                const dtSaida = new Date(saida);
-
-                if (!isNaN(dtEntrada) && !isNaN(dtSaida)) {
-                    const diffMs = dtSaida - dtEntrada;
-
-                    if (diffMs < 0) {
-                        dentro.value = "Inválido";
-                        return;
-                    }
-
-                    const diffMin = Math.floor(diffMs / 60000);
-                    const horas = Math.floor(diffMin / 60);
-                    const minutos = diffMin % 60;
-
-                    dentro.value = `${horas}h ${minutos}min`;
-                } else {
-                    dentro.value = '';
-                }
-            }
-            // Chama a função de atualização após o cálculo
-            atualizarStatusECores(item);
-        }
-
-        function mostrarErro(item, campo, mensagem) {
-            const spanErro = item.querySelector('.msg-erro');
-            if (spanErro) {
-                spanErro.textContent = mensagem;
-                spanErro.style.display = 'block';
-            }
-
-            if (campo) {
-                campo.style.border = "2px solid red";
-                campo.classList.add("com-erro");
-                campo.focus();
-            }
-        }
-
-        function limparErros(item) {
-            const spanErro = item.querySelector('.msg-erro');
-            if (spanErro) {
-                spanErro.textContent = '';
-                spanErro.style.display = 'none';
-            }
-
-            const campos = item.querySelectorAll('input');
-            campos.forEach(campo => {
-                campo.style.border = "";
-                campo.classList.remove("com-erro");
+                this.value = resultado;
             });
         }
 
-        function validarDatas(item) {
-            const agora = new Date();
+        /* =========================
+           SELECT2 (SEGURO)
+        ========================= */
+        function iniciarSelect2() {
+            $('.select2').each(function () {
+                if ($(this).hasClass("select2-hidden-accessible")) {
+                    $(this).select2('destroy');
+                }
+                $(this).select2({ width: '100%' });
+            });
+        }
 
-            const chegadaOrigemInput = item.querySelector('.chegada');
-            const saidaOrigemInput = item.querySelector('.saida');
-            const chegadaDestinoInput = item.querySelector('.chegada-planta');
-            const entradaInput = item.querySelector('.entrada-planta');
-            const saidaPlantaInput = item.querySelector('.saida-planta');
-            const cvaInput = item.querySelector('.cva');
-            const gateInput = item.querySelector('.gate');
-            const tdDataHora = item.querySelector('.data-hora');
-            const dataHoraAttr = tdDataHora?.getAttribute('data-datahora');
+        /* =========================
+           TEMPOS E STATUS
+        ========================= */
+        function converterTempoParaMinutos(str) {
+            if (!str || str.includes("Inválido")) return 0;
+            let h = parseInt(str.split('h')[0]) || 0;
+            let m = parseInt((str.split('h')[1] || '').replace('min', '')) || 0;
+            return h * 60 + m;
+        }
 
-            limparErros(item);
+        function atualizarStatusECores(item) {
+            const ddl = item.querySelector('.ddlStatus');
+            if (!ddl) return;
 
-            const v1 = new Date(chegadaOrigemInput.value);
-            const v2 = new Date(saidaOrigemInput.value);
-            const v3 = new Date(chegadaDestinoInput.value);
-            const v4 = new Date(entradaInput.value);
-            const v5 = new Date(saidaPlantaInput.value);
+            const chegada = item.querySelector('.chegada')?.value;
+            const saida = item.querySelector('.saida')?.value;
+            const chegadaPlanta = item.querySelector('.chegada-planta')?.value;
+            const saidaPlanta = item.querySelector('.saida-planta')?.value;
 
-            if (cvaInput && gateInput && gateInput.value && !cvaInput.value.trim()) {
-                mostrarErro(item, gateInput, "Preencha o Nº CVA antes da Janela Gate.");
-                gateInput.value = "";
+            if (saidaPlanta) ddl.value = 'Concluido';
+            else if (chegadaPlanta) ddl.value = 'Ag. Descarga';
+            else if (saida) ddl.value = 'Em Transito';
+            else if (chegada) ddl.value = 'Ag. Carreg.';
+
+            const limite = 90;
+            ['espera', 'espera-gate', 'dentro-planta'].forEach(cls => {
+                const el = item.querySelector('.' + cls);
+                if (!el) return;
+
+                const tempo = converterTempoParaMinutos(el.value);
+                el.style.backgroundColor = tempo > limite ? 'red' : '';
+                el.style.color = tempo > limite ? 'white' : '';
+            });
+        }
+
+        /* =========================
+           CÁLCULOS
+        ========================= */
+        function calcularTempo(item, iniCls, fimCls, destinoCls) {
+            const ini = item.querySelector(iniCls)?.value;
+            const fim = item.querySelector(fimCls)?.value;
+            const destino = item.querySelector(destinoCls);
+
+            if (!ini || !fim || !destino) return;
+
+            const d1 = new Date(ini);
+            const d2 = new Date(fim);
+            if (isNaN(d1) || isNaN(d2) || d2 < d1) {
+                destino.value = "Inválido";
                 return;
             }
 
-            if (dataHoraAttr && gateInput?.value) {
-                const dtGate = new Date(gateInput.value);
-                const dtReferencia = new Date(dataHoraAttr);
+            const min = Math.floor((d2 - d1) / 60000);
+            destino.value = `${Math.floor(min / 60)}h ${min % 60}min`;
 
-                if (dtGate < dtReferencia) {
-                    mostrarErro(item, gateInput, "Janela Gate não pode ser menor que a data/hora da coleta.");
-                    gateInput.value = "";
+            atualizarStatusECores(item);
+        }
+
+        /* =========================
+           VALIDAÇÕES
+        ========================= */
+        function validarDatas(item) {
+            const agora = new Date();
+            const campos = item.querySelectorAll('.chegada, .saida, .chegada-planta, .entrada-planta, .saida-planta');
+
+            for (let i = 0; i < campos.length - 1; i++) {
+                if (!campos[i].value && campos[i + 1].value) {
+                    campos[i + 1].value = '';
+                    campos[i + 1].style.border = '2px solid red';
                     return;
                 }
             }
 
-            if (!chegadaOrigemInput.value && saidaOrigemInput.value) {
-                mostrarErro(item, saidaOrigemInput, "Preencha a chegada do fornecedor antes da saída.");
-                saidaOrigemInput.value = "";
-                return;
-            }
-
-            if (!saidaOrigemInput.value && chegadaDestinoInput.value) {
-                mostrarErro(item, chegadaDestinoInput, "Preencha a saída do fornecedor antes da chegada na planta.");
-                chegadaDestinoInput.value = "";
-                return;
-            }
-
-            if (!chegadaDestinoInput.value && entradaInput.value) {
-                mostrarErro(item, entradaInput, "Preencha a chegada na planta antes da entrada.");
-                entradaInput.value = "";
-                return;
-            }
-
-            if (!entradaInput.value && saidaPlantaInput.value) {
-                mostrarErro(item, saidaPlantaInput, "Preencha a entrada na planta antes da saída.");
-                saidaPlantaInput.value = "";
-                return;
-            }
-
-            if (v1 > agora) {
-                mostrarErro(item, chegadaOrigemInput, "Chegada do fornecedor não pode ser no futuro.");
-                return;
-            }
-
-            if (v2 < v1 || v2 > agora) {
-                mostrarErro(item, saidaOrigemInput, "Saída do fornecedor não pode ser antes da chegada nem no futuro.");
-                return;
-            }
-
-            if (v3 < v2 || v3 > agora) {
-                mostrarErro(item, chegadaDestinoInput, "Chegada na planta não pode ser antes da saída do fornecedor nem no futuro.");
-                return;
-            }
-
-            if (v4 < v3 || v4 > agora) {
-                mostrarErro(item, entradaInput, "Entrada na planta não pode ser antes da chegada nem no futuro.");
-                return;
-            }
-
-            if (v5 < v4 || v5 > agora) {
-                mostrarErro(item, saidaPlantaInput, "Saída da planta não pode ser antes da entrada nem no futuro.");
-                return;
-            }
-
-            limparErros(item);
-            // Chama a função de atualização após a validação bem-sucedida
             atualizarStatusECores(item);
         }
 
+        /* =========================
+           PEDIDOS (TAB)
+        ========================= */
+        function carregarPedidos(idCarga) {
+            fetch("Carga.aspx/GetPedidos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json; charset=utf-8" },
+                body: JSON.stringify({ idCarga })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d && d.d !== undefined) {
+                        document.getElementById("conteudoPedidos").innerHTML = d.d;
+                    }
+                })
+                .catch(console.error);
+        }
+
+        /* =========================
+           BIND GERAL (UMA VEZ)
+        ========================= */
         function bindEventos() {
-            const itens = document.querySelectorAll('.item-coleta');
-            itens.forEach(item => {
-                // MODIFICAÇÃO: Adiciona a classe 'ddlStatus' ao DropDownList para facilitar a seleção.
+
+            iniciarSelect2();
+            aplicarMascaraTelefone();
+
+            document.querySelectorAll('.item-coleta').forEach(item => {
+
+                if (item.dataset.bound) return;
+                item.dataset.bound = "true";
+
                 const ddl = item.querySelector('select[id*="ddlStatus"]');
-                if (ddl) {
-                    ddl.classList.add('ddlStatus');
-                }
+                if (ddl) ddl.classList.add('ddlStatus');
 
-                const inputsDeData = item.querySelectorAll('.chegada, .saida, .chegada-planta, .entrada-planta, .saida-planta, .gate');
-
-                inputsDeData.forEach(input => {
-                    input.addEventListener('change', () => {
-                        // Centraliza as chamadas de função
-                        calcularTempoAgCarreg(item);
-                        calcularTempoEsperaGate(item);
-                        calcularTempoDentroPlanta(item);
-                        validarDatas(item); // validarDatas já chama a atualização no final
+                item.querySelectorAll('.chegada, .saida, .chegada-planta, .entrada-planta, .saida-planta')
+                    .forEach(i => {
+                        i.addEventListener('change', () => {
+                            calcularTempo(item, '.chegada', '.saida', '.espera');
+                            calcularTempo(item, '.chegada-planta', '.entrada-planta', '.espera-gate');
+                            calcularTempo(item, '.entrada-planta', '.saida-planta', '.dentro-planta');
+                            validarDatas(item);
+                        });
                     });
-                });
 
-                const inputsGerais = item.querySelectorAll('input');
-                inputsGerais.forEach(input => {
-                    input.addEventListener('input', () => {
-                        if (input.classList.contains('com-erro')) {
-                            input.style.border = "";
-                            input.classList.remove('com-erro');
-                            const erro = item.querySelector('.msg-erro');
-                            if (erro) {
-                                erro.textContent = '';
-                                erro.style.display = 'none';
-                            }
-                        }
-                    });
-                });
-
-                // Executa a verificação inicial quando a página carrega
                 atualizarStatusECores(item);
             });
         }
 
-        window.addEventListener('load', bindEventos);
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Escuta mudança em qualquer txtCVA dentro do Repeater
-            $(document).on('blur', '.cva', function () {
-                var txt = $(this);
-                var valor = txt.val().trim();
+        /* =========================
+           INICIALIZAÇÃO
+        ========================= */
+        $(document).ready(bindEventos);
+        Sys.Application.add_load(bindEventos);
 
-                if (valor.length > 0) {
-                    $.ajax({
-                        type: "POST",
-                        url: '<%= ResolveUrl("Frm_AtualizaOrdemColeta.aspx/VerificarCVA") %>', // ajuste para o nome da sua página
-                        data: JSON.stringify({ numeroCVA: valor }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            if (response.d === true) {
-                                alert("Já existe uma carga com esse número de CVA!");
-                                txt.val(""); // limpa o campo
-                                txt.focus();
-                            }
-                        },
-                        error: function (err) {
-                            console.error("Erro na verificação do CVA", err);
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-    <script>
-        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
-            tab.addEventListener('shown.bs.tab', function (e) {
-
-                let alvo = e.target.getAttribute("data-bs-target");
-                let idCarga = document.getElementById('<%= hdIdCarga.ClientID %>').value;
-
-        if (!idCarga) {
-            document.querySelector(alvo).innerHTML =
-                '<div class="alert alert-warning">Selecione uma carga</div>';
-            return;
-        }
-
-        if (alvo === "#tabPedidos") carregarPedidos(idCarga);
-    });
-});
-
-        function carregarPedidos(idCarga) {
-            fetch("Carga.aspx/GetPedidos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ idCarga: idCarga })
-            })
-                .then(r => r.json())
-                .then(d => {
-                    document.getElementById("conteudoPedidos").innerHTML = d.d;
-                });
-        }
-    </script>
-    <script>
-        $(function () {
-            $('.select2').select2({ width: '100%' });
-
-            $('input[id*=txtInicio], input[id*=txtFim]').attr('type', 'datetime-local');
-        });
     </script>
 
-    <script>
-        function iniciarSelect2() {
-            $('.select2').select2({
-                width: '100%'
-            });
-        }
-
-        Sys.Application.add_load(iniciarSelect2);
-    </script>
-
-    <script>
-        document.addEventListener("input", function (e) {
-            if (e.target.classList.contains("datetime")) {
-                e.target.type = "datetime-local";
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("change", function (e) {
-            if (e.target.classList.contains("datetime")) {
-
-                let row = e.target.closest("tr");
-                let inicio = row.querySelector('[id*="txtInicio"]').value;
-                let fim = row.querySelector('[id*="txtFim"]').value;
-                let lbl = row.querySelector('[id*="lblTempo"]');
-
-                if (inicio && fim) {
-                    let d1 = new Date(inicio);
-                    let d2 = new Date(fim);
-
-                    let diff = (d2 - d1) / 60000;
-                    let horas = Math.floor(diff / 60);
-                    let minutos = diff % 60;
-
-                    lbl.innerText = horas + "h " + minutos + "min";
-                }
-            }
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('.select2').select2({ width: '100%' });
-
-            $('.datetime').inputmask("99/99/9999 99:99");
-        });
-    </script>
 
     <div class="content-wrapper">
     <section class="content">
@@ -567,7 +254,8 @@
     role="alert" style="display: none;">
     <span id="lblMsgCarreta1" runat="server"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div><div id="divMsgCarreta2" runat="server"
+</div>
+ <div id="divMsgCarreta2" runat="server"
     class="alert alert-warning alert-dismissible fade show mt-3"
     role="alert" style="display: none;">
     <span id="lblMsgCarreta2" runat="server"></span>
@@ -577,9 +265,9 @@
     <div class="col-md-12">
     <div class="card card-info">
     <div class="card-header">
-    <h3 class="card-title">
+    
     <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;ORDEM DE COLETA/ENTREGA - &nbsp;<asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
-    </h3>
+   
     <div class="card-tools">
     <button type="button" class="btn btn-tool" data-card-widget="maximize">
     <i class="fas fa-expand"></i>
@@ -598,10 +286,10 @@
  <div class="info-box">
      <%--rounded-circle border--%>
      <span class="info-box-icon bg-info">  
-         <img src="<%=fotoMotorista%>" class="mg-thumbnail float-center" width="70px" height="75px" alt="" />  
+         <img src="<%=fotoMotorista%>" class="mg-thumbnail float-center" width="70" height="75" alt="" />  
      </span>
      <div class="info-box-content">
-         <span class="info-box-number">
+         <span class="info-box-number"/>
              <div class="row g-3">
                 <div class="col-md-1">
                     <div class="form-group">
@@ -610,6 +298,7 @@
                         <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" OnTextChanged="txtCodMotorista_TextChanged" AutoPostBack="true"></asp:TextBox>
                     </div>
                 </div>
+                 
                  <div class="col-md-3">
     <div class="form-group">
         <span class="details">NOME COMPLETO:</span>
@@ -668,9 +357,9 @@
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
-                                    <!-- /.card-tools -->
+                                  
                                 </div>
-                                <!-- /.card-header -->
+                               
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-md-2">
@@ -719,7 +408,7 @@
                                             <div class="form-group">
                                                 <span class="details">LIBERAÇÃO:</span>
                                                 <div class="input-group">
-                                                    <asp:TextBox ID="txtLiberacao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                    <asp:TextBox ID="txtLiberacao" runat="server" class="form-control font-weight-bold" ReadOnly="true" Style="text-align: center;"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -827,7 +516,7 @@
 
                                     </div>
                                 </div>
-                                <!-- /.card-body -->
+                               
                             </div>
     <!-- dados do veiculo -->
     <div class="card card-outline card-info collapsed-card">
@@ -991,11 +680,11 @@
     <div class="row g-3">
     <div class="col-md-12">
     <div class="card">
-        <asp:HiddenField ID="hdIdCarga" runat="server" />
-    <!-- ./card-header -->
+            <!-- ./card-header -->
     <div class="card-body">
     <asp:Repeater ID="rptColetas" runat="server" OnItemDataBound="rptColetas_ItemDataBound" OnItemCommand="rptColetas_ItemCommand">
     <HeaderTemplate>
+         
     <table id="gridCargas" class="table table-bordered table-hover">
 
     <thead>
@@ -1014,6 +703,8 @@
     <tbody>
     </HeaderTemplate>
     <ItemTemplate>
+        <asp:HiddenField ID="hdIdCarga" runat="server"
+   Value='<%# Eval("carga") %>' />
     <tr data-widget="expandable-table" aria-expanded="false">
     <td><%# Eval("carga") %></td>
     <td><%# Eval("cliorigem") %></td>
@@ -1024,7 +715,7 @@
     <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
     <td><%# Eval("status") %></td>
     <td runat="server" id="tdAtendimento">
-    <asp:Label ID="lblAtendimento" runat="server" />    
+    <asp:Label ID="lblAtendimento" runat="server" Text=""></asp:Label>
     </td>
     </tr>
     <tr class="expandable-body">
@@ -1321,12 +1012,13 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
+
+       
     
-    <asp:UpdatePanel ID="updTabs" runat="server">
+    <asp:UpdatePanel ID="updTabs" runat="server" UpdateMode="Always">
 
     <ContentTemplate>
-        <!-- HiddenField da carga -->
-       <%-- <asp:HiddenField ID="hdIdCarga" runat="server" />--%>
+      
 
     <!-- COLE AS ABAS AQUI -->
     <ul class="nav nav-tabs" id="tabsPedido" role="tablist">
@@ -1383,67 +1075,13 @@
 
             <!-- ABA PEDIDOS -->
 
-    <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped"
-AutoGenerateColumns="False"
-OnRowDataBound="gvPedidos_RowDataBound">
-        <Columns>
-
-    <asp:BoundField DataField="pedido" HeaderText="Pedido" />
-
-    <asp:BoundField DataField="emissao"
-        HeaderText="Emissão"
-        DataFormatString="{0:dd/MM/yyyy}" />
-
-    <asp:BoundField DataField="peso" HeaderText="Peso" />
-    <asp:BoundField DataField="material" HeaderText="Material" />
-    <asp:BoundField DataField="portao" HeaderText="Portão" />
-
-   
-    <asp:TemplateField HeaderText="Motorista">
-        <ItemTemplate>
-            <asp:DropDownList ID="ddlMotCar"
-                runat="server"
-                CssClass="form-select select2">
-            </asp:DropDownList>
-        </ItemTemplate>
-    </asp:TemplateField>
-
-   
-    <asp:TemplateField HeaderText="Início">
-        <ItemTemplate>
-            <asp:TextBox ID="txtInicioCar"
-                runat="server"
-                CssClass="form-control"
-                Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
-            </asp:TextBox>
-        </ItemTemplate>
-    </asp:TemplateField>
-
-   
-    <asp:TemplateField HeaderText="Fim">
-        <ItemTemplate>
-            <asp:TextBox ID="txtTermCar"
-                runat="server"
-                CssClass="form-control"
-                Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}") %>'>
-            </asp:TextBox>
-        </ItemTemplate>
-    </asp:TemplateField>
-
     
-    <asp:TemplateField HeaderText="Tempo">
-        <ItemTemplate>
-            <%# CalcularTempo(Eval("iniciocar"), Eval("termcar")) %>
-        </ItemTemplate>
-    </asp:TemplateField>
-
-</Columns>
-    </asp:GridView>
 
             <div class="tab-pane fade show active" id="tabPedidos">
-                  <asp:GridView ID="GridView1" runat="server" CssClass="table table-sm table-striped"
-AutoGenerateColumns="False"
-OnRowDataBound="gvPedidos_RowDataBound">
+
+                
+                  
+               <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
         <Columns>
 
     <asp:BoundField DataField="pedido" HeaderText="Pedido" />
@@ -1491,13 +1129,12 @@ OnRowDataBound="gvPedidos_RowDataBound">
     
     <asp:TemplateField HeaderText="Tempo">
         <ItemTemplate>
-            <%# CalcularTempo(Eval("iniciocar"), Eval("termcar")) %>
+          
         </ItemTemplate>
     </asp:TemplateField>
 
 </Columns>
     </asp:GridView>
-                
 
             </div>
         </div>
@@ -1815,8 +1452,7 @@ OnRowDataBound="gvPedidos_RowDataBound">
     <div class="modal fade" id="telefoneModal" tabindex="-1" role="dialog" aria-labelledby="telefoneModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <%--<asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                    <ContentTemplate>--%>
+                       
                             <div class="modal-header">
                                 <h5 class="modal-title" id="telefoneModalLabel">Cadastrar Contato</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
@@ -1845,11 +1481,7 @@ OnRowDataBound="gvPedidos_RowDataBound">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                                 <asp:Button ID="btnCadContato" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnCadContato_Click" />
                             </div>
-                            <%--</ContentTemplate>
-                    <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="btnCadContato" EventName="Click" />
-                    </Triggers>
-                </asp:UpdatePanel>--%>
+                          
                         </div>
                     </div>
                 </div>
@@ -1943,6 +1575,8 @@ OnRowDataBound="gvPedidos_RowDataBound">
                     </div>
                 </div>
     </div>
+        </div>
     </section>
     </div>
-</asp:Content>
+    </asp:Content>
+

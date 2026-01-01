@@ -44,7 +44,7 @@ using System.Web.Services;
 
 namespace NewCapit.dist.pages
 {
-   
+
     public partial class Frm_AtualizaColetaMatriz : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
@@ -79,7 +79,7 @@ namespace NewCapit.dist.pages
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
                 PreencherComboMotoristas();
                 CarregaDados();
-                CarregaMap(txtPlaca.Text);               
+                CarregaMap(txtPlaca.Text);
 
             }
             //CarregarFotoMotorista(fotoMotorista);
@@ -118,7 +118,7 @@ namespace NewCapit.dist.pages
             }
 
         }
-       
+
         public void CarregaNumColeta()
         {
             if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
@@ -547,11 +547,12 @@ namespace NewCapit.dist.pages
             txtCodTransportadora.Text = dt.Rows[0][145].ToString();
             txtTransportadora.Text = dt.Rows[0][146].ToString();
             txtLiberacao.Text = dt.Rows[0][171].ToString();
-            txtProtocoloCET.Text = dt.Rows[0][172].ToString();            
+            txtProtocoloCET.Text = dt.Rows[0][172].ToString();
 
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);
+            //GetPedidos();
 
 
         }
@@ -641,11 +642,62 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+            if (e.Item.ItemType == ListItemType.Item ||
+         e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                HiddenField hdIdCarga =
+                    (HiddenField)e.Item.FindControl("hdIdCarga");
+
+                GridView gvPedidos =
+                    (GridView)e.Item.FindControl("gvPedidos");
+
+                UpdatePanel upd =
+                    (UpdatePanel)e.Item.FindControl("updTabs");
+
+                if (hdIdCarga != null && gvPedidos != null)
+                {
+                    int idCarga;
+                    if (int.TryParse(hdIdCarga.Value, out idCarga))
+                    {
+                        CarregarPedidos(idCarga, gvPedidos);
+
+                        // força renderização do conteúdo
+                        //upd.Update();
+                    }
+                }
+            }
 
 
 
 
         }
+
+        private void CarregarPedidos(int idCarga, GridView gv)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"SELECT pedido, emissao, peso, material, portao,
+                              iniciocar, termcar
+                       FROM tbpedidos
+                       WHERE carga = @idCarga";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        gv.DataSource = dr;
+                        gv.DataBind();
+                    }
+
+                }
+            }
+        }
+
+
 
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
@@ -837,9 +889,9 @@ namespace NewCapit.dist.pages
             {
                 int id = Convert.ToInt32(e.CommandArgument);
                 string idCarga = id.ToString(); // esse valor viria da lógica do seu código
-                hdIdCarga.Value = idCarga;
+                //hdIdCarga.Value = idCarga;
                 Session["idCarga"] = idCarga;
-                GetPedidos();
+                //GetPedidos();
                 //string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
                 //string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
                 //ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
@@ -1107,7 +1159,7 @@ namespace NewCapit.dist.pages
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";                                    
+                                    txtReboque2.Text = "";
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1152,7 +1204,7 @@ namespace NewCapit.dist.pages
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";                                    
+                                    txtReboque2.Text = "";
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1198,7 +1250,7 @@ namespace NewCapit.dist.pages
                                     txtCodVeiculo.Text = "";
                                     txtPlaca.Text = "";
                                     txtReboque1.Text = "";
-                                    txtReboque2.Text = "";                                    
+                                    txtReboque2.Text = "";
                                     txtVeiculoTipo.Text = "";
                                     txtTipoVeiculo.Text = "";
                                     txtCarreta.Text = "";
@@ -1238,7 +1290,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";                                
+                                txtReboque2.Text = "";
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1282,7 +1334,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";                                
+                                txtReboque2.Text = "";
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1326,7 +1378,7 @@ namespace NewCapit.dist.pages
                                 txtCodVeiculo.Text = "";
                                 txtPlaca.Text = "";
                                 txtReboque1.Text = "";
-                                txtReboque2.Text = "";                                
+                                txtReboque2.Text = "";
                                 txtVeiculoTipo.Text = "";
                                 txtTipoVeiculo.Text = "";
                                 txtCarreta.Text = "";
@@ -1550,7 +1602,7 @@ namespace NewCapit.dist.pages
                 {
                     conn.Open();
                     cmd.ExecuteNonQuery();
-                   // CalculaKmTotal();
+                    // CalculaKmTotal();
                     nomeUsuario = txtUsuCadastro.Text;
                     string mensagem = $"Olá, {nomeUsuario}!\nCarregamento atualizado no sistema com sucesso.";
                     string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
@@ -1648,32 +1700,38 @@ namespace NewCapit.dist.pages
         {
             // Opcional: limpar ou fechar modal
             ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
-            
+
         }
-        void GetPedidos()
-        {
-            if (string.IsNullOrEmpty(hdIdCarga.Value))
-                return;
+        //void GetPedidos()
+        //{
+        //    if (string.IsNullOrEmpty(hdIdCarga.Value))
+        //        return;
 
-            using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-            {
-                string sql = @"SELECT pedido, emissao, peso, material, portao,
-                              iniciocar, termcar
-                       FROM tbpedidos
-                       WHERE id = @idCarga";
+        //    using (SqlConnection conn = new SqlConnection(
+        //        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //    {
+        //        string sql = @"SELECT pedido, emissao, peso, material, portao,
+        //                      iniciocar, termcar
+        //               FROM tbpedidos
+        //               WHERE carga = @idCarga";
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add("@idCarga", SqlDbType.Int)
-                               .Value = int.Parse(hdIdCarga.Value);
+        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
+        //        {
+        //            cmd.Parameters.Add("@idCarga", SqlDbType.Int)
+        //                           .Value = int.Parse(hdIdCarga.Value);
 
-                con.Open();
+        //            conn.Open();
 
-                
-                gvPedidos.DataSource = cmd.ExecuteReader();
-                gvPedidos.DataBind();
-            }
-        }
+
+
+        //            gvPedidos.DataSource = cmd.ExecuteReader();
+        //            gvPedidos.DataBind();
+        //        }
+        //    }
+        //}
+
+        
+
         protected string CalcularTempo(object inicio, object fim)
         {
             if (inicio == DBNull.Value || fim == DBNull.Value)
@@ -1685,6 +1743,8 @@ namespace NewCapit.dist.pages
             TimeSpan tempo = dtFim - dtInicio;
 
             return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
+
+            
         }
 
         void CarregarPedidos(int idCarga)
@@ -1707,16 +1767,22 @@ namespace NewCapit.dist.pages
         void GetMotoristas(DropDownList ddl)
         {
             using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT id, nommot FROM tbMotoristas where status = 'ATIVO'", conn);
+                string sql = "SELECT id, nommot FROM tbmotoristas";
 
-                con.Open();
-                ddl.DataSource = cmd.ExecuteReader();
-                ddl.DataTextField = "nommot";
-                ddl.DataValueField = "id";
-                ddl.DataBind();
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        ddl.DataSource = dr;
+                        ddl.DataTextField = "nommot";
+                        ddl.DataValueField = "id";
+                        ddl.DataBind();
+                    }
+                }
             }
 
             //ddl.Items.Insert(0, new ListItem("Selecione", ""));
@@ -1749,7 +1815,7 @@ namespace NewCapit.dist.pages
             }
         }
 
-        [System.Web.Services.WebMethod]          
+        [System.Web.Services.WebMethod]
         public static bool VerificarCVA(string numeroCVA)
         {
             bool existe = false;
@@ -2083,7 +2149,7 @@ namespace NewCapit.dist.pages
                 txtTransportadora.Text = dt.Rows[0]["transp"].ToString();
                 fotoMotorista = dt.Rows[0]["caminhofoto"].ToString();
                 txtLiberacao.Text = dt.Rows[0]["codliberacao"].ToString();
-                              
+
                 // valida Exame Toxicologico
                 if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
                 {
@@ -2186,270 +2252,270 @@ namespace NewCapit.dist.pages
 
             //if(txtTipoMot.Text != "FUNCIONÁRIO")
             //{
-                //Dados do veiculos
-                string sqlVeiculos = @"SELECT codvei, plavei, reboque1, reboque2, tipoveiculo, tipvei, tiporeboque, tipocarreta, vencimentolaudofumaca, venclicenciamento, codtra, transp, venclicencacet, protocolocet, venccronotacografo, rastreamento, rastreador, ativo_inativo, fl_exclusao
+            //Dados do veiculos
+            string sqlVeiculos = @"SELECT codvei, plavei, reboque1, reboque2, tipoveiculo, tipvei, tiporeboque, tipocarreta, vencimentolaudofumaca, venclicenciamento, codtra, transp, venclicencacet, protocolocet, venccronotacografo, rastreamento, rastreador, ativo_inativo, fl_exclusao
                        FROM tbveiculos 
                        WHERE codvei = @idVeiculo AND ativo_inativo = 'ATIVO' AND fl_exclusao IS NULL";
-                using (SqlCommand cmdVeiculos = new SqlCommand(sqlVeiculos, con))
+            using (SqlCommand cmdVeiculos = new SqlCommand(sqlVeiculos, con))
+            {
+                cmdVeiculos.Parameters.AddWithValue("@idVeiculo", txtCodVeiculo.Text.Trim());
+
+                DataTable dtVeiculos = new DataTable();
+                SqlDataAdapter daVeiculos = new SqlDataAdapter(cmdVeiculos);
+
+                daVeiculos.Fill(dtVeiculos);
+
+                if (dtVeiculos.Rows.Count == 0)
                 {
-                    cmdVeiculos.Parameters.AddWithValue("@idVeiculo", txtCodVeiculo.Text.Trim());
+                    MostrarMsgVeic(txtPlaca.Text.Trim() + " - Veículo NÂO encontrado na base de dados ou INATIVO. Verifique!", "danger");
+                    //LimparCamposMotorista();
+                    return;
+                }
 
-                    DataTable dtVeiculos = new DataTable();
-                    SqlDataAdapter daVeiculos = new SqlDataAdapter(cmdVeiculos);
-
-                    daVeiculos.Fill(dtVeiculos);
-
-                    if (dtVeiculos.Rows.Count == 0)
-                    {
-                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Veículo NÂO encontrado na base de dados ou INATIVO. Verifique!", "danger");
-                        //LimparCamposMotorista();
-                        return;
-                    }
-
-                    if (dtVeiculos.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtVeiculos.Rows[0]["fl_exclusao"].ToString() == "S")
-                    {
-                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Veículo INATIVO ou EXCLUIDO da base de dados. Verique!", "danger");
-                        //LimparCamposMotorista();
-                        return;
-
-                    }
-
-                    if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO TRUCADO")
-                    {
-                        carretas.Visible = true;
-                        reboque1.Visible = true;
-                    }
-                    else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO SIMPLES")
-                    {
-                        carretas.Visible = true;
-                        reboque1.Visible = true;
-                    }
-                    else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO 4 EIXOS")
-                    {
-                        carretas.Visible = true;
-                        reboque1.Visible = true;
-                    }
-                    else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "BITREM")
-                    {
-                        carretas.Visible = true;
-                        reboque1.Visible = true;
-                        reboque2.Visible = true;
-                    }
-                    else
-                    {
-                        carretas.Visible = false;
-                        reboque1.Visible = false;
-                        reboque2.Visible = false;
-                    }
-
-
-                    // Dados do veículo
-                    txtCodVeiculo.Text = dtVeiculos.Rows[0]["codvei"].ToString();
-                    txtPlaca.Text = dtVeiculos.Rows[0]["plavei"].ToString();
-                    txtReboque1.Text = dtVeiculos.Rows[0]["reboque1"].ToString();
-                    txtReboque2.Text = dtVeiculos.Rows[0]["reboque2"].ToString();
-
-                    txtVeiculoTipo.Text = dtVeiculos.Rows[0]["tipoveiculo"].ToString();
-                    txtTipoVeiculo.Text = dtVeiculos.Rows[0]["tipvei"].ToString().Trim();
-                    txtCarreta.Text = dtVeiculos.Rows[0]["tiporeboque"].ToString();
-                    txtConjunto.Text = dtVeiculos.Rows[0]["tipocarreta"].ToString();
-                    txtCodProprietario.Text = dtVeiculos.Rows[0]["codtra"].ToString();
-                    txtProprietario.Text = dtVeiculos.Rows[0]["transp"].ToString();
-                    txtTecnologia.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
-                    txtRastreamento.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
-
-                    txtOpacidade.Text = dtVeiculos.Rows[0]["vencimentolaudofumaca"].ToString();
-                    txtCET.Text = dtVeiculos.Rows[0]["venclicencacet"].ToString();
-                    txtProtocoloCET.Text = dtVeiculos.Rows[0]["protocolocet"].ToString();
-                    txtCRLVVeiculo.Text = dtVeiculos.Rows[0]["venclicenciamento"].ToString();
-                    txtCrono.Text = dtVeiculos.Rows[0]["venccronotacografo"].ToString();
-
-
-
-                    // valida Laudo de Fumaça
-                    DateTime dataOpacidade;
-                    if (!DateTime.TryParse(txtOpacidade.Text, out dataOpacidade))
-                    {
-                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Laudo de OPACIDADE(Fumaça), não foi lançado.", "danger");
-                        txtCodMotorista.Text = "";
-                        txtCodMotorista.Focus();
-                    }
-                    else
-                    {
-                        DateTime validadeOpacidade = Convert.ToDateTime(dtVeiculos.Rows[0]["vencimentolaudofumaca"]);
-                        TimeSpan diferencaOpacidade = validadeOpacidade - DateTime.Today;
-
-                        if (validadeOpacidade < DateTime.Today)
-                        {
-                            MostrarMsgVeic(txtPlaca.Text.Trim() + " - Laudo de OPACIDADE(Fumaça), está VENCIDO.", "danger");
-                            txtOpacidade.BackColor = System.Drawing.Color.Red;
-                            txtOpacidade.ForeColor = System.Drawing.Color.White;
-                            txtCodMotorista.Text = "";
-                            txtCodMotorista.Focus();
-                        }
-                        else if (diferencaOpacidade.TotalDays <= 30)
-                        {
-                            MostrarMsgVeic(txtPlaca.Text.Trim() + " - Atenção! Laudo de OPACIDADE(Fumaça) vence em " + diferencaOpacidade.Days + " dias.", "warning");
-                            txtOpacidade.BackColor = System.Drawing.Color.Khaki;
-                            txtOpacidade.ForeColor = System.Drawing.Color.OrangeRed;
-                        }
-                    }
-
-                    // valida Cronotacografo
-                    DateTime dataCrono;
-                    if (!DateTime.TryParse(txtCrono.Text, out dataCrono))
-                    {
-                        MostrarMsgCrono(txtPlaca.Text.Trim() + " - Laudo do CRONOTACOGRAFO, não foi lançado. Verifique!", "danger");
-                        txtCodMotorista.Text = "";
-                        txtCodMotorista.Focus();
-                    }
-                    else
-                    {
-                        DateTime validadeCrono = Convert.ToDateTime(dtVeiculos.Rows[0]["venccronotacografo"]);
-                        TimeSpan diferencaCrono = validadeCrono - DateTime.Today;
-
-                        if (validadeCrono < DateTime.Today)
-                        {
-                            MostrarMsgCrono(txtPlaca.Text.Trim() + " - Laudo do CRONOTACOGRAFO, está VENCIDO. Verifique!", "danger");
-                            txtCrono.BackColor = System.Drawing.Color.Red;
-                            txtCrono.ForeColor = System.Drawing.Color.White;
-                            txtCodMotorista.Text = "";
-                            txtCodMotorista.Focus();
-                        }
-                        else if (diferencaCrono.TotalDays <= 30)
-                        {
-                            MostrarMsgCrono(txtPlaca.Text.Trim() + " - Atenção! Laudo do CRONOTACOGRAFO vence em " + diferencaCrono.Days + " dias.", "warning");
-                            txtCrono.BackColor = System.Drawing.Color.Khaki;
-                            txtCrono.ForeColor = System.Drawing.Color.OrangeRed;
-                        }
-                    }
-
-                    // valida Licenciamento
-                    DateTime dataLinc;
-                    if (!DateTime.TryParse(txtCRLVVeiculo.Text, out dataLinc))
-                    {
-                        MostrarMsgLinc(txtPlaca.Text.Trim() + " - LICENCIAMENTO do veículo, não foi lançado. Verifique!", "danger");
-                        txtCodMotorista.Text = "";
-                        txtCodMotorista.Focus();
-                    }
-                    else
-                    {
-                        DateTime validadeLinc = Convert.ToDateTime(dtVeiculos.Rows[0]["vencimentolaudofumaca"]);
-                        TimeSpan diferencaLinc = validadeLinc - DateTime.Today;
-
-                        if (validadeLinc < DateTime.Today)
-                        {
-                            MostrarMsgLinc(txtPlaca.Text.Trim() + " - LICENCIAMENTO do veículo, está VENCIDO. Verifique!", "danger");
-                            txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
-                            txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
-                            txtCodMotorista.Text = "";
-                            txtCodMotorista.Focus();
-                        }
-                        else if (diferencaLinc.TotalDays <= 30)
-                        {
-                            MostrarMsgLinc(txtPlaca.Text.Trim() + " - Atenção! LICENCIAMENTO do veículo, vence em " + diferencaLinc.Days + " dias.", "warning");
-                            txtCRLVVeiculo.BackColor = System.Drawing.Color.Khaki;
-                            txtCRLVVeiculo.ForeColor = System.Drawing.Color.OrangeRed;
-                        }
-                    }
-
-                    // valida CET
-                    DateTime dataCET;
-                    if (!DateTime.TryParse(txtCET.Text, out dataCET))
-                    {
-                        MostrarMsgCET(txtPlaca.Text.Trim() + " - LICENÇA CET para o veículo, não foi lançado. Verifique!", "danger");
-                        txtCodMotorista.Text = "";
-                        txtCodMotorista.Focus();
-                    }
-                    else
-                    {
-                        DateTime validadeCET = Convert.ToDateTime(dtVeiculos.Rows[0]["venclicencacet"]);
-                        TimeSpan diferencaCET = validadeCET - DateTime.Today;
-
-                        if (validadeCET < DateTime.Today)
-                        {
-                            MostrarMsgCET(txtPlaca.Text.Trim() + " - LICENÇA CET do veículo, está VENCIDA. Verifique!", "danger");
-                            txtCET.BackColor = System.Drawing.Color.Red;
-                            txtCET.ForeColor = System.Drawing.Color.White;
-                            txtCodMotorista.Text = "";
-                            txtCodMotorista.Focus();
-                        }
-                        else if (diferencaCET.TotalDays <= 30)
-                        {
-                            MostrarMsgCET(txtPlaca.Text.Trim() + " - Atenção! LICENÇA CET do veículo, vence em " + diferencaCET.Days + " dias.", "warning");
-                            txtCET.BackColor = System.Drawing.Color.Khaki;
-                            txtCET.ForeColor = System.Drawing.Color.OrangeRed;
-                        }
-                    }
-
-
+                if (dtVeiculos.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtVeiculos.Rows[0]["fl_exclusao"].ToString() == "S")
+                {
+                    MostrarMsgVeic(txtPlaca.Text.Trim() + " - Veículo INATIVO ou EXCLUIDO da base de dados. Verique!", "danger");
+                    //LimparCamposMotorista();
+                    return;
 
                 }
 
-                // Dados da primeira carreta
-                if (txtReboque1.Text != "")
+                if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO TRUCADO")
                 {
-                    string sqlCarreta1 = @"SELECT placacarreta, licenciamento, ativo_inativo, fl_exclusao
+                    carretas.Visible = true;
+                    reboque1.Visible = true;
+                }
+                else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO SIMPLES")
+                {
+                    carretas.Visible = true;
+                    reboque1.Visible = true;
+                }
+                else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "CAVALO 4 EIXOS")
+                {
+                    carretas.Visible = true;
+                    reboque1.Visible = true;
+                }
+                else if (dtVeiculos.Rows[0]["tipvei"].ToString() == "BITREM")
+                {
+                    carretas.Visible = true;
+                    reboque1.Visible = true;
+                    reboque2.Visible = true;
+                }
+                else
+                {
+                    carretas.Visible = false;
+                    reboque1.Visible = false;
+                    reboque2.Visible = false;
+                }
+
+
+                // Dados do veículo
+                txtCodVeiculo.Text = dtVeiculos.Rows[0]["codvei"].ToString();
+                txtPlaca.Text = dtVeiculos.Rows[0]["plavei"].ToString();
+                txtReboque1.Text = dtVeiculos.Rows[0]["reboque1"].ToString();
+                txtReboque2.Text = dtVeiculos.Rows[0]["reboque2"].ToString();
+
+                txtVeiculoTipo.Text = dtVeiculos.Rows[0]["tipoveiculo"].ToString();
+                txtTipoVeiculo.Text = dtVeiculos.Rows[0]["tipvei"].ToString().Trim();
+                txtCarreta.Text = dtVeiculos.Rows[0]["tiporeboque"].ToString();
+                txtConjunto.Text = dtVeiculos.Rows[0]["tipocarreta"].ToString();
+                txtCodProprietario.Text = dtVeiculos.Rows[0]["codtra"].ToString();
+                txtProprietario.Text = dtVeiculos.Rows[0]["transp"].ToString();
+                txtTecnologia.Text = dtVeiculos.Rows[0]["rastreamento"].ToString();
+                txtRastreamento.Text = dtVeiculos.Rows[0]["rastreador"].ToString();
+
+                txtOpacidade.Text = dtVeiculos.Rows[0]["vencimentolaudofumaca"].ToString();
+                txtCET.Text = dtVeiculos.Rows[0]["venclicencacet"].ToString();
+                txtProtocoloCET.Text = dtVeiculos.Rows[0]["protocolocet"].ToString();
+                txtCRLVVeiculo.Text = dtVeiculos.Rows[0]["venclicenciamento"].ToString();
+                txtCrono.Text = dtVeiculos.Rows[0]["venccronotacografo"].ToString();
+
+
+
+                // valida Laudo de Fumaça
+                DateTime dataOpacidade;
+                if (!DateTime.TryParse(txtOpacidade.Text, out dataOpacidade))
+                {
+                    MostrarMsgVeic(txtPlaca.Text.Trim() + " - Laudo de OPACIDADE(Fumaça), não foi lançado.", "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                }
+                else
+                {
+                    DateTime validadeOpacidade = Convert.ToDateTime(dtVeiculos.Rows[0]["vencimentolaudofumaca"]);
+                    TimeSpan diferencaOpacidade = validadeOpacidade - DateTime.Today;
+
+                    if (validadeOpacidade < DateTime.Today)
+                    {
+                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Laudo de OPACIDADE(Fumaça), está VENCIDO.", "danger");
+                        txtOpacidade.BackColor = System.Drawing.Color.Red;
+                        txtOpacidade.ForeColor = System.Drawing.Color.White;
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else if (diferencaOpacidade.TotalDays <= 30)
+                    {
+                        MostrarMsgVeic(txtPlaca.Text.Trim() + " - Atenção! Laudo de OPACIDADE(Fumaça) vence em " + diferencaOpacidade.Days + " dias.", "warning");
+                        txtOpacidade.BackColor = System.Drawing.Color.Khaki;
+                        txtOpacidade.ForeColor = System.Drawing.Color.OrangeRed;
+                    }
+                }
+
+                // valida Cronotacografo
+                DateTime dataCrono;
+                if (!DateTime.TryParse(txtCrono.Text, out dataCrono))
+                {
+                    MostrarMsgCrono(txtPlaca.Text.Trim() + " - Laudo do CRONOTACOGRAFO, não foi lançado. Verifique!", "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                }
+                else
+                {
+                    DateTime validadeCrono = Convert.ToDateTime(dtVeiculos.Rows[0]["venccronotacografo"]);
+                    TimeSpan diferencaCrono = validadeCrono - DateTime.Today;
+
+                    if (validadeCrono < DateTime.Today)
+                    {
+                        MostrarMsgCrono(txtPlaca.Text.Trim() + " - Laudo do CRONOTACOGRAFO, está VENCIDO. Verifique!", "danger");
+                        txtCrono.BackColor = System.Drawing.Color.Red;
+                        txtCrono.ForeColor = System.Drawing.Color.White;
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else if (diferencaCrono.TotalDays <= 30)
+                    {
+                        MostrarMsgCrono(txtPlaca.Text.Trim() + " - Atenção! Laudo do CRONOTACOGRAFO vence em " + diferencaCrono.Days + " dias.", "warning");
+                        txtCrono.BackColor = System.Drawing.Color.Khaki;
+                        txtCrono.ForeColor = System.Drawing.Color.OrangeRed;
+                    }
+                }
+
+                // valida Licenciamento
+                DateTime dataLinc;
+                if (!DateTime.TryParse(txtCRLVVeiculo.Text, out dataLinc))
+                {
+                    MostrarMsgLinc(txtPlaca.Text.Trim() + " - LICENCIAMENTO do veículo, não foi lançado. Verifique!", "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                }
+                else
+                {
+                    DateTime validadeLinc = Convert.ToDateTime(dtVeiculos.Rows[0]["vencimentolaudofumaca"]);
+                    TimeSpan diferencaLinc = validadeLinc - DateTime.Today;
+
+                    if (validadeLinc < DateTime.Today)
+                    {
+                        MostrarMsgLinc(txtPlaca.Text.Trim() + " - LICENCIAMENTO do veículo, está VENCIDO. Verifique!", "danger");
+                        txtCRLVVeiculo.BackColor = System.Drawing.Color.Red;
+                        txtCRLVVeiculo.ForeColor = System.Drawing.Color.White;
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else if (diferencaLinc.TotalDays <= 30)
+                    {
+                        MostrarMsgLinc(txtPlaca.Text.Trim() + " - Atenção! LICENCIAMENTO do veículo, vence em " + diferencaLinc.Days + " dias.", "warning");
+                        txtCRLVVeiculo.BackColor = System.Drawing.Color.Khaki;
+                        txtCRLVVeiculo.ForeColor = System.Drawing.Color.OrangeRed;
+                    }
+                }
+
+                // valida CET
+                DateTime dataCET;
+                if (!DateTime.TryParse(txtCET.Text, out dataCET))
+                {
+                    MostrarMsgCET(txtPlaca.Text.Trim() + " - LICENÇA CET para o veículo, não foi lançado. Verifique!", "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                }
+                else
+                {
+                    DateTime validadeCET = Convert.ToDateTime(dtVeiculos.Rows[0]["venclicencacet"]);
+                    TimeSpan diferencaCET = validadeCET - DateTime.Today;
+
+                    if (validadeCET < DateTime.Today)
+                    {
+                        MostrarMsgCET(txtPlaca.Text.Trim() + " - LICENÇA CET do veículo, está VENCIDA. Verifique!", "danger");
+                        txtCET.BackColor = System.Drawing.Color.Red;
+                        txtCET.ForeColor = System.Drawing.Color.White;
+                        txtCodMotorista.Text = "";
+                        txtCodMotorista.Focus();
+                    }
+                    else if (diferencaCET.TotalDays <= 30)
+                    {
+                        MostrarMsgCET(txtPlaca.Text.Trim() + " - Atenção! LICENÇA CET do veículo, vence em " + diferencaCET.Days + " dias.", "warning");
+                        txtCET.BackColor = System.Drawing.Color.Khaki;
+                        txtCET.ForeColor = System.Drawing.Color.OrangeRed;
+                    }
+                }
+
+
+
+            }
+
+            // Dados da primeira carreta
+            if (txtReboque1.Text != "")
+            {
+                string sqlCarreta1 = @"SELECT placacarreta, licenciamento, ativo_inativo, fl_exclusao
                        FROM tbcarretas 
                        WHERE placacarreta = @idCarreta1 AND ativo_inativo = 'ATIVO' AND fl_exclusao IS NULL";
-                    using (SqlCommand cmdCarreta1 = new SqlCommand(sqlCarreta1, con))
+                using (SqlCommand cmdCarreta1 = new SqlCommand(sqlCarreta1, con))
+                {
+                    cmdCarreta1.Parameters.AddWithValue("@idCarreta1", txtReboque1.Text.Trim());
+
+                    DataTable dtCarreta1 = new DataTable();
+                    SqlDataAdapter daCarreta1 = new SqlDataAdapter(cmdCarreta1);
+
+                    daCarreta1.Fill(dtCarreta1);
+
+                    if (dtCarreta1.Rows.Count == 0)
                     {
-                        cmdCarreta1.Parameters.AddWithValue("@idCarreta1", txtReboque1.Text.Trim());
-
-                        DataTable dtCarreta1 = new DataTable();
-                        SqlDataAdapter daCarreta1 = new SqlDataAdapter(cmdCarreta1);
-
-                        daCarreta1.Fill(dtCarreta1);
-
-                        if (dtCarreta1.Rows.Count == 0)
-                        {
-                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Carreta NÂO encontrada na base de dados ou INATIVA. Verifique!", "danger");
-                            //LimparCamposMotorista();
-                            return;
-                        }
-
-                        if (dtCarreta1.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtCarreta1.Rows[0]["fl_exclusao"].ToString() == "S")
-                        {
-                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Carreta INATIVA ou EXCLUIDA da base de dados. Verique!", "danger");
-                            //LimparCamposMotorista();
-                            return;
-
-                        }
-
-                        // Dados da Carreta 
-                        txtCRLVReb1.Text = dtCarreta1.Rows[0]["licenciamento"].ToString();
-                        // valida Licenciamento reboque 1
-                        DateTime dataLincReb1;
-                        if (!DateTime.TryParse(txtCRLVReb1.Text, out dataLincReb1))
-                        {
-                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - LICENCIAMENTO da carreta, não foi lançado. Verifique!", "danger");
-                            //return;
-                        }
-                        else
-                        {
-                            DateTime validadeLincReb1 = Convert.ToDateTime(dtCarreta1.Rows[0]["licenciamento"]);
-                            TimeSpan diferencaLincReb1 = validadeLincReb1 - DateTime.Today;
-
-                            if (validadeLincReb1 < DateTime.Today)
-                            {
-                                MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - LICENCIAMENTO da carreta, está VENCIDO. Verifique!", "danger");
-                                txtCRLVReb1.BackColor = System.Drawing.Color.Red;
-                                txtCRLVReb1.ForeColor = System.Drawing.Color.White;
-                            }
-                            else if (diferencaLincReb1.TotalDays <= 30)
-                            {
-                                MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Atenção! LICENCIAMENTO da carreta, vence em " + diferencaLincReb1.Days + " dias.", "warning");
-                                txtCRLVReb1.BackColor = System.Drawing.Color.Khaki;
-                                txtCRLVReb1.ForeColor = System.Drawing.Color.OrangeRed;
-                            }
-                        }
+                        MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Carreta NÂO encontrada na base de dados ou INATIVA. Verifique!", "danger");
+                        //LimparCamposMotorista();
+                        return;
                     }
 
+                    if (dtCarreta1.Rows[0]["ativo_inativo"].ToString() == "INATIVO" || dtCarreta1.Rows[0]["fl_exclusao"].ToString() == "S")
+                    {
+                        MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Carreta INATIVA ou EXCLUIDA da base de dados. Verique!", "danger");
+                        //LimparCamposMotorista();
+                        return;
+
+                    }
+
+                    // Dados da Carreta 
+                    txtCRLVReb1.Text = dtCarreta1.Rows[0]["licenciamento"].ToString();
+                    // valida Licenciamento reboque 1
+                    DateTime dataLincReb1;
+                    if (!DateTime.TryParse(txtCRLVReb1.Text, out dataLincReb1))
+                    {
+                        MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - LICENCIAMENTO da carreta, não foi lançado. Verifique!", "danger");
+                        //return;
+                    }
+                    else
+                    {
+                        DateTime validadeLincReb1 = Convert.ToDateTime(dtCarreta1.Rows[0]["licenciamento"]);
+                        TimeSpan diferencaLincReb1 = validadeLincReb1 - DateTime.Today;
+
+                        if (validadeLincReb1 < DateTime.Today)
+                        {
+                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - LICENCIAMENTO da carreta, está VENCIDO. Verifique!", "danger");
+                            txtCRLVReb1.BackColor = System.Drawing.Color.Red;
+                            txtCRLVReb1.ForeColor = System.Drawing.Color.White;
+                        }
+                        else if (diferencaLincReb1.TotalDays <= 30)
+                        {
+                            MostrarMsgCarreta1(txtReboque1.Text.Trim() + " - Atenção! LICENCIAMENTO da carreta, vence em " + diferencaLincReb1.Days + " dias.", "warning");
+                            txtCRLVReb1.BackColor = System.Drawing.Color.Khaki;
+                            txtCRLVReb1.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
+                    }
                 }
 
+            }
 
-                // Dados da segunda carreta
-                if (txtReboque2.Text != "")
+
+            // Dados da segunda carreta
+            if (txtReboque2.Text != "")
             {
                 string sqlCarreta2 = @"SELECT placacarreta, licenciamento, ativo_inativo, fl_exclusao
                    FROM tbcarretas 
@@ -2609,12 +2675,12 @@ namespace NewCapit.dist.pages
                     window = new GInfoWindow(latlng1, string.Format(@"<b>Informações:</b><br />Horário: {0}<br/>Placa: {1}<br/>Lat: {2}<br/>Long: {3}<br/>End: {4}<br/>UF: {5}<br/>Ignição: {6}<br/>Velocidade: {7}",
                     hora, placa, lat, lon, rua, uf, ignicao, velocidade), true);
 
-                   // GMap1.Add(window);
-                    
+                    // GMap1.Add(window);
+
 
                     // Focar o veículo no mapa com zoom adequado
-                   // GMap1.setCenter(latlng1);
-                   // GMap1.GZoom = 18;
+                    // GMap1.setCenter(latlng1);
+                    // GMap1.GZoom = 18;
                     //GMap1; // Ajuste conforme necessário
                     GIcon ico = new GIcon();
 
@@ -2850,6 +2916,6 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
-        
+
     }
 }
