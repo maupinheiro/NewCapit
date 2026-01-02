@@ -1571,19 +1571,7 @@ namespace NewCapit.dist.pages
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            string cs = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
-
-            // 🔹 Monta o campo descr_frete
-            //string[] pagador = cboPagador.SelectedItem.Text.Split(' ');
-            //string[] remetente = cboRemetente.Text.Split(' ');
-            //string[] expedidor = cboExpedidor.Text.Split(' ');
-            //string[] destinatario = cboDestinatario.Text.Split(' ');
-            //string[] recebedor = cboRecebedor.Text.Split(' ');
-            
-            //string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Exped./Recb.: {txtCodExpedidor.Text} - {expedidor[0]}({txtCidExpedidor.Text}/{txtUFExpedidor.Text}) x {txtCodRecebedor.Text} - {recebedor[0]}({txtCidRecebedor.Text}/{txtUFRecebedor.Text}) - Material: {cboTipoMaterial.SelectedItem.Text} - Veículo: {cboTipoVeiculo.SelectedItem.Text}";
-
-            //, cod_pagador, pagador, remetente, cod_expedidor,expedidor, uf_expedidor, cid_expedidor, destinatario, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, material, tipoveiculo
-
+            string cs = WebConfigurationManager.ConnectionStrings["conexao"].ToString(); 
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 conn.Open();

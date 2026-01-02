@@ -555,6 +555,7 @@ namespace NewCapit.dist.pages
             string nomePagador = null;
             string cidPagador = null;
             string ufPagador = null;
+            string achou = null;
 
 
             string sqlPesquisarFrete = @"
@@ -592,6 +593,7 @@ namespace NewCapit.dist.pages
                         sDuracao = duracaoFrete ?? "";
                         sDeslocamento = deslocamentoFrete ?? "";
                         sEmitePedagio = emitePedagioFrete ?? "";
+                        achou = "Sim";
                     }
                     else
                     {
@@ -603,6 +605,7 @@ namespace NewCapit.dist.pages
                         sDeslocamento = null;
                         sEmitePedagio = null;
                         sDistancia = null;
+                        
                     }
                 }
             }
@@ -611,10 +614,10 @@ namespace NewCapit.dist.pages
 
             // ===============================
             // pesquisar se a carga ja existe
-            // ===============================
-            if (!CargaJaExiste(conn, numSolic))
-            {
-                string sqlCarga = @"INSERT INTO tbcargas (carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, cadastro, gr, solicitante, empresa, andamento, codvworigem, codvwdestino, 
+            // ===============================           
+             if (!CargaJaExiste(conn, numSolic))
+                {
+                    string sqlCarga = @"INSERT INTO tbcargas (carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, cadastro, gr, solicitante, empresa, andamento, codvworigem, codvwdestino, 
                   distancia, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, nucleo, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao,  duracao, deslocamento, conta_debito_solicitacao, centro_custo_solicitacao, emitepedagio, desc_veic_vw, cod_pagador, pagador, cid_pagador, uf_pagador)
                     VALUES
                     (@carga, @emissao, @status, @tomador, @entrega, @peso, @material, 
@@ -623,72 +626,74 @@ namespace NewCapit.dist.pages
                        @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @nucleo, @tipo_solicitacao,
                         @tipo_geracao_solicitacao, @tipo_veiculo_solicitacao,  @duracao, @deslocamento, @conta_debito_solicitacao, @centro_custo_solicitacao, @emitepedagio, @desc_veic_vw, @cod_pagador, @pagador, @cid_pagador, @uf_pagador)";
 
-                using (SqlCommand cmd = new SqlCommand(sqlCarga, conn))
-                {
-                    cmd.Parameters.Add("@carga", SqlDbType.VarChar, 50).Value = numSolic;
-                    cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = SafeDateTimeValue(dtCadastro + " " + hrCadastro);
-                    cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = "Pendente";
-                    cmd.Parameters.Add("@tomador", SqlDbType.VarChar, 170).Value = nomePlanta;
-                    cmd.Parameters.Add("@entrega", SqlDbType.VarChar, 20).Value = "Normal";
-                    cmd.Parameters.Add("@peso", SqlDbType.Decimal).Value = pesoTotal;
-                    cmd.Parameters.Add("@material", SqlDbType.VarChar, 50).Value = "OUTROS";
-                    cmd.Parameters.Add("@portao", SqlDbType.VarChar, 20).Value = planta;
-                    cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "Pronto";
-                    cmd.Parameters.Add("@previsao", SqlDbType.Date).Value = SafeDateValue(dtColeta);
-                    cmd.Parameters.Add("@codorigem", SqlDbType.Int).Value = DbInt(codCliOrigem);
-                    cmd.Parameters.Add("@cliorigem", SqlDbType.VarChar, 150).Value = razCliOrigem;
-                    cmd.Parameters.Add("@coddestino", SqlDbType.Int).Value = DbInt(codCliDestino);
-                    cmd.Parameters.Add("@clidestino", SqlDbType.VarChar, 150).Value = razCliDestino;
-                    cmd.Parameters.Add("@ufcliorigem", SqlDbType.Char, 2).Value = estCliOrigem;
-                    cmd.Parameters.Add("@ufclidestino", SqlDbType.Char, 2).Value = estCliDestino;
-                    cmd.Parameters.Add("@cidorigem", SqlDbType.VarChar, 50).Value = cidCliOrigem;
-                    cmd.Parameters.Add("@ciddestino", SqlDbType.VarChar, 50).Value = cidCliDestino;
-                    cmd.Parameters.Add("@cadastro", SqlDbType.VarChar, 80).Value = Frm_ImpSolVWMatriz.DataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + usuario.ToUpper();
-                    cmd.Parameters.Add("@gr", SqlDbType.VarChar, 50).Value = grPlanta;
-                    cmd.Parameters.Add("@solicitante", SqlDbType.VarChar, 50).Value = nomePlanta;
-                    cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 50).Value = "1111";
-                    cmd.Parameters.Add("@andamento", SqlDbType.VarChar, 50).Value = "PENDENTE";
-                    cmd.Parameters.Add("@codvworigem", SqlDbType.VarChar, 10).Value = lblOrigem;
-                    cmd.Parameters.Add("@codvwdestino", SqlDbType.VarChar, 10).Value = lblDestino;
-                    cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = sDistancia ?? (object)DBNull.Value;
-                    cmd.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = DbInt(codCliExpedidor);
-                    cmd.Parameters.Add("@expedidor", SqlDbType.VarChar, 150).Value = razCliExpedidor;
-                    cmd.Parameters.Add("@cid_expedidor", SqlDbType.VarChar, 50).Value = cidCliExpedidor;
-                    cmd.Parameters.Add("@uf_expedidor", SqlDbType.VarChar, 2).Value = estCliExpedidor;
-                    cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int)
-                       .Value = DbInt(codCliRecebedor);
-                    cmd.Parameters.Add("@recebedor", SqlDbType.VarChar, 120)
-                       .Value = DbString(razCliRecebedor);
-                    cmd.Parameters.Add("@cid_recebedor", SqlDbType.VarChar, 80)
-                       .Value = DbString(cidCliRecebedor);
-                    cmd.Parameters.Add("@uf_recebedor", SqlDbType.Char, 2)
-                       .Value = DbString(estCliRecebedor);
-                    cmd.Parameters.Add("@nucleo", SqlDbType.VarChar, 50).Value = "MATRIZ";
-                    cmd.Parameters.Add("@tipo_solicitacao", SqlDbType.VarChar, 50).Value = descricaoTipoSolicitacao;
-                    cmd.Parameters.Add("@tipo_geracao_solicitacao", SqlDbType.VarChar, 50).Value = descricaoTipoGeracao;
-                    cmd.Parameters.Add("@tipo_veiculo_solicitacao", SqlDbType.VarChar, 90).Value = descricaoTipoVeiculo;
-                    cmd.Parameters.Add("@duracao", SqlDbType.VarChar, 15).Value = sDuracao;                    
-                    cmd.Parameters.Add("@deslocamento", SqlDbType.VarChar, 30).Value = sDeslocamento;
-                    cmd.Parameters.Add("@conta_debito_solicitacao", SqlDbType.VarChar, 30).Value = contaDebito;
-                    cmd.Parameters.Add("@centro_custo_solicitacao", SqlDbType.VarChar, 20).Value = centroCusto;
-                    cmd.Parameters.Add("@emitepedagio", SqlDbType.VarChar, 3).Value = sEmitePedagio;
-                    cmd.Parameters.Add("@desc_veic_vw", SqlDbType.VarChar, 25).Value = descVeicVW;
-                    cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = DbInt(codCliPagador);
-                    cmd.Parameters.Add("@pagador", SqlDbType.VarChar, 120)
-                       .Value = DbString(razCliPagador);
-                    cmd.Parameters.Add("@cid_pagador", SqlDbType.VarChar, 50)
-                       .Value = DbString(cidCliPagador);
-                    cmd.Parameters.Add("@uf_pagador", SqlDbType.VarChar, 2)
-                       .Value = DbString(estCliPagador);
-
-                    foreach (SqlParameter p in cmd.Parameters)
+                    using (SqlCommand cmd = new SqlCommand(sqlCarga, conn))
                     {
-                        if (p.Value == null)
-                            p.Value = DBNull.Value;
+                        cmd.Parameters.Add("@carga", SqlDbType.VarChar, 50).Value = numSolic;
+                        cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = SafeDateTimeValue(dtCadastro + " " + hrCadastro);
+                        cmd.Parameters.Add("@status", SqlDbType.VarChar, 50).Value = "Pendente";
+                        cmd.Parameters.Add("@tomador", SqlDbType.VarChar, 170).Value = nomePlanta;
+                        cmd.Parameters.Add("@entrega", SqlDbType.VarChar, 20).Value = "Normal";
+                        cmd.Parameters.Add("@peso", SqlDbType.Decimal).Value = pesoTotal;
+                        cmd.Parameters.Add("@material", SqlDbType.VarChar, 50).Value = "OUTROS";
+                        cmd.Parameters.Add("@portao", SqlDbType.VarChar, 20).Value = planta;
+                        cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "Pronto";
+                        cmd.Parameters.Add("@previsao", SqlDbType.Date).Value = SafeDateValue(dtColeta);
+                        cmd.Parameters.Add("@codorigem", SqlDbType.Int).Value = DbInt(codCliOrigem);
+                        cmd.Parameters.Add("@cliorigem", SqlDbType.VarChar, 150).Value = razCliOrigem;
+                        cmd.Parameters.Add("@coddestino", SqlDbType.Int).Value = DbInt(codCliDestino);
+                        cmd.Parameters.Add("@clidestino", SqlDbType.VarChar, 150).Value = razCliDestino;
+                        cmd.Parameters.Add("@ufcliorigem", SqlDbType.Char, 2).Value = estCliOrigem;
+                        cmd.Parameters.Add("@ufclidestino", SqlDbType.Char, 2).Value = estCliDestino;
+                        cmd.Parameters.Add("@cidorigem", SqlDbType.VarChar, 50).Value = cidCliOrigem;
+                        cmd.Parameters.Add("@ciddestino", SqlDbType.VarChar, 50).Value = cidCliDestino;
+                        cmd.Parameters.Add("@cadastro", SqlDbType.VarChar, 80).Value = Frm_ImpSolVWMatriz.DataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + usuario.ToUpper();
+                        cmd.Parameters.Add("@gr", SqlDbType.VarChar, 50).Value = grPlanta;
+                        cmd.Parameters.Add("@solicitante", SqlDbType.VarChar, 50).Value = nomePlanta;
+                        cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 50).Value = "1111";
+                        cmd.Parameters.Add("@andamento", SqlDbType.VarChar, 50).Value = "PENDENTE";
+                        cmd.Parameters.Add("@codvworigem", SqlDbType.VarChar, 10).Value = lblOrigem;
+                        cmd.Parameters.Add("@codvwdestino", SqlDbType.VarChar, 10).Value = lblDestino;
+                        cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = sDistancia ?? (object)DBNull.Value;
+                        cmd.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = DbInt(codCliExpedidor);
+                        cmd.Parameters.Add("@expedidor", SqlDbType.VarChar, 150).Value = razCliExpedidor;
+                        cmd.Parameters.Add("@cid_expedidor", SqlDbType.VarChar, 50).Value = cidCliExpedidor;
+                        cmd.Parameters.Add("@uf_expedidor", SqlDbType.VarChar, 2).Value = estCliExpedidor;
+                        cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int)
+                           .Value = DbInt(codCliRecebedor);
+                        cmd.Parameters.Add("@recebedor", SqlDbType.VarChar, 120)
+                           .Value = DbString(razCliRecebedor);
+                        cmd.Parameters.Add("@cid_recebedor", SqlDbType.VarChar, 80)
+                           .Value = DbString(cidCliRecebedor);
+                        cmd.Parameters.Add("@uf_recebedor", SqlDbType.Char, 2)
+                           .Value = DbString(estCliRecebedor);
+                        cmd.Parameters.Add("@nucleo", SqlDbType.VarChar, 50).Value = "MATRIZ";
+                        cmd.Parameters.Add("@tipo_solicitacao", SqlDbType.VarChar, 50).Value = descricaoTipoSolicitacao;
+                        cmd.Parameters.Add("@tipo_geracao_solicitacao", SqlDbType.VarChar, 50).Value = descricaoTipoGeracao;
+                        cmd.Parameters.Add("@tipo_veiculo_solicitacao", SqlDbType.VarChar, 90).Value = descricaoTipoVeiculo;
+                        cmd.Parameters.Add("@duracao", SqlDbType.VarChar, 15).Value = sDuracao;
+                        cmd.Parameters.Add("@deslocamento", SqlDbType.VarChar, 30).Value = sDeslocamento;
+                        cmd.Parameters.Add("@conta_debito_solicitacao", SqlDbType.VarChar, 30).Value = contaDebito;
+                        cmd.Parameters.Add("@centro_custo_solicitacao", SqlDbType.VarChar, 20).Value = centroCusto;
+                        cmd.Parameters.Add("@emitepedagio", SqlDbType.VarChar, 3).Value = sEmitePedagio;
+                        cmd.Parameters.Add("@desc_veic_vw", SqlDbType.VarChar, 25).Value = descVeicVW;
+                        cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = DbInt(codCliPagador);
+                        cmd.Parameters.Add("@pagador", SqlDbType.VarChar, 120)
+                           .Value = DbString(razCliPagador);
+                        cmd.Parameters.Add("@cid_pagador", SqlDbType.VarChar, 50)
+                           .Value = DbString(cidCliPagador);
+                        cmd.Parameters.Add("@uf_pagador", SqlDbType.VarChar, 2)
+                           .Value = DbString(estCliPagador);
+
+                        foreach (SqlParameter p in cmd.Parameters)
+                        {
+                            if (p.Value == null)
+                                p.Value = DBNull.Value;
+                        }
+                        cmd.ExecuteNonQuery();
                     }
-                    cmd.ExecuteNonQuery();
                 }
-            }
+           
+            
 
         }
         private static bool CargaJaExiste(SqlConnection conn, string carga)

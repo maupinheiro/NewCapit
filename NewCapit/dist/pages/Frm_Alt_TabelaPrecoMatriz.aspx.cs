@@ -163,7 +163,11 @@ namespace NewCapit.dist.pages
         private void PreencherComboTipoVeiculos()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codigo, descricao FROM tbtipoveic order by descricao";
+            string query = @"
+            SELECT DISTINCT RTRIM(LTRIM(descricao_tng)) AS descricao_tng
+            FROM tbtipoveic
+            WHERE descricao_tng IS NOT NULL
+            ORDER BY descricao_tng";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -181,8 +185,8 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     cboTipoVeiculo.DataSource = reader;
-                    cboTipoVeiculo.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cboTipoVeiculo.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+                    cboTipoVeiculo.DataTextField = "descricao_tng";  // Campo que será mostrado no ComboBox
+                    cboTipoVeiculo.DataValueField = "descricao_tng";  // Campo que será o valor de cada item                    
                     cboTipoVeiculo.DataBind();  // Realiza o binding dos dados                   
                     cboTipoVeiculo.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
@@ -233,7 +237,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboConsignario()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes order by nomcli";
+            string query = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes order by razcli";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -251,10 +255,10 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     cboConsignatario.DataSource = reader;
-                    cboConsignatario.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    cboConsignatario.DataTextField = "razcli";  // Campo que será mostrado no ComboBox
                     cboConsignatario.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     cboConsignatario.DataBind();  // Realiza o binding dos dados                   
-                    cboConsignatario.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    //cboConsignatario.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -268,7 +272,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboPagador()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes order by nomcli";
+            string query = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes order by razcli";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -286,10 +290,10 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     cboPagador.DataSource = reader;
-                    cboPagador.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    cboPagador.DataTextField = "razcli";  // Campo que será mostrado no ComboBox
                     cboPagador.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     cboPagador.DataBind();  // Realiza o binding dos dados                   
-                    cboPagador.Items.Insert(0, new ListItem("Selecione...", "0"));
+                   // cboPagador.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -424,6 +428,14 @@ namespace NewCapit.dist.pages
                     txtCodAgregado.Text = dr["codmot_especial"].ToString();
                     txtCodTra.Text = dr["codtra_especial"].ToString();
                     txtTransp.Text = dr["transp_especial"].ToString();
+                    ddlHoraParada.SelectedItem.Text = dr["cobra_hora_parada"].ToString();
+                    if (dr["franquia_hora_parada"] != DBNull.Value)
+                    {
+                        TimeSpan hora = (TimeSpan)dr["franquia_hora_parada"];
+                        txtFranquia.Text = hora.ToString(@"hh\:mm");
+                    }                    
+                    txtValorFranquia.Text = Convert.ToDecimal(dr["valor_hora_parada"]).ToString("N2");
+                    
                     CarregaRotas(rota);
                     // 🔹 RadioButton customizado (lotação mínima)
                     string lotacao = dr["lotacao_minima"].ToString();
@@ -445,7 +457,7 @@ namespace NewCapit.dist.pages
             if (txtCodConsignatario.Text != "")
             {
                 string cod = txtCodConsignatario.Text;
-                string sql = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -513,7 +525,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -539,7 +551,7 @@ namespace NewCapit.dist.pages
             if (txtCodPagador.Text != "")
             {
                 string cod = txtCodPagador.Text;
-                string sql = "SELECT codcli, nomcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -607,7 +619,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -1067,7 +1079,10 @@ namespace NewCapit.dist.pages
                                                 transp_especial = @transp_especial,
                                                 perc_frete_agregado = @perc_frete_agregado,
                                                 perc_frete_terceiro = @perc_frete_terceiro,
-                                                perc_frete_especial = @perc_frete_especial
+                                                perc_frete_especial = @perc_frete_especial,
+                                                cobra_hora_parada = @cobra_hora_parada, 
+                                                valor_hora_parada = @valor_hora_parada,
+                                                franquia_hora_parada = @franquia_hora_parada
                                             WHERE cod_frete = @cod_frete";
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
@@ -1145,6 +1160,10 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@perc_frete_agregado", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGAgregado.Text);
                     cmd.Parameters.Add("@perc_frete_terceiro", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTngTerceiro.Text);
                     cmd.Parameters.Add("@perc_frete_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGEspecial.Text);
+                    cmd.Parameters.Add("@cobra_hora_parada", SqlDbType.NVarChar).Value = ddlHoraParada.SelectedValue;
+                    cmd.Parameters.Add("@valor_hora_parada", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtValorFranquia.Text);
+                    cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = txtFranquia.Text;
+
 
                     con.Open();
                     cmd.ExecuteNonQuery();
@@ -1153,6 +1172,8 @@ namespace NewCapit.dist.pages
                 ClientScript.RegisterStartupScript(this.GetType(), "Sucesso",
                     "<script>alert('✅ Frete atualizado com sucesso!');</script>");
             }
+            Response.Redirect("/dist/pages/ConsultaFretes.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
         }
         public static class DbParse
         {

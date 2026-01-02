@@ -15,35 +15,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
        
-   <%--<script>
-
-       function aplicarMascaras() {
-
-           $('input.data').mask('00/00/0000');
-
-           $('input.datahora').mask('00/00/0000 00:00');
-
-           $('input.hora').mask('00:00');
-
-           $('input.moeda').mask('000.000.000,00', {
-               reverse: true
-           });
-       }
-
-       // carregamento inicial
-       $(document).ready(function () {
-           aplicarMascaras();
-       });
-
-       // após AutoPostBack parcial (UpdatePanel)
-       Sys.WebForms.PageRequestManager
-           .getInstance()
-           .add_endRequest(function () {
-               aplicarMascaras();
-           });
-
-   </script>--%>
-
+  
 
 
     <script>
@@ -100,12 +72,12 @@
         <asp:ScriptManagerProxy ID="ScriptManagerProxy1" runat="server" />
         <section class="content">
             <div class="container-fluid">               
-                
+                <br />
                 <div class="col-md-12">
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;GESTÃO DE MULTAS</h3>
+                                <h3 class="card-title"><i class="fas fa-route"></i>&nbsp;DISTÂNCIA ENTRE CIDADES</h3>
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
@@ -128,19 +100,19 @@
                                     <div class="col-md-4">
                                         <asp:TextBox ID="txtPesquisar" runat="server"
                                             CssClass="form-control"
-                                            placeholder="Pesquisar placa, por codigo, nome do motorista ou processo ... " />
+                                            placeholder="Pesquisar ciddade, estado... " />
                                     </div>
 
-                                    <div class="col-md-3">
+                                    <%--<div class="col-md-3">
                                         <asp:DropDownList ID="ddlStatus" runat="server"
                                             CssClass="form-select"
                                             AutoPostBack="true"
                                             OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
-                                            <asp:ListItem Text="Pendentes" Value="Pendente" />
-                                            <asp:ListItem Text="Baixados" Value="Baixado" />
+                                            <asp:ListItem Text="Origem" Value="Origem" />
+                                            <asp:ListItem Text="Destino" Value="Destino" />
                                             <asp:ListItem Text="Todos" Value="Todos" />
                                         </asp:DropDownList>
-                                    </div>
+                                    </div>--%>
 
                                     <div class="col-md-2">
                                         <asp:Button ID="btnPesquisar" runat="server"
@@ -149,72 +121,52 @@
                                             OnClick="btnPesquisar_Click" />
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <%--<div class="col-md-2">
                                         <asp:Button ID="btnAbrirModal" runat="server"
                                             Text="Abrir Processo"
                                             CssClass="btn btn-primary w-100"
                                             OnClick="btnAbrirModal_Click" />
-                                    </div>
+                                    </div>--%>
                                 </div>
 
-                                <asp:GridView ID="gvProcessos" runat="server"
+                                <asp:GridView ID="gvCidades" runat="server"
                                     CssClass="table table-bordered table-striped table-hover"
                                     AutoGenerateColumns="False"
                                     EmptyDataText="Nenhum registro encontrado.">
 
-                                    <Columns>
+                                    <Columns>                                        
 
-                                        <asp:TemplateField HeaderText="Foto">
+                                        <asp:TemplateField HeaderText="Cidade de Origem">
                                             <ItemTemplate>
-                                                <asp:Image ID="imgFoto" runat="server"
-                                                    Width="55"
-                                                    CssClass="img-thumbnail"
-                                                    ImageUrl='<%# Eval("foto") %>' />
+                                                <%# Eval("origem")%>
+                                               
                                             </ItemTemplate>
                                         </asp:TemplateField>
 
-                                        <asp:TemplateField HeaderText="Motorista/Transportadora">
+                                        <asp:TemplateField HeaderText="UF">
                                             <ItemTemplate>
-                                                <%# Eval("codmot") + " - " + Eval("nome") %>
-                                                <br />
-                                                <%# Eval("transportadora")%>
+                                                <%# Eval("uf_origem")%>   
                                             </ItemTemplate>
                                         </asp:TemplateField>
 
-                                        <asp:TemplateField HeaderText="Processo/AIT">
+                                        <asp:TemplateField HeaderText="Cidade de Destino">
                                             <ItemTemplate>
-                                                <%# Eval("processo")%>
-                                                <br />
-                                                <%# Eval("ait")%>
+                                                <%# Eval("Destino")%>   
                                             </ItemTemplate>
                                         </asp:TemplateField>
 
-                                        <asp:TemplateField HeaderText="Data Autuação">
+                                        <asp:TemplateField HeaderText="UF">
                                             <ItemTemplate>
-                                                <%# String.Format("{0:dd/MM/yyyy HH:mm}", Eval("dthoranot")) %>
-                                                <br />
-                                                <%# Eval("dia")%>
+                                                <%# Eval("uf_destino")%>   
                                             </ItemTemplate>
                                         </asp:TemplateField>
 
-                                        <asp:TemplateField HeaderText="Placa">
+                                        <asp:TemplateField HeaderText="Distância (km)">
                                             <ItemTemplate>
-                                                <%# Eval("placa")%>
-                                                <br />
-                                                <%# Eval("equipamento")%>
+                                                <%# Eval("Distancia")%>   
                                             </ItemTemplate>
                                         </asp:TemplateField>
-
-
-                                        <asp:TemplateField HeaderText="Status">
-                                            <ItemTemplate>
-                                                <span class='<%# Eval("status").ToString() == "Pendente" ? "badge bg-warning text-dark" : "badge bg-success" %>'>
-                                                    <%# Eval("status") %>
-                                                </span>
-                                                <br />
-                                                <%# Eval("baixado_por") %>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
+                                        
                                     </Columns>
                                 </asp:GridView>
                             </div>
@@ -222,7 +174,7 @@
                     </div>
                 </div>
                 <!-- form INCLUIR e CONSULTAR processo -->
-                <div class="modal fade" id="mdlProcesso" tabindex="-1">
+               <%-- <div class="modal fade" id="mdlProcesso" tabindex="-1">
                     <div class="modal-dialog modal-xl modal-dialog-centered"">
                         <div class="modal-content">                            
                             <div class="modal-header">
@@ -304,7 +256,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <%--<span class="details">Gravidade:</span>--%>
-                                                        <label>Gravidade:</label>
+                                                       <%-- <label>Gravidade:</label>
                                                         <asp:TextBox ID="txtGravidade" runat="server" CssClass="form-control" Style="text-align: center" Enabled="false"></asp:TextBox>
                                                     </div>
                                                 </div>
@@ -492,7 +444,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div>--%>
             </div>
         </section>
     </div>

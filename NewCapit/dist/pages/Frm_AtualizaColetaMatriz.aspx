@@ -690,8 +690,8 @@ function aplicarMascaraTelefone() {
     <thead>
     <tr>
     <th>CARGA</th>
-    <th>REMETENTE/EXPEDIDOR</th>
-    <th>DESTINATÁRIO/RECEBEDOR</th>
+    <th>LOCAL DE COLETA</th>
+    <th>LOCAL DE ENTREGA</th>
     <th>INICIO VIAGEM</th>
     <th>PREVISÃO CHEG.</th>
     <th>CHEGADA</th>
@@ -707,8 +707,8 @@ function aplicarMascaraTelefone() {
    Value='<%# Eval("carga") %>' />
     <tr data-widget="expandable-table" aria-expanded="false">
     <td><%# Eval("carga") %></td>
-    <td><%# Eval("cliorigem") %></td>
-    <td><%# Eval("clidestino") %></td>
+    <td><%# Eval("expedidor") %></td>
+    <td><%# Eval("recebedor") %></td>
     <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
     <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
     <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
@@ -940,7 +940,7 @@ function aplicarMascaraTelefone() {
     <div class="form-group">
         <span class="details">Conta Débito:</span>
         <div class="input-group">
-            <asp:TextBox ID="txtConta_Debito_Solicitacao" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+            <asp:TextBox ID="txtConta_Debito_Solicitacao" runat="server" class="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
         </div>
     </div>
 </div>
@@ -948,7 +948,7 @@ function aplicarMascaraTelefone() {
     <div class="form-group">
         <span class="details">Centro Custo:</span>
         <div class="input-group">
-            <asp:TextBox ID="txtCento_Custo_Solicitacao" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+            <asp:TextBox ID="txtCento_Custo_Solicitacao" runat="server" class="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
         </div>
     </div>
 </div>
@@ -972,7 +972,7 @@ function aplicarMascaraTelefone() {
     </div>
     <div class="col-md-4">
     <div class="form-group">
-    <span class="details">Solicitante:</span>
+    <span class="details">Tipo de Veículo:</span>
     <div class="input-group">
     <asp:TextBox ID="txtTipo_Veiculo_Solicitacao" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("tipo_veiculo_solicitacao") %>'></asp:TextBox>
     </div>

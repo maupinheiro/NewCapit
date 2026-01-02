@@ -420,23 +420,15 @@
                                                     <p>
                                                         Coletas/Entregas 
                                                     </p>
-                                                </a>
-                                                <%--<ul class="nav nav-treeview">
-                                                    <li class="nav-item">
-                                                        <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
-                                                            <i class="fas fa-warehouse nav-icon"></i>
-                                                            <p>Consulta</p>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="pages/tables/jsgrid.html" class="nav-link">
-                                                            <i class="far fa-circle nav-icon"></i>
-                                                            <p>Relatórios</p>
-                                                        </a>
-                                                    </li>
-                                                </ul>--%>
+                                                </a>                                                
                                             </li>
                                             <li class="nav-item">
+                                                <a href="/dist/pages/ControleDePedagio.aspx" class="nav-link">
+                                                    <i class="fas fa-map-marker-alt nav-icon"></i>
+                                                    <p>Controle de Pedágio</p>
+                                                </a>                                         
+                                            </li>
+                                            <%--<li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="nav-icon fas fa-fire-extinguisher"></i>
                                                     <p>
@@ -470,7 +462,7 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </li>
+                                            </li>--%>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -532,11 +524,11 @@
                                             <p>Gestão de Fretes</p>
                                         </a>
                                         <a href="/dist/pages/SimuladorFrete.aspx" class="nav-link">
-                                            <i class="fas fa-dollar-sign nav-icon"></i>
+                                            <i class="far fa-money-bill-alt nav-icon"></i>
                                             <p>Simular Frete</p>
                                         </a>
                                         <a href="/dist/pages/Frm_DistanciaEntreCidades.aspx" class="nav-link">
-                                            <i class="fas fa-dollar-sign nav-icon"></i>
+                                            <i class="fas fa-road nav-icon"></i>
                                             <p>Distância entre Cidades</p>
                                         </a>
                                     </li>

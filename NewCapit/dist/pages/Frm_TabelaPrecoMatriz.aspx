@@ -407,9 +407,10 @@
                                                         <div class="form-group">
                                                             <span class="details">EMITE PEDÁGIO:</span>
                                                             <asp:DropDownList ID="ddlEmitePedagio" runat="server" CssClass="form-control">
-                                                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                                <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+
+                                                                
                                                                 <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                                <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                             </asp:DropDownList>
                                                         </div>
                                                     </div>
@@ -417,9 +418,8 @@
                                                         <div class="form-group">
                                                             <span class="details">COBRA HORAS PARADAS:</span>
                                                             <asp:DropDownList ID="ddlHoraParada" runat="server" CssClass="form-control">
-                                                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                                <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                                 <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                                <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                             </asp:DropDownList>
                                                         </div>
                                                     </div>
@@ -493,10 +493,9 @@
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
-                                                        <asp:DropDownList ID="ddlValorFixoTng" runat="server" CssClass="form-control">
-                                                            <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+                                                        <asp:DropDownList ID="ddlValorFixoTng" runat="server" CssClass="form-control"> 
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
                                                 </div>
@@ -526,9 +525,8 @@
                                                     <label class="col-sm-1 col-form-label text-right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
                                                         <asp:DropDownList ID="ddlFixoAgregado" runat="server" CssClass="form-control">
-                                                            <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
 
@@ -585,10 +583,9 @@
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
-                                                        <asp:DropDownList ID="ddlTerceiro" runat="server" CssClass="form-control">
-                                                            <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+                                                        <asp:DropDownList ID="ddlTerceiro" runat="server" CssClass="form-control"> 
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">(%) TNG:</label>
@@ -648,9 +645,9 @@
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-1">
                                                         <asp:DropDownList ID="ddlEspecial" runat="server" CssClass="form-control">
-                                                            <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+                                                            
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">ALUGUEL TNG (%):</label>

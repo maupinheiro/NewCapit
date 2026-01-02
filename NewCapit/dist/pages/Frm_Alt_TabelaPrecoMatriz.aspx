@@ -786,7 +786,7 @@
                                         Text="Atualizar" />
                                 </div>
                                 <div class="col-md-1">
-                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Fechar             
                                     </a>
                                 </div>
                             </div>
