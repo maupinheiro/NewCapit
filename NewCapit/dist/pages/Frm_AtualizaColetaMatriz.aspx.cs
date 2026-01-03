@@ -697,26 +697,21 @@ namespace NewCapit.dist.pages
             }
         }
 
-
-
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Atualizar")
             {
                 string carga = e.CommandArgument.ToString();
 
-                // Recuperar os controles de dentro do item
-                TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
-                TextBox txtGate = (TextBox)e.Item.FindControl("txtGate");
-                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
-                TextBox txtChegadaOrigem = (TextBox)e.Item.FindControl("txtChegadaOrigem");
+                // Recuperar os controles de dentro do item                
+                TextBox txtGateOrigem = (TextBox)e.Item.FindControl("txtGateOrigem");
+                TextBox txtPrevisaoChegada = (TextBox)e.Item.FindControl("txtPrevisaoChegada");
+                TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
+                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus"); 
                 TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
-                TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
-                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
-                TextBox txtEntrada = (TextBox)e.Item.FindControl("txtEntrada");
+                //TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino"); 
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
-                TextBox txtDentroPlanta = (TextBox)e.Item.FindControl("txtDentroPlanta");
-                TextBox txtEsperaGate = (TextBox)e.Item.FindControl("txtEsperaGate");
                 Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
 
 
@@ -725,43 +720,40 @@ namespace NewCapit.dist.pages
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
-                    // Extrai os valores uma única vez
-                    var chegada = SafeDateValue2(txtChegadaOrigem.Text.Trim());
-                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
-                    var entrada = SafeDateValue2(txtEntrada.Text.Trim());
+                    // Extrai os valores uma única vez                    
+                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim()); 
                     var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
 
-                    if (chegada != null && saida != null && entrada != null && saidaPlanta != null)
-                    {
-                        status = "Concluido";
-                        situacao = "CONCLUIDO";
-                    }
-                    else if (chegada != null && saida != null && entrada != null)
-                    {
-                        status = "Ag. Descarga";
-                        situacao = "EM ANDAMENTO";
-                    }
-                    else if (chegada != null && saida != null)
-                    {
-                        status = "Em Transito";
-                        situacao = "EM ANDAMENTO";
-                    }
-                    else if (chegada != null)
-                    {
-                        status = "Ag. Carreg.";
-                        situacao = "EM ANDAMENTO";
-                    }
-                    else
-                    {
-                        status = "Pendente";
-                        situacao = "PENDENTE";
-                    }
+                    //if (chegada != null && saida != null && entrada != null && saidaPlanta != null)
+                    //{
+                    //    status = "Concluido";
+                    //    situacao = "CONCLUIDO";
+                    //}
+                    //else if (chegada != null && saida != null && entrada != null)
+                    //{
+                    //    status = "Ag. Descarga";
+                    //    situacao = "EM ANDAMENTO";
+                    //}
+                    //else if (chegada != null && saida != null)
+                    //{
+                    //    status = "Em Transito";
+                    //    situacao = "EM ANDAMENTO";
+                    //}
+                    //else if (chegada != null)
+                    //{
+                    //    status = "Ag. Carreg.";
+                    //    situacao = "EM ANDAMENTO";
+                    //}
+                    //else
+                    //{
+                    //    status = "Pendente";
+                    //    situacao = "PENDENTE";
+                    //}
 
-                    string query = @"UPDATE tbcargas SET 
-                                cva = @cva, 
-                                gate = @gate, 
+                    string query = @"UPDATE tbcargas SET                                  
+                                gate_origem = @gate_origem,
+                                gate_destino = @gate_destino,
                                 status = @status, 
-                                chegadaorigem = @chegadaorigem, 
                                 saidaorigem = @saidaorigem,
                                 tempoagcarreg = @tempoagcarreg,
                                 chegadadestino = @chegadadestino,
@@ -776,21 +768,17 @@ namespace NewCapit.dist.pages
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
 
-                    cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGate.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@status", status);
-                    cmd.Parameters.AddWithValue("@chegadaorigem", SafeDateValue(txtChegadaOrigem.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGateOrigem.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@status", status);                    
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@entradaplanta", SafeDateValue(txtEntrada.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@tempodentroplanta", SafeValue(txtDentroPlanta.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@tempoesperagate", SafeValue(txtEsperaGate.Text.Trim()));
+                    //cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));                    
+                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));                    
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                    //cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     // continue os parâmetros conforme seu banco
-                    string valorDigitado = txtCVA.Text.Trim();
+                    //string valorDigitado = txtCVA.Text.Trim();
 
                     // Chama método que verifica no banco
 

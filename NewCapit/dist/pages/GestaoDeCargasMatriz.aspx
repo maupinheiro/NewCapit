@@ -104,10 +104,10 @@
                                             <asp:BoundField DataField="status" HeaderText="Status" />
                                             <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
                                             <%--<asp:BoundField DataField="Valor" HeaderText="Valor" DataFormatString="{0:C}" />--%>
-                                            <asp:BoundField DataField="cliorigem" HeaderText="Remetente" />
-                                            <asp:BoundField DataField="cidorigem" HeaderText="Município" />
-                                            <asp:BoundField DataField="clidestino" HeaderText="Destinatário" />
-                                            <asp:BoundField DataField="ciddestino" HeaderText="Município" />
+                                            <asp:BoundField DataField="expedidor" HeaderText="Local de Coleta" />
+                                            <asp:BoundField DataField="cid_expedidor" HeaderText="Município" />
+                                            <asp:BoundField DataField="recebedor" HeaderText="Local de Entrega" />
+                                            <asp:BoundField DataField="cid_recebedor" HeaderText="Município" />
                                         </Columns>
                                     </asp:GridView>
                             </div>

@@ -580,18 +580,26 @@
 
                                             <asp:LinkButton ID="lnkRemover" runat="server" CommandName="Excluir"
                                                 CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i> Remover</asp:LinkButton>
-
-
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:BoundField DataField="carga" HeaderText="CARGA" />
-                                    <asp:BoundField DataField="previsao" HeaderText="PREVISÃO" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField DataField="cliorigem" HeaderText="ORIGEM" />
-                                    <asp:BoundField DataField="cidorigem" HeaderText="MUNICIPIO" />
+                                    <%--<asp:BoundField DataField="carga" HeaderText="Carga" />
+                                    <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="expedidor" HeaderText="Local de Coleta" />
+                                    <asp:BoundField DataField="cid_expedidor" HeaderText="Municipio" />
+                                    <asp:BoundField DataField="ufcluf_expedidor" HeaderText="UF" />
+                                    <asp:BoundField DataField="recebedor" HeaderText="Local de Entrega" />
+                                    <asp:BoundField DataField="cid_recebedor" HeaderText="Municipio" />
+                                    <asp:BoundField DataField="uf_recebedor" HeaderText="UF" />--%>
+                                    <asp:BoundField DataField="carga" HeaderText="Carga" />
+                                    <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="cliorigem" HeaderText="Remetente" />
+                                    <asp:BoundField DataField="cidorigem" HeaderText="Cidade" />
                                     <asp:BoundField DataField="ufcliorigem" HeaderText="UF" />
-                                    <asp:BoundField DataField="clidestino" HeaderText="DESTINO" />
-                                    <asp:BoundField DataField="ciddestino" HeaderText="MUNICIPIO" />
+                                    <asp:BoundField DataField="clidestino" HeaderText="Destinatário" />
+                                    <asp:BoundField DataField="ciddestino" HeaderText="Cidade" />
                                     <asp:BoundField DataField="ufclidestino" HeaderText="UF" />
+
+
 
                                     <asp:ButtonField CommandName="detalhes"
                                         ButtonType="Button" Text="Pedido(s)" ControlStyle-CssClass="btn btn-info btn-sm" />
