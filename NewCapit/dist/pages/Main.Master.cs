@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
+using System.Globalization;
 
 namespace NewCapit
 {
@@ -80,8 +81,74 @@ namespace NewCapit
             }
            
            
-        }       
+        }
 
+        public static class SafeConvert
+        {
+            // INT
+            public static int SafeInt(string valor)
+            {
+                int result;
+                return int.TryParse(valor, out result) ? result : 0;
+            }
+
+            // INT NULLABLE
+            public static object SafeIntNullable(string valor)
+            {
+                int result;
+                return int.TryParse(valor, out result) ? (object)result : DBNull.Value;
+            }
+
+            // DECIMAL (aceita vírgula ou ponto)
+            public static decimal SafeDecimal(string valor)
+            {
+                if (string.IsNullOrWhiteSpace(valor))
+                    return 0;
+
+                valor = valor.Replace(",", ".");
+
+                decimal result;
+                return decimal.TryParse(
+                    valor,
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture,
+                    out result) ? result : 0;
+            }
+
+            // DECIMAL NULLABLE
+            public static object SafeDecimalNullable(string valor)
+            {
+                if (string.IsNullOrWhiteSpace(valor))
+                    return DBNull.Value;
+
+                valor = valor.Replace(",", ".");
+
+                decimal result;
+                return decimal.TryParse(
+                    valor,
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture,
+                    out result) ? (object)result : DBNull.Value;
+            }
+
+            // DATETIME
+            public static DateTime SafeDate(string valor)
+            {
+                DateTime dt;
+                return DateTime.TryParse(valor, new CultureInfo("pt-BR"), DateTimeStyles.None, out dt)
+                    ? dt
+                    : DateTime.MinValue;
+            }
+
+            // DATETIME NULLABLE
+            public static object SafeDateNullable(string valor)
+            {
+                DateTime dt;
+                return DateTime.TryParse(valor, new CultureInfo("pt-BR"), DateTimeStyles.None, out dt)
+                    ? (object)dt
+                    : DBNull.Value;
+            }
+        }
 
 
     }

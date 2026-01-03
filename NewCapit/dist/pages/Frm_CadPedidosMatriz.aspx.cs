@@ -11,6 +11,7 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NPOI.SS.Formula;
+using static NewCapit.Main;
 
 namespace NewCapit.dist.pages
 {
@@ -31,8 +32,8 @@ namespace NewCapit.dist.pages
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
 
-                    txtUsuCadastro.Text = nomeUsuario;
-                    txtUsuAlteracao.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                    txtUsuCadastro.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper();
+                    
                 }
                 else
                 {
@@ -664,47 +665,78 @@ namespace NewCapit.dist.pages
                         if (reader.Read())
                         {
                             // encontrou update
-                            reader.Close();
-                            string sql = @"UPDATE tbpedidos SET carga = @carga, material = @material, peso = REPLACE(@peso, ',', '.'), portao = @portao, situacao = @situacao, previsao = @previsao, entrega = @entrega, controledocliente = @controledocliente, observacao = @observacao, atualizacao = @atualizacao, gr = @gr, tomador = @tomador WHERE pedido = @pedido, lotacao=@lotacao";
+                            reader.Close();                           
+                            string sql = @"
+                            UPDATE tbpedidos 
+                            SET 
+                                carga = @carga,
+                                material = @material,
+                                peso = @peso,
+                                portao = @portao,
+                                situacao = @situacao,
+                                previsao = @previsao,
+                                entrega = @entrega,
+                                controledocliente = @controledocliente,
+                                observacao = @observacao,
+                                atualizacao = @atualizacao,
+                                gr = @gr,
+                                tomador = @tomador,
+                                lotacao = @lotacao      
+                            WHERE pedido = @pedido";
+
+
                             try
                             {
                                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                                using (SqlCommand cmdUpdate = new SqlCommand(sql, con))
-                                {
-                                    cmdUpdate.Parameters.AddWithValue("@carga", novaCarga.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@peso", txtPeso.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@previsao", DateTime.Parse(txtPrevEntrega.Text).ToString("yyyy-MM-dd"));
-                                    cmdUpdate.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@controledocliente", txtControleCliente.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@observacao", txtObservacao.Text.ToUpper());
-                                    cmdUpdate.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@atualizacao", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
-                                    cmdUpdate.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
-                                    cmdUpdate.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
-                                    con.Open();
-                                    int rowsAffected = cmdUpdate.ExecuteNonQuery();
-                                    if (rowsAffected > 0)
-                                    {
-                                        // Acione o toast quando a página for carregada
-                                        string script = "<script>showToast('Pedido atualizado com sucesso!');</script>";
-                                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                                        // atualiza  
-                                        txtNumPedido.Text = "";
-                                        txtNumPedido.Focus();
-                                    }
-                                    else
-                                    {
-                                        // Acione o toast quando a página for carregada
-                                        string script = "<script>showToast('Erro ao atualizar o pedido.');</script>";
-                                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                                    }
+                            using (SqlCommand cmdUpdate = new SqlCommand(sql, con))
+                            {
+                                
+                                cmdUpdate.Parameters.Add("@carga", SqlDbType.NVarChar).Value = novaCarga.Text;
+                                cmdUpdate.Parameters.Add("@material", SqlDbType.NVarChar).Value = cboMaterial.SelectedItem.Text;
+                                decimal peso;
 
+                                if (!decimal.TryParse(
+                                        txtPeso.Text.Replace(",", "."),
+                                        System.Globalization.NumberStyles.Any,
+                                        System.Globalization.CultureInfo.InvariantCulture,
+                                        out peso))
+                                {
+                                    throw new Exception("Peso inválido.");
                                 }
+                                cmdUpdate.Parameters.Add("@peso", SqlDbType.Decimal).Value = peso; // decimal convertido
+                                cmdUpdate.Parameters.Add("@portao", SqlDbType.NVarChar).Value = cboDeposito.SelectedItem.Text;
+                                cmdUpdate.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = cboSituacao.SelectedItem.Text;
+                                cmdUpdate.Parameters.Add("@previsao", SqlDbType.Date).Value = DateTime.Parse(txtPrevEntrega.Text);
+                                cmdUpdate.Parameters.Add("@entrega", SqlDbType.NVarChar).Value = cboEntrega.SelectedItem.Text;
+                                cmdUpdate.Parameters.Add("@controledocliente", SqlDbType.NVarChar).Value = txtControleCliente.Text;
+                                cmdUpdate.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text.ToUpper();
+                                cmdUpdate.Parameters.Add("@gr", SqlDbType.NVarChar).Value = cboGR.SelectedItem.Text;
+                                cmdUpdate.Parameters.Add("@atualizacao", SqlDbType.NVarChar).Value =
+                                    dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper();
+                                cmdUpdate.Parameters.Add("@tomador", SqlDbType.NVarChar).Value =
+                                    txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")";
+                                cmdUpdate.Parameters.Add("@pedido", SqlDbType.Int).Value = int.Parse(txtNumPedido.Text);
+                                cmdUpdate.Parameters.Add("@lotacao", SqlDbType.NVarChar).Value = txtLotacao.Text;
+
+                                con.Open();
+                                int rowsAffected = cmdUpdate.ExecuteNonQuery();
+                                if (rowsAffected > 0)
+                                {
+                                    // Acione o toast quando a página for carregada
+                                    string script = "<script>showToast('Pedido atualizado com sucesso!');</script>";
+                                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                                    // atualiza  
+                                    txtNumPedido.Text = "";
+                                    txtNumPedido.Focus();
+                                }
+                                else
+                                {
+                                    // Acione o toast quando a página for carregada
+                                    string script = "<script>showToast('Erro ao atualizar o pedido.');</script>";
+                                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                                }
+
+                            }
                             }
                             catch (Exception ex)
                             {
@@ -751,11 +783,11 @@ namespace NewCapit.dist.pages
                                 comando.ExecuteNonQuery();
                                 conn.Close();
                                 // Acione o toast quando a página for carregada
-                                       string script = "<script>showToast('Pedido cadastrado com sucesso!');</script>";
-                                       ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                                string script = "<script>showToast('Pedido cadastrado com sucesso!');</script>";
+                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                                 // atualiza  
-                                        txtNumPedido.Text = "";
-                                       txtNumPedido.Focus();
+                                txtNumPedido.Text = "";
+                                txtNumPedido.Focus();
 
                             }
                             catch (Exception ex)
@@ -776,6 +808,15 @@ namespace NewCapit.dist.pages
                 CarregarGrid(numeroCarga);
             }
         }
+        decimal ToDecimal(string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return 0;
+
+            return Convert.ToDecimal(valor.Replace(".", "").Replace(",", "."),
+                System.Globalization.CultureInfo.InvariantCulture);
+        }
+
         protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -807,7 +848,7 @@ namespace NewCapit.dist.pages
                 try
                 {
                     string sql = "delete tbpedidos where pedido=@pedido";
-                using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                     using (SqlCommand cmdUpdate = new SqlCommand(sql, con))
                     {
                         cmdUpdate.Parameters.AddWithValue("@pedido", id);
@@ -840,7 +881,7 @@ namespace NewCapit.dist.pages
                 }
 
             }
-           
+
         }
 
         protected void btnSalvar_Click(object sender, EventArgs e)
@@ -872,63 +913,83 @@ namespace NewCapit.dist.pages
                 else
                 {
                     conn.Close();
-                    int totalPesoCarga = 0;
+                    decimal totalPesoCarga = 0;
                     if (ViewState["TotalPesoCarga"] != null)
-                        totalPesoCarga = Convert.ToInt32(ViewState["TotalPesoCarga"]);
+                        totalPesoCarga = Convert.ToDecimal(ViewState["TotalPesoCarga"]);
                     string sqlSalvarPedido = "insert into tbcargas " + "(carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, ufcliorigem, ufclidestino, pedidos, gr, ot, solicitante, empresa, andamento,cadastro, distancia, emitepedagio, cidorigem, ciddestino, nucleo, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, duracao, cod_tomador, tipo_veiculo, deslocamento)" +
                     "values" + "(@carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @ufcliorigem, @ufclidestino, @pedidos, @gr, @ot, @solicitante, @empresa, @andamento, @cadastro, @distancia, @emitepedagio, @cidorigem, @ciddestino, @nucleo, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao, @cod_tomador, @tipo_veiculo, @deslocamento)";
-
                     SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
-                    comando.Parameters.AddWithValue("@carga", novaCarga.Text);
-                    comando.Parameters.AddWithValue("@emissao", SafeDateTimeValue(txtCadastro.Text));
-                    comando.Parameters.AddWithValue("@status", "Pendente");
-                    //comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
-                    comando.Parameters.AddWithValue("@tomador", cboFrete.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@peso", totalPesoCarga);
-                    comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@previsao", SafeDateValue(txtPrevEntrega.Text));
-                    comando.Parameters.AddWithValue("@codorigem", txtCodRemetente.Text);
-                    comando.Parameters.AddWithValue("@cliorigem", cboRemetente.Text);
-                    comando.Parameters.AddWithValue("@coddestino", txtCodDestinatario.Text);
-                    comando.Parameters.AddWithValue("@clidestino", cboDestinatario.Text);
-                    comando.Parameters.AddWithValue("@observacao", txtObservacao.Text.ToUpper());
-                    comando.Parameters.AddWithValue("@ufcliorigem", txtUFRemetente.Text);
-                    comando.Parameters.AddWithValue("@ufclidestino", txtUFDestinatario.Text);
-                    comando.Parameters.AddWithValue("@pedidos", gvPedidos.Rows.Count);
-                    comando.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@ot", txtControleCliente.Text);
-                    comando.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
-                    comando.Parameters.AddWithValue("@empresa", "1111");
-                    comando.Parameters.AddWithValue("@andamento", "PENDENTE");
-                    comando.Parameters.AddWithValue("@cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
-                    comando.Parameters.AddWithValue("@distancia", txtDistancia.Text);
-                    comando.Parameters.AddWithValue("@emitepedagio", txtPedagio.Text);
-                    comando.Parameters.AddWithValue("@cidorigem", txtMunicipioRemetente.Text);
-                    comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text);
-                    comando.Parameters.AddWithValue("@nucleo", txtFilial.Text);
-                    comando.Parameters.AddWithValue("@cod_expedidor", txtCodExpedidor.Text);
-                    comando.Parameters.AddWithValue("@expedidor", cboExpedidor.Text);
-                    comando.Parameters.AddWithValue("@cid_expedidor", txtCidExpedidor.Text);
-                    comando.Parameters.AddWithValue("@uf_expedidor", txtUFExpedidor.Text);
-                    comando.Parameters.AddWithValue("@cod_recebedor", txtCodRecebedor.Text);
-                    comando.Parameters.AddWithValue("@recebedor", cboRecebedor.Text);
-                    comando.Parameters.AddWithValue("@cid_recebedor", txtCidRecebedor.Text);
-                    comando.Parameters.AddWithValue("@uf_recebedor", txtUFRecebedor.Text);
-                    comando.Parameters.AddWithValue("@cod_consignatario", txtCodConsignatario.Text);
-                    comando.Parameters.AddWithValue("@consignatario", txtConsignatario.Text);
-                    comando.Parameters.AddWithValue("@cid_consignatario", txtCidConsignatario.Text);
-                    comando.Parameters.AddWithValue("@uf_consignatario", txtUFConsignatario.Text);
-                    comando.Parameters.AddWithValue("@cod_pagador", txtCodPagador.Text);
-                    comando.Parameters.AddWithValue("@pagador", txtPagador.Text);
-                    comando.Parameters.AddWithValue("@cid_pagador", txtCidPagador.Text);
-                    comando.Parameters.AddWithValue("@uf_pagador", txtUFPagador.Text);
-                    comando.Parameters.AddWithValue("@duracao", txtDuracao.Text);
-                    comando.Parameters.AddWithValue("@cod_tomador", txtFrete.Text);
-                    comando.Parameters.AddWithValue("@tipo_veiculo", txtTipoVeiculo.Text);
-                    comando.Parameters.AddWithValue("@deslocamento", txtDeslocamento.Text);
+
+                    // nvarchar
+                    comando.Parameters.Add("@carga", SqlDbType.NVarChar, 50).Value = novaCarga.Text;
+                    comando.Parameters.Add("@status", SqlDbType.NVarChar, 50).Value = "Pendente";
+                    comando.Parameters.Add("@tomador", SqlDbType.NVarChar, 170).Value = cboFrete.SelectedItem.Text;
+                    comando.Parameters.Add("@entrega", SqlDbType.NVarChar, 20).Value = cboEntrega.SelectedItem.Text;
+                    comando.Parameters.Add("@material", SqlDbType.NVarChar, 50).Value = cboMaterial.SelectedItem.Text;
+                    comando.Parameters.Add("@portao", SqlDbType.NVarChar, 20).Value = cboDeposito.SelectedItem.Text;
+                    comando.Parameters.Add("@situacao", SqlDbType.NVarChar, 20).Value = cboSituacao.SelectedItem.Text;
+                    comando.Parameters.Add("@cliorigem", SqlDbType.NVarChar, 150).Value = cboRemetente.Text;
+                    comando.Parameters.Add("@clidestino", SqlDbType.NVarChar, 150).Value = cboDestinatario.Text;
+                    comando.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text.ToUpper();
+                    comando.Parameters.Add("@ufcliorigem", SqlDbType.NVarChar, 2).Value = txtUFRemetente.Text;
+                    comando.Parameters.Add("@ufclidestino", SqlDbType.NVarChar, 2).Value = txtUFDestinatario.Text;
+                    comando.Parameters.Add("@gr", SqlDbType.NVarChar, 50).Value = cboGR.SelectedItem.Text;
+                    comando.Parameters.Add("@ot", SqlDbType.NVarChar, 50).Value = txtControleCliente.Text;
+                    comando.Parameters.Add("@solicitante", SqlDbType.NVarChar, 50).Value = cbSolicitantes.SelectedItem.Text;
+                    comando.Parameters.Add("@empresa", SqlDbType.NVarChar, 50).Value = "1111";
+                    comando.Parameters.Add("@andamento", SqlDbType.NVarChar, 50).Value = "PENDENTE";
+                    comando.Parameters.Add("@cadastro", SqlDbType.NVarChar, 80).Value =
+                        $"{dataHoraAtual:dd/MM/yyyy HH:mm} - {nomeUsuario.ToUpper()}";
+
+                    // datetime / date
+                    comando.Parameters.Add("@emissao", SqlDbType.DateTime).Value = SafeDateTimeValue(txtCadastro.Text);
+                    comando.Parameters.Add("@previsao", SqlDbType.Date).Value = SafeDateValue(txtPrevEntrega.Text);
+
+                    // decimal
+                    comando.Parameters.Add("@peso", SqlDbType.Decimal).Value = Convert.ToDecimal(totalPesoCarga);
+                    comando.Parameters.Add("@distancia", SqlDbType.Decimal).Value =
+                        string.IsNullOrWhiteSpace(txtDistancia.Text) ? 0 : Convert.ToDecimal(txtDistancia.Text.Replace(",", "."));
+
+                    // int
+                    comando.Parameters.Add("@codorigem", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
+                    comando.Parameters.Add("@coddestino", SqlDbType.Int).Value = Convert.ToInt32(txtCodDestinatario.Text);
+                    comando.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text);
+                    comando.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text);
+                    comando.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value = SafeConvert.SafeIntNullable(txtCodConsignatario.Text);
+                    comando.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = Convert.ToInt32(txtCodPagador.Text);
+                    comando.Parameters.Add("@cod_tomador", SqlDbType.Int).Value = Convert.ToInt32(txtFrete.Text);
+
+                    // outros
+                    comando.Parameters.Add("@pedidos", SqlDbType.NVarChar).Value = gvPedidos.Rows.Count.ToString();
+                    comando.Parameters.Add("@emitepedagio", SqlDbType.NChar, 3).Value = txtPedagio.Text;
+                    comando.Parameters.Add("@cidorigem", SqlDbType.NVarChar, 50).Value = txtMunicipioRemetente.Text;
+                    comando.Parameters.Add("@ciddestino", SqlDbType.NVarChar, 50).Value = txtMunicipioDestinatario.Text;
+                    comando.Parameters.Add("@nucleo", SqlDbType.NVarChar, 50).Value = txtFilial.Text;
+                    comando.Parameters.Add("@duracao", SqlDbType.NVarChar, 15).Value = txtDuracao.Text;
+                    comando.Parameters.Add("@tipo_veiculo", SqlDbType.NVarChar, 50).Value = txtTipoVeiculo.Text;
+                    comando.Parameters.Add("@deslocamento", SqlDbType.NVarChar, 30).Value = txtDeslocamento.Text;
+
+                    // EXPEDIDOR
+                    comando.Parameters.Add("@expedidor", SqlDbType.NVarChar, 150).Value = cboExpedidor.Text;
+                    comando.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar, 50).Value = txtCidExpedidor.Text;
+                    comando.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2).Value = txtUFExpedidor.Text;
+
+                    // RECEBEDOR
+                    comando.Parameters.Add("@recebedor", SqlDbType.NVarChar, 150).Value = cboRecebedor.Text;
+                    comando.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar, 50).Value = txtCidRecebedor.Text;
+                    comando.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2).Value = txtUFRecebedor.Text;
+
+                    // CONSIGNATÁRIO
+                    comando.Parameters.Add("@consignatario", SqlDbType.NVarChar, 150).Value = txtConsignatario.Text;
+                    comando.Parameters.Add("@cid_consignatario", SqlDbType.NVarChar, 50).Value = txtCidConsignatario.Text;
+                    comando.Parameters.Add("@uf_consignatario", SqlDbType.NVarChar, 2).Value = txtUFConsignatario.Text;
+
+                    // PAGADOR
+                    comando.Parameters.Add("@pagador", SqlDbType.NVarChar, 150).Value = txtPagador.Text;
+                    comando.Parameters.Add("@cid_pagador", SqlDbType.NVarChar, 50).Value = txtCidPagador.Text;
+                    comando.Parameters.Add("@uf_pagador", SqlDbType.NVarChar, 2).Value = txtUFPagador.Text;
+
+
 
                     try
                     {
@@ -939,7 +1000,7 @@ namespace NewCapit.dist.pages
                         string script = "<script>showToast('Carga cadastrado com sucesso!');</script>";
                         ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                         // atualiza  
-                        Response.Redirect("/dist/pages/GestaoDeCargasMatriz.aspx");                     
+                        Response.Redirect("/dist/pages/GestaoDeCargasMatriz.aspx");
                     }
                     catch (Exception ex)
                     {
@@ -993,7 +1054,7 @@ namespace NewCapit.dist.pages
                 }
 
             }
-           
+
         }
         public static bool DataValida(string dataTexto, out DateTime data)
         {

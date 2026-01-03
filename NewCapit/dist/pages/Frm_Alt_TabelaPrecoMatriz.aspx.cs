@@ -9,6 +9,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Globalization;
+using DocumentFormat.OpenXml.Wordprocessing;
+
 
 
 namespace NewCapit.dist.pages
@@ -79,7 +81,7 @@ namespace NewCapit.dist.pages
                     cboFilial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cboFilial.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cboFilial.DataBind();  // Realiza o binding dos dados                   
-                    cboFilial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    cboFilial.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -114,7 +116,7 @@ namespace NewCapit.dist.pages
                     cboTipoMaterial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cboTipoMaterial.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cboTipoMaterial.DataBind();  // Realiza o binding dos dados                   
-                    cboTipoMaterial.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    cboTipoMaterial.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -149,7 +151,7 @@ namespace NewCapit.dist.pages
                     cboNomAgregado.DataTextField = "nommot";  // Campo que será mostrado no ComboBox
                     cboNomAgregado.DataValueField = "id";  // Campo que será o valor de cada item                    
                     cboNomAgregado.DataBind();  // Realiza o binding dos dados                   
-                    cboNomAgregado.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    cboNomAgregado.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -188,7 +190,7 @@ namespace NewCapit.dist.pages
                     cboTipoVeiculo.DataTextField = "descricao_tng";  // Campo que será mostrado no ComboBox
                     cboTipoVeiculo.DataValueField = "descricao_tng";  // Campo que será o valor de cada item                    
                     cboTipoVeiculo.DataBind();  // Realiza o binding dos dados                   
-                    cboTipoVeiculo.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    cboTipoVeiculo.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -223,7 +225,7 @@ namespace NewCapit.dist.pages
                     cboTipoViagem.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cboTipoViagem.DataValueField = "codigo";  // Campo que será o valor de cada item                    
                     cboTipoViagem.DataBind();  // Realiza o binding dos dados                   
-                    cboTipoViagem.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    cboTipoViagem.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -328,7 +330,7 @@ namespace NewCapit.dist.pages
                     cboRotas.DataTextField = "desc_rota";  // Campo que será mostrado no ComboBox
                     cboRotas.DataValueField = "rota";  // Campo que será o valor de cada item                    
                     cboRotas.DataBind();  // Realiza o binding dos dados                   
-                    cboRotas.Items.Insert(0, new ListItem("Selecione...", "0"));
+                    cboRotas.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
                     // Feche o reader
                     reader.Close();
                 }
@@ -419,7 +421,7 @@ namespace NewCapit.dist.pages
                     cboDeslocamento.Text =  dr["deslocamento"].ToString();
                     ddlTerceiro.SelectedItem.Text= dr["valor_fixo_terceiro"].ToString();
                     ddlValorFixoTng.SelectedItem.Text =  dr["valor_fixo_tng"].ToString();
-                    ddlEmitePedagio.Items.Insert(0, new ListItem(dr["emitepedagio"].ToString())); 
+                    ddlEmitePedagio.SelectedItem.Text = dr["emitepedagio"].ToString(); 
                     cboNomAgregado.SelectedItem.Text= dr["nommot_especial"].ToString();
                     txtCadastro.Text = dr["cadastro_usuario"].ToString();
                     lblDtCadastro.Text = dr["data_cadastro"].ToString();
@@ -434,7 +436,7 @@ namespace NewCapit.dist.pages
                         TimeSpan hora = (TimeSpan)dr["franquia_hora_parada"];
                         txtFranquia.Text = hora.ToString(@"hh\:mm");
                     }                    
-                    txtValorFranquia.Text = Convert.ToDecimal(dr["valor_hora_parada"]).ToString("N2");
+                    txtValorFranquia.Text = GetDecimal(dr["valor_hora_parada"]);
                     
                     CarregaRotas(rota);
                     // 🔹 RadioButton customizado (lotação mínima)
@@ -450,6 +452,14 @@ namespace NewCapit.dist.pages
 
                 dr.Close();
             }
+            Response.Redirect("/dist/pages/ConsultaFretes.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+        string GetDecimal(object valor)
+        {
+            return valor == DBNull.Value
+                ? "0,00"
+                : Convert.ToDecimal(valor).ToString("N2");
         }
 
         protected void txtCodConsignatario_TextChanged(object sender, EventArgs e)
@@ -1162,7 +1172,16 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@perc_frete_especial", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPercTNGEspecial.Text);
                     cmd.Parameters.Add("@cobra_hora_parada", SqlDbType.NVarChar).Value = ddlHoraParada.SelectedValue;
                     cmd.Parameters.Add("@valor_hora_parada", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtValorFranquia.Text);
-                    cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = txtFranquia.Text;
+                    TimeSpan franquiaHora;
+
+                    if (!TimeSpan.TryParse(txtFranquia.Text, out franquiaHora))
+                    {
+                        //MostrarMsg("Franquia inválida. Use o formato HH:mm ou HH:mm:ss");
+                        return;
+                    }
+
+                    cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = franquiaHora;
+                   // cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = txtFranquia.Text;
 
 
                     con.Open();
@@ -1214,5 +1233,19 @@ namespace NewCapit.dist.pages
             }
             return 0m;
         }
+        //protected void MostrarMsg(string mensagem, string tipo = "warning")
+        //{
+        //    divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+        //    lblMsg.InnerText = mensagem;
+        //    divMsg.Style["display"] = "block";
+
+        //    string script = @"setTimeout(function() {
+        //                var div = document.getElementById('divMsg');
+        //                if (div) div.style.display = 'none';
+        //              }, 5000);";
+
+        //    ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        //}
+
     }
 }

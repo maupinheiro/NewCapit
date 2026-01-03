@@ -289,7 +289,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">MATERIAL:</label>
-                                <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="cboMaterial_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboMaterial_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-1">

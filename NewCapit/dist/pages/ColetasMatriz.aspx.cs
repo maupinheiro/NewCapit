@@ -868,8 +868,8 @@ namespace NewCapit.dist.pages
                                 DataRow linha = dt.Rows[0];
 
                                 // Carga encontrada → adiciona na GridView
-                                //DataTable lista = (DataTable)Session["Cargas"];
-                                lista.Rows.Add(
+                                DataTable listaCarga = (DataTable)Session["Cargas"];
+                                listaCarga.Rows.Add(
                                     dt.Rows[0]["carga"],
                                     dt.Rows[0]["previsao"],
                                     dt.Rows[0]["cliorigem"],
@@ -879,8 +879,18 @@ namespace NewCapit.dist.pages
                                     dt.Rows[0]["ciddestino"],
                                     dt.Rows[0]["ufclidestino"]
                                 );
+                                //DataTable listaDados = new DataTable();
+                                //listaDados.Columns.Add("carga");
+                                //listaDados.Columns.Add("previsao");
+                                //listaDados.Columns.Add("expedidor");
+                                //listaDados.Columns.Add("cid_expedidor");
+                                //listaDados.Columns.Add("uf_expedidor");
+                                //listaDados.Columns.Add("recebedor");
+                                //listaDados.Columns.Add("cid_recebedor");
+                                //listaDados.Columns.Add("uf_recebedor");
 
-                                gvCargas.DataSource = lista;
+
+                                gvCargas.DataSource = listaCarga;
                                 gvCargas.DataBind();
 
                                 txtCarga.Text = "";
@@ -1222,8 +1232,8 @@ namespace NewCapit.dist.pages
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
@@ -1242,6 +1252,14 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@ufclidestino", ufDestino);
                 cmd.Parameters.AddWithValue("@cidorigem", municipioOrigem);
                 cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
+                cmd.Parameters.AddWithValue("@cod_expedidor", codigoOrigem);
+                cmd.Parameters.AddWithValue("@expedidor", nomeOrigem);
+                cmd.Parameters.AddWithValue("@cod_recebedor", codigoDestino);
+                cmd.Parameters.AddWithValue("@recebedor", nomeDestino);
+                cmd.Parameters.AddWithValue("@uf_expedidor", ufOrigem);
+                cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
+                cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
+                cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
                 cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
                 cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                 cmd.Parameters.AddWithValue("@distancia", distancia);

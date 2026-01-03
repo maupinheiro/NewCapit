@@ -6,13 +6,12 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-  
-
     <!-- Bibliotecas necessárias -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+
+
 
     <script>
         function mascaraMoeda(campo) {
@@ -102,19 +101,19 @@
         document.addEventListener("DOMContentLoaded", alcularFreteEspecial);
     </script>
 
-
-
-
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <br />
-                <div id="toastContainer" class="alert alert-warning alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
+                <br />                
+                <div id="divMsg" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsg" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+
+                
 
                 <div class="col-xl-12 col-md-12 mb-12">
                     <div class="card card-info">
@@ -372,7 +371,7 @@
                                                                 <label for="customRadioFrota" class="custom-control-label">NÃO</label>
                                                             </div>
                                                         </div>
-                                                    </div>                                                  
+                                                    </div>
 
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">MATERIAL:</label>
                                                     <div class="col-md-4">
@@ -407,8 +406,6 @@
                                                         <div class="form-group">
                                                             <span class="details">EMITE PEDÁGIO:</span>
                                                             <asp:DropDownList ID="ddlEmitePedagio" runat="server" CssClass="form-control">
-
-                                                                
                                                                 <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                                 <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                             </asp:DropDownList>
@@ -451,7 +448,7 @@
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">DESPACHO:</label>
                                                             <div class="col-sm-1">
-                                                                <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center"  oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                                <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                             </div>
                                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">PEDÁGIO:</label>
                                                             <div class="col-sm-1">
@@ -493,7 +490,7 @@
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
-                                                        <asp:DropDownList ID="ddlValorFixoTng" runat="server" CssClass="form-control"> 
+                                                        <asp:DropDownList ID="ddlValorFixoTng" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
@@ -526,7 +523,7 @@
                                                     <div class="col-sm-2">
                                                         <asp:DropDownList ID="ddlFixoAgregado" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+                                                            <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
 
@@ -583,7 +580,7 @@
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
-                                                        <asp:DropDownList ID="ddlTerceiro" runat="server" CssClass="form-control"> 
+                                                        <asp:DropDownList ID="ddlTerceiro" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
@@ -645,7 +642,7 @@
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-1">
                                                         <asp:DropDownList ID="ddlEspecial" runat="server" CssClass="form-control">
-                                                            
+
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                         </asp:DropDownList>
