@@ -47,6 +47,7 @@ namespace NewCapit.dist.pages
         DateTime dataHoraAtual = DateTime.Now;
         double distancia;
         string sDuracao, sPercurso;
+        
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -422,7 +423,7 @@ namespace NewCapit.dist.pages
             }
 
             //Dados do veiculos
-            string sqlVeiculos = @"SELECT codvei, plavei, reboque1, reboque2, tipoveiculo, tipvei, tiporeboque, tipocarreta, vencimentolaudofumaca, venclicenciamento, codtra, transp, venclicencacet, protocolocet, venccronotacografo, rastreamento, rastreador, ativo_inativo, fl_exclusao
+            string sqlVeiculos = @"SELECT codvei, plavei, reboque1, reboque2, tipoveiculo, tipvei, tiporeboque, tipocarreta, vencimentolaudofumaca, venclicenciamento, codtra, transp, venclicencacet, protocolocet, venccronotacografo, rastreamento, rastreador, ativo_inativo, fl_exclusao, eixos
                    FROM tbveiculos 
                    WHERE codvei = @idVeiculo AND ativo_inativo = 'ATIVO' AND fl_exclusao IS NULL";
             using (SqlCommand cmdVeiculos = new SqlCommand(sqlVeiculos, conn))
@@ -498,7 +499,7 @@ namespace NewCapit.dist.pages
                 txtNumProtCET.Text = dtVeiculos.Rows[0]["protocolocet"].ToString();
                 txtCRLVVeiculo.Text = dtVeiculos.Rows[0]["venclicenciamento"].ToString();
                 txtCrono.Text = dtVeiculos.Rows[0]["venccronotacografo"].ToString();
-
+                txtEixos.Text = dtVeiculos.Rows[0]["eixos"].ToString();
 
 
                 // valida Laudo de Fumaça
@@ -841,7 +842,7 @@ namespace NewCapit.dist.pages
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     using (SqlCommand cmd = new SqlCommand(@"
-            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem
+            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem, emitepedagio, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, pagador
             FROM tbcargas
             WHERE carga = @c
         ", conn))
@@ -861,9 +862,22 @@ namespace NewCapit.dist.pages
                             return;
                         }
                         else 
-                        {
+                        {                            
+                            //string sEmitePedagio = ViewState["emitepedagio"]?.ToString();
+                            txtPedagio.Text = dt.Rows[0]["emitepedagio"].ToString();
+                            txtCod_Expedidor.Text = dt.Rows[0]["cod_expedidor"].ToString();
+                            txtExpedidor.Text = dt.Rows[0]["expedidor"].ToString();
+                            txtCid_Expedidor.Text = dt.Rows[0]["cid_expedidor"].ToString();
+                            txtUf_Expedidor.Text = dt.Rows[0]["uf_expedidor"].ToString();
+                            txtCod_Recebedor.Text = dt.Rows[0]["cod_recebedor"].ToString();
+                            txtRecebedor.Text = dt.Rows[0]["recebedor"].ToString();
+                            txtCid_Recebedor.Text = dt.Rows[0]["cid_recebedor"].ToString();
+                            txtUf_Recebedor.Text = dt.Rows[0]["uf_recebedor"].ToString();
+                            string nomeCompleto = dt.Rows[0]["pagador"].ToString().Trim();
+                            string primeiroNome = nomeCompleto.Split(' ')[0];
+                            txtPagador.Text = primeiroNome;
                             if (dt.Rows[0][10].ToString() == "Pendente" || dt.Rows[0][10].ToString() == "PENDENTE")
-                            {
+                            {                                
                                 // ✔ Agora é seguro acessar dt.Rows[0]
                                 DataRow linha = dt.Rows[0];
 
@@ -878,21 +892,11 @@ namespace NewCapit.dist.pages
                                     dt.Rows[0]["clidestino"],
                                     dt.Rows[0]["ciddestino"],
                                     dt.Rows[0]["ufclidestino"]
-                                );
-                                //DataTable listaDados = new DataTable();
-                                //listaDados.Columns.Add("carga");
-                                //listaDados.Columns.Add("previsao");
-                                //listaDados.Columns.Add("expedidor");
-                                //listaDados.Columns.Add("cid_expedidor");
-                                //listaDados.Columns.Add("uf_expedidor");
-                                //listaDados.Columns.Add("recebedor");
-                                //listaDados.Columns.Add("cid_recebedor");
-                                //listaDados.Columns.Add("uf_recebedor");
-
+                                );   
 
                                 gvCargas.DataSource = listaCarga;
                                 gvCargas.DataBind();
-
+                                
                                 txtCarga.Text = "";
                             }
                             else
@@ -1074,7 +1078,7 @@ namespace NewCapit.dist.pages
         private void PreencherClienteInicial()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
+            string query = "SELECT id, codcli, razcli FROM tbclientes order by razcli";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1109,7 +1113,7 @@ namespace NewCapit.dist.pages
         private void PreencherClienteFinal()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, codcli, nomcli FROM tbclientes order by nomcli";
+            string query = "SELECT id, codcli, razcli FROM tbclientes order by razcli";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1215,11 +1219,12 @@ namespace NewCapit.dist.pages
 
             }
         }
-
+        // Salvando coleta vazia
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
         {            
             string novaCarga = novaCargaVazia.Text.Trim();
             int numCarga = int.Parse(novaCargaVazia.Text.Trim());
+            decimal pesoMaterial = decimal.Parse(txtPesoVazio.Text.Trim()); 
             string codigoOrigem = codCliInicial.Text.Trim();
             string nomeOrigem = ddlCliInicial.SelectedItem.Text.Trim().ToUpper();
             string codigoDestino = codCliFinal.Text.Trim();
@@ -1229,20 +1234,27 @@ namespace NewCapit.dist.pages
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
             string ufDestino = txtUfDestino.Text.Trim().ToUpper();
             double distancia = double.Parse(txtDistancia.Text.Trim()); 
+            string codigoPagadorVazio = txtCod_PagadorVazio.Text.Trim();
+            string nomePagadorVazio = txtPagadorVazio.Text.Trim().ToUpper();
+            string materialVazio = ddlTipoMaterial.SelectedItem.Text;
+            string municipioPagadorVazio = txtCid_PagadorVazio.Text.Trim().ToUpper();
+            string ufPagadorVazio = txtUf_PagadorVazio.Text.Trim().ToUpper();
+            string nomeCompleto = nomePagadorVazio;
+            string primeiroNome = nomeCompleto.Split(' ')[0];
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
-                cmd.Parameters.AddWithValue("@entrega", "NORMAL");
-                cmd.Parameters.AddWithValue("@peso", "0"); // ou valor padrão
-                cmd.Parameters.AddWithValue("@material", "Vazio"); // ou valor padrão
+                cmd.Parameters.AddWithValue("@entrega", "Normal");
+                cmd.Parameters.AddWithValue("@peso", pesoMaterial); // ou valor padrão
+                cmd.Parameters.AddWithValue("@material", materialVazio); // ou valor padrão
                 cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
-                cmd.Parameters.AddWithValue("@situacao", "Pendente");                
-                cmd.Parameters.AddWithValue("@tomador", "TRANSNOVAG");
+                cmd.Parameters.AddWithValue("@situacao", "Pronto");                
+                cmd.Parameters.AddWithValue("@tomador", nomeCompleto);
                 cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
                 cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
                 cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
@@ -1264,6 +1276,10 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                 cmd.Parameters.AddWithValue("@distancia", distancia);
                 cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
+                cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
+                cmd.Parameters.AddWithValue("@pagador", primeiroNome);
+                cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
+                cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
 
                 // Abrindo a conexão e executando a query
                 conn.Open();
@@ -1586,9 +1602,33 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+        object DbInt(object v)
+        {
+            if (v == null || v == DBNull.Value)
+                return DBNull.Value;
 
+            if (v is int i)
+                return i;
+
+            return int.TryParse(v.ToString(), out int r)
+                ? r
+                : (object)DBNull.Value;
+        }
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
+            object DbString(string v) =>
+                string.IsNullOrWhiteSpace(v) ? (object)DBNull.Value : v.Trim();
+
+            object DbInt(string v) =>
+                int.TryParse(v, out var i) ? i : (object)DBNull.Value;
+
+            object DbDate(string v) =>
+                DateTime.TryParse(v, out var d) ? d : (object)DBNull.Value;
+
+            object DbDecimal(string v) =>
+                decimal.TryParse(v, out var d) ? d : (object)DBNull.Value;
+            string nomeCompleto = txtPagador.Text;
+            string primeiroNome = nomeCompleto.Split(' ')[0];
             string cs = WebConfigurationManager.ConnectionStrings["conexao"].ToString(); 
             using (SqlConnection conn = new SqlConnection(cs))
             {
@@ -1608,67 +1648,104 @@ namespace NewCapit.dist.pages
                     cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, valcet, valcrlvveiculo,
                     valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
                     tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa, dtcad, usucad,
-                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario
+                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario, pedagio, eixos, pedagiofeito, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, tomadorservico
                 )
                 VALUES (
                     @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                     @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @valcet, @valcrlvveiculo,
                     @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
                     @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa, @dtcad, @usucad,
-                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario
+                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario, @pedagio, @eixos, @pedagiofeito, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @tomadorservico 
                 )";
 
                     using (SqlCommand cmd = new SqlCommand(insert, conn, tran))
                     {
-                        cmd.Parameters.AddWithValue("@num_carregamento", SafeValue(novaColeta.Text));
-                        cmd.Parameters.AddWithValue("@codmotorista", SafeValue(txtCodMotorista.Text));
-                        cmd.Parameters.AddWithValue("@nucleo", SafeValue(txtFilialMot.Text));
-                        cmd.Parameters.AddWithValue("@tipomot", SafeValue(txtTipoMot.Text));
+                        // PRINCIPAIS
+                        cmd.Parameters.Add("@num_carregamento", SqlDbType.VarChar, 20).Value = DbString(novaColeta.Text);
+                        cmd.Parameters.Add("@codmotorista", SqlDbType.VarChar, 10).Value = DbString(txtCodMotorista.Text);
+                        cmd.Parameters.Add("@nucleo", SqlDbType.VarChar, 25).Value = DbString(txtFilialMot.Text);
+                        cmd.Parameters.Add("@tipomot", SqlDbType.VarChar, 25).Value = DbString(txtTipoMot.Text);
 
-                        cmd.Parameters.AddWithValue("@valtoxicologico", SafeDateValue(txtExameToxic.Text));
-                        cmd.Parameters.AddWithValue("@venccnh", SafeDateValue(txtValCNH.Text));
-                        cmd.Parameters.AddWithValue("@valgr", SafeDateValue(txtValGR.Text));
+                        // DATAS MOTORISTA
+                        cmd.Parameters.Add("@valtoxicologico", SqlDbType.Date).Value = DbDate(txtExameToxic.Text);
+                        cmd.Parameters.Add("@venccnh", SqlDbType.Date).Value = DbDate(txtValCNH.Text);
+                        cmd.Parameters.Add("@valgr", SqlDbType.Date).Value = DbDate(txtValGR.Text);
 
-                        cmd.Parameters.AddWithValue("@foto", SafeValue(fotoMotorista));
+                        // FOTO
+                        cmd.Parameters.Add("@foto", SqlDbType.VarChar).Value = DbString(fotoMotorista);
 
-                        cmd.Parameters.AddWithValue("@nomemotorista", ddlMotorista.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@cpf", SafeValue(txtCPF.Text));
-                        cmd.Parameters.AddWithValue("@cartaopedagio", SafeValue(txtNumCartao.Text));
-                        cmd.Parameters.AddWithValue("@valcartao", txtValCartao.Text);
-                        cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelularParticular.Text));
-                        cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
-                        cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
+                        // DADOS MOTORISTA
+                        cmd.Parameters.Add("@nomemotorista", SqlDbType.VarChar, 150).Value = DbString(ddlMotorista.SelectedItem.Text);
+                        cmd.Parameters.Add("@cpf", SqlDbType.VarChar, 14).Value = DbString(txtCPF.Text);
+                        cmd.Parameters.Add("@cartaopedagio", SqlDbType.VarChar, 30).Value = DbString(txtNumCartao.Text);
+                        cmd.Parameters.Add("@valcartao", SqlDbType.Decimal).Value = DbDecimal(txtValCartao.Text);
+                        cmd.Parameters.Add("@foneparticular", SqlDbType.VarChar, 20).Value = DbString(txtCelularParticular.Text);
 
-                        cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
-                        cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
-                        cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
-                        cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
+                        // VEÍCULO
+                        cmd.Parameters.Add("@veiculo", SqlDbType.VarChar, 20).Value = DbString(txtCodVeiculo.Text);
+                        cmd.Parameters.Add("@veiculotipo", SqlDbType.VarChar, 20).Value = DbString(txtVeiculoTipo.Text);
 
-                        cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
-                        cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
-                        cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
-                        cmd.Parameters.AddWithValue("@reboque2", SafeValue(txtReboque2.Text));
-                        cmd.Parameters.AddWithValue("@carreta", SafeValue(txtCarreta.Text));
-                        cmd.Parameters.AddWithValue("@tecnologia", SafeValue(txtTecnologia.Text));
-                        cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
-                        cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
-                        cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
-                        cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
-                        cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
-                        cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
-                        cmd.Parameters.AddWithValue("@empresa", "1111");
-                        cmd.Parameters.AddWithValue("@dtcad", DateTime.Now);
-                        cmd.Parameters.AddWithValue("@usucad", nomeUsuario);
-                        cmd.Parameters.AddWithValue("@situacao", "EM ANDAMENTO");
-                        cmd.Parameters.AddWithValue("@funcao", SafeValue(txtFuncao.Text));
-                        cmd.Parameters.AddWithValue("@codtranspmotorista", SafeValue(txtCodTransportadora.Text));
-                        cmd.Parameters.AddWithValue("@nomtranspmotorista", SafeValue(txtTransportadora.Text));
-                        cmd.Parameters.AddWithValue("@venccronotacografo", SafeDateValue(txtCrono.Text));
-                        cmd.Parameters.AddWithValue("@valopacidade", SafeDateValue(txtOpacidade.Text));
-                        cmd.Parameters.AddWithValue("@emissao", DateTime.Now);
-                        cmd.Parameters.AddWithValue("@numero_gr", txtLiberacaoGR.Text);
-                        cmd.Parameters.AddWithValue("@numero_protocolo_cet", txtNumProtCET.Text);
-                        cmd.Parameters.AddWithValue("@cpf_cnpj_proprietario", txtCPF_CNPJ.Text.Trim());
+                        cmd.Parameters.Add("@valcet", SqlDbType.Date).Value = DbDate(txtCET.Text);
+                        cmd.Parameters.Add("@valcrlvveiculo", SqlDbType.Date).Value = DbDate(txtCRLVVeiculo.Text);
+                        cmd.Parameters.Add("@valcrlvreboque1", SqlDbType.Date).Value = DbDate(txtCRLVReb1.Text);
+                        cmd.Parameters.Add("@valcrlvreboque2", SqlDbType.Date).Value = DbDate(txtCRLVReb2.Text);
+
+                        cmd.Parameters.Add("@placa", SqlDbType.VarChar, 10).Value = DbString(txtPlaca.Text);
+                        cmd.Parameters.Add("@tipoveiculo", SqlDbType.VarChar, 20).Value = DbString(txtTipoVeiculo.Text);
+                        cmd.Parameters.Add("@reboque1", SqlDbType.VarChar, 20).Value = DbString(txtReboque1.Text);
+                        cmd.Parameters.Add("@reboque2", SqlDbType.VarChar, 20).Value = DbString(txtReboque2.Text);
+                        cmd.Parameters.Add("@carreta", SqlDbType.VarChar, 20).Value = DbString(txtCarreta.Text);
+
+                        cmd.Parameters.Add("@tecnologia", SqlDbType.VarChar, 30).Value = DbString(txtTecnologia.Text);
+                        cmd.Parameters.Add("@rastreamento", SqlDbType.VarChar, 30).Value = DbString(txtRastreamento.Text);
+
+                        cmd.Parameters.Add("@tipocarreta", SqlDbType.VarChar, 20).Value = DbString(txtConjunto.Text);
+
+                        // PROPRIETÁRIO / TRANSPORTADORA
+                        cmd.Parameters.Add("@codtra", SqlDbType.VarChar, 20).Value = DbString(txtCodProprietario.Text);
+                        cmd.Parameters.Add("@transportadora", SqlDbType.VarChar, 150).Value = DbString(txtProprietario.Text);
+                        cmd.Parameters.Add("@codcontato", SqlDbType.VarChar, 20).Value = DbString(txtCodFrota.Text);
+                        cmd.Parameters.Add("@fonecorporativo", SqlDbType.VarChar, 20).Value = DbString(txtFoneCorp.Text);
+
+                        // CONTROLE
+                        cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 10).Value = "1111";
+                        cmd.Parameters.Add("@dtcad", SqlDbType.DateTime).Value = DateTime.Now;
+                        cmd.Parameters.Add("@usucad", SqlDbType.VarChar, 50).Value = DbString(nomeUsuario);
+                        cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "EM ANDAMENTO";
+                        cmd.Parameters.Add("@funcao", SqlDbType.VarChar, 30).Value = DbString(txtFuncao.Text);
+                        cmd.Parameters.Add("@tomadorservico", SqlDbType.VarChar, 50).Value = DbString(primeiroNome);
+
+                        // TRANSPORTADORA DO MOTORISTA
+                        cmd.Parameters.Add("@codtranspmotorista", SqlDbType.VarChar, 20).Value = DbString(txtCodTransportadora.Text);
+                        cmd.Parameters.Add("@nomtranspmotorista", SqlDbType.VarChar, 150).Value = DbString(txtTransportadora.Text);
+
+                        // OUTRAS DATAS
+                        cmd.Parameters.Add("@venccronotacografo", SqlDbType.Date).Value = DbDate(txtCrono.Text);
+                        cmd.Parameters.Add("@valopacidade", SqlDbType.Date).Value = DbDate(txtOpacidade.Text);
+
+                        // DOCUMENTOS
+                        cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
+                        cmd.Parameters.Add("@numero_gr", SqlDbType.VarChar, 30).Value = DbString(txtLiberacaoGR.Text);
+                        cmd.Parameters.Add("@numero_protocolo_cet", SqlDbType.VarChar, 30).Value = DbString(txtNumProtCET.Text);
+                        cmd.Parameters.Add("@cpf_cnpj_proprietario", SqlDbType.VarChar, 20).Value = DbString(txtCPF_CNPJ.Text);
+
+                        // PEDÁGIO / EIXOS
+                        cmd.Parameters.Add("@pedagio", SqlDbType.VarChar, 3).Value = DbString(txtPedagio.Text);
+                        cmd.Parameters.Add("@pedagiofeito", SqlDbType.VarChar, 3).Value = DbString("NÃO");
+                        cmd.Parameters.Add("@eixos", SqlDbType.Int).Value = DbInt(txtEixos.Text);
+
+                        // EXPEDIDOR
+                        cmd.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = DbInt(txtCod_Expedidor.Text);
+                        cmd.Parameters.Add("@expedidor", SqlDbType.VarChar, 150).Value = DbString(txtExpedidor.Text);
+                        cmd.Parameters.Add("@cid_expedidor", SqlDbType.VarChar, 50).Value = DbString(txtCid_Expedidor.Text);
+                        cmd.Parameters.Add("@uf_expedidor", SqlDbType.VarChar, 2).Value = DbString(txtUf_Expedidor.Text);
+
+                        // RECEBEDOR
+                        cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = DbInt(txtCod_Recebedor.Text);
+                        cmd.Parameters.Add("@recebedor", SqlDbType.VarChar, 150).Value = DbString(txtRecebedor.Text);
+                        cmd.Parameters.Add("@cid_recebedor", SqlDbType.VarChar, 50).Value = DbString(txtCid_Recebedor.Text);
+                        cmd.Parameters.Add("@uf_recebedor", SqlDbType.VarChar, 2).Value = DbString(txtUf_Recebedor.Text);
+
                         cmd.ExecuteNonQuery();
                     }
 
@@ -2288,6 +2365,49 @@ namespace NewCapit.dist.pages
                 }
 
             }
+        }
+
+        protected void txtCod_PagadorVazio_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCod_PagadorVazio.Text != "")
+            {
+
+                string codigoPagador = txtCod_PagadorVazio.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcli, razcli, cidcli, estcli, codvw FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoPagador);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                txtCod_PagadorVazio.Text = reader["codcli"].ToString();
+                                txtPagadorVazio.Text = reader["razcli"].ToString();
+                                txtCid_PagadorVazio.Text = reader["cidcli"].ToString();
+                                txtUf_PagadorVazio.Text = reader["estcli"].ToString();
+                                codCliFinal.Focus();
+                            }
+                            else
+                            {                               
+                                txtCod_PagadorVazio.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                txtCod_PagadorVazio.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
         }
 
         protected void MostrarMsgCarreta2(string mensagem, string tipo = "warning")

@@ -50,16 +50,17 @@
                      <asp:GridView ID="gvListFretes" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="cod_frete" runat="server" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListFretes_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                      <Columns>
-                        <asp:BoundField DataField="cod_frete" HeaderText="#ID"/>
-                        <asp:BoundField DataField="pagador" HeaderText="PAGADOR"/>                         
-                        <asp:BoundField DataField="expedidor" HeaderText="EXPEDIDOR" />
-                        <asp:BoundField DataField="recebedor" HeaderText="RECEBEDOR" /> 
-                        <asp:BoundField DataField="frete_tng" HeaderText="FRETE TNG" />
-                        <asp:BoundField DataField="frete_agregado" HeaderText="FRETE AGREG." /> 
-                         <asp:BoundField DataField="frete_terceiro" HeaderText="FRETE TERC." /> 
-                         <asp:BoundField DataField="vigencia_inicial" HeaderText="VIGENCIA" /> 
-                         <asp:BoundField DataField="vigencia_final" HeaderText="VIGENCIA" /> 
-                         <asp:BoundField DataField="situacao" HeaderText="STATUS" /> 
+                        <asp:BoundField DataField="cod_frete" HeaderText="#"/>
+                        <asp:BoundField DataField="cod_pagador" HeaderText="Código"/>
+                        <asp:BoundField DataField="pagador" HeaderText="Pagador"/>                         
+                        <asp:BoundField DataField="expedidor" HeaderText="Expedidor" />
+                        <asp:BoundField DataField="recebedor" HeaderText="Recebedor" /> 
+                        <asp:BoundField DataField="frete_tng" HeaderText="Frete TNG" />
+                        <asp:BoundField DataField="frete_agregado" HeaderText="Frete Agreg." /> 
+                         <asp:BoundField DataField="frete_terceiro" HeaderText="Frete Terc." /> 
+                         <asp:BoundField DataField="vigencia_inicial" HeaderText="Vigencia" DataFormatString="{0:dd/MM/yyyy}" /> 
+                         <asp:BoundField DataField="vigencia_final" HeaderText="Final" DataFormatString="{0:dd/MM/yyyy}" /> 
+                         <asp:BoundField DataField="situacao" HeaderText="Status" /> 
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                             <ItemTemplate>
                                 <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>

@@ -108,6 +108,7 @@
                                             <asp:BoundField DataField="cid_expedidor" HeaderText="Município" />
                                             <asp:BoundField DataField="recebedor" HeaderText="Local de Entrega" />
                                             <asp:BoundField DataField="cid_recebedor" HeaderText="Município" />
+                                            <asp:BoundField DataField="andamento" HeaderText="Atendimento" />
                                         </Columns>
                                     </asp:GridView>
                             </div>

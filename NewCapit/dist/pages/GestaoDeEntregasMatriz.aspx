@@ -97,38 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="container-fluid">
-                                <%--<table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="40" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
-                                        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
-                                        <Columns>
-                                            <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-info btn-sm"><i class="fas fa-edit"></i></i>
-                                                    </asp:LinkButton>
-                                                </ItemTemplate>
-                                            </asp:TemplateField>
-                                            <asp:BoundField DataField="Id" HeaderText="ID" Visible="false" />
-                                            <asp:BoundField DataField="veiculo" HeaderText="Veículo" />                                            
-                                            <asp:BoundField DataField="placa" HeaderText="Placa" />
-                                            <asp:BoundField DataField="num_carregamento" HeaderText="Carga" />
-                                            <asp:BoundField DataField="" HeaderText="foto" />
-                                            <asp:BoundField DataField="codmotorista" HeaderText="Código"/>
-                                            <asp:BoundField DataField="nomemotorista" HeaderText="Nome do Motorista"/>
-                                            <asp:BoundField DataField="carga" HeaderText="Remetente/Expedidor" />
-                                            <asp:BoundField DataField="carga" HeaderText="Destinatário/Recebedor"/>
-                                            <asp:BoundField DataField="emissao" HeaderText="Abertura" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
-                                            <asp:BoundField DataField="peso" HeaderText="Situacao" />
-                                            <asp:BoundField DataField="" HeaderText="Status" />
-                                            <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
-                                            <%--<asp:BoundField DataField="Valor" HeaderText="Valor" DataFormatString="{0:C}" />--%>
-                                <%--<asp:BoundField DataField="cliorigem" HeaderText="Remetente" />
-                                            <asp:BoundField DataField="cidorigem" HeaderText="Município" />
-                                            <asp:BoundField DataField="clidestino" HeaderText="Destinatário" />
-                                            <asp:BoundField DataField="ciddestino" HeaderText="Município" />
-                                        </Columns>
-                                    </asp:GridView>--%>
-
+                            <div class="container-fluid">                                
                                 <div class="row">
                                     <div class="col-12">
                                         <!-- /.col -->
@@ -141,14 +110,15 @@
                                                         <table class="table table-bordered table-hover">
                                                             <thead>
                                                                 <tr text-align: center;>
-                                                                    <th>AÇÃO</th>
-                                                                    <th>VEÍCULO</th>
-                                                                    <th>PLACA</th>
-                                                                   <%-- <th>FOTO</th>--%>
-                                                                    <th>MOTORISTA</th>
-                                                                    <th>ORDEM COLETA</th>
-                                                                    <th>ATENDIMENTO</th>
-                                                                    <th>PROGRESSO</th>
+                                                                    <th>#</th>
+                                                                    <th>Veículo</th>
+                                                                    <th>Placa</th>   
+                                                                    <th>Motorista</th>
+                                                                    <th>Expedidor/Recebedor</th>
+                                                                    <th>Inicio/Termino da Prestação</th>
+                                                                    <th>Ordem Coleta</th>
+                                                                    <th>Atendimento</th>
+                                                                    <th>Progresso</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -160,17 +130,7 @@
                                                                      CommandName="Editar"
                                                                      CommandArgument='<%# Eval("num_carregamento") %>'
                                                                      OnCommand="lnkEditar_Command"
-                                                                     OnClientClick="event.stopPropagation();"/>
-                                                              <%--  <asp:LinkButton
-                                                                    ID="lnkEditar"
-                                                                    runat="server"
-                                                                    class="btn btn-info"
-                                                                    CommandName="Editar"
-                                                                    CommandArgument='<%# Eval("num_carregamento") %>'
-                                                                    OnCommand="lnkEditar_Command"
-                                                                    OnClientClick="event.stopPropagation();">
-                                                                    <i class="fas fa-tasks"></i>
-                                                                </asp:LinkButton>--%>
+                                                                     OnClientClick="event.stopPropagation();"/>  
                                                             </td>
                                                             <td>
                                                                 <%# Eval("veiculo") %>
@@ -182,14 +142,21 @@
                                                                 <br />
                                                                 <%# Eval("reboque1")  + " - " +  Eval("reboque2") %>
 
-                                                            </td>
-                                                           <%-- <td style="text-align: center; vertical-align: middle;">
-                                                                <img src='<%# Eval("fotos") %>' alt="Foto" style="width: 45px;" />
-                                                            </td>--%>
+                                                            </td>   
                                                             <td>
                                                                 <%# Eval("codmotorista") + " - " + Eval("nomemotorista") %>
                                                                 <br />
                                                                 <%# Eval("codtra") + " - " + Eval("transportadora")%>  
+                                                            </td>
+                                                            <td>
+                                                                <%# Eval("cod_expedidor") + " - " + Eval("expedidor") %>
+                                                                <br />
+                                                                <%# Eval("cod_recebedor") + " - " + Eval("recebedor")%>  
+                                                            </td>
+                                                            <td>
+                                                                <%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %>
+                                                                <br />
+                                                                <%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor")%>  
                                                             </td>
                                                             <td style="text-align: center; vertical-align: middle;">
                                                                 <%# Eval("num_carregamento") %>

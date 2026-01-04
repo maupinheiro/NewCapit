@@ -52,12 +52,12 @@ namespace NewCapit.dist.pages
 
         protected void Editar(object sender, EventArgs e)
         {
-            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-            {
-                string id = gvListFretes.DataKeys[row.RowIndex].Value.ToString();
+            LinkButton btn = (LinkButton)sender;
+            GridViewRow row = (GridViewRow)btn.NamingContainer;
 
-                Response.Redirect("Frm_Alt_TabelaPrecoMatriz.aspx?id=" + id);
-            }
+            string id = gvListFretes.DataKeys[row.RowIndex].Value.ToString();
+
+            Response.Redirect("Frm_Alt_TabelaPrecoMatriz.aspx?id=" + id, false);
         }
         private void AllData(string searchTerm = "")
         {

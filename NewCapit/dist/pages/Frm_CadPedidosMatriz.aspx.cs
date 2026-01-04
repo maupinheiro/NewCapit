@@ -656,6 +656,8 @@ namespace NewCapit.dist.pages
                     string cod = txtNumPedido.Text;
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                     {
+                        string nomeCompleto = txtPagador.Text;
+                        string primeiroNome = nomeCompleto.Split(' ')[0];
                         conn.Open();
                         string query = "SELECT pedido FROM tbpedidos WHERE pedido = @ID";
                         SqlCommand cmd = new SqlCommand(query, conn);
@@ -713,8 +715,7 @@ namespace NewCapit.dist.pages
                                 cmdUpdate.Parameters.Add("@gr", SqlDbType.NVarChar).Value = cboGR.SelectedItem.Text;
                                 cmdUpdate.Parameters.Add("@atualizacao", SqlDbType.NVarChar).Value =
                                     dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper();
-                                cmdUpdate.Parameters.Add("@tomador", SqlDbType.NVarChar).Value =
-                                    txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")";
+                                cmdUpdate.Parameters.Add("@tomador", SqlDbType.NVarChar).Value = primeiroNome;
                                 cmdUpdate.Parameters.Add("@pedido", SqlDbType.Int).Value = int.Parse(txtNumPedido.Text);
                                 cmdUpdate.Parameters.Add("@lotacao", SqlDbType.NVarChar).Value = txtLotacao.Text;
 
@@ -771,7 +772,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@andamento", "PENDENTE");
                             comando.Parameters.AddWithValue("@ufcliorigem", txtUFRemetente.Text);
                             comando.Parameters.AddWithValue("@ufclidestino", txtUFDestinatario.Text);
-                            comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
+                            comando.Parameters.AddWithValue("@tomador", primeiroNome);
                             comando.Parameters.AddWithValue("@cidorigem", txtMunicipioRemetente.Text);
                             comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text);
                             comando.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
@@ -886,6 +887,7 @@ namespace NewCapit.dist.pages
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
+            
             if (gvPedidos.Rows.Count == 0)
             {
                 // Acione o toast quando a página for carregada
@@ -912,6 +914,8 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
+                    string nomeCompleto = txtPagador.Text;
+                    string primeiroNome = nomeCompleto.Split(' ')[0];
                     conn.Close();
                     decimal totalPesoCarga = 0;
                     if (ViewState["TotalPesoCarga"] != null)
@@ -985,7 +989,7 @@ namespace NewCapit.dist.pages
                     comando.Parameters.Add("@uf_consignatario", SqlDbType.NVarChar, 2).Value = txtUFConsignatario.Text;
 
                     // PAGADOR
-                    comando.Parameters.Add("@pagador", SqlDbType.NVarChar, 150).Value = txtPagador.Text;
+                    comando.Parameters.Add("@pagador", SqlDbType.NVarChar, 150).Value = primeiroNome;
                     comando.Parameters.Add("@cid_pagador", SqlDbType.NVarChar, 50).Value = txtCidPagador.Text;
                     comando.Parameters.Add("@uf_pagador", SqlDbType.NVarChar, 2).Value = txtUFPagador.Text;
 

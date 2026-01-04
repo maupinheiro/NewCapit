@@ -49,7 +49,7 @@ namespace NewCapit.dist.pages
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, expedidor, cid_expedidor, recebedor, cid_recebedor FROM tbcargas where empresa = '1111' ";
+                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, expedidor, cid_expedidor, recebedor, cid_recebedor, andamento FROM tbcargas where empresa = '1111' ";
 
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     query += " AND previsao >= @DataInicio";

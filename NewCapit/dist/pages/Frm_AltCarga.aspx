@@ -307,8 +307,8 @@
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">SITUAÇÃO:</label>
                                 <asp:DropDownList ID="cboSituacao" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="PRONTO" Text="PRONTO"></asp:ListItem>
-                                    <asp:ListItem Value="EM PROCESSO" Text="EM PROCESSO"></asp:ListItem>
+                                    <asp:ListItem Value="Pronto" Text="Pronto"></asp:ListItem>
+                                    <asp:ListItem Value="Em Processo" Text="Em Processo"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -328,8 +328,8 @@
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">ENTREGA:</label>
                                 <asp:DropDownList ID="cboEntrega" runat="server" CssClass="form-control">
-                                    <asp:ListItem Value="NORMAL" Text="NORMAL"></asp:ListItem>
-                                    <asp:ListItem Value="IMEDIATA" Text="IMEDIATA"></asp:ListItem>
+                                    <asp:ListItem Value="Normal" Text="Normal"></asp:ListItem>
+                                    <asp:ListItem Value="Imediata" Text="Imediata"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
