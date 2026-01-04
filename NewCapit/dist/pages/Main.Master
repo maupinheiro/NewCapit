@@ -200,7 +200,7 @@
 <!-- layout-fixed -->
 <body class="hold-transition sidebar-mini layout-fixed">
     <form id="form1" runat="server">
-        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
         <div class="wrapper">
 
             <!-- Preloader -->

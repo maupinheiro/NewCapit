@@ -131,19 +131,90 @@
            VALIDAÇÕES
         ========================= */
         function validarDatas(item) {
-            const agora = new Date();
-            const campos = item.querySelectorAll('.chegada, .saida, .chegada-planta, .entrada-planta, .saida-planta');
+            // 1. Identifica o container da linha
+            let container = item.closest('.expandable-body');
+            if (!container) return;
 
-            for (let i = 0; i < campos.length - 1; i++) {
-                if (!campos[i].value && campos[i + 1].value) {
-                    campos[i + 1].value = '';
-                    campos[i + 1].style.border = '2px solid red';
-                    return;
+            // --- SELEÇÃO DE CAMPOS ---
+            const txtSaidaOrigem = container.querySelector('input[id*="txtSaidaOrigem"]');
+            const txtDuracao = container.querySelector('input[id*="txtDuracao"]');
+            const txtPrevisaoChegada = container.querySelector('input[id*="txtPrevisaoChegada"]');
+            const txtChegadaDestino = container.querySelector('input[id*="txtChegadaDestino"]');
+            const txtSaidaPlanta = container.querySelector('input[id*="txtSaidaPlanta"]');
+            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
+            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
+            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
+
+            // Busca o HiddenField hdEmissao (pode estar no container ou na linha principal do Repeater)
+            let hdEmissao = container.querySelector('input[id*="hdEmissao"]');
+            if (!hdEmissao) {
+                const trPrincipal = container.previousElementSibling;
+                if (trPrincipal) hdEmissao = trPrincipal.querySelector('input[id*="hdEmissao"]');
+            }
+
+            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA (HHh mmmin) ---
+            function formatarDiferenca(inicio, fim) {
+                if (!inicio || !fim) return "";
+                const d1 = new Date(inicio);
+                const d2 = new Date(fim);
+                if (isNaN(d1) || isNaN(d2)) return "";
+                if (d2 < d1) return "Inválido";
+
+                const diffMs = d2 - d1;
+                const totalMinutos = Math.floor(diffMs / 60000);
+                const horas = Math.floor(totalMinutos / 60);
+                const minutos = totalMinutos % 60;
+                return `${horas}h ${minutos}min`;
+            }
+
+            // --- 1. CÁLCULO: Previsão de Chegada (Saída + Duração) ---
+            if (txtSaidaOrigem && txtDuracao && txtPrevisaoChegada) {
+                const valorSaida = txtSaidaOrigem.value;
+                const valorDuracao = txtDuracao.value;
+                if (valorSaida && valorDuracao) {
+                    let dataPrevisao = new Date(valorSaida);
+                    const partes = valorDuracao.split(':');
+                    dataPrevisao.setHours(dataPrevisao.getHours() + (parseInt(partes[0]) || 0));
+                    dataPrevisao.setMinutes(dataPrevisao.getMinutes() + (parseInt(partes[1]) || 0));
+                    dataPrevisao.setSeconds(dataPrevisao.getSeconds() + (parseInt(partes[2]) || 0));
+
+                    if (!isNaN(dataPrevisao.getTime())) {
+                        const ano = dataPrevisao.getFullYear();
+                        const mes = String(dataPrevisao.getMonth() + 1).padStart(2, '0');
+                        const dia = String(dataPrevisao.getDate()).padStart(2, '0');
+                        const hora = String(dataPrevisao.getHours()).padStart(2, '0');
+                        const min = String(dataPrevisao.getMinutes()).padStart(2, '0');
+                        txtPrevisaoChegada.value = `${ano}-${mes}-${dia}T${hora}:${min}`;
+                    }
                 }
             }
 
-            atualizarStatusECores(item);
+            // --- 2. CÁLCULO: Duração da Viagem (Chegada Destino - Saída Origem) ---
+            if (txtChegadaDestino && txtSaidaOrigem && txtAgCarreg) {
+                txtAgCarreg.value = formatarDiferenca(txtSaidaOrigem.value, txtChegadaDestino.value);
+            }
+
+            // --- 3. CÁLCULO: Tempo de Descarga (Saída Planta - Chegada Destino) ---
+            if (txtSaidaPlanta && txtChegadaDestino && txtAgDescarga) {
+                txtAgDescarga.value = formatarDiferenca(txtChegadaDestino.value, txtSaidaPlanta.value);
+            }
+
+            // --- 4. CÁLCULO: Tempo Total da Viagem (Saída Planta - Emissão) ---
+            if (txtSaidaPlanta && hdEmissao && txtDurTransp) {
+                txtDurTransp.value = formatarDiferenca(hdEmissao.value, txtSaidaPlanta.value);
+            }
+
+            // Atualiza cores/status se a função existir
+            if (typeof atualizarStatusECores === "function") {
+                atualizarStatusECores(container);
+            }
         }
+
+
+
+
+
+
 
         /* =========================
            PEDIDOS (TAB)
@@ -677,12 +748,23 @@
                                         </asp:UpdatePanel>
                                     </div>
                                 </div>
+                               
 
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <div class="card">
                                             <!-- ./card-header -->
+                                                
+                                                 
                                             <div class="card-body">
+                                                 <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">CARGA/SOLICITAÇÃO:</span>
+                                                        <asp:TextBox ID="txtCarga" Style="text-align: center" onkeypress="return apenasNumeros(event);" runat="server" CssClass="form-control" OnTextChanged="btnAdd_Click" AutoPostBack="true"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                 <div class="col-md-12">
+                                                <div class="form-group">
                                                 <asp:Repeater ID="rptColetas" runat="server" OnItemDataBound="rptColetas_ItemDataBound" OnItemCommand="rptColetas_ItemCommand">
                                                     <HeaderTemplate>
 
@@ -706,6 +788,7 @@
                                                     <ItemTemplate>
                                                         <asp:HiddenField ID="hdIdCarga" runat="server"
                                                             Value='<%# Eval("carga") %>' />
+                                                        
                                                         <tr data-widget="expandable-table" aria-expanded="false">
                                                             <td><%# Eval("carga") %></td>
                                                             <td><%# Eval("expedidor") %></td>
@@ -1180,6 +1263,8 @@
 
                                                                 <!-- /.card-body -->
                                                                 </div>
+                                                                 <asp:HiddenField ID="hdEmissao" runat="server"
+    Value='<%#Eval("emissao", "{0:yyyy-MM-ddTHH:mm:ss}") %>' />
  <div class="card card-outline card-info">
  <div class="card-header">
  <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Dados do Atendimento</h3>
@@ -1198,7 +1283,7 @@
             <span class="details">Janela Gate Origem:<asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label></span>
             <div class="input-group">
                                                                                                         <div class="input-group">
-                <asp:TextBox ID="txtGateOrigem" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                <asp:TextBox ID="txtGateOrigem" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
             </div>
 
             </div>
@@ -1209,7 +1294,7 @@
         <div class="form-group">
             <span class="details">Janela Gate Destino:</span>
             <div class="input-group">
-                <asp:TextBox ID="txtGateDestino" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                <asp:TextBox ID="txtGateDestino" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_destino","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
             </div>
             <span class="msg-erro text-danger" style="display: none;"></span>
         </div>
@@ -1270,7 +1355,7 @@
  <div class="form-group">
  <span class="details">Previsão de Chegada:</span>
  <div class="input-group">
- <asp:TextBox ID="txtPrevisaoChegada" runat="server"                                         CssClass="form-control saida"                                                           Text='<%# Bind("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>'                               TextMode="DateTimeLocal"                                                                Style="text-align: center" onChange="validarDatas(item)" />
+ <asp:TextBox ID="txtPrevisaoChegada" runat="server"                                         CssClass="form-control saida"                        ReadOnly="true"                                   Text='<%# Bind("prev_chegada", "{0:yyyy-MM-ddTHH:mm}") %>'                               TextMode="DateTimeLocal"                                                                Style="text-align: center" onChange="validarDatas(item)" />
  </div>
  <span class="msg-erro text-danger" style="display: none;"></span>
  </div>
@@ -1348,6 +1433,8 @@
 </table>
                                                     </FooterTemplate>
                                                 </asp:Repeater>
+                                                    </div>
+                                                     </div>
                                             </div>
                                             <!-- /.card-body -->
                                         </div>

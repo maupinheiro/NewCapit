@@ -709,7 +709,7 @@ namespace NewCapit.dist.pages
                 TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
                 DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus"); 
                 TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
-                //TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+                TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
                 TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino"); 
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
@@ -771,11 +771,13 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGateOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@status", status);                    
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
-                    //cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
                     cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));                    
                     cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));                    
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@gate_origem", txtGateOrigem.Text.Trim() ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@gate_destino", txtGateDestino.Text.Trim() ?? (object)DBNull.Value);
                     //cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     // continue os parâmetros conforme seu banco
                     //string valorDigitado = txtCVA.Text.Trim();
@@ -1615,6 +1617,123 @@ namespace NewCapit.dist.pages
                 }
 
             }
+        }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            divMsg.Visible = true;
+            divMsgCNH.Visible = false;
+            divMsgCarreta1.Visible = false;
+            divMsgCarreta2.Visible = false;
+            divMsgCET.Visible = false;
+            divMsgCrono.Visible = false;
+            divMsgGR.Visible = false;
+            divMsgLinc.Visible = false;
+            divMsgVeic.Visible = false;
+            divMsg.Attributes["class"] = "alert alert-danger d-none";
+
+            if (string.IsNullOrWhiteSpace(txtCarga.Text))
+            {
+                MostrarMsg("Digite uma carga!");
+                return;
+            }
+
+            BuscarCargaNoBanco(txtCarga.Text.Trim());
+        }
+        private void BuscarCargaNoBanco(string carga)
+        {
+
+           
+           
+
+            // Consulta no banco
+            if (txtCarga.Text.Trim() == "1")
+            {
+                //PreencherNumCargaVazia();
+                // Modal para incluir carga  
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "abrirModal();", true);
+            }
+            else
+            {
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(@"
+            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem
+            FROM tbcargas
+            WHERE carga = @c and idviagem is null
+        ", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@c", carga);
+
+                        conn.Open();
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        if (dt.Rows.Count == 0)
+                        {
+                            MostrarMsg("Carga NÃO encontrada!");
+                            txtCarga.Text = "";
+                            txtCarga.Focus();
+                            return;
+                        }
+                        else
+                        {
+                            if (dt.Rows[0][10].ToString() == "Pendente" || dt.Rows[0][10].ToString() == "PENDENTE")
+                            {
+                                // ✔ Agora é seguro acessar dt.Rows[0]
+                                //string carga = gvCargas.DataKeys[row.RowIndex].Value.ToString();
+
+                                string updateCargas = @"
+                                    UPDATE tbcargas SET
+                                        emissao = @emissao,
+                                        idviagem = @idviagem,
+                                        codmot = @codmot,
+                                        frota = @frota,
+                                        status = @status,
+                                        andamento = @andamento,
+                                        atendimento = @atendimento,
+                                        funcaomot = @funcaomot
+                                    WHERE carga = @carga";
+
+                                using (SqlCommand cmds = new SqlCommand(updateCargas, conn))
+                                {
+                                    cmds.Parameters.Add("@carga", SqlDbType.VarChar).Value = carga;
+                                    cmds.Parameters.Add("@idviagem", SqlDbType.VarChar).Value = novaColeta.Text;
+                                    cmds.Parameters.Add("@codmot", SqlDbType.VarChar).Value = txtCodMotorista.Text;
+                                    cmds.Parameters.Add("@frota", SqlDbType.VarChar).Value = txtCodFrota.Text;
+                                    cmds.Parameters.Add("@status", SqlDbType.VarChar).Value = "Pendente";
+                                    cmds.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "EM ANDAMENTO";
+                                    cmds.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";
+                                    cmds.Parameters.Add("@funcaomot", SqlDbType.VarChar).Value = txtFuncao.Text;
+                                    cmds.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
+
+                                    cmds.ExecuteNonQuery();
+                                }
+
+                                ViewState["Coletas"] = null;
+                                CarregarColetas(novaColeta.Text);
+
+                                txtCarga.Text = "";
+                            }
+                            else
+                            {
+                                MostrarMsg("CARGA: " + txtCarga.Text.Trim() + " está " + dt.Rows[0][10].ToString().Trim() + " NA ORDEM DE COLETA: " + dt.Rows[0][11].ToString().Trim() + ".");
+                                txtCarga.Text = "";
+                                txtCarga.Focus();
+                                return;
+
+                            }
+
+                        }
+
+
+                    }
+                }
+
+            }
+
+
         }
         private object SafeValue(string input)
         {
