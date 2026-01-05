@@ -1096,7 +1096,7 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     ddlCliInicial.DataSource = reader;
-                    ddlCliInicial.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    ddlCliInicial.DataTextField = "razcli";  // Campo que será mostrado no ComboBox
                     ddlCliInicial.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     ddlCliInicial.DataBind();  // Realiza o binding dos dados                   
                     ddlCliInicial.Items.Insert(0, new System.Web.UI.WebControls.ListItem("...", "0"));
@@ -1131,7 +1131,7 @@ namespace NewCapit.dist.pages
 
                     // Preencher o ComboBox com os dados do DataReader
                     ddlCliFinal.DataSource = reader;
-                    ddlCliFinal.DataTextField = "nomcli";  // Campo que será mostrado no ComboBox
+                    ddlCliFinal.DataTextField = "razcli";  // Campo que será mostrado no ComboBox
                     ddlCliFinal.DataValueField = "codcli";  // Campo que será o valor de cada item                    
                     ddlCliFinal.DataBind();  // Realiza o binding dos dados                   
                     ddlCliFinal.Items.Insert(0, new System.Web.UI.WebControls.ListItem("...", "0"));
@@ -1186,7 +1186,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+                    string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -1198,7 +1198,7 @@ namespace NewCapit.dist.pages
                             if (reader.Read())
                             {
                                 codCliInicial.Text = reader["codcli"].ToString();
-                                ddlCliInicial.SelectedItem.Text = reader["nomcli"].ToString();
+                                ddlCliInicial.SelectedItem.Text = reader["razcli"].ToString();
                                 txtMunicipioOrigem.Text = reader["cidcli"].ToString();
                                 txtUfOrigem.Text = reader["estcli"].ToString();
                                 codCliFinal.Focus();
@@ -1240,12 +1240,13 @@ namespace NewCapit.dist.pages
             string municipioPagadorVazio = txtCid_PagadorVazio.Text.Trim().ToUpper();
             string ufPagadorVazio = txtUf_PagadorVazio.Text.Trim().ToUpper();
             string nomeCompleto = nomePagadorVazio;
+            string DuracaoVazio = txtDuracaoVazio.Text.Trim();
             string primeiroNome = nomeCompleto.Split(' ')[0];
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
@@ -1279,7 +1280,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
                 cmd.Parameters.AddWithValue("@pagador", primeiroNome);
                 cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
-                cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
+                cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);                
+                cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
 
                 // Abrindo a conexão e executando a query
                 conn.Open();
@@ -1327,7 +1329,7 @@ namespace NewCapit.dist.pages
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
-                    string query = "SELECT codcli, nomcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+                    string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -1339,7 +1341,7 @@ namespace NewCapit.dist.pages
                             if (reader.Read())
                             {
                                 codCliFinal.Text = reader["codcli"].ToString();
-                                ddlCliFinal.SelectedItem.Text = reader["nomcli"].ToString();
+                                ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
                                 txtMunicipioDestino.Text = reader["cidcli"].ToString();
                                 txtUfDestino.Text = reader["estcli"].ToString();
                             }

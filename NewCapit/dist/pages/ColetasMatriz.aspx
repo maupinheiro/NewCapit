@@ -853,10 +853,16 @@
                                                 </asp:DropDownList></>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-1">
                                             <div class="form-group">
                                                 <span class="details">Peso:</span>
                                                 <asp:TextBox ID="txtPesoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <span class="details">TT:</span>
+                                                <asp:TextBox ID="txtDuracaoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
