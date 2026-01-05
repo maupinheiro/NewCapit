@@ -1606,6 +1606,7 @@ namespace NewCapit.dist.pages
 
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
+                    ViewState["Coletas"] = null;
                     CarregarColetas(novaColeta.Text);
 
 

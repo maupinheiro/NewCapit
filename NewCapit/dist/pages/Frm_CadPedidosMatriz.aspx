@@ -29,7 +29,25 @@
                 campo.value = valor.substring(0, 2) + '/' + valor.substring(2, 4) + '/' + valor.substring(4, 8);
         }
     </script>
-    
+    <script>
+        function mascaraPeso(el) {
+            let v = el.value;
+
+            // remove tudo que não for número
+            v = v.replace(/\D/g, "");
+
+            // garante no mínimo 4 dígitos
+            while (v.length < 4) {
+                v = "0" + v;
+            }
+
+            let inteiro = v.slice(0, -3);
+            let decimal = v.slice(-3);
+
+            el.value = inteiro + "," + decimal;
+        }
+    </script>
+
      <script>
          document.addEventListener("DOMContentLoaded", function () {
              function aplicarMascara(input, mascara) {
@@ -295,7 +313,13 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <label for="inputFilial" style="text-align: right">PESO:</label>
-                                <asp:TextBox ID="txtPeso" runat="server" onkeypress="return apenasNumeros(event);" CssClass="form-control" value=""></asp:TextBox>
+                                <<asp:TextBox 
+                                    ID="txtPeso" 
+                                    runat="server"
+                                    CssClass="form-control"
+                                    onkeyup="mascaraPeso(this);"
+                                    inputmode="numeric">
+                                </asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">

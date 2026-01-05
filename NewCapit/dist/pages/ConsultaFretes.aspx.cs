@@ -57,7 +57,7 @@ namespace NewCapit.dist.pages
 
             string id = gvListFretes.DataKeys[row.RowIndex].Value.ToString();
 
-            Response.Redirect("Frm_Alt_TabelaPrecoMatriz.aspx?id=" + id, false);
+            Response.Redirect("Frm_Alt_TabelaPrecoMatriz.aspx?id=" + id);
         }
         private void AllData(string searchTerm = "")
         {

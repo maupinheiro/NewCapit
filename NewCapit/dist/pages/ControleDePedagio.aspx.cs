@@ -51,6 +51,7 @@ namespace NewCapit.dist.pages
                                 tomadorservico LIKE 'VOLKS%'
                                 AND (cva IS NULL OR LTRIM(RTRIM(cva)) = '')
                               )
+                               AND pedagiofeito='NÃO'
                         ORDER BY nomemotorista
                         ";
 
