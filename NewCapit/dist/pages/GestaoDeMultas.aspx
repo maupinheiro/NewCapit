@@ -379,14 +379,14 @@
                                                      <label>Nome do Motorista:</label>
                                                      <asp:TextBox ID="txtNome"
                                                          runat="server"
-                                                         CssClass="form-control" Enabled="false" />
+                                                         CssClass="form-control" ReadyOnly="true" />
                                                 </div>
                                                 
                                                 <div class="col-md-3">
                                                      <label>Núcleo:</label>
                                                      <asp:TextBox ID="txtNucleo"
                                                          runat="server"
-                                                         CssClass="form-control" Enabled="false" />
+                                                         CssClass="form-control" ReadyOnly="true" />
                                                 </div>
                                             </div>
                                             
@@ -397,17 +397,17 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label>Placa:</label>
-                                                    <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" Enabled="false"/>
+                                                    <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" ReadyOnly="true"/>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label>Equip:</label>
-                                                    <asp:TextBox ID="txtEquipamento" runat="server" CssClass="form-control" Enabled="false" />
+                                                    <asp:TextBox ID="txtEquipamento" runat="server" CssClass="form-control" ReadyOnly="true" />
                                                 </div>
                                                 <div class="col-md-6">
                                                      <label>Transportadora:</label>
                                                      <asp:TextBox ID="txtTransportadora"
                                                          runat="server"
-                                                         CssClass="form-control" Enabled="false" />
+                                                         CssClass="form-control" ReadyOnly="true" />
                                                 </div>
                                             </div>                                            
                                             <br />
@@ -418,23 +418,23 @@
                                                             <div class="form-group row">
                                                                 <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Dep. de Transporte Em:</label>
                                                                 <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control" ></asp:TextBox>
+                                                                    <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control"  ></asp:TextBox>
                                                                 </div>
 
                                                                 <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Recebido Por:</label>
                                                                 <div class="col-md-4">
-                                                                    <asp:TextBox ID="txtRecebido_Por" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                                                    <asp:TextBox ID="txtRecebido_Por" runat="server" CssClass="form-control" ReadyOnly="true"></asp:TextBox>
                                                                 </div>
                                                             </div>                                                            
                                                             <div class="form-group row">
                                                                 <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Controle Em:</label>
                                                                 <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtEnvio_dcp" runat="server" CssClass="form-control" ></asp:TextBox>
+                                                                    <asp:TextBox ID="txtEnvio_dcp" runat="server" CssClass="form-control" onkeyup="mascaraDataHora(this);" ></asp:TextBox>
                                                                 </div>
 
                                                                 <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Baixado Por:</label>
                                                                 <div class="col-md-4">
-                                                                    <asp:TextBox ID="txtBaixado_por" runat="server" CssClass="form-control" Enabled="false" ></asp:TextBox>
+                                                                    <asp:TextBox ID="txtBaixado_por" runat="server" CssClass="form-control" ReadyOnly="true" ></asp:TextBox>
                                                                 </div>
                                                             </div>
                                                            
@@ -451,7 +451,7 @@
 
                                                 <!-- ESQUERDA -->
                                                 <div class="col-auto">
-                                                    <asp:TextBox ID="txtStatus"
+                                                    <asp:TextBox ID="txtStatus" Text=""
                                                         runat="server"
                                                         CssClass="form-control form-control-sm" Style="text-align: center"
                                                          />                                                       

@@ -38,6 +38,7 @@ namespace NewCapit.dist.pages
                 CarregarGrid("Pendente");
                 CarregarArtigosCTB();
                 divMsg.Visible = false;
+                txtBaixado_por.Text = nomeUsuario;
             }
 
         }
