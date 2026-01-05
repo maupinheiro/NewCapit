@@ -1355,7 +1355,7 @@
  <div class="form-group">
  <span class="details">Previsão de Chegada:</span>
  <div class="input-group">
- <asp:TextBox ID="txtPrevisaoChegada" runat="server"                                         CssClass="form-control saida"                        ReadOnly="true"                                   Text='<%# Bind("prev_chegada", "{0:yyyy-MM-ddTHH:mm}") %>'                               TextMode="DateTimeLocal"                                                                Style="text-align: center" onChange="validarDatas(item)" />
+ <asp:TextBox ID="txtPrevisaoChegada" runat="server"                                         CssClass="form-control saida"                                                           Text='<%# Bind("prev_chegada", "{0:yyyy-MM-ddTHH:mm}") %>'                               TextMode="DateTimeLocal"                                                                Style="text-align: center" onChange="validarDatas(item)" />
  </div>
  <span class="msg-erro text-danger" style="display: none;"></span>
  </div>
@@ -1394,7 +1394,7 @@
 <div class="form-group">
 <span class="details" style="text-align: center">DURAÇÃO DA VIAGEM:</span>
 <div class="input-group">
-<asp:TextBox ID="txtAgCarreg" runat="server" CssClass="form-control espera" Text='<%# Bind("tempoagcarreg") %>'       Style="text-align: center" onkeydown="return false;" ReadOnly="true"/>
+<asp:TextBox ID="txtAgCarreg" runat="server" CssClass="form-control espera" Text='<%# Bind("tempoagcarreg") %>'       Style="text-align: center" onkeydown="return false;" />
 </div>
 <span class="msg-erro text-danger" style="display: none;"></span>
 </div>
@@ -1403,7 +1403,7 @@
 <div class="form-group">
 <span class="details" style="text-align: center">AG. DESCARREGAMENTO:</span>
 <div class="input-group">
-<asp:TextBox ID="txtAgDescarga" runat="server" CssClass="form-control espera" Text='<%# Bind("tempoagcarreg") %>'      Style="text-align: center" onkeydown="return false;"  ReadOnly="true"/>
+<asp:TextBox ID="txtAgDescarga" runat="server" CssClass="form-control espera" Text='<%# Bind("tempoagdescarreg") %>'      Style="text-align: center" onkeydown="return false;"  />
 </div>
 <span class="msg-erro text-danger" style="display: none;"></span>
 </div>
@@ -1412,7 +1412,7 @@
 <div class="form-group">
 <span class="details" style="text-align: center">DURAÇÃO DO TRANSPORTE:</span>
 <div class="input-group">
-<asp:TextBox ID="txtDurTransp" runat="server" CssClass="form-control espera" Text='<%# Bind("tempoagcarreg") %>'       Style="text-align: center" onkeydown="return false;" ReadOnly="true"/>
+<asp:TextBox ID="txtDurTransp" runat="server" CssClass="form-control espera" Text='<%# Bind("duracao") %>'       Style="text-align: center" onkeydown="return false;" />
 </div>
 <span class="msg-erro text-danger" style="display: none;"></span>
 </div>

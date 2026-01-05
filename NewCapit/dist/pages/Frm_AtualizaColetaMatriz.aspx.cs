@@ -710,10 +710,12 @@ namespace NewCapit.dist.pages
                 DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus"); 
                 TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
                 TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+                TextBox txtAgDescarga = (TextBox)e.Item.FindControl("txtAgDescarga");
+                TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
                 TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino"); 
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
-
+                
 
                 // continue com os demais campos que quiser atualizar...
 
@@ -757,11 +759,11 @@ namespace NewCapit.dist.pages
                                 saidaorigem = @saidaorigem,
                                 tempoagcarreg = @tempoagcarreg,
                                 chegadadestino = @chegadadestino,
-                                entradaplanta = @entradaplanta,
                                 saidaplanta = @saidaplanta,
-                                tempodentroplanta = @tempodentroplanta,
+                                prev_chegada = @prev_chegada,
+                                tempoagdescarreg=@tempoagdescarreg,
+                                duracao=@duracao,
                                 codmot=@codmot, 
-                                tempoesperagate=@tempoesperagate,
                                 frota=@frota
                                 WHERE carga = @carga";
 
@@ -769,15 +771,18 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@carga", carga);
 
                     cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGateOrigem.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@status", status);                    
+                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);                    
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));                    
+                    cmd.Parameters.AddWithValue("@duracao", SafeValue(txtDurTransp.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
                     cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));                    
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@gate_origem", txtGateOrigem.Text.Trim() ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@gate_destino", txtGateDestino.Text.Trim() ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
                     //cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     // continue os parâmetros conforme seu banco
                     //string valorDigitado = txtCVA.Text.Trim();
@@ -789,26 +794,27 @@ namespace NewCapit.dist.pages
                 }
 
                 // Atualizando a ordem de coleta 
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                {
-                    string queryCarregamento = @"UPDATE tbcarregamentos SET 
-                                situacao = @situacao
-                                WHERE num_carregamento = @num_carregamento";
+                //using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                //{
+                //    string queryCarregamento = @"UPDATE tbcarregamentos SET 
+                //                situacao = @situacao
+                //                WHERE num_carregamento = @num_carregamento";
 
-                    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
-                    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
-                    cmdCarregamento.Parameters.AddWithValue("@situacao", situacao);
+                //    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
+                //    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                //    cmdCarregamento.Parameters.AddWithValue("@situacao", situacao);
 
-                    // continue os parâmetros conforme seu banco
-                    //string valorDigitado = txtCVA.Text.Trim();
+                //    // continue os parâmetros conforme seu banco
+                //    //string valorDigitado = txtCVA.Text.Trim();
 
-                    // Chama método que verifica no banco
+                //    // Chama método que verifica no banco
 
-                    conn.Open();
-                    cmdCarregamento.ExecuteNonQuery();
-                }
+                //    conn.Open();
+                //    cmdCarregamento.ExecuteNonQuery();
+                //}
                 // Após atualizar, recarregar os dados no Repeater
-                AtualizarColetasVisiveis();
+                ViewState["Coletas"] = null;
+                CarregarColetas(novaColeta.Text);
             }
             if (e.CommandName == "Ocorrencias")
             {
@@ -1511,7 +1517,6 @@ namespace NewCapit.dist.pages
                             foneparticular = @foneparticular,
                             veiculo = @veiculo,
                             veiculotipo = @veiculotipo,
-                            filialveiculo = @filialveiculo,
                             valcet = @valcet,
                             valcrlvveiculo = @valcrlvveiculo,
                             valcrlvreboque1 = @valcrlvreboque1,
@@ -1601,7 +1606,7 @@ namespace NewCapit.dist.pages
 
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
-                    AtualizarColetasVisiveis();
+                    CarregarColetas(novaColeta.Text);
 
 
                 }
