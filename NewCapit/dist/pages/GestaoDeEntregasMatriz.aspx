@@ -90,10 +90,19 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <div class="custom-control custom-switch custom-switch-off-primary custom-switch-on-success">
-                                            <input type="checkbox" class="custom-control-input" id="customSwitch3">
-                                            <label class="custom-control-label" style="text-align: center" for="customSwitch3">Ocultar viagens CONCLUÍDAS</label>
-                                        </div>
+                                      <div class="custom-control custom-switch custom-switch-off-primary custom-switch-on-success">
+                                        <input type="checkbox" class="custom-control-input" id="chkOcultarViagens" 
+                                               <%= hfOcultarViagens.Value.ToLower() == "true" ? "checked" : "" %>
+                                               onchange="document.getElementById('<%= hfOcultarViagens.ClientID %>').value = this.checked; document.getElementById('<%= btnPostbackOcultar.ClientID %>').click();">
+    
+                                        <label class="custom-control-label" for="chkOcultarViagens">Ocultar viagens CONCLUÍDAS</label>
+
+                                        <asp:HiddenField ID="hfOcultarViagens" runat="server" Value="false" />
+    
+                                        <%-- Botão invisível para processar o evento no servidor --%>
+                                        <asp:Button ID="btnPostbackOcultar" runat="server" style="display:none;" OnClick="btnPostbackOcultar_Click" />
+                                    </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +132,7 @@
                                                             </thead>
                                                             <tbody>
                                                     </HeaderTemplate>
-                                                    <ItemTemplate>
+                                                    <ItemTemplate> 
                                                         <tr onclick="toggleDetalhes(this)">
                                                             <td style="text-align: center; vertical-align: middle;">
                                                                 <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 60px; height:60px;" runat="server"

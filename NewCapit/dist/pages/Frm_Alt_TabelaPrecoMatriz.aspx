@@ -408,7 +408,8 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <span class="details">EMITE PEDÁGIO:</span>
-                                                            <asp:DropDownList ID="ddlEmitePedagio" runat="server" CssClass="form-control">       
+                                                            <asp:DropDownList ID="ddlEmitePedagio" runat="server" CssClass="form-control"> 
+                                                                <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                                                                 <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                                 <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                             </asp:DropDownList>
@@ -418,7 +419,7 @@
                                                         <div class="form-group">
                                                             <span class="details">COBRA HORAS PARADAS:</span>
                                                             <asp:DropDownList ID="ddlHoraParada" runat="server" CssClass="form-control">
-                                                                
+                                                                <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                                                                 <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                                 <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                             </asp:DropDownList>
@@ -495,7 +496,7 @@
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FRETE FIXO:</label>
                                                     <div class="col-sm-2">
                                                         <asp:DropDownList ID="ddlValorFixoTng" runat="server" CssClass="form-control">
-                                                            
+                                                            <asp:ListItem Value="" Text="SELECIONE"></asp:ListItem>
                                                             <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
                                                             <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
                                                         </asp:DropDownList>

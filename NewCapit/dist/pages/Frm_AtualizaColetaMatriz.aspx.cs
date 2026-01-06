@@ -762,7 +762,7 @@ namespace NewCapit.dist.pages
                                 saidaplanta = @saidaplanta,
                                 prev_chegada = @prev_chegada,
                                 tempoagdescarreg=@tempoagdescarreg,
-                                duracao=@duracao,
+                                duracao_transp=@duracao_transp,
                                 codmot=@codmot, 
                                 frota=@frota
                                 WHERE carga = @carga";
@@ -774,7 +774,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);                    
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@duracao", SafeValue(txtDurTransp.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
                     cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
                     cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
@@ -1606,6 +1606,7 @@ namespace NewCapit.dist.pages
 
 
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
+                    ViewState["Coletas"] = null;
                     CarregarColetas(novaColeta.Text);
 
 

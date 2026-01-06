@@ -39,7 +39,21 @@ namespace NewCapit.dist.pages
 
                     Response.Redirect("Login.aspx");
                 }
+
+                bool ocultar = false;
+                if (bool.TryParse(hfOcultarViagens.Value, out ocultar))
+                {
+                    // Chame sua função de filtrar ou carregar dados aqui
+                    FiltrarViagens(ocultar);
+                }
             }
+
+
+        }
+        protected void btnPostbackOcultar_Click(object sender, EventArgs e)
+        {
+            bool ocultar = bool.Parse(hfOcultarViagens.Value);
+            FiltrarViagens(ocultar);
         }
         protected void CarregarGrid()
         {
@@ -167,9 +181,34 @@ namespace NewCapit.dist.pages
             //CarregarPedidos();
         }
 
+        public void FiltrarViagens(bool ocultar)
+        {
+            if (ocultar == true)
+            {
+                CarregarColetasConcluidas();
+            }
+            else
+            {
+                CarregarColetas();
+            }
+        }
+
         private void CarregarColetas()
         {
             var novosDados = DAL.ConEntrega.FetchDataTableEntregasMatriz();
+
+            rptCarregamento.DataSource = novosDados;
+            rptCarregamento.DataBind();
+
+            // Armazena no ViewState, se necessário para outras operações
+            ViewState["rptCarregamento"] = novosDados;
+
+            lblMensagem.Text = string.Empty;
+        }
+
+        private void CarregarColetasConcluidas()
+        {
+            var novosDados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida();
 
             rptCarregamento.DataSource = novosDados;
             rptCarregamento.DataBind();

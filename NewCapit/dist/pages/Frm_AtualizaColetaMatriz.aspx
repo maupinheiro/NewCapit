@@ -1412,7 +1412,7 @@
 <div class="form-group">
 <span class="details" style="text-align: center">DURAÇÃO DO TRANSPORTE:</span>
 <div class="input-group">
-<asp:TextBox ID="txtDurTransp" runat="server" CssClass="form-control espera" Text='<%# Bind("duracao") %>'       Style="text-align: center" onkeydown="return false;" />
+<asp:TextBox ID="txtDurTransp" runat="server" CssClass="form-control espera" Text='<%# Bind("duracao_transp") %>'       Style="text-align: center" onkeydown="return false;" />
 </div>
 <span class="msg-erro text-danger" style="display: none;"></span>
 </div>

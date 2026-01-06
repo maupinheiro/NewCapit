@@ -452,8 +452,7 @@ namespace NewCapit.dist.pages
 
                 dr.Close();
             }
-            Response.Redirect("/dist/pages/ConsultaFretes.aspx", false);
-            Context.ApplicationInstance.CompleteRequest();
+            
         }
         string GetDecimal(object valor)
         {

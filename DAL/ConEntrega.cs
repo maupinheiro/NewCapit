@@ -36,7 +36,27 @@ namespace DAL
         public static DataTable FetchDataTableEntregasMatriz()
         {
             // alterado a query para verificar a coluna exclusao para itens excluídos            
-            string sql = "select c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2, '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.num_carregamento, c.emissao, c.situacao, c.status from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='1111' and situacao <> 'VIAGEM CONCLUIDA' order by c.veiculo ASC ";
+            string sql = "select c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2, '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.num_carregamento, c.emissao, c.situacao, c.status from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='1111' and situacao <> 'VIAGEM CONCLUIDA' order by c.veiculo, emissao ASC ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+
+                }
+            }
+        }
+        public static DataTable FetchDataTableEntregasMatrizConcluida()
+        {
+            // alterado a query para verificar a coluna exclusao para itens excluídos            
+            string sql = "select c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2, '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.num_carregamento, c.emissao, c.situacao, c.status from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='1111' and situacao = 'VIAGEM CONCLUIDA' order by c.veiculo, emissao ASC ";
 
             using (var con = ConnectionUtil.GetConnection())
             {

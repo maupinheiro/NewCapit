@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -653,6 +654,7 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
+                    decimal peso = decimal.Parse(txtPeso.Text, new CultureInfo("pt-BR"));
                     string cod = txtNumPedido.Text;
                     using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                     {
@@ -695,17 +697,18 @@ namespace NewCapit.dist.pages
                                 
                                 cmdUpdate.Parameters.Add("@carga", SqlDbType.NVarChar).Value = novaCarga.Text;
                                 cmdUpdate.Parameters.Add("@material", SqlDbType.NVarChar).Value = cboMaterial.SelectedItem.Text;
-                                decimal peso;
+                                    //decimal peso;
 
-                                if (!decimal.TryParse(
-                                        txtPeso.Text.Replace(",", "."),
-                                        System.Globalization.NumberStyles.Any,
-                                        System.Globalization.CultureInfo.InvariantCulture,
-                                        out peso))
-                                {
-                                    throw new Exception("Peso inválido.");
-                                }
-                                cmdUpdate.Parameters.Add("@peso", SqlDbType.Decimal).Value = peso; // decimal convertido
+                                    //if (!decimal.TryParse(
+                                    //        txtPeso.Text.Replace(",", "."),
+                                    //        System.Globalization.NumberStyles.Any,
+                                    //        System.Globalization.CultureInfo.InvariantCulture,
+                                    //        out peso))
+                                    //{
+                                    //    throw new Exception("Peso inválido.");
+                                    //}
+                                   
+                                    cmdUpdate.Parameters.AddWithValue("@peso",  peso); // decimal convertido
                                 cmdUpdate.Parameters.Add("@portao", SqlDbType.NVarChar).Value = cboDeposito.SelectedItem.Text;
                                 cmdUpdate.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = cboSituacao.SelectedItem.Text;
                                 cmdUpdate.Parameters.Add("@previsao", SqlDbType.Date).Value = DateTime.Parse(txtPrevEntrega.Text);
@@ -738,14 +741,14 @@ namespace NewCapit.dist.pages
                                 }
 
                             }
-                            }
+                        }
                             catch (Exception ex)
                             {
-                                string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                                string script = $"alert('{mensagemErro}');";
-                                ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
-                            }
+                            string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                            string script = $"alert('{mensagemErro}');";
+                            ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
                         }
+                    }
                         else
                         {
                             conn.Close();
@@ -759,7 +762,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@status", "Pendente");
                             comando.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
-                            comando.Parameters.AddWithValue("@peso", txtPeso.Text);
+                            comando.Parameters.AddWithValue("@peso", peso);
                             comando.Parameters.AddWithValue("@material", cboMaterial.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@portao", cboDeposito.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@situacao", cboSituacao.SelectedItem.Text);
