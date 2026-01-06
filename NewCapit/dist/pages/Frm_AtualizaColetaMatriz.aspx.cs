@@ -51,8 +51,10 @@ namespace NewCapit.dist.pages
         public string fotoMotorista;
         string codmot, caminhofoto;
         string num_coleta;
-        string status;
-        string situacao;
+        string statusOC;
+        string situacaoOC;
+        string chegada;
+
         BigInteger idveiculo;
         string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade;
 
@@ -714,10 +716,9 @@ namespace NewCapit.dist.pages
                 TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
                 TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino"); 
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
-                Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
-                
+                Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");                
 
-                // continue com os demais campos que quiser atualizar...
+                
 
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -725,37 +726,39 @@ namespace NewCapit.dist.pages
                     // Extrai os valores uma única vez                    
                     var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim()); 
                     var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
+                    var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
 
-                    //if (chegada != null && saida != null && entrada != null && saidaPlanta != null)
-                    //{
-                    //    status = "Concluido";
-                    //    situacao = "CONCLUIDO";
-                    //}
-                    //else if (chegada != null && saida != null && entrada != null)
-                    //{
-                    //    status = "Ag. Descarga";
-                    //    situacao = "EM ANDAMENTO";
-                    //}
-                    //else if (chegada != null && saida != null)
-                    //{
-                    //    status = "Em Transito";
-                    //    situacao = "EM ANDAMENTO";
-                    //}
-                    //else if (chegada != null)
-                    //{
-                    //    status = "Ag. Carreg.";
-                    //    situacao = "EM ANDAMENTO";
-                    //}
-                    //else
-                    //{
-                    //    status = "Pendente";
-                    //    situacao = "PENDENTE";
-                    //}
+                    if (chegada != null && saida != null && saidaPlanta != null)
+                    {
+                        statusOC = "Concluido";
+                        situacaoOC = "EM ANDAMENTO";
+                    }
+                    else if (chegada != null && saida != null)
+                    {
+                        statusOC = "Ag. Descarga";
+                        situacaoOC = "EM ANDAMENTO";
+                    }
+                    else if (chegada != null && saida != null)
+                    {
+                        statusOC = "Em Transito";
+                        situacaoOC = "EM ANDAMENTO";
+                    }
+                    else if (chegada != null)
+                    {
+                        statusOC = "Ag. Carreg.";
+                        situacaoOC = "EM ANDAMENTO";
+                    }
+                    else
+                    {
+                        statusOC = "Pendente";
+                        situacaoOC = "PROGRAMADA";
+                    }
 
                     string query = @"UPDATE tbcargas SET                                  
                                 gate_origem = @gate_origem,
                                 gate_destino = @gate_destino,
                                 status = @status, 
+                                andamento = @andamento,
                                 saidaorigem = @saidaorigem,
                                 tempoagcarreg = @tempoagcarreg,
                                 chegadadestino = @chegadadestino,
@@ -768,10 +771,9 @@ namespace NewCapit.dist.pages
                                 WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@carga", carga);
-
-                    cmd.Parameters.AddWithValue("@gate", SafeDateValue(txtGateOrigem.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);                    
+                    cmd.Parameters.AddWithValue("@carga", carga);                    
+                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@andamento", situacaoOC);
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
                     cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
@@ -783,104 +785,99 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
-                    //cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                    // continue os parâmetros conforme seu banco
-                    //string valorDigitado = txtCVA.Text.Trim();
+                    
 
                     // Chama método que verifica no banco
-
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
 
                 // Atualizando a ordem de coleta 
-                //using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                //{
-                //    string queryCarregamento = @"UPDATE tbcarregamentos SET 
-                //                situacao = @situacao
-                //                WHERE num_carregamento = @num_carregamento";
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string queryCarregamento = @"UPDATE tbcarregamentos SET 
+                                situacao = @situacao,
+                                status = @status
+                                WHERE num_carregamento = @num_carregamento";
 
-                //    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
-                //    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
-                //    cmdCarregamento.Parameters.AddWithValue("@situacao", situacao);
+                    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
+                    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                    cmdCarregamento.Parameters.AddWithValue("@situacao", situacaoOC);
+                    cmdCarregamento.Parameters.AddWithValue("@status", statusOC);
 
-                //    // continue os parâmetros conforme seu banco
-                //    //string valorDigitado = txtCVA.Text.Trim();
-
-                //    // Chama método que verifica no banco
-
-                //    conn.Open();
-                //    cmdCarregamento.ExecuteNonQuery();
-                //}
+                    // Chama método que verifica no banco
+                    conn.Open();
+                    cmdCarregamento.ExecuteNonQuery();
+                }
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
-            if (e.CommandName == "Ocorrencias")
-            {
-                int id = Convert.ToInt32(e.CommandArgument);
+            //if (e.CommandName == "Ocorrencias")
+            //{
+            //    int id = Convert.ToInt32(e.CommandArgument);
 
-                string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    conn.Open();
+            //    string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            //    using (SqlConnection conn = new SqlConnection(connStr))
+            //    {
+            //        conn.Open();
 
-                    SqlCommand cmd1 = new SqlCommand("SELECT carga,cva, andamento FROM tbcargas WHERE carga = @Id", conn);
-                    cmd1.Parameters.AddWithValue("@Id", id);
-                    SqlDataReader reader1 = cmd1.ExecuteReader();
-                    if (reader1.Read())
-                    {
-                        lblCVA.BackColor = System.Drawing.Color.Magenta;
-                        lblCVA.ForeColor = System.Drawing.Color.White;
-                        lblCVA.Text = reader1["cva"].ToString();
+            //        SqlCommand cmd1 = new SqlCommand("SELECT carga,cva, andamento FROM tbcargas WHERE carga = @Id", conn);
+            //        cmd1.Parameters.AddWithValue("@Id", id);
+            //        SqlDataReader reader1 = cmd1.ExecuteReader();
+            //        if (reader1.Read())
+            //        {
+            //            lblCVA.BackColor = System.Drawing.Color.Magenta;
+            //            lblCVA.ForeColor = System.Drawing.Color.White;
+            //            lblCVA.Text = reader1["cva"].ToString();
 
-                        lblColeta.BackColor = System.Drawing.Color.LightGreen;
-                        lblColeta.Text = reader1["carga"].ToString();
+            //            lblColeta.BackColor = System.Drawing.Color.LightGreen;
+            //            lblColeta.Text = reader1["carga"].ToString();
 
-                        if (reader1["andamento"].ToString() == "CONCLUIDO")
-                        {
-                            lblStatus.BackColor = System.Drawing.Color.LightGreen;
-                            lblStatus.Text = reader1["andamento"].ToString();
-                        }
-                        else if (reader1["andamento"].ToString() == "PENDENTE" || reader1["andamento"].ToString() == "Pendente")
-                        {
-                            lblStatus.BackColor = System.Drawing.Color.Yellow;
-                            lblStatus.Text = reader1["andamento"].ToString();
-                        }
-                        else if (reader1["andamento"].ToString() == "EM ANDAMENTO")
-                        {
-                            lblStatus.BackColor = System.Drawing.Color.Purple;
-                            lblCVA.ForeColor = System.Drawing.Color.White;
-                            lblStatus.Text = reader1["andamento"].ToString();
-                        }
-                        else
-                        {
-                            lblStatus.BackColor = System.Drawing.Color.Black;
-                            lblStatus.Text = reader1["andamento"].ToString();
-                        }
+            //            if (reader1["andamento"].ToString() == "CONCLUIDO")
+            //            {
+            //                lblStatus.BackColor = System.Drawing.Color.LightGreen;
+            //                lblStatus.Text = reader1["andamento"].ToString();
+            //            }
+            //            else if (reader1["andamento"].ToString() == "PENDENTE" || reader1["andamento"].ToString() == "Pendente")
+            //            {
+            //                lblStatus.BackColor = System.Drawing.Color.Yellow;
+            //                lblStatus.Text = reader1["andamento"].ToString();
+            //            }
+            //            else if (reader1["andamento"].ToString() == "EM ANDAMENTO")
+            //            {
+            //                lblStatus.BackColor = System.Drawing.Color.Purple;
+            //                lblCVA.ForeColor = System.Drawing.Color.White;
+            //                lblStatus.Text = reader1["andamento"].ToString();
+            //            }
+            //            else
+            //            {
+            //                lblStatus.BackColor = System.Drawing.Color.Black;
+            //                lblStatus.Text = reader1["andamento"].ToString();
+            //            }
 
-                        using (SqlConnection con = new SqlConnection(connStr))
-                        {
-                            string query = "SELECT id, responsavel, motivo, observacao, data_inclusao, usuario_inclusao FROM tbocorrencias WHERE carga = @numeroCarga";
+            //            using (SqlConnection con = new SqlConnection(connStr))
+            //            {
+            //                string query = "SELECT id, responsavel, motivo, observacao, data_inclusao, usuario_inclusao FROM tbocorrencias WHERE carga = @numeroCarga";
 
-                            SqlCommand cmd = new SqlCommand(query, con);
-                            cmd.Parameters.AddWithValue("@numeroCarga", id);
+            //                SqlCommand cmd = new SqlCommand(query, con);
+            //                cmd.Parameters.AddWithValue("@numeroCarga", id);
 
-                            SqlDataAdapter da = new SqlDataAdapter(cmd);
-                            DataTable dt = new DataTable();
-                            da.Fill(dt);
+            //                SqlDataAdapter da = new SqlDataAdapter(cmd);
+            //                DataTable dt = new DataTable();
+            //                da.Fill(dt);
 
-                            GridViewCarga.DataSource = dt;
-                            GridViewCarga.DataBind();
-                        }
+            //                GridViewCarga.DataSource = dt;
+            //                GridViewCarga.DataBind();
+            //            }
 
 
-                        // Exibe o modal com JavaScript
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalOcorrencia').modal('show');", true);
+            //            // Exibe o modal com JavaScript
+            //            ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalOcorrencia').modal('show');", true);
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
             if (e.CommandName == "Coletas")
             {
                 int id = Convert.ToInt32(e.CommandArgument);
@@ -1497,11 +1494,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-            //comissao = @comissao,
-            //vlpernoite = @vlpernoite,
-            //cafe = @cafe,
-            //almoco = @almoco,
-            //janta = @janta,
+            
             string query = @"UPDATE tbcarregamentos SET
                             codmotorista = @codmotorista,
                             nucleo = @nucleo,
@@ -1535,8 +1528,7 @@ namespace NewCapit.dist.pages
                             codcontato = @codcontato,
                             fonecorporativo = @fonecorporativo,
                             empresa = @empresa,
-                            dtalt = @dtalt,
-                            status = @status, 
+                            dtalt = @dtalt,                            
                             numero_gr = @numero_gr,
                             numero_protocolo_cet = numero_protocolo_cet,
                             usualt = @usualt
@@ -1574,8 +1566,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@tecnologia", SafeValue(txtTecnologia.Text));
                 cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
                 cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
-                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
-                cmd.Parameters.AddWithValue("@status", SafeValue(status));
+                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));  
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
@@ -1648,10 +1639,6 @@ namespace NewCapit.dist.pages
         }
         private void BuscarCargaNoBanco(string carga)
         {
-
-           
-           
-
             // Consulta no banco
             if (txtCarga.Text.Trim() == "1")
             {
@@ -1744,8 +1731,6 @@ namespace NewCapit.dist.pages
         private object SafeValue(string input)
         {
             return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
-
-
         }
         private DateTime? SafeDateValue2(string input)
         {
@@ -2202,6 +2187,26 @@ namespace NewCapit.dist.pages
         }
         protected void btnEncerrar_Click(object sender, EventArgs e)
         {
+            // Atualizando a ordem de coleta 
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string queryCarregamento = @"UPDATE tbcarregamentos SET 
+                                situacao = @situacao,
+                                status = @status
+                                WHERE num_carregamento = @num_carregamento";
+
+                SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
+                cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                cmdCarregamento.Parameters.AddWithValue("@situacao", "VIAGEM CONCLUIDA");
+                cmdCarregamento.Parameters.AddWithValue("@status", "Concluido");
+
+                // Chama método que verifica no banco
+                conn.Open();
+                cmdCarregamento.ExecuteNonQuery();
+
+                Response.Redirect("/dist/pages/GestaoDeEntregasMatriz.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
+            }
 
         }
 

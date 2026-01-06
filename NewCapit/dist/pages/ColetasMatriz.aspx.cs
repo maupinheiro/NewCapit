@@ -1713,7 +1713,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 10).Value = "1111";
                         cmd.Parameters.Add("@dtcad", SqlDbType.DateTime).Value = DateTime.Now;
                         cmd.Parameters.Add("@usucad", SqlDbType.VarChar, 50).Value = DbString(nomeUsuario);
-                        cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "EM ANDAMENTO";
+                        cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "PROGRAMADA";
                         cmd.Parameters.Add("@funcao", SqlDbType.VarChar, 30).Value = DbString(txtFuncao.Text);
                         cmd.Parameters.Add("@tomadorservico", SqlDbType.VarChar, 50).Value = DbString(primeiroNome);
 
@@ -1726,7 +1726,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@valopacidade", SqlDbType.Date).Value = DbDate(txtOpacidade.Text);
 
                         // DOCUMENTOS
-                        cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
+                        cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Parse(txtCadastro.Text).ToString("yyyy-MM-dd HH:mm");
                         cmd.Parameters.Add("@numero_gr", SqlDbType.VarChar, 30).Value = DbString(txtLiberacaoGR.Text);
                         cmd.Parameters.Add("@numero_protocolo_cet", SqlDbType.VarChar, 30).Value = DbString(txtNumProtCET.Text);
                         cmd.Parameters.Add("@cpf_cnpj_proprietario", SqlDbType.VarChar, 20).Value = DbString(txtCPF_CNPJ.Text);
@@ -1780,7 +1780,7 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.Add("@codmot", SqlDbType.VarChar).Value = txtCodMotorista.Text;
                             cmd.Parameters.Add("@frota", SqlDbType.VarChar).Value = txtCodFrota.Text;
                             cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = "Pendente";
-                            cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "EM ANDAMENTO";
+                            cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "PROGRAMADA";
                             cmd.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";
                             cmd.Parameters.Add("@funcaomot", SqlDbType.VarChar).Value = txtFuncao.Text;
                             cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;

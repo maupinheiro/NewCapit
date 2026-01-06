@@ -793,10 +793,11 @@
                                                             <td><%# Eval("carga") %></td>
                                                             <td><%# Eval("expedidor") %></td>
                                                             <td><%# Eval("recebedor") %></td>
-                                                            <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                            <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                            <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                            <td class="data-hora" data-datahora='<%# Eval("data_hora", "{0:yyyy-MM-ddTHH:mm}") %>'><%# Eval("data_hora", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                            <td><%# Eval("saidaorigem", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                            <td><%# Eval("prev_chegada", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                            <td><%# Eval("chegadadestino", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                            <td><%# Eval("saidaplanta", "{0:dd/MM/yyyy HH:mm}") %></td>
+                                                            
                                                             <td><%# Eval("status") %></td>
                                                             <td runat="server" id="tdAtendimento">
                                                                 <asp:Label ID="lblAtendimento" runat="server" Text=""></asp:Label>
@@ -1310,11 +1311,11 @@
 
     <div class="col-md-1">
         <br />
-        <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+        <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
     </div>
     <div class="col-md-1">
         <br />
-        <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+        <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
     </div>
    <%-- <div class="col-md-1">
         <br />
@@ -1323,7 +1324,7 @@
     </div>--%>
     <div class="col-md-1">
         <br />
-        <asp:Button ID="btnOrdemColeta" runat="server" Text="Impr. O.C." CommandName="Coletas" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-warning" />
+        <asp:Button ID="btnOrdemColeta" runat="server" Text="Impr. O.C." CommandName="Coletas" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-warning w-100" />
 
     </div>
 </div>
@@ -1469,17 +1470,17 @@
                                 <div class="row g-3">
                                     <div class="col-md-1">
                                         <br />
-                                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar" />
+                                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success w-100" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar" />
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <br />
+                                        <asp:Button ID="btnEncerrar" CssClass="btn btn-outline-info w-100" runat="server" Text="Finalizar Ordem de Coleta" OnClick="btnEncerrar_Click" />
                                     </div>
 
                                     <div class="col-md-1">
                                         <br />
-                                        <asp:Button ID="btnEncerrar" CssClass="btn btn-outline-info  btn-lg" runat="server" Text="Concluir" OnClick="btnEncerrar_Click" />
-                                    </div>
-
-                                    <div class="col-md-1">
-                                        <br />
-                                        <a href="GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                        <a href="GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger w-100">Fechar               
                                         </a>
                                     </div>
                                 </div>
