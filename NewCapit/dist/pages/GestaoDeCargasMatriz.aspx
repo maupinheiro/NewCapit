@@ -88,7 +88,7 @@
                                 <%--<asp:GridView ID="gvCargas" runat="server" CssClass="table table-striped" AutoGenerateColumns="False" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvCargas_PageIndexChanging" OnRowEditing="gvCargas_RowEditing" OnRowCancelingEdit="gvCargas_RowCancelingEdit"
                                     OnRowUpdating="gvCargas_RowUpdating">--%>
                                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
                                             <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">

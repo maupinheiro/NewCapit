@@ -15,7 +15,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace NewCapit.dist.pages
 {
-    public partial class WebForm1 : System.Web.UI.Page
+    public partial class Frm_Alt_TabelaPrecoMatriz : System.Web.UI.Page
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;

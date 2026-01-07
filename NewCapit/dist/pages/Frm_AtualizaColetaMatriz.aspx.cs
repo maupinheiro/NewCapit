@@ -86,6 +86,7 @@ namespace NewCapit.dist.pages
             }
             //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
+            VerificaCargasFechadas();
         }
 
         public void CarregaFoto()
@@ -745,7 +746,7 @@ namespace NewCapit.dist.pages
                     }
                     else if (chegada != null)
                     {
-                        statusOC = "Ag. Carregamento.";
+                        statusOC = "Ag. Carregamento";
                         situacaoOC = "EM ANDAMENTO";
                     }
                     else
@@ -1637,6 +1638,37 @@ namespace NewCapit.dist.pages
 
             BuscarCargaNoBanco(txtCarga.Text.Trim());
         }
+        public void VerificaCargasFechadas()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                using (SqlCommand cmd = new SqlCommand(@"
+            SELECT COUNT(*) 
+            FROM tbcargas 
+            WHERE idviagem = @idviagem 
+              AND status <> 'Concluido'", conn))
+                {
+                    cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text);
+
+                    conn.Open();
+
+                    int cargasAbertas = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    if (cargasAbertas == 0)
+                    {
+                        // Todas as cargas estão concluídas 🎉
+                        btnEncerrar.Enabled = true;
+                    }
+                    else
+                    {
+                        // Ainda existem cargas não concluídas 🚧
+                        btnEncerrar.Enabled = false;
+                    }
+                }
+            }
+        }
+
         private void BuscarCargaNoBanco(string carga)
         {
             // Consulta no banco
