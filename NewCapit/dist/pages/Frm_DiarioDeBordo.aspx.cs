@@ -643,7 +643,7 @@ namespace NewCapit.dist.pages
                                     CarregaGrid2();
                                     CarregaTodas();
 
-                                    ShowAlert("Informações cadastradas com sucesso!");
+                                    //ShowAlert("Informações cadastradas com sucesso!");
                                 }
                                 catch (Exception ex)
                                 {
@@ -733,7 +733,7 @@ namespace NewCapit.dist.pages
                                 CarregaGrid2();
                                 CarregaTodas();
 
-                                ShowAlert("Informações cadastradas com sucesso!");
+                                //ShowAlert("Informações cadastradas com sucesso!");
                             }
                             catch (Exception ex)
                             {
