@@ -21,7 +21,7 @@ namespace NewCapit.dist.pages
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;
         DateTime dataHoraAtual = DateTime.Now;
-        int totalQuantidade = 0;
+        decimal totalQuantidade = 0;
         //int totalLinhas = 0;
         string totalPesoCarga;
         protected void Page_Load(object sender, EventArgs e)
@@ -825,7 +825,8 @@ namespace NewCapit.dist.pages
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                int quantidade = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Peso"));
+                
+                decimal quantidade = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "Peso"), new CultureInfo("pt-BR"));
                 totalQuantidade += quantidade;
             }
             else if (e.Row.RowType == DataControlRowType.Footer)

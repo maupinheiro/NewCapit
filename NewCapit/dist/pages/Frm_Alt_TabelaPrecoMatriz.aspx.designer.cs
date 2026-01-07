@@ -11,7 +11,7 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class WebForm1
+    public partial class Frm_Alt_TabelaPrecoMatriz
     {
 
         /// <summary>

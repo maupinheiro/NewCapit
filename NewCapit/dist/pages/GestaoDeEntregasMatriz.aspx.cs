@@ -183,7 +183,7 @@ namespace NewCapit.dist.pages
 
         public void FiltrarViagens(bool ocultar)
         {
-            if (ocultar == true)
+            if (ocultar == false)
             {
                 CarregarColetasConcluidas();
             }
