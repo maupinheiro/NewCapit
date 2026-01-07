@@ -745,7 +745,7 @@ namespace NewCapit.dist.pages
                     }
                     else if (chegada != null)
                     {
-                        statusOC = "Ag. Carreg.";
+                        statusOC = "Ag. Carregamento.";
                         situacaoOC = "EM ANDAMENTO";
                     }
                     else

@@ -30,7 +30,7 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">
                     <i class="fas fa-map-marker-alt"></i>&nbsp;Gestão de Rotas</h1>
-                <a href="Frm_CadRotas.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                <a href="NovaRota.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-directions"></i>&nbsp;Novo Cadastro            
                 </a>
 
@@ -47,7 +47,7 @@
         <div class="card shadow mb-4">              
               <div class="card-body">
                  <div class="table-responsive">
-                     <asp:GridView ID="gvListRotas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="rota" runat="server" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListRotas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                     <asp:GridView ID="gvListRotas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="rota" runat="server" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListRotas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                      <Columns>
                         <asp:BoundField DataField="rota" HeaderText="#ID"/>

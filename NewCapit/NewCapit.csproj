@@ -360,6 +360,7 @@
     <Content Include="dist\pages\ControleCreditoAbastecimento.aspx" />
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\ControleDePedagio.aspx" />
+    <Content Include="dist\pages\ControleDeRotas.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\exempolos.aspx" />
@@ -404,6 +405,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
+    <Content Include="dist\pages\NovaRota.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\SimuladorFrete.aspx" />
@@ -4648,6 +4650,13 @@
     <Compile Include="dist\pages\ControleDePedagio.aspx.designer.cs">
       <DependentUpon>ControleDePedagio.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ControleDeRotas.aspx.cs">
+      <DependentUpon>ControleDeRotas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleDeRotas.aspx.designer.cs">
+      <DependentUpon>ControleDeRotas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\demo_motorista.aspx.cs">
       <DependentUpon>demo_motorista.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4990,6 +4999,13 @@
     </Compile>
     <Compile Include="dist\pages\ImportarPlanejamento.aspx.designer.cs">
       <DependentUpon>ImportarPlanejamento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\NovaRota.aspx.cs">
+      <DependentUpon>NovaRota.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\NovaRota.aspx.designer.cs">
+      <DependentUpon>NovaRota.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\OrdemColetaImpressaoIndividual.aspx.cs">
       <DependentUpon>OrdemColetaImpressaoIndividual.aspx</DependentUpon>
