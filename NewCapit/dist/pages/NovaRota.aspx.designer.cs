@@ -78,57 +78,21 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Button btnCalcular;
 
         /// <summary>
-        /// Controle btnSalvar.
+        /// Controle lblDistancia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvar;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblDistancia;
 
         /// <summary>
-        /// Controle lblDtCadastro.
+        /// Controle lblTempo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDtCadastro;
-
-        /// <summary>
-        /// Controle txtUsuCadastro.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUsuCadastro;
-
-        /// <summary>
-        /// Controle lbDtAtualizacao.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbDtAtualizacao;
-
-        /// <summary>
-        /// Controle txtAltCad.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAltCad;
-
-        /// <summary>
-        /// Controle btnCadastrar.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCadastrar;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTempo;
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Web.Services;
 using System.Web.Configuration;
 using System.Web.UI.WebControls;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace NewCapit.dist.pages
 {
@@ -23,14 +24,14 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-                    txtUsuCadastro.Text = nomeUsuario;
+                    //txtUsuCadastro.Text = nomeUsuario;
                 }
                 else
                 {                                  
                     Response.Redirect("Login.aspx");
                 }
                 DateTime dataHoraAtual = DateTime.Now;
-                lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                //lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 CarregarUFs();
             }
 
@@ -48,8 +49,8 @@ namespace NewCapit.dist.pages
                 ddlUfOrigem.Items.Clear();
                 ddlUfDestino.Items.Clear();
 
-                ddlUfOrigem.Items.Add("-- UF --");
-                ddlUfDestino.Items.Add("-- UF --");
+                ddlUfOrigem.Items.Add("-- Selecione a UF --");
+                ddlUfDestino.Items.Add("-- Selecione a UF --");
 
                 while (dr.Read())
                 {
@@ -85,7 +86,7 @@ namespace NewCapit.dist.pages
 
                 SqlDataReader dr = cmd.ExecuteReader();
 
-                ddl.Items.Add("-- Cidade --");
+                ddl.Items.Add("-- Selecione a Cidade --");
 
                 while (dr.Read())
                 {
@@ -93,8 +94,88 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        // [System.Web.Services.WebMethod]
+        public DistanciaTempoDTO BuscarDistancia(
+     string ufOrigem, string origem,
+     string ufDestino, string destino)
+        {
+            DistanciaTempoDTO resultado = null;
 
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(@"
+            SELECT TOP 1 Distancia, tempo_min
+            FROM tbdistanciapremio
+            WHERE 
+            (
+                UF_Origem COLLATE Latin1_General_CI_AI = @ufo
+                AND Origem COLLATE Latin1_General_CI_AI = @origem
+                AND UF_Destino COLLATE Latin1_General_CI_AI = @ufd
+                AND Destino COLLATE Latin1_General_CI_AI = @destino
+            )
+            OR
+            (
+                UF_Origem COLLATE Latin1_General_CI_AI = @ufd
+                AND Origem COLLATE Latin1_General_CI_AI = @destino
+                AND UF_Destino COLLATE Latin1_General_CI_AI = @ufo
+                AND Destino COLLATE Latin1_General_CI_AI = @origem
+            )", conn);
 
+                cmd.Parameters.Add("@ufo", SqlDbType.VarChar).Value = ufOrigem.Trim();
+                cmd.Parameters.Add("@origem", SqlDbType.VarChar).Value = origem.Trim();
+                cmd.Parameters.Add("@ufd", SqlDbType.VarChar).Value = ufDestino.Trim();
+                cmd.Parameters.Add("@destino", SqlDbType.VarChar).Value = destino.Trim();
+
+                conn.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        resultado = new DistanciaTempoDTO
+                        {
+                            Distancia = dr["Distancia"] != DBNull.Value
+                                ? Convert.ToDecimal(dr["Distancia"])
+                                : 0,
+
+                            TempoMinutos = dr["tempo_min"] != DBNull.Value
+                                ? Convert.ToInt32(dr["tempo_min"])
+                                : 0
+                        };
+                    }
+                }
+            }
+
+            return resultado; // ✅ sempre retorna
+        }
+        protected void btnCalcular_Click(object sender, EventArgs e)
+        {
+            var dados = BuscarDistancia(
+                ddlUfOrigem.SelectedValue,
+                ddlCidadeOrigem.SelectedItem.Text,
+                ddlUfDestino.SelectedValue,
+                ddlCidadeDestino.SelectedItem.Text
+            );
+
+            if (dados != null)
+            {
+                lblDistancia.InnerText = dados.Distancia.ToString("N2");
+                lblTempo.InnerText = dados.TempoMinutos.ToString();
+               
+            }
+            else
+            {
+                MostrarMsg("Distância não cadastrada para essa rota.", "info");
+                lblDistancia.InnerText = "";
+                lblTempo.InnerText = "";
+            }
+        }
+        public class DistanciaTempoDTO
+        {
+            public decimal Distancia { get; set; }
+            public int TempoMinutos { get; set; }
+        }
         protected void MostrarMsg(string mensagem, string tipo = "warning")
         {
             divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
