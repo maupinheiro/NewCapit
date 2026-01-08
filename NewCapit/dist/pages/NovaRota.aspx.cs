@@ -1,15 +1,20 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
-using System.Web.Script.Serialization;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.Web.UI;
-using System.Collections.Generic;
-using System.Web.Services;
+using System.Globalization;
+using System.Net;
+using System.Web;
 using System.Web.Configuration;
+using System.Web.Script.Serialization;
+using System.Web.Services;
+using System.Web.UI;
 using System.Web.UI.WebControls;
-using DocumentFormat.OpenXml.Presentation;
 
 namespace NewCapit.dist.pages
 {
@@ -149,6 +154,64 @@ namespace NewCapit.dist.pages
 
             return resultado; // ✅ sempre retorna
         }
+        protected void btnDistancia_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string origem = HttpUtility.JavaScriptStringEncode(txtOrigem.Text.Trim());
+                string destino = HttpUtility.JavaScriptStringEncode(txtDestino.Text.Trim());
+                string key = "AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww";
+
+                string url = "https://routes.googleapis.com/directions/v2:computeRoutes";
+
+               
+
+                string jsonBody = $@"
+        {{
+            ""origin"": {{ ""address"": ""{origem}"" }},
+            ""destination"": {{ ""address"": ""{destino}"" }},
+            ""travelMode"": ""DRIVE""
+        }}";
+
+                using (var client = new WebClient())
+                {
+                    client.Headers.Add("Content-Type", "application/json");
+                    client.Headers.Add("X-Goog-Api-Key", key);
+                    client.Headers.Add("X-Goog-FieldMask", "routes.distanceMeters,routes.duration");
+
+                    string response = client.UploadString(url, "POST", jsonBody);
+                    dynamic data = JsonConvert.DeserializeObject(response);
+
+                    if (data.routes == null || data.routes.Count == 0)
+                        throw new Exception("Rota não encontrada");
+
+                    // 📏 Distância
+                    double metros = (double)data.routes[0].distanceMeters;
+                    txtDistancia.Text = (metros / 1000).ToString("0.##");
+
+                    // ⏱ Tempo
+                    string duracao = data.routes[0].duration.ToString().Replace("s", "");
+                    int minutos = int.Parse(duracao) / 60;
+                    txtTempo.Text = minutos + " min";
+
+                    ScriptManager.RegisterStartupScript(
+                        this,
+                        this.GetType(),
+                        "AbrirModal",
+                        "abrirModal();",
+                        true
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                txtDistancia.Text = "0";
+                txtTempo.Text = "0";
+
+                MostrarMsg("Erro ao calcular rota: " + ex.Message, "danger");
+            }
+
+        }
         protected void btnCalcular_Click(object sender, EventArgs e)
         {
             var dados = BuscarDistancia(
@@ -166,9 +229,14 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                MostrarMsg("Distância não cadastrada para essa rota.", "info");
-                lblDistancia.InnerText = "";
-                lblTempo.InnerText = "";
+                //MostrarMsg("Distância não cadastrada para essa rota.", "info");
+                //lblDistancia.InnerText = "";
+                //lblTempo.InnerText = "";
+
+                txtOrigem.Text = ddlCidadeOrigem.SelectedItem.Text  + " - " + ddlUfOrigem.SelectedItem.Text;
+                txtDestino.Text = ddlCidadeDestino.SelectedItem.Text  + " - " + ddlUfDestino.SelectedItem.Text;
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "abrirModal();", true);
             }
         }
         public class DistanciaTempoDTO
@@ -189,5 +257,48 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+
+        protected void btnCadastrar_Click(object sender, EventArgs e)
+        {
+            string[] origem = txtOrigem.Text.Split(new[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] destino = txtDestino.Text.Split(new[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (origem.Length != 2 || destino.Length != 2)
+            {
+                MostrarMsg("Formato inválido. Use: Cidade - UF", "warning");
+                return;
+            }
+
+            decimal distancia = decimal.Parse(
+                txtDistancia.Text.Replace(",", "."),
+                CultureInfo.InvariantCulture
+            );
+
+            int tempo = int.Parse(txtTempo.Text.Replace(" min", ""));
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sql = @"
+        INSERT INTO tbdistanciapremio
+        (UF_Origem, Origem, UF_Destino, Destino, Distancia, tempo_min)
+        VALUES
+        (@UF_Origem, @Origem, @UF_Destino, @Destino, @Distancia, @tempo_min)";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@UF_Origem", origem[1].ToUpper());
+                cmd.Parameters.AddWithValue("@Origem", origem[0].ToUpper());
+                cmd.Parameters.AddWithValue("@UF_Destino", destino[1].ToUpper());
+                cmd.Parameters.AddWithValue("@Destino", destino[0].ToUpper());
+                cmd.Parameters.AddWithValue("@Distancia", distancia);
+                cmd.Parameters.AddWithValue("@tempo_min", tempo);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            MostrarMsg("Distância cadastrada para essa rota.", "success");
+        }
+
     }
 }

@@ -190,6 +190,8 @@ namespace NewCapit.dist.pages
             else
             {
                 CarregarColetas();
+                
+                
             }
         }
 

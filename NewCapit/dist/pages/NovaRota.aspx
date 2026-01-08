@@ -15,7 +15,8 @@
         padding: 5px;
     }
     </style>
-
+     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Google Maps -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww"></script>
@@ -65,8 +66,16 @@
         );
     }--%>
     </script>
-
+   <script type="text/javascript">
+       function abrirModal() {
+           $('#meuModal').modal({
+               backdrop: 'static',
+               keyboard: false
+           });
+       }
+   </script>
     <div class="content-wrapper">
+       
         <!-- Main content -->
         <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />--%>
     <div class="card card-info">
@@ -150,61 +159,80 @@
     </div>
     </div>
 
-        <%--<section class="content">
+        <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                <ContentTemplate>
+ <div class="row">
+     <div class="col-md-12">
+         <div class="card shadow"  runat="server">
+             <div class="card-header bg-primary text-white">
+                 <h5 class="mb-0">Cadastrar Nova Rota</h5>
+                     </div>
+             <!-- /.card-header -->
+             <div class="card-body">
+                 <div class="row mb-3">
+                     <div class="col-md-5">
+                         <label>Origem:</label>
+                         <asp:TextBox ID="txtOrigem" runat="server" placeholder="Ex: São Paulo - SP" CssClass="form-control"  ></asp:TextBox>
+                     </div>
+                     <div class="col-md-5">
+                         <label>Destino:</label>
+                         <asp:TextBox ID="txtDestino" runat="server" placeholder="Ex: São Paulo - SP" CssClass="form-control"  ></asp:TextBox>
+                     </div>
+                     <div class="col-md-1">
+                         <label>&nbsp;</label>
+                         <asp:Button ID="btnDistancia" runat="server" Text="Calcular Distância" CssClass="btn btn-primary" OnClick="btnDistancia_Click" />
 
-            <div class="container-fluid">
-                <br />
-                <div id="divMsg" runat="server"
-                    class="alert alert-warning alert-dismissible fade show mt-3"
-                    role="alert" style="display: none;">
-                    <span id="lblMsgGeral" runat="server"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <div class="card card-info">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-map-marker-alt"></i>&nbsp;ROTAS - NOVO CADASTRO</h3>
-                    </div>
-                </div>
-                <div class="card-body">  
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">CADASTRADO EM:</span>
-                                <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" readonly="true"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">POR:</span>
-                                <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                            </div>
-                        </div>
+                     </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">ATUALIZADO EM:</span>
-                                <asp:Label ID="lbDtAtualizacao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">POR:</span>
-                                <asp:TextBox ID="txtAltCad" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
-                            </div>
-                        </div>
+                 </div>
+                 <div class="row mb-3">
+                     <div class="col-md-2">
+                         <label>Distância (Km):</label>
+                         <asp:TextBox ID="txtDistancia" runat="server" CssClass="form-control" ></asp:TextBox>
+                     </div>
+                     <div class="col-md-2">
+                        <label>Tempo (Min):</label>
+                        <asp:TextBox ID="txtTempo" runat="server" CssClass="form-control" ></asp:TextBox>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <asp:Button ID="btnCadastrar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" Text="Cadastrar" />
-                        </div>
-                        <div class="col-md-2">
-                            <a href="ConsultaRotas.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar      
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>--%>
+                   
+                 </div>
+                 <div class="row mb-3">
+                     <div class="col-md-2">
+                         <asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" CssClass="btn btn-success" OnClick="btnCadastrar_Click"/>
+                     </div>
+                      <div class="col-md-2">
+                        <asp:Button 
+                                ID="btnFechar" 
+                                runat="server" 
+                                Text="Fechar"
+                                CssClass="btn btn-danger"
+                                 />
+                         </div>
+                 </div>
+                
+             </div>
+             <!-- /.card-body -->
+         </div>
+         <!-- /.card -->
+     </div>
+ </div>
+ <asp:HiddenField ID="hfCollapse" runat="server" />
+                </ContentTemplate>
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="btnDistancia" />
+                    <asp:PostBackTrigger ControlID="btnFechar" />
+                    <asp:PostBackTrigger ControlID="btnCadastrar" />
+                </Triggers>
+            </asp:UpdatePanel>
+
+
+        </div>
+    </div>
+</div>
+       
     </div>
 
 </asp:Content>

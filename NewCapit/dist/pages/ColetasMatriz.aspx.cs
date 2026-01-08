@@ -1618,6 +1618,37 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
+            divMsg.Visible = true;
+            divMsgCNH.Visible = false;
+            divMsgCarreta1.Visible = false;
+            divMsgCarreta2.Visible = false;
+            divMsgCET.Visible = false;
+            divMsgCrono.Visible = false;
+            divMsgGR.Visible = false;
+            divMsgLinc.Visible = false;
+            divMsgVeic.Visible = false;
+            divMsg.Attributes["class"] = "alert alert-danger d-none";
+            bool temCargas = gvCargas.Rows
+                .Cast<GridViewRow>()
+                .Any(r => r.RowType == DataControlRowType.DataRow);
+
+            if (!temCargas)
+            {
+                MostrarMsg("Inclua ao menos uma carga antes de salvar.");
+                return;
+                              
+            }
+            if (txtCodMotorista.Text == string.Empty)
+            {
+                MostrarMsg("É necessário incluir um motorista antes de salvar.");
+                return;
+            }
+            if (txtCodFrota.Text == string.Empty)
+            {
+                MostrarMsg("É necessário incluir o cóodigo de frota antes de salvar.");
+                return;
+            }
+
             object DbString(string v) =>
                 string.IsNullOrWhiteSpace(v) ? (object)DBNull.Value : v.Trim();
 
