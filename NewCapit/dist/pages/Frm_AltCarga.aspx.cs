@@ -788,7 +788,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@cidorigem", txtMunicipioRemetente.Text);
                             comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text);
                             comando.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
-                            comando.Parameters.AddWithValue("@atualização", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
+                            comando.Parameters.AddWithValue("@cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
 
                             try
                             {

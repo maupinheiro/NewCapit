@@ -33,46 +33,103 @@ namespace DAL
             }
         }
 
-        public static DataTable FetchDataTableEntregasMatriz()
+        public static DataTable FetchDataTableEntregasMatriz(
+    DateTime? dataInicio,
+    DateTime? dataFim)
         {
-            // alterado a query para verificar a coluna exclusao para itens excluídos            
-            string sql = "select c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2, '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.num_carregamento, c.emissao, c.situacao, c.status from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='1111' and situacao <> 'VIAGEM CONCLUIDA' order by c.veiculo, emissao ASC ";
+            var sql = @"
+        SELECT 
+            c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
+            '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
+            c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
+            c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
+            c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
+            c.num_carregamento, c.emissao, c.situacao, c.status
+        FROM tbcarregamentos c
+        INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
+        WHERE empresa = '1111'
+    ";
+
+            if (dataInicio.HasValue)
+                sql += " AND c.emissao >= @DataInicio";
+
+            if (dataFim.HasValue)
+                sql += " AND c.emissao <= @DataFim";
+
+            sql += " ORDER BY c.veiculo, c.emissao ASC";
 
             using (var con = ConnectionUtil.GetConnection())
+            using (var cmd = con.CreateCommand())
             {
-                using (var cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        DataTable dataTable = new DataTable();
-                        dataTable.Load(reader);
-                        return dataTable;
-                    }
+                cmd.CommandText = sql;
 
+                if (dataInicio.HasValue)
+                    cmd.Parameters.AddWithValue("@DataInicio", dataInicio.Value.Date);
+
+                if (dataFim.HasValue)
+                    cmd.Parameters.AddWithValue(
+                        "@DataFim",
+                        dataFim.Value.Date.AddDays(1).AddSeconds(-1)
+                    );
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    return dt;
                 }
             }
         }
-        public static DataTable FetchDataTableEntregasMatrizConcluida()
+
+
+        public static DataTable FetchDataTableEntregasMatrizConcluida(
+    DateTime? dataInicio,
+    DateTime? dataFim)
         {
-            // alterado a query para verificar a coluna exclusao para itens excluídos            
-            string sql = "select c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2, '../../fotos/'+ REPLACE(m.caminhofoto, '/fotos/', '') AS fotos, c.codmotorista,c.nomemotorista,c.codtra, c.transportadora, c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor, c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor, c.num_carregamento, c.emissao, c.situacao, c.status from tbcarregamentos as c inner join tbmotoristas as m on c.codmotorista=m.codmot where empresa='1111' and situacao = 'VIAGEM CONCLUIDA' or situacao <> 'VIAGEM CONCLUIDA' order by c.veiculo, emissao ASC ";
+            string sql = @"
+        SELECT 
+            c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
+            '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
+            c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
+            c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
+            c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
+            c.num_carregamento, c.emissao, c.situacao, c.status
+        FROM tbcarregamentos c
+        INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
+        WHERE empresa = '1111'
+          AND c.situacao <> 'VIAGEM CONCLUIDA'
+    ";
+
+           
+
+            if (dataFim.HasValue)
+                sql += " AND c.emissao <= @DataFim";
+
+            sql += " ORDER BY c.veiculo, c.emissao ASC";
 
             using (var con = ConnectionUtil.GetConnection())
+            using (var cmd = con.CreateCommand())
             {
-                using (var cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        DataTable dataTable = new DataTable();
-                        dataTable.Load(reader);
-                        return dataTable;
-                    }
+                cmd.CommandText = sql;
 
+                if (dataInicio.HasValue)
+                    cmd.Parameters.AddWithValue("@DataInicio", dataInicio.Value.Date);
+
+                if (dataFim.HasValue)
+                    cmd.Parameters.AddWithValue(
+                        "@DataFim",
+                        dataFim.Value.Date.AddDays(1).AddSeconds(-1)
+                    );
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    DataTable dataTable = new DataTable();
+                    dataTable.Load(reader);
+                    return dataTable;
                 }
             }
         }
+
         public static DataTable FetchDataTable2(DateTime? dataInicio, DateTime? dataFim)
         {
             string sql = @"

@@ -29,7 +29,7 @@ namespace NewCapit.dist.pages
 
                 if (Session["UsuarioLogado"] != null)
                 {
-                    CarregarColetas();
+                    
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
                 }
@@ -46,6 +46,8 @@ namespace NewCapit.dist.pages
                     // Chame sua função de filtrar ou carregar dados aqui
                     FiltrarViagens(ocultar);
                 }
+
+                CarregarColetas();
             }
 
 
@@ -101,8 +103,19 @@ namespace NewCapit.dist.pages
         }
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
-            CarregarGrid();
+            bool ocultar = false;
+
+            if (bool.TryParse(hfOcultarViagens.Value, out ocultar))
+            {
+                FiltrarViagens(ocultar);
+            }
+            else
+            {
+                // fallback de segurança
+                CarregarColetas();
+            }
         }
+
 
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
@@ -185,41 +198,52 @@ namespace NewCapit.dist.pages
         {
             if (ocultar == false)
             {
-                CarregarColetasConcluidas();
+                
+                CarregarColetas();
             }
             else
             {
-                CarregarColetas();
-                
-                
+                CarregarColetasConcluidas();
+
+
             }
         }
 
         private void CarregarColetas()
         {
-            var novosDados = DAL.ConEntrega.FetchDataTableEntregasMatriz();
+            var dados = DAL.ConEntrega.FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
 
-            rptCarregamento.DataSource = novosDados;
+            rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
 
-            // Armazena no ViewState, se necessário para outras operações
-            ViewState["rptCarregamento"] = novosDados;
-
+            ViewState["rptCarregamento"] = dados;
             lblMensagem.Text = string.Empty;
         }
 
+        private DateTime? GetDataInicio()
+        {
+            return DateTime.TryParse(DataInicio.Text, out var d) ? d : (DateTime?)null;
+        }
+
+        private DateTime? GetDataFim()
+        {
+            return DateTime.TryParse(DataFim.Text, out var d) ? d : (DateTime?)null;
+        }
         private void CarregarColetasConcluidas()
         {
-            var novosDados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida();
+            var dados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida(
+                GetDataInicio(),
+                GetDataFim()
+               
+            );
 
-            rptCarregamento.DataSource = novosDados;
+            rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
 
-            // Armazena no ViewState, se necessário para outras operações
-            ViewState["rptCarregamento"] = novosDados;
-
+            ViewState["rptCarregamento"] = dados;
             lblMensagem.Text = string.Empty;
         }
+
 
         protected void lnkEditar_Command(object sender, CommandEventArgs e)
         {
