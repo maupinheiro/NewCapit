@@ -101,8 +101,8 @@ namespace NewCapit.dist.pages
         }
         // [System.Web.Services.WebMethod]
         public DistanciaTempoDTO BuscarDistancia(
-     string ufOrigem, string origem,
-     string ufDestino, string destino)
+         string ufOrigem, string origem,
+         string ufDestino, string destino)
         {
             DistanciaTempoDTO resultado = null;
 

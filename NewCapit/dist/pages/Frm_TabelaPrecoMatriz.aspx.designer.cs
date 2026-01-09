@@ -42,15 +42,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Label novaTabelaDeFrete;
 
         /// <summary>
-        /// Controle cboFilial.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboFilial;
-
-        /// <summary>
         /// Controle txtStatusRota.
         /// </summary>
         /// <remarks>
@@ -69,24 +60,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCadastro;
 
         /// <summary>
-        /// Controle txtRota.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRota;
-
-        /// <summary>
-        /// Controle cboRotas.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboRotas;
-
-        /// <summary>
         /// Controle txtCodRemetente.
         /// </summary>
         /// <remarks>
@@ -102,7 +75,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRemetente;
+        protected global::System.Web.UI.WebControls.DropDownList cboRemetente;
 
         /// <summary>
         /// Controle txtMunicipioRemetente.
@@ -138,7 +111,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboExpedidor;
+        protected global::System.Web.UI.WebControls.DropDownList cboExpedidor;
 
         /// <summary>
         /// Controle txtCidExpedidor.
@@ -174,7 +147,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboDestinatario;
+        protected global::System.Web.UI.WebControls.DropDownList cboDestinatario;
 
         /// <summary>
         /// Controle txtMunicipioDestinatario.
@@ -210,7 +183,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRecebedor;
+        protected global::System.Web.UI.WebControls.DropDownList cboRecebedor;
 
         /// <summary>
         /// Controle txtCidRecebedor.
@@ -301,6 +274,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtUFPagador;
+
+        /// <summary>
+        /// Controle txtRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRota;
+
+        /// <summary>
+        /// Controle cboRotas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox cboRotas;
 
         /// <summary>
         /// Controle txtDistancia.

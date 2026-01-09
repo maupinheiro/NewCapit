@@ -10,9 +10,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-
-
-
     <script>
         function mascaraMoeda(campo) {
             let valor = campo.value.replace(/\D/g, "");
@@ -112,9 +109,6 @@
                     <span id="lblMsg" runat="server"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-
-                
-
                 <div class="col-xl-12 col-md-12 mb-12">
                     <div class="card card-info">
                         <div class="card-header">
@@ -141,13 +135,7 @@
                                     <span class="info-box-icon bg-info"></span>
                                     <div class="info-box-content">
                                         <span class="info-box-number">
-                                            <div class="row g-3">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <span class="details">FILIAL:</span>
-                                                        <asp:DropDownList ID="cboFilial" runat="server" CssClass="form-control select2"></asp:DropDownList>
-                                                    </div>
-                                                </div>
+                                            <div class="row g-3">                                                
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <span class="details">SITUAÇÃO:</span>
@@ -176,30 +164,21 @@
                                         <!-- /.card-tools -->
                                     </div>
                                     <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <div class="form-group row">
-                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
-                                            <div class="col-sm-1">
-                                                <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" OnTextChanged="txtRota_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                            </div>
-                                            <div class="col-md-10">
-                                                <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRotas_SelectedIndexChanged"></asp:DropDownList>
-                                            </div>
-                                        </div>
+                                    <div class="card-body"> 
                                         <!-- REMETENTE -->
                                         <div class="form-group row">
                                             <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">REMETENTE:</label>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control"  OnTextChanged="txtCodRemetente_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-5">
-                                                <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:DropDownList ID="cboRemetente" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboRemetente_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
 
                                         </div>
@@ -207,45 +186,45 @@
                                         <div class="form-group row">
                                             <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">EXPEDIDOR:</label>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control"  OnTextChanged="txtCodExpedidor_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-5">
-                                                <asp:TextBox ID="cboExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:DropDownList ID="cboExpedidor" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboExpedidor_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
                                                 <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtUFExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtUFExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                         </div>
                                         <!-- DESTINATARIO -->
                                         <div class="form-group row">
                                             <label for="inputDestinatario" class="col-sm-1 col-form-label" style="text-align: right">DEST.:</label>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" OnTextChanged="txtCodDestinatario_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-5">
-                                                <asp:TextBox ID="cboDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:DropDownList ID="cboDestinatario" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboDestinatario_SelectedIndexChanged" AutoPostBack="true" ></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                         </div>
                                         <!-- RECEBEDOR -->
                                         <div class="form-group row">
                                             <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">RECEBEDOR:</label>
                                             <div class="col-md-1">
-                                                <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control"  OnTextChanged="txtCodRecebedor_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-5">
-                                                <asp:TextBox ID="cboRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboRecebedor_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtUFRecebedor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -261,7 +240,7 @@
                                                 <asp:DropDownList ID="cboConsignatario" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboConsignatario_SelectedIndexChanged"></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="txtCidConsignatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtCidConsignatario" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtUFConsignatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -281,6 +260,16 @@
                                             </div>
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtUFPagador" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <asp:TextBox ID="cboRotas" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                         </div>
 
@@ -773,12 +762,12 @@
                                 </div>
                             </div>
                             <div class="row g-3">
-                                <div class="col-md-1">
-                                    <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" OnClick="btnAlterar_Click"
+                                <div class="col-md-2">
+                                    <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnAlterar_Click"
                                         Text="Atualizar" />
                                 </div>
-                                <div class="col-md-1">
-                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                <div class="col-md-2">
+                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                                     </a>
                                 </div>
                             </div>

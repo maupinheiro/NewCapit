@@ -397,11 +397,11 @@
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-1">
-                            <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Salvar" OnClick="btnSalvar_Click" />
+                        <div class="col-md-2">
+                            <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" Text="Atualizar" OnClick="btnSalvar_Click" />
                         </div>
-                        <div class="col-md-1">
-                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                        <div class="col-md-2">
+                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                             </a>
                         </div>
                     </div>
