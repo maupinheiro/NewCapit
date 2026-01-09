@@ -69,6 +69,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList ddlCidadeDestino;
 
         /// <summary>
+        /// Controle ddlPedagio.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPedagio;
+
+        /// <summary>
+        /// Controle lblDeslocamento.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDeslocamento;
+
+        /// <summary>
         /// Controle btnCalcular.
         /// </summary>
         /// <remarks>
@@ -76,6 +94,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCalcular;
+
+        /// <summary>
+        /// Controle btnCadastrarRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCadastrarRota;
 
         /// <summary>
         /// Controle lblDistancia.
@@ -148,6 +175,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtTempo;
+
+        /// <summary>
+        /// Controle ddlPedagioNovo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPedagioNovo;
+
+        /// <summary>
+        /// Controle lblDeslocamentoNovo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDeslocamentoNovo;
 
         /// <summary>
         /// Controle btnCadastrar.
