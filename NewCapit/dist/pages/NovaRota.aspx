@@ -110,7 +110,7 @@
 
                     <label class="form-label mt-2">Cidade</label>
                     <asp:DropDownList ID="ddlCidadeOrigem" runat="server"
-                        CssClass="form-select select2" />
+                        CssClass="form-select select2" OnSelectedIndexChanged="AtualizarDeslocamento" />
                 </div>
 
                 <div class="col-md-6">
@@ -124,20 +124,36 @@
 
                     <label class="form-label mt-2">Cidade</label>
                     <asp:DropDownList ID="ddlCidadeDestino" runat="server"
-                        CssClass="form-select select2" />
+                        CssClass="form-select select2" OnSelectedIndexChanged="AtualizarDeslocamento"  />
                 </div>
             </div>
-
-            <div class="mt-4 text-center">
-                <%--<button class="btn btn-success px-4" onclick="calcularDistanciaBanco()">
-                    Calcular Distância
-                </button>--%>
-                <asp:Button 
-                    ID="btnCalcular" 
-                    runat="server" 
-                    Text="Calcular Distância"
-                    CssClass="btn btn-success px-4"
-                    OnClick="btnCalcular_Click" />
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label mt-2">PEDAGIADA</label>
+                    <asp:DropDownList ID="ddlPedagio" runat="server"
+                        CssClass="form-select select2">
+                        <asp:ListItem Text="SIM" Value="SIM"></asp:ListItem>
+                        <asp:ListItem Text="NÃO" Value="NÃO"></asp:ListItem>
+                        </asp:DropDownList>
+                </div>
+                <div class="col-md-6">
+                 <label class="form-label mt-2">DESLOCAMENTO</label><br />
+                    <asp:Label ID="lblDeslocamento" runat="server" Text=""></asp:Label>
+                </div>
+               </div> <br />
+            <div class="row">
+              <div class="col-md-6">
+                   <asp:Button 
+                     ID="btnCalcular" 
+                     runat="server" 
+                     Text="Calcular Distância"
+                     CssClass="btn btn-success px-4"
+                     OnClick="btnCalcular_Click" />
+              </div>
+                <div class="col-md-6">
+                    <asp:Button ID="btnCadastrarRota" runat="server" Text="Cadastrar" CssClass="btn btn-warning px-4" OnClick="btnCadastrarRota_Click" />
+                </div>
+               
             </div>
 
             <div class="row mt-4 text-center">
@@ -197,7 +213,19 @@
                         <label>Tempo (Min):</label>
                         <asp:TextBox ID="txtTempo" runat="server" CssClass="form-control" ></asp:TextBox>
                     </div>
-                   
+                   <div class="col-md-2">
+                       <label>Pedagiada</label>
+                    <asp:DropDownList ID="ddlPedagioNovo" runat="server"
+                        CssClass="form-select select2">
+                        <asp:ListItem Text="SIM" Value="SIM"></asp:ListItem>
+                        <asp:ListItem Text="NÃO" Value="NÃO"></asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Deslocamento</label>
+                        <asp:Label ID="lblDeslocamentoNovo" runat="server" Text=""></asp:Label>
+                    </div>
+
                  </div>
                  <div class="row mb-3">
                      <div class="col-md-2">
