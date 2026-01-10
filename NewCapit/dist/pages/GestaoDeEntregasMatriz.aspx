@@ -21,10 +21,9 @@
             });
         });
     </script>--%>
-
+     <div class="container-fluid">
     <div class="content-wrapper">
-        <section class="content">
-            <div class="container-fluid">
+        <section class="content">           
                 <br />
                 <div id="toastContainerVermelho" class="alert alert-danger alert-dismissible" style="display: none;">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -68,13 +67,13 @@
                                         <asp:ListItem Text="Concluído" Value="Concluído" />
                                     </asp:DropDownList>
                                 </div>--%>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnFiltrar_Click" />
+                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning w-100" Text="Filtrar" OnClick="btnFiltrar_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
+                                    <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success w-100" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
                                 </div>
                                <%-- <div class="col-md-2">
                                     <label>&nbsp;</label><br />
@@ -84,11 +83,11 @@
                                 </div>--%>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <a href="/dist/pages/ColetasMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i
-                                        class="fas fa-boxes"></i>&nbsp;Coleta
+                                    <a href="/dist/pages/ColetasMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm w-100"><i
+                                        class="fas fa-boxes"></i>&nbsp;Abrir Carregamento
                                     </a>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                       <div class="custom-control custom-switch custom-switch-off-primary custom-switch-on-success">
                                         <input type="checkbox" class="custom-control-input" id="chkOcultarViagens" 
@@ -116,7 +115,7 @@
                                                 <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                                                 <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
                                                     <HeaderTemplate>
-                                                        <table class="table table-bordered table-hover">
+                                                        <table class="table table-striped table-bordere table-hover" AutoGenerateColumns="false">
                                                             <thead>
                                                                 <tr text-align: center;>
                                                                     <th>#</th>
@@ -189,7 +188,7 @@
                                                             <td colspan="11">
                                                                 <asp:Repeater ID="rptColeta" OnItemDataBound="rptColeta_ItemDataBound" runat="server">
                                                                     <HeaderTemplate>
-                                                                        <table class="table table-bordered table-hover mb-0">
+                                                                        <table class="table table-striped table-bordered table-hover" AutoGenerateColumns="false">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Carga</th>

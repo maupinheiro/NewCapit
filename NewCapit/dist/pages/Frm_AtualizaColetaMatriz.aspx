@@ -1076,14 +1076,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-2">
-                                                                                <div class="form-group">
-                                                                                    <span class="details">CVA:</span>
-                                                                                    <div class="input-group">
-                                                                                        <asp:TextBox ID="txtCVA" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                           
                                                                         </div>
 
 
@@ -1305,6 +1298,14 @@
             <span class="msg-erro text-danger" style="display: none;"></span>
         </div>
     </div>
+      <div class="col-md-2">
+     <div class="form-group">
+         <span class="details">Núm. CVA:</span>
+         <div class="input-group">
+             <asp:TextBox ID="txtCVA" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+         </div>
+     </div>
+ </div>
     <div class="col-md-2">
         <div class="form-group">
             <span class="">Status:</span>

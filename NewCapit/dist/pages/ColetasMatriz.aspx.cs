@@ -1150,7 +1150,6 @@ namespace NewCapit.dist.pages
         {
             codCliInicial.Text = ddlCliInicial.SelectedValue;
         }
-
         protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
         {
             codCliFinal.Text = ddlCliFinal.SelectedValue;
@@ -1217,6 +1216,96 @@ namespace NewCapit.dist.pages
 
                 }
 
+            }
+        }
+        protected void codCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            if (codCliFinal.Text != "")
+            {
+
+
+                string codigoRemetente = codCliFinal.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                codCliFinal.Text = reader["codcli"].ToString();
+                                ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
+                                txtMunicipioDestino.Text = reader["cidcli"].ToString();
+                                txtUfDestino.Text = reader["estcli"].ToString();
+                            }
+                            else
+                            {
+                                ddlCliFinal.SelectedItem.Text = "Selecione...";
+                                codCliFinal.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                codCliFinal.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            if (codCliInicial.Text != "" && codCliFinal.Text != "")
+            {
+                //string UFOrigem = txtUfOrigem.Text.Trim();
+                //string Origem = ddlCliInicial.SelectedItem.Text.Trim();
+                //string UFDestino = txtUfDestino.Text.Trim();
+                //string Destino = ddlCliFinal.SelectedItem.Text.Trim();
+
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    SqlCommand cmd = new SqlCommand(@"
+                        SELECT 
+                        c1.LATITUDE  AS LatOrigem,
+                        c1.LONGITUDE AS LonOrigem,
+                        c2.LATITUDE  AS LatDestino,
+                        c2.LONGITUDE AS LonDestino
+                    FROM tbcidadesdobrasil c1
+                    JOIN tbcidadesdobrasil c2 ON 1 = 1
+                    WHERE 
+                        c1.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeOrigem AND c1.UF = @UFOrigem
+                    AND c2.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeDestino AND c2.UF = @UFDestino
+                ", conn);
+
+                    cmd.Parameters.AddWithValue("@CidadeOrigem", txtMunicipioOrigem.Text.Trim());
+                    cmd.Parameters.AddWithValue("@UFOrigem", txtUfOrigem.Text.Trim());
+                    cmd.Parameters.AddWithValue("@CidadeDestino", txtMunicipioDestino.Text.Trim());
+                    cmd.Parameters.AddWithValue("@UFDestino", txtUfDestino.Text.Trim());
+
+                    conn.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        double distancia = CalcularDistancia(
+                            Convert.ToDouble(dr["LatOrigem"]),
+                            Convert.ToDouble(dr["LonOrigem"]),
+                            Convert.ToDouble(dr["LatDestino"]),
+                            Convert.ToDouble(dr["LonDestino"])
+                        );
+
+                        txtDistancia.Text = $"{distancia:N2}"; //$"Distância: {distancia:N2} km";
+                    }
+                    else
+                    {
+                        lblDistancia.Text = "Cidade não encontrada.";
+                    }
+                }
             }
         }
         // Salvando coleta vazia
@@ -1319,96 +1408,7 @@ namespace NewCapit.dist.pages
             }
 
         }
-        protected void codCliFinal_TextChanged(object sender, EventArgs e)
-        {
-            if (codCliFinal.Text != "")
-            {
-
-
-                string codigoRemetente = codCliFinal.Text.Trim();
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
-                        conn.Open();
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                codCliFinal.Text = reader["codcli"].ToString();
-                                ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
-                                txtMunicipioDestino.Text = reader["cidcli"].ToString();
-                                txtUfDestino.Text = reader["estcli"].ToString();
-                            }
-                            else
-                            {
-                                ddlCliFinal.SelectedItem.Text = "Selecione...";
-                                codCliFinal.Text = "";
-                                // Aciona o Toast via JavaScript
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-                                codCliFinal.Focus();
-                                // Opcional: exibir mensagem ao usuário
-                            }
-                        }
-                    }
-
-                }
-
-            }
-            if (codCliInicial.Text != "" && codCliFinal.Text != "")
-            {
-                //string UFOrigem = txtUfOrigem.Text.Trim();
-                //string Origem = ddlCliInicial.SelectedItem.Text.Trim();
-                //string UFDestino = txtUfDestino.Text.Trim();
-                //string Destino = ddlCliFinal.SelectedItem.Text.Trim();
-
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    SqlCommand cmd = new SqlCommand(@"
-                        SELECT 
-                        c1.LATITUDE  AS LatOrigem,
-                        c1.LONGITUDE AS LonOrigem,
-                        c2.LATITUDE  AS LatDestino,
-                        c2.LONGITUDE AS LonDestino
-                    FROM tbcidadesdobrasil c1
-                    JOIN tbcidadesdobrasil c2 ON 1 = 1
-                    WHERE 
-                        c1.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeOrigem AND c1.UF = @UFOrigem
-                    AND c2.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeDestino AND c2.UF = @UFDestino
-                ", conn);
-
-                    cmd.Parameters.AddWithValue("@CidadeOrigem", txtMunicipioOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@UFOrigem", txtUfOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@CidadeDestino", txtMunicipioDestino.Text.Trim());
-                    cmd.Parameters.AddWithValue("@UFDestino", txtUfDestino.Text.Trim());
-
-                    conn.Open();
-                    SqlDataReader dr = cmd.ExecuteReader();
-
-                    if (dr.Read())
-                    {
-                        double distancia = CalcularDistancia(
-                            Convert.ToDouble(dr["LatOrigem"]),
-                            Convert.ToDouble(dr["LonOrigem"]),
-                            Convert.ToDouble(dr["LatDestino"]),
-                            Convert.ToDouble(dr["LonDestino"])
-                        );
-
-                        txtDistancia.Text = $"{distancia:N2}"; //$"Distância: {distancia:N2} km";
-                    }
-                    else
-                    {
-                        lblDistancia.Text = "Cidade não encontrada.";
-                    }
-                }
-            }
-        }
+        
         public static double CalcularDistancia(double lat1, double lon1, double lat2, double lon2)
         {
             double R = 6371; // KM

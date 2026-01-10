@@ -692,11 +692,11 @@
                                         </div>
                                     </div>
                                     <div class="row g-3">
-                                        <div class="col-md-1">
-                                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg" OnClick="btnSalvar_Click" runat="server" Text="Cadastrar" />
+                                        <div class="col-md-2">
+                                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnSalvar_Click" runat="server" Text="Cadastrar" />
                                         </div>
-                                        <div class="col-md-1">
-                                            <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                        <div class="col-md-2">
+                                            <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                                             </a>
                                         </div>
                                     </div>

@@ -35,37 +35,7 @@
            .add_endRequest(initSelect2);
 
        $(document).ready(initSelect2);
-    </script>
-    <script>
-    <%--function calcularDistanciaBanco() {
-
-        var ufOrigem = $('#<%= ddlUfOrigem.ClientID %>').val();
-        var cidadeOrigem = $('#<%= ddlCidadeOrigem.ClientID %>').val();
-        var ufDestino = $('#<%= ddlUfDestino.ClientID %>').val();
-        var cidadeDestino = $('#<%= ddlCidadeDestino.ClientID %>').val();
-
-        if (!cidadeOrigem || !cidadeDestino) {
-            alert("Selecione origem e destino.");
-           // MostrarMsg("Selecione origem e destino.", "info");
-            return;
-        }
-
-        PageMethods.BuscarDistancia(
-            ufOrigem, cidadeOrigem, ufDestino, cidadeDestino,
-            function (ret) {
-
-                if (!ret.encontrado) {
-                    alert("Distância não cadastrada para este trajeto.");
-                    //MostrarMsg("Selecione origem e destino.", "info");
-                    return;
-                }
-
-                $('#lblDistancia').text(ret.distancia + " km");
-                $('#lblTempo').text(ret.tempo + " min");
-            }
-        );
-    }--%>
-    </script>
+    </script>   
    <script type="text/javascript">
        function abrirModal() {
            $('#meuModal').modal({
@@ -127,32 +97,38 @@
                         CssClass="form-select select2" OnSelectedIndexChanged="AtualizarDeslocamento"  />
                 </div>
             </div>
+            <br />
             <div class="row">
                 <div class="col-md-6">
-                    <label class="form-label mt-2">PEDAGIADA</label>
+                    <label class="form-label mt-2">Pedagiada</label>
                     <asp:DropDownList ID="ddlPedagio" runat="server"
-                        CssClass="form-select select2">
+                        CssClass="form-select">
+                        <asp:ListItem Text="---" Value=""></asp:ListItem>
                         <asp:ListItem Text="SIM" Value="SIM"></asp:ListItem>
                         <asp:ListItem Text="NÃO" Value="NÃO"></asp:ListItem>
                         </asp:DropDownList>
                 </div>
                 <div class="col-md-6">
-                 <label class="form-label mt-2">DESLOCAMENTO</label><br />
+                 <label class="form-label mt-2">Deslocamento</label><br />
                     <asp:Label ID="lblDeslocamento" runat="server" Text=""></asp:Label>
                 </div>
                </div> <br />
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                    <asp:Button 
                      ID="btnCalcular" 
                      runat="server" 
                      Text="Calcular Distância"
-                     CssClass="btn btn-success px-4"
+                     CssClass="btn btn-outline-warning px-4 w-100"
                      OnClick="btnCalcular_Click" />
               </div>
-                <div class="col-md-6">
-                    <asp:Button ID="btnCadastrarRota" runat="server" Text="Cadastrar" CssClass="btn btn-warning px-4" OnClick="btnCadastrarRota_Click" />
-                </div>
+              <div class="col-md-4">
+                    <asp:Button ID="btnCadastrarRota" runat="server" Text="Cadastrar" CssClass="btn btn-outline-success px-4 w-100" OnClick="btnCadastrarRota_Click" />
+              </div>
+              <div class="col-md-4">
+                    <a href="ConsultaRotas.aspx" class="btn btn-outline-danger px-4 w-100">Fechar               
+                    </a>
+              </div>
                
             </div>
 
