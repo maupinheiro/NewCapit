@@ -47,7 +47,7 @@ namespace DAL
             c.num_carregamento, c.emissao, c.situacao, c.status
         FROM tbcarregamentos c
         INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
-        WHERE empresa = '1111'
+        WHERE empresa = '1111' AND c.situacao <> 'VIAGEM CONCLUIDA'
     ";
 
             if (dataInicio.HasValue)
@@ -97,7 +97,7 @@ namespace DAL
         FROM tbcarregamentos c
         INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
         WHERE empresa = '1111'
-          AND c.situacao <> 'VIAGEM CONCLUIDA'
+          
     ";
 
            

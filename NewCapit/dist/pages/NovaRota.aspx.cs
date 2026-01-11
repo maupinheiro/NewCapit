@@ -516,9 +516,9 @@ namespace NewCapit.dist.pages
                 CultureInfo.InvariantCulture);
 
             string descr_rota =
-                ddlCidadeOrigem.SelectedItem.Text + "/" + ddlUfOrigem.SelectedItem.Text +
+                ddlCidadeOrigem.SelectedItem.Text.ToUpper() + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
                 " X " +
-                ddlCidadeDestino.SelectedItem.Text + "/" + ddlUfDestino.SelectedItem.Text;
+                ddlCidadeDestino.SelectedItem.Text.ToUpper() + "/" + ddlUfDestino.SelectedItem.Text;
 
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -662,9 +662,9 @@ namespace NewCapit.dist.pages
             //    CultureInfo.InvariantCulture);
 
             string descr_rota =
-                ddlCidadeOrigem.SelectedItem.Text + "/" + ddlUfOrigem.SelectedItem.Text +
+                ddlCidadeOrigem.SelectedItem.Text.ToUpper() + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
                 " X " +
-                ddlCidadeDestino.SelectedItem.Text + "/" + ddlUfDestino.SelectedItem.Text;
+                ddlCidadeDestino.SelectedItem.Text.ToUpper() + "/" + ddlUfDestino.SelectedItem.Text.ToUpper();
 
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -673,17 +673,17 @@ namespace NewCapit.dist.pages
         IF NOT EXISTS (
             SELECT 1 
             FROM tbrotasdeentregas 
-            WHERE desc_rota = @desc_rota
+            WHERE desc_rota COLLATE Latin1_General_CI_AI = @desc_rota
         )
         BEGIN
             INSERT tbrotasdeentregas
             (rota,desc_rota, cidade_expedidor, uf_expedidor,
              cidade_recebedor, uf_recebedor,
-             distancia, tempo, deslocamento, pedagio)
+             distancia, tempo, deslocamento, pedagio, situacao, data_cadastro, usuario_cadastro)
             VALUES
             (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
              @cidade_recebedor, @uf_recebedor,
-             @distancia, @tempo, @deslocamento, @pedagio)
+             @distancia, @tempo, @deslocamento, @pedagio, @situacao, @data_cadastro, @usuario_cadastro)
         END
         ELSE
         BEGIN
@@ -701,6 +701,10 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@tempo", resultado);
                 cmd.Parameters.AddWithValue("@deslocamento", lblDeslocamentoNovo.Text);
                 cmd.Parameters.AddWithValue("@pedagio", ddlPedagioNovo.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@situacao", "ATIVO");
+                cmd.Parameters.AddWithValue("@data_cadastro", DateTime.Now);
+                cmd.Parameters.AddWithValue("@usuario_cadastro", Session["UsuarioLogado"]);
+
 
                 conn.Open();
 

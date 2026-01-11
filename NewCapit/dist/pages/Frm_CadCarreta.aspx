@@ -92,6 +92,65 @@
 
             
     </script>
+    <script>
+            function mascaraAnoFabricacao(campo) {
+                let v = campo.value.replace(/\D/g, '');
+
+                if (v.length > 4) {
+                    v = v.substring(0, 4) + '/' + v.substring(4, 8);
+                }
+
+                campo.value = v;
+            }
+    </script>
+    <script>
+            function mascaraData(campo) {
+                let v = campo.value.replace(/\D/g, '');
+
+                if (v.length > 2) v = v.substring(0, 2) + '/' + v.substring(2);
+                if (v.length > 5) v = v.substring(0, 5) + '/' + v.substring(5, 9);
+
+                campo.value = v;
+            }
+    </script>
+    <script>
+            function mascaraCNPJ(campo) {
+                let v = campo.value.replace(/\D/g, '');
+
+                if (v.length > 14)
+                    v = v.substring(0, 14);
+
+                if (v.length > 2)
+                    v = v.substring(0, 2) + '.' + v.substring(2);
+
+                if (v.length > 6)
+                    v = v.substring(0, 6) + '.' + v.substring(6);
+
+                if (v.length > 10)
+                    v = v.substring(0, 10) + '/' + v.substring(10);
+
+                if (v.length > 15)
+                    v = v.substring(0, 15) + '-' + v.substring(15);
+
+                campo.value = v;
+            }
+    </script>
+    <script>
+            function mascaraComprimento(campo) {
+                let v = campo.value.replace(/\D/g, '');
+
+                if (v.length > 5)
+                    v = v.substring(0, 5);
+
+                if (v.length > 2) {
+                    v = v.substring(0, v.length - 2) + '.' + v.substring(v.length - 2);
+                }
+
+                campo.value = v;
+            }
+    </script>
+
+
   <%--  <script>
             document.addEventListener("DOMContentLoaded", function () {
                 function aplicarMascaraLatitudeLongitude(input) {
@@ -226,14 +285,14 @@
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">FAB/MOD.:</span>
-                                        <asp:TextBox ID="txtAno" runat="server" Style="text-align: center" CssClass="form-control" placeholder="0000/0000" MaxLength="9"></asp:TextBox>
+                                        <asp:TextBox ID="txtAno" runat="server" Style="text-align: center" CssClass="form-control" placeholder="0000/0000" MaxLength="9" onkeyup="mascaraAnoFabricacao(this);"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator14" ControlToValidate="txtAno" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">AQUISIÇÃO:</span>
-                                        <asp:TextBox ID="txtDataAquisicao" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10"></asp:TextBox>
+                                        <asp:TextBox ID="txtDataAquisicao" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" onkeyup="mascaraData(this);"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator15" ControlToValidate="txtDataAquisicao" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
@@ -254,7 +313,7 @@
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">VENC. LIC:</span>
-                                        <asp:TextBox ID="txtLicenciamento" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center"></asp:TextBox>
+                                        <asp:TextBox ID="txtLicenciamento" runat="server" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" Style="text-align: center" onkeyup="mascaraData(this);"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator18" ControlToValidate="txtLicenciamento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
@@ -270,21 +329,21 @@
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">COMP.(m):</span>
-                                        <asp:TextBox ID="txtComprimento" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6"></asp:TextBox>
+                                        <asp:TextBox ID="txtComprimento" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6" onkeyup="mascaraComprimento(this);"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator19" ControlToValidate="txtComprimento" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">LARG.(m):</span>
-                                        <asp:TextBox ID="txtLargura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6"></asp:TextBox>
+                                        <asp:TextBox ID="txtLargura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6" onkeyup="mascaraComprimento(this);"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator20" ControlToValidate="txtLargura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">ALT.(m):</span>
-                                        <asp:TextBox ID="txtAltura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6"></asp:TextBox>
+                                        <asp:TextBox ID="txtAltura" runat="server" Style="text-align: center" CssClass="form-control" placeholder="000.00" MaxLength="6" onkeyup="mascaraComprimento(this);"></asp:TextBox>
                                         <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator21" ControlToValidate="txtAltura" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
                                 </div>
@@ -396,13 +455,13 @@
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">INICIO:</span>
-                                        <asp:TextBox ID="txtInicioContrato" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10"></asp:TextBox>
+                                        <asp:TextBox ID="txtInicioContrato" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" onkeyup="mascaraData(this);"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form_group">
                                         <span class="details">TERMINO:</span>
-                                        <asp:TextBox ID="txtTerminoContrato" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10"></asp:TextBox>
+                                        <asp:TextBox ID="txtTerminoContrato" runat="server" Style="text-align: center" CssClass="form-control" placeholder="00/00/0000" MaxLength="10" onkeyup="mascaraData(this);"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
