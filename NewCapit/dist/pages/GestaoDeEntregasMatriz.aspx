@@ -94,7 +94,7 @@
                                                <%= hfOcultarViagens.Value.ToLower() == "true" ? "checked" : "" %>
                                                onchange="document.getElementById('<%= hfOcultarViagens.ClientID %>').value = this.checked; document.getElementById('<%= btnPostbackOcultar.ClientID %>').click();">
     
-                                        <label class="custom-control-label" for="chkOcultarViagens">Ocultar viagens CONCLUÍDAS</label>
+                                        <label class="custom-control-label" for="chkOcultarViagens">Visualizar Todas as Viagens</label>
 
                                         <asp:HiddenField ID="hfOcultarViagens" runat="server" Value="false" />
     

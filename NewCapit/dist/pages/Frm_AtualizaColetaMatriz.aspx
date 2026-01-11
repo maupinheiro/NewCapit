@@ -1302,7 +1302,7 @@
      <div class="form-group">
          <span class="details">Núm. CVA:</span>
          <div class="input-group">
-             <asp:TextBox ID="txtCVA" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+             <asp:TextBox ID="txtCVA" Text='<%# Bind("cva") %>' runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
          </div>
      </div>
  </div>
