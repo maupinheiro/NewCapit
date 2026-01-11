@@ -28,6 +28,8 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
+                    txtRecebido_Por.Text = nomeUsuario.ToUpper();
+                    txtEnvio_transp.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 }
                 else
                 {
@@ -37,8 +39,8 @@ namespace NewCapit.dist.pages
                 ddlStatus.SelectedValue = "Pendente"; // padrão
                 CarregarGrid("Pendente");
                 CarregarArtigosCTB();
-                divMsg.Visible = false;
-                txtBaixado_por.Text = nomeUsuario;
+               // divMsg.Visible = false;
+               // txtBaixado_por.Text = nomeUsuario;
             }
 
         }
@@ -268,7 +270,7 @@ namespace NewCapit.dist.pages
                     HabilitarCampos(true);
                     btnSalvar.Visible = true;
                     hfStatus.Value = "NOVO";
-                    MostrarMsg("Processo " + txtProcessoModal.Text + " não encontrado. Você pode cadastrar uma nova multa.", "info");
+                    //MostrarMsg("Processo " + txtProcessoModal.Text + " não encontrado. Você pode cadastrar uma nova multa.", "info");
                     txtNome.Text = "";
                     txtData.Text = "";
                     txtAIT.Text = "";
@@ -289,8 +291,8 @@ namespace NewCapit.dist.pages
                     txtNucleo.Text = "";
                     txtVencimento.Text = "";
                     txtTransportadora.Text = "";
-                    txtEnvio_transp.Text = "";
-                    txtEnvio_dcp.Text = "";
+                    //txtEnvio_transp.Text = "";
+                   // txtEnvio_dcp.Text = "";
                     txtBaixado_por.Text = "";
                     txtFrota.Text = "";
                     txtPlaca.Text = "";
@@ -298,13 +300,15 @@ namespace NewCapit.dist.pages
                     imgFoto.ImageUrl = ResolveUrl("/fotos/motoristasemfoto.jpg");
 
 
-
+                    txtRecebido_Por.Text = Session["UsuarioLogado"].ToString().ToUpper();
+                    txtEnvio_transp.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                     txtLancamento.BackColor = System.Drawing.Color.LightYellow;
                     txtLancamento.ForeColor = System.Drawing.Color.Blue;
                     txtLancamento.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                     txtStatus.BackColor = System.Drawing.Color.Khaki;
                     txtStatus.ForeColor = System.Drawing.Color.OrangeRed;
-                    txtStatus.Text = "Pendente";
+                    txtStatus.Text = "NOVO";
+                    
 
                 }
             }
@@ -576,50 +580,48 @@ namespace NewCapit.dist.pages
             }
 
         }
+        
         protected void txtCodigo_Infracao_TextChanged(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtCodigo_Infracao.Text))
+                return;
+
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT artigo_inciso_CTB, pontos, codigo, descricao, gravidade, responsavel, autuador, valorsemindicacao, valorcomindicacao FROM tbcodigoevalordasinfracoes WHERE codigo = @codigo", con);
+                string sql = @"
+            SELECT artigo_inciso_CTB, pontos, codigo, descricao, gravidade, responsavel, autuador, valorsemindicacao, valorcomindicacao FROM tbcodigoevalordasinfracoes WHERE codigo = @codigo";
 
-                cmd.Parameters.AddWithValue("@codigo", txtCodigo_Infracao.Text.Trim());
-                con.Open();
-
-                SqlDataReader dr = cmd.ExecuteReader();
-
-                if (dr.Read())
+                using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
+                    cmd.Parameters.AddWithValue("@codigo", txtCodigo_Infracao.Text);
 
-                    txtCodigo_Infracao.Text = dr["codigo"].ToString();
-                    ddlArtigo.SelectedItem.Text = dr["artigo_inciso_CTB"].ToString();
-                    txtPontos.Text = dr["pontos"].ToString();
-                    txtGravidade.Text = dr["gravidade"].ToString();
-                    txtInfrator.Text = dr["responsavel"].ToString();
-                    txtCompetencia.Text = dr["autuador"].ToString();
-                    txtdesc_multa.Text = dr["descricao"].ToString();
+                    con.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {                                                        
+                            txtCodigo_Infracao.Text = dr["codigo"].ToString();
+                            ddlArtigo.SelectedItem.Text = dr["artigo_inciso_CTB"].ToString();
+                            txtPontos.Text = dr["pontos"].ToString();
+                            txtGravidade.Text = dr["gravidade"].ToString();
+                            txtInfrator.Text = dr["responsavel"].ToString();
+                            txtCompetencia.Text = dr["autuador"].ToString();
+                            txtdesc_multa.Text = dr["descricao"].ToString();
+                            txtValorsd.Text = Convert.ToDecimal(dr["valorsemindicacao"]).ToString("N2", new CultureInfo("pt-BR"));
+                            txtValorcd.Text = Convert.ToDecimal(dr["valorcomindicacao"]).ToString("N2", new CultureInfo("pt-BR"));
 
+                            
 
-                    txtLocalMulta.Focus();
-
-                }
-                else
-                {
-                    // não encontrado → novo
-                    MostrarMsg(txtCodigo_Infracao.Text + " - Código não encontrado. Verifique a digitação!", "info");
-                    txtCodigo_Infracao.Text = "";
-                    ddlArtigo.SelectedItem.Text = "";
-                    txtPontos.Text = "";
-                    txtGravidade.Text = "";
-                    txtInfrator.Text = "";
-                    txtCompetencia.Text = "";
-                    txtdesc_multa.Text = "";
-                    txtCodigo_Infracao.Focus();
-
+                        }
+                        else
+                        {
+                            LimparCampos();
+                        }
+                    }
                 }
             }
-
         }
+
         private object SafeDateValue(string input)
         {
             DateTime dt;

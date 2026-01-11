@@ -15,37 +15,6 @@
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
-       
-   <%--<script>
-
-       function aplicarMascaras() {
-
-           $('input.data').mask('00/00/0000');
-
-           $('input.datahora').mask('00/00/0000 00:00');
-
-           $('input.hora').mask('00:00');
-
-           $('input.moeda').mask('000.000.000,00', {
-               reverse: true
-           });
-       }
-
-       // carregamento inicial
-       $(document).ready(function () {
-           aplicarMascaras();
-       });
-
-       // após AutoPostBack parcial (UpdatePanel)
-       Sys.WebForms.PageRequestManager
-           .getInstance()
-           .add_endRequest(function () {
-               aplicarMascaras();
-           });
-
-   </script>--%>
-
-
 
     <script>
         function abrirModalProcesso() {
@@ -66,6 +35,34 @@
                     v.substring(4, 8) + ' ' +
                     v.substring(8, 10) +
                     (v.length >= 11 ? ':' + v.substring(10, 12) : '');
+            }
+            else if (v.length >= 5) {
+                campo.value =
+                    v.substring(0, 2) + '/' +
+                    v.substring(2, 4) + '/' +
+                    v.substring(4, 8);
+            }
+            else if (v.length >= 3) {
+                campo.value =
+                    v.substring(0, 2) + '/' +
+                    v.substring(2, 4);
+            }
+            else {
+                campo.value = v;
+            }
+        }
+        function mascaraData(campo) {
+            let v = campo.value.replace(/\D/g, '');
+
+            if (v.length > 12)
+                v = v.substring(0, 12);
+
+            if (v.length >= 9) {
+                campo.value =
+                    v.substring(0, 2) + '/' +
+                    v.substring(2, 4) + '/' +
+                    v.substring(4, 8) + ' ' +
+                    v.substring(8, 10);
             }
             else if (v.length >= 5) {
                 campo.value =
@@ -255,7 +252,7 @@
                                                      </div>
                                                 <div class="col-md-2">
                                                     <label>Nº Processo:</label>
-                                                    <asp:TextBox ID="txtProcessoModal" runat="server" CssClass="form-control" />
+                                                    <asp:TextBox ID="txtProcessoModal" runat="server" CssClass="form-control" OnTextChanged="btnPesquisarModal_Click" />
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label>Nº AIT:</label>
@@ -362,7 +359,7 @@
                                                                 </div>
                                                                 <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Indicar Até:</label>
                                                                 <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtVencimento" runat="server" CssClass="form-control" ></asp:TextBox>
+                                                                    <asp:TextBox ID="txtVencimento" runat="server" CssClass="form-control" oninput="mascaraData(this);" ></asp:TextBox>
                                                                 </div> 
                                                             </div>                                                            
                                                         </div>
@@ -418,7 +415,7 @@
                                                             <div class="form-group row">
                                                                 <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Dep. de Transporte Em:</label>
                                                                 <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control"  ></asp:TextBox>
+                                                                    <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control" oninput="mascaraDataHora(this);"  ></asp:TextBox>
                                                                 </div>
 
                                                                 <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Recebido Por:</label>
