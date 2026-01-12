@@ -16,6 +16,7 @@
             <div class="container-fluid">               
                 <br />
                 <div class="col-md-12">
+                    
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -36,12 +37,38 @@
                         </div>
                         <div class="card-body">
                             <div class="container-fluid">
+                                <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">                                        
+                                        <asp:TextBox ID="txtCodMotorista" Style="text-align: left" runat="server" CssClass="form-control font-weight-bold" placeholder="Digite documento, motorista, placa para pesquisa ... "></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">   
+                                        <asp:TextBox ID="txtDataInicial" TextMode="Date" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" MaxLength="10"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">    
+                                        <asp:TextBox ID="txtDataFinal" TextMode="Date" runat="server" Style="text-align: center" CssClass="form-control font-weight-bold" MaxLength="10"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">                                   
+                                       <asp:Button 
+                                        ID="btnAtualizarGrid" 
+                                        runat="server"
+                                        Text="Pesquisar"
+                                        CssClass="btn btn-warning w-100"
+                                         />
+                                </div>
+                                </div>                                
+                               
                                 <asp:UpdatePanel ID="upLista" runat="server">
                                  <ContentTemplate>
                                         <table class="table table-striped table-hover table-bordered">
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th>Motorista</th> 
+                                                    <th>Documento</th>                                                                        <th>Motorista</th> 
                                                     <th>Transportadora</th>
                                                     <th>Placa</th>                                                     
                                                     <th>Local de Coleta</th>
@@ -56,6 +83,11 @@
 
                                                     <ItemTemplate>
                                                         <tr>
+                                                            <td>
+                                                                <%# Eval("doc_pedagio") %>
+                                                                <br />
+                                                                <%# Eval("dtemissaopedagio") %>
+                                                            </td>
                                                             <td>
                                                                 <%# Eval("nomemotorista") %>
                                                                 <br />

@@ -285,13 +285,49 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtRota;
 
         /// <summary>
-        /// Controle cboRotas.
+        /// Controle txtDesc_Rota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRotas;
+        protected global::System.Web.UI.WebControls.TextBox txtDesc_Rota;
+
+        /// <summary>
+        /// Controle txtDistanciaCentro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDistanciaCentro;
+
+        /// <summary>
+        /// Controle txtTempoCentro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTempoCentro;
+
+        /// <summary>
+        /// Controle txtDistanciaCEP.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDistanciaCEP;
+
+        /// <summary>
+        /// Controle txtTempoCEP.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTempoCEP;
 
         /// <summary>
         /// Controle txtDistancia.
@@ -312,13 +348,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDuracao;
 
         /// <summary>
-        /// Controle cboDeslocamento.
+        /// Controle txtDeslocamento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboDeslocamento;
+        protected global::System.Web.UI.WebControls.TextBox txtDeslocamento;
 
         /// <summary>
         /// Controle cboTipoViagem.
@@ -366,13 +402,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtVigenciaFinal;
 
         /// <summary>
-        /// Controle ddlEmitePedagio.
+        /// Controle txtEmitePedagio.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEmitePedagio;
+        protected global::System.Web.UI.WebControls.TextBox txtEmitePedagio;
 
         /// <summary>
         /// Controle ddlHoraParada.

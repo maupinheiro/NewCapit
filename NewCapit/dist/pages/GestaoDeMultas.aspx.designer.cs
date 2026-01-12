@@ -249,13 +249,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtLocalMulta;
 
         /// <summary>
-        /// Controle txtProvidencia.
+        /// Controle txtVencimento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtProvidencia;
+        protected global::System.Web.UI.WebControls.TextBox txtVencimento;
 
         /// <summary>
         /// Controle txtValorsd.
@@ -276,13 +276,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtValorcd;
 
         /// <summary>
-        /// Controle txtVencimento.
+        /// Controle txtProvidencia.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtVencimento;
+        protected global::System.Web.UI.WebControls.TextBox txtProvidencia;
 
         /// <summary>
         /// Controle txtCodMot.
@@ -393,13 +393,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtStatus;
 
         /// <summary>
-        /// Controle btnPesquisarModal.
+        /// Controle chkBaixado.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisarModal;
+        protected global::System.Web.UI.WebControls.CheckBox chkBaixado;
 
         /// <summary>
         /// Controle btnSalvar.

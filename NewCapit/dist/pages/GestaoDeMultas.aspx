@@ -93,7 +93,34 @@
             campo.value = "R$ " + valor;
         }
     </script>
-   
+   <%-- <script>
+    $(function () {
+        $('#<%= chkBaixado.ClientID %>').change(function () {
+            if (this.checked) {
+                $('#divDataBaixa').slideDown();
+                $('#divBaixadoPor').slideDown();
+            } else {
+                $('#divDataBaixa').slideUp();
+                 $('#divBaixadoPor').slideUp();
+            }
+        });
+    });
+    </script>--%>
+
+    <style>
+    .modal-xxl {
+        max-width: 80%;
+    }
+    </style>
+    <script>
+    function ReabrirModal() {
+        var modal = new bootstrap.Modal(
+            document.getElementById('mdlProcesso')
+        );
+        modal.show();
+    }
+    </script>
+
     <div class="content-wrapper">
         <asp:ScriptManagerProxy ID="ScriptManagerProxy1" runat="server" />
         <section class="content">
@@ -221,7 +248,7 @@
                 </div>
                 <!-- form INCLUIR e CONSULTAR processo -->
                 <div class="modal fade" id="mdlProcesso" tabindex="-1">
-                    <div class="modal-dialog modal-xl modal-dialog-centered"">
+                    <div class="modal-dialog modal-xxl modal-dialog-centered"">
                         <div class="modal-content">                            
                             <div class="modal-header">
                                 <h5 class="modal-title">Multa/Processo</h5>
@@ -252,7 +279,7 @@
                                                      </div>
                                                 <div class="col-md-2">
                                                     <label>Nº Processo:</label>
-                                                    <asp:TextBox ID="txtProcessoModal" runat="server" CssClass="form-control" OnTextChanged="btnPesquisarModal_Click" />
+                                                    <asp:TextBox ID="txtProcessoModal" runat="server" CssClass="form-control" OnTextChanged="btnPesquisarModal_Click" AutoPostBack="true" />
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label>Nº AIT:</label>
@@ -328,12 +355,31 @@
                                                 </div>
                                             </div>
                                             <div class="row g-3">
-                                                <div class="col-md-12">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Local de Multa:</label>
                                                         <asp:TextBox ID="txtLocalMulta" runat="server" CssClass="form-control"></asp:TextBox>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Indicar Até:</label>
+                                                       <asp:TextBox ID="txtVencimento" runat="server" CssClass="form-control" oninput="mascaraData(this);" ></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>R$ Sem Indicação:</label>
+                                                        <asp:TextBox ID="txtValorsd" runat="server" CssClass="form-control"  onblur="formatarMoeda(this)" ></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>R$ Com Indicação:</label>
+                                                        <asp:TextBox ID="txtValorcd" runat="server" CssClass="form-control"  onblur="formatarMoeda(this)" ></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                
                                             </div>
                                             <div class="row g-3">
                                                 <div class="col-md-12">
@@ -343,30 +389,6 @@
                                                 </div>
                                             </div>
                                             </div>
-                                            <div class="row-3">
-                                                <div class="card-header">
-                                                    <form class="form-horizontal">
-                                                        <div class="card-body">                                                            
-                                                            <div class="form-group row">
-                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right"> Valor Sem Indicação:</label>
-                                                                <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtValorsd" runat="server" CssClass="form-control"  onblur="formatarMoeda(this)" ></asp:TextBox>
-                                                                </div>
-
-                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Valor Com Indicação:</label>
-                                                                <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtValorcd" runat="server" CssClass="form-control"  onblur="formatarMoeda(this)" ></asp:TextBox>
-                                                                </div>
-                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Indicar Até:</label>
-                                                                <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtVencimento" runat="server" CssClass="form-control" oninput="mascaraData(this);" ></asp:TextBox>
-                                                                </div> 
-                                                            </div>                                                            
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>                                           
-                                           
                                             <div class="row g-3">
                                                 <div class="col-md-2">
                                                      <label>Código:</label>
@@ -409,38 +431,26 @@
                                             </div>                                            
                                             <br />
                                             <div class="row g-3">
-                                                <div class="card-header">
-                                                    <form class="form-horizontal">
-                                                        <div class="card-body">                                                            
-                                                            <div class="form-group row">
-                                                                <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Dep. de Transporte Em:</label>
-                                                                <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control" oninput="mascaraDataHora(this);"  ></asp:TextBox>
-                                                                </div>
-
-                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Recebido Por:</label>
-                                                                <div class="col-md-4">
-                                                                    <asp:TextBox ID="txtRecebido_Por" runat="server" CssClass="form-control" ReadyOnly="true"></asp:TextBox>
-                                                                </div>
-                                                            </div>                                                            
-                                                            <div class="form-group row">
-                                                                <label for="inputRemetente" class="col-sm-4 col-form-label" style="text-align: right"> Entregue ao Controle Em:</label>
-                                                                <div class="col-md-2">
-                                                                    <asp:TextBox ID="txtEnvio_dcp" runat="server" CssClass="form-control" onkeyup="mascaraDataHora(this);" ></asp:TextBox>
-                                                                </div>
-
-                                                                <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Baixado Por:</label>
-                                                                <div class="col-md-4">
-                                                                    <asp:TextBox ID="txtBaixado_por" runat="server" CssClass="form-control" ReadyOnly="true" ></asp:TextBox>
-                                                                </div>
-                                                            </div>
-                                                           
-                                                        </div>
-                                                    </form>
+                                                <div class="col-md-2">
+                                                     <label>Recebido:</label>
+                                                      <asp:TextBox ID="txtEnvio_transp" runat="server" CssClass="form-control" oninput="mascaraDataHora(this);"  ></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-4">
+                                                     <label>Por:</label>
+                                                     <asp:TextBox ID="txtRecebido_Por" runat="server" CssClass="form-control" ReadyOnly="true"></asp:TextBox>
+                                                </div>
+                                                
+                                                <div class="col-md-2" id="divDataBaixa" >
+                                                     <label>Baixa:</label>
+                                                     <asp:TextBox ID="txtEnvio_dcp" runat="server" CssClass="form-control" onkeyup="mascaraDataHora(this);" ></asp:TextBox>
+                                                </div>
+                                                <div class="col-md-4" id="divBaixadoPor" >
+                                                     <label>Por:</label>
+                                                     <asp:TextBox ID="txtBaixado_por" runat="server" CssClass="form-control" ReadyOnly="true" ></asp:TextBox>
                                                 </div>
                                             </div>
                                     </div>                                    
-                                    
+                                    <br />
                                     <div class="modal-footer">
 
                                         <div class="container-fluid">
@@ -453,23 +463,34 @@
                                                         CssClass="form-control form-control-sm" Style="text-align: center"
                                                          />                                                       
                                                 </div>
+                                                <div class="col-auto">
+                                                    <asp:CheckBox
+                                                        ID="chkBaixado"
+                                                        runat="server"
+                                                        AutoPostBack="true"
+                                                        OnCheckedChanged="chkBaixado_CheckedChanged"
+                                                        CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%= chkBaixado.ClientID %>">
+                                                        Baixar Multa
+                                                    </label>
+                                                </div>
 
                                                 <!-- ESPAÇO FLEXÍVEL -->
                                                 <div class="col"></div>
 
                                                 <!-- DIREITA -->
                                                 <div class="col-auto text-end">
-                                                    <asp:Button ID="btnPesquisarModal"
+                                                   <%-- <asp:Button ID="btnPesquisarModal"
                                                         runat="server"
                                                         Text="Pesquisar"
                                                         CssClass="btn btn-info btn-sm ms-2"
                                                         OnClick="btnPesquisarModal_Click"
-                                                        UseSubmitBehavior="false" />
+                                                        UseSubmitBehavior="false" />--%>
 
                                                     <asp:Button ID="btnSalvar"
                                                         runat="server"
                                                         Text="Salvar"
-                                                        CssClass="btn btn-success btn-sm ms-2"
+                                                        CssClass="btn btn-success btn-sm ms-2"  
                                                         OnClick="btnSalvar_Click"
                                                         UseSubmitBehavior="false" />
 
