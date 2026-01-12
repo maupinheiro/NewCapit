@@ -287,9 +287,9 @@
                                          <div class="col-sm-1">
                                              <asp:TextBox ID="txtDistanciaCEP" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                          </div>
-                                             <div class="col-md-1">
+                                           <%--  <div class="col-md-1">
                                                  <asp:TextBox ID="txtTempoCEP" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                             </div>
+                                             </div>--%>
                                          </div>
                                     </div>
                                 </div>

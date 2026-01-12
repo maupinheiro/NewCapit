@@ -269,7 +269,33 @@
              //$('#meuModal').modal('show');
              $('#meuModal').modal({ backdrop: 'static', keyboard: false });
          }
+        
      </script>
+   
+         <script type="text/javascript">
+             function initSelect2() {
+                 $('.select2').select2({
+                     // Esta é a correção principal: define o modal como pai do dropdown
+                     dropdownParent: $('#meuModal')
+                 });
+             }
+
+             $(document).ready(function () {
+                 initSelect2();
+             });
+
+             // Como você está usando UpdatePanel, o Select2 precisa ser reinicializado após cada PostBack parcial
+             var prm = Sys.WebForms.PageRequestManager.getInstance();
+             if (prm) {
+                 prm.add_endRequest(function (sender, args) {
+                     initSelect2();
+                 });
+             }
+
+             // Correção adicional para conflito de foco do Bootstrap 4
+             // Isso garante que o campo de busca do Select2 possa receber foco mesmo dentro do modal
+             $.fn.modal.Constructor.prototype._enforceFocus = function () { };
+         </script>
 
     <div class="content-wrapper">
         <section class="content">
@@ -1295,7 +1321,7 @@
      <div class="form-group">
          <span class="details">Núm. CVA:</span>
          <div class="input-group">
-             <asp:TextBox ID="txtCVA" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+             <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
          </div>
      </div>
  </div>
@@ -1615,154 +1641,152 @@
 
                      <!-- Modal Bootstrap Incluir Coleta Vazia -->
  <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-         <div class="modal-content">
-             <asp:UpdatePanel ID="UpdatePanel2" runat="server">
-                 <ContentTemplate>
-                     <div class="modal-header">
-                         <h5 class="modal-title" id="meuModalLabel">Inclusão de Viagem</h5>
-                         <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                             <span aria-hidden="true">&times;</span>
-                         </button>
-                     </div>
-                     <div class="modal-body">
-                         <div class="row g-3">
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <span class="details">Código:</span>
-                                     <asp:TextBox ID="codCliInicial" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliInicial_TextChanged"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-8">
-                                 <div class="form-group">
-                                     <span class="details">Origem:</span>
-                                     <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" CssClass="form-control select2"></asp:DropDownList>
-                                 </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <span class="details">Carga:</span>
-                                     <asp:TextBox ID="novaCargaVazia" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
-                                     <asp:HiddenField ID="hdNovaCarga" runat="server" />
-                                 </div>
-                             </div>
-                         </div>
-                         <!-- colunas ocultas -->
-                         <div class="row g-3">
-                             <div class="col-md-10">
-                                 <div class="form-group">
-                                     <asp:TextBox ID="txtMunicipioOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <asp:TextBox ID="txtUfOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                 </div>
-                             </div>
-                         </div>
-                         <!-- fim das colunas ocultas -->
-                         <div class="row g-3">
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <span class="details">Código:</span>
-                                     <asp:TextBox ID="codCliFinal" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliFinal_TextChanged"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-8">
-                                 <div class="form-group">
-                                     <span class="details">Destin:</span>
-                                     <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" CssClass="form-control select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged"></asp:DropDownList>
-                                     <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
-                                 </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <span class="details">Percurso:</span>
-                                     <asp:TextBox ID="txtDistancia" runat="server" ReadOnly="true" Style="text-align: center" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
-                                 </div>
-                             </div>
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                <ContentTemplate>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="meuModalLabel">Inclusão de Viagem</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="details">Código:</span>
+                                    <asp:TextBox ID="codCliInicial" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliInicial_TextChanged"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <span class="details">Origem:</span>
+                                    <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" class="form-control select2"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="details">Carga:</span>
+                                    <asp:TextBox ID="novaCargaVazia" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
+                                    <asp:HiddenField ID="hdNovaCarga" runat="server" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- colunas ocultas -->
+                        <div class="row g-3">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <asp:TextBox ID="txtMunicipioOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <asp:TextBox ID="txtUfOrigem" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fim das colunas ocultas -->
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="details">Código:</span>
+                                    <asp:TextBox ID="codCliFinal" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliFinal_TextChanged"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <span class="details">Destin:</span>
+                                    <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-control select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged"></asp:DropDownList>
+                                    <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="details">Percurso:</span>
+                                    <asp:TextBox ID="txtDistancia" runat="server" ReadOnly="true" Style="text-align: center" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
+                                </div>
+                            </div>
 
-                         </div>
-                         <!-- colunas ocultas -->
-                         <div class="row g-3">
-                             <div class="col-md-10">
-                                 <div class="form-group">
-                                     <asp:TextBox ID="txtMunicipioDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <asp:TextBox ID="txtUfDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                 </div>
-                             </div>
-                         </div>
-                         <!-- fim das colunas ocultas -->
-                         <div class="row g-3">
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <span class="">Viagem:</span>
-                                     <asp:DropDownList ID="ddlTipoMaterial" runat="server" CssClass="form-control">
-                                         <asp:ListItem Value="Almoxarifado" Text="Almoxarifado"></asp:ListItem>
-                                         <asp:ListItem Value="Vazio" Text="Vazio"></asp:ListItem>
-                                         <asp:ListItem Value="Embalagem" Text="Embalagem"></asp:ListItem>
-                                     </asp:DropDownList></>
-                                 </div>
-                             </div>
-                             <div class="col-md-1">
-                                 <div class="form-group">
-                                     <span class="details">Peso:</span>
-                                     <asp:TextBox ID="txtPesoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-1">
-                                 <div class="form-group">
-                                     <span class="details">TT:</span>
-                                     <asp:TextBox ID="txtDuracaoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <span class="details">Código:</span>
-                                     <asp:TextBox ID="txtCod_PagadorVazio" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="txtCod_PagadorVazio_TextChanged"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-6">
-                                 <div class="form-group">
-                                     <span class="details">Pagador:</span>
-                                     <asp:TextBox ID="txtPagadorVazio" runat="server" CssClass="form-control" ></asp:TextBox>
-                                     <asp:Label ID="Label1" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
-                                 </div>
-                             </div>
-                         </div>
-                         <!-- colunas ocultas -->
-                         <div class="row g-3" ID="linhaPagadorCidadeUF" runat="server" visible="false">
-                             <div class="col-md-10">
-                                 <div class="form-group">
-                                     <asp:TextBox ID="txtCid_PagadorVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                 </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <asp:TextBox ID="txtUf_PagadorVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                 </div>
-                             </div>
-                         </div>
-                         <!-- fim das colunas ocultas -->
-                         </div>
-                     <div class="modal-footer">
-                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                         <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnSalvarColeta_Click" />
-                     </div>
-                 </ContentTemplate>
-                 <Triggers>
-                     <asp:PostBackTrigger ControlID="btnSalvarColeta" />
-                 </Triggers>
-             </asp:UpdatePanel>
-
-
-         </div>
-     </div>
- </div>
+                        </div>
+                        <!-- colunas ocultas -->
+                        <div class="row g-3">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <asp:TextBox ID="txtMunicipioDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <asp:TextBox ID="txtUfDestino" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fim das colunas ocultas -->
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="">Viagem:</span>
+                                    <asp:DropDownList ID="ddlTipoMaterial" runat="server" CssClass="form-control">
+                                        <asp:ListItem Value="Almoxarifado" Text="Almoxarifado"></asp:ListItem>
+                                        <asp:ListItem Value="Vazio" Text="Vazio"></asp:ListItem>
+                                        <asp:ListItem Value="Embalagem" Text="Embalagem"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <span class="details">Peso:</span>
+                                    <asp:TextBox ID="txtPesoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <span class="details">TT:</span>
+                                    <asp:TextBox ID="txtDuracaoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="details">Código:</span>
+                                    <asp:TextBox ID="txtCod_PagadorVazio" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="txtCod_PagadorVazio_TextChanged"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <span class="details">Pagador:</span>
+                                    <asp:TextBox ID="txtPagadorVazio" runat="server" CssClass="form-control" ></asp:TextBox>
+                                    <asp:Label ID="Label1" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- colunas ocultas -->
+                        <div class="row g-3" ID="linhaPagadorCidadeUF" runat="server" visible="false">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <asp:TextBox ID="txtCid_PagadorVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <asp:TextBox ID="txtUf_PagadorVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fim das colunas ocultas -->
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnSalvarColeta_Click" />
+                    </div>
+                </ContentTemplate>
+                <Triggers>
+                    <asp:PostBackTrigger ControlID="btnSalvarColeta" />
+                </Triggers>
+            </asp:UpdatePanel>
+        </div>
+    </div>
+</div>
                 </div>
             </div>
         </section>

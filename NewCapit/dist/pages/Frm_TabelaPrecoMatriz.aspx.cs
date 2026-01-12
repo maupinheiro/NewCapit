@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Configuration;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 
 namespace NewCapit.dist.pages
 {
@@ -1097,7 +1099,7 @@ namespace NewCapit.dist.pages
                     string nomeRota = txtCidExpedidor.Text.Trim() + "/" + txtUFExpedidor.Text.Trim() + " X " + txtCidRecebedor.Text.Trim() + "/" + txtUFRecebedor.Text.Trim();
 
                     BuscarRota(nomeRota);
-
+                    CepOrigemDestino();
 
                 }
                 else
@@ -1112,6 +1114,97 @@ namespace NewCapit.dist.pages
             }
 
         }
+        public void CepOrigemDestino()
+        {
+            string sqle = "select endcli,cidcli,estcli from tbclientes where codcli='" + txtCodExpedidor.Text+"' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+            SqlDataAdapter dae = new SqlDataAdapter(sqle, conn);
+            DataTable dte = new DataTable();
+            conn.Open();
+            dae.Fill(dte);
+            conn.Close();
+
+            string sqlr = "select endcli,cidcli,estcli from tbclientes where codcli='" + txtCodDestinatario.Text + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+            SqlDataAdapter dar = new SqlDataAdapter(sqlr, conn);
+            DataTable dtr = new DataTable();
+            conn.Open();
+            dar.Fill(dtr);
+            conn.Close();
+
+            string ceporigem = dte.Rows[0][0].ToString()+", "+ dte.Rows[0][1].ToString() + ", "+ dte.Rows[0][2].ToString() + "";
+            string cepdestino = dtr.Rows[0][0].ToString() + ", " + dtr.Rows[0][1].ToString() + ", " + dtr.Rows[0][2].ToString() + "";
+
+            BuscarPorCep(ceporigem, cepdestino);
+
+        }
+        public void BuscarPorCep(string cepOrigem_, string cepDestino_)
+        {
+            try
+            {
+                string key = "AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww";
+                string url = "https://routes.googleapis.com/directions/v2:computeRoutes";
+
+                // 🛣️ Endereços SEM número (padrão)
+                string origem =  cepOrigem_+", Brasil";
+
+                string destino = cepDestino_ + ", Brasil";
+
+
+                //if (string.IsNullOrWhiteSpace(txtRuaOrigem.Text) ||
+                //    string.IsNullOrWhiteSpace(txtRuaDestino.Text))
+                //    throw new Exception("Informe a rua de origem e destino.");
+
+                string jsonBody = $@"
+                    {{
+                      ""origin"": {{
+                        ""address"": ""{origem}""
+                      }},
+                      ""destination"": {{
+                        ""address"": ""{destino}""
+                      }},
+                      ""travelMode"": ""DRIVE"",
+                      ""routingPreference"": ""TRAFFIC_AWARE"",
+                      ""computeAlternativeRoutes"": false
+                    }}";
+
+                using (var client = new WebClient())
+                {
+                    client.Headers.Add("Content-Type", "application/json");
+                    client.Headers.Add("X-Goog-Api-Key", key);
+                    client.Headers.Add(
+                        "X-Goog-FieldMask",
+                        "routes.distanceMeters,routes.duration"
+                    );
+
+                    string response = client.UploadString(url, "POST", jsonBody);
+                    dynamic data = JsonConvert.DeserializeObject(response);
+
+                    if (data.routes == null || data.routes.Count == 0)
+                        throw new Exception("Rota não encontrada para os endereços informados.");
+
+                    // 📏 Distância (km)
+                    double metros = (double)data.routes[0].distanceMeters;
+                    txtDistanciaCEP.Text = (metros / 1000).ToString("0.##");
+
+                    // ⏱ Tempo (min)
+                    string duracaoStr = data.routes[0].duration.ToString().Replace("s", "");
+                    double segundos = double.Parse(duracaoStr, CultureInfo.InvariantCulture);
+
+                    TimeSpan tempo = TimeSpan.FromSeconds(segundos);
+                    //txtTempoCEP.Text = tempo.ToString(@"hh\:mm");
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+               
+                MostrarMsg(
+                    "Erro ao calcular rota: " + ex.Message,
+                    "danger"
+                );
+            }
+        }
+       
         public RotaEntrega ObterRotaPorDescricao(string nomeRota)
         {
             const string sql = @"

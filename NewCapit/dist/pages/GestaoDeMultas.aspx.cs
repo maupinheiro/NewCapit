@@ -669,21 +669,24 @@ namespace NewCapit.dist.pages
         }
         protected void txtCodigo_Infracao_TextChanged(object sender, EventArgs e)
         {
-            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlConnection con = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT artigo_inciso_CTB, pontos, codigo, descricao, gravidade, responsavel, autuador, valorsemindicacao, valorcomindicacao FROM tbcodigoevalordasinfracoes WHERE codigo = @codigo", con);
-
-                cmd.Parameters.AddWithValue("@codigo", txtCodigo_Infracao.Text.Trim());
-                con.Open();
-
-                SqlDataReader dr = cmd.ExecuteReader();
+                using (SqlCommand cmd = new SqlCommand(
+                    @"SELECT artigo_inciso_CTB, pontos, codigo, descricao, gravidade,
+                     responsavel, autuador, valorsemindicacao, valorcomindicacao
+              FROM tbcodigoevalordasinfracoes
+              WHERE codigo = @codigo", con))
+                {
+                    cmd.Parameters.Add("@codigo", SqlDbType.VarChar)
+                                   .Value = txtCodigo_Infracao.Text.Trim();
 
                     con.Open();
+
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         if (dr.Read())
-                        {                                                        
+                        {
                             txtCodigo_Infracao.Text = dr["codigo"].ToString();
                             ddlArtigo.SelectedItem.Text = dr["artigo_inciso_CTB"].ToString();
                             txtPontos.Text = dr["pontos"].ToString();
@@ -691,29 +694,36 @@ namespace NewCapit.dist.pages
                             txtInfrator.Text = dr["responsavel"].ToString();
                             txtCompetencia.Text = dr["autuador"].ToString();
                             txtdesc_multa.Text = dr["descricao"].ToString();
-                            txtValorsd.Text = Convert.ToDecimal(dr["valorsemindicacao"]).ToString("N2", new CultureInfo("pt-BR"));
-                            txtValorcd.Text = Convert.ToDecimal(dr["valorcomindicacao"]).ToString("N2", new CultureInfo("pt-BR"));
 
-                            
+                            txtValorsd.Text = Convert.ToDecimal(dr["valorsemindicacao"])
+                                .ToString("N2", new CultureInfo("pt-BR"));
 
-                }
-                else
-                {
-                    // não encontrado → novo
-                    MostrarMsg(txtCodigo_Infracao.Text + " - Código não encontrado. Verifique a digitação!", "info");
-                    txtCodigo_Infracao.Text = "";
-                    ddlArtigo.SelectedItem.Text = "";
-                    txtPontos.Text = "";
-                    txtGravidade.Text = "";
-                    txtInfrator.Text = "";
-                    txtCompetencia.Text = "";
-                    txtdesc_multa.Text = "";
-                    txtCodigo_Infracao.Focus();
+                            txtValorcd.Text = Convert.ToDecimal(dr["valorcomindicacao"])
+                                .ToString("N2", new CultureInfo("pt-BR"));
+                        }
+                        else
+                        {
+                            MostrarMsg(
+                                txtCodigo_Infracao.Text + " - Código não encontrado. Verifique a digitação!",
+                                "info");
 
+                            txtCodigo_Infracao.Text = "";
+                            ddlArtigo.SelectedItem.Text = "";
+                            txtPontos.Text = "";
+                            txtGravidade.Text = "";
+                            txtInfrator.Text = "";
+                            txtCompetencia.Text = "";
+                            txtdesc_multa.Text = "";
+                            txtValorsd.Text = "";
+                            txtValorcd.Text = "";
+
+                            txtCodigo_Infracao.Focus();
+                        }
+                    }
                 }
             }
-
         }
+
         private object SafeDateValue(string input)
         {
             DateTime dt;
