@@ -612,11 +612,11 @@
                 </div>
                 <!-- Linha 9 do formulário -->
                 <div class="row g-3">
-                    <div class="col-md-1">
-                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvar1_Click" />
+                    <div class="col-md-2">
+                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success btn-lg w-100" runat="server" Text="Atualizar" OnClick="btnSalvar1_Click" />
                     </div>
-                    <div class="col-md-1">
-                        <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                    <div class="col-md-2">
+                        <a href="/dist/pages/ConsultaMotoristas.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                         </a>
                     </div>
                 </div>

@@ -269,10 +269,28 @@
                                                 <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-10">
-                                                <asp:TextBox ID="cboRotas" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtDesc_Rota" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                         </div>
-
+                                        <br />
+                                         <div class="form-group row">
+                                             <label for="inputFilial" class="col-sm-5 col-form-label" style="text-align: right">Distância/Tempo CENTRO/CENTRO:</label>
+                                             <div class="col-sm-1">
+                                                 <asp:TextBox ID="txtDistanciaCentro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                             </div>
+                                             <div class="col-md-1">
+                                                 <asp:TextBox ID="txtTempoCentro" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                             </div>
+                                         </div>
+                                         <div class="form-group row">
+                                         <label for="inputFilial" class="col-sm-5 col-form-label" style="text-align: right">Distância/Tempo CEP/CEP:</label>
+                                         <div class="col-sm-1">
+                                             <asp:TextBox ID="txtDistanciaCEP" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                             <div class="col-md-1">
+                                                 <asp:TextBox ID="txtTempoCEP" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                             </div>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +324,7 @@
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <span class="details">PERCURSO:</span>
-                                                    <asp:TextBox ID="cboDeslocamento" class="form-control" runat="server" ReadOnly="true" Style="text-align: center"></asp:TextBox>
+                                                    <asp:TextBox ID="txtDeslocamento" class="form-control" runat="server" ReadOnly="true" Style="text-align: center"></asp:TextBox>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
@@ -394,10 +412,7 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <span class="details">EMITE PEDÁGIO:</span>
-                                                            <asp:DropDownList ID="ddlEmitePedagio" runat="server" CssClass="form-control">
-                                                                <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
-                                                                <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                            </asp:DropDownList>
+                                                       <asp:TextBox ID="txtEmitePedagio" runat="server" CssClass="form-control"></asp:TextBox>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">

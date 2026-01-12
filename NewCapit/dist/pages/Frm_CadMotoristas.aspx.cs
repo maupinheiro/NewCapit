@@ -561,7 +561,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboJornada()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, descricao FROM tbhorarios";
+            string query = "SELECT id, descricao FROM tbhorarios order by descricao ASC";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))

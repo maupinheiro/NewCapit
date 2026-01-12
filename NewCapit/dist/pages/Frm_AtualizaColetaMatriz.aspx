@@ -209,13 +209,6 @@
                 atualizarStatusECores(container);
             }
         }
-
-
-
-
-
-
-
         /* =========================
            PEDIDOS (TAB)
         ========================= */
@@ -796,8 +789,8 @@
                                                         
                                                         <tr data-widget="expandable-table" aria-expanded="false">
                                                             <td><%# Eval("carga") %></td>
-                                                            <td><%# Eval("expedidor") %></td>
-                                                            <td><%# Eval("recebedor") %></td>
+                                                            <td><%# Eval("cod_expedidor") + " - " + Eval("expedidor") %></td>
+                                                            <td><%# Eval("cod_recebedor") + " - " + Eval("recebedor") %></td>
                                                             <td><%# Eval("saidaorigem", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                             <td><%# Eval("prev_chegada", "{0:dd/MM/yyyy HH:mm}") %></td>
                                                             <td><%# Eval("chegadadestino", "{0:dd/MM/yyyy HH:mm}") %></td>
@@ -1302,7 +1295,7 @@
      <div class="form-group">
          <span class="details">Núm. CVA:</span>
          <div class="input-group">
-             <asp:TextBox ID="txtCVA" Text='<%# Bind("cva") %>' runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+             <asp:TextBox ID="txtCVA" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
          </div>
      </div>
  </div>
