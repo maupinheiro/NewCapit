@@ -273,36 +273,52 @@ namespace NewCapit.dist.pages
         }
         public void CarregaFoto()
         {
-            var codigo = txtCodMotorista.Text.Trim();
+            string codigo = txtCodMotorista.Text?.Trim();
+
+            if (string.IsNullOrEmpty(codigo))
+            {
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                return;
+            }
 
             var obj = new Domain.ConsultaMotorista
             {
                 codmot = codigo
             };
-            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
-            if (ConsultaMotorista != null)
+
+            var consultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+
+            if (consultaMotorista == null)
             {
-                if (ConsultaMotorista.status.Trim() != "INATIVO")
-                {
-                    if (txtCodMotorista.Text.Trim() != "")
-                    {
-                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-
-                        if (!File.Exists(fotoMotorista))
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-                        }
-                        else
-                        {
-                            fotoMotorista = "../../fotos/motoristasemfoto.jpg";
-                        }
-                    }
-
-                }
-
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                return;
             }
 
+            if (string.Equals(consultaMotorista.status?.Trim(), "INATIVO", StringComparison.OrdinalIgnoreCase))
+            {
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                return;
+            }
+
+            string caminhoFoto = consultaMotorista.caminhofoto?.Trim();
+
+            if (!string.IsNullOrEmpty(caminhoFoto) && caminhoFoto != "NULL")
+            {
+                if (File.Exists(caminhoFoto))
+                {
+                    fotoMotorista = caminhoFoto;
+                }
+                else
+                {
+                    fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                }
+            }
+            else
+            {
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+            }
         }
+
         protected void chkDiadema_CheckedChanged(object sender, EventArgs e)
         {
             chkDiadema.Checked = true;
@@ -751,7 +767,7 @@ namespace NewCapit.dist.pages
 
                                 for (int y = 0; y < dt4.Rows.Count; y++)
                                 {
-                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                     {
                                         c = c + 1;
                                     }
@@ -1600,7 +1616,7 @@ namespace NewCapit.dist.pages
                                     //BLOCO FIM DE JORMADA
                                     if (c > 0)
                                     {
-                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                         {
                                             int a = 0;
                                             a = w - 1;
@@ -2260,7 +2276,7 @@ namespace NewCapit.dist.pages
 
                                     for (int y = 0; y < dt4.Rows.Count; y++)
                                     {
-                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                         {
                                             c = c + 1;
                                         }
@@ -3100,7 +3116,7 @@ namespace NewCapit.dist.pages
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -3763,7 +3779,7 @@ namespace NewCapit.dist.pages
 
                                         for (int y = 0; y < dt4.Rows.Count; y++)
                                         {
-                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                             {
                                                 c = c + 1;
                                             }
@@ -4613,7 +4629,7 @@ namespace NewCapit.dist.pages
                                             //BLOCO FIM DE JORMADA
                                             if (c > 0)
                                             {
-                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                 {
                                                     int a = 0;
                                                     a = w - 1;
@@ -4683,12 +4699,6 @@ namespace NewCapit.dist.pages
                                                                             // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                         }
                                                                     }
-                                                                    else
-                                                                    {
-                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
-                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
-                                                                        // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
-                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -4696,8 +4706,6 @@ namespace NewCapit.dist.pages
                                                                     write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
                                                                     // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                 }
-
-
 
                                                             }
                                                             else
@@ -4707,7 +4715,7 @@ namespace NewCapit.dist.pages
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-                                                            
+
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -5280,7 +5288,7 @@ namespace NewCapit.dist.pages
 
                                             for (int y = 0; y < dt4.Rows.Count; y++)
                                             {
-                                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                                 {
                                                     c = c + 1;
                                                 }
@@ -6120,7 +6128,7 @@ namespace NewCapit.dist.pages
                                                 //BLOCO FIM DE JORMADA
                                                 if (c > 0)
                                                 {
-                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                     {
                                                         int a = 0;
                                                         a = w - 1;
@@ -6786,7 +6794,7 @@ namespace NewCapit.dist.pages
 
                                             for (int y = 0; y < dt4.Rows.Count; y++)
                                             {
-                                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                                 {
                                                     c = c + 1;
                                                 }
@@ -7670,7 +7678,7 @@ namespace NewCapit.dist.pages
                                                 //BLOCO FIM DE JORMADA
                                                 if (c > 0)
                                                 {
-                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                     {
                                                         int a = 0;
                                                         a = w - 1;
@@ -8331,7 +8339,7 @@ namespace NewCapit.dist.pages
 
                                             for (int y = 0; y < dt4.Rows.Count; y++)
                                             {
-                                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                                 {
                                                     c = c + 1;
                                                 }
@@ -9171,7 +9179,7 @@ namespace NewCapit.dist.pages
                                                 //BLOCO FIM DE JORMADA
                                                 if (c > 0)
                                                 {
-                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                     {
                                                         int a = 0;
                                                         a = w - 1;
@@ -9837,7 +9845,7 @@ namespace NewCapit.dist.pages
 
                                     for (int y = 0; y < dt4.Rows.Count; y++)
                                     {
-                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                         {
                                             c = c + 1;
                                         }
@@ -10721,7 +10729,7 @@ namespace NewCapit.dist.pages
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -11381,7 +11389,7 @@ namespace NewCapit.dist.pages
 
                                     for (int y = 0; y < dt4.Rows.Count; y++)
                                     {
-                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                         {
                                             c = c + 1;
                                         }
@@ -12221,7 +12229,7 @@ namespace NewCapit.dist.pages
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                             {
                                                 int a = 0;
                                                 a = w - 1;

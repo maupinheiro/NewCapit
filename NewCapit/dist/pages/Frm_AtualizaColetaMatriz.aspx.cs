@@ -774,7 +774,7 @@ namespace NewCapit.dist.pages
                     var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim()); 
                     var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
                     var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
-                    var cvaOC = SafeDateValue2(txtCVA.Text.Trim());
+                    var cvaOC = txtCVA.Text.Trim();
 
                     var CodExpedidor = SafeDateValue2(txtCodExpedidor.Text.Trim());
                     var Expedidor = SafeDateValue2(cboExpedidor.Text.Trim());
@@ -839,7 +839,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@carga", carga);                    
                     cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@andamento", situacaoOC);
-                    cmd.Parameters.AddWithValue("@cva", SafeDateValue(txtCVA.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
                     cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
@@ -880,7 +880,7 @@ namespace NewCapit.dist.pages
 
                     // Status e datas
                     cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = situacaoOC;
-                    //cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = cvaOC ;
+                    cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = cvaOC ;
                     cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar).Value = statusOC;
                     cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = SafeDateValue(txtCVA.Text.Trim()) ?? (object)DBNull.Value;
 

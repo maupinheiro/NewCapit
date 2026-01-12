@@ -321,15 +321,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDistanciaCEP;
 
         /// <summary>
-        /// Controle txtTempoCEP.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTempoCEP;
-
-        /// <summary>
         /// Controle txtDistancia.
         /// </summary>
         /// <remarks>

@@ -417,7 +417,7 @@ namespace NewCapit
 
                             for (int y = 0; y < dt4.Rows.Count; y++)
                             {
-                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                 {
                                     c = c + 1;
                                 }
@@ -1299,7 +1299,7 @@ namespace NewCapit
                                 //BLOCO FIM DE JORMADA
                                 if (c > 0)
                                 {
-                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                    if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                     {
                                         int a = 0;
                                         a = w - 1;
@@ -1977,7 +1977,7 @@ namespace NewCapit
 
                                 for (int y = 0; y < dt4.Rows.Count; y++)
                                 {
-                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                     {
                                         c = c + 1;
                                     }
@@ -2817,7 +2817,7 @@ namespace NewCapit
                                     //BLOCO FIM DE JORMADA
                                     if (c > 0)
                                     {
-                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                         {
                                             int a = 0;
                                             a = w - 1;
@@ -2893,6 +2893,13 @@ namespace NewCapit
                                                                     marcacoes.Add(hora);
                                                                 }
                                                             }
+                                                            else
+                                                            {
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                marcacoes.Add(hora);
+                                                            }
                                                         }
                                                         else
                                                         {
@@ -2910,7 +2917,7 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
-
+                                                    marcacoes.Add(hora);
                                                 }
                                                 else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                 {
@@ -3493,7 +3500,7 @@ namespace NewCapit
 
                                     for (int y = 0; y < dt4.Rows.Count; y++)
                                     {
-                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                        if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                         {
                                             c = c + 1;
                                         }
@@ -4373,7 +4380,7 @@ namespace NewCapit
                                         //BLOCO FIM DE JORMADA
                                         if (c > 0)
                                         {
-                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                            if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -4473,7 +4480,7 @@ namespace NewCapit
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                         }
-                                                        
+                                                        marcacoes.Add(hora);
                                                     }
                                                     else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                     {
@@ -5049,7 +5056,7 @@ namespace NewCapit
 
                                         for (int y = 0; y < dt4.Rows.Count; y++)
                                         {
-                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                             {
                                                 c = c + 1;
                                             }
@@ -5919,7 +5926,7 @@ namespace NewCapit
                                             //BLOCO FIM DE JORMADA
                                             if (c > 0)
                                             {
-                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                 {
                                                     int a = 0;
                                                     a = w - 1;
@@ -5995,6 +6002,13 @@ namespace NewCapit
                                                                             marcacoes.Add(hora);
                                                                         }
                                                                     }
+                                                                    else
+                                                                    {
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                        marcacoes.Add(hora);
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -6012,7 +6026,7 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-
+                                                            marcacoes.Add(hora);
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -6596,7 +6610,7 @@ namespace NewCapit
 
                                         for (int y = 0; y < dt4.Rows.Count; y++)
                                         {
-                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                             {
                                                 c = c + 1;
                                             }
@@ -7510,7 +7524,7 @@ namespace NewCapit
                                             //BLOCO FIM DE JORMADA
                                             if (c > 0)
                                             {
-                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                 {
                                                     int a = 0;
                                                     a = w - 1;
@@ -7586,6 +7600,13 @@ namespace NewCapit
                                                                             marcacoes.Add(hora);
                                                                         }
                                                                     }
+                                                                    else
+                                                                    {
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                        marcacoes.Add(hora);
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -7603,7 +7624,7 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-
+                                                            marcacoes.Add(hora);
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -8180,7 +8201,7 @@ namespace NewCapit
 
                                         for (int y = 0; y < dt4.Rows.Count; y++)
                                         {
-                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                            if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                             {
                                                 c = c + 1;
                                             }
@@ -9050,7 +9071,7 @@ namespace NewCapit
                                             //BLOCO FIM DE JORMADA
                                             if (c > 0)
                                             {
-                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                                if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                                 {
                                                     int a = 0;
                                                     a = w - 1;
@@ -9126,6 +9147,13 @@ namespace NewCapit
                                                                             marcacoes.Add(hora);
                                                                         }
                                                                     }
+                                                                    else
+                                                                    {
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                        // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                        marcacoes.Add(hora);
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -9143,7 +9171,7 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-
+                                                            marcacoes.Add(hora);
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -9726,7 +9754,7 @@ namespace NewCapit
 
                                 for (int y = 0; y < dt4.Rows.Count; y++)
                                 {
-                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                     {
                                         c = c + 1;
                                     }
@@ -10640,7 +10668,7 @@ namespace NewCapit
                                     //BLOCO FIM DE JORMADA
                                     if (c > 0)
                                     {
-                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                         {
                                             int a = 0;
                                             a = w - 1;
@@ -10716,6 +10744,13 @@ namespace NewCapit
                                                                     marcacoes.Add(hora);
                                                                 }
                                                             }
+                                                            else
+                                                            {
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                marcacoes.Add(hora);
+                                                            }
                                                         }
                                                         else
                                                         {
@@ -10733,7 +10768,7 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
-
+                                                    marcacoes.Add(hora);
                                                 }
                                                 else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                 {
@@ -11311,7 +11346,7 @@ namespace NewCapit
 
                                 for (int y = 0; y < dt4.Rows.Count; y++)
                                 {
-                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525")
+                                    if (dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725405" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "725407" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "184525" || dt4.Rows[y][2].ToString() == "FIM DE JORNADA" && dt4.Rows[y][6].ToString() == "2162703")
                                     {
                                         c = c + 1;
                                     }
@@ -12181,7 +12216,7 @@ namespace NewCapit
                                     //BLOCO FIM DE JORMADA
                                     if (c > 0)
                                     {
-                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522")
+                                        if (dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725405" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "725407" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "184525" && dt4.Rows[w][6].ToString() == "184522" || dt4.Rows[w][2].ToString() == "FIM DE JORNADA" && dt4.Rows[w][6].ToString() == "2162703")
                                         {
                                             int a = 0;
                                             a = w - 1;
@@ -12257,6 +12292,13 @@ namespace NewCapit
                                                                     marcacoes.Add(hora);
                                                                 }
                                                             }
+                                                            else
+                                                            {
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                // write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                marcacoes.Add(hora);
+                                                            }
                                                         }
                                                         else
                                                         {
@@ -12274,7 +12316,7 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
-
+                                                    marcacoes.Add(hora);
                                                 }
                                                 else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                 {

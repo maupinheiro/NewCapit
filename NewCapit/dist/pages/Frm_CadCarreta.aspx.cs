@@ -588,10 +588,10 @@ namespace NewCapit
                 comando.Parameters.Add("@altura", SqlDbType.Decimal).Value = DecimalOuDBNull(txtAltura.Text);
 
                 // 📅 DATAS
-                comando.Parameters.Add("@licenciamento", SqlDbType.VarChar, 10).Value = txtLicenciamento.Text.Trim();
-                comando.Parameters.Add("@inicio_contrato", SqlDbType.VarChar, 10).Value = txtInicioContrato.Text.Trim();
-                comando.Parameters.Add("@termino_contrato", SqlDbType.VarChar, 10).Value = txtTerminoContrato.Text.Trim();
-                comando.Parameters.Add("@aquisicao", SqlDbType.VarChar, 10).Value = txtDataAquisicao.Text.Trim();
+                comando.Parameters.Add("@licenciamento", SqlDbType.VarChar, 10).Value = SafeDate(txtLicenciamento.Text.Trim());
+                comando.Parameters.Add("@inicio_contrato", SqlDbType.VarChar, 10).Value = SafeDate(txtInicioContrato.Text.Trim());
+                comando.Parameters.Add("@termino_contrato", SqlDbType.VarChar, 10).Value = SafeDate(txtTerminoContrato.Text.Trim());
+                comando.Parameters.Add("@aquisicao", SqlDbType.VarChar, 10).Value = SafeDate(txtDataAquisicao.Text.Trim());
 
                 comando.Parameters.Add("@data_cadastro", SqlDbType.VarChar, 16)
                     .Value = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
@@ -611,7 +611,14 @@ namespace NewCapit
             Thread.Sleep(5000);
             Response.Redirect("/dist/pages/ControleCarretas.aspx");
         }
-
+        private object SafeDate(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
+        }
 
         private object DecimalOuDBNull(string valor)
         {
