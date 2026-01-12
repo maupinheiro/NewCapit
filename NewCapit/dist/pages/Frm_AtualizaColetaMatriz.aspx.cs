@@ -40,6 +40,7 @@ using System.Security.Principal;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Text;
 using System.Web.Services;
+using DocumentFormat.OpenXml.Office.Word;
 
 
 namespace NewCapit.dist.pages
@@ -753,10 +754,19 @@ namespace NewCapit.dist.pages
                 TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
                 TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino"); 
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
-                Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");                
+                Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
+
+                TextBox txtCodExpedidor = (TextBox)e.Item.FindControl("txtCodExpedidor");
+                TextBox cboExpedidor = (TextBox)e.Item.FindControl("cboExpedidor");
+                TextBox txtCidExpedidor = (TextBox)e.Item.FindControl("txtCidExpedidor");
+                TextBox txtUFExpedidor = (TextBox)e.Item.FindControl("txtUFExpedidor");
+
+                TextBox txtCodRecebedor = (TextBox)e.Item.FindControl("txtCodRecebedor");
+                TextBox cboRecebedor = (TextBox)e.Item.FindControl("cboRecebedor");
+                TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
+                TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
 
                 
-
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
@@ -765,7 +775,16 @@ namespace NewCapit.dist.pages
                     var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
                     var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
                     var cvaOC = SafeDateValue2(txtCVA.Text.Trim());
-                    
+
+                    var CodExpedidor = SafeDateValue2(txtCodExpedidor.Text.Trim());
+                    var Expedidor = SafeDateValue2(cboExpedidor.Text.Trim());
+                    var Cid_Expedidor = SafeDateValue2(txtCidExpedidor.Text.Trim());
+                    var UFExpedidor = SafeDateValue2(txtUFExpedidor.Text.Trim());
+
+                    var CodRecebedor = SafeDateValue2(txtCodRecebedor.Text.Trim());
+                    var Recebedor = SafeDateValue2(cboRecebedor.Text.Trim());
+                    var CidRecebedor = SafeDateValue2(txtCidRecebedor.Text.Trim());
+                    var UFRecebedor = SafeDateValue2(txtUFRecebedor.Text.Trim());
 
                     if (chegada != null && saida != null && saidaPlanta != null)
                     {
@@ -792,9 +811,11 @@ namespace NewCapit.dist.pages
                         statusOC = "Pendente";
                         situacaoOC = "PROGRAMADA";
                     }
-                    if (ddlStatus.SelectedItem.Text == "Ag.Carregamento")
+                    if (ddlStatus.SelectedItem.Text != "Pendente" || ddlStatus.SelectedItem.Text != "Concluido")
                     {
                         situacaoOC = "EM ANDAMENTO";
+                        statusOC = ddlStatus.SelectedItem.Text.Trim();
+                        
                     }
                     
                     string query = @"UPDATE tbcargas SET                                  
@@ -825,12 +846,11 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
                     cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
                     cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));                    
+                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim())); 
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
-                    
+                    cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);                   
 
                     // Chama método que verifica no banco
                     conn.Open();
@@ -841,16 +861,42 @@ namespace NewCapit.dist.pages
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     string queryCarregamento = @"UPDATE tbcarregamentos SET 
-                                situacao = @situacao,
-                                cva = @cva,
-                                status = @status
-                                WHERE num_carregamento = @num_carregamento";
-
+                        situacao = @situacao,
+                        cva = @cva,
+                        status = @status,                        
+                        cod_expedidor = @cod_expedidor,
+                        expedidor = @expedidor,
+                        cid_expedidor = @cid_expedidor,
+                        uf_expedidor = @uf_expedidor,
+                        cod_recebedor = @cod_recebedor,
+                        recebedor = @recebedor,
+                        cid_recebedor = @cid_recebedor,
+                        uf_recebedor = @uf_recebedor
+                    WHERE num_carregamento = @num_carregamento";
                     SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
-                    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
-                    cmdCarregamento.Parameters.AddWithValue("@situacao", situacaoOC);
-                    cmdCarregamento.Parameters.AddWithValue("@cva", SafeDateValue(txtCVA.Text.Trim()));
-                    cmdCarregamento.Parameters.AddWithValue("@status", statusOC);
+
+                    // Num carregamento
+                    cmdCarregamento.Parameters.Add("@num_carregamento", SqlDbType.NVarChar).Value = novaColeta.Text.Trim();
+
+                    // Status e datas
+                    cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = situacaoOC;
+                    //cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = cvaOC ;
+                    cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar).Value = statusOC;
+                    cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = SafeDateValue(txtCVA.Text.Trim()) ?? (object)DBNull.Value;
+
+                    // Expedidor
+                    cmdCarregamento.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text.Trim());
+                    cmdCarregamento.Parameters.Add("@expedidor", SqlDbType.NVarChar).Value = cboExpedidor.Text.Trim();
+                    cmdCarregamento.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar).Value = txtCidExpedidor.Text.Trim();
+                    cmdCarregamento.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar).Value = txtUFExpedidor.Text.Trim();
+
+                    // Recebedor
+                    cmdCarregamento.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text.Trim());
+                    cmdCarregamento.Parameters.Add("@recebedor", SqlDbType.NVarChar).Value = cboRecebedor.Text.Trim();
+                    cmdCarregamento.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar).Value = txtCidRecebedor.Text.Trim();
+                    cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar).Value = txtUFRecebedor.Text.Trim();
+
+
 
                     // Chama método que verifica no banco
                     conn.Open();
@@ -2217,14 +2263,13 @@ namespace NewCapit.dist.pages
         }
         protected void codCliFinal_TextChanged(object sender, EventArgs e)
         {
-            if (codCliFinal.Text != "")
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                if (codCliFinal.Text != "")
             {
-
-
-                string codigoRemetente = codCliFinal.Text.Trim();
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
+                string codigoRemetente = codCliFinal.Text.Trim();  
+                    
+                    using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
                     string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -2258,51 +2303,74 @@ namespace NewCapit.dist.pages
             }
             if (codCliInicial.Text != "" && codCliFinal.Text != "")
             {
+                codCliFinal.Text = ddlCliFinal.SelectedValue;
+                string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+                SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                adp.Fill(dt);
+                con.Close();
+                if (dt.Rows.Count > 0)
+                {
+                    txtDistancia.Text = dt.Rows[0][0].ToString();
+                    txtUfOrigem.Text = dt.Rows[0][1].ToString();
+                    txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
+                    txtUfDestino.Text = dt.Rows[0][3].ToString();
+                    txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
+                    lblDistancia.Text = string.Empty;
+                }
+                else
+                {
+                    lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
+                }
+
+
+
                 //string UFOrigem = txtUfOrigem.Text.Trim();
                 //string Origem = ddlCliInicial.SelectedItem.Text.Trim();
                 //string UFDestino = txtUfDestino.Text.Trim();
                 //string Destino = ddlCliFinal.SelectedItem.Text.Trim();
 
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    SqlCommand cmd = new SqlCommand(@"
-                        SELECT 
-                        c1.LATITUDE  AS LatOrigem,
-                        c1.LONGITUDE AS LonOrigem,
-                        c2.LATITUDE  AS LatDestino,
-                        c2.LONGITUDE AS LonDestino
-                    FROM tbcidadesdobrasil c1
-                    JOIN tbcidadesdobrasil c2 ON 1 = 1
-                    WHERE 
-                        c1.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeOrigem AND c1.UF = @UFOrigem
-                    AND c2.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeDestino AND c2.UF = @UFDestino
-                ", conn);
+                //string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                //using (SqlConnection conn = new SqlConnection(strConn))
+                //{
+                //    SqlCommand cmd = new SqlCommand(@"
+                //        SELECT 
+                //        c1.LATITUDE  AS LatOrigem,
+                //        c1.LONGITUDE AS LonOrigem,
+                //        c2.LATITUDE  AS LatDestino,
+                //        c2.LONGITUDE AS LonDestino
+                //    FROM tbcidadesdobrasil c1
+                //    JOIN tbcidadesdobrasil c2 ON 1 = 1
+                //    WHERE 
+                //        c1.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeOrigem AND c1.UF = @UFOrigem
+                //    AND c2.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeDestino AND c2.UF = @UFDestino
+                //", conn);
 
-                    cmd.Parameters.AddWithValue("@CidadeOrigem", txtMunicipioOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@UFOrigem", txtUfOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@CidadeDestino", txtMunicipioDestino.Text.Trim());
-                    cmd.Parameters.AddWithValue("@UFDestino", txtUfDestino.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@CidadeOrigem", txtMunicipioOrigem.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@UFOrigem", txtUfOrigem.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@CidadeDestino", txtMunicipioDestino.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@UFDestino", txtUfDestino.Text.Trim());
 
-                    conn.Open();
-                    SqlDataReader dr = cmd.ExecuteReader();
+                //    conn.Open();
+                //    SqlDataReader dr = cmd.ExecuteReader();
 
-                    if (dr.Read())
-                    {
-                        double distancia = CalcularDistancia(
-                            Convert.ToDouble(dr["LatOrigem"]),
-                            Convert.ToDouble(dr["LonOrigem"]),
-                            Convert.ToDouble(dr["LatDestino"]),
-                            Convert.ToDouble(dr["LonDestino"])
-                        );
+                //    if (dr.Read())
+                //    {
+                //        double distancia = CalcularDistancia(
+                //            Convert.ToDouble(dr["LatOrigem"]),
+                //            Convert.ToDouble(dr["LonOrigem"]),
+                //            Convert.ToDouble(dr["LatDestino"]),
+                //            Convert.ToDouble(dr["LonDestino"])
+                //        );
 
-                        txtDistancia.Text = $"{distancia:N2}"; //$"Distância: {distancia:N2} km";
-                    }
-                    else
-                    {
-                        lblDistancia.Text = "Cidade não encontrada.";
-                    }
-                }
+                //        txtDistancia.Text = $"{distancia:N2}"; //$"Distância: {distancia:N2} km";
+                //    }
+                //    else
+                //    {
+                //        lblDistancia.Text = "Cidade não encontrada.";
+                //    }
+                //}
             }
         }
 
