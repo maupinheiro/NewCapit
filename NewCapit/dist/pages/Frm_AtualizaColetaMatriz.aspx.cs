@@ -818,7 +818,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@carga", carga);                    
                     cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@andamento", situacaoOC);
-                    cmd.Parameters.AddWithValue("@cva", SafeDateValue(txtCVA.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
                     cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
