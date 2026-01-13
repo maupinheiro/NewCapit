@@ -58,7 +58,7 @@
                                         ID="btnAtualizarGrid" 
                                         runat="server"
                                         Text="Pesquisar"
-                                        CssClass="btn btn-warning w-100"
+                                        CssClass="btn btn-warning w-100" OnClick="btnAtualizarGrid_Click"
                                          />
                                 </div>
                                 </div>                                

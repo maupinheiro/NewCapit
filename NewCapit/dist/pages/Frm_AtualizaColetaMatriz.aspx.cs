@@ -858,50 +858,98 @@ namespace NewCapit.dist.pages
                 }
 
                 // Atualizando a ordem de coleta 
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                using (SqlConnection conn = new SqlConnection(
+       WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
-                    string queryCarregamento = @"UPDATE tbcarregamentos SET 
-                        situacao = @situacao,
-                        cva = @cva,
-                        status = @status,                        
-                        cod_expedidor = @cod_expedidor,
-                        expedidor = @expedidor,
-                        cid_expedidor = @cid_expedidor,
-                        uf_expedidor = @uf_expedidor,
-                        cod_recebedor = @cod_recebedor,
-                        recebedor = @recebedor,
-                        cid_recebedor = @cid_recebedor,
-                        uf_recebedor = @uf_recebedor
-                    WHERE num_carregamento = @num_carregamento";
-                    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
+                    var cvaOC = txtCVA.Text.Trim();
 
-                    // Num carregamento
-                    cmdCarregamento.Parameters.Add("@num_carregamento", SqlDbType.NVarChar).Value = novaColeta.Text.Trim();
+                    string queryCarregamento = @"
+        UPDATE tbcarregamentos SET 
+            situacao = @situacao,
+            cva = @cva,
+            status = @status,                        
+            cod_expedidor = @cod_expedidor,
+            expedidor = @expedidor,
+            cid_expedidor = @cid_expedidor,
+            uf_expedidor = @uf_expedidor,
+            cod_recebedor = @cod_recebedor,
+            recebedor = @recebedor,
+            cid_recebedor = @cid_recebedor,
+            uf_recebedor = @uf_recebedor
+        WHERE num_carregamento = @num_carregamento";
 
-                    // Status e datas
-                    cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar).Value = situacaoOC;
-                    cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = cvaOC ;
-                    cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar).Value = statusOC;
-                    cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar).Value = SafeDateValue(txtCVA.Text.Trim()) ?? (object)DBNull.Value;
+                    using (SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn))
+                    {
+                        // Num carregamento (obrigatório)
+                        cmdCarregamento.Parameters.Add("@num_carregamento", SqlDbType.NVarChar, 20)
+                            .Value = novaColeta.Text.Trim();
 
-                    // Expedidor
-                    cmdCarregamento.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = Convert.ToInt32(txtCodExpedidor.Text.Trim());
-                    cmdCarregamento.Parameters.Add("@expedidor", SqlDbType.NVarChar).Value = cboExpedidor.Text.Trim();
-                    cmdCarregamento.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar).Value = txtCidExpedidor.Text.Trim();
-                    cmdCarregamento.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar).Value = txtUFExpedidor.Text.Trim();
+                        // Status
+                        cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar, 50)
+                            .Value = string.IsNullOrWhiteSpace(situacaoOC)
+                                ? (object)DBNull.Value
+                                : situacaoOC.Trim();
 
-                    // Recebedor
-                    cmdCarregamento.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = Convert.ToInt32(txtCodRecebedor.Text.Trim());
-                    cmdCarregamento.Parameters.Add("@recebedor", SqlDbType.NVarChar).Value = cboRecebedor.Text.Trim();
-                    cmdCarregamento.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar).Value = txtCidRecebedor.Text.Trim();
-                    cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar).Value = txtUFRecebedor.Text.Trim();
+                        cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar, 50)
+                            .Value = string.IsNullOrWhiteSpace(cvaOC)
+                                ? (object)DBNull.Value
+                                : cvaOC.Trim();
 
+                        cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar, 50)
+                            .Value = string.IsNullOrWhiteSpace(statusOC)
+                                ? (object)DBNull.Value
+                                : statusOC.Trim();
 
+                        // Expedidor
+                        int codExp;
+                        cmdCarregamento.Parameters.Add("@cod_expedidor", SqlDbType.Int)
+                            .Value = int.TryParse(txtCodExpedidor.Text, out codExp)
+                                ? (object)codExp
+                                : (object)DBNull.Value;
 
-                    // Chama método que verifica no banco
-                    conn.Open();
-                    cmdCarregamento.ExecuteNonQuery();
+                        cmdCarregamento.Parameters.Add("@expedidor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(cboExpedidor.Text)
+                                ? (object)DBNull.Value
+                                : cboExpedidor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(txtCidExpedidor.Text)
+                                ? (object)DBNull.Value
+                                : txtCidExpedidor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2)
+                            .Value = string.IsNullOrWhiteSpace(txtUFExpedidor.Text)
+                                ? (object)DBNull.Value
+                                : txtUFExpedidor.Text.Trim();
+
+                        // Recebedor
+                        int codRec;
+                        cmdCarregamento.Parameters.Add("@cod_recebedor", SqlDbType.Int)
+                            .Value = int.TryParse(txtCodRecebedor.Text, out codRec)
+                                ? (object)codRec
+                                : (object)DBNull.Value;
+
+                        cmdCarregamento.Parameters.Add("@recebedor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(cboRecebedor.Text)
+                                ? (object)DBNull.Value
+                                : cboRecebedor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(txtCidRecebedor.Text)
+                                ? (object)DBNull.Value
+                                : txtCidRecebedor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2)
+                            .Value = string.IsNullOrWhiteSpace(txtUFRecebedor.Text)
+                                ? (object)DBNull.Value
+                                : txtUFRecebedor.Text.Trim();
+
+                        conn.Open();
+                        cmdCarregamento.ExecuteNonQuery();
+                    }
                 }
+
+
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
