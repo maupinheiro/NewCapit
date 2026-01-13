@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
 
 
 
@@ -21,46 +22,94 @@ namespace NewCapit.dist.pages
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
+            {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                    txtCreditadoPor.Text = nomeUsuario;
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                    Response.Redirect("Login.aspx");
+                }
+                CarregarGrid();
+            }
                 
-            if (Session["UsuarioLogado"] != null)
-            {
-                string nomeUsuario = Session["UsuarioLogado"].ToString();
-                var lblUsuario = nomeUsuario;
-                txtCreditadoPor.Text = nomeUsuario;
-            }
-            else
-            {
-                var lblUsuario = "<Usuário>";
-                Response.Redirect("Login.aspx");
-            }
-            CarregarGrid();
+            
+           
 
         }
         void CarregarGrid()
         {
-            SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+            using (SqlConnection con = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string sql = @"SELECT nomemotorista, cpf, transportadora,
-                       cpf_cnpj_proprietario, placa, tipoveiculo, eixos,
-                       tomadorservico, expedidor, cid_expedidor, uf_expedidor,
-                       recebedor, cid_recebedor, uf_recebedor,
-                       idpedagio, valorpedagio, id
-                       FROM tbcarregamentos
-                       WHERE pedagio = 'SIM'
-                          AND NOT (
-                                tomadorservico LIKE 'VOLKS%'
-                                AND (cva IS NULL OR LTRIM(RTRIM(cva)) = '')
-                              )
-                          AND pedagiofeito = 'NÃO'
-                        ORDER BY nomemotorista
-                        ";
+                StringBuilder sql = new StringBuilder(@"
+            SELECT nomemotorista, cpf, transportadora,
+                   cpf_cnpj_proprietario, placa, tipoveiculo, eixos,
+                   tomadorservico, expedidor, cid_expedidor, uf_expedidor,
+                   recebedor, cid_recebedor, uf_recebedor,
+                   idpedagio, valorpedagio, id,doc_pedagio, convert(varchar, dtemissaopedagio,103) as dtemissaopedagio
+            FROM tbcarregamentos
+            WHERE pedagio = 'SIM'
+              AND NOT (
+                    tomadorservico LIKE 'VOLKS%'
+                    AND (cva IS NULL OR LTRIM(RTRIM(cva)) = '')
+                  )
+              AND pedagiofeito = 'NÃO'
+        ");
 
-                SqlCommand cmd = new SqlCommand(sql, con);   
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+
+                // 🔎 Filtro por documento / motorista / placa
+                if (!string.IsNullOrWhiteSpace(txtCodMotorista.Text))
+                {
+                    sql.Append(@"
+                AND (
+                    doc_pedagio LIKE @pesquisa
+                    OR nomemotorista LIKE @pesquisa
+                    OR placa LIKE @pesquisa
+                )
+            ");
+
+                    cmd.Parameters.AddWithValue(
+                        "@pesquisa", "%" + txtCodMotorista.Text.Trim() + "%"
+                    );
+                }
+
+                // 📅 Data inicial
+                // 📅 Data inicial (Início do dia: 00:00:00)
+                if (!string.IsNullOrWhiteSpace(txtDataInicial.Text))
+                {
+                    sql.Append(" AND dtemissaopedagio >= @dataInicial ");
+                    // .Date garante que pegamos apenas a data com hora 00:00:00
+                    DateTime dataInicial = DateTime.Parse(txtDataInicial.Text).Date;
+                    cmd.Parameters.AddWithValue("@dataInicial", dataInicial);
+                }
+
+                // 📅 Data final (Fim do dia: 23:59:59 para incluir registros com horário)
+                if (!string.IsNullOrWhiteSpace(txtDataFinal.Text))
+                {
+                    sql.Append(" AND dtemissaopedagio <= @dataFinal ");
+                    // Adiciona um dia e subtrai um tique para chegar ao final do dia escolhido
+                    DateTime dataFinal = DateTime.Parse(txtDataFinal.Text).Date.AddDays(1).AddTicks(-1);
+                    cmd.Parameters.AddWithValue("@dataFinal", dataFinal);
+                }
+
+
+                sql.Append(" ORDER BY nomemotorista ");
+
+                cmd.CommandText = sql.ToString();
+
                 con.Open();
                 rpCarregamentos.DataSource = cmd.ExecuteReader();
                 rpCarregamentos.DataBind();
             }
         }
+
         protected void rpCarregamentos_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Editar")
@@ -252,9 +301,10 @@ namespace NewCapit.dist.pages
             }
         }
 
-
-
-
+        protected void btnAtualizarGrid_Click(object sender, EventArgs e)
+        {
+            CarregarGrid();
+        }
     }
 
 }
