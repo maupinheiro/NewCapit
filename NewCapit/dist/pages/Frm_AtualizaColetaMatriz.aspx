@@ -1225,7 +1225,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </Columns>
 </asp:GridView>
 </div>
-</div>
+
 
 
 
@@ -1233,18 +1233,17 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                             <!-- Conteúdo Notas Fiscais -->
                                                                                         </div>
 
-                                                                                        <div class="tab-pane fade" id="tabCte">
-                                                                                            <!-- Conteúdo CT-e / NFS-e -->
-                                                                                            <div class="row g-3">
-                                                                                               
-                                                                                                <div class="col-md-3">
-                                                                                                    <div class="form-group">
-                                                                                                        <span class="details">Chave de Acesso:</span>
-                                                                                                        <asp:TextBox ID="txtChaveCte" class="form-control" runat="server"></asp:TextBox>
-                                                                                                    </div>
-                                                                                                </div>                                                                                              
-                                                                                            </div>
-                                                                                        </div>
+<div class="tab-pane fade" id="tabCte">
+<!-- Conteúdo CT-e / NFS-e -->
+<div class="row g-3">
+<div class="col-md-3">
+<div class="form-group">
+<span class="details">Chave de Acesso:</span>
+<asp:TextBox ID="txtChaveCte" class="form-control" runat="server"></asp:TextBox>
+</div>
+</div>                                                                                              
+</div>
+</div>
 
 <div class="tab-pane fade" id="tabPedagio">
 <!-- Conteúdo Pedágio -->
@@ -1284,9 +1283,83 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 </div>
 
-                                                                                        <div class="tab-pane fade" id="tabKrona">
-                                                                                            <!-- Conteúdo Krona -->
-                                                                                        </div>
+<div class="tab-pane fade" id="tabKrona">
+<!-- Conteúdo Krona -->
+<div class="row g-3">
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Num. SM:</span>
+        <asp:TextBox ID="txtSM" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <div class="form-group">
+        <span class="details">Percurso:</span>
+        <asp:DropDownList 
+            ID="ddlPercurso" 
+            runat="server"
+            CssClass="form-select">
+    
+            <asp:ListItem Text="Selecione..." Value="" />
+            <asp:ListItem Text="Urbano" Value="Urbano" />
+            <asp:ListItem Text="Rodoviário" Value="Rodoriário" />
+        </asp:DropDownList>
+    </div>
+</div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Peso Total:</span>
+        <asp:TextBox ID="txtPeso" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Valor Total:</span>
+        <asp:TextBox ID="txtValorTotal" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Previsão Inicio:</span>
+        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Previsão Termino:</span>
+        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Id Rota:</span>
+        <asp:TextBox ID="txtIdRotaKrona" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+        <span class="details">Descrição da Rota:</span>
+        <asp:DropDownList 
+            ID="ddlRotaKrona" 
+            runat="server"
+            CssClass="form-select select2">
+        </asp:DropDownList>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+        <span class="details">Enviada Por:</span>
+        <asp:TextBox ID="txtSmEnviadaPor" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <br />
+        <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" runat="server" Text="Enviar SM" />
+    </div>
+</div>
+</div>
 
                                                                                         <div class="tab-pane fade" id="tabDespesa">
                                                                                             <!-- Conteúdo Despesa Motorista -->
@@ -1299,17 +1372,10 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                         <div class="tab-pane fade" id="tabAlteracoes">
                                                                                             <!-- Conteúdo Alterações -->
                                                                                         </div>
-                                                                                        </div>
-
-
-                                                                                    </ContentTemplate>
-
-                                                                                </asp:UpdatePanel>
-                                                                                
-
-
-
-                                                                            </div>
+</div>
+</ContentTemplate>
+</asp:UpdatePanel>
+</div>
 </div>
 
 
