@@ -112,7 +112,7 @@ namespace NewCapit.dist.pages
 
                 // 🔐 Segurança: não salvar se já estiver SIM
                 SqlCommand check = new SqlCommand(@"
-            SELECT pedagiofeito, idpedagio, valorpedagio, historicopedagio, creditopedagio, pagadorpedagioida, pagadorpedagiovolta, dtemissaopedagio 
+            SELECT pedagiofeito, idpedagio, valorpedagio, historicopedagio, creditopedagio, pagadorpedagioida, pagadorpedagiovolta, dtemissaopedagio, doc_pedagio 
             FROM tbcarregamentos 
             WHERE id = @id", conn);
 
@@ -136,11 +136,13 @@ namespace NewCapit.dist.pages
                 creditopedagio = @creditopedagio,
                 pagadorpedagioida=@pagadorpedagioida,
                 pagadorpedagiovolta = @pagadorpedagiovolta,
+                doc_pedagio = @doc_pedagio,
                 pedagiofeito = 'SIM'
             WHERE id = @id", conn);
 
                 cmd.Parameters.AddWithValue("@id", hdIdCarregamento.Value);
-                cmd.Parameters.AddWithValue("@idpedagio", txtDocumentoPedagio.Text.Trim());
+                cmd.Parameters.AddWithValue("@idpedagio", txtComprovantePedagio.Text.Trim());
+                cmd.Parameters.AddWithValue("@doc_pedagio", txtDocumentoPedagio.Text.Trim());
                 cmd.Parameters.AddWithValue("@valorpedagio", valorPedagio);
                 cmd.Parameters.AddWithValue("@dtemissaopedagio", DateTime.Now);
                 cmd.Parameters.AddWithValue("@historicopedagio", txtObservacaoPedagio.Text.Trim());
