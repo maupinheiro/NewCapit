@@ -51,7 +51,7 @@ namespace NewCapit.dist.pages
                 PreencherComboMotorista();
                 PreencherNumTabelaDeFrete();
             }
-
+            
             //DateTime dataHoraAtual = DateTime.Now;
             txtAltCad.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             lbDtAtualizacao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
@@ -421,7 +421,7 @@ namespace NewCapit.dist.pages
                     cboDeslocamento.Text =  dr["deslocamento"].ToString();
                     ddlTerceiro.SelectedItem.Text= dr["valor_fixo_terceiro"].ToString();
                     ddlValorFixoTng.SelectedItem.Text =  dr["valor_fixo_tng"].ToString();
-                    ddlEmitePedagio.SelectedItem.Text = dr["emitepedagio"].ToString(); 
+                    ddlEmitePedagio.SelectedItem.Text =  dr["emitepedagio"].ToString();
                     cboNomAgregado.SelectedItem.Text= dr["nommot_especial"].ToString();
                     txtCadastro.Text = dr["cadastro_usuario"].ToString();
                     lblDtCadastro.Text = dr["data_cadastro"].ToString();
@@ -453,6 +453,16 @@ namespace NewCapit.dist.pages
                 dr.Close();
             }
             
+        }
+        private void SetSelectedValue(DropDownList ddl, string value)
+        {
+            if (ddl.Items.FindByValue(value) != null)
+            {
+                ddl.ClearSelection(); // Limpa qualquer seleção anterior
+                ddl.SelectedValue = value;
+            }
+            // Opcional: Se o valor não for encontrado, você pode querer definir um padrão
+            // else { ddl.SelectedIndex = 0; } 
         }
         string GetDecimal(object valor)
         {
@@ -1096,8 +1106,12 @@ namespace NewCapit.dist.pages
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
+                    if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+                    {
+                        id = HttpContext.Current.Request.QueryString["id"].ToString();
+                    }
                     // Mesmo mapeamento de parâmetros do seu INSERT
-                    cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(novaTabelaDeFrete.Text);
+                    cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(id);
                     cmd.Parameters.Add("@desc_frete", SqlDbType.NVarChar).Value = descr_frete;
                     cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
                     cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = cboRotas.SelectedItem.Text;
@@ -1138,7 +1152,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text;
                     cmd.Parameters.Add("@alteracao_usuario", SqlDbType.NVarChar).Value = txtUsuCadastro.Text;
                     cmd.Parameters.Add("@alteracao_data", SqlDbType.NVarChar).Value = lbDtAtualizacao.Text;
-                    cmd.Parameters.Add("@emitepedagio", SqlDbType.NVarChar).Value = ddlEmitePedagio.SelectedValue;
+                    cmd.Parameters.Add("@emitepedagio", SqlDbType.NVarChar).Value = ddlEmitePedagio.SelectedItem.Text;
                     cmd.Parameters.Add("@codmot_especial", SqlDbType.NChar).Value = txtCodAgregado.Text;
                     cmd.Parameters.Add("@nommot_especial", SqlDbType.NVarChar).Value = cboNomAgregado.SelectedItem.Text;
                     cmd.Parameters.Add("@codtra_especial", SqlDbType.NChar).Value = txtCodTra.Text;
@@ -1173,25 +1187,44 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@valor_hora_parada", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtValorFranquia.Text);
                     TimeSpan franquiaHora;
 
-                    if (!TimeSpan.TryParse(txtFranquia.Text, out franquiaHora))
+                    if (!TimeSpan.TryParseExact(
+                            txtFranquia.Text,
+                            @"hh\:mm\:ss",
+                            CultureInfo.InvariantCulture,
+                            out franquiaHora))
                     {
-                        //MostrarMsg("Franquia inválida. Use o formato HH:mm ou HH:mm:ss");
+                        ClientScript.RegisterStartupScript(this.GetType(), "ErroFranquia",
+                            "<script>alert('❌ Use o formato HH:mm:ss');</script>");
                         return;
                     }
 
                     cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = franquiaHora;
-                   // cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = txtFranquia.Text;
+
+                    // cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = txtFranquia.Text;
 
 
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+
+                        ClientScript.RegisterStartupScript(this.GetType(), "Sucesso",
+                            "<script>alert('✅ Frete atualizado com sucesso!'); window.location.href='/dist/pages/ConsultaFretes.aspx';</script>");
+                    }
+                    catch (Exception ex)
+                    {
+                        // ✅ BOA PRÁTICA: Logar o erro para depuração
+                        // Logger.LogError(ex); // Exemplo de como você poderia logar o erro
+                        ClientScript.RegisterStartupScript(this.GetType(), "Erro",
+                            $"<script>alert('❌ Ocorreu um erro ao atualizar o frete: {ex.Message.Replace("'", "\\'")}')</script>");
+                    }
                 }
 
-                ClientScript.RegisterStartupScript(this.GetType(), "Sucesso",
-                    "<script>alert('✅ Frete atualizado com sucesso!');</script>");
+                //ClientScript.RegisterStartupScript(this.GetType(), "Sucesso",
+                //    "<script>alert('✅ Frete atualizado com sucesso!');</script>");
             }
-            Response.Redirect("/dist/pages/ConsultaFretes.aspx", false);
-            Context.ApplicationInstance.CompleteRequest();
+            //Response.Redirect("/dist/pages/ConsultaFretes.aspx", false);
+            //Context.ApplicationInstance.CompleteRequest();
         }
         public static class DbParse
         {
