@@ -1030,6 +1030,46 @@ namespace NewCapit.dist.pages
                 //string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
                 //ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
             }
+            if (e.CommandName == "AtualizarColeta")
+            {
+                string carga = e.CommandArgument.ToString();
+
+                // Recuperar os controles de dentro do item                
+               
+               
+
+                // Exemplo: atualizando no banco
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
+                    TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
+                    TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
+
+
+                    string query = @"UPDATE tbcargas SET                                  
+                                ot = @ot,
+                                catraca = @catraca,
+                                rede = @rede 
+                                WHERE carga = @carga";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", carga);
+                    cmd.Parameters.AddWithValue("@ot", txtOT.Text);
+                    cmd.Parameters.AddWithValue("@catraca", txtCatracas.Text);
+                    cmd.Parameters.AddWithValue("@rede", txtRedes.Text.Trim());
+                   
+
+                    // Chama método que verifica no banco
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+              
+
+                // Após atualizar, recarregar os dados no Repeater
+                ViewState["Coletas"] = null;
+                CarregarColetas(novaColeta.Text);
+            }
         }
 
         protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)

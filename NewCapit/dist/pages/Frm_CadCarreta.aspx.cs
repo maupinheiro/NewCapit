@@ -519,39 +519,57 @@ namespace NewCapit
 
                 string formatado = valor.Trim().Replace(',', '.');
 
-                if (decimal.TryParse(formatado, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numero))
+                if (decimal.TryParse(
+                    formatado,
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture,
+                    out decimal numero))
                     return numero;
 
                 return DBNull.Value;
             }
 
-            DateTime dataHoraAtual = DateTime.Now;
+            object SafeDate(string input)
+            {
+                if (string.IsNullOrWhiteSpace(input))
+                    return DBNull.Value;
+
+                if (DateTime.TryParseExact(
+                    input,
+                    "dd/MM/yyyy",
+                    CultureInfo.GetCultureInfo("pt-BR"),
+                    DateTimeStyles.None,
+                    out DateTime data))
+                    return data;
+
+                return DBNull.Value;
+            }
 
             string sqlSalvarCarreta = @"
-        INSERT INTO tbcarretas
-        (
-            codcarreta, modelo, placacarreta, tipocarreta, anocarreta, tiporeboque,
-            codprop, descprop, nucleo, ativo_inativo, marca, renavan, cor, antt,
-            codrastreador, tecnologia, idrastreador, comunicacao, chassi,
-            licenciamento, kilometragem, carretaalugada, alugada_de, cnpj_de,
-            inicio_contrato, termino_contrato, uf_placa_carreta,
-            municipio_placa_carreta, data_cadastro, cadastrado_por, dt_cadastro,
-            patrimonio, tara, comprimento, largura, altura, aquisicao
-        )
-        VALUES
-        (
-            @codcarreta, @modelo, @placacarreta, @tipocarreta, @anocarreta, @tiporeboque,
-            @codprop, @descprop, @nucleo, @ativo_inativo, @marca, @renavan, @cor, @antt,
-            @codrastreador, @tecnologia, @idrastreador, @comunicacao, @chassi,
-            @licenciamento, @kilometragem, @carretaalugada, @alugada_de, @cnpj_de,
-            @inicio_contrato, @termino_contrato, @uf_placa_carreta,
-            @municipio_placa_carreta, @data_cadastro, @cadastrado_por, @dt_cadastro,
-            @patrimonio, @tara, @comprimento, @largura, @altura, @aquisicao
-        )";
+INSERT INTO tbcarretas
+(
+    codcarreta, modelo, placacarreta, tipocarreta, anocarreta, tiporeboque,
+    codprop, descprop, nucleo, ativo_inativo, marca, renavan, cor, antt,
+    codrastreador, tecnologia, idrastreador, comunicacao, chassi,
+    licenciamento, kilometragem, carretaalugada, alugada_de, cnpj_de,
+    inicio_contrato, termino_contrato, uf_placa_carreta,
+    municipio_placa_carreta, data_cadastro, cadastrado_por, 
+    patrimonio, tara, comprimento, largura, altura, aquisicao
+)
+VALUES
+(
+    @codcarreta, @modelo, @placacarreta, @tipocarreta, @anocarreta, @tiporeboque,
+    @codprop, @descprop, @nucleo, @ativo_inativo, @marca, @renavan, @cor, @antt,
+    @codrastreador, @tecnologia, @idrastreador, @comunicacao, @chassi,
+    @licenciamento, @kilometragem, @carretaalugada, @alugada_de, @cnpj_de,
+    @inicio_contrato, @termino_contrato, @uf_placa_carreta,
+    @municipio_placa_carreta, @data_cadastro, @cadastrado_por, 
+    @patrimonio, @tara, @comprimento, @largura, @altura, @aquisicao
+)";
 
             using (SqlCommand comando = new SqlCommand(sqlSalvarCarreta, con))
             {
-                // 🔤 STRINGS COM TAMANHO (ANTI-TRUNCAMENTO)
+                // 🔤 STRINGS
                 comando.Parameters.Add("@codcarreta", SqlDbType.VarChar, 20).Value = txtCodVei.Text.Trim().ToUpper();
                 comando.Parameters.Add("@modelo", SqlDbType.VarChar, 50).Value = txtModelo.Text.Trim().ToUpper();
                 comando.Parameters.Add("@placacarreta", SqlDbType.Char, 7).Value = txtPlaca.Text.Replace("-", "").Trim().ToUpper();
@@ -582,22 +600,18 @@ namespace NewCapit
                 // 🔢 NUMÉRICOS
                 comando.Parameters.Add("@kilometragem", SqlDbType.VarChar, 15).Value = txtOdometro.Text.Trim();
                 comando.Parameters.Add("@tara", SqlDbType.VarChar, 10).Value = txtTara.Text.Trim();
-
                 comando.Parameters.Add("@comprimento", SqlDbType.Decimal).Value = DecimalOuDBNull(txtComprimento.Text);
                 comando.Parameters.Add("@largura", SqlDbType.Decimal).Value = DecimalOuDBNull(txtLargura.Text);
                 comando.Parameters.Add("@altura", SqlDbType.Decimal).Value = DecimalOuDBNull(txtAltura.Text);
 
-                // 📅 DATAS
-                comando.Parameters.Add("@licenciamento", SqlDbType.VarChar, 10).Value = SafeDate(txtLicenciamento.Text.Trim());
-                comando.Parameters.Add("@inicio_contrato", SqlDbType.VarChar, 10).Value = SafeDate(txtInicioContrato.Text.Trim());
-                comando.Parameters.Add("@termino_contrato", SqlDbType.VarChar, 10).Value = SafeDate(txtTerminoContrato.Text.Trim());
-                comando.Parameters.Add("@aquisicao", SqlDbType.VarChar, 10).Value = SafeDate(txtDataAquisicao.Text.Trim());
+                // 📅 DATAS (100% tipadas)
+                comando.Parameters.Add("@licenciamento", SqlDbType.Date).Value = SafeDate(txtLicenciamento.Text);
+                comando.Parameters.Add("@inicio_contrato", SqlDbType.Date).Value = SafeDate(txtInicioContrato.Text);
+                comando.Parameters.Add("@termino_contrato", SqlDbType.Date).Value = SafeDate(txtTerminoContrato.Text);
+                comando.Parameters.Add("@aquisicao", SqlDbType.Date).Value = SafeDate(txtDataAquisicao.Text);
 
-                comando.Parameters.Add("@data_cadastro", SqlDbType.VarChar, 16)
-                    .Value = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-
-                comando.Parameters.Add("@dt_cadastro", SqlDbType.VarChar, 10)
-                    .Value = dataHoraAtual.ToString("dd/MM/yyyy");
+                // ⏱️ DATA/HORA DO SISTEMA
+                comando.Parameters.Add("@data_cadastro", SqlDbType.DateTime).Value = DateTime.Now;
 
                 con.Open();
                 comando.ExecuteNonQuery();
@@ -611,6 +625,7 @@ namespace NewCapit
             Thread.Sleep(5000);
             Response.Redirect("/dist/pages/ControleCarretas.aspx");
         }
+
         private object SafeDate(string input)
         {
             DateTime dt;

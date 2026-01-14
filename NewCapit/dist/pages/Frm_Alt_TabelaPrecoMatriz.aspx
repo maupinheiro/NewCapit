@@ -101,6 +101,32 @@
         document.addEventListener("DOMContentLoaded", alcularFreteEspecial);
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.querySelector(".time-mask");
+
+            input.addEventListener("input", function () {
+                let v = input.value.replace(/\D/g, "");
+
+                if (v.length >= 3)
+                    v = v.slice(0, 2) + ":" + v.slice(2);
+                if (v.length >= 6)
+                    v = v.slice(0, 5) + ":" + v.slice(5, 7);
+
+                input.value = v;
+            });
+
+            input.addEventListener("blur", function () {
+                const regex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+
+                if (input.value && !regex.test(input.value)) {
+                    alert("⛔ Horário inválido. Use HH:mm:ss");
+                    input.value = "";
+                    input.focus();
+                }
+            });
+        });
+    </script>
 
 
 
@@ -428,13 +454,16 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <span class="details">FRANQUIA (HH:mm):</span>
-                                                            <asp:TextBox ID="txtFranquia" runat="server" CssClass="form-control"> 
-                                                            </asp:TextBox>
+                                                            <asp:TextBox 
+                                                                        ID="txtFranquia" 
+                                                                        runat="server" 
+                                                                        CssClass="form-control time-mask" 
+                                                                        MaxLength="8" />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <span class="details">VALOR (HH:mm):</span>
+                                                            <span class="details">VALOR:</span>
                                                             <asp:TextBox ID="txtValorFranquia" runat="server" CssClass="form-control" oninput="mascaraMoeda(this);"> 
                                                             </asp:TextBox>
                                                         </div>
@@ -753,7 +782,7 @@
                         <%--<img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />--%>
                     </span>
                     <div class="info-box-content">
-                        <span class="info-box-number">
+                     
                             <div class="row g-3">
                                 <div class="col-md-2">
                                     <div class="form-group">

@@ -673,10 +673,10 @@
                                                     <asp:TextBox ID="txtCarreta" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <div class="form-group">
                                                     <span class="details">CONJUNTO:</span>
-                                                    <asp:TextBox ID="txtConjunto" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                    <asp:TextBox ID="txtConjunto" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="80"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -1060,7 +1060,7 @@
                                                                                         <div class="form-group">
                                                                                             <span class="details">Rede:</span>
                                                                                             <div class="input-group">
-                                                                                                <asp:TextBox ID="txtRedes" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                                                                                <asp:TextBox ID="txtRedes" runat="server" Text='<%# Eval("rede") %>' class="form-control" Style="text-align: center"></asp:TextBox>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1068,7 +1068,7 @@
                                                                                         <div class="form-group">
                                                                                             <span class="details">Catraca:</span>
                                                                                             <div class="input-group">
-                                                                                                <asp:TextBox ID="txtCatracas" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                                                                                <asp:TextBox ID="txtCatracas" runat="server" Text='<%# Bind("catraca") %>' class="form-control" Style="text-align: center"></asp:TextBox>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1118,10 +1118,14 @@
                                                                                         <div class="form-group">
                                                                                             <span class="details">Ctrl.Cliente:</span>
                                                                                             <div class="input-group">
-                                                                                                <asp:TextBox ID="txOT" runat="server" class="form-control" Style="text-align: center"></asp:TextBox>
+                                                                                                <asp:TextBox ID="txtOT" runat="server" Text='<%# Bind("ot") %>' class="form-control" Style="text-align: center"></asp:TextBox>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
+                                                                                    <div class="col-md-1">
+                                                                                            <br />
+                                                                                            <asp:Button ID="btnSalvarDadosColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="AtualizarColeta" CommandArgument='<%# Eval("carga") %>' />
+                                                                                        </div>
 
                                                                                 </div>
 
