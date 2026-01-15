@@ -2335,13 +2335,16 @@ namespace NewCapit.dist.pages
             }
 
 
-            //if (codCliInicial.Text != "")
+        }
+        protected void codCliFinal_TextChanged(object sender, EventArgs e)
+        {
+            //using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //if (codCliFinal.Text != "")
             //{
-
-            //    string codigoRemetente = codCliInicial.Text.Trim();
-            //    string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            //    using (SqlConnection conn = new SqlConnection(strConn))
-            //    {
+            //    string codigoRemetente = codCliFinal.Text.Trim();  
+                    
+            //        using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            //        {
             //        string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
             //        using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -2353,19 +2356,18 @@ namespace NewCapit.dist.pages
             //            {
             //                if (reader.Read())
             //                {
-            //                    codCliInicial.Text = reader["codcli"].ToString();
-            //                    ddlCliInicial.SelectedItem.Text = reader["razcli"].ToString();
-            //                    txtMunicipioOrigem.Text = reader["cidcli"].ToString();
-            //                    txtUfOrigem.Text = reader["estcli"].ToString();
-            //                    codCliFinal.Focus();
+            //                    codCliFinal.Text = reader["codcli"].ToString();
+            //                    ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
+            //                    txtMunicipioDestino.Text = reader["cidcli"].ToString();
+            //                    txtUfDestino.Text = reader["estcli"].ToString();
             //                }
             //                else
             //                {
-            //                    ddlCliInicial.SelectedItem.Text = "Selecione...";
-            //                    codCliInicial.Text = "";
+            //                    ddlCliFinal.SelectedItem.Text = "Selecione...";
+            //                    codCliFinal.Text = "";
             //                    // Aciona o Toast via JavaScript
             //                    ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-            //                    codCliInicial.Focus();
+            //                    codCliFinal.Focus();
             //                    // Opcional: exibir mensagem ao usuário
             //                }
             //            }
@@ -2374,17 +2376,17 @@ namespace NewCapit.dist.pages
             //    }
 
             //}
-        }
-        protected void codCliFinal_TextChanged(object sender, EventArgs e)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                if (codCliFinal.Text != "")
+
+            if (!string.IsNullOrWhiteSpace(codCliFinal.Text))
             {
-                string codigoRemetente = codCliFinal.Text.Trim();  
-                    
-                    using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                    {
-                    string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+                string codigoRemetente = codCliFinal.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = @"SELECT codcli, razcli, cidcli, estcli 
+                         FROM tbclientes 
+                         WHERE codcli = @Codigo OR codvw = @Codigo";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -2395,26 +2397,44 @@ namespace NewCapit.dist.pages
                         {
                             if (reader.Read())
                             {
-                                codCliFinal.Text = reader["codcli"].ToString();
-                                ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
-                                txtMunicipioDestino.Text = reader["cidcli"].ToString();
-                                txtUfDestino.Text = reader["estcli"].ToString();
+                                string codCli = reader["codcli"].ToString();
+
+                                codCliFinal.Text = codCli;
+
+                                // 🔥 AQUI ESTÁ A CORREÇÃO
+                                if (ddlCliInicial.Items.FindByValue(codCli) != null)
+                                    ddlCliInicial.SelectedValue = codCli;
+                                else
+                                    ddlCliInicial.SelectedIndex = 0;
+
+                                txtMunicipioDestino.Text = reader["cidcli"] == DBNull.Value ? "" : reader["cidcli"].ToString();
+                                txtUfDestino.Text = reader["estcli"] == DBNull.Value ? "" : reader["estcli"].ToString();
+
+                                codCliFinal.Focus();
                             }
                             else
                             {
-                                ddlCliFinal.SelectedItem.Text = "Selecione...";
+                                ddlCliInicial.ClearSelection();
+                                ddlCliInicial.SelectedIndex = 0;
+
                                 codCliFinal.Text = "";
-                                // Aciona o Toast via JavaScript
-                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+
+                                ScriptManager.RegisterStartupScript(
+                                    this,
+                                    GetType(),
+                                    "toastNaoEncontrado",
+                                    "mostrarToastNaoEncontrado();",
+                                    true
+                                );
+
                                 codCliFinal.Focus();
-                                // Opcional: exibir mensagem ao usuário
                             }
                         }
                     }
-
                 }
-
             }
+
+
             if (codCliInicial.Text != "" && codCliFinal.Text != "")
             {
                 codCliFinal.Text = ddlCliFinal.SelectedValue;
@@ -2577,7 +2597,7 @@ namespace NewCapit.dist.pages
 
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             return R * c;
-        }        
+        }
 
         protected string CalcularTempo(object inicio, object fim)
         {
@@ -2592,16 +2612,16 @@ namespace NewCapit.dist.pages
             return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
 
 
-        //}
+        }
 
         void CarregarPedidos(int idCarga)
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string sql = @"SELECT pedido, emissao, peso, material, portao,
-                              iniciocar, termcar
-                       FROM tbPedidos
-                       WHERE id = @idCarga";
+                            iniciocar, termcar
+                    FROM tbPedidos
+                    WHERE id = @idCarga";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
@@ -2634,6 +2654,7 @@ namespace NewCapit.dist.pages
 
             //ddl.Items.Insert(0, new ListItem("Selecione", ""));
         }
+        
 
         protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
