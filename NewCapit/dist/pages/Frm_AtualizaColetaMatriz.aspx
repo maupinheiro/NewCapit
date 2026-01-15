@@ -420,6 +420,41 @@
         // Isso garante que o campo de busca do Select2 possa receber foco mesmo dentro do modal
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
     </script>
+    <%--<script>
+        function ativarSelect2() {
+            $('.select2').select2({
+                placeholder: "Selecione a rota",
+                allowClear: true,
+                width: '100%'
+            });
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+            ativarSelect2();
+        });
+
+        $(document).ready(function () {
+            ativarSelect2();
+        });
+    </script>--%>
+    <script>
+        function ativarSelect2() {
+            $('#ddlRotaKrona').select2({
+                placeholder: 'Selecione a rota',
+                width: '100%'
+            });
+
+            // EVENTO CHANGE
+            $('#ddlRotaKrona').on('change', function () {
+                var idRota = $(this).val(); // VALUE do option
+                $('#txtId_Rota').val(idRota);
+            });
+        }
+
+        $(document).ready(function () {
+            ativarSelect2();
+        });
+    </script>
 
     <div class="content-wrapper">
         <section class="content">
@@ -1333,15 +1368,33 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <!-- Conteúdo Notas Fiscais -->
 </div>
 
-<div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
+<div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="row g-3">
-<div class="col-md-3">
-<div class="form-group">
-<span class="details">Chave de Acesso:</span>
-<asp:TextBox ID="txtChaveCte" class="form-control" runat="server"></asp:TextBox>
+   <div class="col-md-3">
+    <input type="text"
+       class="form-control chave-cte"
+       placeholder="Chave de Acesso do CT-e / RPS-e"
+       maxlength="44" />
 </div>
-</div>                                                                                              
+</div>
+</br>
+<div class="row g-3">
+  <!-- GRID -->
+  <table class="table table-sm table-bordered tbl-cte mt-2">
+   <thead class="table-dark">
+     <tr>                                
+      <th>Estado</th>
+      <th>Muncipio</th>                                
+      <th>Filial</th>
+      <th>Nº CT-e</th>
+      <th>Série</th>                                
+      <th>Lançamento</th>
+      <th>Status</th>                               
+     </tr>
+   </thead>
+  <tbody></tbody>
+ </table>
 </div>
 </div>
 
@@ -1392,7 +1445,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <asp:TextBox ID="txtSM" class="form-control" runat="server"></asp:TextBox>
         </div>
     </div>
-    <div class="col-md-1">
+    <div class="col-md-2">
         <div class="form-group">
         <span class="details">Percurso:</span>
         <asp:DropDownList 
@@ -1433,20 +1486,34 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 <div class="row g-3">
     <div class="col-md-2">
-        <div class="form-group">
+        <%--<div class="form-group">
         <span class="details">Id Rota:</span>
-        <asp:TextBox ID="txtIdRotaKrona" class="form-control" runat="server"></asp:TextBox>
-        </div>
+        <asp:TextBox ID="txtIdRotaKrona" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+        </div>--%>
+        <asp:TextBox ID="txtId_Rota"
+    runat="server"
+    CssClass="form-control mt-2"
+    ClientIDMode="Static"
+    ReadOnly="true">
+</asp:TextBox>
     </div>
     <div class="col-md-4">
-        <div class="form-group">
+        <%--<div class="form-group">
         <span class="details">Descrição da Rota:</span>
         <asp:DropDownList 
             ID="ddlRotaKrona" 
             runat="server"
-            CssClass="form-select select2">
+            CssClass="form-select select2"
+            AutoPostBack="true"
+            OnSelectedIndexChanged="ddlRotaKrona_SelectedIndexChanged">
         </asp:DropDownList>
-        </div>
+        </div>--%>
+        <asp:DropDownList ID="ddlRotaKrona"
+    runat="server"
+    CssClass="form-control select2"
+    ClientIDMode="Static">
+</asp:DropDownList>
+
     </div>
     <div class="col-md-4">
         <div class="form-group">
@@ -1472,7 +1539,14 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
     <!-- Conteúdo Alterações -->
 </div>
+                                                                                        
 </div>
+                                                                                                <div class="row g-3">
+                                                                                        <div class="col-md-10"></div>
+                                                                                        <div class="col-md-2">
+    <br />
+    <asp:Button ID="Button1" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+</div></div></div>
 </div>
 </ContentTemplate>
 </asp:UpdatePanel>
@@ -1520,15 +1594,42 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                 </div>
                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </div>                                                                                        
                                                                                         <div class="col-md-2">
-                                                                                            <div class="form-group">
-                                                                                                <span class="details">Núm. CVA:</span>
-                                                                                                <div class="input-group">
-                                                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
-                                                                                                </div>
+    <div class="form-group">
+        <span class="details">Data e Hora da Coleta:<asp:Label ID="Label2" runat="server" Text=""></asp:Label></span>
+        <div class="input-group">
+            <div class="input-group">
+                <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+            </div>
+
+        </div>
+        <span class="msg-erro text-danger" style="display: none;"></span>
+    </div>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        <div class="col-md-2">
+    <div class="form-group">
+        <span class="details">Núm. CVA:</span>
+        <div class="input-group">
+            <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
+        </div>
+    </div>
+</div>
+                                                                                                                        
+
+                                                            <div class="col-md-2">
+    <div class="form-group">
+        <span class="details">Veículo Disponível:<asp:Label ID="Label3" runat="server" Text=""></asp:Label></span>
+        <div class="input-group">
+            <div class="input-group">
+                <asp:TextBox ID="txtVeiculoDisponivel" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+            </div>
+
+        </div>
+        <span class="msg-erro text-danger" style="display: none;"></span>
+    </div>
+</div>
+
                                                                                         <div class="col-md-2">
                                                                                             <div class="form-group">
                                                                                                 <span class="">Status:</span>
@@ -1538,24 +1639,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                             </div>
                                                                                         </div>
 
-                                                                                        <div class="col-md-1">
-                                                                                            <br />
-                                                                                            <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
-                                                                                        </div>
-                                                                                        <div class="col-md-1">
-                                                                                            <br />
-                                                                                            <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
-                                                                                        </div>
-                                                                                        <%-- <div class="col-md-1">
-        <br />
-        <asp:Button ID="btnAbrirModal" runat="server" Text="Ocorrência" CommandName="Ocorrencias" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-danger" />
-
-    </div>--%>
-                                                                                        <div class="col-md-1">
-                                                                                            <br />
-                                                                                            <asp:Button ID="btnOrdemColeta" runat="server" Text="Impr. O.C." CommandName="Coletas" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-warning w-100" />
-
-                                                                                        </div>
+                                                                                        
                                                                                     </div>
 
                                                                                     <div class="row g-3">
@@ -1652,6 +1736,21 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
+                                                                                    <div class="row g-3">
+                                                                                        <div class="col-md-10"></div>
+                                                                                        <div class="col-md-2">
+    <br />
+    <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+</div>
+<%--<div class="col-md-1">
+    <br />
+    <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+</div>                                                                                                                                                                             <div class="col-md-1">
+    <br />
+    <asp:Button ID="btnOrdemColeta" runat="server" Text="Impr. O.C." CommandName="Coletas" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-warning w-100" />
+
+</div>
+  --%>                                                                                  </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

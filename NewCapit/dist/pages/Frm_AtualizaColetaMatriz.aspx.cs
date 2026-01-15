@@ -86,6 +86,7 @@ namespace NewCapit.dist.pages
                 CarregaMap(txtPlaca.Text);
                 PreencherClienteInicial();
                 PreencherClienteFinal();
+                
 
             }
             //CarregarFotoMotorista(fotoMotorista);
@@ -706,6 +707,31 @@ namespace NewCapit.dist.pages
                         btnOrdem.CssClass += " disabled";
                     }
                 }
+            }
+
+            if (e.Item.ItemType == ListItemType.Item ||
+        e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+
+                using (SqlConnection conn = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    string sqlr = @"SELECT id_rota, descricao_rota 
+                           FROM tbrotaskrona 
+                           ORDER BY descricao_rota";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlr, conn))
+                    {
+                        conn.Open();
+                        ddlRotaKrona.DataSource = cmd.ExecuteReader();
+                        ddlRotaKrona.DataTextField = "descricao_rota";
+                        ddlRotaKrona.DataValueField = "id_rota";
+                        ddlRotaKrona.DataBind();
+                    }
+                }
+
+                ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
             }
 
 
@@ -2565,8 +2591,8 @@ namespace NewCapit.dist.pages
 
             return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
 
-            
-        }
+
+        //}
 
         void CarregarPedidos(int idCarga)
         {
@@ -3422,6 +3448,31 @@ namespace NewCapit.dist.pages
 
 
         }
+
+        protected void ddlRotaKrona_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DropDownList ddl = (DropDownList)sender;
+
+            // Linha do Repeater onde o evento ocorreu
+            RepeaterItem item = (RepeaterItem)ddl.NamingContainer;
+
+            // TextBox da MESMA linha
+            TextBox txtId_Rota = (TextBox)item.FindControl("txtId_Rota");
+
+            if (txtId_Rota == null)
+                return;
+
+            if (!string.IsNullOrEmpty(ddl.SelectedValue))
+            {
+                txtId_Rota.Text = ddl.SelectedValue;
+            }
+            else
+            {
+                txtId_Rota.Text = "";
+            }
+        }
+
+
 
         protected void ExibirToastErro(string mensagem)
         {
