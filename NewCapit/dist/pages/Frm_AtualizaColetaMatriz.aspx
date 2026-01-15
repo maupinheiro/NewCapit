@@ -15,6 +15,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+
+
     <!-- Script para fechar modal -->
     <script type="text/javascript">
 
@@ -264,7 +273,7 @@
         Sys.Application.add_load(bindEventos);
 
     </script>
-    <script>
+   <%-- <script>
         function inicializarAbas() {
 
             document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
@@ -287,6 +296,36 @@
         // Após postback parcial (UpdatePanel)
         Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
             inicializarAbas();
+        });
+    </script>--%>
+
+    <script>
+        function inicializarSelect2() {
+            $('.select2-motorista').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Selecione o motorista'
+            });
+        }
+
+        function calcularTempo() {
+            $('.iniciocar, .tercar').on('change', function () {
+                let row = $(this).closest('tr');
+
+                let inicio = row.find('.iniciocar').val();
+                let termino = row.find('.termcar').val();
+
+                if (inicio && termino) {
+                    let diff = (new Date(termino) - new Date(inicio)) / 60000;
+                    row.find('.tempo-carreg').text(Math.round(diff));
+                }
+            });
+
+        }
+
+        Sys.Application.add_load(function () {
+            inicializarSelect2();
+            calcularTempo();
         });
     </script>
 
@@ -1145,240 +1184,119 @@
 </div>
 <!-- /.card-header -->
 <div class="card-body">
-<asp:UpdatePanel ID="updTabs" runat="server" UpdateMode="Always">
-<ContentTemplate>
-<asp:HiddenField ID="hfAbaAtiva" runat="server" />
-<!-- COLE AS ABAS AQUI -->
-<ul class="nav nav-tabs" id="tabsPedido" role="tablist">
-<li class="nav-item" role="presentation">
-<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabPedidos">
-📦 Pedidos
-</button>
-</li>
-<li class="nav-item active" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabNotas">
-🧾 Notas Fiscais
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCte">
-🧾 CT-e / NFS-e
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPedagio">
-Pedágio
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabKrona">
-Krona
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDespesa">
-Despesa Motorista
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabHistorico">
-Histórico
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAlteracoes">
-Alterações
-</button>
-</li>
-</ul>
-<div class="tab-content border border-top-0 p-3">
-<!-- ABA PEDIDOS -->
-<div class="tab-pane fade show active" id="tabPedidos">
-<asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
-<Columns>
-<asp:BoundField DataField="pedido" HeaderText="Pedido" />
-<asp:BoundField DataField="emissao"
-HeaderText="Emissão"
-DataFormatString="{0:dd/MM/yyyy}" />
-<asp:BoundField DataField="peso" HeaderText="Peso" />
-<asp:BoundField DataField="material" HeaderText="Material" />
-<asp:BoundField DataField="portao" HeaderText="Portão" />
-<asp:TemplateField HeaderText="Motorista">
-<ItemTemplate>                                                                                                           <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">                                       </asp:DropDownList>                                                                                                  </ItemTemplate>
-  </asp:TemplateField>
-<asp:TemplateField HeaderText="Início">
-                                                                                                           <ItemTemplate>
-                                                                                                                <asp:TextBox ID="txtInicioCar"
-                                                                                                                    runat="server"
-                                                                                                                    CssClass="form-control"
-                                                                                                                    Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
-</asp:TextBox>
-</ItemTemplate>
-</asp:TemplateField>
+    <!-- abas -->
+    <ul class="nav nav-tabs" id="tabsCarga" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabPedidos">
+            Pedidos da Carga
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCTE">
+            CT-e da Carga
+        </button>
+    </li>
+    </ul>
 
-<asp:TemplateField HeaderText="Fim">
-<ItemTemplate>
-<asp:TextBox ID="txtTermCar" runat="server" CssClass="form-control" Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}")%>'>
-</asp:TextBox>
-</ItemTemplate>
-</asp:TemplateField>
-<asp:TemplateField HeaderText="Tempo">
-<ItemTemplate>
-</ItemTemplate>
-</asp:TemplateField>
-</Columns>
+    <div class="tab-content mt-3">
+        <!-- ABA 1 -->
+        <div class="tab-pane fade show active" id="tabPedidos">
+            <!-- Conteúdo Aba 1 Pedidos -->
+            <asp:GridView ID="gvPedidosCarga2"
+    runat="server"
+    AutoGenerateColumns="False"
+    DataKeyNames="pedido"
+    CssClass="table table-bordered table-sm align-middle"
+    OnRowDataBound="gvPedidosCarga2_RowDataBound"
+    OnRowCommand="gvPedidosCarga2_RowCommand">
+
+    <Columns>
+
+        <%-- PEDIDO --%>
+        <asp:BoundField DataField="pedido" HeaderText="Pedido" />
+
+        <%-- EMISSÃO --%>
+        <asp:BoundField DataField="emissao"
+            HeaderText="Emissão"
+            DataFormatString="{0:dd/MM/yyyy}" />
+
+        <%-- PESO --%>
+        <asp:BoundField DataField="peso" HeaderText="Peso" />
+
+        <%-- MATERIAL --%>
+        <asp:BoundField DataField="material" HeaderText="Material" />
+
+        <%-- PORTÃO --%>
+        <asp:BoundField DataField="portao" HeaderText="Portão" />
+
+        <%-- MOTORISTA --%>
+        <asp:TemplateField HeaderText="Motorista">
+            <ItemTemplate>
+                <asp:DropDownList ID="ddlMotorista"
+                    runat="server"
+                    CssClass="form-select select2-motorista" />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+        <%-- INÍCIO --%>
+        <asp:TemplateField HeaderText="Início Carreg.">
+            <ItemTemplate>
+                <asp:TextBox ID="txtInicio"
+                    runat="server"
+                    CssClass="form-control inicio-carreg"
+                    TextMode="DateTimeLocal" />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+        <%-- TÉRMINO --%>
+        <asp:TemplateField HeaderText="Término Carreg.">
+            <ItemTemplate>
+                <asp:TextBox ID="txtTermino"
+                    runat="server"
+                    CssClass="form-control termino-carreg"
+                    TextMode="DateTimeLocal" />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+        <%-- DURAÇÃO --%>
+        <asp:TemplateField HeaderText="Duração (min)">
+            <ItemTemplate>
+                <asp:Label ID="lblDuracao"
+                    runat="server"
+                    CssClass="fw-bold text-primary tempo-carreg" />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+        <%-- BOTÃO SALVAR --%>
+        <asp:TemplateField HeaderText="Ação">
+            <ItemTemplate>
+                <asp:LinkButton ID="btnSalvarLinha"
+                    runat="server"
+                    CssClass="btn btn-success btn-sm"
+                    Text="Salvar"
+                    CommandName="SalvarLinha"
+                    CommandArgument="<%# Container.DataItemIndex %>" />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+    </Columns>
 </asp:GridView>
-</div>
 
 
 
+        </div>
 
-                                                                                        <div class="tab-pane fade" id="tabNotas">
-                                                                                            <!-- Conteúdo Notas Fiscais -->
-                                                                                        </div>
-
-<div class="tab-pane fade" id="tabCte">
-<!-- Conteúdo CT-e / NFS-e -->
-<div class="row g-3">
-<div class="col-md-3">
-<div class="form-group">
-<span class="details">Chave de Acesso:</span>
-<asp:TextBox ID="txtChaveCte" class="form-control" runat="server"></asp:TextBox>
-</div>
-</div>                                                                                              
-</div>
-</div>
-
-<div class="tab-pane fade" id="tabPedagio">
-<!-- Conteúdo Pedágio -->
-<div class="row g-3">
-<div class="col-md-2">
-<div class="form-group">
-<span class="details">IdViagem/Comprovante:</span>
-<asp:TextBox ID="txtIdPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
-</div>
-</div>
- <div class="col-md-2">
-    <div class="form-group">
-    <span class="details">Valor Creditado:</span>
-    <asp:TextBox ID="txtValorPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
-    </div>
- </div>
- <div class="col-md-2">
-   <div class="form-group">
-   <span class="details">Emissão:</span>
-   <asp:TextBox ID="txtDtemissaoPedagio" class="form-control" runat="server" ReadOnly="true" ></asp:TextBox>
-   </div>
- </div>
- <div class="col-md-3">
-   <div class="form-group">
-   <span class="details">Emitido Por:</span>
-   <asp:TextBox ID="txtCreditoPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
-   </div>
- </div>
-</div>
-<div class="row g-3">
-  <div class="col-md-12">
-     <div class="form-group">
-        <span class="details">Observações:</span>
-        <asp:TextBox ID="txtHistoricoPedagio" TextMode="MultiLine" Rows="3" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
-     </div>
-  </div>
-</div>
-</div>
-
-<div class="tab-pane fade" id="tabKrona">
-<!-- Conteúdo Krona -->
-<div class="row g-3">
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Num. SM:</span>
-        <asp:TextBox ID="txtSM" class="form-control" runat="server"></asp:TextBox>
+        <!-- ABA 2 -->
+        <div class="tab-pane fade" id="tabCTE">
+            <!-- Conteúdo Aba 2 (próxima parte) -->
         </div>
     </div>
-    <div class="col-md-1">
-        <div class="form-group">
-        <span class="details">Percurso:</span>
-        <asp:DropDownList 
-            ID="ddlPercurso" 
-            runat="server"
-            CssClass="form-select">
+
+
     
-            <asp:ListItem Text="Selecione..." Value="" />
-            <asp:ListItem Text="Urbano" Value="Urbano" />
-            <asp:ListItem Text="Rodoviário" Value="Rodoriário" />
-        </asp:DropDownList>
-    </div>
-</div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Peso Total:</span>
-        <asp:TextBox ID="txtPeso" class="form-control" runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Valor Total:</span>
-        <asp:TextBox ID="txtValorTotal" class="form-control" runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Previsão Inicio:</span>
-        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Previsão Termino:</span>
-        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" runat="server"></asp:TextBox>
-        </div>
-    </div>
-</div>
-<div class="row g-3">
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Id Rota:</span>
-        <asp:TextBox ID="txtIdRotaKrona" class="form-control" runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-        <span class="details">Descrição da Rota:</span>
-        <asp:DropDownList 
-            ID="ddlRotaKrona" 
-            runat="server"
-            CssClass="form-select select2">
-        </asp:DropDownList>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-        <span class="details">Enviada Por:</span>
-        <asp:TextBox ID="txtSmEnviadaPor" class="form-control" runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <br />
-        <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" runat="server" Text="Enviar SM" />
-    </div>
-</div>
-</div>
 
-                                                                                        <div class="tab-pane fade" id="tabDespesa">
-                                                                                            <!-- Conteúdo Despesa Motorista -->
-                                                                                        </div>
 
-                                                                                        <div class="tab-pane fade" id="tabHistorico">
-                                                                                            <!-- Conteúdo Histórico -->
-                                                                                        </div>
-
-                                                                                        <div class="tab-pane fade" id="tabAlteracoes">
-                                                                                            <!-- Conteúdo Alterações -->
-                                                                                        </div>
-</div>
-</ContentTemplate>
-</asp:UpdatePanel>
+    <!-- fim das abas -->
 </div>
 </div>
 
