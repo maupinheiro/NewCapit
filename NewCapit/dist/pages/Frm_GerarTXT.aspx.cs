@@ -2188,30 +2188,30 @@ namespace NewCapit.dist.pages
                                     //BLOCO RETORNO PERNOITE
                                     if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                     {
-                                        int a = 0;
-                                        a = w - 1;
-                                        if (a >= 0)
-                                        {
-                                            if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                            {
+                                        //int a = 0;
+                                        //a = w - 1;
+                                        //if (a >= 0)
+                                        //{
+                                        //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                        //    {
 
-                                            }
-                                            else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                            {
-                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                            }
-
-
-                                        }
-                                        else
-                                        {
-                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                        }
+                                        //    }
+                                        //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                        //    {
+                                        //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                        //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                        //    }
 
 
+                                        //}
+                                        //else
+                                        //{
+                                        //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                        //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                        //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                        //}
+
+                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                     }
                                     //FIM
@@ -3688,30 +3688,30 @@ namespace NewCapit.dist.pages
                                         //BLOCO RETORNO PERNOITE
                                         if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                         {
-                                            int a = 0;
-                                            a = w - 1;
-                                            if (a >= 0)
-                                            {
-                                                if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                {
+                                            //int a = 0;
+                                            //a = w - 1;
+                                            //if (a >= 0)
+                                            //{
+                                            //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                            //    {
 
-                                                }
-                                                else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                {
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                }
-
-
-                                            }
-                                            else
-                                            {
-                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                            }
+                                            //    }
+                                            //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                            //    {
+                                            //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                            //    }
 
 
+                                            //}
+                                            //else
+                                            //{
+                                            //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                            //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                            //}
+
+                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                         }
                                         //FIM
@@ -5201,30 +5201,30 @@ namespace NewCapit.dist.pages
                                             //BLOCO RETORNO PERNOITE
                                             if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                             {
-                                                int a = 0;
-                                                a = w - 1;
-                                                if (a >= 0)
-                                                {
-                                                    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                    {
+                                                //int a = 0;
+                                                //a = w - 1;
+                                                //if (a >= 0)
+                                                //{
+                                                //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                //    {
 
-                                                    }
-                                                    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                    {
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                    }
-
-
-                                                }
-                                                else
-                                                {
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                }
+                                                //    }
+                                                //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                //    {
+                                                //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                //    }
 
 
+                                                //}
+                                                //else
+                                                //{
+                                                //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                //}
+
+                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                             }
                                             //FIM
@@ -6700,30 +6700,30 @@ namespace NewCapit.dist.pages
                                                 //BLOCO RETORNO PERNOITE
                                                 if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                                 {
-                                                    int a = 0;
-                                                    a = w - 1;
-                                                    if (a >= 0)
-                                                    {
-                                                        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                        {
+                                                    //int a = 0;
+                                                    //a = w - 1;
+                                                    //if (a >= 0)
+                                                    //{
+                                                    //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                    //    {
 
-                                                        }
-                                                        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                        {
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                        }
-
-                                                        
-                                                    }
-                                                    else
-                                                    {
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                    }
+                                                    //    }
+                                                    //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                    //    {
+                                                    //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                    //    }
 
 
+                                                    //}
+                                                    //else
+                                                    //{
+                                                    //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                    //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                    //}
+
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                 }
                                                 //FIM
@@ -8250,30 +8250,30 @@ namespace NewCapit.dist.pages
                                                 //BLOCO RETORNO PERNOITE
                                                 if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                                 {
-                                                    int a = 0;
-                                                    a = w - 1;
-                                                    if (a >= 0)
-                                                    {
-                                                        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                        {
+                                                    //int a = 0;
+                                                    //a = w - 1;
+                                                    //if (a >= 0)
+                                                    //{
+                                                    //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                    //    {
 
-                                                        }
-                                                        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                        {
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                        }
-
-
-                                                    }
-                                                    else
-                                                    {
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                    }
+                                                    //    }
+                                                    //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                    //    {
+                                                    //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                    //    }
 
 
+                                                    //}
+                                                    //else
+                                                    //{
+                                                    //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                    //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                    //}
+
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                 }
                                                 //FIM
@@ -9751,30 +9751,30 @@ namespace NewCapit.dist.pages
                                                 //BLOCO RETORNO PERNOITE
                                                 if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                                 {
-                                                    int a = 0;
-                                                    a = w - 1;
-                                                    if (a >= 0)
-                                                    {
-                                                        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                        {
+                                                    //int a = 0;
+                                                    //a = w - 1;
+                                                    //if (a >= 0)
+                                                    //{
+                                                    //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                                    //    {
 
-                                                        }
-                                                        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                        {
-                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                        }
-
-
-                                                    }
-                                                    else
-                                                    {
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                    }
+                                                    //    }
+                                                    //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                                    //    {
+                                                    //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                                    //    }
 
 
+                                                    //}
+                                                    //else
+                                                    //{
+                                                    //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                                    //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                                    //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                                    //}
+
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                                 }
                                                 //FIM
@@ -11301,30 +11301,30 @@ namespace NewCapit.dist.pages
                                         //BLOCO RETORNO PERNOITE
                                         if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                         {
-                                            int a = 0;
-                                            a = w - 1;
-                                            if (a >= 0)
-                                            {
-                                                if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                {
+                                            //int a = 0;
+                                            //a = w - 1;
+                                            //if (a >= 0)
+                                            //{
+                                            //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                            //    {
 
-                                                }
-                                                else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                {
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                }
-
-
-                                            }
-                                            else
-                                            {
-                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                            }
+                                            //    }
+                                            //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                            //    {
+                                            //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                            //    }
 
 
+                                            //}
+                                            //else
+                                            //{
+                                            //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                            //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                            //}
+
+                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                         }
                                         //FIM
@@ -12801,30 +12801,30 @@ namespace NewCapit.dist.pages
                                         //BLOCO RETORNO PERNOITE
                                         if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                         {
-                                            int a = 0;
-                                            a = w - 1;
-                                            if (a >= 0)
-                                            {
-                                                if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                {
+                                            //int a = 0;
+                                            //a = w - 1;
+                                            //if (a >= 0)
+                                            //{
+                                            //    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
+                                            //    {
 
-                                                }
-                                                else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                {
-                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                }
-
-
-                                            }
-                                            else
-                                            {
-                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                            }
+                                            //    }
+                                            //    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
+                                            //    {
+                                            //        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
+                                            //    }
 
 
+                                            //}
+                                            //else
+                                            //{
+                                            //    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
+                                            //    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
+                                            //    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
+                                            //}
+
+                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
 
                                         }
                                         //FIM

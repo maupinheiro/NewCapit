@@ -266,28 +266,125 @@
     </script>
     <script>
         function inicializarAbas() {
+            console.log("Inicializando abas...");
 
-            document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
-                tab.addEventListener('shown.bs.tab', function (e) {
-                    document.getElementById('<%= hfAbaAtiva.ClientID %>').value =
-                    e.target.getAttribute('href');
+            // 1. Restaurar a aba salva após o postback parcial
+            document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
+                const targetId = hf.value;
+                if (targetId) {
+                    console.log("Restaurando aba:", targetId);
+                    const btnAba = document.querySelector(`button[data-bs-target="${targetId}"]`);
+
+                    if (btnAba) {
+                        // Usamos a API do Bootstrap para mostrar a aba corretamente
+                        const tab = new bootstrap.Tab(btnAba);
+                        tab.show();
+                    }
+                }
             });
-        });
 
-        var aba = document.getElementById('<%= hfAbaAtiva.ClientID %>').value;
-            if (aba) {
-                var tab = document.querySelector(`a[href="${aba}"]`);
-                if (tab) new bootstrap.Tab(tab).show();
-            }
+            // 2. Escutar o evento de troca de aba para salvar no HiddenField
+            // Usamos o evento 'shown.bs.tab' que é disparado quando a animação termina
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+                btn.addEventListener('shown.bs.tab', function (event) {
+                    const target = event.target.getAttribute('data-bs-target');
+                    // Busca o HiddenField dentro do mesmo container do botão clicado
+                    const container = event.target.closest('.upd-tabs-container');
+                    if (container) {
+                        const hf = container.querySelector('.hf-aba-ativa');
+                        if (hf) {
+                            hf.value = target;
+                            console.log("Aba salva no HiddenField:", target);
+                        }
+                    }
+                });
+            });
         }
 
-        // Primeira carga
+        // Carregamento inicial (apenas quando a página carrega inteira)
         document.addEventListener('DOMContentLoaded', inicializarAbas);
 
-        // Após postback parcial (UpdatePanel)
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-            inicializarAbas();
-        });
+        // Pós-Postback do UpdatePanel (apenas se o Sys do ASP.NET existir)
+        if (typeof Sys !== 'undefined') {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                console.log("Postback detectado, reinicializando...");
+                inicializarAbas();
+            });
+        }
+
+        // Essencial para UpdatePanel: Re-executa após cada postback parcial
+        if (typeof Sys !== 'undefined') {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                inicializarAbas();
+            });
+        }
+    </script><script>
+                 function inicializarAbas() {
+                     console.log("Iniciando limpeza e restauração de abas...");
+
+                     // 1. Restaurar o estado das abas salvas nos HiddenFields
+                     document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
+                         const targetId = hf.value; // Ex: #tabNotas_0 ou tabNotas_0
+                         if (!targetId) return;
+
+                         // Garante que o ID comece com # para o seletor CSS
+                         const selector = targetId.startsWith('#') ? targetId : '#' + targetId;
+                         const btnAba = document.querySelector(`button[data-bs-target="${targetId}"], button[data-bs-target="${selector}"]`);
+
+                         if (btnAba) {
+                             console.log("Ativando aba e conteúdo para:", selector);
+
+                             // A. Forçar ativação do Botão
+                             const container = btnAba.closest('.upd-tabs-container');
+                             if (container) {
+                                 // Remove active de todos os botões do grupo
+                                 container.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                                 btnAba.classList.add('active');
+
+                                 // B. Forçar ativação do Painel de Conteúdo
+                                 // O ID do painel é o targetId sem o #
+                                 const paneId = selector.replace('#', '');
+                                 const pane = document.getElementById(paneId);
+
+                                 if (pane) {
+                                     // Remove show/active de todos os painéis do grupo
+                                     container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 'active'));
+                                     pane.classList.add('show');
+                                     pane.classList.add('active');
+                                 } else {
+                                     console.error("Painel não encontrado:", paneId);
+                                 }
+                             }
+                         }
+                     });
+
+                     // 2. Configurar o evento de clique (sem usar o evento do Bootstrap que pode falhar)
+                     document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+                         btn.onclick = function () {
+                             const target = this.getAttribute('data-bs-target');
+                             const container = this.closest('.upd-tabs-container');
+                             if (container) {
+                                 const hf = container.querySelector('.hf-aba-ativa');
+                                 if (hf) {
+                                     hf.value = target;
+                                     console.log("Novo estado salvo:", target);
+                                 }
+                             }
+                         };
+                     });
+                 }
+
+                 // Carregamento inicial
+                 document.addEventListener('DOMContentLoaded', inicializarAbas);
+
+                 // Pós-Postback do UpdatePanel
+                 if (typeof Sys !== 'undefined') {
+                     var prm = Sys.WebForms.PageRequestManager.getInstance();
+                     prm.add_endRequest(function () {
+                         // Um pequeno delay de 10ms ajuda o DOM a "assentar" no UpdatePanel
+                         setTimeout(inicializarAbas, 10);
+                     });
+                 }
     </script>
 
 
@@ -1145,55 +1242,57 @@
 </div>
 <!-- /.card-header -->
 <div class="card-body">
-<asp:UpdatePanel ID="updTabs" runat="server" UpdateMode="Always">
+<asp:UpdatePanel ID="updTabs" runat="server">
 <ContentTemplate>
-<asp:HiddenField ID="hfAbaAtiva" runat="server" />
+    <div class="upd-tabs-container">
+<input type="hidden" id="hfAbaAtiva" runat="server" class="hf-aba-ativa" />
 <!-- COLE AS ABAS AQUI -->
-<ul class="nav nav-tabs" id="tabsPedido" role="tablist">
-<li class="nav-item" role="presentation">
-<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabPedidos">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item">
+<button class="nav-link active" data-bs-toggle="tab" data-bs-target='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
 📦 Pedidos
 </button>
 </li>
-<li class="nav-item active" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabNotas">
+<li class="nav-item active">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
 🧾 Notas Fiscais
 </button>
 </li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCte">
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
 🧾 CT-e / NFS-e
 </button>
 </li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPedagio">
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
 Pedágio
 </button>
 </li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabKrona">
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
 Krona
 </button>
 </li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDespesa">
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabDespesa_" + ((RepeaterItem)Container).ItemIndex %>'>
 Despesa Motorista
 </button>
 </li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabHistorico">
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
 Histórico
 </button>
 </li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAlteracoes">
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabAlteracao_" + ((RepeaterItem)Container).ItemIndex %>'>
 Alterações
 </button>
 </li>
 </ul>
+    
 <div class="tab-content border border-top-0 p-3">
 <!-- ABA PEDIDOS -->
-<div class="tab-pane fade show active" id="tabPedidos">
+<div class="tab-pane fade show active" id='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
 <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
 <Columns>
 <asp:BoundField DataField="pedido" HeaderText="Pedido" />
@@ -1230,14 +1329,11 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </asp:GridView>
 </div>
 
+<div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Notas Fiscais -->
+</div>
 
-
-
-                                                                                        <div class="tab-pane fade" id="tabNotas">
-                                                                                            <!-- Conteúdo Notas Fiscais -->
-                                                                                        </div>
-
-<div class="tab-pane fade" id="tabCte">
+<div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="row g-3">
 <div class="col-md-3">
@@ -1249,7 +1345,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 </div>
 
-<div class="tab-pane fade" id="tabPedagio">
+<div class="tab-pane fade" id='<%# "taPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
 <!-- Conteúdo Pedágio -->
 <div class="row g-3">
 <div class="col-md-2">
@@ -1287,7 +1383,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 </div>
 
-<div class="tab-pane fade" id="tabKrona">
+<div class="tab-pane fade" id='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
 <!-- Conteúdo Krona -->
 <div class="row g-3">
     <div class="col-md-2">
@@ -1365,17 +1461,18 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 </div>
 
-                                                                                        <div class="tab-pane fade" id="tabDespesa">
-                                                                                            <!-- Conteúdo Despesa Motorista -->
-                                                                                        </div>
+<div class="tab-pane fade" id='<%# "tabDespesas_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Despesa Motorista -->
+</div>
 
-                                                                                        <div class="tab-pane fade" id="tabHistorico">
-                                                                                            <!-- Conteúdo Histórico -->
-                                                                                        </div>
+<div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Histórico -->
+</div>
 
-                                                                                        <div class="tab-pane fade" id="tabAlteracoes">
-                                                                                            <!-- Conteúdo Alterações -->
-                                                                                        </div>
+<div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Alterações -->
+</div>
+</div>
 </div>
 </ContentTemplate>
 </asp:UpdatePanel>
