@@ -15,15 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
-
-
     <!-- Script para fechar modal -->
     <script type="text/javascript">
 
@@ -273,60 +264,127 @@
         Sys.Application.add_load(bindEventos);
 
     </script>
-   <%-- <script>
-        function inicializarAbas() {
-
-            document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
-                tab.addEventListener('shown.bs.tab', function (e) {
-                    document.getElementById('<%= hfAbaAtiva.ClientID %>').value =
-                    e.target.getAttribute('href');
-            });
-        });
-
-        var aba = document.getElementById('<%= hfAbaAtiva.ClientID %>').value;
-            if (aba) {
-                var tab = document.querySelector(`a[href="${aba}"]`);
-                if (tab) new bootstrap.Tab(tab).show();
-            }
-        }
-
-        // Primeira carga
-        document.addEventListener('DOMContentLoaded', inicializarAbas);
-
-        // Após postback parcial (UpdatePanel)
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-            inicializarAbas();
-        });
-    </script>--%>
-
     <script>
-        function inicializarSelect2() {
-            $('.select2-motorista').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: 'Selecione o motorista'
-            });
-        }
+        function inicializarAbas() {
+            console.log("Inicializando abas...");
 
-        function calcularTempo() {
-            $('.iniciocar, .tercar').on('change', function () {
-                let row = $(this).closest('tr');
+            // 1. Restaurar a aba salva após o postback parcial
+            document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
+                const targetId = hf.value;
+                if (targetId) {
+                    console.log("Restaurando aba:", targetId);
+                    const btnAba = document.querySelector(`button[data-bs-target="${targetId}"]`);
 
-                let inicio = row.find('.iniciocar').val();
-                let termino = row.find('.termcar').val();
-
-                if (inicio && termino) {
-                    let diff = (new Date(termino) - new Date(inicio)) / 60000;
-                    row.find('.tempo-carreg').text(Math.round(diff));
+                    if (btnAba) {
+                        // Usamos a API do Bootstrap para mostrar a aba corretamente
+                        const tab = new bootstrap.Tab(btnAba);
+                        tab.show();
+                    }
                 }
             });
 
+            // 2. Escutar o evento de troca de aba para salvar no HiddenField
+            // Usamos o evento 'shown.bs.tab' que é disparado quando a animação termina
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+                btn.addEventListener('shown.bs.tab', function (event) {
+                    const target = event.target.getAttribute('data-bs-target');
+                    // Busca o HiddenField dentro do mesmo container do botão clicado
+                    const container = event.target.closest('.upd-tabs-container');
+                    if (container) {
+                        const hf = container.querySelector('.hf-aba-ativa');
+                        if (hf) {
+                            hf.value = target;
+                            console.log("Aba salva no HiddenField:", target);
+                        }
+                    }
+                });
+            });
         }
 
-        Sys.Application.add_load(function () {
-            inicializarSelect2();
-            calcularTempo();
-        });
+        // Carregamento inicial (apenas quando a página carrega inteira)
+        document.addEventListener('DOMContentLoaded', inicializarAbas);
+
+        // Pós-Postback do UpdatePanel (apenas se o Sys do ASP.NET existir)
+        if (typeof Sys !== 'undefined') {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                console.log("Postback detectado, reinicializando...");
+                inicializarAbas();
+            });
+        }
+
+        // Essencial para UpdatePanel: Re-executa após cada postback parcial
+        if (typeof Sys !== 'undefined') {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                inicializarAbas();
+            });
+        }
+    </script><script>
+                 function inicializarAbas() {
+                     console.log("Iniciando limpeza e restauração de abas...");
+
+                     // 1. Restaurar o estado das abas salvas nos HiddenFields
+                     document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
+                         const targetId = hf.value; // Ex: #tabNotas_0 ou tabNotas_0
+                         if (!targetId) return;
+
+                         // Garante que o ID comece com # para o seletor CSS
+                         const selector = targetId.startsWith('#') ? targetId : '#' + targetId;
+                         const btnAba = document.querySelector(`button[data-bs-target="${targetId}"], button[data-bs-target="${selector}"]`);
+
+                         if (btnAba) {
+                             console.log("Ativando aba e conteúdo para:", selector);
+
+                             // A. Forçar ativação do Botão
+                             const container = btnAba.closest('.upd-tabs-container');
+                             if (container) {
+                                 // Remove active de todos os botões do grupo
+                                 container.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                                 btnAba.classList.add('active');
+
+                                 // B. Forçar ativação do Painel de Conteúdo
+                                 // O ID do painel é o targetId sem o #
+                                 const paneId = selector.replace('#', '');
+                                 const pane = document.getElementById(paneId);
+
+                                 if (pane) {
+                                     // Remove show/active de todos os painéis do grupo
+                                     container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 'active'));
+                                     pane.classList.add('show');
+                                     pane.classList.add('active');
+                                 } else {
+                                     console.error("Painel não encontrado:", paneId);
+                                 }
+                             }
+                         }
+                     });
+
+                     // 2. Configurar o evento de clique (sem usar o evento do Bootstrap que pode falhar)
+                     document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+                         btn.onclick = function () {
+                             const target = this.getAttribute('data-bs-target');
+                             const container = this.closest('.upd-tabs-container');
+                             if (container) {
+                                 const hf = container.querySelector('.hf-aba-ativa');
+                                 if (hf) {
+                                     hf.value = target;
+                                     console.log("Novo estado salvo:", target);
+                                 }
+                             }
+                         };
+                     });
+                 }
+
+                 // Carregamento inicial
+                 document.addEventListener('DOMContentLoaded', inicializarAbas);
+
+                 // Pós-Postback do UpdatePanel
+                 if (typeof Sys !== 'undefined') {
+                     var prm = Sys.WebForms.PageRequestManager.getInstance();
+                     prm.add_endRequest(function () {
+                         // Um pequeno delay de 10ms ajuda o DOM a "assentar" no UpdatePanel
+                         setTimeout(inicializarAbas, 10);
+                     });
+                 }
     </script>
 
 
@@ -1184,119 +1242,240 @@
 </div>
 <!-- /.card-header -->
 <div class="card-body">
-    <!-- abas -->
-    <ul class="nav nav-tabs" id="tabsCarga" role="tablist">
-    <li class="nav-item">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabPedidos">
-            Pedidos da Carga
-        </button>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCTE">
-            CT-e da Carga
-        </button>
-    </li>
-    </ul>
+<asp:UpdatePanel ID="updTabs" runat="server">
+<ContentTemplate>
+    <div class="upd-tabs-container">
+<input type="hidden" id="hfAbaAtiva" runat="server" class="hf-aba-ativa" />
+<!-- COLE AS ABAS AQUI -->
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item">
+<button class="nav-link active" data-bs-toggle="tab" data-bs-target='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
+📦 Pedidos
+</button>
+</li>
+<li class="nav-item active">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
+🧾 Notas Fiscais
+</button>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
+🧾 CT-e / NFS-e
+</button>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
+Pedágio
+</button>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
+Krona
+</button>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabDespesa_" + ((RepeaterItem)Container).ItemIndex %>'>
+Despesa Motorista
+</button>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
+Histórico
+</button>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabAlteracao_" + ((RepeaterItem)Container).ItemIndex %>'>
+Alterações
+</button>
+</li>
+</ul>
+    
+<div class="tab-content border border-top-0 p-3">
+<!-- ABA PEDIDOS -->
+<div class="tab-pane fade show active" id='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
+<asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
+<Columns>
+<asp:BoundField DataField="pedido" HeaderText="Pedido" />
+<asp:BoundField DataField="emissao"
+HeaderText="Emissão"
+DataFormatString="{0:dd/MM/yyyy}" />
+<asp:BoundField DataField="peso" HeaderText="Peso" />
+<asp:BoundField DataField="material" HeaderText="Material" />
+<asp:BoundField DataField="portao" HeaderText="Portão" />
+<asp:TemplateField HeaderText="Motorista">
+<ItemTemplate>                                                                                                           <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">                                       </asp:DropDownList>                                                                                                  </ItemTemplate>
+  </asp:TemplateField>
+<asp:TemplateField HeaderText="Início">
+                                                                                                           <ItemTemplate>
+                                                                                                                <asp:TextBox ID="txtInicioCar"
+                                                                                                                    runat="server"
+                                                                                                                    CssClass="form-control"
+                                                                                                                    Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
+</asp:TextBox>
+</ItemTemplate>
+</asp:TemplateField>
 
-    <div class="tab-content mt-3">
-        <!-- ABA 1 -->
-        <div class="tab-pane fade show active" id="tabPedidos">
-            <!-- Conteúdo Aba 1 Pedidos -->
-            <asp:GridView ID="gvPedidosCarga2"
-    runat="server"
-    AutoGenerateColumns="False"
-    DataKeyNames="pedido"
-    CssClass="table table-bordered table-sm align-middle"
-    OnRowDataBound="gvPedidosCarga2_RowDataBound"
-    OnRowCommand="gvPedidosCarga2_RowCommand">
-
-    <Columns>
-
-        <%-- PEDIDO --%>
-        <asp:BoundField DataField="pedido" HeaderText="Pedido" />
-
-        <%-- EMISSÃO --%>
-        <asp:BoundField DataField="emissao"
-            HeaderText="Emissão"
-            DataFormatString="{0:dd/MM/yyyy}" />
-
-        <%-- PESO --%>
-        <asp:BoundField DataField="peso" HeaderText="Peso" />
-
-        <%-- MATERIAL --%>
-        <asp:BoundField DataField="material" HeaderText="Material" />
-
-        <%-- PORTÃO --%>
-        <asp:BoundField DataField="portao" HeaderText="Portão" />
-
-        <%-- MOTORISTA --%>
-        <asp:TemplateField HeaderText="Motorista">
-            <ItemTemplate>
-                <asp:DropDownList ID="ddlMotorista"
-                    runat="server"
-                    CssClass="form-select select2-motorista" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <%-- INÍCIO --%>
-        <asp:TemplateField HeaderText="Início Carreg.">
-            <ItemTemplate>
-                <asp:TextBox ID="txtInicio"
-                    runat="server"
-                    CssClass="form-control inicio-carreg"
-                    TextMode="DateTimeLocal" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <%-- TÉRMINO --%>
-        <asp:TemplateField HeaderText="Término Carreg.">
-            <ItemTemplate>
-                <asp:TextBox ID="txtTermino"
-                    runat="server"
-                    CssClass="form-control termino-carreg"
-                    TextMode="DateTimeLocal" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <%-- DURAÇÃO --%>
-        <asp:TemplateField HeaderText="Duração (min)">
-            <ItemTemplate>
-                <asp:Label ID="lblDuracao"
-                    runat="server"
-                    CssClass="fw-bold text-primary tempo-carreg" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <%-- BOTÃO SALVAR --%>
-        <asp:TemplateField HeaderText="Ação">
-            <ItemTemplate>
-                <asp:LinkButton ID="btnSalvarLinha"
-                    runat="server"
-                    CssClass="btn btn-success btn-sm"
-                    Text="Salvar"
-                    CommandName="SalvarLinha"
-                    CommandArgument="<%# Container.DataItemIndex %>" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-    </Columns>
+<asp:TemplateField HeaderText="Fim">
+<ItemTemplate>
+<asp:TextBox ID="txtTermCar" runat="server" CssClass="form-control" Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}")%>'>
+</asp:TextBox>
+</ItemTemplate>
+</asp:TemplateField>
+<asp:TemplateField HeaderText="Tempo">
+<ItemTemplate>
+</ItemTemplate>
+</asp:TemplateField>
+</Columns>
 </asp:GridView>
+</div>
 
+<div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Notas Fiscais -->
+</div>
 
+<div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
+<!-- Conteúdo CT-e / NFS-e -->
+<div class="row g-3">
+<div class="col-md-3">
+<div class="form-group">
+<span class="details">Chave de Acesso:</span>
+<asp:TextBox ID="txtChaveCte" class="form-control" runat="server"></asp:TextBox>
+</div>
+</div>                                                                                              
+</div>
+</div>
 
-        </div>
+<div class="tab-pane fade" id='<%# "taPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
+<!-- Conteúdo Pedágio -->
+<div class="row g-3">
+<div class="col-md-2">
+<div class="form-group">
+<span class="details">IdViagem/Comprovante:</span>
+<asp:TextBox ID="txtIdPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+</div>
+</div>
+ <div class="col-md-2">
+    <div class="form-group">
+    <span class="details">Valor Creditado:</span>
+    <asp:TextBox ID="txtValorPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+    </div>
+ </div>
+ <div class="col-md-2">
+   <div class="form-group">
+   <span class="details">Emissão:</span>
+   <asp:TextBox ID="txtDtemissaoPedagio" class="form-control" runat="server" ReadOnly="true" ></asp:TextBox>
+   </div>
+ </div>
+ <div class="col-md-3">
+   <div class="form-group">
+   <span class="details">Emitido Por:</span>
+   <asp:TextBox ID="txtCreditoPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+   </div>
+ </div>
+</div>
+<div class="row g-3">
+  <div class="col-md-12">
+     <div class="form-group">
+        <span class="details">Observações:</span>
+        <asp:TextBox ID="txtHistoricoPedagio" TextMode="MultiLine" Rows="3" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+     </div>
+  </div>
+</div>
+</div>
 
-        <!-- ABA 2 -->
-        <div class="tab-pane fade" id="tabCTE">
-            <!-- Conteúdo Aba 2 (próxima parte) -->
+<div class="tab-pane fade" id='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
+<!-- Conteúdo Krona -->
+<div class="row g-3">
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Num. SM:</span>
+        <asp:TextBox ID="txtSM" class="form-control" runat="server"></asp:TextBox>
         </div>
     </div>
-
-
+    <div class="col-md-1">
+        <div class="form-group">
+        <span class="details">Percurso:</span>
+        <asp:DropDownList 
+            ID="ddlPercurso" 
+            runat="server"
+            CssClass="form-select">
     
+            <asp:ListItem Text="Selecione..." Value="" />
+            <asp:ListItem Text="Urbano" Value="Urbano" />
+            <asp:ListItem Text="Rodoviário" Value="Rodoriário" />
+        </asp:DropDownList>
+    </div>
+</div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Peso Total:</span>
+        <asp:TextBox ID="txtPeso" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Valor Total:</span>
+        <asp:TextBox ID="txtValorTotal" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Previsão Inicio:</span>
+        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Previsão Termino:</span>
+        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-2">
+        <div class="form-group">
+        <span class="details">Id Rota:</span>
+        <asp:TextBox ID="txtIdRotaKrona" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+        <span class="details">Descrição da Rota:</span>
+        <asp:DropDownList 
+            ID="ddlRotaKrona" 
+            runat="server"
+            CssClass="form-select select2">
+        </asp:DropDownList>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+        <span class="details">Enviada Por:</span>
+        <asp:TextBox ID="txtSmEnviadaPor" class="form-control" runat="server"></asp:TextBox>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <br />
+        <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" runat="server" Text="Enviar SM" />
+    </div>
+</div>
+</div>
 
+<div class="tab-pane fade" id='<%# "tabDespesas_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Despesa Motorista -->
+</div>
 
-    <!-- fim das abas -->
+<div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Histórico -->
+</div>
+
+<div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
+    <!-- Conteúdo Alterações -->
+</div>
+</div>
+</div>
+</ContentTemplate>
+</asp:UpdatePanel>
 </div>
 </div>
 
