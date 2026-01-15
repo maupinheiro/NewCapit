@@ -41,9 +41,6 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.Text;
 using System.Web.Services;
 using DocumentFormat.OpenXml.Office.Word;
-using DocumentFormat.OpenXml;
-using ClosedXML.Excel;
-using Org.BouncyCastle.Asn1.Cms;
 
 
 namespace NewCapit.dist.pages
@@ -89,14 +86,13 @@ namespace NewCapit.dist.pages
                 CarregaMap(txtPlaca.Text);
                 PreencherClienteInicial();
                 PreencherClienteFinal();
+                
 
             }
             //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
             VerificaCargasFechadas();
         }
-
-
 
         public void CarregaFoto()
         {
@@ -713,6 +709,31 @@ namespace NewCapit.dist.pages
                 }
             }
 
+            if (e.Item.ItemType == ListItemType.Item ||
+        e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+
+                using (SqlConnection conn = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    string sqlr = @"SELECT id_rota, descricao_rota 
+                           FROM tbrotaskrona 
+                           ORDER BY descricao_rota";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlr, conn))
+                    {
+                        conn.Open();
+                        ddlRotaKrona.DataSource = cmd.ExecuteReader();
+                        ddlRotaKrona.DataTextField = "descricao_rota";
+                        ddlRotaKrona.DataValueField = "id_rota";
+                        ddlRotaKrona.DataBind();
+                    }
+                }
+
+                ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
+            }
+
 
         }
 
@@ -752,12 +773,12 @@ namespace NewCapit.dist.pages
                 TextBox txtPrevisaoChegada = (TextBox)e.Item.FindControl("txtPrevisaoChegada");
                 TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
                 TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
-                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus"); 
                 TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
                 TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
                 TextBox txtAgDescarga = (TextBox)e.Item.FindControl("txtAgDescarga");
                 TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
-                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
+                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino"); 
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
 
@@ -771,12 +792,12 @@ namespace NewCapit.dist.pages
                 TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
                 TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
 
-
+                
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     // Extrai os valores uma única vez                    
-                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
+                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim()); 
                     var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
                     var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
                     var cvaOC = txtCVA.Text.Trim();
@@ -820,9 +841,9 @@ namespace NewCapit.dist.pages
                     {
                         situacaoOC = "EM ANDAMENTO";
                         statusOC = ddlStatus.SelectedItem.Text.Trim();
-
+                        
                     }
-
+                    
                     string query = @"UPDATE tbcargas SET                                  
                                 gate_origem = @gate_origem,
                                 gate_destino = @gate_destino,
@@ -841,7 +862,7 @@ namespace NewCapit.dist.pages
                                 WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@carga", carga);
+                    cmd.Parameters.AddWithValue("@carga", carga);                    
                     cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@andamento", situacaoOC);
                     cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
@@ -851,11 +872,11 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
                     cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
                     cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim())); 
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);                   
 
                     // Chama método que verifica no banco
                     conn.Open();
@@ -1040,8 +1061,8 @@ namespace NewCapit.dist.pages
                 string carga = e.CommandArgument.ToString();
 
                 // Recuperar os controles de dentro do item                
-
-
+               
+               
 
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1062,14 +1083,14 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@ot", txtOT.Text);
                     cmd.Parameters.AddWithValue("@catraca", txtCatracas.Text);
                     cmd.Parameters.AddWithValue("@rede", txtRedes.Text.Trim());
-
+                   
 
                     // Chama método que verifica no banco
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
 
-
+              
 
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
@@ -1680,7 +1701,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-
+            
             string query = @"UPDATE tbcarregamentos SET
                             codmotorista = @codmotorista,
                             nucleo = @nucleo,
@@ -1752,7 +1773,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@tecnologia", SafeValue(txtTecnologia.Text));
                 cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
                 cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
-                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
+                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));  
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
@@ -2059,7 +2080,7 @@ namespace NewCapit.dist.pages
             ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
 
         }
-
+        
 
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
         {
@@ -2133,7 +2154,7 @@ namespace NewCapit.dist.pages
                     txtCarga.Text = novaCarga;
 
                     BuscarCargaNoBanco(novaCarga);
-
+                    
                 }
 
                 else
@@ -2358,42 +2379,42 @@ namespace NewCapit.dist.pages
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 if (codCliFinal.Text != "")
-                {
-                    string codigoRemetente = codCliFinal.Text.Trim();
-
+            {
+                string codigoRemetente = codCliFinal.Text.Trim();  
+                    
                     using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                     {
-                        string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
+                    string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
 
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
-                            conn.Open();
-
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            if (reader.Read())
                             {
-                                if (reader.Read())
-                                {
-                                    codCliFinal.Text = reader["codcli"].ToString();
-                                    ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
-                                    txtMunicipioDestino.Text = reader["cidcli"].ToString();
-                                    txtUfDestino.Text = reader["estcli"].ToString();
-                                }
-                                else
-                                {
-                                    ddlCliFinal.SelectedItem.Text = "Selecione...";
-                                    codCliFinal.Text = "";
-                                    // Aciona o Toast via JavaScript
-                                    ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-                                    codCliFinal.Focus();
-                                    // Opcional: exibir mensagem ao usuário
-                                }
+                                codCliFinal.Text = reader["codcli"].ToString();
+                                ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
+                                txtMunicipioDestino.Text = reader["cidcli"].ToString();
+                                txtUfDestino.Text = reader["estcli"].ToString();
+                            }
+                            else
+                            {
+                                ddlCliFinal.SelectedItem.Text = "Selecione...";
+                                codCliFinal.Text = "";
+                                // Aciona o Toast via JavaScript
+                                ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
+                                codCliFinal.Focus();
+                                // Opcional: exibir mensagem ao usuário
                             }
                         }
-
                     }
 
                 }
+
+            }
             if (codCliInicial.Text != "" && codCliFinal.Text != "")
             {
                 codCliFinal.Text = ddlCliFinal.SelectedValue;
@@ -2556,90 +2577,90 @@ namespace NewCapit.dist.pages
 
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             return R * c;
+        }        
+
+        protected string CalcularTempo(object inicio, object fim)
+        {
+            if (inicio == DBNull.Value || fim == DBNull.Value)
+                return "";
+
+            DateTime dtInicio = Convert.ToDateTime(inicio);
+            DateTime dtFim = Convert.ToDateTime(fim);
+
+            TimeSpan tempo = dtFim - dtInicio;
+
+            return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
+
+
+        //}
+
+        void CarregarPedidos(int idCarga)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sql = @"SELECT pedido, emissao, peso, material, portao,
+                              iniciocar, termcar
+                       FROM tbPedidos
+                       WHERE id = @idCarga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
+
+                conn.Open();
+                //gvPedidos.DataSource = cmd.ExecuteReader();
+                //gvPedidos.DataBind();
+            }
+        }
+        void GetMotoristas(DropDownList ddl)
+        {
+            using (SqlConnection conn = new SqlConnection(
+        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = "SELECT id, nommot FROM tbmotoristas";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        ddl.DataSource = dr;
+                        ddl.DataTextField = "nommot";
+                        ddl.DataValueField = "id";
+                        ddl.DataBind();
+                    }
+                }
+            }
+
+            //ddl.Items.Insert(0, new ListItem("Selecione", ""));
         }
 
-        //protected string CalcularTempo(object inicio, object fim)
-        //{
-        //    if (inicio == DBNull.Value || fim == DBNull.Value)
-        //        return "";
+        protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
 
-        //    DateTime dtInicio = Convert.ToDateTime(inicio);
-        //    DateTime dtFim = Convert.ToDateTime(fim);
+            // Select2 Motoristas
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+                if (ddl != null)
+                {
+                    GetMotoristas(ddl);
+                }
+            }
 
-        //    TimeSpan tempo = dtFim - dtInicio;
+            // Calcular tempo
+            DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
+            DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
 
-        //    return $"{tempo.Hours:D2}:{tempo.Minutes:D2}";
+            Label lblTempo = (Label)e.Row.FindControl("lblTempo");
 
-
-        //}
-
-        //void CarregarPedidos(int idCarga)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-        //    {
-        //        string sql = @"SELECT pedido, emissao, peso, material, portao,
-        //                      iniciocar, termcar
-        //               FROM tbPedidos
-        //               WHERE id = @idCarga";
-
-        //        SqlCommand cmd = new SqlCommand(sql, conn);
-        //        cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
-
-        //        conn.Open();
-        //        //gvPedidos.DataSource = cmd.ExecuteReader();
-        //        //gvPedidos.DataBind();
-        //    }
-        //}
-        //void GetMotoristas(DropDownList ddl)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(
-        //ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-        //    {
-        //        string sql = "SELECT id, nommot FROM tbmotoristas";
-
-        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
-        //        {
-        //            conn.Open();
-
-        //            using (SqlDataReader dr = cmd.ExecuteReader())
-        //            {
-        //                ddl.DataSource = dr;
-        //                ddl.DataTextField = "nommot";
-        //                ddl.DataValueField = "id";
-        //                ddl.DataBind();
-        //            }
-        //        }
-        //    }
-
-        //    //ddl.Items.Insert(0, new ListItem("Selecione", ""));
-        //}
-
-        //protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
-        //    if (e.Row.RowType != DataControlRowType.DataRow) return;
-
-        //    // Select2 Motoristas
-        //    if (e.Row.RowType == DataControlRowType.DataRow)
-        //    {
-        //        DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
-        //        if (ddl != null)
-        //        {
-        //            GetMotoristas(ddl);
-        //        }
-        //    }
-
-        //    // Calcular tempo
-        //    DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
-        //    DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
-
-        //    Label lblTempo = (Label)e.Row.FindControl("lblTempo");
-
-        //    if (inicio.HasValue && fim.HasValue)
-        //    {
-        //        TimeSpan t = fim.Value - inicio.Value;
-        //        lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
-        //    }
-        //}
+            if (inicio.HasValue && fim.HasValue)
+            {
+                TimeSpan t = fim.Value - inicio.Value;
+                lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+            }
+        }
 
         [System.Web.Services.WebMethod]
         public static bool VerificarCVA(string numeroCVA)
@@ -3428,6 +3449,31 @@ namespace NewCapit.dist.pages
 
         }
 
+        protected void ddlRotaKrona_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DropDownList ddl = (DropDownList)sender;
+
+            // Linha do Repeater onde o evento ocorreu
+            RepeaterItem item = (RepeaterItem)ddl.NamingContainer;
+
+            // TextBox da MESMA linha
+            TextBox txtId_Rota = (TextBox)item.FindControl("txtId_Rota");
+
+            if (txtId_Rota == null)
+                return;
+
+            if (!string.IsNullOrEmpty(ddl.SelectedValue))
+            {
+                txtId_Rota.Text = ddl.SelectedValue;
+            }
+            else
+            {
+                txtId_Rota.Text = "";
+            }
+        }
+
+
+
         protected void ExibirToastErro(string mensagem)
         {
             string script = $@"
@@ -3761,136 +3807,6 @@ namespace NewCapit.dist.pages
                       }, 5000);";
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
-        }
-        private void SalvarPedidoLinha(int pedido, string motorista, DateTime? inicio, DateTime? termino, int? duracao)
-        {
-            using (SqlConnection conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                string sql = @"
-            UPDATE tbpedidos SET
-                motcar = @motcar,
-                iniciocar = @iniciocar,
-                termcar = @termcar,
-                duracao = @duracao
-            WHERE pedido = @pedido";
-
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@pedido", pedido);
-                    cmd.Parameters.AddWithValue("@motcar", (object)motorista ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@iniciocar", (object)inicio ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@termcar", (object)termino ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@duracao", (object)duracao ?? DBNull.Value);
-
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        protected void gvPedidosCarga2_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName != "SalvarLinha")
-                return;
-
-            int pedido = Convert.ToInt32(e.CommandArgument);
-
-            GridViewRow row = ((LinkButton)e.CommandSource).NamingContainer as GridViewRow;
-            if (row == null) return;
-
-            DropDownList ddlMotorista = row.FindControl("ddlMotorista") as DropDownList;
-            TextBox txtInicio = row.FindControl("txtInicio") as TextBox;
-            TextBox txtTermino = row.FindControl("txtTermino") as TextBox;
-            Label lblDuracao = row.FindControl("lblDuracao") as Label;
-
-            if (ddlMotorista == null || txtInicio == null || txtTermino == null)
-                return;
-
-            string motorista = string.IsNullOrEmpty(ddlMotorista.SelectedValue)
-                ? null
-                : ddlMotorista.SelectedValue;
-
-            DateTime? inicio = null;
-            DateTime? termino = null;
-
-            // ⚠️ formato do DateTimeLocal
-            if (DateTime.TryParseExact(
-                txtInicio.Text,
-                "yyyy-MM-ddTHH:mm",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime dtInicio))
-                inicio = dtInicio;
-
-            if (DateTime.TryParseExact(
-                txtTermino.Text,
-                "yyyy-MM-ddTHH:mm",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime dtTermino))
-                termino = dtTermino;
-
-            int? duracao = null;
-            if (inicio.HasValue && termino.HasValue)
-            {
-                duracao = (int)(termino.Value - inicio.Value).TotalMinutes;
-                lblDuracao.Text = duracao.ToString();
-            }
-
-            SalvarPedidoLinha(pedido, motorista, inicio, termino, duracao);
-        }
-        private int SafeInt(string valor)
-        {
-            return int.TryParse(valor, out int v) ? v : 0;
-        }
-        private void CarregarPedidosCarga()
-        {
-            DataTable dt = new DataTable();
-
-            using (SqlConnection conn = new SqlConnection(strConn))
-            {
-                string sql = @"
-            SELECT 
-                pedido,
-                emissao,
-                peso,
-                material,
-                portao
-            FROM tbPedidos
-            WHERE carga = @num_carga
-            ORDER BY pedido";
-
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@num_carga", SafeInt(txtNumCarga.Text));
-
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    {
-                        da.Fill(dt);
-                    }
-                }
-            }
-
-            gvPedidosCarga2.DataSource = dt;
-            gvPedidosCarga2.DataBind();
-        }
-
-
-        protected void gvPedidosCarga2_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                DropDownList ddlMotorista =
-                    (DropDownList)e.Row.FindControl("ddlMotorista");
-                int motoristaId = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "motcar"));
-                if (motoristaId != 0)
-                {
-                    ddlMotorista.SelectedValue = motoristaId.ToString();
-                }
-
-
-            }
         }
 
     }
