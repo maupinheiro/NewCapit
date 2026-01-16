@@ -1389,7 +1389,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="row g-3">
-   <div class="col-md-6">
+   <div class="col-md-4">
        <asp:TextBox ID="txtChaveCte"
     runat="server"
     CssClass="form-control chave-cte"

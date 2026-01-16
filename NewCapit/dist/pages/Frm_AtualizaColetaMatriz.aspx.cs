@@ -3567,6 +3567,8 @@ namespace NewCapit.dist.pages
 
         protected void txtChaveCte_TextChanged(object sender, EventArgs e)
         {
+            /*35251055890016000109570010001725711001725910*/
+
             TextBox txt = (TextBox)sender;
             string chave = txt.Text.Trim();
 
@@ -3577,11 +3579,21 @@ namespace NewCapit.dist.pages
 
             string CNPJ = chave.Substring(6, 14);
 
+            string sql = @"SELECT razcli,(select Estado from tbestadosbrasileiros where SiglaUf=estcli) as estcli, cidcli
+                        FROM tbclientes
+                        WHERE 
+                            REPLACE(REPLACE(REPLACE(cnpj, '.', ''), '/', ''), '-', '') ='"+ CNPJ + "'";
+
+            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adp.Fill(dt);
+            con.Close();
             // Criar o objeto lido
             var cte = new CteLido
             {
-                Estado = ObterUF(chave.Substring(0, 2)),
-                Municipio = "São Paulo", // Ideal seria buscar de uma API ou Banco
+                Estado = dt.Rows[0][1].ToString(),
+                Municipio = dt.Rows[0][2].ToString(), // Ideal seria buscar de uma API ou Banco
                 Filial = "Matriz",
                 Numero = chave.Substring(25, 9),
                 Serie = chave.Substring(22, 3),
