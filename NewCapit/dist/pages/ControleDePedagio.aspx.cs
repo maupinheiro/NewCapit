@@ -47,7 +47,7 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 StringBuilder sql = new StringBuilder(@"
-            SELECT nomemotorista, cpf, transportadora,
+            SELECT idpedagio, nomemotorista, cpf, transportadora,
                    cpf_cnpj_proprietario, placa, tipoveiculo, eixos,
                    tomadorservico, expedidor, cid_expedidor, uf_expedidor,
                    recebedor, cid_recebedor, uf_recebedor,
@@ -174,7 +174,7 @@ namespace NewCapit.dist.pages
                     return;
                 }
 
-                // 💾 Salvar pedágio
+                // 💾 Salvar pedágio na tbcarregamentos
                 SqlCommand cmd = new SqlCommand(@"
             UPDATE tbcarregamentos
             SET
@@ -201,6 +201,35 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@pedagiofeito", "SIM");
 
                 cmd.ExecuteNonQuery();
+
+                // 💾 Salvar pedágio na tbcargas
+                SqlCommand cmdcargas = new SqlCommand(@"
+            UPDATE tbcargas
+            SET
+                idpedagio = @idpedagio,
+                valorpedagio = @valorpedagio,
+                dtemissaopedagio = @dtemissaopedagio, 
+                historicopedagio = @historicopedagio,
+                creditopedagio = @creditopedagio,
+                pagadorpedagioida=@pagadorpedagioida,
+                pagadorpedagiovolta = @pagadorpedagiovolta,
+                doc_pedagio = @doc_pedagio,
+                pedagiofeito = 'SIM'
+            WHERE idviagem = @id", conn);
+
+                cmdcargas.Parameters.AddWithValue("@idviagem", hdIdCarregamento.Value);
+                cmdcargas.Parameters.AddWithValue("@idpedagio", txtComprovantePedagio.Text.Trim());
+                cmdcargas.Parameters.AddWithValue("@doc_pedagio", txtDocumentoPedagio.Text.Trim());
+                cmdcargas.Parameters.AddWithValue("@valorpedagio", valorPedagio);
+                cmdcargas.Parameters.AddWithValue("@dtemissaopedagio", DateTime.Now);
+                cmdcargas.Parameters.AddWithValue("@historicopedagio", txtObservacaoPedagio.Text.Trim());
+                cmdcargas.Parameters.AddWithValue("@creditopedagio", txtCreditadoPor.Text.Trim());
+                cmdcargas.Parameters.AddWithValue("@pagadorpedagioida", txtTomadorServicoPedagio.Text.Trim());
+                cmdcargas.Parameters.AddWithValue("@pagadorpedagiovolta", txtPagadorPedagioVolta.Text.Trim());
+                cmdcargas.Parameters.AddWithValue("@pedagiofeito", "SIM");
+
+                cmdcargas.ExecuteNonQuery();
+
             }
 
             // 🔄 Atualiza grid

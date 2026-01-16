@@ -1419,31 +1419,31 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 </div>
 
-<div class="tab-pane fade" id='<%# "taPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
-<!-- Conteúdo Pedágio -->
+<div class="tab-pane fade" id='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
+<!-- Conteúdo da aba Pedágio -->
 <div class="row g-3">
 <div class="col-md-2">
 <div class="form-group">
 <span class="details">IdViagem/Comprovante:</span>
-<asp:TextBox ID="txtIdPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+<asp:TextBox ID="txtIdPedagio" class="form-control" runat="server" Text='<%# Eval("idpedagio") %>' ReadOnly="true"></asp:TextBox>
 </div>
 </div>
  <div class="col-md-2">
     <div class="form-group">
     <span class="details">Valor Creditado:</span>
-    <asp:TextBox ID="txtValorPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+    <asp:TextBox ID="txtValorPedagio" class="form-control" runat="server" Text='<%# Eval("valorpedagio", "{0:C2}") %>' ReadOnly="true"></asp:TextBox>
     </div>
  </div>
  <div class="col-md-2">
    <div class="form-group">
    <span class="details">Emissão:</span>
-   <asp:TextBox ID="txtDtemissaoPedagio" class="form-control" runat="server" ReadOnly="true" ></asp:TextBox>
+   <asp:TextBox ID="txtDtemissaoPedagio" class="form-control" runat="server" Text='<%# Eval("dtemissaopedagio", "{0:dd/MM/yyyy HH:mm}") %>' ReadOnly="true" ></asp:TextBox>
    </div>
  </div>
  <div class="col-md-3">
    <div class="form-group">
    <span class="details">Emitido Por:</span>
-   <asp:TextBox ID="txtCreditoPedagio" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+   <asp:TextBox ID="txtCreditoPedagio" class="form-control" runat="server" Text='<%# Eval("creditopedagio") %>' ReadOnly="true"></asp:TextBox>
    </div>
  </div>
 </div>
@@ -1451,7 +1451,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
   <div class="col-md-12">
      <div class="form-group">
         <span class="details">Observações:</span>
-        <asp:TextBox ID="txtHistoricoPedagio" TextMode="MultiLine" Rows="3" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
+        <asp:TextBox ID="txtHistoricoPedagio" TextMode="MultiLine" Rows="3" class="form-control" Text='<%# Eval("historicopedagio") %>' runat="server" ReadOnly="true"></asp:TextBox>
      </div>
   </div>
 </div>
