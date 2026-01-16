@@ -38,9 +38,23 @@
                         <div class="card-body">
                             <div class="container-fluid">
                                 <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">                                        
                                         <asp:TextBox ID="txtCodMotorista" Style="text-align: left" runat="server" CssClass="form-control font-weight-bold" placeholder="Digite documento, motorista, placa para pesquisa ... "></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">                                        
+                                        <asp:DropDownList 
+                                            ID="ddlPedagioFeito"
+                                            runat="server"
+                                            CssClass="form-control">
+    
+                                            <asp:ListItem Text="Pendente" Value="NÃO" Selected="True" />
+                                            <asp:ListItem Text="Emitido" Value="SIM" />
+                                            <asp:ListItem Text="Todos" Value="Todos"  />
+
+                                        </asp:DropDownList>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
