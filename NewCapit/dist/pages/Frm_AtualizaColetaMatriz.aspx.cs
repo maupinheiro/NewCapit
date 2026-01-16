@@ -3575,6 +3575,8 @@ namespace NewCapit.dist.pages
             RepeaterItem item = (RepeaterItem)txt.NamingContainer;
             int index = item.ItemIndex;
 
+            string CNPJ = chave.Substring(6, 14);
+
             // Criar o objeto lido
             var cte = new CteLido
             {
