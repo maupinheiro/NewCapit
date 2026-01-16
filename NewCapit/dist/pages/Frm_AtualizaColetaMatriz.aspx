@@ -318,7 +318,23 @@
                 inicializarAbas();
             });
         }
-    </script><script>
+    </script>
+    <script>
+        function configurarFocoScanner() {
+    document.querySelectorAll('.chave-cte').forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                // Impede que o Enter envie o formulário inteiro
+                // O AutoPostBack="true" já vai cuidar de disparar o TextChanged
+            }
+        });
+    });
+}
+
+// Chame isso dentro da sua função inicializarAbas()
+    </script>
+    
+    <script>
                  function inicializarAbas() {
                      console.log("Iniciando limpeza e restauração de abas...");
 
@@ -455,6 +471,8 @@
             ativarSelect2();
         });
     </script>
+
+
 
     <div class="content-wrapper">
         <section class="content">
@@ -1277,7 +1295,7 @@
 </div>
 <!-- /.card-header -->
 <div class="card-body">
-<asp:UpdatePanel ID="updTabs" runat="server">
+<asp:UpdatePanel ID="updTabs" UpdateMode="Conditional" runat="server">
 <ContentTemplate>
     <div class="upd-tabs-container">
 <input type="hidden" id="hfAbaAtiva" runat="server" class="hf-aba-ativa" />
@@ -1371,17 +1389,20 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="row g-3">
-   <div class="col-md-3">
-    <input type="text"
-       class="form-control chave-cte"
-       placeholder="Chave de Acesso do CT-e / RPS-e"
-       maxlength="44" />
+   <div class="col-md-6">
+       <asp:TextBox ID="txtChaveCte"
+    runat="server"
+    CssClass="form-control chave-cte"
+    AutoPostBack="true"
+    OnTextChanged="txtChaveCte_TextChanged"
+    MaxLength="44" />
+    
 </div>
 </div>
 </br>
 <div class="row g-3">
   <!-- GRID -->
-  <table class="table table-sm table-bordered tbl-cte mt-2">
+  <table   id="tblCte"  runat="server" class="table table-sm table-bordered tbl-cte mt-2">
    <thead class="table-dark">
      <tr>                                
       <th>Estado</th>
@@ -1549,6 +1570,11 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div></div></div>
 </div>
 </ContentTemplate>
+    <Triggers>
+    <asp:AsyncPostBackTrigger 
+        ControlID="rptColetas"
+        EventName="ItemCommand" />
+</Triggers>
 </asp:UpdatePanel>
 </div>
 </div>

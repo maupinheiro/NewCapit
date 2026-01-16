@@ -43,6 +43,7 @@ using System.Web.Services;
 using DocumentFormat.OpenXml.Office.Word;
 
 
+
 namespace NewCapit.dist.pages
 {
 
@@ -733,7 +734,21 @@ namespace NewCapit.dist.pages
 
                 ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
             }
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // 1. Achar a tabela HTML dentro deste item do repeater
+                HtmlTable tbl = (HtmlTable)e.Item.FindControl("tblCte");
+                int index = e.Item.ItemIndex;
 
+                // 2. Se houver dados salvos na Session para este índice, popula a tabela
+                if (ListaCtePorItem.ContainsKey(index))
+                {
+                    foreach (var cte in ListaCtePorItem[index])
+                    {
+                        AdicionarLinhaTabela(tbl, cte.Estado, cte.Municipio, cte.Filial, cte.Numero, cte.Serie, cte.Lancamento, cte.Status);
+                    }
+                }
+            }
 
         }
 
@@ -1090,7 +1105,7 @@ namespace NewCapit.dist.pages
                     cmd.ExecuteNonQuery();
                 }
 
-              
+                
 
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
@@ -3549,6 +3564,105 @@ namespace NewCapit.dist.pages
             string script = $"showWarningToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
         }
+
+        protected void txtChaveCte_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            string chave = txt.Text.Trim();
+
+            if (chave.Length != 44) return;
+
+            RepeaterItem item = (RepeaterItem)txt.NamingContainer;
+            int index = item.ItemIndex;
+
+            // Criar o objeto lido
+            var cte = new CteLido
+            {
+                Estado = ObterUF(chave.Substring(0, 2)),
+                Municipio = "São Paulo", // Ideal seria buscar de uma API ou Banco
+                Filial = "Matriz",
+                Numero = chave.Substring(25, 9),
+                Serie = chave.Substring(22, 3),
+                Lancamento = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                Status = "Lido"
+            };
+
+            // Salvar na Session
+            if (!ListaCtePorItem.ContainsKey(index))
+                ListaCtePorItem[index] = new List<CteLido>();
+
+            ListaCtePorItem[index].Add(cte);
+
+            // Limpar o campo para a próxima leitura
+            txt.Text = string.Empty;
+
+            // IMPORTANTE: Em vez de DataBind(), vamos apenas forçar a tabela a se atualizar 
+            // chamando o ItemDataBound manualmente ou apenas repopulando a tabela deste item
+            HtmlTable tbl = (HtmlTable)item.FindControl("tblCte");
+            AdicionarLinhaTabela(tbl, cte.Estado, cte.Municipio, cte.Filial, cte.Numero, cte.Serie, cte.Lancamento, cte.Status);
+
+            // Focar o cursor novamente no TextBox para o próximo scan
+            txt.Focus();
+        }
+
+
+
+
+        private void AdicionarLinhaTabela(
+            HtmlTable tabela,
+            string estado,
+            string municipio,
+            string filial,
+            string numeroCte,
+            string serie,
+            string lancamento,
+            string status)
+                {
+                    HtmlTableRow row = new HtmlTableRow();
+
+                    row.Cells.Add(new HtmlTableCell { InnerText = estado });
+                    row.Cells.Add(new HtmlTableCell { InnerText = municipio });
+                    row.Cells.Add(new HtmlTableCell { InnerText = filial });
+                    row.Cells.Add(new HtmlTableCell { InnerText = numeroCte });
+                    row.Cells.Add(new HtmlTableCell { InnerText = serie });
+                    row.Cells.Add(new HtmlTableCell { InnerText = lancamento });
+                    row.Cells.Add(new HtmlTableCell { InnerText = status });
+
+            tabela.Rows.Add(row);
+        }
+
+        private string ObterUF(string codigoUf)
+        {
+            switch (codigoUf)
+            {
+                case "35": return "SP";
+                case "33": return "RJ";
+                case "31": return "MG";
+                default: return "UF";
+            }
+        }
+        public class CteLido
+        {
+            public string Estado { get; set; }
+            public string Municipio { get; set; }
+            public string Filial { get; set; }
+            public string Numero { get; set; }
+            public string Serie { get; set; }
+            public string Lancamento { get; set; }
+            public string Status { get; set; }
+        }
+
+        private Dictionary<int, List<CteLido>> ListaCtePorItem
+        {
+            get
+            {
+                if (Session["CTE_ITENS"] == null)
+                    Session["CTE_ITENS"] = new Dictionary<int, List<CteLido>>();
+
+                return (Dictionary<int, List<CteLido>>)Session["CTE_ITENS"];
+            }
+        }
+
 
         public void CarregaMap(string ds_placa)
         {
