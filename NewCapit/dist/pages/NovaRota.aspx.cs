@@ -1,7 +1,7 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿//using DocumentFormat.OpenXml.Drawing.Charts;
+//using DocumentFormat.OpenXml.Office2010.Excel;
+//using DocumentFormat.OpenXml.Presentation;
+//using DocumentFormat.OpenXml.Wordprocessing;
 using MathNet.Numerics;
 using Newtonsoft.Json;
 using System;
@@ -481,6 +481,8 @@ namespace NewCapit.dist.pages
                             if (rowsAffected > 0)
                             {
                                 // atualiza  
+
+                                
                             }
                             else
                             {
@@ -505,6 +507,8 @@ namespace NewCapit.dist.pages
                     //Tratar erro
                     //txtResultado.Text = "Erro: " + ex.Message;
                 }
+
+                InsertTbDistancia();
             }
             int minutos = int.Parse(lblTempo.InnerHtml.Replace(" min", ""));
 
@@ -524,25 +528,25 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string sql = @"
-        IF NOT EXISTS (
-            SELECT 1 
-            FROM tbrotasdeentregas 
-            WHERE desc_rota = @desc_rota
-        )
-        BEGIN
-            INSERT tbrotasdeentregas
-            (rota,desc_rota, cidade_expedidor, uf_expedidor,
-             cidade_recebedor, uf_recebedor,
-             distancia, tempo, deslocamento, pedagio)
-            VALUES
-            (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
-             @cidade_recebedor, @uf_recebedor,
-             @distancia, @tempo, @deslocamento, @pedagio)
-        END
-        ELSE
-        BEGIN
-            RAISERROR ('ROTA_DUPLICADA', 16, 1)
-        END";
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM tbrotasdeentregas 
+                            WHERE desc_rota = @desc_rota
+                        )
+                        BEGIN
+                            INSERT tbrotasdeentregas
+                            (rota,desc_rota, cidade_expedidor, uf_expedidor,
+                             cidade_recebedor, uf_recebedor,
+                             distancia, tempo, deslocamento, pedagio)
+                            VALUES
+                            (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
+                             @cidade_recebedor, @uf_recebedor,
+                             @distancia, @tempo, @deslocamento, @pedagio)
+                        END
+                        ELSE
+                        BEGIN
+                            RAISERROR ('ROTA_DUPLICADA', 16, 1)
+                        END";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@rota", rota);
@@ -670,25 +674,25 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string sql = @"
-        IF NOT EXISTS (
-            SELECT 1 
-            FROM tbrotasdeentregas 
-            WHERE desc_rota COLLATE Latin1_General_CI_AI = @desc_rota
-        )
-        BEGIN
-            INSERT tbrotasdeentregas
-            (rota,desc_rota, cidade_expedidor, uf_expedidor,
-             cidade_recebedor, uf_recebedor,
-             distancia, tempo, deslocamento, pedagio, situacao, data_cadastro, usuario_cadastro)
-            VALUES
-            (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
-             @cidade_recebedor, @uf_recebedor,
-             @distancia, @tempo, @deslocamento, @pedagio, @situacao, @data_cadastro, @usuario_cadastro)
-        END
-        ELSE
-        BEGIN
-            RAISERROR ('ROTA_DUPLICADA', 16, 1)
-        END";
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM tbrotasdeentregas 
+                            WHERE desc_rota COLLATE Latin1_General_CI_AI = @desc_rota
+                        )
+                        BEGIN
+                            INSERT tbrotasdeentregas
+                            (rota,desc_rota, cidade_expedidor, uf_expedidor,
+                             cidade_recebedor, uf_recebedor,
+                             distancia, tempo, deslocamento, pedagio, situacao, data_cadastro, usuario_cadastro)
+                            VALUES
+                            (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
+                             @cidade_recebedor, @uf_recebedor,
+                             @distancia, @tempo, @deslocamento, @pedagio, @situacao, @data_cadastro, @usuario_cadastro)
+                        END
+                        ELSE
+                        BEGIN
+                            RAISERROR ('ROTA_DUPLICADA', 16, 1)
+                        END";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@rota", rota);
@@ -721,11 +725,119 @@ namespace NewCapit.dist.pages
                         throw;
                 }
             }
+
+            
         }
 
         protected void btnCadastrarRota_Click(object sender, EventArgs e)
         {
             InsertRota();
+            InsertTbDistancia();
         }
+
+        public void InsertTbDistancia()
+        {
+           
+
+            string sqld = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem='"+ ddlUfOrigem.SelectedItem.Text+ "' and Origem='"+ ddlCidadeOrigem.SelectedItem.Text + "' and UF_Destino='"+ ddlUfDestino.SelectedItem.Text + "' and Destino='"+ ddlCidadeDestino.SelectedItem.Text + "'";
+            SqlDataAdapter adp = new SqlDataAdapter(sqld, conn);
+            DataTable dt = new DataTable();
+            conn.Open();
+            adp.Fill(dt);
+            conn.Close();
+
+            if (dt.Rows.Count > 0)
+            {
+                MostrarMsg("Esta distância já está cadastrada.");
+                               
+            }
+            else
+            {
+                decimal? distancia = null;
+                int? tempo = null;
+
+                // DISTÂNCIA
+                if (!string.IsNullOrWhiteSpace(txtDistancia.Text))
+                {
+                    decimal d;
+                    if (!decimal.TryParse(
+                            txtDistancia.Text.Replace(",", "."),
+                            NumberStyles.Any,
+                            CultureInfo.InvariantCulture,
+                            out d))
+                    {
+                        MostrarMsg("Distância inválida.", "warning");
+                        return;
+                    }
+                    distancia = d;
+                }
+
+                // TEMPO
+                if (!string.IsNullOrWhiteSpace(txtTempo.Text))
+                {
+                    int t;
+                    if (!int.TryParse(
+                            txtTempo.Text.Replace(" min", "").Trim(),
+                            out t))
+                    {
+                        MostrarMsg("Tempo inválido.", "warning");
+                        return;
+                    }
+                    tempo = t;
+                }
+
+                using (SqlConnection conn = new SqlConnection(
+                    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string sql = @"
+                            INSERT INTO tbdistanciapremio
+                            (UF_Origem, Origem, UF_Destino, Destino, Distancia, tempo_min)
+                            VALUES
+                            (@UF_Origem, @Origem, @UF_Destino, @Destino, @Distancia, @tempo_min)";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.Add("@UF_Origem", SqlDbType.Char, 2)
+                            .Value = ddlUfOrigem.SelectedItem.Text.ToUpper();
+
+                        cmd.Parameters.Add("@Origem", SqlDbType.VarChar, 100)
+                            .Value = ddlCidadeOrigem.SelectedItem.Text.ToUpper();
+
+                        cmd.Parameters.Add("@UF_Destino", SqlDbType.Char, 2)
+                            .Value = ddlUfDestino.SelectedItem.Text.ToUpper();
+
+                        cmd.Parameters.Add("@Destino", SqlDbType.VarChar, 100)
+                            .Value = ddlCidadeDestino.SelectedItem.Text.ToUpper();
+
+                        // Aqui está o ajuste importante 👇
+                        cmd.Parameters.Add("@Distancia", SqlDbType.Decimal)
+                            .Value = distancia.HasValue ? (object)distancia.Value : DBNull.Value;
+
+                        cmd.Parameters.Add("@tempo_min", SqlDbType.Int)
+                            .Value = tempo.HasValue ? (object)tempo.Value : DBNull.Value;
+
+                        conn.Open();
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            MostrarMsg("Distância cadastrada com sucesso!");
+                        }
+                        catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
+                        {
+                            MostrarMsg("Esta rota já está cadastrada.");
+                        }
+                        catch (Exception)
+                        {
+                            MostrarMsg("Erro ao salvar os dados.", "danger");
+                        }
+                    }
+                }
+
+
+            }
+
+
+        }
+
     }
 }
