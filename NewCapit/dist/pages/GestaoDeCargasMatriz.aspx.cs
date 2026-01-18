@@ -49,7 +49,7 @@ namespace NewCapit.dist.pages
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, expedidor, cid_expedidor, recebedor, cid_recebedor, andamento FROM tbcargas where empresa = '1111' ";
+                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, expedidor, cid_expedidor, recebedor, cid_recebedor, andamento, idviagem FROM tbcargas where empresa = '1111' ";
 
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     query += " AND previsao >= @DataInicio";
@@ -58,7 +58,7 @@ namespace NewCapit.dist.pages
                     query += " AND previsao <= @DataFim";
 
                 if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
-                    query += " AND status = @Status";
+                    query += " AND andamento = @Status";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -89,6 +89,7 @@ namespace NewCapit.dist.pages
         {
             CarregarGrid();   
         }
+
         
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
@@ -144,30 +145,30 @@ namespace NewCapit.dist.pages
             CarregarGrid();
         }
 
-        protected void gvCargas_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
-        {
-            //GridViewRow row = gvPedidos.Rows[e.RowIndex];
-            //int id = Convert.ToInt32(gvPedidos.DataKeys[e.RowIndex].Value);
-            //string cliente = ((TextBox)row.Cells[1].Controls[0]).Text;
-            //string data = ((TextBox)row.Cells[2].Controls[0]).Text;
-            //string valor = ((TextBox)row.Cells[3].Controls[0]).Text;
+        //protected void gvCargas_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
+        //{
+        //    //GridViewRow row = gvPedidos.Rows[e.RowIndex];
+        //    //int id = Convert.ToInt32(gvPedidos.DataKeys[e.RowIndex].Value);
+        //    //string cliente = ((TextBox)row.Cells[1].Controls[0]).Text;
+        //    //string data = ((TextBox)row.Cells[2].Controls[0]).Text;
+        //    //string valor = ((TextBox)row.Cells[3].Controls[0]).Text;
 
-            //using (SqlConnection conn = new SqlConnection(connStr))
-            //{
-            //    string sql = "UPDATE Pedidos SET Cliente=@Cliente, DataPedido=@DataPedido, Valor=@Valor WHERE Id=@Id";
-            //    SqlCommand cmd = new SqlCommand(sql, conn);
-            //    cmd.Parameters.AddWithValue("@Cliente", cliente);
-            //    cmd.Parameters.AddWithValue("@DataPedido", DateTime.Parse(data));
-            //    cmd.Parameters.AddWithValue("@Valor", decimal.Parse(valor));
-            //    cmd.Parameters.AddWithValue("@Id", id);
+        //    //using (SqlConnection conn = new SqlConnection(connStr))
+        //    //{
+        //    //    string sql = "UPDATE Pedidos SET Cliente=@Cliente, DataPedido=@DataPedido, Valor=@Valor WHERE Id=@Id";
+        //    //    SqlCommand cmd = new SqlCommand(sql, conn);
+        //    //    cmd.Parameters.AddWithValue("@Cliente", cliente);
+        //    //    cmd.Parameters.AddWithValue("@DataPedido", DateTime.Parse(data));
+        //    //    cmd.Parameters.AddWithValue("@Valor", decimal.Parse(valor));
+        //    //    cmd.Parameters.AddWithValue("@Id", id);
 
-            //    conn.Open();
-            //    cmd.ExecuteNonQuery();
-            //}
+        //    //    conn.Open();
+        //    //    cmd.ExecuteNonQuery();
+        //    //}
 
-            //gvPedidos.EditIndex = -1;
-            //CarregarPedidos();
-        }
+        //    //gvPedidos.EditIndex = -1;
+        //    //CarregarPedidos();
+        //}
 
     }
 }

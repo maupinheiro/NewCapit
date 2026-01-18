@@ -19,7 +19,7 @@ namespace NewCapit.dist.pages
 {
     public partial class GestaoDeEntregasMatriz : System.Web.UI.Page
     {
-        string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+        string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -48,6 +48,7 @@ namespace NewCapit.dist.pages
                 }
 
                 CarregarColetas();
+                CarregarGridBarraPesquisa();
             }
 
 
@@ -60,9 +61,10 @@ namespace NewCapit.dist.pages
         protected void CarregarGrid()
         {
 
-            string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            //string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, cliorigem, cidorigem, clidestino, ciddestino FROM tbcargas where empresa = '1111' ";
 
@@ -219,12 +221,54 @@ namespace NewCapit.dist.pages
             ViewState["rptCarregamento"] = dados;
             lblMensagem.Text = string.Empty;
         }
+        private void CarregarGridBarraPesquisa()
+        {
+            DataTable dados = DAL.ConEntrega
+        .FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
+
+            ViewState["rptCarregamento"] = dados;
+
+            rptCarregamento.DataSource = dados;
+            rptCarregamento.DataBind();
+
+            lblMensagem.Text = string.Empty;
+        }
+        protected void txtPesquisar_TextChanged(object sender, EventArgs e)
+        {            
+            DataTable dt = ViewState["rptCarregamento"] as DataTable;
+            if (dt == null) return;
+
+            string filtro = txtPesquisar.Text.Trim().Replace("'", "''");
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                rptCarregamento.DataSource = dt;
+                rptCarregamento.DataBind();
+                return;
+            }
+
+            List<string> filtros = new List<string>();
+
+            foreach (DataColumn col in dt.Columns)
+            {
+                filtros.Add(
+                    $"CONVERT([{col.ColumnName}], 'System.String') LIKE '%{filtro}%'"
+                );
+            }
+
+            DataView dv = new DataView(dt);
+            dv.RowFilter = string.Join(" OR ", filtros);
+
+            rptCarregamento.DataSource = dv;
+            rptCarregamento.DataBind();
+            lblMensagem.Text = "Pesquisa retornou (" + dv.Count + ") registro(s).";
+        }
+
 
         private DateTime? GetDataInicio()
         {
             return DateTime.TryParse(DataInicio.Text, out var d) ? d : (DateTime?)null;
         }
-
         private DateTime? GetDataFim()
         {
             return DateTime.TryParse(DataFim.Text, out var d) ? d : (DateTime?)null;
@@ -272,7 +316,46 @@ namespace NewCapit.dist.pages
                     // Bind dos dados ao repeater interno
                     rptColeta.DataSource = dtColetas;
                     rptColeta.DataBind();
+
+
+                    Label lblStatus = e.Item.FindControl("lblStatus") as Label;
+                    if (lblStatus == null) return;
+
+                    string status = lblStatus.Text.Trim();
+                    switch (status)
+                    {
+                        case "Pronto":
+                            lblStatus.CssClass += " bg-warning text-white";
+                            break;
+
+                        case "Em Transito":
+                            lblStatus.CssClass += " bg-success text-white";
+                            break;
+
+                        case "Ag. Descarga":
+                            lblStatus.CssClass += " bg-danger text-white";
+                            break;
+
+                        case "Ag. Carregamento":
+                            lblStatus.CssClass += " bg-red text-dark";
+                            break;
+
+                        case "Ag. Documentos":
+                            lblStatus.CssClass += " bg-yellow text-dark";
+                            break;
+
+                        case "Carregando":
+                            lblStatus.CssClass += " bg-purple text-white";
+                            break;
+                        case "Pendente":
+                            lblStatus.CssClass += " bg-black text-white";
+                            break;
+                        case "Concluido":
+                            lblStatus.CssClass += " bg-info text-white";
+                            break;
+                    }
                 }
+
             }
         }
         protected void rptColeta_ItemDataBound(object sender, RepeaterItemEventArgs e)

@@ -58,14 +58,14 @@ namespace NewCapit.dist.pages
                     tomadorservico LIKE 'VOLKS%'
                     AND (cva IS NULL OR LTRIM(RTRIM(cva)) = '')
                   )
-              AND pedagiofeito = 'NÃO'
+              AND pedagiofeito = 'Pendente'
         ");
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
 
                 // 🔎 Filtro por documento / motorista / placa
-                if (!string.IsNullOrWhiteSpace(txtCodMotorista.Text))
+                if (!string.IsNullOrWhiteSpace(txtPesquisar.Text))
                 {
                     sql.Append(@"
                 AND (
@@ -76,7 +76,7 @@ namespace NewCapit.dist.pages
             ");
 
                     cmd.Parameters.AddWithValue(
-                        "@pesquisa", "%" + txtCodMotorista.Text.Trim() + "%"
+                        "@pesquisa", "%" + txtPesquisar.Text.Trim() + "%"
                     );
                 }
 
@@ -167,7 +167,7 @@ namespace NewCapit.dist.pages
 
                 check.Parameters.AddWithValue("@id", hdIdCarregamento.Value);
 
-                if (Convert.ToString(check.ExecuteScalar()) == "SIM")
+                if (Convert.ToString(check.ExecuteScalar()) == "Emitido")
                 {
                     lblErro.Text = "Este pedágio já foi salvo.";
                     ReabrirModal();
@@ -186,7 +186,7 @@ namespace NewCapit.dist.pages
                 pagadorpedagioida=@pagadorpedagioida,
                 pagadorpedagiovolta = @pagadorpedagiovolta,
                 doc_pedagio = @doc_pedagio,
-                pedagiofeito = 'SIM'
+                pedagiofeito = @pedagiofeito
             WHERE id = @id", conn);
 
                 cmd.Parameters.AddWithValue("@id", hdIdCarregamento.Value);
@@ -198,7 +198,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@creditopedagio", txtCreditadoPor.Text.Trim());
                 cmd.Parameters.AddWithValue("@pagadorpedagioida", txtTomadorServicoPedagio.Text.Trim());
                 cmd.Parameters.AddWithValue("@pagadorpedagiovolta", txtPagadorPedagioVolta.Text.Trim());
-                cmd.Parameters.AddWithValue("@pedagiofeito", "SIM");
+                cmd.Parameters.AddWithValue("@pedagiofeito", "Emitido");
 
                 cmd.ExecuteNonQuery();
 
@@ -214,10 +214,10 @@ namespace NewCapit.dist.pages
                 pagadorpedagioida=@pagadorpedagioida,
                 pagadorpedagiovolta = @pagadorpedagiovolta,
                 doc_pedagio = @doc_pedagio,
-                pedagiofeito = 'SIM'
-            WHERE idviagem = @id", conn);
-
-                cmdcargas.Parameters.AddWithValue("@idviagem", hdIdCarregamento.Value);
+                pedagiofeito = @pedagiofeito
+            WHERE idviagem = @idviagem", conn);
+                //cmdcargas.Parameters.AddWithValue("@id", hdIdCarregamento.Value);
+                cmdcargas.Parameters.AddWithValue("@idviagem", txtNum_Carregamento.Text.Trim());
                 cmdcargas.Parameters.AddWithValue("@idpedagio", txtComprovantePedagio.Text.Trim());
                 cmdcargas.Parameters.AddWithValue("@doc_pedagio", txtDocumentoPedagio.Text.Trim());
                 cmdcargas.Parameters.AddWithValue("@valorpedagio", valorPedagio);
@@ -226,7 +226,7 @@ namespace NewCapit.dist.pages
                 cmdcargas.Parameters.AddWithValue("@creditopedagio", txtCreditadoPor.Text.Trim());
                 cmdcargas.Parameters.AddWithValue("@pagadorpedagioida", txtTomadorServicoPedagio.Text.Trim());
                 cmdcargas.Parameters.AddWithValue("@pagadorpedagiovolta", txtPagadorPedagioVolta.Text.Trim());
-                cmdcargas.Parameters.AddWithValue("@pedagiofeito", "SIM");
+                cmdcargas.Parameters.AddWithValue("@pedagiofeito", "Emitido");
 
                 cmdcargas.ExecuteNonQuery();
 
@@ -319,6 +319,7 @@ namespace NewCapit.dist.pages
                     {
                         txtDocumentoPedagio.Text = "OC" + dr["num_carregamento"]?.ToString();
                     }
+                    txtComprovantePedagio.Text = dr["idpedagio"]?.ToString();
                     txtValorPedagio.Text = dr["valorpedagio"] != DBNull.Value
                         ? Convert.ToDecimal(dr["valorpedagio"]).ToString("N2")
                         : "";
@@ -334,6 +335,12 @@ namespace NewCapit.dist.pages
         {
             CarregarGrid();
         }
+       
+
+        
+        
+
+
     }
 
 }

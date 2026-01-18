@@ -44,7 +44,7 @@ namespace DAL
             c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
             c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
             c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
-            c.num_carregamento, c.emissao, c.situacao, c.status
+            c.num_carregamento, c.emissao, c.situacao, c.status, c.carga
         FROM tbcarregamentos c
         INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
         WHERE empresa = '1111' AND c.situacao <> 'VIAGEM CONCLUIDA'
@@ -93,7 +93,7 @@ namespace DAL
             c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
             c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
             c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
-            c.num_carregamento, c.emissao, c.situacao, c.status
+            c.num_carregamento, c.emissao, c.situacao, c.status, c.carga
         FROM tbcarregamentos c
         INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
         WHERE empresa = '1111'

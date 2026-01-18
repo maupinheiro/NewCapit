@@ -40,7 +40,7 @@
                                 <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="form-group">                                        
-                                        <asp:TextBox ID="txtCodMotorista" Style="text-align: left" runat="server" CssClass="form-control font-weight-bold" placeholder="Digite documento, motorista, placa para pesquisa ... "></asp:TextBox>
+                                        <asp:TextBox ID="txtPesquisar" Style="text-align: left" runat="server" CssClass="form-control font-weight-bold" placeholder="Digite documento, motorista, placa para pesquisa ... "></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -48,10 +48,9 @@
                                         <asp:DropDownList 
                                             ID="ddlPedagioFeito"
                                             runat="server"
-                                            CssClass="form-control">
-    
-                                            <asp:ListItem Text="Pendente" Value="NÃO" Selected="True" />
-                                            <asp:ListItem Text="Emitido" Value="SIM" />
+                                            CssClass="form-control">    
+                                            <asp:ListItem Text="Pendente" Value="Pendente" Selected="True" />
+                                            <asp:ListItem Text="Emitido" Value="Emitido" />
                                             <asp:ListItem Text="Todos" Value="Todos"  />
 
                                         </asp:DropDownList>
@@ -80,6 +79,7 @@
                                 <asp:UpdatePanel ID="upLista" runat="server">
                                  <ContentTemplate>
                                         <table class="table table-striped table-hover table-bordered">
+                                           <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th>Documento</th>                                                                        <th>Motorista</th> 
@@ -87,12 +87,12 @@
                                                     <th>Placa</th>                                                     
                                                     <th>Local de Coleta</th>
                                                     <th>Local de Entrega</th> 
-                                                    <th>Ação</th>
+                                                    <th>Emitir</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                <asp:Repeater ID="rpCarregamentos" runat="server"
+                                                <asp:Repeater ID="rpCarregamentos"  runat="server"
                                                     OnItemCommand="rpCarregamentos_ItemCommand">
 
                                                     <ItemTemplate>
@@ -289,7 +289,7 @@
                                <div class="col-md-6">
                                      <div class="form-group">
                                          <span class="details">Observação:</span>
-                                         <asp:TextBox ID="txtObservacaoPedagio" runat="server" class="form-control"></asp:TextBox>                                        
+                                         <asp:TextBox ID="txtObservacaoPedagio" Text="" runat="server" class="form-control"></asp:TextBox>                                        
                                      </div>
                                </div>
                             </div>

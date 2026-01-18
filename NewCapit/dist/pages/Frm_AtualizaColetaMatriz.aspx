@@ -420,23 +420,7 @@
         // Isso garante que o campo de busca do Select2 possa receber foco mesmo dentro do modal
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
     </script>
-    <%--<script>
-        function ativarSelect2() {
-            $('.select2').select2({
-                placeholder: "Selecione a rota",
-                allowClear: true,
-                width: '100%'
-            });
-        }
-
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-            ativarSelect2();
-        });
-
-        $(document).ready(function () {
-            ativarSelect2();
-        });
-    </script>--%>
+   
     <script>
         function ativarSelect2() {
             $('#ddlRotaKrona').select2({
@@ -554,7 +538,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <span class="details">NOME COMPLETO:</span>
                                                 <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control font-weight-bold select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
@@ -1371,7 +1355,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="row g-3">
-   <div class="col-md-3">
+   <div class="col-md-4">
     <input type="text"
        class="form-control chave-cte"
        placeholder="Chave de Acesso do CT-e / RPS-e"
@@ -1600,7 +1584,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <span class="details">Data e Hora da Coleta:<asp:Label ID="Label2" runat="server" Text=""></asp:Label></span>
         <div class="input-group">
             <div class="input-group">
-                <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("data_hora_coleta","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
             </div>
 
         </div>
@@ -1622,7 +1606,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <span class="details">Veículo Disponível:<asp:Label ID="Label3" runat="server" Text=""></asp:Label></span>
         <div class="input-group">
             <div class="input-group">
-                <asp:TextBox ID="txtVeiculoDisponivel" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                <asp:TextBox ID="txtVeiculoDisponivel" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("disponivel_solicitacao","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
             </div>
 
         </div>

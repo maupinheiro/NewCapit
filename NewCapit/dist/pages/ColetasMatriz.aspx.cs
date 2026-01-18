@@ -47,6 +47,7 @@ namespace NewCapit.dist.pages
         DateTime dataHoraAtual = DateTime.Now;
         double distancia;
         string sDuracao, sPercurso;
+        string sOTCliente;       
         
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -172,29 +173,29 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void CarregarFotoMotorista(string fotoMotorista)
-        {
-            //fotoMotorista = "/fotos/motoristasemfoto.jpg";
-            // 1️⃣ NULL ou vazio
-            //if (string.IsNullOrEmpty(fotoMotorista))
-            //{
-            //    imgFoto.ImageUrl = "/fotos/motoristasemfoto.jpg";
-            //    return;
-            //}
+        //private void CarregarFotoMotorista(string fotoMotorista)
+        //{
+        //    //fotoMotorista = "/fotos/motoristasemfoto.jpg";
+        //    // 1️⃣ NULL ou vazio
+        //    //if (string.IsNullOrEmpty(fotoMotorista))
+        //    //{
+        //    //    imgFoto.ImageUrl = "/fotos/motoristasemfoto.jpg";
+        //    //    return;
+        //    //}
 
-            // 2️⃣ Verifica se o arquivo existe
-            //string caminhoFisico = Server.MapPath(fotoMotorista);
+        //    // 2️⃣ Verifica se o arquivo existe
+        //    //string caminhoFisico = Server.MapPath(fotoMotorista);
 
-            //if (!System.IO.File.Exists(caminhoFisico))
-            //{
-            //    imgFoto.ImageUrl = "/fotos/motoristasemfoto.jpg";
-            //    return;
-            //}
+        //    //if (!System.IO.File.Exists(caminhoFisico))
+        //    //{
+        //    //    imgFoto.ImageUrl = "/fotos/motoristasemfoto.jpg";
+        //    //    return;
+        //    //}
 
-            // 3️⃣ Tudo certo → mostra a foto
-            //imgFoto.ImageUrl = fotoMotorista;
+        //    // 3️⃣ Tudo certo → mostra a foto
+        //    //imgFoto.ImageUrl = fotoMotorista;
 
-        }
+        //}
         
         protected void CarregaFoto()
         {
@@ -321,7 +322,7 @@ namespace NewCapit.dist.pages
                 fotoMotorista = dt.Rows[0]["caminhofoto"].ToString();
                 txtLiberacaoGR.Text = dt.Rows[0]["codliberacao"].ToString();
                 // FOTO
-                CarregarFotoMotorista(fotoMotorista);
+                //CarregarFotoMotorista(fotoMotorista);
                 // valida Exame Toxicologico
                 if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
                 {
@@ -842,7 +843,7 @@ namespace NewCapit.dist.pages
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     using (SqlCommand cmd = new SqlCommand(@"
-            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem, emitepedagio, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, pagador
+            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem, emitepedagio, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, pagador, ot, data_hora
             FROM tbcargas
             WHERE carga = @c
         ", conn))
@@ -873,7 +874,9 @@ namespace NewCapit.dist.pages
                             txtRecebedor.Text = dt.Rows[0]["recebedor"].ToString();
                             txtCid_Recebedor.Text = dt.Rows[0]["cid_recebedor"].ToString();
                             txtUf_Recebedor.Text = dt.Rows[0]["uf_recebedor"].ToString();
+                            
                             string nomeCompleto = dt.Rows[0]["pagador"].ToString().Trim();
+                            string sOTCliente = dt.Rows[0]["ot"].ToString().Trim();
                             string primeiroNome = nomeCompleto.Split(' ')[0];
                             txtPagador.Text = primeiroNome;
                             if (dt.Rows[0][10].ToString() == "Pendente" || dt.Rows[0][10].ToString() == "PENDENTE")
@@ -1365,7 +1368,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
                 cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                 cmd.Parameters.AddWithValue("@distancia", distancia);
-                cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
+                cmd.Parameters.AddWithValue("@andamento", "Pendente");
                 cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
                 cmd.Parameters.AddWithValue("@pagador", primeiroNome);
                 cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
@@ -1657,6 +1660,8 @@ namespace NewCapit.dist.pages
 
             object DbDate(string v) =>
                 DateTime.TryParse(v, out var d) ? d : (object)DBNull.Value;
+            object DbDateTime(string v) =>
+                DateTime.TryParse(v, out var d) ? d : (object)DBNull.Value;
 
             object DbDecimal(string v) =>
                 decimal.TryParse(v, out var d) ? d : (object)DBNull.Value;
@@ -1681,14 +1686,14 @@ namespace NewCapit.dist.pages
                     cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, valcet, valcrlvveiculo,
                     valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
                     tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa, dtcad, usucad,
-                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario, pedagio, eixos, pedagiofeito, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, tomadorservico
+                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario, pedagio, eixos, pedagiofeito, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, tomadorservico, ot
                 )
                 VALUES (
                     @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                     @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @valcet, @valcrlvveiculo,
                     @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
                     @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa, @dtcad, @usucad,
-                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario, @pedagio, @eixos, @pedagiofeito, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @tomadorservico 
+                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario, @pedagio, @eixos, @pedagiofeito, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @tomadorservico, @ot 
                 )";
 
                     using (SqlCommand cmd = new SqlCommand(insert, conn, tran))
@@ -1745,6 +1750,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@dtcad", SqlDbType.DateTime).Value = DateTime.Now;
                         cmd.Parameters.Add("@usucad", SqlDbType.VarChar, 50).Value = DbString(nomeUsuario);
                         cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "PROGRAMADA";
+                        cmd.Parameters.Add("@ot", SqlDbType.VarChar, 20).Value = sOTCliente;
                         cmd.Parameters.Add("@funcao", SqlDbType.VarChar, 30).Value = DbString(txtFuncao.Text);
                         cmd.Parameters.Add("@tomadorservico", SqlDbType.VarChar, 50).Value = DbString(primeiroNome);
 
@@ -1755,7 +1761,7 @@ namespace NewCapit.dist.pages
                         // OUTRAS DATAS
                         cmd.Parameters.Add("@venccronotacografo", SqlDbType.Date).Value = DbDate(txtCrono.Text);
                         cmd.Parameters.Add("@valopacidade", SqlDbType.Date).Value = DbDate(txtOpacidade.Text);
-
+                        
                         // DOCUMENTOS
                         cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Parse(txtCadastro.Text).ToString("yyyy-MM-dd HH:mm");
                         cmd.Parameters.Add("@numero_gr", SqlDbType.VarChar, 30).Value = DbString(txtLiberacaoGR.Text);
@@ -1764,7 +1770,7 @@ namespace NewCapit.dist.pages
 
                         // PEDÁGIO / EIXOS
                         cmd.Parameters.Add("@pedagio", SqlDbType.VarChar, 3).Value = DbString(txtPedagio.Text);
-                        cmd.Parameters.Add("@pedagiofeito", SqlDbType.VarChar, 3).Value = DbString("NÃO");
+                        cmd.Parameters.Add("@pedagiofeito", SqlDbType.VarChar, 15).Value = DbString("Pendente");
                         cmd.Parameters.Add("@eixos", SqlDbType.Int).Value = DbInt(txtEixos.Text);
 
                         // EXPEDIDOR
@@ -1811,7 +1817,7 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.Add("@codmot", SqlDbType.VarChar).Value = txtCodMotorista.Text;
                             cmd.Parameters.Add("@frota", SqlDbType.VarChar).Value = txtCodFrota.Text;
                             cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = "Pendente";
-                            cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "PROGRAMADA";
+                            cmd.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "Programada";
                             cmd.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";
                             cmd.Parameters.Add("@funcaomot", SqlDbType.VarChar).Value = txtFuncao.Text;
                             cmd.Parameters.Add("@emissao", SqlDbType.DateTime).Value = DateTime.Now;
@@ -1950,7 +1956,7 @@ namespace NewCapit.dist.pages
                 fotoMotorista = dt.Rows[0]["caminhofoto"].ToString();
                 txtLiberacaoGR.Text = dt.Rows[0]["codliberacao"].ToString();
                 // FOTO
-                CarregarFotoMotorista(fotoMotorista);
+                //CarregarFotoMotorista(fotoMotorista);
                 // valida Exame Toxicologico
                 if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
                 {

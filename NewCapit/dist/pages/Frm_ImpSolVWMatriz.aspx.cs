@@ -503,7 +503,7 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.AddWithValue("@pedido", pedido);
                             cmd.Parameters.AddWithValue("@carga", numSolic);
                             cmd.Parameters.AddWithValue("@emissao", SafeDateTimeValue(dtCadastro + " " + hrCadastro));
-                            cmd.Parameters.AddWithValue("@status", "PENDENTE");
+                            cmd.Parameters.AddWithValue("@status", "Pendente");
                             cmd.Parameters.AddWithValue("@solicitante", planta);
                             cmd.Parameters.AddWithValue("@entrega", "Normal");
                             cmd.Parameters.AddWithValue("@peso", peso);
@@ -519,7 +519,7 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.AddWithValue("@clidestino", razCliDestino);
                             cmd.Parameters.AddWithValue("@observacao", DBNull.Value);
                             cmd.Parameters.AddWithValue("@idviagem", DBNull.Value);
-                            cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
+                            cmd.Parameters.AddWithValue("@andamento", "Pendente");
                             cmd.Parameters.AddWithValue("@ufcliorigem", estCliOrigem);
                             cmd.Parameters.AddWithValue("@ufclidestino", estCliDestino);
                             cmd.Parameters.AddWithValue("@placas", DBNull.Value);
@@ -618,13 +618,13 @@ namespace NewCapit.dist.pages
              if (!CargaJaExiste(conn, numSolic))
                 {
                     string sqlCarga = @"INSERT INTO tbcargas (carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, cadastro, gr, solicitante, empresa, andamento, codvworigem, codvwdestino, 
-                  distancia, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, nucleo, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao,  duracao, deslocamento, conta_debito_solicitacao, centro_custo_solicitacao, emitepedagio, desc_veic_vw, cod_pagador, pagador, cid_pagador, uf_pagador)
+                  distancia, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, nucleo, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao,  duracao, deslocamento, conta_debito_solicitacao, centro_custo_solicitacao, emitepedagio, desc_veic_vw, cod_pagador, pagador, cid_pagador, uf_pagador, data_hora_coleta)
                     VALUES
                     (@carga, @emissao, @status, @tomador, @entrega, @peso, @material, 
                      @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, 
                      @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @cadastro, @gr, @solicitante, @empresa, @andamento, @codvworigem, @codvwdestino, @distancia, @cod_expedidor, @expedidor,
                        @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @nucleo, @tipo_solicitacao,
-                        @tipo_geracao_solicitacao, @tipo_veiculo_solicitacao,  @duracao, @deslocamento, @conta_debito_solicitacao, @centro_custo_solicitacao, @emitepedagio, @desc_veic_vw, @cod_pagador, @pagador, @cid_pagador, @uf_pagador)";
+                        @tipo_geracao_solicitacao, @tipo_veiculo_solicitacao,  @duracao, @deslocamento, @conta_debito_solicitacao, @centro_custo_solicitacao, @emitepedagio, @desc_veic_vw, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @data_hora_coleta)";
 
                     using (SqlCommand cmd = new SqlCommand(sqlCarga, conn))
                     {
@@ -650,7 +650,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@gr", SqlDbType.VarChar, 50).Value = grPlanta;
                         cmd.Parameters.Add("@solicitante", SqlDbType.VarChar, 50).Value = nomePlanta;
                         cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 50).Value = "1111";
-                        cmd.Parameters.Add("@andamento", SqlDbType.VarChar, 50).Value = "PENDENTE";
+                        cmd.Parameters.Add("@andamento", SqlDbType.VarChar, 50).Value = "Pendente";
                         cmd.Parameters.Add("@codvworigem", SqlDbType.VarChar, 10).Value = lblOrigem;
                         cmd.Parameters.Add("@codvwdestino", SqlDbType.VarChar, 10).Value = lblDestino;
                         cmd.Parameters.Add("@distancia", SqlDbType.Decimal).Value = sDistancia ?? (object)DBNull.Value;
@@ -683,8 +683,10 @@ namespace NewCapit.dist.pages
                            .Value = DbString(cidCliPagador);
                         cmd.Parameters.Add("@uf_pagador", SqlDbType.VarChar, 2)
                            .Value = DbString(estCliPagador);
+                        cmd.Parameters.Add("@data_hora_coleta", SqlDbType.DateTime)
+                           .Value = DbString(lblColeta + " " + lblHora);
 
-                        foreach (SqlParameter p in cmd.Parameters)
+                    foreach (SqlParameter p in cmd.Parameters)
                         {
                             if (p.Value == null)
                                 p.Value = DBNull.Value;

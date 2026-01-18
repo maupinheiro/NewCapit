@@ -21,6 +21,28 @@
             });
         });
     </script>
+    <script>
+        function filtrarGrid() {
+            let input = document.getElementById("txtPesquisa");
+            let filtro = input.value.toLowerCase();
+            let tabela = document.getElementById("<%= gvCargas.ClientID %>");
+            let linhas = tabela.getElementsByTagName("tr");
+
+            for (let i = 1; i < linhas.length; i++) {
+                let mostrar = false;
+                let colunas = linhas[i].getElementsByTagName("td");
+
+                for (let j = 0; j < colunas.length; j++) {
+                    if (colunas[j].innerText.toLowerCase().includes(filtro)) {
+                        mostrar = true;
+                        break;
+                    }
+                }
+                linhas[i].style.display = mostrar ? "" : "none";
+            }
+        }
+    </script>
+
 
     <div class="content-wrapper">
         <section class="content">
@@ -65,35 +87,41 @@
                                     <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
                                         <asp:ListItem Text="Todas" Value="" />
                                         <asp:ListItem Text="Pendente" Value="Pendente" />
-                                        <asp:ListItem Text="Concluído" Value="Concluído" />
+                                        <asp:ListItem Text="Entregue" Value="Entregue" />
+                                        <asp:ListItem Text="Em Andamento" Value="Em Andamento" />
+                                        <asp:ListItem Text="Programada" Value="Programada" />
                                     </asp:DropDownList>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning" Text="Filtrar" OnClick="btnFiltrar_Click" />
+                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning w-100" Text="Pesquisar" OnClick="btnFiltrar_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
+                                    <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success w-100" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <a href="/dist/pages/Frm_CadPedidosMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i
+                                    <a href="/dist/pages/Frm_CadPedidosMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm w-100"><i
                                         class="fas fa-boxes"></i>&nbsp;Nova Carga
                                     </a>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <input type="text" id="txtPesquisa" class="form-control mb-2"
+                                        placeholder="Pesquisar..."
+                                        onkeyup="filtrarGrid()" />
+                                </div>
+                            </div>
                             <div class="container-fluid">
-
-                                <%--<asp:GridView ID="gvCargas" runat="server" CssClass="table table-striped" AutoGenerateColumns="False" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvCargas_PageIndexChanging" OnRowEditing="gvCargas_RowEditing" OnRowCancelingEdit="gvCargas_RowCancelingEdit"
-                                    OnRowUpdating="gvCargas_RowUpdating">--%>
                                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
                                     <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
                                             <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-info btn-sm"><i class="fas fa-edit"></i></i>
+                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-info btn-sm"><i class="fas fa-edit"></i>
                                                     </asp:LinkButton>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
@@ -102,13 +130,13 @@
                                             <asp:BoundField DataField="emissao" HeaderText="Emissão" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
                                             <asp:BoundField DataField="peso" HeaderText="Peso" />
                                             <asp:BoundField DataField="status" HeaderText="Status" />
-                                            <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />
-                                            <%--<asp:BoundField DataField="Valor" HeaderText="Valor" DataFormatString="{0:C}" />--%>
+                                            <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />                                           
                                             <asp:BoundField DataField="expedidor" HeaderText="Local de Coleta" />
                                             <asp:BoundField DataField="cid_expedidor" HeaderText="Município" />
                                             <asp:BoundField DataField="recebedor" HeaderText="Local de Entrega" />
                                             <asp:BoundField DataField="cid_recebedor" HeaderText="Município" />
                                             <asp:BoundField DataField="andamento" HeaderText="Atendimento" />
+                                            <asp:BoundField DataField="idviagem" HeaderText="O.Coleta" />
                                         </Columns>
                                     </asp:GridView>
                             </div>

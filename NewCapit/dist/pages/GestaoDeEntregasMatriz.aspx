@@ -11,16 +11,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-
-    <%--<script>
-        $(document).ready(function () {
-            $('#<%= gvCargas.ClientID %>').DataTable({
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                }
-            });
-        });
-    </script>--%>
+   
      <div class="container-fluid">
     <div class="content-wrapper">
         <section class="content">           
@@ -58,34 +49,24 @@
                                 <div class="col-md-2">
                                     <label>Data Final:</label>
                                     <asp:TextBox ID="DataFim" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                                </div>
-                                <%--<div class="col-md-2">
-                                    <label>Status:</label>
-                                    <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
-                                        <asp:ListItem Text="Todas" Value="" />
-                                        <asp:ListItem Text="Pendente" Value="Pendente" />
-                                        <asp:ListItem Text="Concluído" Value="Concluído" />
-                                    </asp:DropDownList>
-                                </div>--%>
-                                <div class="col-md-2">
+                                </div>                               
+                                <div class="col-md-1">
                                     <label>&nbsp;</label><br />
                                     <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning w-100" Text="Filtrar" OnClick="btnFiltrar_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success w-100" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
-                                </div>
-                               <%-- <div class="col-md-2">
-                                    <label>&nbsp;</label><br />
-                                    <a href="/dist/pages/Frm_ColetaMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i
-                                        class="fas fa-boxes"></i>&nbsp;Nova Coleta/Entrega
-                                    </a>
-                                </div>--%>
+                                </div>                              
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <a href="/dist/pages/ColetasMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm w-100"><i
                                         class="fas fa-boxes"></i>&nbsp;Abrir Carregamento
                                     </a>
+                                </div>
+                                <div class="col-md-1">
+                                    <label>&nbsp;</label><br />
+                                    <asp:Button ID="Button1" runat="server" CssClass="btn btn-info w-100" Text="Baixar DOC" OnClick="btnFiltrar_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
@@ -103,6 +84,17 @@
                                     </div>
 
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                        <asp:TextBox 
+                                            ID="txtPesquisar"
+                                            runat="server"
+                                            AutoPostBack="true"
+                                            OnTextChanged="txtPesquisar_TextChanged"
+                                            CssClass="form-control"
+                                            placeholder="Pesquisar..." />
                                 </div>
                             </div>
                             <div class="container-fluid">                                
@@ -125,8 +117,7 @@
                                                                     <th>Expedidor/Recebedor</th>
                                                                     <th>Inicio/Termino da Prestação</th>
                                                                     <th>Ordem Coleta</th>
-                                                                    <th>Atendimento</th>
-                                                                    <th>Progresso</th>
+                                                                    <th>Atendimento</th> 
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -167,22 +158,22 @@
                                                                 <%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor")%>  
                                                             </td>
                                                             <td style="text-align: center; vertical-align: middle;">
-                                                                <%# Eval("num_carregamento") %>
-                                                                <br />
+                                                                <%# Eval("num_carregamento") + " ("
+ + Eval("carga") + ")"  %>                                                                <br />
                                                                 <%# Eval("emissao", "{0:dd/MM/yyyy HH:mm}") %>
                                                             </td>
                                                             <td>
+                                                                <%--<%# Eval("situacao") %>
+                                                                <br />
+                                                                <%# Eval("status")%>  --%>
                                                                 <%# Eval("situacao") %>
                                                                 <br />
-                                                                <%# Eval("status")%>  
-                                                            </td>
-                                                            <td>
-                                                                <div class="progress progress-xs">
-                                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                                </div>
-                                                                <span class="badge bg-danger">55%</span>
-                                                            </td>
-
+                                                                <asp:Label 
+                                                                    ID="lblStatus"
+                                                                    runat="server"
+                                                                    Text='<%# Eval("status") %>'
+                                                                    CssClass="badge" />
+                                                            </td>                                                           
                                                         </tr>
                                                         <tr class="detalhes d-none">
                                                             <td colspan="11">

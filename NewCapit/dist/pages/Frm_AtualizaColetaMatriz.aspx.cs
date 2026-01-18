@@ -56,6 +56,7 @@ namespace NewCapit.dist.pages
         string situacaoOC;
         string cvaOC;
         string chegada;
+        string andamentoCarga;
 
         BigInteger idveiculo;
         string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade;
@@ -768,7 +769,9 @@ namespace NewCapit.dist.pages
             {
                 string carga = e.CommandArgument.ToString();
 
-                // Recuperar os controles de dentro do item                
+                // Recuperar os controles de dentro do item
+                TextBox txtDataHoraColeta = (TextBox)e.Item.FindControl("txtDataHoraColeta");
+                TextBox txtVeiculoDisponivel = (TextBox)e.Item.FindControl("txtVeiculoDisponivel");
                 TextBox txtGateOrigem = (TextBox)e.Item.FindControl("txtGateOrigem");
                 TextBox txtPrevisaoChegada = (TextBox)e.Item.FindControl("txtPrevisaoChegada");
                 TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
@@ -800,6 +803,7 @@ namespace NewCapit.dist.pages
                     var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim()); 
                     var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
                     var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
+                    var disponivel_solicitacao = SafeDateValue2(txtVeiculoDisponivel.Text.Trim());
                     var cvaOC = txtCVA.Text.Trim();
 
                     var CodExpedidor = SafeDateValue2(txtCodExpedidor.Text.Trim());
@@ -816,34 +820,47 @@ namespace NewCapit.dist.pages
                     {
                         statusOC = "Concluido";
                         situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
                     }
                     else if (chegada != null && saida != null)
                     {
                         statusOC = "Ag. Descarga";
                         situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
                     }
                     else if (chegada != null && saida != null)
                     {
                         statusOC = "Em Transito";
                         situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
                     }
                     else if (chegada != null)
                     {
                         statusOC = "Ag. Carregamento";
                         situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
                     }
                     else
                     {
                         statusOC = "Pendente";
                         situacaoOC = "PROGRAMADA";
+                        andamentoCarga = "Programada";
                     }
                     if (ddlStatus.SelectedItem.Text != "Pendente" || ddlStatus.SelectedItem.Text != "Concluido")
                     {
                         situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
                         statusOC = ddlStatus.SelectedItem.Text.Trim();
                         
                     }
-                    
+                    if (ddlStatus.SelectedItem.Text == "Pendente")
+                    {
+                        situacaoOC = "PROGRAMADA";
+                        andamentoCarga = "Programada";
+                        //statusOC = ddlStatus.SelectedItem.Text.Trim();
+
+                    }
+
                     string query = @"UPDATE tbcargas SET                                  
                                 gate_origem = @gate_origem,
                                 gate_destino = @gate_destino,
@@ -857,6 +874,7 @@ namespace NewCapit.dist.pages
                                 prev_chegada = @prev_chegada,
                                 tempoagdescarreg=@tempoagdescarreg,
                                 duracao_transp=@duracao_transp,
+                                disponivel_solicitacao = @disponivel_solicitacao,
                                 codmot=@codmot, 
                                 frota=@frota
                                 WHERE carga = @carga";
@@ -864,13 +882,14 @@ namespace NewCapit.dist.pages
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);                    
                     cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@andamento", situacaoOC);
+                    cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
                     cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
                     cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
                     cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
                     cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
                     cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@disponivel_solicitacao", SafeDateValue(txtVeiculoDisponivel.Text.Trim()));
                     cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
                     cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim())); 
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
@@ -901,6 +920,7 @@ namespace NewCapit.dist.pages
             cod_recebedor = @cod_recebedor,
             recebedor = @recebedor,
             cid_recebedor = @cid_recebedor,
+            carga = @carga,
             uf_recebedor = @uf_recebedor
         WHERE num_carregamento = @num_carregamento";
 
@@ -925,6 +945,11 @@ namespace NewCapit.dist.pages
                             .Value = string.IsNullOrWhiteSpace(statusOC)
                                 ? (object)DBNull.Value
                                 : statusOC.Trim();
+                        int cargaCarreg;
+                        cmdCarregamento.Parameters.Add("@carga", SqlDbType.Int)
+                            .Value = int.TryParse(carga, out cargaCarreg)
+                                ? (object)cargaCarreg
+                                : (object)DBNull.Value;
 
                         // Expedidor
                         int codExp;
@@ -1718,6 +1743,7 @@ namespace NewCapit.dist.pages
                             veiculo = @veiculo,
                             veiculotipo = @veiculotipo,
                             valcet = @valcet,
+                            dtottu=@dtottu,
                             valcrlvveiculo = @valcrlvveiculo,
                             valcrlvreboque1 = @valcrlvreboque1,
                             valcrlvreboque2 = @valcrlvreboque2,
@@ -1737,7 +1763,10 @@ namespace NewCapit.dist.pages
                             empresa = @empresa,
                             dtalt = @dtalt,                            
                             numero_gr = @numero_gr,
-                            numero_protocolo_cet = numero_protocolo_cet,
+                            numero_protocolo_cet = numero_protocolo_cet, 
+                            dtsaida=@dtsaida,
+                            dtchegada=@dtchegada,
+                            dtconclusao=@dtconclusao,
                             usualt = @usualt
                             WHERE num_carregamento = @num_carregamento";
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1779,6 +1808,46 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
                 cmd.Parameters.AddWithValue("@numero_gr", SafeValue(txtLiberacao.Text));
                 cmd.Parameters.AddWithValue("@numero_protocolo_cet", SafeValue(txtProtocoloCET.Text));
+
+                cmd.Parameters.Add("@dtchegada", SqlDbType.DateTime);
+                cmd.Parameters.Add("@dtsaida", SqlDbType.DateTime);
+                cmd.Parameters.Add("@dtconclusao", SqlDbType.DateTime);
+                cmd.Parameters.Add("@dtottu", SqlDbType.VarChar);
+                foreach (RepeaterItem item in rptColetas.Items)
+                {
+                    TextBox txtSaidaOrigem =
+                        item.FindControl("txtSaidaOrigem") as TextBox;
+
+                    TextBox txtChegadaDestino =
+                        item.FindControl("txtChegadaDestino") as TextBox;
+
+                    TextBox txtSaidaPlanta =
+                        item.FindControl("txtSaidaPlanta") as TextBox;
+
+                    TextBox txtOT =
+                        item.FindControl("txtOT") as TextBox;
+
+                    DateTime? dtsaida = SafeDateValue2(txtSaidaOrigem?.Text);
+                    DateTime? dtchegada = SafeDateValue2(txtChegadaDestino?.Text);
+                    DateTime? dtconclusao = SafeDateValue2(txtSaidaPlanta?.Text);
+
+                    cmd.Parameters["@dtsaida"].Value =
+                        (object)dtsaida ?? DBNull.Value;
+
+                    cmd.Parameters["@dtchegada"].Value =
+                        (object)dtchegada ?? DBNull.Value;
+
+                    cmd.Parameters["@dtconclusao"].Value =
+                        (object)dtconclusao ?? DBNull.Value;
+
+                    cmd.Parameters["@dtottu"].Value =
+                        SafeValue(txtOT?.Text) ?? (object)DBNull.Value;
+
+                }
+
+
+
+
 
                 //cmd.Parameters.AddWithValue("@comissao", SafeValue(txtComissao.Text));
                 //cmd.Parameters.AddWithValue("@vlpernoite", SafeValue(txtPernoite.Text));
@@ -2079,9 +2148,7 @@ namespace NewCapit.dist.pages
             // Opcional: limpar ou fechar modal
             ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
 
-        }
-        
-
+        }      
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
         {
             string novaCarga = novaCargaVazia.Text.Trim();
@@ -2244,7 +2311,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void ddlCliInicial_TextChanged(object sender, EventArgs e)
         {
             codCliInicial.Text = ddlCliInicial.SelectedValue;
@@ -2274,7 +2340,6 @@ namespace NewCapit.dist.pages
 
 
         }
-
         protected void codCliInicial_TextChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(codCliInicial.Text))
@@ -2507,7 +2572,6 @@ namespace NewCapit.dist.pages
                 //}
             }
         }
-
         private void PreencherNumCargaVazia()
         {
             // Consulta SQL que retorna os dados desejados
@@ -2581,8 +2645,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
-
         public static double CalcularDistancia(double lat1, double lon1, double lat2, double lon2)
         {
             double R = 6371; // KM
