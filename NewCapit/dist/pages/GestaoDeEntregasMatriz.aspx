@@ -12,8 +12,44 @@
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
    
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <script src="bootstrap.bundle.min.js"></script>
+    <script>
+function buscarDocumento() {
+
+    let numero = document.getElementById("txtNumeroDocumento").value;
+
+    if (numero === "") {
+        alert("Digite o número do documento");
+        return;
+    }
+
+    fetch("ControleDePedagio.aspx/BuscarDocumento", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numeroDocumento: numero })
+    })
+    .then(res => res.json())
+    .then(res => {
+
+        if (!res.d || !res.d.encontrado) {
+            alert("Documento não encontrado");
+            return;
+        }
+
+        document.getElementById("lblChave").innerText = res.d.chave;
+        document.getElementById("lblEmissao").innerText = res.d.emissao;
+        document.getElementById("lblEmpresa").innerText = res.d.empresa;
+        document.getElementById("lblMotorista").innerText = res.d.motorista;
+        document.getElementById("lblDestino").innerText = res.d.destino;
+        document.getElementById("lblCidade").innerText = res.d.cidade + "/" + res.d.uf;
+        document.getElementById("lblDataSaida").innerText = res.d.dataSaida;
+    });
+}
+    </script>
+
      <div class="container-fluid">
-    <div class="content-wrapper">
+    <div class="content-wrapper">        
         <section class="content">           
                 <br />
                 <div id="toastContainerVermelho" class="alert alert-danger alert-dismissible" style="display: none;">
@@ -66,7 +102,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <label>&nbsp;</label><br />
-                                    <asp:Button ID="Button1" runat="server" CssClass="btn btn-info w-100" Text="Baixar DOC" OnClick="btnFiltrar_Click" />
+                                    <asp:Button ID="btnBaixar" runat="server" CssClass="btn btn-info w-100" Text="Baixar DOC" OnClick="btnBaixar_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
@@ -252,8 +288,62 @@
                     </div>
                 </div>
             </div>
-        </section>
+         <!-- Modal -->
+         <div class="modal fade" id="modalCTE" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Baixar Documentos CT-e/RPS-e</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row g-3">
+                   <div class="col-md-9">
+                      <label>Nº Documento</label>
+                      <input type="text" id="txtNumeroDocumento" class="form-control" />
+                   </div>
+                    
+                  <div class="col-md-3">
+                      <span class="details">&nbsp;</span><br />
+                      <button type="button" class="btn btn-warning w-100" onclick="buscarDocumento()">
+                        Pesquisar
+                      </button>
+                 </div>
+                </div>
+                <hr />
+
+                <b>Chave:</b> <span id="lblChave"></span><br />
+                <b>Emissão:</b> <span id="lblEmissao"></span><br />
+                <b>Empresa:</b> <span id="lblEmpresa"></span><br />
+
+                <hr />
+
+                <b>Motorista:</b> <span id="lblMotorista"></span><br />
+                <b>Destino:</b> <span id="lblDestino"></span><br />
+                <b>Cidade/UF:</b> <span id="lblCidade"></span><br />
+                <b>Data Saída:</b> <span id="lblDataSaida"></span>
+
+            </div>
+
+            <div class="modal-footer">
+                <asp:Button ID="btnSalvarBaixa" runat="server"
+                    CssClass="btn btn-success"
+                    Text="Baixa"
+                    OnClick="btnSalvarBaixa_Click" />
+            </div>
+
+        </div>
     </div>
+</div>
+
+
+        </section>
+           
+    </div>
+   
+
 
 
 </asp:Content>

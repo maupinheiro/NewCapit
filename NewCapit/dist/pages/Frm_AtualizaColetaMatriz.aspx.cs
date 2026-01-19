@@ -936,6 +936,9 @@ namespace NewCapit.dist.pages
             recebedor = @recebedor,
             cid_recebedor = @cid_recebedor,
             carga = @carga,
+            dtsaida=@dtsaida,
+            dtchegada=@dtchegada,
+            dtconclusao=@dtconclusao,
             uf_recebedor = @uf_recebedor
         WHERE num_carregamento = @num_carregamento";
 
@@ -1004,6 +1007,9 @@ namespace NewCapit.dist.pages
                             .Value = string.IsNullOrWhiteSpace(txtCidRecebedor.Text)
                                 ? (object)DBNull.Value
                                 : txtCidRecebedor.Text.Trim();
+                        cmdCarregamento.Parameters.AddWithValue("@dtsaida", SafeDateValue(txtSaidaOrigem.Text.Trim()));
+                        cmdCarregamento.Parameters.AddWithValue("@dtchegada", SafeDateValue(txtChegadaDestino.Text.Trim()));
+                        cmdCarregamento.Parameters.AddWithValue("@dtconclusao", SafeDateValue(txtSaidaPlanta.Text.Trim()));
 
                         cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2)
                             .Value = string.IsNullOrWhiteSpace(txtUFRecebedor.Text)

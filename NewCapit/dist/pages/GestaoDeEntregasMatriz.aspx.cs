@@ -25,11 +25,11 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-               // CarregarGrid();
+                // CarregarGrid();
 
                 if (Session["UsuarioLogado"] != null)
                 {
-                    
+
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
                 }
@@ -200,7 +200,7 @@ namespace NewCapit.dist.pages
         {
             if (ocultar == false)
             {
-                
+
                 CarregarColetas();
             }
             else
@@ -234,7 +234,7 @@ namespace NewCapit.dist.pages
             lblMensagem.Text = string.Empty;
         }
         protected void txtPesquisar_TextChanged(object sender, EventArgs e)
-        {            
+        {
             DataTable dt = ViewState["rptCarregamento"] as DataTable;
             if (dt == null) return;
 
@@ -278,7 +278,7 @@ namespace NewCapit.dist.pages
             var dados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida(
                 GetDataInicio(),
                 GetDataFim()
-               
+
             );
 
             rptCarregamento.DataSource = dados;
@@ -406,6 +406,113 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+        }
+
+        [System.Web.Services.WebMethod]
+        public static object BuscarDocumento(string numeroDocumento)
+        {      
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sqlCte = @"
+            SELECT chave_de_acesso, emissao_documento, empresa_emissora, idviagem
+            FROM tbcte
+            WHERE num_documento = @numero";
+
+                SqlCommand cmd = new SqlCommand(sqlCte, conn);
+                cmd.Parameters.AddWithValue("@numero", numeroDocumento);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (!dr.Read())
+                    return new { encontrado = false };
+
+                string idViagem = dr["idviagem"].ToString();
+
+                var resultado = new
+                {
+                    encontrado = true,
+                    chave = dr["chave_de_acesso"].ToString(),
+                    emissao = Convert.ToDateTime(dr["emissao_documento"]).ToString("dd/MM/yyyy"),
+                    empresa = dr["empresa_emissora"].ToString(),
+                    motorista = "",
+                    destino = "",
+                    cidade = "",
+                    uf = "",
+                    dataSaida = ""
+                };
+
+                dr.Close();
+
+                string sqlCar = @"
+            SELECT nomemotorista, recebedpr. cod_recebedor, uf_recebedor, dtchegada
+            FROM tbcarregamentos
+            WHERE num_carregamento = @num";
+
+                SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
+                cmdCar.Parameters.AddWithValue("@num", idViagem);
+
+                SqlDataReader dr2 = cmdCar.ExecuteReader();
+
+                if (dr2.Read())
+                {
+                    resultado = new
+                    {
+                        encontrado = true,
+                        chave = resultado.chave,
+                        emissao = resultado.emissao,
+                        empresa = resultado.empresa,
+                        motorista = dr2["nomemotorista"].ToString(),
+                        destino = dr2["recebedor"].ToString(),
+                        cidade = dr2["cid_recebedor"].ToString(),
+                        uf = dr2["uf_recebedor"].ToString(),
+                        dataSaida = Convert.ToDateTime(dr2["dtchegada"])
+                                        .ToString("dd/MM/yyyy HH:mm")
+                    };
+                }
+
+                return resultado;
+            }
+        }
+
+        protected void btnSalvarBaixa_Click(object sender, EventArgs e)
+        {
+            
+            string usuario = Session["UsuarioLogado"].ToString();
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+            UPDATE tbcte
+            SET baixado_por = @usuario,
+                status_documento = @status_documento,
+                data_baixa = GETDATE()
+            WHERE numero_documento = @numero";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@usuario", usuario);
+                cmd.Parameters.AddWithValue("@numero", Request.Form["txtNumeroDocumento"]);
+                cmd.Parameters.AddWithValue("@status_documento", "Baixado");
+
+                cmd.ExecuteNonQuery();
+            }
+
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "ok", "alert('CTe baixado com sucesso!');", true);
+        }
+        protected void btnBaixar_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "abrirModal",
+                "var m = new bootstrap.Modal(document.getElementById('modalCTE')); m.show();",
+                true
+            );
         }
     }
 }

@@ -51,13 +51,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Button btnExportarExcel;
 
         /// <summary>
-        /// Controle Button1.
+        /// Controle btnBaixar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button btnBaixar;
 
         /// <summary>
         /// Controle hfOcultarViagens.
@@ -103,5 +103,14 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptCarregamento;
+
+        /// <summary>
+        /// Controle btnSalvarBaixa.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSalvarBaixa;
     }
 }
