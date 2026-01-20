@@ -48,31 +48,54 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 StringBuilder sql = new StringBuilder(@"
-            SELECT idpedagio, nomemotorista, cpf, transportadora,
+                               SELECT 
+                        idpedagio, nomemotorista, cpf, transportadora,
                    cpf_cnpj_proprietario, placa, tipoveiculo, eixos,
                    tomadorservico, expedidor, cid_expedidor, uf_expedidor,
                    recebedor, cid_recebedor, uf_recebedor,
                    idpedagio, valorpedagio, id,doc_pedagio, convert(varchar, dtemissaopedagio,103) as dtemissaopedagio
-            FROM tbcarregamentos
-            WHERE pedagio = 'SIM'
-              AND NOT (
-                    tomadorservico LIKE 'VOLKS%'
-                    AND (cva IS NULL OR LTRIM(RTRIM(cva)) = '')
-                  )
-              AND pedagiofeito = 'Pendente'
+
+                    FROM tbcarregamentos
+                    WHERE pedagio = 'SIM'
+                      
+                      AND (
+                            tomadorservico NOT LIKE 'VOLKS%'
+                            OR (
+                                tomadorservico LIKE 'VOLKS%'
+                                AND cva IS NOT NULL
+                                AND LTRIM(RTRIM(cva)) <> ''
+                               )
+                          )
+              
         ");
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
 
+                if (ddlPedagioFeito.SelectedItem.Text == "Pendente" )
+                {
+                    sql.Append(@"AND pedagiofeito = 'Pendente'");
+                    
+                }
+                else if (ddlPedagioFeito.SelectedItem.Text == "Todos")
+                {
+                    
+
+                }
+                else
+                {
+                    sql.Append(@"AND pedagiofeito = @pedagiofeito");
+                }
                 // 🔎 Filtro por documento / motorista / placa
                 if (!string.IsNullOrWhiteSpace(txtPesquisar.Text))
                 {
                     sql.Append(@"
-                AND (
+
+               AND (
                     doc_pedagio LIKE @pesquisa
                     OR nomemotorista LIKE @pesquisa
                     OR placa LIKE @pesquisa
+                    OR idpedagio LIKE @pesquisa
                 )
             ");
 
@@ -99,7 +122,7 @@ namespace NewCapit.dist.pages
                     DateTime dataFinal = DateTime.Parse(txtDataFinal.Text).Date.AddDays(1).AddTicks(-1);
                     cmd.Parameters.AddWithValue("@dataFinal", dataFinal);
                 }
-
+                cmd.Parameters.AddWithValue("@pedagiofeito", ddlPedagioFeito.SelectedItem.Text);
 
                 sql.Append(" ORDER BY nomemotorista ");
 

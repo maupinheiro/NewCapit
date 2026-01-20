@@ -259,7 +259,7 @@
 
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <div class="form-group">
                                                             <span class="details">NOME DO MOTORISTA:</span>
                                                             <asp:DropDownList ID="ddlMotorista" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged"></asp:DropDownList>

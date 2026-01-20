@@ -1785,9 +1785,6 @@ namespace NewCapit.dist.pages
                             dtalt = @dtalt,                            
                             numero_gr = @numero_gr,
                             numero_protocolo_cet = numero_protocolo_cet, 
-                            dtsaida=@dtsaida,
-                            dtchegada=@dtchegada,
-                            dtconclusao=@dtconclusao,
                             usualt = @usualt
                             WHERE num_carregamento = @num_carregamento";
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1830,44 +1827,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@numero_gr", SafeValue(txtLiberacao.Text));
                 cmd.Parameters.AddWithValue("@numero_protocolo_cet", SafeValue(txtProtocoloCET.Text));
 
-                cmd.Parameters.Add("@dtchegada", SqlDbType.DateTime);
-                cmd.Parameters.Add("@dtsaida", SqlDbType.DateTime);
-                cmd.Parameters.Add("@dtconclusao", SqlDbType.DateTime);
-                cmd.Parameters.Add("@dtottu", SqlDbType.VarChar);
-                foreach (RepeaterItem item in rptColetas.Items)
-                {
-                    TextBox txtSaidaOrigem =
-                        item.FindControl("txtSaidaOrigem") as TextBox;
-
-                    TextBox txtChegadaDestino =
-                        item.FindControl("txtChegadaDestino") as TextBox;
-
-                    TextBox txtSaidaPlanta =
-                        item.FindControl("txtSaidaPlanta") as TextBox;
-
-                    TextBox txtOT =
-                        item.FindControl("txtOT") as TextBox;
-
-                    DateTime? dtsaida = SafeDateValue2(txtSaidaOrigem?.Text);
-                    DateTime? dtchegada = SafeDateValue2(txtChegadaDestino?.Text);
-                    DateTime? dtconclusao = SafeDateValue2(txtSaidaPlanta?.Text);
-
-                    cmd.Parameters["@dtsaida"].Value =
-                        (object)dtsaida ?? DBNull.Value;
-
-                    cmd.Parameters["@dtchegada"].Value =
-                        (object)dtchegada ?? DBNull.Value;
-
-                    cmd.Parameters["@dtconclusao"].Value =
-                        (object)dtconclusao ?? DBNull.Value;
-
-                    cmd.Parameters["@dtottu"].Value =
-                        SafeValue(txtOT?.Text) ?? (object)DBNull.Value;
-
-                }
-
-
-
+                
+                
 
 
                 //cmd.Parameters.AddWithValue("@comissao", SafeValue(txtComissao.Text));

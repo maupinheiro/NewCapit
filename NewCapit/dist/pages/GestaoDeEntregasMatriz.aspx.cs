@@ -337,7 +337,7 @@ namespace NewCapit.dist.pages
                             break;
 
                         case "Ag. Carregamento":
-                            lblStatus.CssClass += " bg-red text-dark";
+                            lblStatus.CssClass += " bg-red text-white";
                             break;
 
                         case "Ag. Documentos":

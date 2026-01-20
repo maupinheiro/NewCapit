@@ -82,7 +82,9 @@
                                            <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th>Documento</th>                                                                        <th>Motorista</th> 
+                                                    <th>Documento</th>
+                                                    <th>Comprovante</th>
+                                                    <th>Motorista</th> 
                                                     <th>Transportadora</th>
                                                     <th>Placa</th>                                                     
                                                     <th>Local de Coleta</th>
@@ -102,6 +104,11 @@
                                                                 <br />
                                                                 <%# Eval("dtemissaopedagio") %>
                                                             </td>
+                                                             <td>
+                                                                 <%# Eval("idpedagio") %>
+                                                                <%-- <br />
+                                                                 <%# Eval("dtemissaopedagio") %>--%>
+                                                             </td>
                                                             <td>
                                                                 <%# Eval("nomemotorista") %>
                                                                 <br />
