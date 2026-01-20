@@ -1119,14 +1119,14 @@ namespace NewCapit.dist.pages
 
 
                     string query = @"UPDATE tbcargas SET                                  
-                                ot = @ot,
+                                dtottu = @dtottu,
                                 catraca = @catraca,
                                 rede = @rede 
                                 WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@ot", txtOT.Text);
+                    cmd.Parameters.AddWithValue("@dtottu", txtOT.Text);
                     cmd.Parameters.AddWithValue("@catraca", txtCatracas.Text);
                     cmd.Parameters.AddWithValue("@rede", txtRedes.Text.Trim());
                    

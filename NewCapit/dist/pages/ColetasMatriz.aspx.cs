@@ -173,60 +173,56 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        //private void CarregarFotoMotorista(string fotoMotorista)
-        //{
-        //    //fotoMotorista = "/fotos/motoristasemfoto.jpg";
-        //    // 1️⃣ NULL ou vazio
-        //    //if (string.IsNullOrEmpty(fotoMotorista))
-        //    //{
-        //    //    imgFoto.ImageUrl = "/fotos/motoristasemfoto.jpg";
-        //    //    return;
-        //    //}
 
-        //    // 2️⃣ Verifica se o arquivo existe
-        //    //string caminhoFisico = Server.MapPath(fotoMotorista);
 
-        //    //if (!System.IO.File.Exists(caminhoFisico))
-        //    //{
-        //    //    imgFoto.ImageUrl = "/fotos/motoristasemfoto.jpg";
-        //    //    return;
-        //    //}
-
-        //    // 3️⃣ Tudo certo → mostra a foto
-        //    //imgFoto.ImageUrl = fotoMotorista;
-
-        //}
-        
-        protected void CarregaFoto()
+        public void CarregaFoto()
         {
-            var codigo = txtCodMotorista.Text.Trim();
+            string codigo = txtCodMotorista.Text?.Trim();
+
+            if (string.IsNullOrEmpty(codigo))
+            {
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                return;
+            }
 
             var obj = new Domain.ConsultaMotorista
             {
                 codmot = codigo
             };
-            var ConsultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
-            if (ConsultaMotorista != null)
+
+            var consultaMotorista = DAL.UsersDAL.CheckMotorista(obj);
+
+            if (consultaMotorista == null)
             {
-                if (ConsultaMotorista.status.Trim() != "INATIVO")
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                return;
+            }
+
+            if (string.Equals(consultaMotorista.status?.Trim(), "INATIVO", StringComparison.OrdinalIgnoreCase))
+            {
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                return;
+            }
+
+            string caminhoFoto = consultaMotorista.caminhofoto?.Trim();
+
+            if (!string.IsNullOrEmpty(caminhoFoto) && caminhoFoto != "NULL")
+            {
+                if (File.Exists(caminhoFoto))
                 {
-                    if (txtCodMotorista.Text.Trim() != "")
-                    {
-
-                        fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-
-                        if (!File.Exists(fotoMotorista))
-                        {
-                            fotoMotorista = ConsultaMotorista.caminhofoto.Trim().ToString();
-                        }
-                        else
-                        {
-                            fotoMotorista = "/fotos/motoristasemfoto.jpg";
-                        }
-                    }
-                }  
+                    fotoMotorista = caminhoFoto;
+                }
+                else
+                {
+                    fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                }
+            }
+            else
+            {
+                fotoMotorista = "../../fotos/motoristasemfoto.jpg";
             }
         }
+
         private void PreencherComboMotoristas()
         {
             // Consulta SQL que retorna os dados desejados
@@ -310,8 +306,25 @@ namespace NewCapit.dist.pages
                 txtFilialMot.Text = dt.Rows[0]["nucleo"].ToString();
                 txtTipoMot.Text = dt.Rows[0]["tipomot"].ToString();
                 txtFuncao.Text = dt.Rows[0]["cargo"].ToString();
-                txtExameToxic.Text = Convert.ToDateTime(dt.Rows[0]["venceti"]).ToString("dd/MM/yyyy");
-                txtValCNH.Text = Convert.ToDateTime(dt.Rows[0]["venccnh"]).ToString("dd/MM/yyyy");
+                if (dt.Rows[0]["venceti"] != DBNull.Value)
+                {
+                    txtExameToxic.Text = Convert.ToDateTime(dt.Rows[0]["venceti"])
+                                         .ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    txtExameToxic.Text = "";
+                }
+
+                if (dt.Rows[0]["venccnh"] != DBNull.Value)
+                {
+                    txtValCNH.Text = Convert.ToDateTime(dt.Rows[0]["venccnh"])
+                                     .ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    txtValCNH.Text = "";
+                }
                 txtValGR.Text = dt.Rows[0]["validade"].ToString();
                 txtCelularParticular.Text = dt.Rows[0]["fone2"].ToString();
                 txtCPF.Text = dt.Rows[0]["cpf"].ToString();
@@ -787,6 +800,8 @@ namespace NewCapit.dist.pages
             dt.Columns.Add("clidestino", typeof(string));
             dt.Columns.Add("ciddestino", typeof(string));
             dt.Columns.Add("ufclidestino", typeof(string));
+            
+
 
             return dt;
         }
@@ -1686,15 +1701,13 @@ namespace NewCapit.dist.pages
                     cartaopedagio, valcartao, foneparticular, veiculo, veiculotipo, valcet, valcrlvveiculo,
                     valcrlvreboque1, valcrlvreboque2, placa, tipoveiculo, reboque1, reboque2, carreta, tecnologia, rastreamento,
                     tipocarreta, codtra, transportadora, codcontato, fonecorporativo, empresa, dtcad, usucad,
-                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario, pedagio, eixos, pedagiofeito, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, tomadorservico, ot
-                )
+                    situacao, funcao, codtranspmotorista, nomtranspmotorista, venccronotacografo, valopacidade, emissao, numero_gr, numero_protocolo_cet, cpf_cnpj_proprietario, pedagio, eixos, pedagiofeito, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, tomadorservico, dtottu)
                 VALUES (
                     @num_carregamento, @codmotorista, @nucleo, @tipomot, @valtoxicologico, @venccnh, @valgr, @foto, @nomemotorista, @cpf,
                     @cartaopedagio, @valcartao, @foneparticular, @veiculo, @veiculotipo, @valcet, @valcrlvveiculo,
                     @valcrlvreboque1, @valcrlvreboque2, @placa, @tipoveiculo, @reboque1, @reboque2, @carreta, @tecnologia, @rastreamento,
                     @tipocarreta, @codtra, @transportadora, @codcontato, @fonecorporativo, @empresa, @dtcad, @usucad,
-                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario, @pedagio, @eixos, @pedagiofeito, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @tomadorservico, @ot 
-                )";
+                    @situacao, @funcao, @codtranspmotorista, @nomtranspmotorista, @venccronotacografo, @valopacidade, @emissao, @numero_gr, @numero_protocolo_cet, @cpf_cnpj_proprietario, @pedagio, @eixos, @pedagiofeito, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @tomadorservico, @dtottu)";
 
                     using (SqlCommand cmd = new SqlCommand(insert, conn, tran))
                     {
@@ -1750,7 +1763,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@dtcad", SqlDbType.DateTime).Value = DateTime.Now;
                         cmd.Parameters.Add("@usucad", SqlDbType.VarChar, 50).Value = DbString(nomeUsuario);
                         cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "PROGRAMADA";
-                        cmd.Parameters.Add("@ot", SqlDbType.VarChar, 20).Value = sOTCliente;
+                        cmd.Parameters.Add("@dtottu", SqlDbType.VarChar, 20).Value = (object)sOTCliente ?? DBNull.Value;
                         cmd.Parameters.Add("@funcao", SqlDbType.VarChar, 30).Value = DbString(txtFuncao.Text);
                         cmd.Parameters.Add("@tomadorservico", SqlDbType.VarChar, 50).Value = DbString(primeiroNome);
 
