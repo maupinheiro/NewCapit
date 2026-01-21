@@ -41,6 +41,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.Text;
 using System.Web.Services;
 using DocumentFormat.OpenXml.Office.Word;
+using OfficeOpenXml.Drawing.Chart;
 
 
 
@@ -562,6 +563,7 @@ namespace NewCapit.dist.pages
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);
+            
             //GetPedidos();
 
 
@@ -751,6 +753,18 @@ namespace NewCapit.dist.pages
                 }
             }
 
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string idViagem = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+                GridView gv = (GridView)e.Item.FindControl("gvCte");
+                int index = e.Item.ItemIndex;
+
+                if (gv != null)
+                {
+                    CarregarGridCte(gv, idViagem, index);
+                }
+            }
+
         }
 
         private void CarregarPedidos(int idCarga, GridView gv)
@@ -759,7 +773,7 @@ namespace NewCapit.dist.pages
                 ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 string sql = @"SELECT pedido, emissao, peso, material, portao,
-                              iniciocar, termcar
+                              iniciocar, termcar, duracao, motcar
                        FROM tbpedidos
                        WHERE carga = @idCarga";
 
@@ -1021,10 +1035,159 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+                //Atualiza CT-e
+                string idViagem = e.CommandArgument.ToString(); // O 'carga' que você passou no Eval
+                int index = e.Item.ItemIndex; // O índice da linha no Repeater
+
+               
+
+                // 1. Verificar se existem CT-es lidos na Session para este item
+                if (ListaCtePorItem.ContainsKey(index) && ListaCtePorItem[index].Count > 0)
+                {
+                    List<CteLido> listaParaSalvar = ListaCtePorItem[index];
+
+                    try
+                    {
+                        if (con.State == ConnectionState.Closed) con.Open();
+                        SqlTransaction trans = con.BeginTransaction();
+
+                        try
+                        {
+                            foreach (var cte in listaParaSalvar)
+                            {
+                                string sql = @"INSERT INTO tbcte 
+                            (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
+                             num_documento, serie_documento, tipo_documento, id_viagem)
+                            VALUES 
+                            (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo, @idViagem)";
+
+                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                {
+                                    // Extraímos o CNPJ (posições 7 a 20 da chave de 44 dígitos)
+                                    string cnpjExtraido = cte.ChaveOriginal.Substring(6, 14);
+
+                                    cmd.Parameters.AddWithValue("@chave", cte.ChaveOriginal);
+                                    cmd.Parameters.AddWithValue("@uf", cte.Estado);
+                                    cmd.Parameters.AddWithValue("@cnpj", cnpjExtraido);
+                                    cmd.Parameters.AddWithValue("@empresa", cte.Filial);
+                                    cmd.Parameters.AddWithValue("@num", cte.Numero);
+                                    cmd.Parameters.AddWithValue("@serie", cte.Serie);
+                                    cmd.Parameters.AddWithValue("@tipo", "CT-e");
+                                    cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+
+                            trans.Commit();
+
+                            // 2. Limpar a Session deste índice específico
+                            ListaCtePorItem.Remove(index);
+
+                            // 3. Sucesso!
+                            MostrarMsg("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
+
+                            // 4. IMPORTANTE: Rebindar o Repeater. 
+                            // Isso fará com que o ItemDataBound rode novamente, 
+                            // alimentando o GridView com os dados que agora estão no Banco.
+                            rptColetas.DataBind();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            MostrarMsg("Erro ao salvar: " + ex.Message);
+                        }
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+                else
+                {
+                    MostrarMsg("Aviso: Nenhuma nova leitura pendente para salvar.");
+                }
+
+                GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+
+                if (gv != null)
+                {
+                    try
+                    {
+                        if (con.State == ConnectionState.Closed) con.Open();
+                        SqlTransaction trans = con.BeginTransaction();
+
+                        try
+                        {
+                            foreach (GridViewRow linha in gv.Rows)
+                            {
+                                // 1. Pegar as chaves da Grid
+                                // Index 0 = pedido, Index 1 = id_viagem (conforme definido no DataKeyNames)
+                                string numPedido = gv.DataKeys[linha.RowIndex].Values[0].ToString();
+                                
+
+                                // 2. Localizar os controles da linha
+                                TextBox txtIni = (TextBox)linha.FindControl("txtInicioCar");
+                                TextBox txtFim = (TextBox)linha.FindControl("txtTermCar");
+                                TextBox txtDur = (TextBox)linha.FindControl("txtTempoTotal");
+                                DropDownList ddlMot = (DropDownList)linha.FindControl("ddlMotCar");
+
+                                // 3. Query de Update
+                                string sql = @"UPDATE tbpedidos SET 
+                                       iniciocar = @ini, 
+                                       termcar = @fim, 
+                                       duracao = @dur,
+                                       motcar = @mot
+                                       WHERE pedido = @pedido ";
+
+                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                {
+                                    // Conversão segura para DateTime (DateTimeLocal envia yyyy-MM-ddTHH:mm)
+                                    DateTime dtIni, dtFim;
+
+                                    if (DateTime.TryParse(txtIni.Text, out dtIni))
+                                        cmd.Parameters.AddWithValue("@ini", dtIni);
+                                    else
+                                        cmd.Parameters.AddWithValue("@ini", DBNull.Value);
+
+                                    if (DateTime.TryParse(txtFim.Text, out dtFim))
+                                        cmd.Parameters.AddWithValue("@fim", dtFim);
+                                    else
+                                        cmd.Parameters.AddWithValue("@fim", DBNull.Value);
+
+                                    cmd.Parameters.AddWithValue("@dur", txtDur.Text);
+                                    cmd.Parameters.AddWithValue("@mot", ddlMot.SelectedItem.Text);
+                                    cmd.Parameters.AddWithValue("@pedido", numPedido);
+                                    //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+
+                            trans.Commit();
+                            MostrarMsg("Alterações salvas com sucesso!");
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw ex;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MostrarMsg("Erro ao salvar pedidos: " + ex.Message);
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
 
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
+                BuscarCteSalvos(idViagem);
+                CarregarPedidos( int.Parse(carga), gv);
             }
             //if (e.CommandName == "Ocorrencias")
             //{
@@ -1744,6 +1907,8 @@ namespace NewCapit.dist.pages
             // Alimenta o Repeater com todos os dados acumulados
             rptColetas.DataSource = dadosAtuais;
             rptColetas.DataBind();
+           
+            
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
@@ -1764,7 +1929,6 @@ namespace NewCapit.dist.pages
                             veiculo = @veiculo,
                             veiculotipo = @veiculotipo,
                             valcet = @valcet,
-                            dtottu=@dtottu,
                             valcrlvveiculo = @valcrlvveiculo,
                             valcrlvreboque1 = @valcrlvreboque1,
                             valcrlvreboque2 = @valcrlvreboque2,
@@ -1826,9 +1990,10 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
                 cmd.Parameters.AddWithValue("@numero_gr", SafeValue(txtLiberacao.Text));
                 cmd.Parameters.AddWithValue("@numero_protocolo_cet", SafeValue(txtProtocoloCET.Text));
+              
 
-                
-                
+
+
 
 
                 //cmd.Parameters.AddWithValue("@comissao", SafeValue(txtComissao.Text));
@@ -2300,25 +2465,25 @@ namespace NewCapit.dist.pages
         protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
         {
             codCliFinal.Text = ddlCliFinal.SelectedValue;
-            string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
-            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            adp.Fill(dt);
-            con.Close();
-            if (dt.Rows.Count > 0)
-            {
-                txtDistancia.Text = dt.Rows[0][0].ToString();
-                txtUfOrigem.Text = dt.Rows[0][1].ToString();
-                txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
-                txtUfDestino.Text = dt.Rows[0][3].ToString();
-                txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
-                lblDistancia.Text = string.Empty;
-            }
-            else
-            {
-                lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
-            }
+            //string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+            //SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+            //DataTable dt = new DataTable();
+            //con.Open();
+            //adp.Fill(dt);
+            //con.Close();
+            //if (dt.Rows.Count > 0)
+            //{
+            //    txtDistancia.Text = dt.Rows[0][0].ToString();
+            //    txtUfOrigem.Text = dt.Rows[0][1].ToString();
+            //    txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
+            //    txtUfDestino.Text = dt.Rows[0][3].ToString();
+            //    txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
+               
+            //}
+            //else
+            //{
+            //    lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
+            //}
 
 
         }
@@ -2698,8 +2863,17 @@ namespace NewCapit.dist.pages
 
             //ddl.Items.Insert(0, new ListItem("Selecione", ""));
         }
-        
 
+        private DataTable BuscarTodosMotoristas()
+        {
+            DataTable dt = new DataTable();
+            string sql = "SELECT id, nommot FROM tbmotoristas"; // Ajuste os nomes das colunas
+            using (SqlDataAdapter adp = new SqlDataAdapter(sql, con))
+            {
+                adp.Fill(dt);
+            }
+            return dt;
+        }
         protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType != DataControlRowType.DataRow) return;
@@ -2715,15 +2889,42 @@ namespace NewCapit.dist.pages
             }
 
             // Calcular tempo
-            DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
-            DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
+            //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
+            //DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
 
-            Label lblTempo = (Label)e.Row.FindControl("lblTempo");
+            //Label lblTempo = (Label)e.Row.FindControl("lblTempo");
 
-            if (inicio.HasValue && fim.HasValue)
+            //if (inicio.HasValue && fim.HasValue)
+            //{
+            //    TimeSpan t = fim.Value - inicio.Value;
+            //    lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+            //}
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                TimeSpan t = fim.Value - inicio.Value;
-                lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+
+                if (ddl != null)
+                {
+                    // 1. Buscamos os motoristas (Ideal buscar uma vez só fora do loop, mas vamos focar na correção agora)
+                    DataTable dtMot = BuscarTodosMotoristas();
+
+                    ddl.DataSource = dtMot;
+                    ddl.DataTextField = "nommot"; // Verifique se o nome da coluna no seu SQL é 'nome'
+                    ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
+                    ddl.DataBind();
+
+                    
+
+                    // 2. Pegar o valor que veio do banco para esta linha
+                    // Importante: motcar deve ser o ID do motorista
+                    string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
+
+                   
+                            ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
+                            //ddl.SelectedItem.Text = motoristaSalvo;
+                    
+                }
             }
         }
 
@@ -3593,83 +3794,201 @@ namespace NewCapit.dist.pages
             string script = $"showWarningToast('{message}');";
             ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
         }
+        private DataTable BuscarCteSalvos(string idViagem)
+        {
+            DataTable dt = new DataTable();
+            // Usamos ALIAS (AS) para garantir que o nome da coluna no C# seja amigável
+            string sql = @"SELECT uf_emissor, empresa_emissora, num_documento, 
+                          serie_documento, chave_de_acesso 
+                   FROM tbcte 
+                   WHERE id_viagem = @idViagem";
 
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@idViagem", idViagem.Trim());
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    adp.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Erro SQL: " + ex.Message);
+            }
+            return dt;
+        }
+        private void CarregarGridCte(GridView gv, string idViagem, int index)
+        {
+            try
+            {
+                // 1. Busca o que já está salvo no Banco de Dados
+                DataTable dtFinal = BuscarCteSalvos(idViagem);
+
+                // Garantimos que a coluna Status exista no DataTable para o GridView não dar erro
+                if (!dtFinal.Columns.Contains("Status"))
+                {
+                    dtFinal.Columns.Add("Status", typeof(string));
+                }
+
+                // Marcamos os itens vindos do banco como "Gravado"
+                foreach (DataRow r in dtFinal.Rows)
+                {
+                    r["Status"] = "Gravado";
+                }
+
+                // 2. Mesclamos com o que está na Session (Leituras que ainda não foram para o banco)
+                if (ListaCtePorItem.ContainsKey(index))
+                {
+                    foreach (var cte in ListaCtePorItem[index])
+                    {
+                        DataRow dr = dtFinal.NewRow();
+                        // ATENÇÃO: Os nomes abaixo devem ser IGUAIS aos do seu SELECT em BuscarCteSalvos
+                        dr["uf_emissor"] = cte.Estado;
+                        dr["empresa_emissora"] = cte.Filial;
+                        dr["num_documento"] = cte.Numero;
+                        dr["serie_documento"] = cte.Serie;
+                        dr["Status"] = "Lido (Pendente)";
+                        dtFinal.Rows.Add(dr);
+                    }
+                }
+
+                // 3. Vincula o resultado final ao GridView
+                gv.DataSource = dtFinal;
+                gv.DataBind();
+            }
+            catch (Exception ex)
+            {
+                MostrarMsg("Erro ao carregar Grid: " + ex.Message);
+            }
+        }
         protected void txtChaveCte_TextChanged(object sender, EventArgs e)
         {
-            /*35251055890016000109570010001725711001725910*/
-
+            //35251055890016000109570010001725711001725910
             TextBox txt = (TextBox)sender;
             string chave = txt.Text.Trim();
 
             if (chave.Length != 44) return;
 
-            RepeaterItem item = (RepeaterItem)txt.NamingContainer;
-            int index = item.ItemIndex;
-
-            string CNPJ = chave.Substring(6, 14);
-
-            string sql = @"SELECT razcli,(select Estado from tbestadosbrasileiros where SiglaUf=estcli) as estcli, cidcli
-                        FROM tbclientes
-                        WHERE 
-                            REPLACE(REPLACE(REPLACE(cnpj, '.', ''), '/', ''), '-', '') ='"+ CNPJ + "'";
-
-            SqlDataAdapter adp = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            adp.Fill(dt);
-            con.Close();
-            // Criar o objeto lido
-            var cte = new CteLido
+            try
             {
-                Estado = dt.Rows[0][1].ToString(),
-                Municipio = dt.Rows[0][2].ToString(), // Ideal seria buscar de uma API ou Banco
-                Filial = "Matriz",
-                Numero = chave.Substring(25, 9),
-                Serie = chave.Substring(22, 3),
-                Lancamento = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
-                Status = "Lido"
-            };
+                RepeaterItem item = (RepeaterItem)txt.NamingContainer;
+                int index = item.ItemIndex;
 
-            // Salvar na Session
-            if (!ListaCtePorItem.ContainsKey(index))
-                ListaCtePorItem[index] = new List<CteLido>();
+                HiddenField lblId = (HiddenField)item.FindControl("hdflIdviagem");
+                string idViagem = lblId != null ? lblId.Value : "";
 
-            ListaCtePorItem[index].Add(cte);
+                // --- 1. VALIDAÇÃO DE DUPLICIDADE ---
 
-            // Limpar o campo para a próxima leitura
-            txt.Text = string.Empty;
+                // Verifica na Session (ListaCtePorItem)
+                bool jaLidoSessao = ListaCtePorItem.ContainsKey(index) &&
+                                    ListaCtePorItem[index].Any(x => x.ChaveOriginal == chave);
 
-            // IMPORTANTE: Em vez de DataBind(), vamos apenas forçar a tabela a se atualizar 
-            // chamando o ItemDataBound manualmente ou apenas repopulando a tabela deste item
-            HtmlTable tbl = (HtmlTable)item.FindControl("tblCte");
-            AdicionarLinhaTabela(tbl, cte.Estado, cte.Municipio, cte.Filial, cte.Numero, cte.Serie, cte.Lancamento, cte.Status);
+                // Verifica no Banco de Dados (tbcte)
+                bool jaSalvoBanco = CteJaExisteNoBanco(chave);
 
-            // Focar o cursor novamente no TextBox para o próximo scan
-            txt.Focus();
+                if (jaLidoSessao || jaSalvoBanco)
+                {
+                    string msg = jaLidoSessao ? "Este CT-e já foi lido agora." : "Este CT-e já está salvo no banco de dados.";
+                    MostrarMsg("Aviso: " + msg);
+                    txt.Text = string.Empty;
+                    txt.Focus();
+                    return;
+                }
+
+                // --- 2. BUSCA DE DADOS DO EMISSOR ---
+                string CNPJ = chave.Substring(6, 14);
+                string sql = @"SELECT razcli, (select Estado from tbestadosbrasileiros where SiglaUf=estcli) as estcli, cidcli 
+                       FROM tbclientes 
+                       WHERE REPLACE(REPLACE(REPLACE(cnpj, '.', ''), '/', ''), '-', '') = @cnpj";
+
+                DataTable dt = new DataTable();
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@cnpj", CNPJ);
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    adp.Fill(dt);
+                }
+
+                if (dt.Rows.Count > 0)
+                {
+                    // --- 3. TRATAMENTO DOS NÚMEROS (Remover zeros à esquerda) ---
+                    string numTratado = chave.Substring(25, 9).TrimStart('0');
+                    string serieTratada = chave.Substring(22, 3).TrimStart('0');
+
+                    var cte = new CteLido
+                    {
+                        ChaveOriginal = chave,
+                        Estado = dt.Rows[0]["estcli"].ToString(),
+                        Municipio = dt.Rows[0]["cidcli"].ToString(),
+                        Filial = dt.Rows[0]["razcli"].ToString(),
+                        Numero = string.IsNullOrEmpty(numTratado) ? "0" : numTratado,
+                        Serie = string.IsNullOrEmpty(serieTratada) ? "0" : serieTratada,
+                        Lancamento = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                        Status = "Lido"
+                    };
+
+                    if (!ListaCtePorItem.ContainsKey(index))
+                        ListaCtePorItem[index] = new List<CteLido>();
+
+                    ListaCtePorItem[index].Add(cte);
+
+                    // --- 4. ATUALIZAR GRIDVIEW ---
+                    GridView gv = (GridView)item.FindControl("gvCte");
+                    if (gv != null)
+                    {
+                        CarregarGridCte(gv, idViagem, index);
+                    }
+                }
+                else
+                {
+                    MostrarMsg("CNPJ do emissor não encontrado no cadastro de clientes.");
+                }
+
+                txt.Text = string.Empty;
+                txt.Focus();
+            }
+            catch (Exception ex)
+            {
+                MostrarMsg("Erro ao processar chave: " + ex.Message);
+            }
+        }
+
+        // Função auxiliar para checar o banco
+        private bool CteJaExisteNoBanco(string chave)
+        {
+            bool existe = false;
+            try
+            {
+                string sql = "SELECT COUNT(1) FROM tbcte WHERE chave_de_acesso = @chave";
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@chave", chave);
+                    if (con.State == ConnectionState.Closed) con.Open();
+                    existe = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+            finally { con.Close(); }
+            return existe;
         }
 
 
 
 
-        private void AdicionarLinhaTabela(
-            HtmlTable tabela,
-            string estado,
-            string municipio,
-            string filial,
-            string numeroCte,
-            string serie,
-            string lancamento,
-            string status)
-                {
-                    HtmlTableRow row = new HtmlTableRow();
+        private void AdicionarLinhaTabela(HtmlTable tabela, string estado, string municipio, string filial, string numeroCte, string serie, string lancamento, string status)
+        {
+            HtmlTableRow row = new HtmlTableRow();
 
-                    row.Cells.Add(new HtmlTableCell { InnerText = estado });
-                    row.Cells.Add(new HtmlTableCell { InnerText = municipio });
-                    row.Cells.Add(new HtmlTableCell { InnerText = filial });
-                    row.Cells.Add(new HtmlTableCell { InnerText = numeroCte });
-                    row.Cells.Add(new HtmlTableCell { InnerText = serie });
-                    row.Cells.Add(new HtmlTableCell { InnerText = lancamento });
-                    row.Cells.Add(new HtmlTableCell { InnerText = status });
+            // Use celulas explicitas
+            HtmlTableCell cell1 = new HtmlTableCell(); cell1.InnerText = estado; row.Cells.Add(cell1);
+            HtmlTableCell cell2 = new HtmlTableCell(); cell2.InnerText = municipio; row.Cells.Add(cell2);
+            HtmlTableCell cell3 = new HtmlTableCell(); cell3.InnerText = filial; row.Cells.Add(cell3);
+            HtmlTableCell cell4 = new HtmlTableCell(); cell4.InnerText = numeroCte; row.Cells.Add(cell4);
+            HtmlTableCell cell5 = new HtmlTableCell(); cell5.InnerText = serie; row.Cells.Add(cell5);
+            HtmlTableCell cell6 = new HtmlTableCell(); cell6.InnerText = lancamento; row.Cells.Add(cell6);
+            HtmlTableCell cell7 = new HtmlTableCell(); cell7.InnerText = status; row.Cells.Add(cell7);
+
+            if (status.Contains("Lido")) row.BgColor = "#fff3cd";
 
             tabela.Rows.Add(row);
         }
@@ -3686,6 +4005,7 @@ namespace NewCapit.dist.pages
         }
         public class CteLido
         {
+            public string ChaveOriginal { get; set; } // Adicione este campo
             public string Estado { get; set; }
             public string Municipio { get; set; }
             public string Filial { get; set; }

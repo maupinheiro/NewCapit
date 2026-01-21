@@ -14,6 +14,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
@@ -264,7 +266,7 @@
         Sys.Application.add_load(bindEventos);
 
     </script>
-    <script>
+  <%--  <script>
         function inicializarAbas() {
             console.log("Inicializando abas...");
 
@@ -318,7 +320,8 @@
                 inicializarAbas();
             });
         }
-    </script><script>
+    </script>--%>
+    <script>
                  function inicializarAbas() {
                      console.log("Iniciando limpeza e restauração de abas...");
 
@@ -356,6 +359,7 @@
                                  }
                              }
                          }
+                         configurarFocoScanner();
                      });
 
                      // 2. Configurar o evento de clique (sem usar o evento do Bootstrap que pode falhar)
@@ -373,7 +377,18 @@
                          };
                      });
                  }
+                    function configurarFocoScanner() {
+                        document.querySelectorAll('.chave-cte').forEach(input => {
+                            input.addEventListener('keydown', function (e) {
+                                if (e.key === 'Enter') {
+                                    // Impede que o Enter envie o formulário inteiro
+                                    // O AutoPostBack="true" já vai cuidar de disparar o TextChanged
+                                }
+                            });
+                        });
+                    }
 
+        // Chame isso dentro da sua função inicializarAbas()
                  // Carregamento inicial
                  document.addEventListener('DOMContentLoaded', inicializarAbas);
 
@@ -438,6 +453,51 @@
         $(document).ready(function () {
             ativarSelect2();
         });
+    </script>
+    <script type="text/javascript">
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        if (prm) {
+            prm.add_endRequest(function (sender, args) {
+                recalcularTodosOsTempos();
+            });
+        }
+
+        $(document).ready(function () {
+            recalcularTodosOsTempos();
+        });
+
+        // Evento disparado quando você altera a data no calendário do navegador
+        $(document).on('change', '.hora-inicio, .hora-fim', function () {
+            calcularDiferenca($(this).closest('tr'));
+        });
+
+        function recalcularTodosOsTempos() {
+            $('.hora-total').each(function () {
+                calcularDiferenca($(this).closest('tr'));
+            });
+        }
+
+        function calcularDiferenca(row) {
+            var valInicio = row.find('.hora-inicio').val(); // Formato: yyyy-MM-ddTHH:mm
+            var valFim = row.find('.hora-fim').val();
+
+            if (valInicio && valFim) {
+                var dataIni = new Date(valInicio);
+                var dataFim = new Date(valFim);
+
+                if (dataFim > dataIni) {
+                    var diffMs = dataFim - dataIni;
+                    var totalMinutos = Math.floor(diffMs / 60000);
+                    var horas = Math.floor(totalMinutos / 60);
+                    var minutos = totalMinutos % 60;
+
+                    var resultado = (horas < 10 ? "0" + horas : horas) + ":" + (minutos < 10 ? "0" + minutos : minutos);
+                    row.find('.hora-total').val(resultado);
+                } else {
+                    row.find('.hora-total').val("00:00");
+                }
+            }
+        }
     </script>
 
     <div class="content-wrapper">
@@ -1312,7 +1372,7 @@ Alterações
 <div class="tab-content border border-top-0 p-3">
 <!-- ABA PEDIDOS -->
 <div class="tab-pane fade show active" id='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
-<asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
+<asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" DataKeyNames="pedido" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
 <Columns>
 <asp:BoundField DataField="pedido" HeaderText="Pedido" />
 <asp:BoundField DataField="emissao"
@@ -1322,27 +1382,33 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <asp:BoundField DataField="material" HeaderText="Material" />
 <asp:BoundField DataField="portao" HeaderText="Portão" />
 <asp:TemplateField HeaderText="Motorista">
-<ItemTemplate>                                                                                                           <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">                                       </asp:DropDownList>                                                                                                  </ItemTemplate>
+<ItemTemplate>                                                                                                           
+    <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">
+
+    </asp:DropDownList>                                                                                                 
+
+</ItemTemplate>
   </asp:TemplateField>
 <asp:TemplateField HeaderText="Início">
-                                                                                                           <ItemTemplate>
-                                                                                                                <asp:TextBox ID="txtInicioCar"
-                                                                                                                    runat="server"
-                                                                                                                    CssClass="form-control"
-                                                                                                                    Text='<%# Bind("iniciocar", "{0:dd/MM/yyyy HH:mm}") %>'>
-</asp:TextBox>
-</ItemTemplate>
+    <ItemTemplate>
+        <asp:TextBox ID="txtInicioCar" TextMode="DateTimeLocal" runat="server" 
+            CssClass="form-control hora-inicio" 
+            Text='<%# Eval("iniciocar") != DBNull.Value ? Convert.ToDateTime(Eval("iniciocar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
+    </ItemTemplate>
 </asp:TemplateField>
 
 <asp:TemplateField HeaderText="Fim">
-<ItemTemplate>
-<asp:TextBox ID="txtTermCar" runat="server" CssClass="form-control" Text='<%# Bind("termcar", "{0:dd/MM/yyyy HH:mm}")%>'>
-</asp:TextBox>
-</ItemTemplate>
+    <ItemTemplate>
+        <asp:TextBox ID="txtTermCar" TextMode="DateTimeLocal" runat="server" 
+            CssClass="form-control hora-fim" 
+            Text='<%# Eval("termcar") != DBNull.Value ? Convert.ToDateTime(Eval("termcar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
+    </ItemTemplate>
 </asp:TemplateField>
+
 <asp:TemplateField HeaderText="Tempo">
-<ItemTemplate>
-</ItemTemplate>
+    <ItemTemplate>
+        <asp:TextBox ID="txtTempoTotal" runat="server" CssClass="form-control hora-total" Text='<%# Eval("duracao")%>'  tabIndex="-1"></asp:TextBox>
+    </ItemTemplate>
 </asp:TemplateField>
 </Columns>
 </asp:GridView>
@@ -1356,29 +1422,34 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="row g-3">
    <div class="col-md-4">
-    <input type="text"
-       class="form-control chave-cte"
-       placeholder="Chave de Acesso do CT-e / RPS-e"
-       maxlength="44" />
+       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e / RPS-e" runat="server" maxlength="44" AutoPostBack="true"></asp:TextBox>
+   
 </div>
 </div>
 </br>
 <div class="row g-3">
-  <!-- GRID -->
-  <table class="table table-sm table-bordered tbl-cte mt-2">
-   <thead class="table-dark">
-     <tr>                                
-      <th>Estado</th>
-      <th>Muncipio</th>                                
-      <th>Filial</th>
-      <th>Nº CT-e</th>
-      <th>Série</th>                                
-      <th>Lançamento</th>
-      <th>Status</th>                               
-     </tr>
-   </thead>
-  <tbody></tbody>
- </table>
+    <asp:HiddenField ID="hdflIdviagem" Value='<%# Eval("carga") %>' runat="server" />
+    <asp:GridView ID="gvCte" runat="server" 
+        CssClass="table table-sm table-bordered mt-2" 
+        AutoGenerateColumns="False" 
+        GridLines="None">
+        <Columns>
+         <asp:BoundField DataField="uf_emissor" HeaderText="Estado" />
+        <asp:BoundField DataField="empresa_emissora" HeaderText="Filial" />
+        <asp:BoundField DataField="num_documento" HeaderText="Nº CT-e" />
+        <asp:BoundField DataField="serie_documento" HeaderText="Série" />
+        <asp:TemplateField HeaderText="Status">
+                <ItemTemplate>
+                    <span class='<%# Eval("Status").ToString().Contains("Lido") ? "badge bg-warning" : "badge bg-success" %>'>
+                        <%# Eval("Status") %>
+                    </span>
+                </ItemTemplate>
+            </asp:TemplateField>
+        </Columns>
+        <EmptyDataTemplate>
+            <div class="alert alert-info mt-2">Nenhum documento lido para esta carga.</div>
+        </EmptyDataTemplate>
+    </asp:GridView>
 </div>
 </div>
 
