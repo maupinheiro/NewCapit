@@ -87,14 +87,15 @@ namespace NewCapit.dist.pages
                 PreencherComboMotoristas();
                 CarregaDados();
                 CarregaMap(txtPlaca.Text);
+
                 PreencherClienteInicial();
                 PreencherClienteFinal();
-                
 
             }
             //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
             VerificaCargasFechadas();
+            
         }
 
         public void CarregaFoto()
@@ -1176,6 +1177,53 @@ namespace NewCapit.dist.pages
                     catch (Exception ex)
                     {
                         MostrarMsg("Erro ao salvar pedidos: " + ex.Message);
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+
+                TextBox txtHistoricoObservacao = (TextBox)e.Item.FindControl("txtHistoricoObservacao");
+
+                if (txtHistoricoObservacao.Text != string.Empty)
+                {
+                    try
+                    {
+                        if (con.State == ConnectionState.Closed) con.Open();
+                        SqlTransaction trans = con.BeginTransaction();
+
+                        try
+                        {
+                          
+                                // 3. Query de Update
+                                string sql = @"UPDATE tbcargas SET 
+                                       observacao = @observacao 
+                                       WHERE carga = @carga ";
+
+                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                {
+                                    
+                                    cmd.Parameters.AddWithValue("@observacao", txtHistoricoObservacao.Text);
+                                    cmd.Parameters.AddWithValue("@carga",carga);
+                                    //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+                                    cmd.ExecuteNonQuery();
+                                }
+                            
+
+                            trans.Commit();
+                            MostrarMsg("Alterações salvas com sucesso!");
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw ex;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MostrarMsg("Erro ao salvar Observacao: " + ex.Message);
                     }
                     finally
                     {
@@ -2300,8 +2348,10 @@ namespace NewCapit.dist.pages
         {
             string novaCarga = novaCargaVazia.Text.Trim();
             int numCarga = int.Parse(novaCargaVazia.Text.Trim());
-            decimal pesoMaterial = decimal.Parse(txtPesoVazio.Text.Trim());
-            string codigoOrigem = codCliInicial.Text.Trim();
+            string pesoTexto = txtPesoVazio.Text.Trim().Replace(".", ",");
+            decimal.TryParse(pesoTexto, out decimal pesoMaterial);
+            string codigoOrigem = Request.Form[codCliInicial.UniqueID] ?? codCliInicial.Text;
+            codigoOrigem = codigoOrigem.Trim();
             string nomeOrigem = ddlCliInicial.SelectedItem.Text.Trim().ToUpper();
             string codigoDestino = codCliFinal.Text.Trim();
             string nomeDestino = ddlCliFinal.SelectedItem.Text.Trim().ToUpper();
@@ -2511,13 +2561,13 @@ namespace NewCapit.dist.pages
                             {
                                 string codCli = reader["codcli"].ToString();
 
-                                codCliInicial.Text = codCli;
+                                //codCliInicial.Text = codCli;
 
                                 // 🔥 AQUI ESTÁ A CORREÇÃO
-                                if (ddlCliInicial.Items.FindByValue(codCli) != null)
-                                    ddlCliInicial.SelectedValue = codCli;
-                                else
-                                    ddlCliInicial.SelectedIndex = 0;
+                                //if (ddlCliInicial.Items.FindByValue(codCli) != null)
+                                ddlCliInicial.SelectedValue = codCli;
+                                //else
+                                //    ddlCliInicial.SelectedIndex = 0;
 
                                 txtMunicipioOrigem.Text = reader["cidcli"] == DBNull.Value ? "" : reader["cidcli"].ToString();
                                 txtUfOrigem.Text = reader["estcli"] == DBNull.Value ? "" : reader["estcli"].ToString();
@@ -2526,10 +2576,10 @@ namespace NewCapit.dist.pages
                             }
                             else
                             {
-                                ddlCliInicial.ClearSelection();
-                                ddlCliInicial.SelectedIndex = 0;
+                                //ddlCliInicial.ClearSelection();
+                                //ddlCliInicial.SelectedIndex = 0;
 
-                                codCliInicial.Text = "";
+                                //codCliInicial.Text = "";
 
                                 ScriptManager.RegisterStartupScript(
                                     this,
@@ -2550,48 +2600,10 @@ namespace NewCapit.dist.pages
         }
         protected void codCliFinal_TextChanged(object sender, EventArgs e)
         {
-            //using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            //if (codCliFinal.Text != "")
-            //{
-            //    string codigoRemetente = codCliFinal.Text.Trim();  
-                    
-            //        using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            //        {
-            //        string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @Codigo OR codvw=@Codigo";
-
-            //        using (SqlCommand cmd = new SqlCommand(query, conn))
-            //        {
-            //            cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
-            //            conn.Open();
-
-            //            using (SqlDataReader reader = cmd.ExecuteReader())
-            //            {
-            //                if (reader.Read())
-            //                {
-            //                    codCliFinal.Text = reader["codcli"].ToString();
-            //                    ddlCliFinal.SelectedItem.Text = reader["razcli"].ToString();
-            //                    txtMunicipioDestino.Text = reader["cidcli"].ToString();
-            //                    txtUfDestino.Text = reader["estcli"].ToString();
-            //                }
-            //                else
-            //                {
-            //                    ddlCliFinal.SelectedItem.Text = "Selecione...";
-            //                    codCliFinal.Text = "";
-            //                    // Aciona o Toast via JavaScript
-            //                    ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-            //                    codCliFinal.Focus();
-            //                    // Opcional: exibir mensagem ao usuário
-            //                }
-            //            }
-            //        }
-
-            //    }
-
-            //}
-
+            
             if (!string.IsNullOrWhiteSpace(codCliFinal.Text))
             {
-                string codigoRemetente = codCliFinal.Text.Trim();
+                string codigoDestinatario = codCliFinal.Text.Trim();
                 string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
                 using (SqlConnection conn = new SqlConnection(strConn))
@@ -2602,7 +2614,7 @@ namespace NewCapit.dist.pages
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        cmd.Parameters.AddWithValue("@Codigo", codigoDestinatario);
                         conn.Open();
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -2614,10 +2626,10 @@ namespace NewCapit.dist.pages
                                 codCliFinal.Text = codCli;
 
                                 // 🔥 AQUI ESTÁ A CORREÇÃO
-                                if (ddlCliInicial.Items.FindByValue(codCli) != null)
-                                    ddlCliInicial.SelectedValue = codCli;
-                                else
-                                    ddlCliInicial.SelectedIndex = 0;
+                                //if (ddlCliInicial.Items.FindByValue(codCli) != null)
+                                ddlCliFinal.SelectedValue = codCli;
+                                //else
+                                //    ddlCliInicial.SelectedIndex = 0;
 
                                 txtMunicipioDestino.Text = reader["cidcli"] == DBNull.Value ? "" : reader["cidcli"].ToString();
                                 txtUfDestino.Text = reader["estcli"] == DBNull.Value ? "" : reader["estcli"].ToString();
@@ -2626,10 +2638,10 @@ namespace NewCapit.dist.pages
                             }
                             else
                             {
-                                ddlCliInicial.ClearSelection();
-                                ddlCliInicial.SelectedIndex = 0;
+                                //ddlCliInicial.ClearSelection();
+                                //ddlCliInicial.SelectedIndex = 0;
 
-                                codCliFinal.Text = "";
+                                //codCliFinal.Text = "";
 
                                 ScriptManager.RegisterStartupScript(
                                     this,
@@ -2650,25 +2662,25 @@ namespace NewCapit.dist.pages
             if (codCliInicial.Text != "" && codCliFinal.Text != "")
             {
                 codCliFinal.Text = ddlCliFinal.SelectedValue;
-                string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
-                SqlDataAdapter adp = new SqlDataAdapter(sql, con);
-                DataTable dt = new DataTable();
-                con.Open();
-                adp.Fill(dt);
-                con.Close();
-                if (dt.Rows.Count > 0)
-                {
-                    txtDistancia.Text = dt.Rows[0][0].ToString();
-                    txtUfOrigem.Text = dt.Rows[0][1].ToString();
-                    txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
-                    txtUfDestino.Text = dt.Rows[0][3].ToString();
-                    txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
-                    lblDistancia.Text = string.Empty;
-                }
-                else
-                {
-                    lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
-                }
+                //string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+                //SqlDataAdapter adp = new SqlDataAdapter(sql, con);
+                //DataTable dt = new DataTable();
+                //con.Open();
+                //adp.Fill(dt);
+                //con.Close();
+                //if (dt.Rows.Count > 0)
+                //{
+                //    txtDistancia.Text = dt.Rows[0][0].ToString();
+                //    txtUfOrigem.Text = dt.Rows[0][1].ToString();
+                //    txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
+                //    txtUfDestino.Text = dt.Rows[0][3].ToString();
+                //    txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
+                //    lblDistancia.Text = string.Empty;
+                //}
+                //else
+                //{
+                //    lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
+                //}
 
 
 

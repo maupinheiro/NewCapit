@@ -124,6 +124,7 @@ namespace NewCapit.dist.pages
                 Response.Redirect("/dist/pages/Frm_AltCarga.aspx?id=" + id);
             }
         }
+        
 
 
 
@@ -144,6 +145,19 @@ namespace NewCapit.dist.pages
             gvCargas.EditIndex = -1;
             CarregarGrid();
         }
+
+        protected void gvCargas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Oc")
+            {
+                string numCarregamento = e.CommandArgument.ToString();
+                string url = $"Frm_AtualizaColetaMatriz.aspx?carregamento={numCarregamento}";
+                Response.Redirect(url);
+
+            }
+        }
+
+
 
         //protected void gvCargas_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
         //{

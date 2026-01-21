@@ -116,7 +116,7 @@
                             </div>
                             <div class="container-fluid">
                                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True" OnRowCommand="gvCargas_RowCommand">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
                                             <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">
@@ -136,7 +136,13 @@
                                             <asp:BoundField DataField="recebedor" HeaderText="Local de Entrega" />
                                             <asp:BoundField DataField="cid_recebedor" HeaderText="Município" />
                                             <asp:BoundField DataField="andamento" HeaderText="Atendimento" />
-                                            <asp:BoundField DataField="idviagem" HeaderText="O.Coleta" />
+                                            <asp:TemplateField HeaderText="O.Coleta" ShowHeader="True" ItemStyle-Width="9">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="lnkOc" runat="server" CommandName="Oc" CommandArgument='<%# Eval("idviagem") %>' Text='<%# Eval("idviagem") %>'>
+                                                    </asp:LinkButton>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                           
                                         </Columns>
                                     </asp:GridView>
                             </div>

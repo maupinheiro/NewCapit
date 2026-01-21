@@ -14,8 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+   
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
@@ -62,14 +61,7 @@
         /* =========================
            SELECT2 (SEGURO)
         ========================= */
-        function iniciarSelect2() {
-            $('.select2').each(function () {
-                if ($(this).hasClass("select2-hidden-accessible")) {
-                    $(this).select2('destroy');
-                }
-                $(this).select2({ width: '100%' });
-            });
-        }
+       
 
         /* =========================
            TEMPOS E STATUS
@@ -234,7 +226,7 @@
         ========================= */
         function bindEventos() {
 
-            iniciarSelect2();
+          
             aplicarMascaraTelefone();
 
             document.querySelectorAll('.item-coleta').forEach(item => {
@@ -262,8 +254,19 @@
         /* =========================
            INICIALIZAÇÃO
         ========================= */
-        $(document).ready(bindEventos);
-        Sys.Application.add_load(bindEventos);
+       Sys.Application.add_load(function () {
+    // 1. Restaura as abas
+    inicializarAbas();
+    
+    // 2. Aplica o Select2 nos campos visíveis e recém-criados
+    aplicarPluginsDinamicos();
+    
+    // 3. Recalcula os tempos da grid
+    recalcularTodosOsTempos();
+    
+    // 4. Aplica máscaras de telefone se houver
+    if (typeof aplicarMascaraTelefone === "function") aplicarMascaraTelefone();
+});
 
     </script>
   <%--  <script>
@@ -411,48 +414,30 @@
 
     </script>
 
-    <script type="text/javascript">
-        function initSelect2() {
-            $('.select2').select2({
-                // Esta é a correção principal: define o modal como pai do dropdown
-                dropdownParent: $('#meuModal')
-            });
-        }
-
-        $(document).ready(function () {
-            initSelect2();
-        });
-
-        // Como você está usando UpdatePanel, o Select2 precisa ser reinicializado após cada PostBack parcial
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
-        if (prm) {
-            prm.add_endRequest(function (sender, args) {
-                initSelect2();
-            });
-        }
-
-        // Correção adicional para conflito de foco do Bootstrap 4
-        // Isso garante que o campo de busca do Select2 possa receber foco mesmo dentro do modal
-        $.fn.modal.Constructor.prototype._enforceFocus = function () { };
-    </script>
+   
    
     <script>
-        function ativarSelect2() {
-            $('#ddlRotaKrona').select2({
-                placeholder: 'Selecione a rota',
-                width: '100%'
-            });
+        function aplicarPluginsDinamicos() {
+    console.log("Aplicando Select2 e Máscaras...");
 
-            // EVENTO CHANGE
-            $('#ddlRotaKrona').on('change', function () {
-                var idRota = $(this).val(); // VALUE do option
-                $('#txtId_Rota').val(idRota);
-            });
+    $('.select2').each(function () {
+        // Se já existir um select2 no elemento, destrói para evitar bugs
+        if ($(this).hasClass("select2-hidden-accessible")) {
+            $(this).select2('destroy');
         }
-
-        $(document).ready(function () {
-            ativarSelect2();
+        
+        $(this).select2({
+            width: '100%',
+            // Se estiver dentro de um modal, precisa desta linha:
+            // dropdownParent: $(this).closest('.modal').length ? $(this).closest('.modal') : $(document.body)
         });
+    });
+
+    // Sincroniza o ID da Rota Krona manualmente
+    $('#ddlRotaKrona').off('change').on('change', function () {
+        $('#txtId_Rota').val($(this).val());
+    });
+}
     </script>
     <script type="text/javascript">
         var prm = Sys.WebForms.PageRequestManager.getInstance();
@@ -1604,7 +1589,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <div class="col-md-12">
             <div class="form-group">
                 <span class="details">Observações:</span>
-                <asp:TextBox ID="txtHistoricoObservacao" TextMode="MultiLine" Rows="4" class="form-control" Text="" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtHistoricoObservacao" Text='<%# Eval("observacao") %>' TextMode="MultiLine" Rows="4" class="form-control" runat="server"></asp:TextBox>
             </div>
         </div>
 </div>

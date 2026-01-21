@@ -1171,25 +1171,25 @@ namespace NewCapit.dist.pages
         protected void ddlCliFinal_TextChanged(object sender, EventArgs e)
         {
             codCliFinal.Text = ddlCliFinal.SelectedValue;
-            string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
-            SqlDataAdapter adp = new SqlDataAdapter(sql, conn);
-            DataTable dt = new DataTable();
-            conn.Open();
-            adp.Fill(dt);
-            conn.Close();
-            if (dt.Rows.Count > 0)
-            {
-                txtDistancia.Text = dt.Rows[0][0].ToString();
-                txtUfOrigem.Text = dt.Rows[0][1].ToString();
-                txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
-                txtUfDestino.Text = dt.Rows[0][3].ToString();
-                txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
-                lblDistancia.Text = string.Empty;
-            }
-            else
-            {
-                lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
-            }
+            //string sql = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem=(SELECT estcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and Origem=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliInicial.SelectedValue + "') and UF_Destino=(SELECT estcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "') and Destino=(SELECT cidcli FROM tbclientes where codcli='" + ddlCliFinal.SelectedValue + "')";
+            //SqlDataAdapter adp = new SqlDataAdapter(sql, conn);
+            //DataTable dt = new DataTable();
+            //conn.Open();
+            //adp.Fill(dt);
+            //conn.Close();
+            //if (dt.Rows.Count > 0)
+            //{
+            //    txtDistancia.Text = dt.Rows[0][0].ToString();
+            //    txtUfOrigem.Text = dt.Rows[0][1].ToString();
+            //    txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
+            //    txtUfDestino.Text = dt.Rows[0][3].ToString();
+            //    txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
+            //    lblDistancia.Text = string.Empty;
+            //}
+            //else
+            //{
+            //    lblDistancia.Text = "Não há distância cadastrada entre ORIGEM e DESTINO...";
+            //}
 
 
         }
@@ -1279,60 +1279,62 @@ namespace NewCapit.dist.pages
             }
             if (codCliInicial.Text != "" && codCliFinal.Text != "")
             {
-                //string UFOrigem = txtUfOrigem.Text.Trim();
-                //string Origem = ddlCliInicial.SelectedItem.Text.Trim();
-                //string UFDestino = txtUfDestino.Text.Trim();
-                //string Destino = ddlCliFinal.SelectedItem.Text.Trim();
+                string UFOrigem = txtUfOrigem.Text.Trim();
+                string Origem = ddlCliInicial.SelectedItem.Text.Trim();
+                string UFDestino = txtUfDestino.Text.Trim();
+                string Destino = ddlCliFinal.SelectedItem.Text.Trim();
 
-                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    SqlCommand cmd = new SqlCommand(@"
-                        SELECT 
-                        c1.LATITUDE  AS LatOrigem,
-                        c1.LONGITUDE AS LonOrigem,
-                        c2.LATITUDE  AS LatDestino,
-                        c2.LONGITUDE AS LonDestino
-                    FROM tbcidadesdobrasil c1
-                    JOIN tbcidadesdobrasil c2 ON 1 = 1
-                    WHERE 
-                        c1.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeOrigem AND c1.UF = @UFOrigem
-                    AND c2.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeDestino AND c2.UF = @UFDestino
-                ", conn);
+                //string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                //using (SqlConnection conn = new SqlConnection(strConn))
+                //{
+                //    SqlCommand cmd = new SqlCommand(@"
+                //        SELECT 
+                //        c1.LATITUDE  AS LatOrigem,
+                //        c1.LONGITUDE AS LonOrigem,
+                //        c2.LATITUDE  AS LatDestino,
+                //        c2.LONGITUDE AS LonDestino
+                //    FROM tbcidadesdobrasil c1
+                //    JOIN tbcidadesdobrasil c2 ON 1 = 1
+                //    WHERE 
+                //        c1.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeOrigem AND c1.UF = @UFOrigem
+                //    AND c2.NOME_MUNICIPIO COLLATE Latin1_General_CI_AI  = @CidadeDestino AND c2.UF = @UFDestino
+                //", conn);
 
-                    cmd.Parameters.AddWithValue("@CidadeOrigem", txtMunicipioOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@UFOrigem", txtUfOrigem.Text.Trim());
-                    cmd.Parameters.AddWithValue("@CidadeDestino", txtMunicipioDestino.Text.Trim());
-                    cmd.Parameters.AddWithValue("@UFDestino", txtUfDestino.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@CidadeOrigem", txtMunicipioOrigem.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@UFOrigem", txtUfOrigem.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@CidadeDestino", txtMunicipioDestino.Text.Trim());
+                //    cmd.Parameters.AddWithValue("@UFDestino", txtUfDestino.Text.Trim());
 
-                    conn.Open();
-                    SqlDataReader dr = cmd.ExecuteReader();
+                //    conn.Open();
+                //    SqlDataReader dr = cmd.ExecuteReader();
 
-                    if (dr.Read())
-                    {
-                        double distancia = CalcularDistancia(
-                            Convert.ToDouble(dr["LatOrigem"]),
-                            Convert.ToDouble(dr["LonOrigem"]),
-                            Convert.ToDouble(dr["LatDestino"]),
-                            Convert.ToDouble(dr["LonDestino"])
-                        );
+                //    if (dr.Read())
+                //    {
+                //        double distancia = CalcularDistancia(
+                //            Convert.ToDouble(dr["LatOrigem"]),
+                //            Convert.ToDouble(dr["LonOrigem"]),
+                //            Convert.ToDouble(dr["LatDestino"]),
+                //            Convert.ToDouble(dr["LonDestino"])
+                //        );
 
-                        txtDistancia.Text = $"{distancia:N2}"; //$"Distância: {distancia:N2} km";
-                    }
-                    else
-                    {
-                        lblDistancia.Text = "Cidade não encontrada.";
-                    }
-                }
+                //        txtDistancia.Text = $"{distancia:N2}"; //$"Distância: {distancia:N2} km";
+                //    }
+                //    else
+                //    {
+                //        lblDistancia.Text = "Cidade não encontrada.";
+                //    }
             }
         }
+        
         // Salvando coleta vazia
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
         {            
             string novaCarga = novaCargaVazia.Text.Trim();
             int numCarga = int.Parse(novaCargaVazia.Text.Trim());
-            decimal pesoMaterial = decimal.Parse(txtPesoVazio.Text.Trim()); 
-            string codigoOrigem = codCliInicial.Text.Trim();
+            string pesoTexto = txtPesoVazio.Text.Trim().Replace(".", ",");
+            decimal.TryParse(pesoTexto, out decimal pesoMaterial);
+            string codigoOrigem = Request.Form[codCliInicial.UniqueID] ?? codCliInicial.Text;
+            codigoOrigem = codigoOrigem.Trim();
             string nomeOrigem = ddlCliInicial.SelectedItem.Text.Trim().ToUpper();
             string codigoDestino = codCliFinal.Text.Trim();
             string nomeDestino = ddlCliFinal.SelectedItem.Text.Trim().ToUpper();
