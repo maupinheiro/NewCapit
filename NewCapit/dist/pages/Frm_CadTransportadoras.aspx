@@ -241,13 +241,13 @@
 
                     </div>
                     <div class="row g-3">
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <br />
-                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" Text="Cadastrar" OnClick="btnSalvar_Click" />
+                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg w-100" runat="server" ValidationGroup="Cadastro" Text="Cadastrar" OnClick="btnSalvar_Click" />
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <br />
-                            <a href="Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                            <a href="Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg w-100">Sair               
                             </a>
                         </div>
                     </div>
@@ -255,13 +255,13 @@
             </div>
         </section>
     </div>
-    <footer class="main-footer">
+   <%-- <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 2.1.0
   
         </div>
         <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>
+    </footer>--%>
 
     <!-- Page specific script -->
     <script>

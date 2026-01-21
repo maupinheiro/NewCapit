@@ -280,7 +280,7 @@
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <span class="details">FROTA:</span>
-                                                            <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                            <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" OnTextChanged="btnPesquisarVeiculo_Click" AutoPostBack="true" ></asp:TextBox>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-1">

@@ -262,11 +262,11 @@
 
                     <div class="row g-3">
                         <br />
-                        <div class="col-md-1">
-                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg" runat="server" ValidationGroup="Cadastro"  OnClick="btnSalvar_Click" Text="Atualizar" />
+                        <div class="col-md-2">
+                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg w-100" runat="server" ValidationGroup="Cadastro"  OnClick="btnSalvar_Click" Text="Atualizar" />
                         </div>
-                        <div class="col-md-1">
-                            <a href="/dist/pages/Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                        <div class="col-md-2">
+                            <a href="/dist/pages/Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg w-100">Cancelar               
                             </a>
                         </div>
                     </div>

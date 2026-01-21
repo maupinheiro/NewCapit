@@ -1908,6 +1908,440 @@ namespace NewCapit.dist.pages
             else
                 return DBNull.Value;
         }
+        protected void btnPesquisarVeiculo_Click(object sender, EventArgs e)
+        {
+            if (txtCodMotorista.Text.Trim() == "")
+            {
+                //string nomeUsuario = txtUsuCadastro.Text;
+
+                string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                string linha2 = "Por favor, digite o código do motorista.";
+
+                // Concatenando as linhas com '\n' para criar a mensagem
+                string mensagem = $"{linha1}\n{linha2}";
+
+                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                // Gerando o script JavaScript para exibir o alerta
+                string script = $"alert('{mensagemCodificada}');";
+
+                // Registrando o script para execução no lado do cliente
+                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                txtCodMotorista.Focus();
+
+            }
+            else
+            {
+                if (txtCodVeiculo.Text.Trim() != "")
+                {
+                    var codigo = txtCodVeiculo.Text.Trim();
+
+                    var obj = new Domain.ConsultaVeiculo
+                    {
+                        codvei = codigo
+                    };
+
+
+                    var ConsultaVeiculo = DAL.UsersDAL.CheckVeiculo(obj);
+                    if (ConsultaVeiculo != null)
+                    {
+                        if (ConsultaVeiculo.ativo_inativo.Trim() == "INATIVO")
+                        {
+                            //string nomeUsuario = txtUsuCadastro.Text;
+                            string placaVeiculo = ConsultaVeiculo.plavei;
+                            string unidade = ConsultaVeiculo.nucleo;
+
+                            string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                            string linha2 = "Código " + codigo + ", excluido ou inativo no sistema.";
+                            string linha3 = "Motorista: " + placaVeiculo + ".";
+                            string linha4 = "Filial: " + unidade + ". Por favor, verifique.";
+
+                            // Concatenando as linhas com '\n' para criar a mensagem
+                            string mensagem = $"{linha1}\n{linha2}\n{linha3}\n{linha4}";
+
+                            string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                            // Gerando o script JavaScript para exibir o alerta
+                            string script = $"alert('{mensagemCodificada}');";
+
+                            // Registrando o script para execução no lado do cliente
+                            ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                            txtCodVeiculo.Text = "";
+                            txtPlaca.Text = "";
+                            txtReboque1.Text = "";
+                            txtReboque2.Text = "";
+                            txtVeiculoTipo.Text = "";
+                            txtTipoVeiculo.Text = "";
+                            txtCarreta.Text = "";
+                            txtConjunto.Text = "";
+                            txtOpacidade.Text = "";
+                            txtCET.Text = "";
+                            txtCRLVVeiculo.Text = "";
+                            txtCRLVReb1.Text = "";
+                            txtCRLVReb2.Text = " ";
+                            txtCodProprietario.Text = "";
+                            txtProprietario.Text = "";
+                            txtTecnologia.Text = "";
+                            txtRastreamento.Text = "";
+                            txtCodVeiculo.Focus();
+                        }
+                        else
+                        {
+                            txtVeiculoTipo.Text = ConsultaVeiculo.tipoveiculo;
+                            txtOpacidade.Text = ConsultaVeiculo.vencimentolaudofumaca;
+                            txtCET.Text = ConsultaVeiculo.venclicencacet;
+                            txtCRLVVeiculo.Text = ConsultaVeiculo.venclicenciamento;
+                            txtPlaca.Text = ConsultaVeiculo.plavei;
+                            txtTipoVeiculo.Text = ConsultaVeiculo.tipvei;
+                            txtReboque1.Text = ConsultaVeiculo.reboque1;
+                            txtReboque2.Text = ConsultaVeiculo.reboque2;
+                            txtCarreta.Text = ConsultaVeiculo.tiporeboque;
+                            txtTecnologia.Text = ConsultaVeiculo.rastreador;
+                            txtRastreamento.Text = ConsultaVeiculo.rastreamento;
+                            txtConjunto.Text = ConsultaVeiculo.tipocarreta;
+                            txtCodProprietario.Text = ConsultaVeiculo.codtra;
+                            txtProprietario.Text = ConsultaVeiculo.transp;
+                            // verifica se o motorista pertence a transportadora
+                            if (txtCodTransportadora.Text.Trim() != txtCodProprietario.Text.Trim())
+                            {
+
+                                //string nomeUsuario = txtUsuCadastro.Text;
+                                string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não pertence a transportadora do veículo " + txtProprietario.Text.Trim() + ".";
+                                string linha3 = "Verifique o código digitado: " + codigo + ". Ou altere o proprietário do veículo";
+                                //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                // Concatenando as linhas com '\n' para criar a mensagem
+                                string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                //// Gerando o script JavaScript para exibir o alerta
+                                string script = $"alert('{mensagemCodificada}');";
+
+                                //// Registrando o script para execução no lado do cliente
+                                ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                txtCodVeiculo.Text = "";
+                                txtPlaca.Text = "";
+                                txtReboque1.Text = "";
+                                txtReboque2.Text = "";
+                                txtVeiculoTipo.Text = "";
+                                txtTipoVeiculo.Text = "";
+                                txtCarreta.Text = "";
+                                txtConjunto.Text = "";
+                                txtOpacidade.Text = "";
+                                txtCET.Text = "";
+                                txtCRLVVeiculo.Text = "";
+                                txtCRLVReb1.Text = "";
+                                txtCRLVReb2.Text = " ";
+                                txtCodProprietario.Text = "";
+                                txtProprietario.Text = "";
+                                txtTecnologia.Text = "";
+                                txtRastreamento.Text = "";
+                                txtCodVeiculo.Focus();
+
+
+                            }
+                            // verifica se a funcao do motorista permite dirigir o veiculo
+                            string primeiraLetraString = txtFuncao.Text.Trim().Substring(0, 1);
+                            if (txtFuncao.Text != "")
+                            {
+                                if (primeiraLetraString == "M")
+                                {
+                                    if (txtTipoVeiculo.Text == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
+                                    {
+                                        // motorista apto a dirigir o veiculo
+                                    }
+                                    else
+                                    {
+                                        //string nomeUsuario = txtUsuCadastro.Text;
+                                        string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                        string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não é apto a dirigir este tipo de veículo " + txtTipoVeiculo.Text.Trim() + ".";
+                                        string linha3 = "Verifique sua função.";
+                                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                        // Concatenando as linhas com '\n' para criar a mensagem
+                                        string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                        //// Gerando o script JavaScript para exibir o alerta
+                                        string script = $"alert('{mensagemCodificada}');";
+
+                                        //// Registrando o script para execução no lado do cliente
+                                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                        //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                        txtCodVeiculo.Text = "";
+                                        txtPlaca.Text = "";
+                                        txtReboque1.Text = "";
+                                        txtReboque2.Text = "";
+                                        txtVeiculoTipo.Text = "";
+                                        txtTipoVeiculo.Text = "";
+                                        txtCarreta.Text = "";
+                                        txtConjunto.Text = "";
+                                        txtOpacidade.Text = "";
+                                        txtCET.Text = "";
+                                        txtCRLVVeiculo.Text = "";
+                                        txtCRLVReb1.Text = "";
+                                        txtCRLVReb2.Text = " ";
+                                        txtCodProprietario.Text = "";
+                                        txtProprietario.Text = "";
+                                        txtTecnologia.Text = "";
+                                        txtRastreamento.Text = "";
+                                        txtCodVeiculo.Focus();
+                                    }
+                                }
+                                else if (primeiraLetraString == "C")
+                                {
+                                    if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS" || txtTipoVeiculo.Text.Trim() == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4")
+                                    {
+                                        // motorista apto a dirigir qualquer veiculo, exceto bitrem
+                                    }
+                                    else
+                                    {
+                                        // string nomeUsuario = txtUsuCadastro.Text;
+                                        string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                        string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não é apto a dirigir este tipo de veículo " + txtTipoVeiculo.Text.Trim() + ".";
+                                        string linha3 = "Verifique sua função.";
+                                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                        // Concatenando as linhas com '\n' para criar a mensagem
+                                        string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                        //// Gerando o script JavaScript para exibir o alerta
+                                        string script = $"alert('{mensagemCodificada}');";
+
+                                        //// Registrando o script para execução no lado do cliente
+                                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                        //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                        txtCodVeiculo.Text = "";
+                                        txtPlaca.Text = "";
+                                        txtReboque1.Text = "";
+                                        txtReboque2.Text = "";
+                                        txtVeiculoTipo.Text = "";
+                                        txtTipoVeiculo.Text = "";
+                                        txtCarreta.Text = "";
+                                        txtConjunto.Text = "";
+                                        txtOpacidade.Text = "";
+                                        txtCET.Text = "";
+                                        txtCRLVVeiculo.Text = "";
+                                        txtCRLVReb1.Text = "";
+                                        txtCRLVReb2.Text = " ";
+                                        txtCodProprietario.Text = "";
+                                        txtProprietario.Text = "";
+                                        txtTecnologia.Text = "";
+                                        txtRastreamento.Text = "";
+                                        txtCodVeiculo.Focus();
+                                    }
+
+                                }
+                                else if (primeiraLetraString == "B")
+                                {
+                                    if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS" || txtTipoVeiculo.Text.Trim() == "BITRUCK" || txtTipoVeiculo.Text.Trim() == "UTILITÁRIO/FURGÃO" || txtTipoVeiculo.Text.Trim() == "LEVE" || txtTipoVeiculo.Text.Trim() == "FIORINO" || txtTipoVeiculo.Text.Trim() == "TOCO" || txtTipoVeiculo.Text.Trim() == "TRUCK" || txtTipoVeiculo.Text.Trim() == "VUC OU 3/4" || txtTipoVeiculo.Text.Trim() == "BITREM")
+                                    {
+                                        // motorista apto a dirigir qualquer veiculo, exceto bitrem
+                                    }
+                                    else
+                                    {
+                                        //string nomeUsuario = txtUsuCadastro.Text;
+                                        string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                        string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não é apto a dirigir este tipo de veículo " + txtTipoVeiculo.Text.Trim() + ".";
+                                        string linha3 = "Verifique sua função.";
+                                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                        // Concatenando as linhas com '\n' para criar a mensagem
+                                        string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                        //// Gerando o script JavaScript para exibir o alerta
+                                        string script = $"alert('{mensagemCodificada}');";
+
+                                        //// Registrando o script para execução no lado do cliente
+                                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                        //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                        txtCodVeiculo.Text = "";
+                                        txtPlaca.Text = "";
+                                        txtReboque1.Text = "";
+                                        txtReboque2.Text = "";
+                                        txtVeiculoTipo.Text = "";
+                                        txtTipoVeiculo.Text = "";
+                                        txtCarreta.Text = "";
+                                        txtConjunto.Text = "";
+                                        txtOpacidade.Text = "";
+                                        txtCET.Text = "";
+                                        txtCRLVVeiculo.Text = "";
+                                        txtCRLVReb1.Text = "";
+                                        txtCRLVReb2.Text = " ";
+                                        txtCodProprietario.Text = "";
+                                        txtProprietario.Text = "";
+                                        txtTecnologia.Text = "";
+                                        txtRastreamento.Text = "";
+                                        txtCodVeiculo.Focus();
+                                    }
+
+                                }
+                                else
+                                {
+                                    // string nomeUsuario = txtUsuCadastro.Text;
+                                    string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                    string linha2 = "O motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", não é apto a dirigir nenhum tipo de veículo.";
+                                    string linha3 = "Verifique seu cadastro.";
+                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                    txtCodVeiculo.Text = "";
+                                    txtPlaca.Text = "";
+                                    txtReboque1.Text = "";
+                                    txtReboque2.Text = "";
+                                    txtVeiculoTipo.Text = "";
+                                    txtTipoVeiculo.Text = "";
+                                    txtCarreta.Text = "";
+                                    txtConjunto.Text = "";
+                                    txtOpacidade.Text = "";
+                                    txtCET.Text = "";
+                                    txtCRLVVeiculo.Text = "";
+                                    txtCRLVReb1.Text = "";
+                                    txtCRLVReb2.Text = " ";
+                                    txtCodProprietario.Text = "";
+                                    txtProprietario.Text = "";
+                                    txtTecnologia.Text = "";
+                                    txtRastreamento.Text = "";
+                                    txtCodVeiculo.Focus();
+                                }
+                            }
+
+
+                            // pesquisar primeiro reboque1
+                            if (txtTipoVeiculo.Text.Trim() == "CAVALO SIMPLES" || txtTipoVeiculo.Text.Trim() == "CAVALO TRUCADO" || txtTipoVeiculo.Text.Trim() == "CAVALO 4 EIXOS")
+                            {
+                                if (txtReboque1.Text == "")
+                                {
+                                    // string nomeUsuario = txtUsuCadastro.Text;
+                                    string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                    string linha2 = "Veículo digitado " + txtPlaca.Text.Trim() + ", não tem reboque engatado.";
+                                    string linha3 = "Verifique seu cadastro.";
+                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                    txtCodVeiculo.Text = "";
+                                    txtPlaca.Text = "";
+                                    txtReboque1.Text = "";
+                                    txtReboque2.Text = "";
+                                    txtVeiculoTipo.Text = "";
+                                    txtTipoVeiculo.Text = "";
+                                    txtCarreta.Text = "";
+                                    txtConjunto.Text = "";
+                                    txtOpacidade.Text = "";
+                                    txtCET.Text = "";
+                                    txtCRLVVeiculo.Text = "";
+                                    txtCRLVReb1.Text = "";
+                                    txtCRLVReb2.Text = " ";
+                                    txtCodProprietario.Text = "";
+                                    txtProprietario.Text = "";
+                                    txtTecnologia.Text = "";
+                                    txtRastreamento.Text = "";
+                                    txtCodVeiculo.Focus();
+
+                                }
+
+                            }
+                            // Verifica reboque 2 - bitrem
+                            if (txtTipoVeiculo.Text.Trim() == "BITREM")
+                            {
+                                if (txtReboque2.Text == "")
+                                {
+                                    // string nomeUsuario = txtUsuCadastro.Text;
+                                    string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                                    string linha2 = "Veículo digitado " + txtPlaca.Text.Trim() + ", trata-se de um Bitrem, não tem o segundo reboque engatado.";
+                                    string linha3 = "Verifique seu cadastro.";
+                                    //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                                    // Concatenando as linhas com '\n' para criar a mensagem
+                                    string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                                    //// Gerando o script JavaScript para exibir o alerta
+                                    string script = $"alert('{mensagemCodificada}');";
+
+                                    //// Registrando o script para execução no lado do cliente
+                                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                                    //fotoMotorista = "../../fotos/motoristasemfoto.jpg";
+                                    txtCodVeiculo.Text = "";
+                                    txtPlaca.Text = "";
+                                    txtReboque1.Text = "";
+                                    txtReboque2.Text = "";
+                                    txtVeiculoTipo.Text = "";
+                                    txtTipoVeiculo.Text = "";
+                                    txtCarreta.Text = "";
+                                    txtConjunto.Text = "";
+                                    txtOpacidade.Text = "";
+                                    txtCET.Text = "";
+                                    txtCRLVVeiculo.Text = "";
+                                    txtCRLVReb1.Text = "";
+                                    txtCRLVReb2.Text = " ";
+                                    txtCodProprietario.Text = "";
+                                    txtProprietario.Text = "";
+                                    txtTecnologia.Text = "";
+                                    txtRastreamento.Text = "";
+                                    txtCodVeiculo.Focus();
+
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                        // string nomeUsuario = txtUsuCadastro.Text;
+
+                        string linha1 = "Olá, " + Session["UsuarioLogado"].ToString() + "!";
+                        string linha2 = "Código/Frota " + codigo + ", não cadastrado no sistema.";
+                        string linha3 = "Verifique o código/frota digitado: " + codigo + ".";
+                        //string linha4 = "Unidade: " + unidade + ". Por favor, verifique.";
+
+                        // Concatenando as linhas com '\n' para criar a mensagem
+                        string mensagem = $"{linha1}\n{linha2}\n{linha3}";
+
+                        string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                        //// Gerando o script JavaScript para exibir o alerta
+                        string script = $"alert('{mensagemCodificada}');";
+
+                        //// Registrando o script para execução no lado do cliente
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+
+                        txtCodVeiculo.Text = "";
+                        txtCodVeiculo.Focus();
+
+                    }
+
+                }
+
+            }
+            
+        }
 
         protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
         {

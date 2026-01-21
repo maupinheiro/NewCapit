@@ -571,16 +571,16 @@
                     </div>
                     <!-- linha 9 -->
                     <div class="row g-3">
-                        <div class="col-md-1">
+                        <div class="col-md-2">
 
-                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" Text="Atualizar" OnClick="btnSalvar1_Click" />
+                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg w-100" runat="server" Text="Atualizar" OnClick="btnSalvar1_Click" />
                         </div>
-                        <div class="col-md-1">
-                            <a href="ConsultaVeiculos.aspx" class="btn btn-outline-danger btn-lg">Cancelar               
+                        <div class="col-md-2">
+                            <a href="ConsultaVeiculos.aspx" class="btn btn-outline-danger btn-lg w-100">Cancelar               
                             </a>
                         </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-info  btn-lg w-100">Mapa </button>
                         </div>
                     </div>
                 </div>
