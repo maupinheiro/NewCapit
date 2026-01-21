@@ -3898,7 +3898,7 @@ namespace NewCapit.dist.pages
 
                 // --- 2. BUSCA DE DADOS DO EMISSOR ---
                 string CNPJ = chave.Substring(6, 14);
-                string sql = @"SELECT razcli, (select Estado from tbestadosbrasileiros where SiglaUf=estcli) as estcli, cidcli 
+                string sql = @"SELECT nomcli, (select Estado from tbestadosbrasileiros where SiglaUf=estcli) as estcli, cidcli 
                        FROM tbclientes 
                        WHERE REPLACE(REPLACE(REPLACE(cnpj, '.', ''), '/', ''), '-', '') = @cnpj";
 
@@ -3921,7 +3921,7 @@ namespace NewCapit.dist.pages
                         ChaveOriginal = chave,
                         Estado = dt.Rows[0]["estcli"].ToString(),
                         Municipio = dt.Rows[0]["cidcli"].ToString(),
-                        Filial = dt.Rows[0]["razcli"].ToString(),
+                        Filial = dt.Rows[0]["nomcli"].ToString(),
                         Numero = string.IsNullOrEmpty(numTratado) ? "0" : numTratado,
                         Serie = string.IsNullOrEmpty(serieTratada) ? "0" : serieTratada,
                         Lancamento = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
@@ -3993,16 +3993,7 @@ namespace NewCapit.dist.pages
             tabela.Rows.Add(row);
         }
 
-        private string ObterUF(string codigoUf)
-        {
-            switch (codigoUf)
-            {
-                case "35": return "SP";
-                case "33": return "RJ";
-                case "31": return "MG";
-                default: return "UF";
-            }
-        }
+        
         public class CteLido
         {
             public string ChaveOriginal { get; set; } // Adicione este campo

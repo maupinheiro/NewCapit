@@ -605,18 +605,7 @@
                                             </div>
                                             <asp:HiddenField ID="txtconformmessageValue" runat="server" />
                                         </div>
-                                        <div class="col-md-1">
-                                            <div class="form-group">
-                                                <span class="details">CONTATO:</span>
-                                                <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <span class="details">FONE CORPORATIVO:</span>
-                                                <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-                                            </div>
-                                        </div>
+                                       
                                         <div class="col-md-1">
                                             <div class="form-group">
                                                 <span class="details">CÓD./FROTA:</span>
@@ -641,6 +630,19 @@
                                                 <asp:TextBox ID="txtReboque2" runat="server" class="form-control font-weight-bold" ReadOnly="true" MaxLength="8"></asp:TextBox>
                                             </div>
                                         </div>
+
+                                         <div class="col-md-1">
+                                             <div class="form-group">
+                                                 <span class="details">CONTATO:</span>
+                                                 <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
+                                             </div>
+                                         </div>
+                                         <div class="col-md-2">
+     <div class="form-group">
+         <span class="details">FONE CORPORATIVO:</span>
+         <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+     </div>
+ </div>
                                     </div>
                                 </div>
                             </div>
@@ -1339,7 +1341,7 @@
 </li>
 <li class="nav-item">
 <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
-🧾 CT-e / NFS-e
+🧾 CT-e / NFS-e / MDF-e
 </button>
 </li>
 <li class="nav-item">
@@ -1420,12 +1422,21 @@ DataFormatString="{0:dd/MM/yyyy}" />
 
 <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
 <!-- Conteúdo CT-e / NFS-e -->
-<div class="row g-3">
+<div class="form-group row">
    <div class="col-md-4">
        <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e / RPS-e" runat="server" maxlength="44" AutoPostBack="true"></asp:TextBox>
+   </div>
    
-</div>
-</div>
+  <%-- <div class="col-md-6">--%>
+           <label for="inputmdfe" class="col-sm-3 col-form-label" style="text-align: right">MDF-e:</label>
+          <div class="col-md-4">
+               <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text="" maxlength="44"></asp:TextBox>
+           </div>
+   <%--</div>--%>
+
+
+   </div>
+
 </br>
 <div class="row g-3">
     <asp:HiddenField ID="hdflIdviagem" Value='<%# Eval("carga") %>' runat="server" />
@@ -1589,6 +1600,16 @@ DataFormatString="{0:dd/MM/yyyy}" />
 
 <div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
     <!-- Conteúdo Histórico -->
+    <div class="row g-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <span class="details">Observações:</span>
+                <asp:TextBox ID="txtHistoricoObservacao" TextMode="MultiLine" Rows="4" class="form-control" Text="" runat="server"></asp:TextBox>
+            </div>
+        </div>
+</div>
+
+    
 </div>
 
 <div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
@@ -1634,7 +1655,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                 <span class="details">Janela Gate Origem:<asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label></span>
                                                                                                 <div class="input-group">
                                                                                                     <div class="input-group">
-                                                                                                        <asp:TextBox ID="txtGateOrigem" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                                                                                                        <asp:TextBox ID="txtGateOrigem" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_origem","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                                                                                     </div>
 
                                                                                                 </div>
@@ -1645,7 +1666,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                             <div class="form-group">
                                                                                                 <span class="details">Janela Gate Destino:</span>
                                                                                                 <div class="input-group">
-                                                                                                    <asp:TextBox ID="txtGateDestino" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_destino","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                                                                                                    <asp:TextBox ID="txtGateDestino" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_destino","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                                                                                 </div>
                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                             </div>
@@ -1655,7 +1676,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <span class="details">Data e Hora da Coleta:<asp:Label ID="Label2" runat="server" Text=""></asp:Label></span>
         <div class="input-group">
             <div class="input-group">
-                <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("data_hora_coleta","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("data_hora_coleta","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center" ReadOnly="true"></asp:TextBox>
             </div>
 
         </div>

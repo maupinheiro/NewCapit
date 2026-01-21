@@ -222,24 +222,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.HiddenField txtconformmessageValue;
 
         /// <summary>
-        /// Controle txtCodFrota.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodFrota;
-
-        /// <summary>
-        /// Controle txtFoneCorp.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFoneCorp;
-
-        /// <summary>
         /// Controle txtCodVeiculo.
         /// </summary>
         /// <remarks>
@@ -292,6 +274,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtReboque2;
+
+        /// <summary>
+        /// Controle txtCodFrota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodFrota;
+
+        /// <summary>
+        /// Controle txtFoneCorp.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFoneCorp;
 
         /// <summary>
         /// Controle txtFilialMot.
