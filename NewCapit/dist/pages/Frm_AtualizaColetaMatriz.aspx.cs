@@ -1231,6 +1231,53 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+                TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFeo");
+
+                if (txtMDFe.Text != string.Empty)
+                {
+                    try
+                    {
+                        if (con.State == ConnectionState.Closed) con.Open();
+                        SqlTransaction trans = con.BeginTransaction();
+
+                        try
+                        {
+
+                            // 3. Query de Update
+                            string sql = @"UPDATE tbcargas SET 
+                                       mdfe = @mdfe 
+                                       WHERE carga = @carga ";
+
+                            using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                            {
+
+                                cmd.Parameters.AddWithValue("@mdfe", txtMDFe.Text);
+                                cmd.Parameters.AddWithValue("@carga", carga);
+                                //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+                                cmd.ExecuteNonQuery();
+                            }
+
+
+                            trans.Commit();
+                            MostrarMsg("Alterações salvas com sucesso!");
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw ex;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MostrarMsg("Erro ao salvar MDFe: " + ex.Message);
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
