@@ -628,7 +628,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 SqlCommand cmd = new SqlCommand(
-                    "SELECT  codvei, plavei, tipvei FROM tbveiculos WHERE codvei = @codvei", con);
+                    "SELECT codvei, plavei, tipvei FROM tbveiculos WHERE codvei = @codvei", con);
 
                 cmd.Parameters.AddWithValue("@codvei", txtFrota.Text.Trim());
                 con.Open();
@@ -640,38 +640,39 @@ namespace NewCapit.dist.pages
                     txtFrota.Text = dr["codvei"].ToString();
                     txtPlaca.Text = dr["plavei"].ToString();
                     txtEquipamento.Text = dr["tipvei"].ToString();
-                    //txtRecebido_Por.Text = Session["UsuarioLogado"].ToString().ToUpper();
-                   // txtEnvio_transp.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                    dr.Close(); // Fecha após o uso bem-sucedido
                 }
                 else
                 {
+                    // IMPORTANTE: Fecha o primeiro DataReader antes de tentar o próximo comando na mesma conexão
+                    dr.Close();
+
                     SqlCommand cmdCarreta = new SqlCommand(
-                    "SELECT  codcarreta, placacarreta FROM tbcarretas WHERE codcodcarreta = @codcarreta", con);
+                        "SELECT codcarreta, placacarreta FROM tbcarretas WHERE codcarreta = @codcarreta", con);
 
+                    // Note que corrigi o nome da coluna no seu SQL (estava codcodcarreta)
                     cmdCarreta.Parameters.AddWithValue("@codcarreta", txtFrota.Text.Trim());
-                    con.Open();
 
-                    SqlDataReader drCarreta = cmdCarreta.ExecuteReader();
-                    if (drCarreta.Read())
+                    using (SqlDataReader drCarreta = cmdCarreta.ExecuteReader())
                     {
-                        txtFrota.Text = dr["codcarreta"].ToString();
-                        txtPlaca.Text = dr["placacarreta"].ToString();
-                        txtEquipamento.Text = "Reboque";
-                    }
-                    else
-                    {
-                        // não encontrado → novo
-                        MostrarMsg(txtFrota.Text + " - Frota não encontrada. Verifique a digitação!", "info");
-                        txtFrota.Text = "";
-                        txtPlaca.Text = "";
-                        txtEquipamento.Text = "";
-                        return;
-                    }
+                        if (drCarreta.Read())
+                        {
+                            txtFrota.Text = drCarreta["codcarreta"].ToString();
+                            txtPlaca.Text = drCarreta["placacarreta"].ToString();
+                            txtEquipamento.Text = "Reboque";
+                        }
+                        else
+                        {
+                            MostrarMsg(txtFrota.Text + " - Frota não encontrada. Verifique a digitação!", "info");
+                            txtFrota.Text = "";
+                            txtPlaca.Text = "";
+                            txtEquipamento.Text = "";
+                        }
+                    } // O using fecha o drCarreta automaticamente aqui
                 }
             }
-
         }
-        
+
         protected void txtCodigo_Infracao_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCodigo_Infracao.Text))

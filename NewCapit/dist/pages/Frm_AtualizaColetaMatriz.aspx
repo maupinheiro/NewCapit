@@ -73,29 +73,36 @@
             return h * 60 + m;
         }
 
-        function atualizarStatusECores(item) {
-            const ddl = item.querySelector('.ddlStatus');
+        function atualizarStatusECores(container) {
+            const ddl = container.querySelector('.ddlStatus');
             if (!ddl) return;
 
-            const chegada = item.querySelector('.chegada')?.value;
-            const saida = item.querySelector('.saida')?.value;
-            const chegadaPlanta = item.querySelector('.chegada-planta')?.value;
-            const saidaPlanta = item.querySelector('.saida-planta')?.value;
+            const valSaidaOrigem = container.querySelector('.saida-origem')?.value;
+            const valChegadaDestino = container.querySelector('.chegada-destino')?.value;
+            const valSaidaPlanta = container.querySelector('.saida-planta')?.value;
 
-            if (saidaPlanta) ddl.value = 'Concluido';
-            else if (chegadaPlanta) ddl.value = 'Ag. Descarga';
-            else if (saida) ddl.value = 'Em Transito';
-            else if (chegada) ddl.value = 'Ag. Carregamento';
+            let novoStatus = "";
 
-            const limite = 90;
-            ['espera', 'espera-gate', 'dentro-planta'].forEach(cls => {
-                const el = item.querySelector('.' + cls);
-                if (!el) return;
+            // Lógica de Hierarquia: O último evento define o status
+            if (valSaidaPlanta) {
+                novoStatus = 'Concluido';
+            } else if (valChegadaDestino) {
+                novoStatus = 'Ag. Descarga';
+            } else if (valSaidaOrigem) {
+                novoStatus = 'Em Transito';
+            }
 
-                const tempo = converterTempoParaMinutos(el.value);
-                el.style.backgroundColor = tempo > limite ? 'red' : '';
-                el.style.color = tempo > limite ? 'white' : '';
-            });
+            if (novoStatus) {
+                // Percorre as opções do DropDown para selecionar pelo Texto
+                for (let i = 0; i < ddl.options.length; i++) {
+                    if (ddl.options[i].text.trim() === novoStatus) {
+                        ddl.selectedIndex = i;
+                        // Dispara o evento change caso precise salvar via Ajax
+                        // ddl.dispatchEvent(new Event('change')); 
+                        break;
+                    }
+                }
+            }
         }
 
         /* =========================
@@ -125,28 +132,21 @@
            VALIDAÇÕES
         ========================= */
         function validarDatas(item) {
-            // 1. Identifica o container da linha
+            // 1. Identifica o container da linha (o <tr> com classe expandable-body)
             let container = item.closest('.expandable-body');
             if (!container) return;
 
-            // --- SELEÇÃO DE CAMPOS ---
-            const txtSaidaOrigem = container.querySelector('input[id*="txtSaidaOrigem"]');
-            const txtDuracao = container.querySelector('input[id*="txtDuracao"]');
-            const txtPrevisaoChegada = container.querySelector('input[id*="txtPrevisaoChegada"]');
-            const txtChegadaDestino = container.querySelector('input[id*="txtChegadaDestino"]');
-            const txtSaidaPlanta = container.querySelector('input[id*="txtSaidaPlanta"]');
+            // --- SELEÇÃO DE CAMPOS USANDO CLASSES (Mais seguro que ID no ASP.NET) ---
+            const txtSaidaOrigem = container.querySelector('.saida-origem');
+            const txtChegadaDestino = container.querySelector('.chegada-destino');
+            const txtSaidaPlanta = container.querySelector('.saida-planta');
+
+            // Campos de destino (onde os cálculos aparecem)
             const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
             const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
             const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
 
-            // Busca o HiddenField hdEmissao (pode estar no container ou na linha principal do Repeater)
-            let hdEmissao = container.querySelector('input[id*="hdEmissao"]');
-            if (!hdEmissao) {
-                const trPrincipal = container.previousElementSibling;
-                if (trPrincipal) hdEmissao = trPrincipal.querySelector('input[id*="hdEmissao"]');
-            }
-
-            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA (HHh mmmin) ---
+            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA ---
             function formatarDiferenca(inicio, fim) {
                 if (!inicio || !fim) return "";
                 const d1 = new Date(inicio);
@@ -161,48 +161,24 @@
                 return `${horas}h ${minutos}min`;
             }
 
-            // --- 1. CÁLCULO: Previsão de Chegada (Saída + Duração) ---
-            if (txtSaidaOrigem && txtDuracao && txtPrevisaoChegada) {
-                const valorSaida = txtSaidaOrigem.value;
-                const valorDuracao = txtDuracao.value;
-                if (valorSaida && valorDuracao) {
-                    let dataPrevisao = new Date(valorSaida);
-                    const partes = valorDuracao.split(':');
-                    dataPrevisao.setHours(dataPrevisao.getHours() + (parseInt(partes[0]) || 0));
-                    dataPrevisao.setMinutes(dataPrevisao.getMinutes() + (parseInt(partes[1]) || 0));
-                    dataPrevisao.setSeconds(dataPrevisao.getSeconds() + (parseInt(partes[2]) || 0));
+            // --- EXECUÇÃO DOS CÁLCULOS ---
 
-                    if (!isNaN(dataPrevisao.getTime())) {
-                        const ano = dataPrevisao.getFullYear();
-                        const mes = String(dataPrevisao.getMonth() + 1).padStart(2, '0');
-                        const dia = String(dataPrevisao.getDate()).padStart(2, '0');
-                        const hora = String(dataPrevisao.getHours()).padStart(2, '0');
-                        const min = String(dataPrevisao.getMinutes()).padStart(2, '0');
-                        txtPrevisaoChegada.value = `${ano}-${mes}-${dia}T${hora}:${min}`;
-                    }
-                }
-            }
-
-            // --- 2. CÁLCULO: Duração da Viagem (Chegada Destino - Saída Origem) ---
-            if (txtChegadaDestino && txtSaidaOrigem && txtAgCarreg) {
+            // 1. Tempo de Trânsito/Espera (Exemplo)
+            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg) {
                 txtAgCarreg.value = formatarDiferenca(txtSaidaOrigem.value, txtChegadaDestino.value);
             }
 
-            // --- 3. CÁLCULO: Tempo de Descarga (Saída Planta - Chegada Destino) ---
+            // 2. Tempo de Descarga
             if (txtSaidaPlanta && txtChegadaDestino && txtAgDescarga) {
                 txtAgDescarga.value = formatarDiferenca(txtChegadaDestino.value, txtSaidaPlanta.value);
             }
-
-            // --- 4. CÁLCULO: Tempo Total da Viagem (Saída Planta - Emissão) ---
-            if (txtSaidaPlanta && hdEmissao && txtDurTransp) {
-                txtDurTransp.value = formatarDiferenca(hdEmissao.value, txtSaidaPlanta.value);
+            if (txtSaidaPlanta && txtSaidaOrigem && txtDurTransp) {
+                txtDurTransp.value = formatarDiferenca(txtSaidaOrigem.value, txtSaidaPlanta.value);
             }
-
-            // Atualiza cores/status se a função existir
-            if (typeof atualizarStatusECores === "function") {
-                atualizarStatusECores(container);
-            }
+            // 3. Atualiza o Status Automaticamente
+            atualizarStatusECores(container);
         }
+       
         /* =========================
            PEDIDOS (TAB)
         ========================= */
@@ -263,67 +239,13 @@
     
     // 3. Recalcula os tempos da grid
     recalcularTodosOsTempos();
+
     
     // 4. Aplica máscaras de telefone se houver
     if (typeof aplicarMascaraTelefone === "function") aplicarMascaraTelefone();
 });
 
     </script>
-  <%--  <script>
-        function inicializarAbas() {
-            console.log("Inicializando abas...");
-
-            // 1. Restaurar a aba salva após o postback parcial
-            document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
-                const targetId = hf.value;
-                if (targetId) {
-                    console.log("Restaurando aba:", targetId);
-                    const btnAba = document.querySelector(`button[data-bs-target="${targetId}"]`);
-
-                    if (btnAba) {
-                        // Usamos a API do Bootstrap para mostrar a aba corretamente
-                        const tab = new bootstrap.Tab(btnAba);
-                        tab.show();
-                    }
-                }
-            });
-
-            // 2. Escutar o evento de troca de aba para salvar no HiddenField
-            // Usamos o evento 'shown.bs.tab' que é disparado quando a animação termina
-            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
-                btn.addEventListener('shown.bs.tab', function (event) {
-                    const target = event.target.getAttribute('data-bs-target');
-                    // Busca o HiddenField dentro do mesmo container do botão clicado
-                    const container = event.target.closest('.upd-tabs-container');
-                    if (container) {
-                        const hf = container.querySelector('.hf-aba-ativa');
-                        if (hf) {
-                            hf.value = target;
-                            console.log("Aba salva no HiddenField:", target);
-                        }
-                    }
-                });
-            });
-        }
-
-        // Carregamento inicial (apenas quando a página carrega inteira)
-        document.addEventListener('DOMContentLoaded', inicializarAbas);
-
-        // Pós-Postback do UpdatePanel (apenas se o Sys do ASP.NET existir)
-        if (typeof Sys !== 'undefined') {
-            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-                console.log("Postback detectado, reinicializando...");
-                inicializarAbas();
-            });
-        }
-
-        // Essencial para UpdatePanel: Re-executa após cada postback parcial
-        if (typeof Sys !== 'undefined') {
-            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-                inicializarAbas();
-            });
-        }
-    </script>--%>
     <script>
                  function inicializarAbas() {
                      console.log("Iniciando limpeza e restauração de abas...");
@@ -380,16 +302,15 @@
                          };
                      });
                  }
-                    function configurarFocoScanner() {
-                        document.querySelectorAll('.chave-cte').forEach(input => {
-                            input.addEventListener('keydown', function (e) {
-                                if (e.key === 'Enter') {
-                                    // Impede que o Enter envie o formulário inteiro
-                                    // O AutoPostBack="true" já vai cuidar de disparar o TextChanged
-                                }
-                            });
-                        });
-                    }
+                function configurarFocoScanner() {
+                    $('.chave-cte').off('keydown').on('keydown', function (e) {
+                        if (e.which === 13) { // 13 é o Enter
+                            e.preventDefault(); // Impede o Submit padrão do formulário
+                            $(this).blur();      // Tira o foco para forçar o OnTextChanged do ASP.NET
+                            return false;
+                        }
+                    });
+                }
 
         // Chame isso dentro da sua função inicializarAbas()
                  // Carregamento inicial
@@ -404,8 +325,6 @@
                      });
                  }
     </script>
-
-
     <script type="text/javascript">
         function abrirModal() {
             //$('#meuModal').modal('show');
@@ -413,9 +332,6 @@
         }
 
     </script>
-
-   
-   
     <script>
         function aplicarPluginsDinamicos() {
     console.log("Aplicando Select2 e Máscaras...");
@@ -456,9 +372,16 @@
             calcularDiferenca($(this).closest('tr'));
         });
 
+        //function recalcularTodosOsTempos() {
+        //    $('.hora-total').each(function () {
+        //        calcularDiferenca($(this).closest('tr'));
+        //    });
+        //}
+
         function recalcularTodosOsTempos() {
-            $('.hora-total').each(function () {
-                calcularDiferenca($(this).closest('tr'));
+            document.querySelectorAll('.expandable-body').forEach(container => {
+                const inputQualquer = container.querySelector('input');
+                if (inputQualquer) validarDatas(inputQualquer);
             });
         }
 
@@ -1413,7 +1336,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <!-- Conteúdo CT-e / NFS-e -->
 <div class="form-group row">
    <div class="col-md-4">
-       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e / RPS-e" runat="server" maxlength="44" AutoPostBack="true"></asp:TextBox>
+       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e / RPS-e" runat="server" maxlength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
    </div>
    
   <%-- <div class="col-md-6">--%>
@@ -1615,6 +1538,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div></div></div>
 </div>
 </ContentTemplate>
+    
 </asp:UpdatePanel>
 </div>
 </div>
@@ -1696,14 +1620,14 @@ DataFormatString="{0:dd/MM/yyyy}" />
     </div>
 </div>
 
-                                                                                        <div class="col-md-2">
-                                                                                            <div class="form-group">
-                                                                                                <span class="">Status:</span>
-                                                                                                <asp:HiddenField ID="hdfStatus" Value='<%# Eval("status") %>' runat="server" />
-                                                                                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
-                                                                                                </asp:DropDownList>
+                                                                                       <div class="col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <span class="">Status:</span>
+                                                                                                    <asp:HiddenField ID="hdfStatus" Value='<%# Eval("status") %>' runat="server" />
+                                                                                                    <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control ddlStatus">
+                                                                                                    </asp:DropDownList>
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
 
                                                                                         
                                                                                     </div>
@@ -1726,7 +1650,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                             <div class="form-group">
                                                                                                                 <span class="details">Inicio de Viagem:</span>
                                                                                                                 <div class="input-group">
-                                                                                                                    <asp:TextBox ID="txtSaidaOrigem" runat="server" CssClass="form-control saida" Text='<%# Bind("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>' TextMode="DateTimeLocal" Style="text-align: center" onChange="validarDatas(item)" />
+                                                                                                                    <asp:TextBox ID="txtSaidaOrigem" runat="server" Text='<%# Bind("saidaorigem", "{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control saida-origem" TextMode="DateTimeLocal" onchange="validarDatas(this)" />
                                                                                                                 </div>
                                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                                             </div>
@@ -1735,7 +1659,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                             <div class="form-group">
                                                                                                                 <span class="details">Previsão de Chegada:</span>
                                                                                                                 <div class="input-group">
-                                                                                                                    <asp:TextBox ID="txtPrevisaoChegada" runat="server" CssClass="form-control saida" Text='<%# Bind("prev_chegada", "{0:yyyy-MM-ddTHH:mm}") %>' TextMode="DateTimeLocal" Style="text-align: center" onChange="validarDatas(item)" />
+                                                                                                                    <asp:TextBox ID="txtPrevisaoChegada" runat="server" CssClass="form-control saida" Text='<%# Bind("prev_chegada", "{0:yyyy-MM-ddTHH:mm}") %>' TextMode="DateTimeLocal" Style="text-align: center" onChange="validarDatas(this)" />
                                                                                                                 </div>
                                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                                             </div>
@@ -1746,9 +1670,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                                 <div class="input-group">
                                                                                                                     <asp:TextBox ID="txtChegadaDestino" runat="server"
                                                                                                                         Text='<%# Bind("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                                                        CssClass="form-control chegada-planta"
-                                                                                                                        TextMode="DateTimeLocal"
-                                                                                                                        Style="text-align: center" onChange="validarDatas(item)" />
+                                                                                                                        CssClass="form-control chegada-destino"  TextMode="DateTimeLocal" onchange="validarDatas(this)" />
 
                                                                                                                 </div>
                                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
@@ -1762,7 +1684,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                                         Text='<%# Bind("saidaplanta", "{0:yyyy-MM-ddTHH:mm}") %>'
                                                                                                                         CssClass="form-control saida-planta"
                                                                                                                         TextMode="DateTimeLocal"
-                                                                                                                        Style="text-align: center" onChange="validarDatas(item)" />
+                                                                                                                        Style="text-align: center" onChange="validarDatas(this)" />
 
                                                                                                                 </div>
                                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>

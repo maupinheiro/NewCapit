@@ -507,6 +507,9 @@
                                     </div>
 
                                 </ContentTemplate>
+                                <Triggers>
+                                    <asp:PostBackTrigger ControlID="btnSalvar" />
+                                </Triggers>
                             </asp:UpdatePanel>
 
                         </div>
