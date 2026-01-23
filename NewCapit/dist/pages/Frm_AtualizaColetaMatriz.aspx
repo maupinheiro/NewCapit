@@ -1415,7 +1415,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
   <%-- <div class="col-md-6">--%>
            <label for="inputmdfe" class="col-sm-3 col-form-label" style="text-align: right">MDF-e:</label>
           <div class="col-md-4">
-               <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text="" maxlength="44"></asp:TextBox>
+               <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>
            </div>
    <%--</div>--%>
 
@@ -1434,6 +1434,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <asp:BoundField DataField="empresa_emissora" HeaderText="Filial" />
         <asp:BoundField DataField="num_documento" HeaderText="Nº CT-e" />
         <asp:BoundField DataField="serie_documento" HeaderText="Série" />
+        <asp:BoundField DataField="mes_ano_documento" HeaderText="Emissão" />
         <asp:TemplateField HeaderText="Status">
                 <ItemTemplate>
                     <span class='<%# Eval("Status").ToString().Contains("Lido") ? "badge bg-warning" : "badge bg-success" %>'>
@@ -1606,7 +1607,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                         <div class="col-md-10"></div>
                                                                                         <div class="col-md-2">
     <br />
-    <asp:Button ID="Button1" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+    <asp:Button ID="Button1" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="AtualizarAbas" CommandArgument='<%# Eval("carga") %>' />
 </div></div></div>
 </div>
 </ContentTemplate>

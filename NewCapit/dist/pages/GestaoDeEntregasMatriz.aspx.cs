@@ -20,7 +20,7 @@ namespace NewCapit.dist.pages
     public partial class GestaoDeEntregasMatriz : System.Web.UI.Page
     {
         string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
+        string idViagem;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -409,73 +409,73 @@ namespace NewCapit.dist.pages
         }
 
         [System.Web.Services.WebMethod]
-        public static object BuscarDocumento(string numeroDocumento)
-        {      
-            using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-            {
-                conn.Open();
+        //public static object BuscarDocumento(string numeroDocumento)
+        //{      
+        //    using (SqlConnection conn = new SqlConnection(
+        //        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //    {
+        //        conn.Open();
 
-                string sqlCte = @"
-            SELECT chave_de_acesso, emissao_documento, empresa_emissora, idviagem
-            FROM tbcte
-            WHERE num_documento = @numero";
+        //        string sqlCte = @"
+        //    SELECT chave_de_acesso, emissao_documento, empresa_emissora, idviagem
+        //    FROM tbcte
+        //    WHERE num_documento = @numero";
 
-                SqlCommand cmd = new SqlCommand(sqlCte, conn);
-                cmd.Parameters.AddWithValue("@numero", numeroDocumento);
+        //        SqlCommand cmd = new SqlCommand(sqlCte, conn);
+        //        cmd.Parameters.AddWithValue("@numero", numeroDocumento);
 
-                SqlDataReader dr = cmd.ExecuteReader();
+        //        SqlDataReader dr = cmd.ExecuteReader();
 
-                if (!dr.Read())
-                    return new { encontrado = false };
+        //        if (!dr.Read())
+        //            return new { encontrado = false };
 
-                string idViagem = dr["idviagem"].ToString();
+        //        string idViagem = dr["idviagem"].ToString();
 
-                var resultado = new
-                {
-                    encontrado = true,
-                    chave = dr["chave_de_acesso"].ToString(),
-                    emissao = Convert.ToDateTime(dr["emissao_documento"]).ToString("dd/MM/yyyy"),
-                    empresa = dr["empresa_emissora"].ToString(),
-                    motorista = "",
-                    destino = "",
-                    cidade = "",
-                    uf = "",
-                    dataSaida = ""
-                };
+        //        var resultado = new
+        //        {
+        //            encontrado = true,
+        //            chave = dr["chave_de_acesso"].ToString(),
+        //            emissao = Convert.ToDateTime(dr["emissao_documento"]).ToString("dd/MM/yyyy"),
+        //            empresa = dr["empresa_emissora"].ToString(),
+        //            motorista = "",
+        //            destino = "",
+        //            cidade = "",
+        //            uf = "",
+        //            dataSaida = ""
+        //        };
 
-                dr.Close();
+        //        dr.Close();
 
-                string sqlCar = @"
-            SELECT nomemotorista, recebedpr. cod_recebedor, uf_recebedor, dtchegada
-            FROM tbcarregamentos
-            WHERE num_carregamento = @num";
+        //        string sqlCar = @"
+        //    SELECT nomemotorista, recebedpr. cod_recebedor, uf_recebedor, dtchegada
+        //    FROM tbcarregamentos
+        //    WHERE num_carregamento = @num";
 
-                SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
-                cmdCar.Parameters.AddWithValue("@num", idViagem);
+        //        SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
+        //        cmdCar.Parameters.AddWithValue("@num", idViagem);
 
-                SqlDataReader dr2 = cmdCar.ExecuteReader();
+        //        SqlDataReader dr2 = cmdCar.ExecuteReader();
 
-                if (dr2.Read())
-                {
-                    resultado = new
-                    {
-                        encontrado = true,
-                        chave = resultado.chave,
-                        emissao = resultado.emissao,
-                        empresa = resultado.empresa,
-                        motorista = dr2["nomemotorista"].ToString(),
-                        destino = dr2["recebedor"].ToString(),
-                        cidade = dr2["cid_recebedor"].ToString(),
-                        uf = dr2["uf_recebedor"].ToString(),
-                        dataSaida = Convert.ToDateTime(dr2["dtchegada"])
-                                        .ToString("dd/MM/yyyy HH:mm")
-                    };
-                }
+        //        if (dr2.Read())
+        //        {
+        //            resultado = new
+        //            {
+        //                encontrado = true,
+        //                chave = resultado.chave,
+        //                emissao = resultado.emissao,
+        //                empresa = resultado.empresa,
+        //                motorista = dr2["nomemotorista"].ToString(),
+        //                destino = dr2["recebedor"].ToString(),
+        //                cidade = dr2["cid_recebedor"].ToString(),
+        //                uf = dr2["uf_recebedor"].ToString(),
+        //                dataSaida = Convert.ToDateTime(dr2["dtchegada"])
+        //                                .ToString("dd/MM/yyyy HH:mm")
+        //            };
+        //        }
 
-                return resultado;
-            }
-        }
+        //        return resultado;
+        //    }
+        //}
 
         protected void btnSalvarBaixa_Click(object sender, EventArgs e)
         {
@@ -506,6 +506,9 @@ namespace NewCapit.dist.pages
         }
         protected void btnBaixar_Click(object sender, EventArgs e)
         {
+
+
+
             ScriptManager.RegisterStartupScript(
                 this,
                 GetType(),
@@ -513,6 +516,73 @@ namespace NewCapit.dist.pages
                 "var m = new bootstrap.Modal(document.getElementById('modalCTE')); m.show();",
                 true
             );
+        }
+
+        private object SafeDateTimeValue(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd HH:mm:ss");
+            else
+                return DBNull.Value;
+        }
+
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            
+            using (SqlConnection conn = new SqlConnection(
+               ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sqlCte = @"
+            SELECT chave_de_acesso, emissao_documento, empresa_emissora, id_viagem
+            FROM tbcte
+            WHERE num_documento = @numero and status_documento <> 'Baixado'";
+
+                SqlCommand cmd = new SqlCommand(sqlCte, conn);
+                cmd.Parameters.AddWithValue("@numero", txtNumeroDocumento.Text);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (!dr.Read())
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(),
+               "ok", "alert('CTe baixado já baixado!');", true);
+                    return;
+                }
+            
+            
+
+
+                if (dr.Read())
+                {
+                    idViagem = dr["id_viagem"].ToString();
+                    lblChave.Text = dr["chave_de_acesso"].ToString();
+                    SafeDateTimeValue(lblEmissao.Text = dr["emissao_documento"].ToString());
+                    lblEmpresa.Text = dr["empresa_emissora"].ToString();
+                }
+
+                dr.Close();
+
+                string sqlCar = @"select m.nommot, c.cid_recebedor,c.uf_recebedor, c.cheg_cliente,recebedor  from tbcargas as c  inner join tbmotoristas as m on c.codmot=m.codmot where carga=@idviagem ";
+
+                SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
+                cmdCar.Parameters.AddWithValue("@idviagem", idViagem);
+
+                SqlDataReader dr2 = cmdCar.ExecuteReader();
+
+                if (dr2.Read())
+                {
+                    lblMotorista.Text = dr2["nommot"].ToString();
+                    lblDestino.Text = dr2["recebedor"].ToString();
+                    lblCidade.Text = dr2["cid_recebedor"].ToString()+"/"+ dr2["uf_recebedor"].ToString();
+                    SafeDateTimeValue(lblDataSaida.Text = dr2["cheg_cliente"].ToString());
+                   
+                }
+                dr2.Close();
+
+            }
         }
     }
 }

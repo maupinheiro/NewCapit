@@ -290,53 +290,58 @@ function buscarDocumento() {
             </div>
          <!-- Modal -->
          <div class="modal fade" id="modalCTE" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Baixar Documentos CT-e/RPS-e</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+             <ContentTemplate>
+                          <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
 
-            <div class="modal-body">
-                <div class="row g-3">
-                   <div class="col-md-9">
-                      <label>Nº Documento</label>
-                      <input type="text" id="txtNumeroDocumento" class="form-control" />
-                   </div>
-                    
-                  <div class="col-md-3">
-                      <span class="details">&nbsp;</span><br />
-                      <button type="button" class="btn btn-warning w-100" onclick="buscarDocumento()">
-                        Pesquisar
-                      </button>
-                 </div>
-                </div>
-                <hr />
-
-                <b>Chave:</b> <span id="lblChave"></span><br />
-                <b>Emissão:</b> <span id="lblEmissao"></span><br />
-                <b>Empresa:</b> <span id="lblEmpresa"></span><br />
-
-                <hr />
-
-                <b>Motorista:</b> <span id="lblMotorista"></span><br />
-                <b>Destino:</b> <span id="lblDestino"></span><br />
-                <b>Cidade/UF:</b> <span id="lblCidade"></span><br />
-                <b>Data Saída:</b> <span id="lblDataSaida"></span>
-
-            </div>
-
-            <div class="modal-footer">
-                <asp:Button ID="btnSalvarBaixa" runat="server"
-                    CssClass="btn btn-success"
-                    Text="Baixa"
-                    OnClick="btnSalvarBaixa_Click" />
-            </div>
-
+        <div class="modal-header">
+            <h5 class="modal-title">Baixar Documentos CT-e/RPS-e</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+
+        <div class="modal-body">
+            <div class="row g-3">
+               <div class="col-md-9">
+                  <label>Nº Documento</label>
+                   <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server"></asp:TextBox>
+                  
+               </div>
+                
+              <div class="col-md-3">
+                  <label></label>
+                  <asp:Button ID="btnBuscar" runat="server" Text="Pesquisar" OnClick="btnBuscar_Click" CssClass="btn btn-warning w-100" />
+                  
+             </div>
+            </div>
+            <hr />
+
+            <b>Chave:</b> <asp:Label ID="lblChave" runat="server" Text=""></asp:Label> <br />
+            <b>Emissão:</b> <asp:Label ID="lblEmissao" runat="server" Text=""></asp:Label> <br />
+            <b>Empresa:</b> <asp:Label ID="lblEmpresa" runat="server" Text=""></asp:Label> <br />
+
+            <hr />
+
+            <b>Motorista:</b> <asp:Label ID="lblMotorista" runat="server" Text=""></asp:Label> <br />
+            <b>Destino:</b> <asp:Label ID="lblDestino" runat="server" Text=""></asp:Label> <br />
+            <b>Cidade/UF:</b> <asp:Label ID="lblCidade" runat="server" Text=""></asp:Label><br />
+            <b>Data Saída:</b> <asp:Label ID="lblDataSaida" runat="server" Text=""></asp:Label> 
+        </div>
+
+        <div class="modal-footer">
+            <asp:Button ID="btnSalvarBaixa" runat="server"
+                CssClass="btn btn-success"
+                Text="Baixa"
+                OnClick="btnSalvarBaixa_Click" />
+        </div>
+
     </div>
 </div>
+             </ContentTemplate>    
+             </asp:UpdatePanel>
+             
+          </div>
 
 
         </section>
