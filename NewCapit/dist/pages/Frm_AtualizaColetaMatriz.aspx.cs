@@ -1226,7 +1226,7 @@ namespace NewCapit.dist.pages
                         }
                     }
 
-                    TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFeo");
+                    TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFe");
 
                     if (txtMDFe.Text != string.Empty)
                     {

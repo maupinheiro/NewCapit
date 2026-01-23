@@ -483,7 +483,8 @@
                 }
             }
         }
-    </script>
+    </script>  
+    
 
     <div class="content-wrapper">
         <section class="content">
@@ -570,7 +571,7 @@
                             <div class="info-box">
                                 <%--rounded-circle border--%>
                                 <span class="info-box-icon bg-info">
-                                    <img src="<%=fotoMotorista%>" class="mg-thumbnail float-center" width="70" height="75" alt="" />
+                                    <img src="<%=fotoMotorista%>" class="mg-thumbnail float-center" width="75" height="77" alt="" />
                                 </span>
                                 <div class="info-box-content">
                                     <span class="info-box-number" />
@@ -583,7 +584,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <span class="details">NOME COMPLETO:</span>
                                                 <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control font-weight-bold select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
@@ -619,15 +620,19 @@
                                          <div class="col-md-1">
                                              <div class="form-group">
                                                  <span class="details">CONTATO:</span>
-                                                 <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
+                                                 <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold"  Style="text-align: center" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
                                              </div>
                                          </div>
                                          <div class="col-md-2">
-     <div class="form-group">
-         <span class="details">FONE CORPORATIVO:</span>
-         <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
-     </div>
- </div>
+                                             <div class="form-group">
+                                                 <span class="details">FONE CORPORATIVO:</span>
+                                                 <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold"  Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                             </div>
+                                         </div>
+                                        <div class="col-md-1">
+                                            <br />
+                                            <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success w-100" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1371,7 +1376,6 @@ DataFormatString="{0:dd/MM/yyyy}" />
 <asp:TemplateField HeaderText="Motorista">
 <ItemTemplate>                                                                                                           
     <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">
-
     </asp:DropDownList>                                                                                                 
 
 </ItemTemplate>
@@ -1380,7 +1384,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <ItemTemplate>
         <asp:TextBox ID="txtInicioCar" TextMode="DateTimeLocal" runat="server" 
             CssClass="form-control hora-inicio" 
-            Text='<%# Eval("iniciocar") != DBNull.Value ? Convert.ToDateTime(Eval("iniciocar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
+            Text='<%# Eval("iniciocar") != DBNull.Value ? Convert.ToDateTime(Eval("iniciocar")).ToString("yyyy-MM-ddTHH:mm") : "" %>' ></asp:TextBox>
     </ItemTemplate>
 </asp:TemplateField>
 
@@ -1858,10 +1862,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                     </div>
                                 </div>
                                 <div class="row g-3">
-                                    <div class="col-md-1">
-                                        <br />
-                                        <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success w-100" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar" />
-                                    </div>
+                                    
 
                                     <div class="col-md-3">
                                         <br />
