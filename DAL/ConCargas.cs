@@ -87,7 +87,7 @@ namespace DAL
         public static DataTable FetchDataTableColetasMatriz4(string idviagem)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT id, carga, cva, codorigem, cliorigem, cidorigem, ufcliorigem, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, coddestino, clidestino, ciddestino, ufclidestino, cod_recebedor, recebedor, cid_recebedor, uf_recebedor,cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, data_hora, deslocamento, distancia, emitepedagio, duracao,solicitante, gr, entrega, material, centro_custo_solicitacao,conta_debito_solicitacao, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao, ot, cva, disponivel_solicitacao, data_hora_coleta,   atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,gate_origem, idpedagio, valorpedagio, historicopedagio, creditopedagio, pagadorpedagioida, pagadorpedagiovolta, dtemissaopedagio, doc_pedagio, gate_destino,prev_chegada,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao, conta_debito_solicitacao, centro_custo_solicitacao, desc_veic_vw, emissao,tempoesperagate,previsao,tempoagdescarreg, duracao_transp, rede,catraca,observacao FROM tbcargas WHERE fl_exclusao is null and idviagem=@idviagem order by data_hora_coleta";
+            string sql = "SELECT id, carga, cva, codorigem, cliorigem, cidorigem, ufcliorigem, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, coddestino, clidestino, ciddestino, ufclidestino, cod_recebedor, recebedor, cid_recebedor, uf_recebedor,cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, data_hora, deslocamento, distancia, emitepedagio, duracao,solicitante, gr, entrega, material, centro_custo_solicitacao,conta_debito_solicitacao, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao, ot, cva, disponivel_solicitacao, data_hora_coleta,   atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,gate_origem, idpedagio, valorpedagio, historicopedagio, creditopedagio, pagadorpedagioida, pagadorpedagiovolta, dtemissaopedagio, doc_pedagio, gate_destino,prev_chegada,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao, conta_debito_solicitacao, centro_custo_solicitacao, desc_veic_vw, emissao,tempoesperagate,previsao,tempoagdescarreg, duracao_transp, rede,catraca,observacao,mdfe FROM tbcargas WHERE fl_exclusao is null and idviagem=@idviagem order by data_hora_coleta";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -121,7 +121,7 @@ namespace DAL
                                 c.chegadaorigem, c.saidaorigem, c.tempoagcarreg,
                                 c.chegadadestino, c.entradaplanta, c.saidaplanta,
                                 c.tempodentroplanta, c.tempoesperagate,c.frota,
-                                c.previsao, c.andamento,c.codmot, cm.nommot, cv.plavei
+                                c.previsao, c.andamento,c.codmot, cm.nommot, cv.plavei,c.mdfe
                             FROM tbcargas c
                             OUTER APPLY (
                                 SELECT TOP 1 codvw, codcli FROM tbclientes WHERE codvw = c.codvworigem
@@ -161,7 +161,7 @@ namespace DAL
         public static DataTable FetchDataTablePesquisa(string searchTerm, string datainicial, string datafinal)
         {
             var sql = new StringBuilder(@"
-        SELECT c.ID, c.carga, c.cva, c.data_hora, c.solicitacoes, c.cliorigem, c.clidestino, c.veiculo, c.tipo_viagem, c.rota, c.atendimento, c.andamento,c.codmot,c.frota, cm.nommot, cv.plavei 
+        SELECT c.ID, c.carga, c.cva, c.data_hora, c.solicitacoes, c.cliorigem, c.clidestino, c.veiculo, c.tipo_viagem, c.rota, c.atendimento, c.andamento,c.codmot,c.frota, cm.nommot, cv.plavei,c.mdfe 
         FROM tbcargas c
         OUTER APPLY (
             SELECT TOP 1 nommot FROM tbmotoristas WHERE codmot = c.codmot
@@ -228,7 +228,7 @@ namespace DAL
             // alterado a query para verifica a coluna exclusao para itens excluídos            
             //string sql = "SELECT id, carga,cva,CONVERT(varchar, CAST(data_hora AS datetime), 103) + ' ' + CONVERT(varchar, CAST(data_hora AS datetime), 108) AS data_hora,  (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,emissao,empresa,codvworigem,codvwdestino,cadastro,tomador, atualizacao,cliorigem,cidorigem,clidestino,ciddestino, solicitante,andamento,codmot FROM tbcargas WHERE andamento = 'PENDENTE' and status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and cva=@searchTerm  AND ISDATE(data_hora) = 1";
 
-            string sql = "SELECT id, carga,cva,data_hora,  (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,emissao,empresa,codvworigem,codvwdestino,cadastro,tomador, atualizacao,cliorigem,cidorigem,clidestino,ciddestino, solicitante,andamento,codmot FROM tbcargas WHERE andamento = 'PENDENTE' and status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and cva=@searchTerm  AND ISDATE(data_hora) = 1";
+            string sql = "SELECT id, carga,cva,data_hora,  (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,emissao,empresa,codvworigem,codvwdestino,cadastro,tomador, atualizacao,cliorigem,cidorigem,clidestino,ciddestino, solicitante,andamento,codmot,mdfe FROM tbcargas WHERE andamento = 'PENDENTE' and status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and cva=@searchTerm  AND ISDATE(data_hora) = 1";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -270,7 +270,7 @@ namespace DAL
         public static DataTable FetchDataTableColetas4(string idviagem)
         {
             // alterado a query para verifica a coluna exclusao para itens excluídos            
-            string sql = "SELECT id, carga,cva, data_hora,  (select top 1  codvw+ '/' + codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,tempoagdescarreg FROM tbcargas WHERE fl_exclusao is null and idviagem=@idviagem order by data_hora ";
+            string sql = "SELECT id, carga,cva, data_hora,  (select top 1  codvw+ '/' + codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select top 1 codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,tempoagdescarreg,mdfe FROM tbcargas WHERE fl_exclusao is null and idviagem=@idviagem order by data_hora ";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -291,7 +291,7 @@ namespace DAL
         public static DataTable FetchDataTableColetasPorCargas(List<string> cargas)
         {
             string listaCargas = string.Join(",", cargas.Select(c => $"'{c}'"));
-            string query = $"SELECT carga,cva, data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,codmot FROM tbcargas WHERE status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and carga IN ({listaCargas})  AND ISDATE(data_hora) = 1 order by data_hora ";
+            string query = $"SELECT carga,cva, data_hora,  (select codvw+ '/'+ codcli from tbclientes where codvw=codvworigem) as CodigoO ,cliorigem, (select codvw+ '/'+ codcli from tbclientes where codvw=codvwdestino) as CodigoD,clidestino,atendimento,tipo_viagem,rota,veiculo,quant_palet,peso,pedidos,solicitacoes,estudo_rota,remessa,cva,gate,status,chegadaorigem,saidaorigem,tempoagcarreg,chegadadestino,entradaplanta,saidaplanta,tempodentroplanta, tempoesperagate,previsao,codmot,mdfe FROM tbcargas WHERE status = 'Pendente' and empresa = 'CNT (CC)' and fl_exclusao is null and carga IN ({listaCargas})  AND ISDATE(data_hora) = 1 order by data_hora ";
 
             using (var con = ConnectionUtil.GetConnection())
             {

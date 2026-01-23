@@ -42,6 +42,7 @@ using System.Text;
 using System.Web.Services;
 using DocumentFormat.OpenXml.Office.Word;
 using OfficeOpenXml.Drawing.Chart;
+using AjaxControlToolkit.Design;
 
 
 
@@ -738,21 +739,7 @@ namespace NewCapit.dist.pages
 
                 ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
             }
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                // 1. Achar a tabela HTML dentro deste item do repeater
-                HtmlTable tbl = (HtmlTable)e.Item.FindControl("tblCte");
-                int index = e.Item.ItemIndex;
-
-                // 2. Se houver dados salvos na Session para este índice, popula a tabela
-                if (ListaCtePorItem.ContainsKey(index))
-                {
-                    foreach (var cte in ListaCtePorItem[index])
-                    {
-                        AdicionarLinhaTabela(tbl, cte.Estado, cte.Municipio, cte.Filial, cte.Numero, cte.Serie, cte.Lancamento, cte.Status);
-                    }
-                }
-            }
+           
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
@@ -1036,166 +1023,174 @@ namespace NewCapit.dist.pages
                     }
                 }
 
-                //Atualiza CT-e
+
                 string idViagem = e.CommandArgument.ToString(); // O 'carga' que você passou no Eval
                 int index = e.Item.ItemIndex; // O índice da linha no Repeater
-
-               
-
-                // 1. Verificar se existem CT-es lidos na Session para este item
-                if (ListaCtePorItem.ContainsKey(index) && ListaCtePorItem[index].Count > 0)
-                {
-                    List<CteLido> listaParaSalvar = ListaCtePorItem[index];
-
-                    try
-                    {
-                        if (con.State == ConnectionState.Closed) con.Open();
-                        SqlTransaction trans = con.BeginTransaction();
-
-                        try
-                        {
-                            foreach (var cte in listaParaSalvar)
-                            {
-                                string sql = @"INSERT INTO tbcte 
-                            (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
-                             num_documento, serie_documento, tipo_documento, id_viagem)
-                            VALUES 
-                            (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo, @idViagem)";
-
-                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
-                                {
-                                    // Extraímos o CNPJ (posições 7 a 20 da chave de 44 dígitos)
-                                    string cnpjExtraido = cte.ChaveOriginal.Substring(6, 14);
-
-                                    cmd.Parameters.AddWithValue("@chave", cte.ChaveOriginal);
-                                    cmd.Parameters.AddWithValue("@uf", cte.Estado);
-                                    cmd.Parameters.AddWithValue("@cnpj", cnpjExtraido);
-                                    cmd.Parameters.AddWithValue("@empresa", cte.Filial);
-                                    cmd.Parameters.AddWithValue("@num", cte.Numero);
-                                    cmd.Parameters.AddWithValue("@serie", cte.Serie);
-                                    cmd.Parameters.AddWithValue("@tipo", "CT-e");
-                                    cmd.Parameters.AddWithValue("@idViagem", idViagem);
-
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
-
-                            trans.Commit();
-
-                            // 2. Limpar a Session deste índice específico
-                            ListaCtePorItem.Remove(index);
-
-                            // 3. Sucesso!
-                            MostrarMsg("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
-
-                            // 4. IMPORTANTE: Rebindar o Repeater. 
-                            // Isso fará com que o ItemDataBound rode novamente, 
-                            // alimentando o GridView com os dados que agora estão no Banco.
-                            rptColetas.DataBind();
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            MostrarMsg("Erro ao salvar: " + ex.Message);
-                        }
-                    }
-                    finally
-                    {
-                        con.Close();
-                    }
-                }
-                else
-                {
-                    MostrarMsg("Aviso: Nenhuma nova leitura pendente para salvar.");
-                }
-
                 GridView gv = (GridView)e.Item.FindControl("gvPedidos");
-
-                if (gv != null)
+                if (e.CommandName == "AtualizarAbas")
                 {
-                    try
+                    //Atualiza CT-e
+                   
+
+
+
+                    // 1. Verificar se existem CT-es lidos na Session para este item
+                    if (ListaCtePorItem.ContainsKey(index) && ListaCtePorItem[index].Count > 0)
                     {
-                        if (con.State == ConnectionState.Closed) con.Open();
-                        SqlTransaction trans = con.BeginTransaction();
+                        List<CteLido> listaParaSalvar = ListaCtePorItem[index];
 
                         try
                         {
-                            foreach (GridViewRow linha in gv.Rows)
+                            if (con.State == ConnectionState.Closed) con.Open();
+                            SqlTransaction trans = con.BeginTransaction();
+
+                            try
                             {
-                                // 1. Pegar as chaves da Grid
-                                // Index 0 = pedido, Index 1 = id_viagem (conforme definido no DataKeyNames)
-                                string numPedido = gv.DataKeys[linha.RowIndex].Values[0].ToString();
-                                
+                                foreach (var cte in listaParaSalvar)
+                                {
+                                    string sql = @"INSERT INTO tbcte 
+                            (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
+                             num_documento, serie_documento, tipo_documento,mes_ano_documento,emitido_por, emissao_documento id_viagem)
+                            VALUES 
+                            (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo,@mes_ano_documento, @emitido_por, @emissao_documento @idViagem)";
 
-                                // 2. Localizar os controles da linha
-                                TextBox txtIni = (TextBox)linha.FindControl("txtInicioCar");
-                                TextBox txtFim = (TextBox)linha.FindControl("txtTermCar");
-                                TextBox txtDur = (TextBox)linha.FindControl("txtTempoTotal");
-                                DropDownList ddlMot = (DropDownList)linha.FindControl("ddlMotCar");
+                                    using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                    {
+                                        // Extraímos o CNPJ (posições 7 a 20 da chave de 44 dígitos)
+                                        string cnpjExtraido = cte.ChaveOriginal.Substring(6, 14);
 
-                                // 3. Query de Update
-                                string sql = @"UPDATE tbpedidos SET 
+                                        cmd.Parameters.AddWithValue("@chave", cte.ChaveOriginal);
+                                        cmd.Parameters.AddWithValue("@uf", cte.Estado);
+                                        cmd.Parameters.AddWithValue("@cnpj", cnpjExtraido);
+                                        cmd.Parameters.AddWithValue("@empresa", cte.Filial);
+                                        cmd.Parameters.AddWithValue("@num", cte.Numero);
+                                        cmd.Parameters.AddWithValue("@serie", cte.Serie);
+                                        cmd.Parameters.AddWithValue("@tipo", "CT-e");
+                                        cmd.Parameters.AddWithValue("@mes_ano_documento", cte.Emissao);
+                                        cmd.Parameters.AddWithValue("@emitido_por", txtUsuCadastro.Text);
+                                        cmd.Parameters.AddWithValue("@emissao_documento", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
+                                        cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+
+                                trans.Commit();
+
+                                // 2. Limpar a Session deste índice específico
+                                ListaCtePorItem.Remove(index);
+
+                                // 3. Sucesso!
+                                MostrarMsg("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
+
+                                // 4. IMPORTANTE: Rebindar o Repeater. 
+                                // Isso fará com que o ItemDataBound rode novamente, 
+                                // alimentando o GridView com os dados que agora estão no Banco.
+                                rptColetas.DataBind();
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                MostrarMsg("Erro ao salvar: " + ex.Message);
+                            }
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                    }
+                    else
+                    {
+                        MostrarMsg("Aviso: Nenhuma nova leitura pendente para salvar.");
+                    }
+
+                   
+
+                    if (gv != null)
+                    {
+                        try
+                        {
+                            if (con.State == ConnectionState.Closed) con.Open();
+                            SqlTransaction trans = con.BeginTransaction();
+
+                            try
+                            {
+                                foreach (GridViewRow linha in gv.Rows)
+                                {
+                                    // 1. Pegar as chaves da Grid
+                                    // Index 0 = pedido, Index 1 = id_viagem (conforme definido no DataKeyNames)
+                                    string numPedido = gv.DataKeys[linha.RowIndex].Values[0].ToString();
+
+
+                                    // 2. Localizar os controles da linha
+                                    TextBox txtIni = (TextBox)linha.FindControl("txtInicioCar");
+                                    TextBox txtFim = (TextBox)linha.FindControl("txtTermCar");
+                                    TextBox txtDur = (TextBox)linha.FindControl("txtTempoTotal");
+                                    DropDownList ddlMot = (DropDownList)linha.FindControl("ddlMotCar");
+
+                                    // 3. Query de Update
+                                    string sql = @"UPDATE tbpedidos SET 
                                        iniciocar = @ini, 
                                        termcar = @fim, 
                                        duracao = @dur,
                                        motcar = @mot
                                        WHERE pedido = @pedido ";
 
-                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
-                                {
-                                    // Conversão segura para DateTime (DateTimeLocal envia yyyy-MM-ddTHH:mm)
-                                    DateTime dtIni, dtFim;
+                                    using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                    {
+                                        // Conversão segura para DateTime (DateTimeLocal envia yyyy-MM-ddTHH:mm)
+                                        DateTime dtIni, dtFim;
 
-                                    if (DateTime.TryParse(txtIni.Text, out dtIni))
-                                        cmd.Parameters.AddWithValue("@ini", dtIni);
-                                    else
-                                        cmd.Parameters.AddWithValue("@ini", DBNull.Value);
+                                        if (DateTime.TryParse(txtIni.Text, out dtIni))
+                                            cmd.Parameters.AddWithValue("@ini", dtIni);
+                                        else
+                                            cmd.Parameters.AddWithValue("@ini", DBNull.Value);
 
-                                    if (DateTime.TryParse(txtFim.Text, out dtFim))
-                                        cmd.Parameters.AddWithValue("@fim", dtFim);
-                                    else
-                                        cmd.Parameters.AddWithValue("@fim", DBNull.Value);
+                                        if (DateTime.TryParse(txtFim.Text, out dtFim))
+                                            cmd.Parameters.AddWithValue("@fim", dtFim);
+                                        else
+                                            cmd.Parameters.AddWithValue("@fim", DBNull.Value);
 
-                                    cmd.Parameters.AddWithValue("@dur", txtDur.Text);
-                                    cmd.Parameters.AddWithValue("@mot", ddlMot.SelectedItem.Text);
-                                    cmd.Parameters.AddWithValue("@pedido", numPedido);
-                                    //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+                                        cmd.Parameters.AddWithValue("@dur", txtDur.Text);
+                                        cmd.Parameters.AddWithValue("@mot", ddlMot.SelectedItem.Text);
+                                        cmd.Parameters.AddWithValue("@pedido", numPedido);
+                                        //cmd.Parameters.AddWithValue("@idViagem", idViagem);
 
-                                    cmd.ExecuteNonQuery();
+                                        cmd.ExecuteNonQuery();
+                                    }
                                 }
-                            }
 
-                            trans.Commit();
-                            MostrarMsg("Alterações salvas com sucesso!");
+                                trans.Commit();
+                                MostrarMsg("Alterações salvas com sucesso!");
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                throw ex;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            trans.Rollback();
-                            throw ex;
+                            MostrarMsg("Erro ao salvar pedidos: " + ex.Message);
+                        }
+                        finally
+                        {
+                            con.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MostrarMsg("Erro ao salvar pedidos: " + ex.Message);
-                    }
-                    finally
-                    {
-                        con.Close();
-                    }
-                }
 
-                TextBox txtHistoricoObservacao = (TextBox)e.Item.FindControl("txtHistoricoObservacao");
+                    TextBox txtHistoricoObservacao = (TextBox)e.Item.FindControl("txtHistoricoObservacao");
 
-                if (txtHistoricoObservacao.Text != string.Empty)
-                {
-                    try
+                    if (txtHistoricoObservacao.Text != string.Empty)
                     {
-                        if (con.State == ConnectionState.Closed) con.Open();
-                        SqlTransaction trans = con.BeginTransaction();
-
                         try
                         {
-                          
+                            if (con.State == ConnectionState.Closed) con.Open();
+                            SqlTransaction trans = con.BeginTransaction();
+
+                            try
+                            {
+
                                 // 3. Query de Update
                                 string sql = @"UPDATE tbcargas SET 
                                        observacao = @observacao 
@@ -1203,86 +1198,92 @@ namespace NewCapit.dist.pages
 
                                 using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                                 {
-                                    
+
                                     cmd.Parameters.AddWithValue("@observacao", txtHistoricoObservacao.Text);
-                                    cmd.Parameters.AddWithValue("@carga",carga);
+                                    cmd.Parameters.AddWithValue("@carga", carga);
                                     //cmd.Parameters.AddWithValue("@idViagem", idViagem);
 
                                     cmd.ExecuteNonQuery();
                                 }
-                            
 
-                            trans.Commit();
-                            MostrarMsg("Alterações salvas com sucesso!");
+
+                                trans.Commit();
+                                MostrarMsg("Alterações salvas com sucesso!");
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                throw ex;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            trans.Rollback();
-                            throw ex;
+                            MostrarMsg("Erro ao salvar Observacao: " + ex.Message);
+                        }
+                        finally
+                        {
+                            con.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MostrarMsg("Erro ao salvar Observacao: " + ex.Message);
-                    }
-                    finally
-                    {
-                        con.Close();
-                    }
-                }
 
-                TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFeo");
+                    TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFeo");
 
-                if (txtMDFe.Text != string.Empty)
-                {
-                    try
+                    if (txtMDFe.Text != string.Empty)
                     {
-                        if (con.State == ConnectionState.Closed) con.Open();
-                        SqlTransaction trans = con.BeginTransaction();
-
                         try
                         {
+                            if (con.State == ConnectionState.Closed) con.Open();
+                            SqlTransaction trans = con.BeginTransaction();
 
-                            // 3. Query de Update
-                            string sql = @"UPDATE tbcargas SET 
+                            try
+                            {
+
+                                // 3. Query de Update
+                                string sql = @"UPDATE tbcargas SET 
                                        mdfe = @mdfe 
                                        WHERE carga = @carga ";
 
-                            using (SqlCommand cmd = new SqlCommand(sql, con, trans))
-                            {
+                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                {
 
-                                cmd.Parameters.AddWithValue("@mdfe", txtMDFe.Text);
-                                cmd.Parameters.AddWithValue("@carga", carga);
-                                //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+                                    cmd.Parameters.AddWithValue("@mdfe", txtMDFe.Text);
+                                    cmd.Parameters.AddWithValue("@carga", carga);
+                                    //cmd.Parameters.AddWithValue("@idViagem", idViagem);
 
-                                cmd.ExecuteNonQuery();
+                                    cmd.ExecuteNonQuery();
+                                }
+
+
+                                trans.Commit();
+                                MostrarMsg("Alterações salvas com sucesso!");
                             }
-
-
-                            trans.Commit();
-                            MostrarMsg("Alterações salvas com sucesso!");
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                throw ex;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            trans.Rollback();
-                            throw ex;
+                            MostrarMsg("Erro ao salvar MDFe: " + ex.Message);
+                        }
+                        finally
+                        {
+                            con.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MostrarMsg("Erro ao salvar MDFe: " + ex.Message);
-                    }
-                    finally
-                    {
-                        con.Close();
-                    }
+
+                    BuscarCteSalvos(idViagem);
+                    CarregarPedidos(int.Parse(carga), gv);
                 }
+
+                   
 
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
                 BuscarCteSalvos(idViagem);
-                CarregarPedidos( int.Parse(carga), gv);
+                CarregarPedidos(int.Parse(carga), gv);
             }
             //if (e.CommandName == "Ocorrencias")
             //{
@@ -2200,7 +2201,7 @@ namespace NewCapit.dist.pages
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     using (SqlCommand cmd = new SqlCommand(@"
-            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem
+            SELECT id, carga, previsao, cliorigem, cidorigem, ufcliorigem, clidestino, ciddestino, ufclidestino, status, andamento, idviagem,mdfe
             FROM tbcargas
             WHERE carga = @c and idviagem is null
         ", conn))
@@ -2406,7 +2407,7 @@ namespace NewCapit.dist.pages
             string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
             string ufDestino = txtUfDestino.Text.Trim().ToUpper();
-            double distancia = double.Parse(txtDistancia.Text.Trim());
+            //double distancia = double.Parse(txtDistancia.Text.Trim());
             string codigoPagadorVazio = txtCod_PagadorVazio.Text.Trim();
             string nomePagadorVazio = txtPagadorVazio.Text.Trim().ToUpper();
             string materialVazio = ddlTipoMaterial.SelectedItem.Text;
@@ -2418,8 +2419,8 @@ namespace NewCapit.dist.pages
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro,  tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
@@ -2448,7 +2449,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
                 cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
                 cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
-                cmd.Parameters.AddWithValue("@distancia", distancia);
+                //cmd.Parameters.AddWithValue("@distancia", distancia);
                 cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
                 cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
                 cmd.Parameters.AddWithValue("@pagador", primeiroNome);
@@ -3858,7 +3859,7 @@ namespace NewCapit.dist.pages
             DataTable dt = new DataTable();
             // Usamos ALIAS (AS) para garantir que o nome da coluna no C# seja amigável
             string sql = @"SELECT uf_emissor, empresa_emissora, num_documento, 
-                          serie_documento, chave_de_acesso 
+                          serie_documento, chave_de_acesso, mes_ano_documento
                    FROM tbcte 
                    WHERE id_viagem = @idViagem";
 
@@ -3974,6 +3975,7 @@ namespace NewCapit.dist.pages
                     // --- 3. TRATAMENTO DOS NÚMEROS (Remover zeros à esquerda) ---
                     string numTratado = chave.Substring(25, 9).TrimStart('0');
                     string serieTratada = chave.Substring(22, 3).TrimStart('0');
+                    string Emissao = chave.Substring(4, 2)+"/" + "20"+chave.Substring(2, 2);
 
                     var cte = new CteLido
                     {
@@ -3983,6 +3985,7 @@ namespace NewCapit.dist.pages
                         Filial = dt.Rows[0]["nomcli"].ToString(),
                         Numero = string.IsNullOrEmpty(numTratado) ? "0" : numTratado,
                         Serie = string.IsNullOrEmpty(serieTratada) ? "0" : serieTratada,
+                        Emissao = Emissao,
                         Lancamento = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
                         Status = "Lido"
                     };
@@ -4034,23 +4037,7 @@ namespace NewCapit.dist.pages
 
 
 
-        private void AdicionarLinhaTabela(HtmlTable tabela, string estado, string municipio, string filial, string numeroCte, string serie, string lancamento, string status)
-        {
-            HtmlTableRow row = new HtmlTableRow();
-
-            // Use celulas explicitas
-            HtmlTableCell cell1 = new HtmlTableCell(); cell1.InnerText = estado; row.Cells.Add(cell1);
-            HtmlTableCell cell2 = new HtmlTableCell(); cell2.InnerText = municipio; row.Cells.Add(cell2);
-            HtmlTableCell cell3 = new HtmlTableCell(); cell3.InnerText = filial; row.Cells.Add(cell3);
-            HtmlTableCell cell4 = new HtmlTableCell(); cell4.InnerText = numeroCte; row.Cells.Add(cell4);
-            HtmlTableCell cell5 = new HtmlTableCell(); cell5.InnerText = serie; row.Cells.Add(cell5);
-            HtmlTableCell cell6 = new HtmlTableCell(); cell6.InnerText = lancamento; row.Cells.Add(cell6);
-            HtmlTableCell cell7 = new HtmlTableCell(); cell7.InnerText = status; row.Cells.Add(cell7);
-
-            if (status.Contains("Lido")) row.BgColor = "#fff3cd";
-
-            tabela.Rows.Add(row);
-        }
+        
 
         
         public class CteLido
@@ -4062,6 +4049,7 @@ namespace NewCapit.dist.pages
             public string Numero { get; set; }
             public string Serie { get; set; }
             public string Lancamento { get; set; }
+            public string Emissao { get; set; }
             public string Status { get; set; }
         }
 

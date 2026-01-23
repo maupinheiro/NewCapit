@@ -4125,7 +4125,7 @@ namespace NewCapit
 
                                         #region REINICIO
                                         //BLOCO REINICIO / INICIO DE VIAGEM
-                                        if (dt4.Rows[w][2].ToString() == "REINICIO DE VIAGEM" || dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                        if (dt4.Rows[w][2].ToString() == "REINICIO DE VIAGEM")
                                         {
                                             int a = 0;
                                             a = w - 1;
@@ -4964,39 +4964,17 @@ namespace NewCapit
 
                                         #endregion
 
-                                        //#region RETORNO PERNOITE
-                                        ////BLOCO REINICIO / INICIO DE VIAGEM
-                                        //if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
-                                        //{
-                                        //    int a = 0;
-                                        //    a = w - 1;
-                                        //    if (a >= 0)
-                                        //    {
-                                        //        if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                        //        {
+                                        #region RETORNO PERNOITE
+                                        //BLOCO REINICIO / INICIO DE VIAGEM
+                                        if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                        {
+                                            
 
-                                        //        }
-                                        //        else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                        //        {
-                                        //            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                        //            marcacoes.Add(hora);
-                                        //            //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                        //        }
+                                            marcacoes.Add(hora);
 
-
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                        //        marcacoes.Add(hora);
-                                        //        // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                        //    }
-
-
-
-                                        //}
-                                        ////FIM
-                                        //#endregion
+                                        }
+                                        //FIM
+                                        #endregion
 
 
 
@@ -5671,7 +5649,7 @@ namespace NewCapit
 
                                             #region REINICIO
                                             //BLOCO REINICIO / INICIO DE VIAGEM
-                                            if (dt4.Rows[w][2].ToString() == "REINICIO DE VIAGEM" || dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                            if (dt4.Rows[w][2].ToString() == "REINICIO DE VIAGEM")
                                             {
                                                 int a = 0;
                                                 a = w - 1;
@@ -6514,31 +6492,9 @@ namespace NewCapit
                                             //BLOCO REINICIO / INICIO DE VIAGEM
                                             if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                             {
-                                                int a = 0;
-                                                a = w - 1;
-                                                if (a >= 0)
-                                                {
-                                                    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                    {
-
-                                                    }
-                                                    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                    {
-                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        marcacoes.Add(hora);
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                    }
 
 
-                                                }
-                                                else
-                                                {
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                    marcacoes.Add(hora);
-                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                }
-
-
+                                                marcacoes.Add(hora);
 
                                             }
                                             //FIM
@@ -7269,7 +7225,7 @@ namespace NewCapit
 
                                             #region REINICIO
                                         //BLOCO REINICIO / INICIO DE VIAGEM
-                                        if (dt4.Rows[w][2].ToString() == "REINICIO DE VIAGEM" || dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
+                                        if (dt4.Rows[w][2].ToString() == "REINICIO DE VIAGEM")
                                         {
                                             int a = 0;
                                             a = w - 1;
@@ -8112,31 +8068,9 @@ namespace NewCapit
                                             //BLOCO REINICIO / INICIO DE VIAGEM
                                             if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                             {
-                                                int a = 0;
-                                                a = w - 1;
-                                                if (a >= 0)
-                                                {
-                                                    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                    {
-
-                                                    }
-                                                    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                    {
-                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        marcacoes.Add(hora);
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                    }
 
 
-                                                }
-                                                else
-                                                {
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                    marcacoes.Add(hora);
-                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                }
-
-
+                                                marcacoes.Add(hora);
 
                                             }
                                             //FIM
@@ -9659,31 +9593,9 @@ namespace NewCapit
                                             //BLOCO REINICIO / INICIO DE VIAGEM
                                             if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                             {
-                                                int a = 0;
-                                                a = w - 1;
-                                                if (a >= 0)
-                                                {
-                                                    if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                                    {
-
-                                                    }
-                                                    else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                                    {
-                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                        marcacoes.Add(hora);
-                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                                    }
 
 
-                                                }
-                                                else
-                                                {
-                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                                    marcacoes.Add(hora);
-                                                    // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                                }
-
-
+                                                marcacoes.Add(hora);
 
                                             }
                                             //FIM
@@ -11256,31 +11168,9 @@ namespace NewCapit
                                     //BLOCO REINICIO / INICIO DE VIAGEM
                                     if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                     {
-                                        int a = 0;
-                                        a = w - 1;
-                                        if (a >= 0)
-                                        {
-                                            if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                            {
-
-                                            }
-                                            else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                            {
-                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                marcacoes.Add(hora);
-                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                            }
 
 
-                                        }
-                                        else
-                                        {
-                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                            marcacoes.Add(hora);
-                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                        }
-
-
+                                        marcacoes.Add(hora);
 
                                     }
                                     //FIM
@@ -12804,31 +12694,9 @@ namespace NewCapit
                                     //BLOCO REINICIO / INICIO DE VIAGEM
                                     if (dt4.Rows[w][2].ToString() == "RETORNO PERNOITE")
                                     {
-                                        int a = 0;
-                                        a = w - 1;
-                                        if (a >= 0)
-                                        {
-                                            if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
-                                            {
-
-                                            }
-                                            else if (dt4.Rows[a][2].ToString() == "PARADA PERNOITE")
-                                            {
-                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "01020000");
-                                                marcacoes.Add(hora);
-                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";2;94");
-                                            }
 
 
-                                        }
-                                        else
-                                        {
-                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0102");
-                                            marcacoes.Add(hora);
-                                            // write.WriteLine(cracha + ";" + data + ";" + hora + ";2;2");
-                                        }
-
-
+                                        marcacoes.Add(hora);
 
                                     }
                                     //FIM

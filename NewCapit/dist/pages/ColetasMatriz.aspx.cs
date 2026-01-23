@@ -1342,7 +1342,7 @@ namespace NewCapit.dist.pages
             string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
             string ufDestino = txtUfDestino.Text.Trim().ToUpper();
-            double distancia = double.Parse(txtDistancia.Text.Trim()); 
+            //double distancia = double.Parse(txtDistancia.Text.Trim()); 
             string codigoPagadorVazio = txtCod_PagadorVazio.Text.Trim();
             string nomePagadorVazio = txtPagadorVazio.Text.Trim().ToUpper();
             string materialVazio = ddlTipoMaterial.SelectedItem.Text;
@@ -1354,8 +1354,8 @@ namespace NewCapit.dist.pages
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, distancia, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @distancia, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro,  tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
+                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro, @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@carga", numCarga);
                 cmd.Parameters.AddWithValue("@status", "Pendente");
