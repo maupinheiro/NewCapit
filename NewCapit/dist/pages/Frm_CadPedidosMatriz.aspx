@@ -306,21 +306,24 @@
                     </div>
                     <div class="row g-3">
                         <div class="col-md-1">
-                            <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">PEDIDO:</label>
+                            <%--<label for="inputFilial" style="text-align: right">tese<asp:Label ID="lblNewPedidoAvulso" runat="server"></asp:Label></label>--%>
+                            <span class="details"><asp:Label ID="lblNewPedidoAvulso" runat="server" Font-Bold="true" style="text-align: right"></asp:Label></span>
+                            <div class="form-group">   
                                 <asp:TextBox ID="txtNumPedido" onkeypress="return apenasNumeros(event);" class="form-control" runat="server" OnTextChanged="txtNumPedido_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">MATERIAL:</label>
+                                <%--<label for="inputFilial" style="text-align: right">MATERIAL:</label>--%>
+                                <span class="details font-weight-bold">Material:</span>
                                 <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboMaterial_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">PESO:</label>
-                              <asp:TextBox 
+                               <%-- <label for="inputFilial" style="text-align: right">PESO:</label>--%>
+                              <span class="details font-weight-bold">Peso:</span>
+                                <asp:TextBox 
                                     ID="txtPeso"
                                     runat="server"
                                     CssClass="form-control"
@@ -332,13 +335,15 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">DEPOSITO:</label>
+                                <%--<label for="inputFilial" style="text-align: right">DEPOSITO:</label>--%>
+                                <span class="details font-weight-bold">Deposito:</span>
                                 <asp:DropDownList ID="cboDeposito" runat="server" CssClass="form-control select2"></asp:DropDownList>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">SITUAÇÃO:</label>
+                                <%--<label for="inputFilial" style="text-align: right">SITUAÇÃO:</label>--%>
+                                <span class="details font-weight-bold">Situação:</span>
                                 <asp:DropDownList ID="cboSituacao" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="Pronto" Text="Pronto"></asp:ListItem>
                                     <asp:ListItem Value="Em Processo" Text="Em Processo"></asp:ListItem>
@@ -347,19 +352,22 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">DT/OT/TU:</label>
+                                <%--<label for="inputFilial" style="text-align: right">DT/OT/TU:</label>--%>
+                                <span class="details font-weight-bold">DT/OT/TU:</span>
                                 <asp:TextBox ID="txtControleCliente" runat="server" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">PREV. ENTREGA:</label>
+                                <%--<label for="inputFilial" style="text-align: right">PREV. ENTREGA:</label>--%>
+                                <span class="details font-weight-bold">Prev. Entrega:</span>
                                 <asp:TextBox ID="txtPrevEntrega" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10" OnTextChanged="txtPrevEntrega_TextChanged" AutoPostBack="true"></asp:TextBox>                               
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label for="inputFilial" style="text-align: right">ENTREGA:</label>
+                                <%--<label for="inputFilial" style="text-align: right">ENTREGA:</label>--%>
+                                <span class="details font-weight-bold">Tipo Entrega:</span>
                                 <asp:DropDownList ID="cboEntrega" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="Normal" Text="Normal"></asp:ListItem>
                                     <asp:ListItem Value="Imediata" Text="Imediata"></asp:ListItem>
@@ -371,7 +379,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <label>&nbsp;</label><br />
-                                <asp:Button ID="btnAdicionar" runat="server" CssClass="btn btn-primary" Text="Adicionar" OnClick="btnAdicionar_Click" />
+                                <asp:Button ID="btnAdicionar" runat="server" CssClass="btn btn-primary btn-sm w-100" Text="Adicionar" OnClick="btnAdicionar_Click" />
                             </div>
                         </div>
                     </div>
@@ -430,11 +438,11 @@
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-1">
-                            <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Salvar" OnClick="btnSalvar_Click" />
+                        <div class="col-md-2">
+                            <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" Text="Salvar" OnClick="btnSalvar_Click" />
                         </div>
-                        <div class="col-md-1">
-                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                        <div class="col-md-2">
+                            <a href="GestaoDeCargasMatriz.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                             </a>
                         </div>
                     </div>

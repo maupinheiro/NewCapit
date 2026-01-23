@@ -24,6 +24,7 @@ namespace NewCapit.dist.pages
         decimal totalQuantidade = 0;
         //int totalLinhas = 0;
         string totalPesoCarga;
+        string newPedidoAvuldo;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -55,8 +56,8 @@ namespace NewCapit.dist.pages
         private void PreencherNumCarga()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT (carga + incremento) as ProximaCarga FROM tbcontadores";
-
+            string query = "SELECT (carga + incremento) as ProximaCarga, (pedido + incremento) as ProximoPedidoAvulso FROM tbcontadores";
+            
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -76,7 +77,9 @@ namespace NewCapit.dist.pages
                             while (reader.Read())
                             {
                                 // Preencher o TextBox com o nome encontrado 
+                                newPedidoAvuldo = reader["ProximoPedidoAvulso"].ToString();
                                 novaCarga.Text = reader["ProximaCarga"].ToString();
+                                lblNewPedidoAvulso.Text = "Prox.Ped.: " + reader["ProximoPedidoAvulso"].ToString();
                             }
                         }
 
@@ -91,13 +94,14 @@ namespace NewCapit.dist.pages
                         ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                         return;
                     }
-                    string sql = @"UPDATE tbcontadores SET carga = @carga WHERE id = @id";
+                    string sql = @"UPDATE tbcontadores SET carga = @carga, pedido = @pedido WHERE id = @id";
                     try
                     {
                         using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                         using (SqlCommand cmd = new SqlCommand(sql, con))
                         {
                             cmd.Parameters.AddWithValue("@carga", novaCarga.Text);
+                            cmd.Parameters.AddWithValue("@pedido", newPedidoAvuldo);
                             cmd.Parameters.AddWithValue("@id", idConvertido);
 
                             con.Open();
