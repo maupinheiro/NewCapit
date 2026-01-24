@@ -403,6 +403,12 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
+                                               <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
+                                                     <i class="fas fa-pallet nav-icon"></i>
+                                                     <p>Pedidos</p>
+                                               </a>                                                
+                                            </li>
+                                            <li class="nav-item">
                                                 <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
                                                     <i class="fas fa-boxes nav-icon"></i>
                                                     <p>Cargas</p>
