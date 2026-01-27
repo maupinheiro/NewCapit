@@ -529,43 +529,52 @@ namespace NewCapit.dist.pages
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            
             using (SqlConnection conn = new SqlConnection(
-               ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 conn.Open();
 
                 string sqlCte = @"
-            SELECT chave_de_acesso, emissao_documento, empresa_emissora, id_viagem
+            SELECT chave_de_acesso, emissao_documento, empresa_emissora, 
+                   id_viagem, status_documento
             FROM tbcte
-            WHERE num_documento = @numero and status_documento <> 'Baixado'";
+            WHERE num_documento = @numero";
 
                 SqlCommand cmd = new SqlCommand(sqlCte, conn);
                 cmd.Parameters.AddWithValue("@numero", txtNumeroDocumento.Text);
 
                 SqlDataReader dr = cmd.ExecuteReader();
 
+                // 🔍 NÃO encontrou registro
                 if (!dr.Read())
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(),
-               "ok", "alert('CTe baixado já baixado!');", true);
+                        "ok", "alert('Não há documento cadastrado!');", true);
                     return;
                 }
-            
-            
 
-
-                if (dr.Read())
+                // 📦 Encontrou, mas já está baixado
+                if (dr["status_documento"].ToString() == "Baixado")
                 {
-                    idViagem = dr["id_viagem"].ToString();
-                    lblChave.Text = dr["chave_de_acesso"].ToString();
-                    SafeDateTimeValue(lblEmissao.Text = dr["emissao_documento"].ToString());
-                    lblEmpresa.Text = dr["empresa_emissora"].ToString();
+                    ScriptManager.RegisterStartupScript(this, GetType(),
+                        "ok", "alert('Documento já foi baixado!');", true);
+                    return;
                 }
+
+                // 📄 Encontrou e está Pendente → segue fluxo
+                idViagem = dr["id_viagem"].ToString();
+                lblChave.Text = dr["chave_de_acesso"].ToString();
+                SafeDateTimeValue(lblEmissao.Text = dr["emissao_documento"].ToString());
+                lblEmpresa.Text = dr["empresa_emissora"].ToString();
 
                 dr.Close();
 
-                string sqlCar = @"select m.nommot, c.cid_recebedor,c.uf_recebedor, c.cheg_cliente,recebedor  from tbcargas as c  inner join tbmotoristas as m on c.codmot=m.codmot where carga=@idviagem ";
+                string sqlCar = @"
+            SELECT m.nommot, c.cid_recebedor, c.uf_recebedor, 
+                   c.cheg_cliente, c.recebedor  
+            FROM tbcargas AS c  
+            INNER JOIN tbmotoristas AS m ON c.codmot = m.codmot 
+            WHERE carga = @idviagem";
 
                 SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
                 cmdCar.Parameters.AddWithValue("@idviagem", idViagem);
@@ -576,13 +585,13 @@ namespace NewCapit.dist.pages
                 {
                     lblMotorista.Text = dr2["nommot"].ToString();
                     lblDestino.Text = dr2["recebedor"].ToString();
-                    lblCidade.Text = dr2["cid_recebedor"].ToString()+"/"+ dr2["uf_recebedor"].ToString();
+                    lblCidade.Text = dr2["cid_recebedor"].ToString() + "/" + dr2["uf_recebedor"].ToString();
                     SafeDateTimeValue(lblDataSaida.Text = dr2["cheg_cliente"].ToString());
-                   
                 }
-                dr2.Close();
 
+                dr2.Close();
             }
         }
+
     }
 }
