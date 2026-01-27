@@ -11,7 +11,7 @@ namespace DAL
     {
         public static DataTable FetchDataTable()
         {
-            string sql = "SELECT cod_frete, cod_pagador, pagador, expedidor, recebedor, frete_tng, frete_agregado, frete_terceiro, vigencia_inicial, vigencia_final, situacao FROM tbtabeladefretes where fl_exclusao is null ORDER BY pagador";
+            string sql = "SELECT cod_frete, cod_pagador, pagador, cod_expedidor, expedidor, cod_recebedor, recebedor, frete_tng, frete_agregado, frete_terceiro, CONVERT(varchar, vigencia_inicial, 103) as vigencia_inicial, CONVERT(varchar, vigencia_final, 103) as vigencia_final, situacao, tipo_veiculo, cid_expedidor, uf_expedidor, cid_recebedor, uf_recebedor FROM tbtabeladefretes where fl_exclusao is null ORDER BY pagador";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -31,7 +31,7 @@ namespace DAL
 
         public static DataTable FetchDataTableLimite()
         {
-            string sql = "SELECT cod_frete, pagador, expedidor, recebedor, frete_tng, frete_agregado, frete_terceiro, vigencia_inicial, vigencia_final, situacao FROM tbtabeladefretes";
+            string sql = "SELECT cod_frete, cod_pagador, pagador, cod_expedidor, expedidor, cod_recebedor, recebedor, frete_tng, frete_agregado, frete_terceiro, CONVERT(varchar, vigencia_inicial, 103) as vigencia_inicial, CONVERT(varchar, vigencia_final, 103) as vigencia_final, situacao, tipo_veiculo, cid_expedidor, uf_expedidor, cid_recebedor, uf_recebedor FROM tbtabeladefretes";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -52,7 +52,7 @@ namespace DAL
 
         public static DataTable FetchDataTable2(string searchTerm)
         {
-            string sql = "SELECT cod_frete, cod_pagador, pagador, expedidor, recebedor, frete_tng, frete_agregado, frete_terceiro, vigencia_inicial, vigencia_final, situacao FROM tbtabeladefretes where fl_exclusao is null and pagador LIKE @searchTerm OR cod_frete LIKE @searchTerm OR expedidor LIKE @searchTerm OR recebedor LIKE @searchTerm OR cod_pagador LIKE @searchTerm ORDER BY pagador";
+            string sql = "SELECT cod_frete, cod_pagador, pagador, cod_expedidor, expedidor, cod_recebedor, recebedor, frete_tng, frete_agregado, frete_terceiro, CONVERT(varchar, vigencia_inicial, 103) as vigencia_inicial, CONVERT(varchar, vigencia_final, 103) as vigencia_final, situacao, tipo_veiculo, cid_expedidor, uf_expedidor, cid_recebedor, uf_recebedor FROM tbtabeladefretes where fl_exclusao is null and pagador LIKE @searchTerm OR cod_frete LIKE @searchTerm OR expedidor LIKE @searchTerm OR recebedor LIKE @searchTerm OR cod_pagador LIKE @searchTerm OR cod_frete LIKE @searchTerm ORDER BY pagador";
 
             using (var con = ConnectionUtil.GetConnection())
             {
