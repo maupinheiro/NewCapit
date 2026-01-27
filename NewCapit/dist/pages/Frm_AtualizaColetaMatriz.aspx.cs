@@ -62,7 +62,7 @@ namespace NewCapit.dist.pages
         string andamentoCarga;
 
         BigInteger idveiculo;
-        string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade;
+        string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade,preferencia,bloqueio;
 
         GInfoWindow window;
         protected void Page_Load(object sender, EventArgs e)
@@ -95,7 +95,7 @@ namespace NewCapit.dist.pages
             }
             //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
-            VerificaCargasFechadas();
+            //VerificaCargasFechadas();
             
         }
 
@@ -782,12 +782,12 @@ namespace NewCapit.dist.pages
 
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-           
-           
+            GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+
             if (e.CommandName == "Atualizar")
             {
                 string carga = e.CommandArgument.ToString();
-                GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+                //GridView gv = (GridView)e.Item.FindControl("gvPedidos");
 
                 // Recuperar os controles de dentro do item
                 TextBox txtDataHoraColeta = (TextBox)e.Item.FindControl("txtDataHoraColeta");
@@ -1045,7 +1045,7 @@ namespace NewCapit.dist.pages
                 string carga = e.CommandArgument.ToString();
                 string idViagem = e.CommandArgument.ToString(); // O 'carga' que você passou no Eval
                 int index = e.Item.ItemIndex; // O índice da linha no Repeater
-                GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+               
 
 
                 // 1. Verificar se existem CT-es lidos na Session para este item
@@ -1064,9 +1064,9 @@ namespace NewCapit.dist.pages
                             {
                                 string sql = @"INSERT INTO tbcte 
                             (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
-                             num_documento, serie_documento, tipo_documento,mes_ano_documento,emitido_por, emissao_documento id_viagem)
+                             num_documento, serie_documento, tipo_documento,mes_ano_documento,emitido_por, emissao_documento, id_viagem)
                             VALUES 
-                            (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo,@mes_ano_documento, @emitido_por, @emissao_documento @idViagem)";
+                            (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo,@mes_ano_documento, @emitido_por, @emissao_documento, @idViagem)";
 
                                 using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                                 {
@@ -1083,7 +1083,7 @@ namespace NewCapit.dist.pages
                                     cmd.Parameters.AddWithValue("@mes_ano_documento", cte.Emissao);
                                     cmd.Parameters.AddWithValue("@emitido_por", txtUsuCadastro.Text);
                                     cmd.Parameters.AddWithValue("@emissao_documento", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
-                                    cmd.Parameters.AddWithValue("@idViagem", idViagem);
+                                    cmd.Parameters.AddWithValue("@idViagem", carga);
 
                                     cmd.ExecuteNonQuery();
                                 }
@@ -1104,8 +1104,8 @@ namespace NewCapit.dist.pages
                         }
                         catch (Exception ex)
                         {
-                            trans.Rollback();
-                            MostrarMsg("Erro ao salvar: " + ex.Message);
+                            string erroLimpo = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", "");
+                            MostrarMsg2("ERRO REAL: " + erroLimpo);
                         }
                     }
                     finally
@@ -1391,14 +1391,14 @@ namespace NewCapit.dist.pages
 
 
                     string query = @"UPDATE tbcargas SET                                  
-                                dtottu = @dtottu,
+                                ot = @ot,
                                 catraca = @catraca,
                                 rede = @rede 
                                 WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@dtottu", txtOT.Text);
+                    cmd.Parameters.AddWithValue("@ot", txtOT.Text);
                     cmd.Parameters.AddWithValue("@catraca", txtCatracas.Text);
                     cmd.Parameters.AddWithValue("@rede", txtRedes.Text.Trim());
                    
@@ -1408,9 +1408,10 @@ namespace NewCapit.dist.pages
                     cmd.ExecuteNonQuery();
                 }
 
-                
+
 
                 // Após atualizar, recarregar os dados no Repeater
+                MostrarMsg2("Dados Salvos!");
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
@@ -2169,35 +2170,42 @@ namespace NewCapit.dist.pages
 
             BuscarCargaNoBanco(txtCarga.Text.Trim());
         }
-        public void VerificaCargasFechadas()
+        private string ValidarEncerramento()
         {
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                using (SqlCommand cmd = new SqlCommand(@"
-            SELECT COUNT(*) 
-            FROM tbcargas 
-            WHERE idviagem = @idviagem 
-              AND status <> 'Concluido'", conn))
+                // Alteramos a query para nos dizer EXATAMENTE o que está errado
+                string sql = @"
+            SELECT 
+                COUNT(CASE WHEN status <> 'Concluido' THEN 1 END) as NaoConcluidas,
+                COUNT(CASE WHEN ISNULL(NULLIF(TRIM(material), ''), '') <> '' AND cte.idcte IS NULL THEN 1 END) as SemCTe
+            FROM tbcargas c
+            LEFT JOIN tbcte cte ON c.idcarga = cte.idcarga 
+            WHERE c.idviagem = @idviagem";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@idviagem", novaColeta.Text);
-
                     conn.Open();
 
-                    int cargasAbertas = Convert.ToInt32(cmd.ExecuteScalar());
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            int naoConcluidas = Convert.ToInt32(reader["NaoConcluidas"]);
+                            int semCTe = Convert.ToInt32(reader["SemCTe"]);
 
-                    if (cargasAbertas == 0)
-                    {
-                        // Todas as cargas estão concluídas 🎉
-                        btnEncerrar.Enabled = true;
-                    }
-                    else
-                    {
-                        // Ainda existem cargas não concluídas 🚧
-                        btnEncerrar.Enabled = false;
+                            if (naoConcluidas > 0)
+                                return $"Existem {naoConcluidas} carga(s) que ainda não foram concluídas.";
+
+                            if (semCTe > 0)
+                                return "Não é possível encerrar: existem cargas com material informado que não possuem CT-e anexado.";
+                        }
                     }
                 }
             }
+            return null; // Tudo certo!
         }
 
         private void BuscarCargaNoBanco(string carga)
@@ -3276,24 +3284,33 @@ namespace NewCapit.dist.pages
         protected void btnEncerrar_Click(object sender, EventArgs e)
         {
             // Atualizando a ordem de coleta 
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            string mensagemErro = ValidarEncerramento();
+
+            if (string.IsNullOrEmpty(mensagemErro))
             {
-                string queryCarregamento = @"UPDATE tbcarregamentos SET 
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string queryCarregamento = @"UPDATE tbcarregamentos SET 
                                 situacao = @situacao,
                                 status = @status
                                 WHERE num_carregamento = @num_carregamento";
 
-                SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
-                cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
-                cmdCarregamento.Parameters.AddWithValue("@situacao", "VIAGEM CONCLUIDA");
-                cmdCarregamento.Parameters.AddWithValue("@status", "Concluido");
+                    SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn);
+                    cmdCarregamento.Parameters.AddWithValue("@num_carregamento", novaColeta.Text);
+                    cmdCarregamento.Parameters.AddWithValue("@situacao", "VIAGEM CONCLUIDA");
+                    cmdCarregamento.Parameters.AddWithValue("@status", "Concluido");
 
-                // Chama método que verifica no banco
-                conn.Open();
-                cmdCarregamento.ExecuteNonQuery();
+                    // Chama método que verifica no banco
+                    conn.Open();
+                    cmdCarregamento.ExecuteNonQuery();
 
-                Response.Redirect("/dist/pages/GestaoDeEntregasMatriz.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
+                    Response.Redirect("/dist/pages/GestaoDeEntregasMatriz.aspx", false);
+                    Context.ApplicationInstance.CompleteRequest();
+                }
+            }
+            else
+            {
+                MostrarMsg2("Necessário Anexar Ct-e a Carga para finalizar a Ordem de Coleta!");
             }
 
         }
@@ -3971,8 +3988,8 @@ namespace NewCapit.dist.pages
 
                 // --- 2. BUSCA DE DADOS DO EMISSOR ---
                 string CNPJ = chave.Substring(6, 14);
-                string sql = @"SELECT nomcli, (select Estado from tbestadosbrasileiros where SiglaUf=estcli) as estcli, cidcli 
-                       FROM tbclientes 
+                string sql = @"SELECT fantra, (select Estado from tbestadosbrasileiros where SiglaUf=uftra) as uftra, cidtra 
+                       FROM tbtransportadoras 
                        WHERE REPLACE(REPLACE(REPLACE(cnpj, '.', ''), '/', ''), '-', '') = @cnpj";
 
                 DataTable dt = new DataTable();
@@ -3993,13 +4010,13 @@ namespace NewCapit.dist.pages
                     var cte = new CteLido
                     {
                         ChaveOriginal = chave,
-                        Estado = dt.Rows[0]["estcli"].ToString(),
-                        Municipio = dt.Rows[0]["cidcli"].ToString(),
-                        Filial = dt.Rows[0]["nomcli"].ToString(),
+                        Estado = dt.Rows[0]["uftra"].ToString(),
+                        Municipio = dt.Rows[0]["cidtra"].ToString(),
+                        Filial = dt.Rows[0]["fantra"].ToString(),
                         Numero = string.IsNullOrEmpty(numTratado) ? "0" : numTratado,
                         Serie = string.IsNullOrEmpty(serieTratada) ? "0" : serieTratada,
                         Emissao = Emissao,
-                        Lancamento = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                        Lancamento = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"),
                         Status = "Lido"
                     };
 
@@ -4096,7 +4113,7 @@ namespace NewCapit.dist.pages
         public void CarregaMap(string ds_placa)
         {
 
-            string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf, t.nr_direcao   ";
+            string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf, t.nr_direcao,t.nr_pontoreferencia,t.fl_bloqueio   ";
             sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where v.ds_placa='" + ds_placa + "'";
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
@@ -4126,10 +4143,12 @@ namespace NewCapit.dist.pages
                     velocidade = dt.Rows[0][8].ToString() + " Km/h";
                     rua = dt.Rows[0][9].ToString();
                     uf = dt.Rows[0][10].ToString();
+                    preferencia = dt.Rows[0][12].ToString();
+                    bloqueio = dt.Rows[0][13].ToString();
                     GLatLng latlng1 = new GLatLng(Convert.ToDouble(lat, CultureInfo.InvariantCulture), Convert.ToDouble(lon, CultureInfo.InvariantCulture));
 
-                    window = new GInfoWindow(latlng1, string.Format(@"<b>Informações:</b><br />Horário: {0}<br/>Placa: {1}<br/>Lat: {2}<br/>Long: {3}<br/>End: {4}<br/>UF: {5}<br/>Ignição: {6}<br/>Velocidade: {7}",
-                    hora, placa, lat, lon, rua, uf, ignicao, velocidade), true);
+                    window = new GInfoWindow(latlng1, string.Format(@"<b>Informações:</b><br />Horário: {0}<br/>Placa: {1}<br/>P. Ref: {2}<br/>Bloqueio: {3}<br/>End: {4}<br/>UF: {5}<br/>Ignição: {6}<br/>Velocidade: {7}",
+                    hora, placa, preferencia, bloqueio, rua, uf, ignicao, velocidade), true);
 
                     // GMap1.Add(window);
 
