@@ -145,7 +145,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <h3 class="card-title"><i class="fas fa-donate"></i>&nbsp;GESTÃO DE FRETES - NOVA TABELA DE FRETE NÚMERO:&nbsp;<asp:Label ID="novaTabelaDeFrete" runat="server"></asp:Label></h3>
+                                <h3 class="card-title"><i class="fas fa-donate"></i>&nbsp;GESTÃO DE FRETES - TABELA:&nbsp;<asp:Label ID="novaTabelaDeFrete" runat="server"></asp:Label></h3>
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
@@ -168,12 +168,12 @@
                                     <div class="info-box-content">
                                         <span class="info-box-number">
                                             <div class="row g-3">
-                                                <div class="col-md-3">
+                                                <%--<div class="col-md-3">
                                                     <div class="form-group">
                                                         <span class="details">FILIAL:</span>
                                                         <asp:DropDownList ID="cboFilial" runat="server" CssClass="form-control select2"></asp:DropDownList>
                                                     </div>
-                                                </div>
+                                                </div>--%>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <span class="details">SITUAÇÃO:</span>
@@ -206,10 +206,10 @@
                                         <div class="form-group row">
                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
                                             <div class="col-sm-1">
-                                                <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" OnTextChanged="txtRota_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                                <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" readonly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-10">
-                                                <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRotas_SelectedIndexChanged"></asp:DropDownList>
+                                                <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control" readonly="true"></asp:DropDownList>
                                             </div>
                                         </div>
                                         <!-- REMETENTE -->

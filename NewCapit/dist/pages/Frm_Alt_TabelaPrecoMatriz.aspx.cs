@@ -42,7 +42,7 @@ namespace NewCapit.dist.pages
 
 
                 PreencherComboRotas();
-                PreencherComboFiliais();
+              //  PreencherComboFiliais();
                 PreencherComboTipoVeiculos();
                 PreencherComboMateriais();
                 PreencherComboTipoViagens();
@@ -57,41 +57,41 @@ namespace NewCapit.dist.pages
             lbDtAtualizacao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             txtStatusRota.Text = "ATIVO";
         }
-        private void PreencherComboFiliais()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codigo, descricao FROM tbempresa order by descricao";
+        //private void PreencherComboFiliais()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT codigo, descricao FROM tbempresa order by descricao";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    cboFilial.DataSource = reader;
-                    cboFilial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-                    cboFilial.DataValueField = "codigo";  // Campo que será o valor de cada item                    
-                    cboFilial.DataBind();  // Realiza o binding dos dados                   
-                    cboFilial.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            cboFilial.DataSource = reader;
+        //            cboFilial.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+        //            cboFilial.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+        //            cboFilial.DataBind();  // Realiza o binding dos dados                   
+        //            cboFilial.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
         private void PreencherComboMateriais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -368,9 +368,13 @@ namespace NewCapit.dist.pages
                     // 🔹 Campos simples
                     txtCodPagador.Text = dr["cod_pagador"].ToString();
                     txtCodExpedidor.Text = dr["cod_expedidor"].ToString();
+                    cboExpedidor.Text = dr["expedidor"].ToString();
                     txtCidExpedidor.Text = dr["cid_expedidor"].ToString();
                     txtUFExpedidor.Text = dr["uf_expedidor"].ToString();
                     txtCodRecebedor.Text = dr["cod_recebedor"].ToString();
+                    txtCodRemetente.Text = dr["cod_remetente"].ToString();
+                    cboRemetente.Text = dr["remetente"].ToString();
+                    cboRecebedor.Text = dr["recebedor"].ToString();
                     txtCidRecebedor.Text = dr["cid_recebedor"].ToString();
                     txtUFRecebedor.Text = dr["uf_recebedor"].ToString();
                     txtRota.Text = dr["rota"].ToString();
@@ -378,6 +382,11 @@ namespace NewCapit.dist.pages
                     txtObservacao.Text = dr["observacao"].ToString();
                     txtUsuCadastro.Text = dr["cadastro_usuario"].ToString();
                     txtStatusRota.Text = dr["situacao"].ToString();
+                    txtCodDestinatario.Text = dr["cod_destinatario"].ToString();
+                    cboDestinatario.Text = dr["destinatario"].ToString();
+                    txtMunicipioDestinatario.Text = dr["cid_destinatario"].ToString();
+                    txtUFDestinatario.Text = dr["uf_destinatario"].ToString();
+                    txtCadastro.Text = dr["data_cadastro"].ToString();
 
                     // 🔹 Campos numéricos / decimais
                     txtDistancia.Text = Convert.ToDecimal(dr["distancia"]).ToString("N2");
@@ -414,7 +423,7 @@ namespace NewCapit.dist.pages
                     txtCidPagador.Text = dr["cid_pagador"].ToString();
                     txtUFPagador.Text = dr["uf_pagador"].ToString();
                     // 🔹 DropDownLists e combos (usa SelectedValue se possível)
-                    cboFilial.SelectedItem.Text= dr["nucleo"].ToString();
+                    //cboFilial.SelectedItem.Text= dr["nucleo"].ToString();
                     cboTipoMaterial.SelectedItem.Text =  dr["tipo_material"].ToString();
                     cboTipoVeiculo.SelectedItem.Text= dr["tipo_veiculo"].ToString();
                     cboTipoViagem.SelectedItem.Text =  dr["tipo_viagem"].ToString();
@@ -1139,7 +1148,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@pagador", SqlDbType.NVarChar).Value = cboPagador.SelectedItem.Text;
                     cmd.Parameters.Add("@cid_pagador", SqlDbType.NVarChar).Value = txtCidPagador.Text;
                     cmd.Parameters.Add("@uf_pagador", SqlDbType.NVarChar).Value = txtUFPagador.Text;
-                    cmd.Parameters.Add("@nucleo", SqlDbType.NVarChar).Value = cboFilial.SelectedItem.Text;
+                    //cmd.Parameters.Add("@nucleo", SqlDbType.NVarChar).Value = cboFilial.SelectedItem.Text;
                     cmd.Parameters.Add("@Tempo", SqlDbType.NVarChar).Value = txtDuracao.Text;
                     cmd.Parameters.Add("@tipo_veiculo", SqlDbType.NVarChar).Value = cboTipoVeiculo.SelectedItem.Text;
                     cmd.Parameters.Add("@tipo_material", SqlDbType.NVarChar).Value = cboTipoMaterial.SelectedItem.Text;
