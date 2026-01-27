@@ -396,6 +396,7 @@
     <Content Include="dist\pages\GestaoDeCargasMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeEntregasMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeMultas.aspx" />
+    <Content Include="dist\pages\GestaoDePedidos.aspx" />
     <Content Include="dist\pages\GestaoPostos.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
@@ -4901,6 +4902,13 @@
     </Compile>
     <Compile Include="dist\pages\GestaoDeMultas.aspx.designer.cs">
       <DependentUpon>GestaoDeMultas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidos.aspx.cs">
+      <DependentUpon>GestaoDePedidos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidos.aspx.designer.cs">
+      <DependentUpon>GestaoDePedidos.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoPostos.aspx.cs">
       <DependentUpon>GestaoPostos.aspx</DependentUpon>
