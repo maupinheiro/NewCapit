@@ -15,37 +15,37 @@
     <link href="bootstrap.min.css" rel="stylesheet" />
     <script src="bootstrap.bundle.min.js"></script>
     <script>
-function buscarDocumento() {
+        function buscarDocumento() {
 
-    let numero = document.getElementById("txtNumeroDocumento").value;
+            let numero = document.getElementById("txtNumeroDocumento").value;
 
-    if (numero === "") {
-        alert("Digite o número do documento");
-        return;
-    }
+            if (numero === "") {
+                alert("Digite o número do documento");
+                return;
+            }
 
-    fetch("ControleDePedagio.aspx/BuscarDocumento", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ numeroDocumento: numero })
-    })
-    .then(res => res.json())
-    .then(res => {
+            fetch("ControleDePedagio.aspx/BuscarDocumento", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ numeroDocumento: numero })
+            })
+                .then(res => res.json())
+                .then(res => {
 
-        if (!res.d || !res.d.encontrado) {
-            alert("Documento não encontrado");
-            return;
+                    if (!res.d || !res.d.encontrado) {
+                        alert("Documento não encontrado");
+                        return;
+                    }
+
+                    document.getElementById("lblChave").innerText = res.d.chave;
+                    document.getElementById("lblEmissao").innerText = res.d.emissao;
+                    document.getElementById("lblEmpresa").innerText = res.d.empresa;
+                    document.getElementById("lblMotorista").innerText = res.d.motorista;
+                    document.getElementById("lblDestino").innerText = res.d.destino;
+                    document.getElementById("lblCidade").innerText = res.d.cidade + "/" + res.d.uf;
+                    document.getElementById("lblDataSaida").innerText = res.d.dataSaida;
+                });
         }
-
-        document.getElementById("lblChave").innerText = res.d.chave;
-        document.getElementById("lblEmissao").innerText = res.d.emissao;
-        document.getElementById("lblEmpresa").innerText = res.d.empresa;
-        document.getElementById("lblMotorista").innerText = res.d.motorista;
-        document.getElementById("lblDestino").innerText = res.d.destino;
-        document.getElementById("lblCidade").innerText = res.d.cidade + "/" + res.d.uf;
-        document.getElementById("lblDataSaida").innerText = res.d.dataSaida;
-    });
-}
     </script>
 
      <div class="container-fluid">
@@ -293,24 +293,48 @@ function buscarDocumento() {
 
              <asp:UpdatePanel ID="UpdatePanel1" runat="server">
              <ContentTemplate>
-                          <div class="modal-dialog modal-lg modal-dialog-centered">
+                          <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
 
         <div class="modal-header">
-            <h5 class="modal-title">Baixar Documentos CT-e/RPS-e</h5>
+            <h5 class="modal-title">Baixar Documentos CT-e / NFS-e</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
             <div class="row g-3">
-               <div class="col-md-9">
-                  <label>Nº Documento</label>
-                   <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server"></asp:TextBox>
-                  
+               <div class="col-md-2">
+                   <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="gridRadios"
+                        id="gridRadiosCTe"
+                        value="option1"
+                        checked
+                      />
+                      <label class="form-check-label" for="gridRadiosCTe"> CT-e</label>
+                   </div>
+               </div>
+               <div class="col-md-2">
+                   <div class="form-check">
+                       <input
+                         class="form-check-input"
+                         type="radio"
+                         name="gridRadios"
+                         id="gridRadiosNFSe"
+                         value="option2"                         
+                       />
+                       <label class="form-check-label" for="gridRadiosNFSe"> NFS-e</label>
+                   </div>
+               </div>
+            </div>
+            <div class="row g-3">
+               <div class="col-md-4">                 
+                   <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server"></asp:TextBox> 
                </div>
                 
-              <div class="col-md-3">
-                  <label></label>
+              <div class="col-md-3">                  
                   <asp:Button ID="btnBuscar" runat="server" Text="Pesquisar" OnClick="btnBuscar_Click" CssClass="btn btn-warning w-100" />
                   
              </div>
@@ -331,8 +355,8 @@ function buscarDocumento() {
 
         <div class="modal-footer">
             <asp:Button ID="btnSalvarBaixa" runat="server"
-                CssClass="btn btn-success"
-                Text="Baixa"
+                CssClass="btn btn-success w-100"
+                Text="Baixar"
                 OnClick="btnSalvarBaixa_Click" />
         </div>
 
