@@ -1026,11 +1026,31 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
+                    TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
+                    TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
 
-                
-               
 
+                    string query = @"UPDATE tbpedidos SET                                  
+                                andamento = @andamento
+                                WHERE carga = @carga";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", carga);
+                    cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
                    
+
+
+                    // Chama método que verifica no banco
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+
+
+
 
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
@@ -2176,23 +2196,23 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string sql = @"
-    -- Verifica se há cargas não concluídas
-    DECLARE @NaoConcluidas INT;
-    SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status <> 'Concluido';
+            -- Verifica se há cargas não concluídas
+            DECLARE @NaoConcluidas INT;
+            SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status <> 'Concluido';
 
-    -- Verifica se existe PELO MENOS UM CT-e para esta viagem
-    DECLARE @PossuiAlgumCTe INT;
-    SELECT @PossuiAlgumCTe = COUNT(*) 
-    FROM tbcte 
-    WHERE idcarga IN (SELECT idcarga FROM tbcargas WHERE idviagem = @idviagem);
+            -- Verifica se existe PELO MENOS UM CT-e para esta viagem
+            DECLARE @PossuiAlgumCTe INT;
+            SELECT @PossuiAlgumCTe = COUNT(*) 
+            FROM tbcte 
+            WHERE idcarga IN (SELECT idcarga FROM tbcargas WHERE idviagem = @idviagem);
 
-    -- Verifica se a viagem possui algum material preenchido
-    DECLARE @PossuiMaterial INT;
-    SELECT @PossuiMaterial = COUNT(*) 
-    FROM tbcargas 
-    WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> '';
+            -- Verifica se a viagem possui algum material preenchido
+            DECLARE @PossuiMaterial INT;
+            SELECT @PossuiMaterial = COUNT(*) 
+            FROM tbcargas 
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> '';
 
-    SELECT @NaoConcluidas AS NaoConcluidas, @PossuiAlgumCTe AS PossuiAlgumCTe, @PossuiMaterial AS PossuiMaterial";
+            SELECT @NaoConcluidas AS NaoConcluidas, @PossuiAlgumCTe AS PossuiAlgumCTe, @PossuiMaterial AS PossuiMaterial";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -4093,12 +4113,7 @@ namespace NewCapit.dist.pages
             return existe;
         }
 
-
-
-
-        
-
-        
+               
         public class CteLido
         {
             public string ChaveOriginal { get; set; } // Adicione este campo
