@@ -219,7 +219,7 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "graficoFrotaScript", html1, false);
 
-            string sqlm = "WITH Ranking AS (SELECT nomemotorista, codmotorista, COUNT(*) AS total_entregas, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_posicao FROM tbcarregamentos WHERE MONTH(emissao) = 02 AND YEAR(emissao) = 2025  GROUP BY nomemotorista, codmotorista) ";
+            string sqlm = "WITH Ranking AS (SELECT nomemotorista, codmotorista, COUNT(*) AS total_entregas, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_posicao FROM tbcarregamentos WHERE MONTH(emissao) = "+DateTime.Now.ToString("MM")+ " AND YEAR(emissao) = "+DateTime.Now.ToString("yyyy")+"  GROUP BY nomemotorista, codmotorista) ";
             sqlm += "SELECT * FROM Ranking WHERE rank_posicao <= 10 AND codmotorista NOT LIKE '%[^0-9]%'";
             SqlDataAdapter adptm = new SqlDataAdapter(sqlm, con);
             DataTable dtm = new DataTable();
@@ -316,7 +316,7 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "barChartVeiculosScript", html3, false);
             string sqlw = @"WITH Ultimos7Dias AS (SELECT CONVERT(VARCHAR(5), DATEADD(DAY, -n, CAST(GETDATE() AS DATE)), 103) AS Dia  FROM (VALUES (1), (2), (3), (4), (5), (6), (7)) AS T(n))
-                            SELECT  U.Dia, COUNT(C.emissao) AS QuantidadeDeViagens FROM Ultimos7Dias U LEFT JOIN tbcarregamentos C ON CONVERT(VARCHAR(5), C.emissao, 103) = U.Dia AND C.nomclidestino LIKE 'VW%'
+                            SELECT  U.Dia, COUNT(C.emissao) AS QuantidadeDeViagens FROM Ultimos7Dias U LEFT JOIN tbcarregamentos C ON CONVERT(VARCHAR(5), C.emissao, 103) = U.Dia AND C.recebedor LIKE 'VOLKS%'
                             AND C.emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) AND C.emissao < DATEADD(DAY, 1, CAST(GETDATE() AS DATE)) GROUP BY U.Dia ORDER BY MIN(U.Dia) asc";
             SqlDataAdapter adptTotal = new SqlDataAdapter(sqlw, con);
             DataTable dtw = new DataTable();
@@ -324,205 +324,128 @@ namespace NewCapit.dist.pages
             adptTotal.Fill(dtw);
             con.Close();
             string sqlo = @"WITH Ultimos7Dias AS (SELECT CONVERT(VARCHAR(5), DATEADD(DAY, -n, CAST(GETDATE() AS DATE)), 103) AS Dia  FROM (VALUES (1), (2), (3), (4), (5), (6), (7)) AS T(n))
-                            SELECT  U.Dia, COUNT(C.emissao) AS QuantidadeDeViagens FROM Ultimos7Dias U LEFT JOIN tbcarregamentos C ON CONVERT(VARCHAR(5), C.emissao, 103) = U.Dia AND C.nomclidestino NOT LIKE 'VW%'
+                            SELECT  U.Dia, COUNT(C.emissao) AS QuantidadeDeViagens FROM Ultimos7Dias U LEFT JOIN tbcarregamentos C ON CONVERT(VARCHAR(5), C.emissao, 103) = U.Dia AND C.recebedor NOT LIKE 'VOLKS%'
                             AND C.emissao >= DATEADD(DAY, -7, CAST(GETDATE() AS DATE)) AND C.emissao < DATEADD(DAY, 1, CAST(GETDATE() AS DATE)) GROUP BY U.Dia ORDER BY MIN(U.Dia) asc";
             SqlDataAdapter adptTotalo = new SqlDataAdapter(sqlo, con);
             DataTable dto = new DataTable();
             con.Open();
             adptTotalo.Fill(dto);
             con.Close();
-            string html4 = @" <script>
-                    $(function () {
-                        /* ChartJS
-                         * -------
-                         * Here we will create a few charts using ChartJS
-                         */
+            string html4 = @"
+<script>
+    $(function () {
+        // 1. Gráfico de Área/Linha (Solicitações VW vs Outros)
+        var areaChartCanvas = $('#areaChart').get(0).getContext('2d');
+        var areaChartData = {
+            labels: [{2}],
+            datasets: [
+                {
+                    label: 'Outros',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    data: [{0}]
+                },
+                {
+                    label: 'Solicitações VW',
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    data: [{1}]
+                }
+            ]
+        };
 
-                        //--------------
-                        //- AREA CHART -
-                        //--------------
+        new Chart(areaChartCanvas, {
+            type: 'line',
+            data: areaChartData,
+            options: { maintainAspectRatio: false, responsive: true }
+        });
 
-                        // Get context with jQuery - using jQuery's .get() method.
-                        var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+        // 2. Gráfico Donut (Status da Carga)
+        var donutChartCanvas = $('#donutChart').get(0).getContext('2d');
+        new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: ['Ag. Carreg.', 'Em Transito', 'Ag. Descarga', 'Concluida', 'Outros'],
+                datasets: [{
+                    data: [700, 500, 400, 600, 300],
+                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc']
+                }]
+            },
+            options: { maintainAspectRatio: false, responsive: true }
+        });
 
-                        var areaChartData = {
-                            labels: [{2}],
-                            datasets: [
-                                {
-                                    label: 'Outros',
-                                    backgroundColor: 'rgba(60,141,188,0.9)',
-                                    borderColor: 'rgba(60,141,188,0.8)',
-                                    pointRadius: false,
-                                    pointColor: '#3b8bba',
-                                    pointStrokeColor: 'rgba(60,141,188,1)',
-                                    pointHighlightFill: '#fff',
-                                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                                    data: [{0}]
-                                },
-                                {
-                                    label: 'Solicitações VW',
-                                    backgroundColor: 'rgba(210, 214, 222, 1)',
-                                    borderColor: 'rgba(210, 214, 222, 1)',
-                                    pointRadius: false,
-                                    pointColor: 'rgba(210, 214, 222, 1)',
-                                    pointStrokeColor: '#c1c7d1',
-                                    pointHighlightFill: '#fff',
-                                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                                    data: [{1}]
-                                },
-                            ]
-                        }
+        // 3. Gráfico de Barras por Filial (Dinamizado)
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+        new Chart(pieChartCanvas, {
+            type: 'bar',
+            data: {
+                labels: [{3}], 
+                datasets: [{
+                    label: 'Carregamentos',
+                    data: [{4}],
+                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#7401DF', '#ffff00', '#2e9afe', '#ff00ff', '#a0a0a0'],
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                maintainAspectRatio: false, 
+                responsive: true,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
 
-                        var areaChartOptions = {
-                            maintainAspectRatio: false,
-                            responsive: true,
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                xAxes: [{
-                                    gridLines: {
-                                        display: false,
-                                    }
-                                }],
-                                yAxes: [{
-                                    gridLines: {
-                                        display: false,
-                                    }
-                                }]
-                            }
-                        }
-
-                        // This will get the first returned node in the jQuery collection.
-                        new Chart(areaChartCanvas, {
-                            type: 'line',
-                            data: areaChartData,
-                            options: areaChartOptions
-                        })
-
-
-
-                        //-------------
-                        //- DONUT CHART - Carregamento
-                        //-------------
-                        // Get context with jQuery - using jQuery's .get() method.
-                        var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-                        var donutData = {
-                            labels: [
-                                'Ag. Carreg.',
-                                'Em Transito',
-                                'Ag. Descarga',
-                                'Concluida',
-                                'Outros',
-                            ],
-                            datasets: [
-                                {
-                                    data: [700, 500, 400, 600, 300],
-                                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
-                                }
-                            ]
-                        }
-                        var donutOptions = {
-                            maintainAspectRatio: false,
-                            responsive: true,
-                            legend: {
-                                display: true,
-                                position: 'right',
-                            },
-
-                        }
-                        //Create pie or douhnut chart
-                        // You can switch between pie and douhnut using the method below.
-                        new Chart(donutChartCanvas, {
-                            type: 'doughnut',
-                            data: donutData,
-                            options: donutOptions
-                        })
-
-                        //-------------
-                        //- PIE CHART - o
-                        //-------------
-                        // Get context with jQuery - using jQuery's .get() method.
-                        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-                        var pieData = {
-                            labels: [
-                                'Matriz.',
-                                'CNT',
-                                'SBC',
-                                'Taubaté',
-                                'Ipiranga',
-                                'São Carlos',
-                                'PR',
-                                'PE',
-                                'MG',
-                            ],
-                            datasets: [
-                                {
-                                    data: [700, 500, 400, 600, 300, 200, 100, 150, 180],
-                                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#7401DF', '#ffff00', '#2e9afe', '#ff00ff'],
-                                    borderWidth: 1,
-                                    borderColor: '#777',
-                                    hoverBorderWidht: 2,
-                                    hoverBorderColor: '#000',
-                                }
-                            ]
-                        }
-                        var pieOptions = {
-                            maintainAspectRatio: false,
-                            responsive: true,
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-
-                            }
-                        }
-                        //Create pie or douhnut chart
-                        // You can switch between pie and douhnut using the method below.
-                        new Chart(pieChartCanvas, {
-                            type: 'bar',
-                            data: pieData,
-                            options: pieOptions
-                        })
-
-                        //-------------
-                        //- BAR CHART -
-                        //-------------
-                        var barChartCanvas = $('#barChart').get(0).getContext('2d')
-                        var barChartData = $.extend(true, {}, areaChartData)
-                        var temp0 = areaChartData.datasets[0]
-                        var temp1 = areaChartData.datasets[1]
-                        barChartData.datasets[0] = temp1
-                        barChartData.datasets[1] = temp0
-
-                        var barChartOptions = {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            datasetFill: false
-                        }
-
-                        new Chart(barChartCanvas, {
-                            type: 'bar',
-                            data: barChartData,
-                            options: barChartOptions
-                        })
-                    })
-            </script>";
+        // 4. Gráfico de Barras Operação (Baseado nos dados do Area Chart)
+        var barChartCanvas = $('#barChart').get(0).getContext('2d');
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: areaChartData,
+            options: { maintainAspectRatio: false, responsive: true }
+        });
+    });
+</script>";
             StringBuilder sb = new StringBuilder(html4);
+
+            // Dados dos últimos 7 dias (Outros e VW)
             string outrosDataValues = string.Join(", ", dto.AsEnumerable().Select(row => row["QuantidadeDeViagens"].ToString()));
-            sb.Replace("{0}", outrosDataValues); // Substitui {0} pelos valores do DataTable 'Outros'
             string solicitacoesVWDataValues = string.Join(", ", dtw.AsEnumerable().Select(row => row["QuantidadeDeViagens"].ToString()));
-            sb.Replace("{1}", solicitacoesVWDataValues); // Substitui {1} pelos valores do DataTable 'Solicitações VW'
             string diasdasemana = string.Join(", ", dtw.AsEnumerable().Select(row => $"'{row["Dia"].ToString()}'"));
-            sb.Replace("{2}", diasdasemana); // Substitui {1} pelos valores do DataTable 'Solicitações VW'
-            ClientScript.RegisterStartupScript(this.GetType(), "", sb.ToString(), false);
+
+            sb.Replace("{0}", outrosDataValues);
+            sb.Replace("{1}", solicitacoesVWDataValues);
+            sb.Replace("{2}", diasdasemana);
+
+            // Dados das Filiais (Usando sua função ObterDadosGrafico que deve ter o LEFT JOIN)
+            DataTable dtEmpresas = ObterDadosGrafico();
+            string labelsEmpresas = string.Join(", ", dtEmpresas.AsEnumerable().Select(row => $"'{row["descricao"].ToString()}'"));
+            string valoresEmpresas = string.Join(", ", dtEmpresas.AsEnumerable().Select(row => row["Quantidade"].ToString()));
+
+            sb.Replace("{3}", labelsEmpresas);
+            sb.Replace("{4}", valoresEmpresas);
+
+            // Registro Único
+            ClientScript.RegisterStartupScript(this.GetType(), "dashboardGeral", sb.ToString(), false);
 
 
+        }
+        public DataTable ObterDadosGrafico()
+        {
+           
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                // Exemplo de query agrupando por dia
+                string sql = @"SELECT 
+                                E.descricao, 
+                                COUNT(C.nucleo) AS Quantidade
+                            FROM tbempresa E
+                            LEFT JOIN tbcarregamentos C ON E.descricao = C.nucleo -- ou o campo que liga as tabelas
+                            GROUP BY E.descricao, E.id
+                            ORDER BY E.id";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                return dt;
+            }
         }
 
         protected void lnkMapa_Click(object sender, EventArgs e)

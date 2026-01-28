@@ -479,30 +479,68 @@ namespace NewCapit.dist.pages
 
         protected void btnSalvarBaixa_Click(object sender, EventArgs e)
         {
-            
-            string usuario = Session["UsuarioLogado"].ToString();
-            using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            try
             {
-                conn.Open();
+                // 1. Verificação de segurança para a Session
+                if (Session["UsuarioLogado"] == null)
+                {
+                    Response.Redirect("Login.aspx");
+                    return;
+                }
 
-                string sql = @"
-            UPDATE tbcte
-            SET baixado_por = @usuario,
-                status_documento = @status_documento,
-                data_baixa = GETDATE()
-            WHERE numero_documento = @numero";
+                string usuario = Session["UsuarioLogado"].ToString();
+                string numeroDoc = txtNumeroDocumento.Text.Trim(); // .Trim() evita espaços vazios
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@usuario", usuario);
-                cmd.Parameters.AddWithValue("@numero", Request.Form["txtNumeroDocumento"]);
-                cmd.Parameters.AddWithValue("@status_documento", "Baixado");
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    string sql = @"
+                UPDATE tbcte 
+                SET baixado_por = @usuario, 
+                    status_documento = @status_documento, 
+                    data_baixa = GETDATE() 
+                WHERE num_documento = @numero";
 
-                cmd.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@usuario", usuario);
+                    cmd.Parameters.AddWithValue("@numero", numeroDoc);
+                    cmd.Parameters.AddWithValue("@status_documento", "Baixado");
+
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ok", "alert('CTe " + numeroDoc + " baixado com sucesso!');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "erro", "alert('Erro: Documento não encontrado no banco.');", true);
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                // Remove quebras de linha e aspas simples/duplas para não quebrar o alert do JS
+                string mensagemErro = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", " ");
 
-            ScriptManager.RegisterStartupScript(this, GetType(),
-                "ok", "alert('CTe baixado com sucesso!');", true);
+                string script = $"alert('Erro técnico: {mensagemErro}');";
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "erro_catch", script, true);
+            }
+        }
+
+        public void Limpar()
+        {
+            txtNumeroDocumento.Text = string.Empty;
+            lblChave.Text = string.Empty;
+            lblCidade.Text = string.Empty;
+            lblDataSaida.Text = string.Empty;
+            lblDestino.Text = string.Empty;
+            lblEmissao.Text = string.Empty;
+            lblEmpresa.Text = string.Empty;
+            lblMotorista.Text = string.Empty;
+
         }
         protected void btnBaixar_Click(object sender, EventArgs e)
         {

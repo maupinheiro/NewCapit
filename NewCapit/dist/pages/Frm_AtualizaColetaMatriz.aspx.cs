@@ -1026,11 +1026,31 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
+                    TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
+                    TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
 
-                
-               
 
+                    string query = @"UPDATE tbpedidos SET                                  
+                                andamento = @andamento
+                                WHERE carga = @carga";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", carga);
+                    cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
                    
+
+
+                    // Chama método que verifica no banco
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+
+
+
 
                 // Após atualizar, recarregar os dados no Repeater
                 ViewState["Coletas"] = null;
@@ -2175,14 +2195,24 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                // Alteramos a query para nos dizer EXATAMENTE o que está errado
                 string sql = @"
-            SELECT 
-                COUNT(CASE WHEN status <> 'Concluido' THEN 1 END) as NaoConcluidas,
-                COUNT(CASE WHEN ISNULL(NULLIF(TRIM(material), ''), '') <> '' AND cte.idcte IS NULL THEN 1 END) as SemCTe
-            FROM tbcargas c
-            LEFT JOIN tbcte cte ON c.idcarga = cte.idcarga 
-            WHERE c.idviagem = @idviagem";
+            -- Verifica se há cargas não concluídas
+            DECLARE @NaoConcluidas INT;
+            SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status <> 'Concluido';
+
+            -- Verifica se existe PELO MENOS UM CT-e para esta viagem
+            DECLARE @PossuiAlgumCTe INT;
+            SELECT @PossuiAlgumCTe = COUNT(*) 
+            FROM tbcte 
+            WHERE idcarga IN (SELECT idcarga FROM tbcargas WHERE idviagem = @idviagem);
+
+            -- Verifica se a viagem possui algum material preenchido
+            DECLARE @PossuiMaterial INT;
+            SELECT @PossuiMaterial = COUNT(*) 
+            FROM tbcargas 
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> '';
+
+            SELECT @NaoConcluidas AS NaoConcluidas, @PossuiAlgumCTe AS PossuiAlgumCTe, @PossuiMaterial AS PossuiMaterial";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -2194,18 +2224,22 @@ namespace NewCapit.dist.pages
                         if (reader.Read())
                         {
                             int naoConcluidas = Convert.ToInt32(reader["NaoConcluidas"]);
-                            int semCTe = Convert.ToInt32(reader["SemCTe"]);
+                            int possuiAlgumCTe = Convert.ToInt32(reader["PossuiAlgumCTe"]);
+                            int possuiMaterial = Convert.ToInt32(reader["PossuiMaterial"]);
 
+                            // 1. Bloqueio por status
                             if (naoConcluidas > 0)
-                                return $"Existem {naoConcluidas} carga(s) que ainda não foram concluídas.";
+                                return $"Existem {naoConcluidas} carga(s) pendentes de conclusão.";
 
-                            if (semCTe > 0)
-                                return "Não é possível encerrar: existem cargas com material informado que não possuem CT-e anexado.";
+                            // 2. Bloqueio por Documentação: 
+                            // Se tem material em alguma carga, mas NENHUMA carga da viagem tem CT-e
+                            if (possuiMaterial > 0 && possuiAlgumCTe == 0)
+                                return "Nenhum CT-e foi encontrado para esta viagem. É necessário anexar pelo menos um para liberar.";
                         }
                     }
                 }
             }
-            return null; // Tudo certo!
+            return null; // Sucesso!
         }
 
         private void BuscarCargaNoBanco(string carga)
@@ -4079,12 +4113,7 @@ namespace NewCapit.dist.pages
             return existe;
         }
 
-
-
-
-        
-
-        
+               
         public class CteLido
         {
             public string ChaveOriginal { get; set; } // Adicione este campo
