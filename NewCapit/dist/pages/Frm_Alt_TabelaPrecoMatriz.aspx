@@ -204,12 +204,21 @@
                                     <!-- /.card-header -->
                                     <div class="card-body">
                                         <div class="form-group row">
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">TABELA:</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtFrete" runat="server" CssClass="form-control" Style="text-align: center" readonly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <asp:TextBox ID="txtDesc_Frete" runat="server" CssClass="form-control" readonly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
                                             <div class="col-sm-1">
                                                 <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" readonly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-10">
-                                                <asp:DropDownList ID="cboRotas" runat="server" CssClass="form-control" readonly="true"></asp:DropDownList>
+                                                <asp:TextBox ID="cboRotas" runat="server" CssClass="form-control" readonly="true"></asp:TextBox>
                                             </div>
                                         </div>
                                         <!-- REMETENTE -->
@@ -810,12 +819,12 @@
                                 </div>
                             </div>
                             <div class="row g-3">
-                                <div class="col-md-1">
-                                    <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" OnClick="btnAlterar_Click"
+                                <div class="col-md-2">
+                                    <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnAlterar_Click"
                                         Text="Atualizar" />
                                 </div>
-                                <div class="col-md-1">
-                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Fechar             
+                                <div class="col-md-2">
+                                    <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar             
                                     </a>
                                 </div>
                             </div>
@@ -835,8 +844,8 @@
                         ...
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary w-100">Salvar</button>
                     </div>
                 </div>
             </div>
