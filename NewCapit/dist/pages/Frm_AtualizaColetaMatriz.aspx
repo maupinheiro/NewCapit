@@ -1333,20 +1333,21 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </div>
 
 <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
-<!-- Conteúdo CT-e / NFS-e -->
+<!-- Conteúdo CT-e / NFS-e MDF-e -->
 <div class="form-group row">
    <div class="col-md-4">
-       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e / RPS-e" runat="server" maxlength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
+       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e" runat="server" maxlength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
    </div>
-   
-  <%-- <div class="col-md-6">--%>
-           <label for="inputmdfe" class="col-sm-3 col-form-label" style="text-align: right">MDF-e:</label>
-          <div class="col-md-4">
-               <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>
-           </div>
-   <%--</div>--%>
-
-
+   <!-- NFS-e -->
+   <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">NFS-e:</label>
+    <div class="col-md-2">
+         <asp:TextBox ID="txtNFSe" runat="server" CssClass="form-control" maxlength="11"></asp:TextBox>
+     </div>
+    <!-- MDF-e --> 
+    <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">MDF-e:</label>
+      <div class="col-md-4">
+         <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>
+      </div>
    </div>
 
 </br>

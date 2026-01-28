@@ -882,47 +882,47 @@ namespace NewCapit.dist.pages
             }
 
         }
-        protected void cboRecebedor_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idSelecionado = int.Parse(cboRecebedor.SelectedValue);
+        //protected void cboRecebedor_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    int idSelecionado = int.Parse(cboRecebedor.SelectedValue);
 
-            // Preencher os campos com base no valor selecionado
-            if (idSelecionado > 0)
-            {
-                PreencherCamposRecebedor(idSelecionado);
-            }
-            else
-            {
-                LimparCamposRecebedor();
-            }
-        }
+        //    // Preencher os campos com base no valor selecionado
+        //    if (idSelecionado > 0)
+        //    {
+        //        PreencherCamposRecebedor(idSelecionado);
+        //    }
+        //    else
+        //    {
+        //        LimparCamposRecebedor();
+        //    }
+        //}
         // Função para preencher os campos com os dados do banco
-        private void PreencherCamposRecebedor(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ID", id);
-                SqlDataReader reader = cmd.ExecuteReader();
+        //private void PreencherCamposRecebedor(int id)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        conn.Open();
+        //        string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+        //        SqlCommand cmd = new SqlCommand(query, conn);
+        //        cmd.Parameters.AddWithValue("@ID", id);
+        //        SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    txtCodRecebedor.Text = reader["codcli"].ToString();
-                    txtCidRecebedor.Text = reader["cidcli"].ToString();
-                    txtUFRecebedor.Text = reader["estcli"].ToString();
-                }
-            }
-        }
+        //        if (reader.Read())
+        //        {
+        //            txtCodRecebedor.Text = reader["codcli"].ToString();
+        //            txtCidRecebedor.Text = reader["cidcli"].ToString();
+        //            txtUFRecebedor.Text = reader["estcli"].ToString();
+        //        }
+        //    }
+        //}
         // Função para limpar os campos
-        private void LimparCamposRecebedor()
-        {
-            txtCodRecebedor.Text = string.Empty;
-            cboRecebedor.SelectedItem.Text = string.Empty;
-            txtCidRecebedor.Text = string.Empty;
-            txtUFRecebedor.Text = string.Empty;
-        }
+        //private void LimparCamposRecebedor()
+        //{
+        //    txtCodRecebedor.Text = string.Empty;
+        //    cboRecebedor.SelectedItem.Text = string.Empty;
+        //    txtCidRecebedor.Text = string.Empty;
+        //    txtUFRecebedor.Text = string.Empty;
+        //}
 
         protected void txtCodConsignatario_TextChanged(object sender, EventArgs e)
         {
@@ -1098,8 +1098,8 @@ namespace NewCapit.dist.pages
                     }
                     string nomeRota = txtCidExpedidor.Text.Trim() + "/" + txtUFExpedidor.Text.Trim() + " X " + txtCidRecebedor.Text.Trim() + "/" + txtUFRecebedor.Text.Trim();
 
-                    BuscarRota(nomeRota);
-                    CepOrigemDestino();
+                    //BuscarRota(nomeRota);
+                    //CepOrigemDestino();
 
                 }
                 else
@@ -1114,169 +1114,169 @@ namespace NewCapit.dist.pages
             }
 
         }
-        public void CepOrigemDestino()
-        {
-            string sqle = "select endcli,cidcli,estcli from tbclientes where codcli='" + txtCodExpedidor.Text+"' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
-            SqlDataAdapter dae = new SqlDataAdapter(sqle, conn);
-            DataTable dte = new DataTable();
-            conn.Open();
-            dae.Fill(dte);
-            conn.Close();
+        //public void CepOrigemDestino()
+        //{
+        //    string sqle = "select endcli,cidcli,estcli from tbclientes where codcli='" + txtCodExpedidor.Text+"' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+        //    SqlDataAdapter dae = new SqlDataAdapter(sqle, conn);
+        //    DataTable dte = new DataTable();
+        //    conn.Open();
+        //    dae.Fill(dte);
+        //    conn.Close();
 
-            string sqlr = "select endcli,cidcli,estcli from tbclientes where codcli='" + txtCodDestinatario.Text + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
-            SqlDataAdapter dar = new SqlDataAdapter(sqlr, conn);
-            DataTable dtr = new DataTable();
-            conn.Open();
-            dar.Fill(dtr);
-            conn.Close();
+        //    string sqlr = "select endcli,cidcli,estcli from tbclientes where codcli='" + txtCodDestinatario.Text + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+        //    SqlDataAdapter dar = new SqlDataAdapter(sqlr, conn);
+        //    DataTable dtr = new DataTable();
+        //    conn.Open();
+        //    dar.Fill(dtr);
+        //    conn.Close();
 
-            string ceporigem = dte.Rows[0][0].ToString()+", "+ dte.Rows[0][1].ToString() + ", "+ dte.Rows[0][2].ToString() + "";
-            string cepdestino = dtr.Rows[0][0].ToString() + ", " + dtr.Rows[0][1].ToString() + ", " + dtr.Rows[0][2].ToString() + "";
+        //    string ceporigem = dte.Rows[0][0].ToString()+", "+ dte.Rows[0][1].ToString() + ", "+ dte.Rows[0][2].ToString() + "";
+        //    string cepdestino = dtr.Rows[0][0].ToString() + ", " + dtr.Rows[0][1].ToString() + ", " + dtr.Rows[0][2].ToString() + "";
 
-            BuscarPorCep(ceporigem, cepdestino);
+        //    BuscarPorCep(ceporigem, cepdestino);
 
-        }
-        public void BuscarPorCep(string cepOrigem_, string cepDestino_)
-        {
-            try
-            {
-                string key = "AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww";
-                string url = "https://routes.googleapis.com/directions/v2:computeRoutes";
+        //}
+        //public void BuscarPorCep(string cepOrigem_, string cepDestino_)
+        //{
+        //    try
+        //    {
+        //        string key = "AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww";
+        //        string url = "https://routes.googleapis.com/directions/v2:computeRoutes";
 
-                // 🛣️ Endereços SEM número (padrão)
-                string origem =  cepOrigem_+", Brasil";
+        //        // 🛣️ Endereços SEM número (padrão)
+        //        string origem =  cepOrigem_+", Brasil";
 
-                string destino = cepDestino_ + ", Brasil";
-
-
-                //if (string.IsNullOrWhiteSpace(txtRuaOrigem.Text) ||
-                //    string.IsNullOrWhiteSpace(txtRuaDestino.Text))
-                //    throw new Exception("Informe a rua de origem e destino.");
-
-                string jsonBody = $@"
-                    {{
-                      ""origin"": {{
-                        ""address"": ""{origem}""
-                      }},
-                      ""destination"": {{
-                        ""address"": ""{destino}""
-                      }},
-                      ""travelMode"": ""DRIVE"",
-                      ""routingPreference"": ""TRAFFIC_AWARE"",
-                      ""computeAlternativeRoutes"": false
-                    }}";
-
-                using (var client = new WebClient())
-                {
-                    client.Headers.Add("Content-Type", "application/json");
-                    client.Headers.Add("X-Goog-Api-Key", key);
-                    client.Headers.Add(
-                        "X-Goog-FieldMask",
-                        "routes.distanceMeters,routes.duration"
-                    );
-
-                    string response = client.UploadString(url, "POST", jsonBody);
-                    dynamic data = JsonConvert.DeserializeObject(response);
-
-                    if (data.routes == null || data.routes.Count == 0)
-                        throw new Exception("Rota não encontrada para os endereços informados.");
-
-                    // 📏 Distância (km)
-                    double metros = (double)data.routes[0].distanceMeters;
-                    txtDistanciaCEP.Text = (metros / 1000).ToString("0.##");
-
-                    // ⏱ Tempo (min)
-                    string duracaoStr = data.routes[0].duration.ToString().Replace("s", "");
-                    double segundos = double.Parse(duracaoStr, CultureInfo.InvariantCulture);
-
-                    TimeSpan tempo = TimeSpan.FromSeconds(segundos);
-                    //txtTempoCEP.Text = tempo.ToString(@"hh\:mm");
+        //        string destino = cepDestino_ + ", Brasil";
 
 
-                }
-            }
-            catch (Exception ex)
-            {
+        //        //if (string.IsNullOrWhiteSpace(txtRuaOrigem.Text) ||
+        //        //    string.IsNullOrWhiteSpace(txtRuaDestino.Text))
+        //        //    throw new Exception("Informe a rua de origem e destino.");
+
+        //        string jsonBody = $@"
+        //            {{
+        //              ""origin"": {{
+        //                ""address"": ""{origem}""
+        //              }},
+        //              ""destination"": {{
+        //                ""address"": ""{destino}""
+        //              }},
+        //              ""travelMode"": ""DRIVE"",
+        //              ""routingPreference"": ""TRAFFIC_AWARE"",
+        //              ""computeAlternativeRoutes"": false
+        //            }}";
+
+        //        using (var client = new WebClient())
+        //        {
+        //            client.Headers.Add("Content-Type", "application/json");
+        //            client.Headers.Add("X-Goog-Api-Key", key);
+        //            client.Headers.Add(
+        //                "X-Goog-FieldMask",
+        //                "routes.distanceMeters,routes.duration"
+        //            );
+
+        //            string response = client.UploadString(url, "POST", jsonBody);
+        //            dynamic data = JsonConvert.DeserializeObject(response);
+
+        //            if (data.routes == null || data.routes.Count == 0)
+        //                throw new Exception("Rota não encontrada para os endereços informados.");
+
+        //            // 📏 Distância (km)
+        //            double metros = (double)data.routes[0].distanceMeters;
+        //            txtDistanciaCEP.Text = (metros / 1000).ToString("0.##");
+
+        //            // ⏱ Tempo (min)
+        //            string duracaoStr = data.routes[0].duration.ToString().Replace("s", "");
+        //            double segundos = double.Parse(duracaoStr, CultureInfo.InvariantCulture);
+
+        //            TimeSpan tempo = TimeSpan.FromSeconds(segundos);
+        //            //txtTempoCEP.Text = tempo.ToString(@"hh\:mm");
+
+
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
                
-                MostrarMsg(
-                    "Erro ao calcular rota: " + ex.Message,
-                    "danger"
-                );
-            }
-        }
+        //        MostrarMsg(
+        //            "Erro ao calcular rota: " + ex.Message,
+        //            "danger"
+        //        );
+        //    }
+        //}
        
-        public RotaEntrega ObterRotaPorDescricao(string nomeRota)
-        {
-            const string sql = @"
-            SELECT 
-                rota,
-                desc_rota,
-                distancia,
-                tempo,
-                deslocamento,
-                pedagio
-            FROM tbrotasdeentregas
-            WHERE desc_rota COLLATE Latin1_General_CI_AI LIKE '%' + @nomeRota + '%'
-        ";
+        //public RotaEntrega ObterRotaPorDescricao(string nomeRota)
+        //{
+        //    const string sql = @"
+        //    SELECT 
+        //        rota,
+        //        desc_rota,
+        //        distancia,
+        //        tempo,
+        //        deslocamento,
+        //        pedagio
+        //    FROM tbrotasdeentregas
+        //    WHERE desc_rota COLLATE Latin1_General_CI_AI LIKE '%' + @nomeRota + '%'
+        //";
 
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
-            {
-                cmd.Parameters.Add("@nomeRota", SqlDbType.VarChar).Value = nomeRota;
-                conn.Open();
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    using (SqlCommand cmd = new SqlCommand(sql, conn))
+        //    {
+        //        cmd.Parameters.Add("@nomeRota", SqlDbType.VarChar).Value = nomeRota;
+        //        conn.Open();
 
-                using (SqlDataReader dr = cmd.ExecuteReader())
-                {
-                    if (!dr.Read())
-                        return null;
+        //        using (SqlDataReader dr = cmd.ExecuteReader())
+        //        {
+        //            if (!dr.Read())
+        //                return null;
 
-                    return new RotaEntrega
-                    {
-                        Rota = DbSafe.ToString(dr["rota"]),
-                        Descricao = DbSafe.ToString(dr["desc_rota"]),
-                        Distancia = DbSafe.ToDecimal(dr["distancia"]),
-                        Tempo = DbSafe.ToTimeSpan(dr["tempo"]),
-                        EmitePedagio = DbSafe.ToString(dr["pedagio"]),
-                        Percurso = DbSafe.ToString(dr["deslocamento"])
-                    };
-                }
-            }
-        }
-        public class RotaEntrega
-        {
-            public string Rota { get; set; }
-            public string Descricao { get; set; }
-            public decimal Distancia { get; set; }
-            public TimeSpan Tempo { get; set; }
-            public string Percurso { get; set; }
-            public string EmitePedagio { get; set; }
-        }
-        private void PreencherCamposRota(RotaEntrega rota)
-        {
-            txtRota.Text = rota.Rota;
+        //            return new RotaEntrega
+        //            {
+        //                Rota = DbSafe.ToString(dr["rota"]),
+        //                Descricao = DbSafe.ToString(dr["desc_rota"]),
+        //                Distancia = DbSafe.ToDecimal(dr["distancia"]),
+        //                Tempo = DbSafe.ToTimeSpan(dr["tempo"]),
+        //                EmitePedagio = DbSafe.ToString(dr["pedagio"]),
+        //                Percurso = DbSafe.ToString(dr["deslocamento"])
+        //            };
+        //        }
+        //    }
+        //}
+        //public class RotaEntrega
+        //{
+        //    public string Rota { get; set; }
+        //    public string Descricao { get; set; }
+        //    public decimal Distancia { get; set; }
+        //    public TimeSpan Tempo { get; set; }
+        //    public string Percurso { get; set; }
+        //    public string EmitePedagio { get; set; }
+        //}
+        //private void PreencherCamposRota(RotaEntrega rota)
+        //{
+        //    txtRota.Text = rota.Rota;
 
-            txtDistanciaCentro.Text = rota.Distancia.ToString("N2");
-            txtDistancia.Text = rota.Distancia.ToString("N2");
+        //    txtDistanciaCentro.Text = rota.Distancia.ToString("N2");
+        //    txtDistancia.Text = rota.Distancia.ToString("N2");
 
-            txtTempoCentro.Text = rota.Tempo.ToString(@"hh\:mm");
-            txtDuracao.Text = rota.Tempo.ToString(@"hh\:mm");
+        //    txtTempoCentro.Text = rota.Tempo.ToString(@"hh\:mm");
+        //    txtDuracao.Text = rota.Tempo.ToString(@"hh\:mm");
 
-            txtDesc_Rota.Text = rota.Descricao;
-            txtDeslocamento.Text = rota.Percurso;
-            txtEmitePedagio.Text = rota.EmitePedagio;
-        }
-        protected void BuscarRota(string nomeRota)
-        {
-            var rota = ObterRotaPorDescricao(nomeRota);
+        //    txtDesc_Rota.Text = rota.Descricao;
+        //    txtDeslocamento.Text = rota.Percurso;
+        //    txtEmitePedagio.Text = rota.EmitePedagio;
+        //}
+        //protected void BuscarRota(string nomeRota)
+        //{
+        //    var rota = ObterRotaPorDescricao(nomeRota);
 
-            if (rota == null)
-            {
-               // LimparCamposRota();
-                return;
-            }
+        //    if (rota == null)
+        //    {
+        //       // LimparCamposRota();
+        //        return;
+        //    }
 
-            PreencherCamposRota(rota);
-        }
+        //    PreencherCamposRota(rota);
+        //}
 
 
         protected void cboPagador_SelectedIndexChanged(object sender, EventArgs e)

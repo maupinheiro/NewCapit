@@ -41,7 +41,7 @@ namespace NewCapit.dist.pages
                
 
 
-                PreencherComboRotas();
+               // PreencherComboRotas();
               //  PreencherComboFiliais();
                 PreencherComboTipoVeiculos();
                 PreencherComboMateriais();
@@ -53,9 +53,9 @@ namespace NewCapit.dist.pages
             }
             
             //DateTime dataHoraAtual = DateTime.Now;
-            txtAltCad.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+            //txtAltCad.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             lbDtAtualizacao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
-            txtStatusRota.Text = "ATIVO";
+            //txtStatusRota.Text = "ATIVO";
         }
         //private void PreencherComboFiliais()
         //{
@@ -306,41 +306,41 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void PreencherComboRotas()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT rota, desc_rota, fl_exclusao FROM tbrotasdeentregas where fl_exclusao is null  and situacao = 'ATIVO' order by desc_rota";
+        //private void PreencherComboRotas()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT rota, desc_rota, fl_exclusao FROM tbrotasdeentregas where fl_exclusao is null  and situacao = 'ATIVO' order by desc_rota";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    cboRotas.DataSource = reader;
-                    cboRotas.DataTextField = "desc_rota";  // Campo que será mostrado no ComboBox
-                    cboRotas.DataValueField = "rota";  // Campo que será o valor de cada item                    
-                    cboRotas.DataBind();  // Realiza o binding dos dados                   
-                    cboRotas.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            cboRotas.DataSource = reader;
+        //            cboRotas.DataTextField = "desc_rota";  // Campo que será mostrado no ComboBox
+        //            cboRotas.DataValueField = "rota";  // Campo que será o valor de cada item                    
+        //            cboRotas.DataBind();  // Realiza o binding dos dados                   
+        //            cboRotas.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
         private void PreencherNumTabelaDeFrete()
         {
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
@@ -366,6 +366,8 @@ namespace NewCapit.dist.pages
                 if (dr.Read())
                 {
                     // 🔹 Campos simples
+                    txtFrete.Text = dr["cod_frete"].ToString();
+                    txtDesc_Frete.Text = dr["desc_frete"].ToString();
                     txtCodPagador.Text = dr["cod_pagador"].ToString();
                     txtCodExpedidor.Text = dr["cod_expedidor"].ToString();
                     cboExpedidor.Text = dr["expedidor"].ToString();
@@ -378,6 +380,7 @@ namespace NewCapit.dist.pages
                     txtCidRecebedor.Text = dr["cid_recebedor"].ToString();
                     txtUFRecebedor.Text = dr["uf_recebedor"].ToString();
                     txtRota.Text = dr["rota"].ToString();
+                    cboRotas.Text = dr["desc_rota"].ToString();
                     txtDuracao.Text = dr["Tempo"].ToString();
                     txtObservacao.Text = dr["observacao"].ToString();
                     txtUsuCadastro.Text = dr["cadastro_usuario"].ToString();
@@ -432,7 +435,7 @@ namespace NewCapit.dist.pages
                     ddlValorFixoTng.SelectedItem.Text =  dr["valor_fixo_tng"].ToString();
                     ddlEmitePedagio.SelectedItem.Text =  dr["emitepedagio"].ToString();
                     cboNomAgregado.SelectedItem.Text= dr["nommot_especial"].ToString();
-                    txtCadastro.Text = dr["cadastro_usuario"].ToString();
+                    txtCadastro.Text = dr["data_cadastro"].ToString();
                     lblDtCadastro.Text = dr["data_cadastro"].ToString();
                     //ddlHoraParada.SelectedItem.Text=
                     rota = dr["rota"].ToString();
@@ -447,7 +450,7 @@ namespace NewCapit.dist.pages
                     }                    
                     txtValorFranquia.Text = GetDecimal(dr["valor_hora_parada"]);
                     
-                    CarregaRotas(rota);
+                    //CarregaRotas(rota);
                     // 🔹 RadioButton customizado (lotação mínima)
                     string lotacao = dr["lotacao_minima"].ToString();
                     ScriptManager.RegisterStartupScript(this, GetType(), "SetRadio",
@@ -703,7 +706,7 @@ namespace NewCapit.dist.pages
                     else
                     {
                         txtRota.Text = dt.Rows[0][0].ToString();
-                        cboRotas.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        cboRotas.Text = dt.Rows[0][1].ToString();
                         txtCodRemetente.Text = dt.Rows[0][2].ToString();
                         cboRemetente.Text = dt.Rows[0][3].ToString();
                         txtMunicipioRemetente.Text = dt.Rows[0][4].ToString();
@@ -778,7 +781,7 @@ namespace NewCapit.dist.pages
                     else
                     {
                         txtRota.Text = dt.Rows[0][0].ToString();
-                        cboRotas.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        cboRotas.Text = dt.Rows[0][1].ToString();
                         txtCodRemetente.Text = dt.Rows[0][2].ToString();
                         cboRemetente.Text = dt.Rows[0][3].ToString();
                         txtMunicipioRemetente.Text = dt.Rows[0][4].ToString();
@@ -817,70 +820,70 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        protected void cboRotas_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idSelecionado = int.Parse(cboRotas.SelectedValue);
+        //protected void cboRotas_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    int idSelecionado = int.Parse(cboRotas.SelectedValue);
 
-            // Preencher os campos com base no valor selecionado
-            if (idSelecionado > 0)
-            {
-                PreencherCamposRotas(idSelecionado);
-            }
-            else
-            {
-                LimparCamposRotas();
-            }
-        }
+        //    // Preencher os campos com base no valor selecionado
+        //    if (idSelecionado > 0)
+        //    {
+        //        PreencherCamposRotas(idSelecionado);
+        //    }
+        //    else
+        //    {
+        //        LimparCamposRotas();
+        //    }
+        //}
         // Função para preencher os campos com os dados do banco
-        private void PreencherCamposRotas(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                conn.Open();
-                string query = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario, codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento FROM tbrotasdeentregas WHERE rota = @ID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ID", id);
-                SqlDataReader reader = cmd.ExecuteReader();
+        ////private void PreencherCamposRotas(int id)
+        ////{
+        ////    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        ////    {
+        ////        conn.Open();
+        ////        string query = "SELECT rota, desc_rota, codigo_remetente, nome_remetente, cidade_remetente, uf_remetente, codigo_expedidor, nome_expedidor, cidade_expedidor, uf_expedidor, codigo_destinatario, nome_destinatario, cidade_destinatario, uf_destinatario, codigo_recebedor, nome_recebedor, cidade_recebedor, uf_recebedor, distancia, tempo, deslocamento FROM tbrotasdeentregas WHERE rota = @ID";
+        ////        SqlCommand cmd = new SqlCommand(query, conn);
+        ////        cmd.Parameters.AddWithValue("@ID", id);
+        ////        SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    txtRota.Text = reader["rota"].ToString();
-                    cboRotas.SelectedItem.Text = reader["desc_rota"].ToString();
-                    txtCodRemetente.Text = reader["codigo_remetente"].ToString();
-                    cboRemetente.Text = reader["nome_remetente"].ToString();
-                    txtMunicipioRemetente.Text = reader["cidade_remetente"].ToString();
-                    txtUFRemetente.Text = reader["uf_remetente"].ToString();
+        ////        if (reader.Read())
+        ////        {
+        ////            txtRota.Text = reader["rota"].ToString();
+        ////            cboRotas.SelectedItem.Text = reader["desc_rota"].ToString();
+        ////            txtCodRemetente.Text = reader["codigo_remetente"].ToString();
+        ////            cboRemetente.Text = reader["nome_remetente"].ToString();
+        ////            txtMunicipioRemetente.Text = reader["cidade_remetente"].ToString();
+        ////            txtUFRemetente.Text = reader["uf_remetente"].ToString();
 
-                    txtCodExpedidor.Text = reader["codigo_expedidor"].ToString();
-                    cboExpedidor.Text = reader["nome_expedidor"].ToString();
-                    txtCidExpedidor.Text = reader["cidade_expedidor"].ToString();
-                    txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
+        ////            txtCodExpedidor.Text = reader["codigo_expedidor"].ToString();
+        ////            cboExpedidor.Text = reader["nome_expedidor"].ToString();
+        ////            txtCidExpedidor.Text = reader["cidade_expedidor"].ToString();
+        ////            txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
 
-                    txtCodDestinatario.Text = reader["codigo_destinatario"].ToString();
-                    cboDestinatario.Text = reader["nome_destinatario"].ToString();
-                    txtMunicipioDestinatario.Text = reader["cidade_destinatario"].ToString();
-                    txtUFDestinatario.Text = reader["uf_destinatario"].ToString();
+        ////            txtCodDestinatario.Text = reader["codigo_destinatario"].ToString();
+        ////            cboDestinatario.Text = reader["nome_destinatario"].ToString();
+        ////            txtMunicipioDestinatario.Text = reader["cidade_destinatario"].ToString();
+        ////            txtUFDestinatario.Text = reader["uf_destinatario"].ToString();
 
-                    txtCodRecebedor.Text = reader["codigo_recebedor"].ToString();
-                    cboRecebedor.Text = reader["nome_recebedor"].ToString();
-                    txtCidRecebedor.Text = reader["cidade_recebedor"].ToString();
-                    txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
+        ////            txtCodRecebedor.Text = reader["codigo_recebedor"].ToString();
+        ////            cboRecebedor.Text = reader["nome_recebedor"].ToString();
+        ////            txtCidRecebedor.Text = reader["cidade_recebedor"].ToString();
+        ////            txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
 
-                    txtDistancia.Text = reader["distancia"].ToString();
-                    txtDuracao.Text = reader["tempo"].ToString();
-                    cboDeslocamento.Text = reader["deslocamento"].ToString();
-                    return;
+        ////            txtDistancia.Text = reader["distancia"].ToString();
+        ////            txtDuracao.Text = reader["tempo"].ToString();
+        ////            cboDeslocamento.Text = reader["deslocamento"].ToString();
+        ////            return;
 
-                }
-            }
-        }
+        ////        }
+        ////    }
+        ////}
         // Função para limpar os campos
-        private void LimparCamposRotas()
-        {
-            //txtCodPagador.Text = string.Empty;
-            //txtCidPagador.Text = string.Empty;
-            //txtUFPagador.Text = string.Empty;
-        }
+        //private void LimparCamposRotas()
+        //{
+        //    //txtCodPagador.Text = string.Empty;
+        //    //txtCidPagador.Text = string.Empty;
+        //    //txtUFPagador.Text = string.Empty;
+        //}
 
         protected void cboNomAgregado_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1063,8 +1066,7 @@ namespace NewCapit.dist.pages
                                                 cod_pagador = @cod_pagador,
                                                 pagador = @pagador,
                                                 cid_pagador = @cid_pagador,
-                                                uf_pagador = @uf_pagador,
-                                                nucleo = @nucleo,
+                                                uf_pagador = @uf_pagador, 
                                                 distancia = @distancia,
                                                 Tempo = @Tempo,
                                                 frete_tng = @frete_tng,
@@ -1123,7 +1125,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(id);
                     cmd.Parameters.Add("@desc_frete", SqlDbType.NVarChar).Value = descr_frete;
                     cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
-                    cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = cboRotas.SelectedItem.Text;
+                    cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = cboRotas.Text;
                     cmd.Parameters.Add("@cod_remetente", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
                     cmd.Parameters.Add("@remetente", SqlDbType.NVarChar).Value = cboRemetente.Text;
                     cmd.Parameters.Add("@cid_remetente", SqlDbType.NVarChar).Value = txtMunicipioRemetente.Text;

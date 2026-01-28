@@ -42,6 +42,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtCadastro;
 
         /// <summary>
+        /// Controle txtFrete.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFrete;
+
+        /// <summary>
+        /// Controle txtDesc_Frete.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDesc_Frete;
+
+        /// <summary>
         /// Controle txtRota.
         /// </summary>
         /// <remarks>
@@ -57,7 +75,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboRotas;
+        protected global::System.Web.UI.WebControls.TextBox cboRotas;
 
         /// <summary>
         /// Controle txtCodRemetente.
