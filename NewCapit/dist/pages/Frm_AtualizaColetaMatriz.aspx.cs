@@ -1065,7 +1065,7 @@ namespace NewCapit.dist.pages
                 string carga = e.CommandArgument.ToString();
                 string idViagem = e.CommandArgument.ToString(); // O 'carga' que você passou no Eval
                 int index = e.Item.ItemIndex; // O índice da linha no Repeater
-               
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
 
 
                 // 1. Verificar se existem CT-es lidos na Session para este item
@@ -1101,7 +1101,7 @@ namespace NewCapit.dist.pages
                                     cmd.Parameters.AddWithValue("@serie", cte.Serie);
                                     cmd.Parameters.AddWithValue("@tipo", "CT-e");
                                     cmd.Parameters.AddWithValue("@mes_ano_documento", cte.Emissao);
-                                    cmd.Parameters.AddWithValue("@emitido_por", txtUsuCadastro.Text);
+                                    cmd.Parameters.AddWithValue("@emitido_por", nomeUsuario);
                                     cmd.Parameters.AddWithValue("@emissao_documento", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
                                     cmd.Parameters.AddWithValue("@idViagem", carga);
 
@@ -1306,8 +1306,64 @@ namespace NewCapit.dist.pages
                         con.Close();
                     }
                 }
+                TextBox txtNFSe = (TextBox)e.Item.FindControl("txtNFSe");
 
-               
+                if (txtNFSe != null && !string.IsNullOrWhiteSpace(txtNFSe.Text))
+                {
+                    try
+                    {
+                        if (con.State == ConnectionState.Closed) con.Open();
+
+                        using (SqlTransaction trans = con.BeginTransaction())
+                        {
+                            try
+                            {
+                                string sql = @"INSERT INTO tbnfse 
+                            (num_documento, serie_documento, tipo_documento, emitido_por, emissao_documento, status_documento,situacao_documento, idviagem)
+                            VALUES 
+                            (@num, @serie, @tipo, @emitido_por, @emissao_documento, @status_documento,@situacao_documento, @idViagem)";
+
+                                using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+                                {
+                                    DateTime agora = DateTime.Now;
+
+                                    cmd.Parameters.AddWithValue("@num", txtNFSe.Text);
+                                    cmd.Parameters.AddWithValue("@serie", "1");
+                                    cmd.Parameters.AddWithValue("@tipo", "NFS-e");
+                                     cmd.Parameters.AddWithValue("@emitido_por", nomeUsuario);
+                                    // Passando como DateTime puro (mais seguro)
+                                    cmd.Parameters.AddWithValue("@status_documento", "Pendente");
+                                    cmd.Parameters.AddWithValue("@situacao_documento", "Emitido");
+                                    cmd.Parameters.AddWithValue("@emissao_documento", agora);
+                                    cmd.Parameters.AddWithValue("@idViagem", carga);
+
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                trans.Commit(); // Commit primeiro
+
+                                // Agora que os dados estão "vivos" no banco, fazemos o bind
+                                rptColetas.DataBind();
+
+                                MostrarMsg2("Alterações salvas com sucesso!");
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                throw ex;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MostrarMsg("Erro ao salvar NFS-e: " + ex.Message);
+                    }
+                    finally
+                    {
+                        if (con.State == ConnectionState.Open) con.Close();
+                    }
+                }
+
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
                 BuscarCteSalvos(idViagem);
@@ -2204,13 +2260,13 @@ namespace NewCapit.dist.pages
             DECLARE @PossuiAlgumCTe INT;
             SELECT @PossuiAlgumCTe = COUNT(*) 
             FROM tbcte 
-            WHERE idcarga IN (SELECT idcarga FROM tbcargas WHERE idviagem = @idviagem);
+            WHERE id_viagem IN (SELECT carga FROM tbcargas WHERE idviagem = @idviagem);
 
             -- Verifica se a viagem possui algum material preenchido
             DECLARE @PossuiMaterial INT;
             SELECT @PossuiMaterial = COUNT(*) 
             FROM tbcargas 
-            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> '';
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), 'Vazio'), 'Vazio') <> 'Vazio';
 
             SELECT @NaoConcluidas AS NaoConcluidas, @PossuiAlgumCTe AS PossuiAlgumCTe, @PossuiMaterial AS PossuiMaterial";
 

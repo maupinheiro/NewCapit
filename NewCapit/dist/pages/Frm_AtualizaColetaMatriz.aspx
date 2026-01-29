@@ -1341,7 +1341,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
    <!-- NFS-e -->
    <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">NFS-e:</label>
     <div class="col-md-2">
-         <asp:TextBox ID="txtNFSe" runat="server" CssClass="form-control" maxlength="11"></asp:TextBox>
+         <asp:TextBox ID="txtNFSe" runat="server" Text='<%# Eval("num_nfse")%>' CssClass="form-control" maxlength="11"></asp:TextBox>
      </div>
     <!-- MDF-e --> 
     <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">MDF-e:</label>

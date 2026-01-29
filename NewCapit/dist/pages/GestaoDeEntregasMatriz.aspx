@@ -289,83 +289,73 @@
                 </div>
             </div>
          <!-- Modal -->
-         <div class="modal fade" id="modalCTE" tabindex="-1">
+         <div class="modal fade" role="dialog" id="modalCTE" tabindex="-1">
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+        <ContentTemplate>
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow">
 
-             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-             <ContentTemplate>
-                          <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title">Baixar Documentos CT-e / NFS-e</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-        <div class="modal-header">
-            <h5 class="modal-title">Baixar Documentos CT-e / NFS-e</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12 d-flex gap-4">
+                                <div class="form-check">
+                                    <asp:RadioButton ID="gridRadiosCTe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" />
+                                    <label class="form-check-label" for="<%= gridRadiosCTe.ClientID %>">CT-e</label>
+                                </div>
+                                <div class="form-check">
+                                    <asp:RadioButton ID="gridRadiosNFSe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" />
+                                    <label class="form-check-label" for="<%= gridRadiosNFSe.ClientID %>">NFS-e</label>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="modal-body">
-            <div class="row g-3">
-               <div class="col-md-2">
-                   <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="gridRadios"
-                        id="gridRadiosCTe"
-                        value="option1"
-                        checked
-                      />
-                      <label class="form-check-label" for="gridRadiosCTe"> CT-e</label>
-                   </div>
-               </div>
-               <div class="col-md-2">
-                   <div class="form-check">
-                       <input
-                         class="form-check-input"
-                         type="radio"
-                         name="gridRadios"
-                         id="gridRadiosNFSe"
-                         value="option2"                         
-                       />
-                       <label class="form-check-label" for="gridRadiosNFSe"> NFS-e</label>
-                   </div>
-               </div>
+                        <div class="row g-2 align-items-end mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Número do Documento</label>
+                                <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server" placeholder="Digite o número..."></asp:TextBox> 
+                            </div>
+                            <div class="col-md-3">
+                                <asp:LinkButton ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" CssClass="btn btn-warning w-100">
+                                    <i class="bi bi-search"></i> Pesquisar
+                                </asp:LinkButton>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p><strong>Chave:</strong> <asp:Label ID="lblChave" runat="server" CssClass="text-muted"></asp:Label></p>
+                                <p><strong>Emissão:</strong> <asp:Label ID="lblEmissao" runat="server"></asp:Label></p>
+                                <p><strong>Empresa:</strong> <asp:Label ID="lblEmpresa" runat="server"></asp:Label></p>
+                            </div>
+                            <div class="col-md-6 border-start">
+                                <p><strong>Motorista:</strong> <asp:Label ID="lblMotorista" runat="server"></asp:Label></p>
+                                <p><strong>Destino:</strong> <asp:Label ID="lblDestino" runat="server"></asp:Label></p>
+                                <p><strong>Cidade/UF:</strong> <asp:Label ID="lblCidade" runat="server"></asp:Label></p>
+                                <p><strong>Data Saída:</strong> <asp:Label ID="lblDataSaida" runat="server"></asp:Label></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <asp:Button ID="btnSalvarBaixa" runat="server"
+                            CssClass="btn btn-success px-5"
+                            Text="Baixar Documento"
+                            OnClick="btnSalvarBaixa_Click" />
+                    </div>
+
+                </div>
             </div>
-            <div class="row g-3">
-               <div class="col-md-4">                 
-                   <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server"></asp:TextBox> 
-               </div>
-                
-              <div class="col-md-3">                  
-                  <asp:Button ID="btnBuscar" runat="server" Text="Pesquisar" OnClick="btnBuscar_Click" CssClass="btn btn-warning w-100" />
-                  
-             </div>
-            </div>
-            <hr />
-
-            <b>Chave:</b> <asp:Label ID="lblChave" runat="server" Text=""></asp:Label> <br />
-            <b>Emissão:</b> <asp:Label ID="lblEmissao" runat="server" Text=""></asp:Label> <br />
-            <b>Empresa:</b> <asp:Label ID="lblEmpresa" runat="server" Text=""></asp:Label> <br />
-
-            <hr />
-
-            <b>Motorista:</b> <asp:Label ID="lblMotorista" runat="server" Text=""></asp:Label> <br />
-            <b>Destino:</b> <asp:Label ID="lblDestino" runat="server" Text=""></asp:Label> <br />
-            <b>Cidade/UF:</b> <asp:Label ID="lblCidade" runat="server" Text=""></asp:Label><br />
-            <b>Data Saída:</b> <asp:Label ID="lblDataSaida" runat="server" Text=""></asp:Label> 
-        </div>
-
-        <div class="modal-footer">
-            <asp:Button ID="btnSalvarBaixa" runat="server"
-                CssClass="btn btn-success w-100"
-                Text="Baixar"
-                OnClick="btnSalvarBaixa_Click" />
-        </div>
-
-    </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </div>
-             </ContentTemplate>    
-             </asp:UpdatePanel>
-             
-          </div>
 
 
         </section>

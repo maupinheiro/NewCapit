@@ -114,6 +114,24 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
 
         /// <summary>
+        /// Controle gridRadiosCTe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton gridRadiosCTe;
+
+        /// <summary>
+        /// Controle gridRadiosNFSe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton gridRadiosNFSe;
+
+        /// <summary>
         /// Controle txtNumeroDocumento.
         /// </summary>
         /// <remarks>
@@ -129,7 +147,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBuscar;
+        protected global::System.Web.UI.WebControls.LinkButton btnBuscar;
 
         /// <summary>
         /// Controle lblChave.

@@ -479,55 +479,114 @@ namespace NewCapit.dist.pages
 
         protected void btnSalvarBaixa_Click(object sender, EventArgs e)
         {
-            try
+            if (gridRadiosCTe.Checked == true)
             {
-                // 1. Verificação de segurança para a Session
-                if (Session["UsuarioLogado"] == null)
+                try
                 {
-                    Response.Redirect("Login.aspx");
-                    return;
-                }
+                    // 1. Verificação de segurança para a Session
+                    if (Session["UsuarioLogado"] == null)
+                    {
+                        Response.Redirect("Login.aspx");
+                        return;
+                    }
 
-                string usuario = Session["UsuarioLogado"].ToString();
-                string numeroDoc = txtNumeroDocumento.Text.Trim(); // .Trim() evita espaços vazios
+                    string usuario = Session["UsuarioLogado"].ToString();
+                    string numeroDoc = txtNumeroDocumento.Text.Trim(); // .Trim() evita espaços vazios
 
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-                {
-                    string sql = @"
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                    {
+                        string sql = @"
                 UPDATE tbcte 
                 SET baixado_por = @usuario, 
                     status_documento = @status_documento, 
                     data_baixa = GETDATE() 
                 WHERE num_documento = @numero";
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@usuario", usuario);
-                    cmd.Parameters.AddWithValue("@numero", numeroDoc);
-                    cmd.Parameters.AddWithValue("@status_documento", "Baixado");
+                        SqlCommand cmd = new SqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@usuario", usuario);
+                        cmd.Parameters.AddWithValue("@numero", numeroDoc);
+                        cmd.Parameters.AddWithValue("@status_documento", "Baixado");
 
-                    conn.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                        conn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
 
-                    if (rowsAffected > 0)
-                    {
+                        if (rowsAffected > 0)
+                        {
 
-                        ScriptManager.RegisterStartupScript(this, GetType(), "ok", "alert('CTe " + numeroDoc + " baixado com sucesso!');", true);
-                    }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(this, GetType(), "erro", "alert('Erro: Documento não encontrado no banco.');", true);
+
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ok", "alert('CTe " + numeroDoc + " baixado com sucesso!');", true);
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, GetType(), "erro", "alert('Erro: Documento não encontrado no banco.');", true);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Remove quebras de linha e aspas simples/duplas para não quebrar o alert do JS
+                    string mensagemErro = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", " ");
+
+                    string script = $"alert('Erro técnico: {mensagemErro}');";
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "erro_catch", script, true);
+                }
             }
-            catch (Exception ex)
+            else if (gridRadiosNFSe.Checked == true)
             {
-                // Remove quebras de linha e aspas simples/duplas para não quebrar o alert do JS
-                string mensagemErro = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", " ");
+                try
+                {
+                    // 1. Verificação de segurança para a Session
+                    if (Session["UsuarioLogado"] == null)
+                    {
+                        Response.Redirect("Login.aspx");
+                        return;
+                    }
 
-                string script = $"alert('Erro técnico: {mensagemErro}');";
+                    string usuario = Session["UsuarioLogado"].ToString();
+                    string numeroDoc = txtNumeroDocumento.Text.Trim(); // .Trim() evita espaços vazios
 
-                ScriptManager.RegisterStartupScript(this, GetType(), "erro_catch", script, true);
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                    {
+                        string sql = @"
+                UPDATE tbnfse 
+                SET baixado_por = @usuario, 
+                    status_documento = @status_documento, 
+                    data_baixa = GETDATE() 
+                WHERE num_documento = @numero";
+
+                        SqlCommand cmd = new SqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@usuario", usuario);
+                        cmd.Parameters.AddWithValue("@numero", numeroDoc);
+                        cmd.Parameters.AddWithValue("@status_documento", "Baixado");
+
+                        conn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+
+                            ScriptManager.RegisterStartupScript(this, GetType(), "ok", "alert('NFS-e " + numeroDoc + " baixado com sucesso!');", true);
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, GetType(), "erro", "alert('Erro: Documento não encontrado no banco.');", true);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Remove quebras de linha e aspas simples/duplas para não quebrar o alert do JS
+                    string mensagemErro = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", " ");
+
+                    string script = $"alert('Erro técnico: {mensagemErro}');";
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "erro_catch", script, true);
+                }
             }
+
+
+            
         }
 
         public void Limpar()
@@ -567,68 +626,142 @@ namespace NewCapit.dist.pages
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-            {
-                conn.Open();
 
-                string sqlCte = @"
+            if (gridRadiosCTe.Checked == true)
+            {
+                using (SqlConnection conn = new SqlConnection(
+                   ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    conn.Open();
+
+                    string sqlCte = @"
             SELECT chave_de_acesso, emissao_documento, empresa_emissora, 
                    id_viagem, status_documento
             FROM tbcte
             WHERE num_documento = @numero";
 
-                SqlCommand cmd = new SqlCommand(sqlCte, conn);
-                cmd.Parameters.AddWithValue("@numero", txtNumeroDocumento.Text);
+                    SqlCommand cmd = new SqlCommand(sqlCte, conn);
+                    cmd.Parameters.AddWithValue("@numero", txtNumeroDocumento.Text);
 
-                SqlDataReader dr = cmd.ExecuteReader();
+                    SqlDataReader dr = cmd.ExecuteReader();
 
-                // 🔍 NÃO encontrou registro
-                if (!dr.Read())
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(),
-                        "ok", "alert('Não há documento cadastrado!');", true);
-                    return;
-                }
+                    // 🔍 NÃO encontrou registro
+                    if (!dr.Read())
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                            "ok", "alert('Não há documento cadastrado!');", true);
+                        Limpar();
+                        return;
+                    }
 
-                // 📦 Encontrou, mas já está baixado
-                if (dr["status_documento"].ToString() == "Baixado")
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(),
-                        "ok", "alert('Documento já foi baixado!');", true);
-                    return;
-                }
+                    // 📦 Encontrou, mas já está baixado
+                    if (dr["status_documento"].ToString() == "Baixado")
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                            "ok", "alert('Documento já foi baixado!');", true);
+                        Limpar();
+                        return;
+                    }
 
-                // 📄 Encontrou e está Pendente → segue fluxo
-                idViagem = dr["id_viagem"].ToString();
-                lblChave.Text = dr["chave_de_acesso"].ToString();
-                SafeDateTimeValue(lblEmissao.Text = dr["emissao_documento"].ToString());
-                lblEmpresa.Text = dr["empresa_emissora"].ToString();
+                    // 📄 Encontrou e está Pendente → segue fluxo
+                    idViagem = dr["id_viagem"].ToString();
+                    lblChave.Text = dr["chave_de_acesso"].ToString();
+                    SafeDateTimeValue(lblEmissao.Text = dr["emissao_documento"].ToString());
+                    lblEmpresa.Text = dr["empresa_emissora"].ToString();
 
-                dr.Close();
+                    dr.Close();
 
-                string sqlCar = @"
+                    string sqlCar = @"
             SELECT m.nommot, c.cid_recebedor, c.uf_recebedor, 
                    c.cheg_cliente, c.recebedor  
             FROM tbcargas AS c  
             INNER JOIN tbmotoristas AS m ON c.codmot = m.codmot 
             WHERE carga = @idviagem";
 
-                SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
-                cmdCar.Parameters.AddWithValue("@idviagem", idViagem);
+                    SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
+                    cmdCar.Parameters.AddWithValue("@idviagem", idViagem);
 
-                SqlDataReader dr2 = cmdCar.ExecuteReader();
+                    SqlDataReader dr2 = cmdCar.ExecuteReader();
 
-                if (dr2.Read())
-                {
-                    lblMotorista.Text = dr2["nommot"].ToString();
-                    lblDestino.Text = dr2["recebedor"].ToString();
-                    lblCidade.Text = dr2["cid_recebedor"].ToString() + "/" + dr2["uf_recebedor"].ToString();
-                    SafeDateTimeValue(lblDataSaida.Text = dr2["cheg_cliente"].ToString());
+                    if (dr2.Read())
+                    {
+                        lblMotorista.Text = dr2["nommot"].ToString();
+                        lblDestino.Text = dr2["recebedor"].ToString();
+                        lblCidade.Text = dr2["cid_recebedor"].ToString() + "/" + dr2["uf_recebedor"].ToString();
+                        SafeDateTimeValue(lblDataSaida.Text = dr2["cheg_cliente"].ToString());
+                    }
+
+                    dr2.Close();
                 }
-
-                dr2.Close();
             }
+            else if (gridRadiosNFSe.Checked == true)
+            {
+                using (SqlConnection conn = new SqlConnection(
+                   ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    conn.Open();
+
+                    string sqlCte = @"
+                                SELECT num_documento, emissao_documento, 
+                                       idviagem, status_documento
+                                FROM tbnfse
+                                WHERE num_documento =@numero";
+
+                    SqlCommand cmd = new SqlCommand(sqlCte, conn);
+                    cmd.Parameters.AddWithValue("@numero", txtNumeroDocumento.Text);
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    // 🔍 NÃO encontrou registro
+                    if (!dr.Read())
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                            "ok", "alert('Não há documento cadastrado!');", true);
+                        Limpar();
+                        return;
+                    }
+
+                    // 📦 Encontrou, mas já está baixado
+                    if (dr["status_documento"].ToString() == "Baixado")
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                            "ok", "alert('Documento já foi baixado!');", true);
+                        Limpar();
+                        return;
+                    }
+
+                    // 📄 Encontrou e está Pendente → segue fluxo
+                    idViagem = dr["idviagem"].ToString();
+                    lblChave.Text = "N/A";
+                    SafeDateTimeValue(lblEmissao.Text = dr["emissao_documento"].ToString());
+                    lblEmpresa.Text = "N/A";
+
+                    dr.Close();
+
+                    string sqlCar = @"
+                        SELECT m.nommot, c.cid_recebedor, c.uf_recebedor, 
+                               c.cheg_cliente, c.recebedor  
+                        FROM tbcargas AS c  
+                        INNER JOIN tbmotoristas AS m ON c.codmot = m.codmot 
+                        WHERE carga = @idviagem";
+
+                    SqlCommand cmdCar = new SqlCommand(sqlCar, conn);
+                    cmdCar.Parameters.AddWithValue("@idviagem", idViagem);
+
+                    SqlDataReader dr2 = cmdCar.ExecuteReader();
+
+                    if (dr2.Read())
+                    {
+                        lblMotorista.Text = dr2["nommot"].ToString();
+                        lblDestino.Text = dr2["recebedor"].ToString();
+                        lblCidade.Text = dr2["cid_recebedor"].ToString() + "/" + dr2["uf_recebedor"].ToString();
+                        SafeDateTimeValue(lblDataSaida.Text = dr2["cheg_cliente"].ToString());
+                    }
+
+                    dr2.Close();
+                }
+            }
+               
         }
 
     }

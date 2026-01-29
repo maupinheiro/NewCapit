@@ -221,7 +221,7 @@
                                                 <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control"  OnTextChanged="txtCodRecebedor_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-5">
-                                                <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboRecebedor_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                                <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control select2" ></asp:DropDownList>
                                             </div>
                                             <div class="col-md-4">
                                                 <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
