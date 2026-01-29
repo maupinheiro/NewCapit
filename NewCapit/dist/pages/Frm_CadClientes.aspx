@@ -368,13 +368,13 @@
                           <br />
                           <button type="button" class="btn btn-outline-info  btn-lg">Mapa </button>
                       </div>--%>
-                      <div class="col-md-1">
+                      <div class="col-md-2">
                           <br />
-                          <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Cadastrar" />
+                          <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg w-100" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Cadastrar" />
                       </div>
-                      <div class="col-md-1">
+                      <div class="col-md-2">
                           <br />
-                          <a href="/dist/pages/ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Sair               
+                          <a href="/dist/pages/ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                           </a>
                       </div>
                   </div>

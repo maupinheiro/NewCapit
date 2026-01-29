@@ -389,6 +389,8 @@ namespace NewCapit.dist.pages
                     cboDestinatario.Text = dr["destinatario"].ToString();
                     txtMunicipioDestinatario.Text = dr["cid_destinatario"].ToString();
                     txtUFDestinatario.Text = dr["uf_destinatario"].ToString();
+                    txtMunicipioRemetente.Text = dr["cid_remetente"].ToString();
+                    txtUFRemetente.Text = dr["uf_remetente"].ToString();
                     txtCadastro.Text = dr["data_cadastro"].ToString();
 
                     // 🔹 Campos numéricos / decimais
@@ -446,7 +448,7 @@ namespace NewCapit.dist.pages
                     if (dr["franquia_hora_parada"] != DBNull.Value)
                     {
                         TimeSpan hora = (TimeSpan)dr["franquia_hora_parada"];
-                        txtFranquia.Text = hora.ToString(@"hh\:mm");
+                        txtFranquia.Text = hora.ToString(@"hh\:mm\:ss");
                     }                    
                     txtValorFranquia.Text = GetDecimal(dr["valor_hora_parada"]);
                     

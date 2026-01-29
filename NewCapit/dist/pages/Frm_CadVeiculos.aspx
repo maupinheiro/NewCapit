@@ -373,12 +373,11 @@
                     <!-- linha 7 -->
                     <div class="row g-3">
                         <div class="col-md-2">
-
                             <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success  btn-lg w-100" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar1_Click" Text="Cadastrar" />
                         </div>
                         <div class="col-md-2">
-                            &nbsp;&nbsp;&nbsp;
-                            <a href="ConsultaVeiculos.aspx" class="btn btn-outline-danger btn-lg w-100">Cancelar               
+                            <%--&nbsp;&nbsp;&nbsp;--%>
+                            <a href="ConsultaVeiculos.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                             </a>
                         </div>
                     </div>
