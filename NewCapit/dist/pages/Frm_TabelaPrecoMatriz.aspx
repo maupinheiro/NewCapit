@@ -426,7 +426,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <span class="details">FRANQUIA (HH:mm):</span>
+                                                            <span class="details">FRANQUIA (HH:mm:ss):</span>
                                                             <asp:TextBox ID="txtFranquia" runat="server" CssClass="form-control"> 
                                                             </asp:TextBox>
                                                         </div>

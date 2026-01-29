@@ -52,8 +52,8 @@
                                         <ItemTemplate>
                                             <span><%# Eval("cod_pagador") + " - " + Eval("pagador") %></span>
                                             <br>
-                                            <span class="negrito"><%# Eval("tipo_veiculo") %></span>
-                                            <%--<%# Eval("tipo_veiculo") %> --%>
+                                            <span class="negrito"><%# Eval("tipo_veiculo") + " - " + Eval("tipo_material") %></span>
+                                            <%--<%# Eval("tipo_material") %> --%>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
@@ -61,7 +61,7 @@
                                         <ItemTemplate>
                                             <%# Eval("cod_expedidor") + " - " + Eval("expedidor") %>
                                             <br>
-                                            <%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %>
+                                            <span class="negrito"><%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
@@ -69,7 +69,7 @@
                                         <ItemTemplate>
                                             <%# Eval("cod_recebedor") + " - " + Eval("recebedor") %>
                                             <br>
-                                            <%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor") %>
+                                           <span class="negrito"><%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor") %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
@@ -95,7 +95,7 @@
                                         <ItemTemplate>
                                             <%# Eval("vigencia_inicial") %>
                                             <br>
-                                            <%# Eval("vigencia_final") %>
+                                            <span class="negrito"><%# Eval("vigencia_final") %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
