@@ -1498,14 +1498,22 @@ namespace NewCapit.dist.pages
 
             if (e.CommandName == "EnviarSM")
             {
+                
+                // 1. Pegamos o ID da Carga do CommandArgument
                 string idCarga = e.CommandArgument.ToString();
+
+                // 2. Localizamos os controles dentro da linha (Item) do Repeater
+                // Substitua os IDs "lblPlaca", "txtValor" pelos IDs reais do seu .aspx
+                string placa = ((Label)e.Item.FindControl("lblPlaca")).Text;
+                string valor = ((TextBox)e.Item.FindControl("txtValor")).Text;
+                string nota = ((HiddenField)e.Item.FindControl("hdnNota")).Value;
 
                 Page.RegisterAsyncTask(new PageAsyncTask(async () =>
                 {
                     try
                     {
                         // 1. Monta o Objeto (Substitua pelos dados reais da sua query/banco)
-                        var solicitacao = CriarObjetoSolicitacao(idCarga);
+                        var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, nota);
 
                         // 2. Serializa para JSON e salva o arquivo físico (Auditoria)
                         string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true });
@@ -1532,7 +1540,7 @@ namespace NewCapit.dist.pages
             }
         }
 
-        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga)
+        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string nota)
         {
             return new SolicitacaoViagemRequest
             {
@@ -2830,7 +2838,7 @@ namespace NewCapit.dist.pages
             DECLARE @PossuiMaterial INT;
             SELECT @PossuiMaterial = COUNT(*) 
             FROM tbcargas 
-            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> '';
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> 'Vazio' ;
 
             SELECT @NaoConcluidas AS NaoConcluidas, 
                    (@TotalCTe + @TotalNFSe) AS TotalDocumentos, 
