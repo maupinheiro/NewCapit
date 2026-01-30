@@ -350,6 +350,9 @@ namespace NewCapit.dist.pages
                         case "Pendente":
                             lblStatus.CssClass += " bg-black text-white";
                             break;
+                        case "Pernoite":
+                            lblStatus.CssClass += " bg-purple text-white";
+                            break;
                         case "Concluido":
                             lblStatus.CssClass += " bg-info text-white";
                             break;
