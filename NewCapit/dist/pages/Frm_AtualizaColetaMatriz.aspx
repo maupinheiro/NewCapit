@@ -1,10 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaColetaMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaColetaMatriz" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaColetaMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaColetaMatriz" Async="true"%>
 
 <%@ Register Assembly="GMaps" Namespace="Subgurim.Controles" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <!-- Bootstrap CSS -->
+       <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- jQuery e Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -14,6 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
    
 
     <!-- Script para fechar modal -->
@@ -61,7 +62,7 @@
         /* =========================
            SELECT2 (SEGURO)
         ========================= */
-       
+
 
         /* =========================
            TEMPOS E STATUS
@@ -132,53 +133,91 @@
            VALIDAÇÕES
         ========================= */
         function validarDatas(item) {
-            // 1. Identifica o container da linha (o <tr> com classe expandable-body)
             let container = item.closest('.expandable-body');
             if (!container) return;
 
-            // --- SELEÇÃO DE CAMPOS USANDO CLASSES (Mais seguro que ID no ASP.NET) ---
+            // --- SELEÇÃO DE CAMPOS ---
             const txtSaidaOrigem = container.querySelector('.saida-origem');
+            const txtDuracao = container.querySelector('input[id*="txtDuracao"]'); // Formato HH:mm:ss
+            const txtPrevisaoChegada = container.querySelector('input[id*="txtPrevisaoChegada"]');
+
             const txtChegadaDestino = container.querySelector('.chegada-destino');
             const txtSaidaPlanta = container.querySelector('.saida-planta');
+            const ddlStatus = container.querySelector('.ddlStatus');
 
-            // Campos de destino (onde os cálculos aparecem)
-            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
-            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
-            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
+            // --- NOVA LÓGICA: CÁLCULO DE PREVISÃO (Somar Duração) ---
+            if (txtSaidaOrigem && txtSaidaOrigem.value && txtDuracao && txtPrevisaoChegada) {
+                let dataSaida = new Date(txtSaidaOrigem.value);
+                let tempoStr = txtDuracao.value; // Esperado "HH:mm:ss"
 
-            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA ---
+                if (!isNaN(dataSaida) && tempoStr.includes(":")) {
+                    let partes = tempoStr.split(':');
+                    let h = parseInt(partes[0]) || 0;
+                    let m = parseInt(partes[1]) || 0;
+                    let s = parseInt(partes[2]) || 0;
+
+                    // Adiciona o tempo à data de saída
+                    dataSaida.setHours(dataSaida.getHours() + h);
+                    dataSaida.setMinutes(dataSaida.getMinutes() + m);
+                    dataSaida.setSeconds(dataSaida.getSeconds() + s);
+
+                    // Formata para o input datetime-local (yyyy-MM-ddTHH:mm)
+                    let ano = dataSaida.getFullYear();
+                    let mes = String(dataSaida.getMonth() + 1).padStart(2, '0');
+                    let dia = String(dataSaida.getDate()).padStart(2, '0');
+                    let hora = String(dataSaida.getHours()).padStart(2, '0');
+                    let min = String(dataSaida.getMinutes()).padStart(2, '0');
+
+                    txtPrevisaoChegada.value = `${ano}-${mes}-${dia}T${hora}:${min}`;
+
+                    // --- REGRA DO STATUS 'CARREGANDO' ---
+                    // Se preencheu saída origem e ainda não tem chegada no destino, vira 'Carregando'
+                    if (ddlStatus && !txtChegadaDestino.value) {
+                        selecionarTextoNoDDL(ddlStatus, "Carregando");
+                    }
+                }
+            }
+
+            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA (Já existente no seu código) ---
             function formatarDiferenca(inicio, fim) {
                 if (!inicio || !fim) return "";
                 const d1 = new Date(inicio);
                 const d2 = new Date(fim);
                 if (isNaN(d1) || isNaN(d2)) return "";
                 if (d2 < d1) return "Inválido";
-
                 const diffMs = d2 - d1;
                 const totalMinutos = Math.floor(diffMs / 60000);
-                const horas = Math.floor(totalMinutos / 60);
-                const minutos = totalMinutos % 60;
-                return `${horas}h ${minutos}min`;
+                return `${Math.floor(totalMinutos / 60)}h ${totalMinutos % 60}min`;
             }
 
-            // --- EXECUÇÃO DOS CÁLCULOS ---
+            // --- CÁLCULOS DE TEMPOS DECORRIDOS ---
+            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
+            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
+            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
 
-            // 1. Tempo de Trânsito/Espera (Exemplo)
-            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg) {
+            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg)
                 txtAgCarreg.value = formatarDiferenca(txtSaidaOrigem.value, txtChegadaDestino.value);
-            }
 
-            // 2. Tempo de Descarga
-            if (txtSaidaPlanta && txtChegadaDestino && txtAgDescarga) {
+            if (txtChegadaDestino && txtSaidaPlanta && txtAgDescarga)
                 txtAgDescarga.value = formatarDiferenca(txtChegadaDestino.value, txtSaidaPlanta.value);
-            }
-            if (txtSaidaPlanta && txtSaidaOrigem && txtDurTransp) {
+
+            if (txtSaidaOrigem && txtSaidaPlanta && txtDurTransp)
                 txtDurTransp.value = formatarDiferenca(txtSaidaOrigem.value, txtSaidaPlanta.value);
-            }
-            // 3. Atualiza o Status Automaticamente
+
+            // 3. Atualiza o Status Geral (Hierarquia que você já tinha)
             atualizarStatusECores(container);
         }
-       
+
+        // Função auxiliar para mudar o DropDown pelo texto
+        function selecionarTextoNoDDL(ddl, texto) {
+            for (let i = 0; i < ddl.options.length; i++) {
+                if (ddl.options[i].text.trim() === texto) {
+                    ddl.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
         /* =========================
            PEDIDOS (TAB)
         ========================= */
@@ -202,7 +241,7 @@
         ========================= */
         function bindEventos() {
 
-          
+
             aplicarMascaraTelefone();
 
             document.querySelectorAll('.item-coleta').forEach(item => {
@@ -230,21 +269,21 @@
         /* =========================
            INICIALIZAÇÃO
         ========================= */
-       Sys.Application.add_load(function () {
-    // 1. Restaura as abas
-    inicializarAbas();
-    
-    // 2. Aplica o Select2 nos campos visíveis e recém-criados
-    aplicarPluginsDinamicos();
-    
-    // 3. Recalcula os tempos da grid
-    recalcularTodosOsTempos();
+        Sys.Application.add_load(function () {
+            // 1. Restaura as abas
+            inicializarAbas();
 
-    
-    // 4. Aplica máscaras de telefone se houver
-    if (typeof aplicarMascaraTelefone === "function") aplicarMascaraTelefone();
-});
+            // 2. Aplica o Select2 nos campos visíveis e recém-criados
+            aplicarPluginsDinamicos();
 
+            // 3. Recalcula os tempos da grid
+            recalcularTodosOsTempos();
+
+
+            // 4. Aplica máscaras de telefone se houver
+            if (typeof aplicarMascaraTelefone === "function") aplicarMascaraTelefone();
+        });
+        if (typeof inicializarAbas === "function") inicializarAbas();
     </script>
     <script>
                  function inicializarAbas() {
@@ -334,26 +373,31 @@
     </script>
     <script>
         function aplicarPluginsDinamicos() {
-    console.log("Aplicando Select2 e Máscaras...");
+            $('.select2').each(function () {
+                var $meuSelect = $(this);
+                var $meuModal = $meuSelect.closest('.modal');
 
-    $('.select2').each(function () {
-        // Se já existir um select2 no elemento, destrói para evitar bugs
-        if ($(this).hasClass("select2-hidden-accessible")) {
-            $(this).select2('destroy');
+                // Importante: Destruir antes de aplicar para evitar que o campo fique "morto"
+                if ($meuSelect.hasClass("select2-hidden-accessible")) {
+                    $meuSelect.select2('destroy');
+                }
+
+                $meuSelect.select2({
+                    width: '100%',
+                    placeholder: "Selecione...",
+                    allowClear: true,
+                    // Isso resolve o problema do dropdown sumir ou não abrir:
+                    dropdownParent: $meuModal.length ? $meuModal : $(document.body)
+                });
+            });
         }
-        
-        $(this).select2({
-            width: '100%',
-            // Se estiver dentro de um modal, precisa desta linha:
-            // dropdownParent: $(this).closest('.modal').length ? $(this).closest('.modal') : $(document.body)
-        });
-    });
 
-    // Sincroniza o ID da Rota Krona manualmente
-    $('#ddlRotaKrona').off('change').on('change', function () {
-        $('#txtId_Rota').val($(this).val());
-    });
-}
+        // SOLUÇÃO PARA O CAMPO DE BUSCA TRAVADO:
+        // O Bootstrap 4 impede que elementos fora do "foco principal" do modal recebam digitação.
+        // Esta linha desabilita essa trava do Bootstrap.
+        if ($.fn.modal && $.fn.modal.Constructor) {
+            $.fn.modal.Constructor.prototype._enforceFocus = function () { };
+        }
     </script>
     <script type="text/javascript">
         var prm = Sys.WebForms.PageRequestManager.getInstance();
@@ -407,6 +451,22 @@
             }
         }
     </script>  
+    <script type="text/javascript">
+        function bindSelect2() {
+            $('.select2').select2(); // Use a classe ou ID do seu ddl
+        }
+
+        // Roda no carregamento inicial
+        $(document).ready(function () {
+            bindSelect2();
+        });
+
+        // Roda após cada PostBack (UpdatePanel)
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function () {
+            bindSelect2();
+        });
+</script>
     
 
     <div class="content-wrapper">
@@ -510,7 +570,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <span class="details">NOME COMPLETO:</span>
-                                                <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control font-weight-bold select2" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                                <asp:DropDownList ID="ddlMotorista" runat="server" class="form-control font-weight-bold select2" EnableViewState="true" OnSelectedIndexChanged="ddlMotorista_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                             </div>
                                             <asp:HiddenField ID="txtconformmessageValue" runat="server" />
                                         </div>

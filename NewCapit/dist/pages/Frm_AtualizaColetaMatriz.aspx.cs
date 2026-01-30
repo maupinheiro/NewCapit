@@ -1,49 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Configuration;
-using System.Web.UI.HtmlControls;
-using System.Collections;
-using Org.BouncyCastle.Asn1.Cmp;
-using NPOI.SS.Formula.Functions;
+﻿using AjaxControlToolkit.Design;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Domain;
-using static NPOI.HSSF.Util.HSSFColor;
-using System.Threading;
-using System.Diagnostics.Eventing.Reader;
-using System.Web.Services.Description;
-using NPOI.SS.UserModel;
-using ICSharpCode.SharpZipLib.Zip;
-using MathNet.Numerics.Providers.SparseSolver;
-using System.Drawing.Drawing2D;
 using GMaps;
 using GMaps.Classes;
+using ICSharpCode.SharpZipLib.Zip;
+using MathNet.Numerics;
+using MathNet.Numerics.Providers.SparseSolver;
+using NPOI.SS.Formula;
+using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
+using OfficeOpenXml.Drawing.Chart;
+using Org.BouncyCastle.Asn1.Cmp;
 using Subgurim;
 using Subgurim.Controles;
 using Subgurim.Controls;
 using Subgurim.Maps;
 using Subgurim.Web;
-using System.Globalization;
-using DocumentFormat.OpenXml.Bibliography;
-using MathNet.Numerics;
-using NPOI.SS.Formula;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Numerics;
-using System.Web.Script.Serialization;
 using System.Security.Principal;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.Script.Serialization;
 using System.Web.Services;
-using DocumentFormat.OpenXml.Office.Word;
-using OfficeOpenXml.Drawing.Chart;
-using AjaxControlToolkit.Design;
-
+using System.Web.Services.Description;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using static NPOI.HSSF.Util.HSSFColor;
+using System.Net.Http;
+using System.Text.Json;
+using NewCapit.Models.Krona;
 
 
 namespace NewCapit.dist.pages
@@ -91,12 +94,13 @@ namespace NewCapit.dist.pages
 
                 PreencherClienteInicial();
                 PreencherClienteFinal();
+               
 
             }
             //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
             //VerificaCargasFechadas();
-            
+
         }
 
         public void CarregaFoto()
@@ -1491,6 +1495,129 @@ namespace NewCapit.dist.pages
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
+
+            if (e.CommandName == "EnviarSM")
+            {
+                string idCarga = e.CommandArgument.ToString();
+
+                Page.RegisterAsyncTask(new PageAsyncTask(async () =>
+                {
+                    try
+                    {
+                        // 1. Monta o Objeto (Substitua pelos dados reais da sua query/banco)
+                        var solicitacao = CriarObjetoSolicitacao(idCarga);
+
+                        // 2. Serializa para JSON e salva o arquivo físico (Auditoria)
+                        string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true });
+                        string caminhoArquivo = $@"C:\EnviaSM\SM_SolicitacaoVW_{idCarga}.json";
+
+                        // Garante que o diretório existe e grava
+                        System.IO.Directory.CreateDirectory(@"C:\EnviaSM");
+                        System.IO.File.WriteAllText(caminhoArquivo, jsonEnvio);
+
+                        // 3. Envia para a API
+                        string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
+
+                        // 4. Captura o retorno e salva no Banco de Dados
+                        ProcessarESalvarRetorno(jsonResposta, idCarga);
+
+                        // Opcional: Feedback na tela (Ex: ScriptManager.RegisterStartupScript para um alert)
+                    }
+                    catch (Exception ex)
+                    {
+                        // Registre o erro em algum log ou label da tela
+                        System.Diagnostics.Debug.WriteLine("Erro no Envio SM: " + ex.Message);
+                    }
+                }));
+            }
+        }
+
+        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga)
+        {
+            return new SolicitacaoViagemRequest
+            {
+                kronaService = new KronaService
+                {
+                    usuario_login = new UsuarioLogin
+                    {
+                        login = "VOLKSWAGEN.TRANSNOVAG",
+                        senha = "WSTRANSNOVAG2024"
+                    },
+
+                    transportador = new EntidadeKrona
+                    {
+                        cnpj = "55.890.016/0001-09",
+                        razao_social = "TRANSNOVAG TRANSPORTES"
+                    },
+
+                    motorista_1 = new Motorista
+                    {
+                        nome = "SILVIO TELES PITANGA",
+                        cpf = "124.308.458-81"
+                    },
+
+                    veiculo = new Veiculo
+                    {
+                        placa = "GHG-2E86",
+                        tecnologia = "SASCAR"
+                    },
+
+                    destinos = new Dictionary<string, Destino>
+                    {
+                        {
+                            "1", new Destino
+                            {
+                                cnpj = "61.532.198/0008-15",
+                                razao_social = "DELGA IND E COMERCIO",
+                                dados_adicionais = new DadosAdicionais
+                                {
+                                    nota = "12345",
+                                    remetente = new EntidadeKrona { cnpj = "55.890.016/0001-09", razao_social = "TRANSNOVAG" }
+                                }
+                            }
+                        }
+                    },
+
+                    viagem = new Viagem
+                    {
+                        tipo_viagem = "ENTREGA ÚNICA",
+                        liberacao = idCarga,
+                        valor = "291952.78",
+                        rota = "TNG X DELGA (JARINU)"
+                    }
+                }
+            };
+        }
+
+        private async Task<string> EnviarRequisicaoKrona(string jsonContent)
+        {
+            string url = "https://k1.grupokrona.com.br/kronaservice/viagem_new";
+
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(url, content);
+
+                // Retorna o corpo da resposta (seja sucesso ou erro)
+                return await response.Content.ReadAsStringAsync();
+            }
+        }
+
+        // MÉTODO PARA SALVAR NO BANCO
+        private void ProcessarESalvarRetorno(string jsonResposta, string idCarga)
+        {
+            // Aqui você pode salvar o retorno bruto (JSON) ou extrair o número da SM
+            // Exemplo de salvamento simples no banco (ADO.NET):
+            /*
+            using (SqlConnection conn = new SqlConnection("SuaConnectionString")) {
+                string sql = "UPDATE SuasColetas SET RespostaApi = @resp WHERE IdCarga = @id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@resp", jsonResposta);
+                cmd.Parameters.AddWithValue("@id", idCarga);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            */
         }
 
         protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
@@ -2251,24 +2378,33 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
+                // A lógica agora busca por qualquer documento em ambas as tabelas
                 string sql = @"
-            -- Verifica se há cargas não concluídas
+            -- 1. Verifica se há cargas não concluídas
             DECLARE @NaoConcluidas INT;
             SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status <> 'Concluido';
 
-            -- Verifica se existe PELO MENOS UM CT-e para esta viagem
-            DECLARE @PossuiAlgumCTe INT;
-            SELECT @PossuiAlgumCTe = COUNT(*) 
+            -- 2. Verifica se existe PELO MENOS UM CT-e para esta viagem
+            DECLARE @TotalCTe INT;
+            SELECT @TotalCTe = COUNT(*) 
             FROM tbcte 
             WHERE id_viagem IN (SELECT carga FROM tbcargas WHERE idviagem = @idviagem);
 
-            -- Verifica se a viagem possui algum material preenchido
+            -- 3. Verifica se existe PELO MENOS UMA NFS-e para esta viagem
+            DECLARE @TotalNFSe INT;
+            SELECT @TotalNFSe = COUNT(*) 
+            FROM tbnfse 
+            WHERE idviagem IN (SELECT carga FROM tbcargas WHERE idviagem = @idviagem);
+
+            -- 4. Verifica se a viagem possui algum material preenchido (exigência de documento)
             DECLARE @PossuiMaterial INT;
             SELECT @PossuiMaterial = COUNT(*) 
             FROM tbcargas 
-            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), 'Vazio'), 'Vazio') <> 'Vazio';
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> '';
 
-            SELECT @NaoConcluidas AS NaoConcluidas, @PossuiAlgumCTe AS PossuiAlgumCTe, @PossuiMaterial AS PossuiMaterial";
+            SELECT @NaoConcluidas AS NaoConcluidas, 
+                   (@TotalCTe + @TotalNFSe) AS TotalDocumentos, 
+                   @PossuiMaterial AS PossuiMaterial";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -2280,22 +2416,21 @@ namespace NewCapit.dist.pages
                         if (reader.Read())
                         {
                             int naoConcluidas = Convert.ToInt32(reader["NaoConcluidas"]);
-                            int possuiAlgumCTe = Convert.ToInt32(reader["PossuiAlgumCTe"]);
+                            int totalDocumentos = Convert.ToInt32(reader["TotalDocumentos"]);
                             int possuiMaterial = Convert.ToInt32(reader["PossuiMaterial"]);
 
-                            // 1. Bloqueio por status
+                            // Validação 1: Todas as cargas devem estar concluídas
                             if (naoConcluidas > 0)
                                 return $"Existem {naoConcluidas} carga(s) pendentes de conclusão.";
 
-                            // 2. Bloqueio por Documentação: 
-                            // Se tem material em alguma carga, mas NENHUMA carga da viagem tem CT-e
-                            if (possuiMaterial > 0 && possuiAlgumCTe == 0)
-                                return "Nenhum CT-e foi encontrado para esta viagem. É necessário anexar pelo menos um para liberar.";
+                            // Validação 2: Se houver material, exige-se pelo menos um CT-e OU NFS-e
+                            if (possuiMaterial > 0 && totalDocumentos == 0)
+                                return "Não é possível encerrar: cargas com material exigem pelo menos um CT-e ou NFS-e anexado.";
                         }
                     }
                 }
             }
-            return null; // Sucesso!
+            return null; // Retorna null se passar em todas as regras (OK para prosseguir)
         }
 
         private void BuscarCargaNoBanco(string carga)
@@ -2528,73 +2663,85 @@ namespace NewCapit.dist.pages
             string DuracaoVazio = txtDuracaoVazio.Text.Trim();
             string primeiroNome = nomeCompleto.Split(' ')[0];
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+
+            if (codCliInicial.Text != string.Empty || codCliFinal.Text != string.Empty || txtPesoVazio.Text != string.Empty || txtCod_PagadorVazio.Text != string.Empty)
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro,  tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@carga", numCarga);
-                cmd.Parameters.AddWithValue("@status", "Pendente");
-                cmd.Parameters.AddWithValue("@entrega", "Normal");
-                cmd.Parameters.AddWithValue("@peso", pesoMaterial); // ou valor padrão
-                cmd.Parameters.AddWithValue("@material", materialVazio); // ou valor padrão
-                cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
-                cmd.Parameters.AddWithValue("@situacao", "Pronto");
-                cmd.Parameters.AddWithValue("@tomador", nomeCompleto);
-                cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
-                cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
-                cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
-                cmd.Parameters.AddWithValue("@coddestino", codigoDestino);
-                cmd.Parameters.AddWithValue("@clidestino", nomeDestino);
-                cmd.Parameters.AddWithValue("@ufcliorigem", ufOrigem);
-                cmd.Parameters.AddWithValue("@ufclidestino", ufDestino);
-                cmd.Parameters.AddWithValue("@cidorigem", municipioOrigem);
-                cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
-                cmd.Parameters.AddWithValue("@cod_expedidor", codigoOrigem);
-                cmd.Parameters.AddWithValue("@expedidor", nomeOrigem);
-                cmd.Parameters.AddWithValue("@cod_recebedor", codigoDestino);
-                cmd.Parameters.AddWithValue("@recebedor", nomeDestino);
-                cmd.Parameters.AddWithValue("@uf_expedidor", ufOrigem);
-                cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
-                cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
-                cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
-                cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
-                cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
-                //cmd.Parameters.AddWithValue("@distancia", distancia);
-                cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
-                cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
-                cmd.Parameters.AddWithValue("@pagador", primeiroNome);
-                cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
-                cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
-                cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
-
-                // Abrindo a conexão e executando a query
-                conn.Open();
-                int rowsInserted = cmd.ExecuteNonQuery();
-
-                if (rowsInserted > 0)
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    txtCarga.Text = novaCarga;
+                    string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro,  tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
+                      "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", numCarga);
+                    cmd.Parameters.AddWithValue("@status", "Pendente");
+                    cmd.Parameters.AddWithValue("@entrega", "Normal");
+                    cmd.Parameters.AddWithValue("@peso", pesoMaterial); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@material", materialVazio); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@situacao", "Pronto");
+                    cmd.Parameters.AddWithValue("@tomador", nomeCompleto);
+                    cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
+                    cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
+                    cmd.Parameters.AddWithValue("@coddestino", codigoDestino);
+                    cmd.Parameters.AddWithValue("@clidestino", nomeDestino);
+                    cmd.Parameters.AddWithValue("@ufcliorigem", ufOrigem);
+                    cmd.Parameters.AddWithValue("@ufclidestino", ufDestino);
+                    cmd.Parameters.AddWithValue("@cidorigem", municipioOrigem);
+                    cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
+                    cmd.Parameters.AddWithValue("@cod_expedidor", codigoOrigem);
+                    cmd.Parameters.AddWithValue("@expedidor", nomeOrigem);
+                    cmd.Parameters.AddWithValue("@cod_recebedor", codigoDestino);
+                    cmd.Parameters.AddWithValue("@recebedor", nomeDestino);
+                    cmd.Parameters.AddWithValue("@uf_expedidor", ufOrigem);
+                    cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
+                    cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
+                    cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
+                    cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
+                    //cmd.Parameters.AddWithValue("@distancia", distancia);
+                    cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
+                    cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
+                    cmd.Parameters.AddWithValue("@pagador", primeiroNome);
+                    cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
+                    cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
+                    cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
 
-                    BuscarCargaNoBanco(novaCarga);
-                    
+                    // Abrindo a conexão e executando a query
+                    conn.Open();
+                    int rowsInserted = cmd.ExecuteNonQuery();
+
+                    if (rowsInserted > 0)
+                    {
+                        txtCarga.Text = novaCarga;
+
+                        BuscarCargaNoBanco(novaCarga);
+
+                    }
+
+                    else
+                    {
+                        string mensagem = "Falha ao cadastrar a viagem. Tente novamente.";
+                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                    }
+                    ScriptManager.RegisterStartupScript(
+                            this,
+                            this.GetType(),
+                            "FechaModal",
+                            "$('#meuModal').modal('hide');",
+                            true
+                        );
+
                 }
 
-                else
-                {
-                    string mensagem = "Falha ao cadastrar a viagem. Tente novamente.";
-                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
-                }
-                ScriptManager.RegisterStartupScript(
-                        this,
-                        this.GetType(),
-                        "FechaModal",
-                        "$('#meuModal').modal('hide');",
-                        true
-                    );
 
             }
+            else
+            {
+                MostrarMsg2("Informar campos obrigatórios da carga!"); 
+            }
+
+            
 
         }
         private void PreencherClienteInicial()
