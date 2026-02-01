@@ -311,35 +311,35 @@ namespace NewCapit
 
                     // Adicionando os parâmetros da inserção
                     cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedValue.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedValue.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedItem.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedItem.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text.Trim());
                     cmd.Parameters.AddWithValue("@dtcvei", DateTime.Now.ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@ativo_inativo", "ATIVO");
                     cmd.Parameters.AddWithValue("@plavei", txtPlaca.Text.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedValue.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedItem.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text.Trim());
-                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@rastreador", ddlTecnologia.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@codtra", txtCodTra.Text.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
                     cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text.Trim());
                     cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text.Trim());
-                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.ToString().Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.ToString().Trim());
+                    cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToString().Trim());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text.Trim());
-                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.ToString().Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.Text.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text.Trim());
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text.Trim());
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text.Trim());
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text.Trim());
                     cmd.Parameters.AddWithValue("@tacografo", ddlTacografo.SelectedItem.ToString().Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@modelotacografo", ddlModeloTacografo.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@controlepatrimonio", txtControlePatrimonio.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
@@ -596,9 +596,9 @@ namespace NewCapit
                     cboTipo.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
                     cboTipo.DataValueField = "id";  // Campo que será o valor de cada item                    
                     cboTipo.DataBind();  // Realiza o binding dos dados                   
-
+                    cboTipo.Items.Insert(0, new ListItem("Selecione...", "0"));
                     // Feche o reader
-                    reader.Close();
+                    reader.Close();                   
                 }
                 catch (Exception ex)
                 {

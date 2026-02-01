@@ -3,19 +3,16 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Bootstrap CSS + JS -->
-    <%--  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>--%>
+    <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!-- jQuery e Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap CSS + JS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         function passarCargaParaForm() {
             var novaCarga = document.getElementById('<%= hdNovaCarga.ClientID %>').value;
@@ -126,6 +123,34 @@
             }
         }
     </script>
+     <script>
+         function aplicarPluginsDinamicos() {
+             $('.select2').each(function () {
+                 var $meuSelect = $(this);
+                 var $meuModal = $meuSelect.closest('.modal');
+
+                 // Importante: Destruir antes de aplicar para evitar que o campo fique "morto"
+                 if ($meuSelect.hasClass("select2-hidden-accessible")) {
+                     $meuSelect.select2('destroy');
+                 }
+
+                 $meuSelect.select2({
+                     width: '100%',
+                     placeholder: "Selecione...",
+                     allowClear: true,
+                     // Isso resolve o problema do dropdown sumir ou não abrir:
+                     dropdownParent: $meuModal.length ? $meuModal : $(document.body)
+                 });
+             });
+         }
+
+         // SOLUÇÃO PARA O CAMPO DE BUSCA TRAVADO:
+         // O Bootstrap 4 impede que elementos fora do "foco principal" do modal recebam digitação.
+         // Esta linha desabilita essa trava do Bootstrap.
+         if ($.fn.modal && $.fn.modal.Constructor) {
+             $.fn.modal.Constructor.prototype._enforceFocus = function () { };
+         }
+     </script>
     <%--<script type="text/javascript">
         // Função para re-inicializar componentes Bootstrap
         function reInitializeBootstrap() {
@@ -900,7 +925,7 @@
                                 </div>
                             </ContentTemplate>
                             <Triggers>
-                                <asp:PostBackTrigger ControlID="btnSalvarColeta" />
+                                <asp:AsyncPostBackTrigger ControlID="btnSalvarColeta" />
                             </Triggers>
                         </asp:UpdatePanel>
 

@@ -1352,83 +1352,97 @@ namespace NewCapit.dist.pages
             string DuracaoVazio = txtDuracaoVazio.Text.Trim();
             string primeiroNome = nomeCompleto.Split(' ')[0];
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            if (codCliInicial.Text != string.Empty || codCliFinal.Text != string.Empty || txtPesoVazio.Text != string.Empty || txtCod_PagadorVazio.Text != string.Empty)
             {
-                string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-                  "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@carga", numCarga);
-                cmd.Parameters.AddWithValue("@status", "Pendente");
-                cmd.Parameters.AddWithValue("@entrega", "Normal");
-                cmd.Parameters.AddWithValue("@peso", pesoMaterial); // ou valor padrão
-                cmd.Parameters.AddWithValue("@material", materialVazio); // ou valor padrão
-                cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
-                cmd.Parameters.AddWithValue("@situacao", "Pronto");                
-                cmd.Parameters.AddWithValue("@tomador", nomeCompleto);
-                cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
-                cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
-                cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
-                cmd.Parameters.AddWithValue("@coddestino", codigoDestino);
-                cmd.Parameters.AddWithValue("@clidestino", nomeDestino);
-                cmd.Parameters.AddWithValue("@ufcliorigem", ufOrigem);
-                cmd.Parameters.AddWithValue("@ufclidestino", ufDestino);
-                cmd.Parameters.AddWithValue("@cidorigem", municipioOrigem);
-                cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
-                cmd.Parameters.AddWithValue("@cod_expedidor", codigoOrigem);
-                cmd.Parameters.AddWithValue("@expedidor", nomeOrigem);
-                cmd.Parameters.AddWithValue("@cod_recebedor", codigoDestino);
-                cmd.Parameters.AddWithValue("@recebedor", nomeDestino);
-                cmd.Parameters.AddWithValue("@uf_expedidor", ufOrigem);
-                cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
-                cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
-                cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
-                cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
-                cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
-                //cmd.Parameters.AddWithValue("@distancia", distancia);
-                cmd.Parameters.AddWithValue("@andamento", "Pendente");
-                cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
-                cmd.Parameters.AddWithValue("@pagador", primeiroNome);
-                cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
-                cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);                
-                cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
-
-                // Abrindo a conexão e executando a query
-                conn.Open();
-                int rowsInserted = cmd.ExecuteNonQuery();
-
-                if (rowsInserted > 0)
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    txtCarga.Text = novaCarga;
-                    
-                    BuscarCargaNoBanco(novaCarga);
-                   // txtCarga.Text = novaCargaVazia.Text.Trim();
-                    //ScriptManager.RegisterStartupScript(
-                    //    this,
-                    //    this.GetType(),
-                    //    "FechaModal",
-                    //    "$('#meuModal').modal('hide');",
-                    //    true
-                    //);
-                }
-               
-                else
-                {
-                    string mensagem = "Falha ao cadastrar a viagem. Tente novamente.";
-                    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
-                }
-                ScriptManager.RegisterStartupScript(
-                        this,
-                        this.GetType(),
-                        "FechaModal",
-                        "$('#meuModal').modal('hide');",
-                        true
-                    );
+                    string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro, tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
+                      "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", numCarga);
+                    cmd.Parameters.AddWithValue("@status", "Pendente");
+                    cmd.Parameters.AddWithValue("@entrega", "Normal");
+                    cmd.Parameters.AddWithValue("@peso", pesoMaterial); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@material", materialVazio); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@situacao", "Pronto");
+                    cmd.Parameters.AddWithValue("@tomador", nomeCompleto);
+                    cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
+                    cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
+                    cmd.Parameters.AddWithValue("@coddestino", codigoDestino);
+                    cmd.Parameters.AddWithValue("@clidestino", nomeDestino);
+                    cmd.Parameters.AddWithValue("@ufcliorigem", ufOrigem);
+                    cmd.Parameters.AddWithValue("@ufclidestino", ufDestino);
+                    cmd.Parameters.AddWithValue("@cidorigem", municipioOrigem);
+                    cmd.Parameters.AddWithValue("@ciddestino", municipioDestino);
+                    cmd.Parameters.AddWithValue("@cod_expedidor", codigoOrigem);
+                    cmd.Parameters.AddWithValue("@expedidor", nomeOrigem);
+                    cmd.Parameters.AddWithValue("@cod_recebedor", codigoDestino);
+                    cmd.Parameters.AddWithValue("@recebedor", nomeDestino);
+                    cmd.Parameters.AddWithValue("@uf_expedidor", ufOrigem);
+                    cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
+                    cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
+                    cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
+                    cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
+                    //cmd.Parameters.AddWithValue("@distancia", distancia);
+                    cmd.Parameters.AddWithValue("@andamento", "Pendente");
+                    cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
+                    cmd.Parameters.AddWithValue("@pagador", primeiroNome);
+                    cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
+                    cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
+                    cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
 
+                    // Abrindo a conexão e executando a query
+                    conn.Open();
+                    int rowsInserted = cmd.ExecuteNonQuery();
+
+                    if (rowsInserted > 0)
+                    {
+                        txtCarga.Text = novaCarga;
+
+                        BuscarCargaNoBanco(novaCarga);
+                        // txtCarga.Text = novaCargaVazia.Text.Trim();
+                        //ScriptManager.RegisterStartupScript(
+                        //    this,
+                        //    this.GetType(),
+                        //    "FechaModal",
+                        //    "$('#meuModal').modal('hide');",
+                        //    true
+                        //);
+                    }
+
+                    else
+                    {
+                        string mensagem = "Falha ao cadastrar a viagem. Tente novamente.";
+                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
+                    }
+                    ScriptManager.RegisterStartupScript(
+                            this,
+                            this.GetType(),
+                            "FechaModal",
+                            "$('#meuModal').modal('hide');",
+                            true
+                        );
+
+                }
+
+            }
+            else
+            {
+                MostrarMsg2("Informar campos obrigatórios da carga!");
             }
 
         }
-        
+        public void MostrarMsg2(string mensagem)
+        {
+            // Substitua o alert por um Toastr ou SweetAlert se preferir, mas o RegisterStartupScript é essencial
+            string script = $"alert('{mensagem.Replace("'", "")}');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "Popup", script, true);
+        }
+
         public static double CalcularDistancia(double lat1, double lon1, double lat2, double lon2)
         {
             double R = 6371; // KM

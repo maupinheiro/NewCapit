@@ -351,14 +351,14 @@
                             </div>
                         </div>
                      <div class="row g-3">
-                            <div class="col-md-1">
-                                <asp:Button ID="btnMapa" runat="server" CssClass="btn btn-outline-info btn-lg" Text="Mapa" OnClick="btnMapa_Click" />
+                            <div class="col-md-2">
+                                <asp:Button ID="btnMapa" runat="server" CssClass="btn btn-outline-info btn-lg w-100" Text="Mapa" OnClick="btnMapa_Click" />
                             </div>
-                            <div class="col-md-1">
-                                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg" Text="Atualizar" OnClick="btnAlterar_Click" />
+                            <div class="col-md-2">
+                                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" Text="Atualizar" OnClick="btnAlterar_Click" />
                             </div>
-                            <div class="col-md-1">
-                                <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                            <div class="col-md-2">
+                                <a href="ConsultaClientes.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                                 </a>
                             </div>
                         </div>                     
