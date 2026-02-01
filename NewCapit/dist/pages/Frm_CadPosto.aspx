@@ -379,13 +379,13 @@
                         </div>
                     </div>
                     <div class="row g-3">
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <br />
-                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Reajustar" />
+                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg w-100" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Reajustar" />
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <br />
-                            <a href="/dist/pages/GestaoPostos.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                            <a href="/dist/pages/GestaoPostos.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                             </a>
                         </div>
                     </div>

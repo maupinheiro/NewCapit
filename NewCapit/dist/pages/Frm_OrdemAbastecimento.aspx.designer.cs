@@ -15,6 +15,24 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
+        /// Controle divMsg.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsg;
+
+        /// <summary>
+        /// Controle lblMsgGeral.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgGeral;
+
+        /// <summary>
         /// Controle txtExterno.
         /// </summary>
         /// <remarks>
@@ -42,13 +60,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtNomFor;
 
         /// <summary>
-        /// Controle ddlFrutas.
+        /// Controle ddlCombustivel.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlFrutas;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCombustivel;
 
         /// <summary>
         /// Controle txtPreco.
@@ -58,6 +76,42 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPreco;
+
+        /// <summary>
+        /// Controle customRadioAgregado.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton customRadioAgregado;
+
+        /// <summary>
+        /// Controle customRadioFrota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton customRadioFrota;
+
+        /// <summary>
+        /// Controle customRadioCTe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton customRadioCTe;
+
+        /// <summary>
+        /// Controle customRadioNFSe.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton customRadioNFSe;
 
         /// <summary>
         /// Controle cbFiliais.

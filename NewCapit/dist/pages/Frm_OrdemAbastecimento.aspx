@@ -109,11 +109,21 @@
         <section class="content">
             <div class="container-fluid">
                 <br />
-                <div id="toastContainer" class="alert alert-warning alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
+                <div id="divMsg" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgGeral" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+                <%--<div class="toast-container position-fixed top-0 end-0 p-3">
+                    <div id="toastMsg" class="toast align-items-center text-bg-warning border-0" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body" id="toastBody"></div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                </div>--%>
+
                 <div class="card card-success">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-gas-pump"></i>&nbsp;ORDEM DE ABASTECIMENTO</h3>
@@ -134,19 +144,19 @@
                             <div class="col-md-1">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">FORNECEDOR:</span>
-                                    <asp:TextBox ID="txtCodFor" runat="server" CssClass="form-control direct-chat-name float-left" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodFor" runat="server" CssClass="form-control direct-chat-name float-left" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <span class="details">POSTO:</span>
-                                    <asp:TextBox ID="txtNomFor" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtNomFor" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <span class="direct-chat-name float-left">COMBUSTÍVEL:</span>
-                                    <asp:DropDownList ID="ddlFrutas" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlFrutas_SelectedIndexChanged"></asp:DropDownList>
+                                    <span class="direct-chat-name float-left">PRODUTO:</span>
+                                    <asp:DropDownList ID="ddlCombustivel" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlCombustivel_SelectedIndexChanged"></asp:DropDownList>
                                     
                                 </div>
                             </div>
@@ -164,46 +174,46 @@
                     <div class="card-header">
                         <br />
                         <div class="row g-3">
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadioAgregado" name="customRadioTipo">
-                                        <label for="customRadioAgregado" class="custom-control-label">AGREGADO</label>
-                                    </div>
+                            <div class="col-sm-2">                               
+                                <div class="form-check">
+                                    <asp:RadioButton ID="customRadioAgregado"
+                                        runat="server"
+                                        GroupName="tipoMotorista"
+                                        AutoPostBack="true"
+                                        OnCheckedChanged="customRadioAgregado_CheckedChanged" />
+                                    <label class="form-check-label">AGREGADO</label>
                                 </div>
                             </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadioFrota" name="customRadioTipo">
-                                        <label for="customRadioFrota" class="custom-control-label">FROTA</label>
-                                    </div>
+                            <div class="col-sm-1">                                
+                                <div class="form-check">
+                                    <asp:RadioButton ID="customRadioFrota"
+                                        runat="server"
+                                        GroupName="tipoMotorista"
+                                        AutoPostBack="true"
+                                        OnCheckedChanged="customRadioFrota_CheckedChanged" />
+                                    <label class="form-check-label">FROTA</label>
                                 </div>
                             </div>
                             <div class="col-sm-2"></div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadioCTE" name="customRadioDocumento">
-                                        <label for="customRadioCTE" class="custom-control-label">CT-e/NF-e</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <%--<div class="col-sm-1">
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadioCVA" name="customRadioDocumento">
-                                        <label for="customRadioCVA" class="custom-control-label">C.V.A.</label>
-                                    </div>
-                                </div>
-                            </div>--%>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="radio" id="customRadioOC" name="customRadioDocumento">
-                                        <label for="customRadioOC" class="custom-control-label">ORDEM DE COLETA</label>
-                                    </div>
-                                </div>
+                            <div class="col-sm-1">                               
+                                <div class="form-check">
+                                    <asp:RadioButton ID="customRadioCTe"
+                                        runat="server"
+                                        GroupName="tipoDocumento"
+                                        AutoPostBack="true"
+                                        OnCheckedChanged="customRadioCTe_CheckedChanged" />
+                                    <label class="form-check-label">CT-e</label>
+                                </div>                          
+                            </div>                            
+                            <div class="col-sm-1">                               
+                                <div class="form-check">
+                                    <asp:RadioButton ID="customRadioNFSe"
+                                        runat="server"
+                                        GroupName="tipoDocumento"
+                                        AutoPostBack="true"
+                                        OnCheckedChanged="customRadioNFSe_CheckedChanged" />
+                                    <label class="form-check-label">NFS-e</label>
+                                </div>                                 
                             </div>
 
                         </div>
@@ -218,13 +228,18 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">DOCUMENTO:</span>
-                                    <asp:TextBox ID="txtDocumento" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtDocumento"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        ReadOnly="true"
+                                        AutoPostBack="true"
+                                        OnTextChanged="txtDocumento_TextChanged" />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">EMISSÃO:</span>
-                                    <asp:TextBox ID="txtEmissao" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtEmissao" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -232,19 +247,19 @@
                             <div class="col-md-1">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">MOTORISTA:</span>
-                                    <asp:TextBox ID="txtCodMot" runat="server" CssClass="form-control direct-chat-name float-left" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodMot" runat="server" CssClass="form-control direct-chat-name float-left" ReadOnly = "true" OnTextChanged="txtCodMot_TextChanged" AutoPostBack="true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <span class="details">NOME COMPLETO:</span>
-                                    <asp:TextBox ID="txtNomMot" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtNomMot" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="details">C.P.F.:</span>
-                                    <asp:TextBox ID="txtCPF" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtCPF" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -252,19 +267,19 @@
                             <div class="col-md-1">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">VEÍCULO:</span>
-                                    <asp:TextBox ID="txtCodVei" runat="server" CssClass="form-control direct-chat-name float-left" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodVei" runat="server" CssClass="form-control direct-chat-name float-left" ReadOnly = "true" OnTextChanged="txtCodVei_TextChanged" AutoPostBack="true"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <div class="form-group">
                                     <span class="details">PLACA:</span>
-                                    <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtPlaca" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <span class="details">DESCRIÇÃO:</span>
-                                    <asp:TextBox ID="txtModelo" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtModelo" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -272,19 +287,19 @@
                             <div class="col-md-1">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">PROP.:</span>
-                                    <asp:TextBox ID="txtCodProp" runat="server" CssClass="form-control direct-chat-name float-left" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtCodProp" runat="server" CssClass="form-control direct-chat-name float-left" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <span class="details">PROPRIETÁRIO.:</span>
-                                    <asp:TextBox ID="txtTransp" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtTransp" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="details">C.P.F./C.N.P.J.:</span>
-                                    <asp:TextBox ID="txtCNPJ" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtCNPJ" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
 
@@ -308,13 +323,13 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">VALOR TOTAL:</span>
-                                    <asp:TextBox ID="txtValorTotal" runat="server" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtValorTotal" runat="server" CssClass="form-control" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">LIMITE DE CRÉDITO:</span>
-                                    <asp:TextBox ID="txtLimiteCredito" runat="server" CssClass="form-control direct-chat-name float-left" Enabled="false"></asp:TextBox>
+                                    <asp:TextBox ID="txtLimiteCredito" runat="server" CssClass="form-control direct-chat-name float-left" ReadOnly = "true"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -356,13 +371,13 @@
                 <div class="card card-success card-outline direct-chat direct-chat-success shadow-none">
                     <div class="card-header">
                         <div class="row g-3">
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                                 <br />
-                                <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg" runat="server" ValidationGroup="Cadastro" Text="Confirmar" />
+                                <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success  btn-lg w-100" runat="server" ValidationGroup="Cadastro" Text="Confirmar" />
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                                 <br />
-                                <a href="/dist/pages/GestaoPostos.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                <a href="/dist/pages/GestaoPostos.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
                                 </a>
                             </div>
                         </div>
