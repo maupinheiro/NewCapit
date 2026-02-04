@@ -1504,16 +1504,25 @@ namespace NewCapit.dist.pages
 
                 // 2. Localizamos os controles dentro da linha (Item) do Repeater
                 // Substitua os IDs "lblPlaca", "txtValor" pelos IDs reais do seu .aspx
-                string placa = ((Label)e.Item.FindControl("lblPlaca")).Text;
-                string valor = ((TextBox)e.Item.FindControl("txtValor")).Text;
-                string nota = ((HiddenField)e.Item.FindControl("hdnNota")).Value;
+                DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
+                DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+                string peso = ((TextBox)e.Item.FindControl("txtPeso")).Text;
+                string valor = ((TextBox)e.Item.FindControl("txtValorTotal")).Text;
+                string previsao_inicial = ((TextBox)e.Item.FindControl("txtPrevisaoInicio")).Text;
+                string previsao_final = ((TextBox)e.Item.FindControl("txtPrevisaoTermino")).Text;
+                string placa = txtPlaca.Text;
+
+                string percurso = ddlPercurso.SelectedItem.Text;
+                string rota = ddlRotaKrona.SelectedItem.Text;
+                string id_rota = ddlRotaKrona.SelectedValue.ToString();
+                //string nota = ((HiddenField)e.Item.FindControl("hdnNota")).Value;
 
                 Page.RegisterAsyncTask(new PageAsyncTask(async () =>
                 {
                     try
                     {
                         // 1. Monta o Objeto (Substitua pelos dados reais da sua query/banco)
-                        var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, nota);
+                        var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial,previsao_final,percurso, rota,id_rota);
 
                         // 2. Serializa para JSON e salva o arquivo físico (Auditoria)
                         string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true });
@@ -1540,8 +1549,43 @@ namespace NewCapit.dist.pages
             }
         }
 
-        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string nota)
+        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string peso, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota)
         {
+            string mot = "select nommot,cpf,numrg,orgaorg,dtnasc,nomemae,estcivil,numregcnh,catcnh,venccnh, endmot,complemento,baimot,cidmot,ufmot,cepmot,fone3,fone2,tipomot,codtra from tbmotoristas where codmot='"+txtCodMotorista.Text+"'";
+            SqlDataAdapter adptm = new SqlDataAdapter(mot, con);
+            DataTable dm = new DataTable();
+            con.Open();
+            adptm.Fill(dm);
+            con.Close();
+
+            string trans = "select cnpj, nomtra,fantra, baitra, endtra,numero,complemento,baitra,cidtra,uftra,ceptra,fone1 from tbtransportadoras where codtra='" + dm.Rows[0][20].ToString() + "'";
+            SqlDataAdapter adptt = new SqlDataAdapter(trans, con);
+            DataTable dt = new DataTable();
+            con.Open();
+            adptt.Fill(dt);
+            con.Close();
+
+            string veic = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + txtCodVeiculo.Text + "'";
+            SqlDataAdapter adptv = new SqlDataAdapter(veic, con);
+            DataTable dv = new DataTable();
+            con.Open();
+            adptv.Fill(dv);
+            con.Close();
+
+            string reb1 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + txtCodVeiculo.Text + "'";
+            SqlDataAdapter adpt1 = new SqlDataAdapter(reb1, con);
+            DataTable db1 = new DataTable();
+            con.Open();
+            adpt1.Fill(db1);
+            con.Close();
+
+            string reb2 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + txtCodVeiculo.Text + "'";
+            SqlDataAdapter adpt2 = new SqlDataAdapter(reb2, con);
+            DataTable db2 = new DataTable();
+            con.Open();
+            adpt2.Fill(db2);
+            con.Close();
+
             return new SolicitacaoViagemRequest
             {
                 kronaService = new KronaService
@@ -1552,22 +1596,153 @@ namespace NewCapit.dist.pages
                         senha = "WSTRANSNOVAG2024"
                     },
 
-                    transportador = new EntidadeKrona
+                    transportador = new Transportador
                     {
-                        cnpj = "55.890.016/0001-09",
-                        razao_social = "TRANSNOVAG TRANSPORTES"
+                        tipo = "TRANSPORTADOR",
+                        cnpj = dt.Rows[0][0].ToString(),
+                        razao_social = dt.Rows[0][1].ToString(),
+                        nome_fantasia= dt.Rows[0][2].ToString(),
+                        unidade = dt.Rows[0][3].ToString(),
+                        codigo="",
+                        end_rua= dt.Rows[0][4].ToString(),
+                        end_numero = dt.Rows[0][5].ToString(),
+                        end_complemento = dt.Rows[0][6].ToString(),
+                        end_bairro = dt.Rows[0][7].ToString(),
+                        end_cidade = dt.Rows[0][8].ToString(),
+                        end_uf = dt.Rows[0][9].ToString(),
+                        end_cep = dt.Rows[0][10].ToString(),
+                        latitude = "",
+                        longitude = "",
+                        telefone_1 = dt.Rows[0][11].ToString(),
+                        telefone_2 = "",
+                        responsavel = "",
+                        responsavel_cargo = "",
+                        responsavel_telefone = "",
+                        responsavel_celular = "",
+                        responsavel_email = "",
                     },
 
                     motorista_1 = new Motorista
                     {
-                        nome = "SILVIO TELES PITANGA",
-                        cpf = "124.308.458-81"
+                        nome = dm.Rows[0][0].ToString(),
+                        cpf = dm.Rows[0][1].ToString(),
+                        rg = dm.Rows[0][2].ToString(),
+                        orgao_emissao = dm.Rows[0][3].ToString(),
+                        data_nascimento = dm.Rows[0][4].ToString(),
+                        nome_mae = dm.Rows[0][5].ToString(),
+                        estado_civil = dm.Rows[0][6].ToString(),
+                        escolaridade = dm.Rows[0][7].ToString(),
+                        cnh_numero = dm.Rows[0][8].ToString(),
+                        cnh_categoria = dm.Rows[0][9].ToString(),
+                        cnh_vencimento = dm.Rows[0][10].ToString(),
+                        end_rua = dm.Rows[0][11].ToString(),
+                        end_numero = dm.Rows[0][0].ToString(),
+                        end_complemento = dm.Rows[0][12].ToString(),
+                        end_bairro = dm.Rows[0][13].ToString(),
+                        end_cidade = dm.Rows[0][14].ToString(),
+                        end_uf = dm.Rows[0][15].ToString(),
+                        end_cep = dm.Rows[0][16].ToString(),
+                        fone = dm.Rows[0][17].ToString(),
+                        celular = dm.Rows[0][18].ToString(),
+                        nextel = "",
+                        mopp = "",
+                        aso = "",
+                        cdd = "",
+                        capacitacao = "",
+                        vinculo = dm.Rows[0][19].ToString(),
+
+
                     },
 
                     veiculo = new Veiculo
                     {
+                        placa = dv.Rows[0][0].ToString(),
+                        renavam = dv.Rows[0][1].ToString(),
+                        marca = dv.Rows[0][2].ToString(),
+                        modelo = dv.Rows[0][3].ToString(),
+                        cor = dv.Rows[0][4].ToString(),
+                        ano = dv.Rows[0][5].ToString(),
+                        tipo = dv.Rows[0][6].ToString(),
+                        capacidade = dv.Rows[0][7].ToString(),
+                        numero_att = dv.Rows[0][8].ToString(),
+                        numero_frota = "",
+                        transp_frota = "",
+                        proprietario = dv.Rows[0][9].ToString(),
+                        proprietario_cnpj = dv.Rows[0][10].ToString(),
+                        end_rua = dv.Rows[0][11].ToString(),
+                        end_numero = dv.Rows[0][12].ToString(),
+                        end_complemento = dv.Rows[0][13].ToString(),
+                        end_bairro = dv.Rows[0][14].ToString(),
+                        end_cidade = dv.Rows[0][15].ToString(),
+                        end_uf = dv.Rows[0][16].ToString(),
+                        end_cep = dv.Rows[0][17].ToString(),
+                        tecnologia = dv.Rows[0][18].ToString(),
+                        id_rastreador = dv.Rows[0][19].ToString(),
+                        comunicacao = dv.Rows[0][20].ToString(),
+                        tecnologia_sec = "",
+                        id_rastreador_sec = "",
+                        comunicacao_sec = "",
+                        fixo = "N"
+
+                    },
+
+                    
+
+                    reboque_1 = new Veiculo
+                    {
                         placa = "GHG-2E86",
-                        tecnologia = "SASCAR"
+                        renavam = "",
+                        marca = "",
+                        modelo = "",
+                        cor = "",
+                        ano = "",
+                        tipo = "",
+                        capacidade = "",
+                        numero_att = "",
+                        numero_frota = "",
+                        transp_frota = "",
+                        proprietario = "",
+                        proprietario_cnpj = "",
+                        end_rua = "",
+                        end_numero = "",
+                        end_complemento = "",
+                        end_bairro = "",
+                        end_cidade = "",
+                        end_uf = "",
+                        end_cep = "",
+                        tecnologia = "SASCAR",
+                        id_rastreador = "",
+                        comunicacao = "",
+                        tecnologia_sec = "",
+                        id_rastreador_sec = "",
+                        comunicacao_sec = "",
+                        fixo = ""
+                    },
+
+                    origem = new EntidadeCompleta
+                    {
+                        tipo = "",
+                        cnpj = "55.890.016/0001-09",
+                        razao_social = "TRANSNOVAG TRANSPORTES",
+                        nome_fantasia = "",
+                        unidade = "",
+                        codigo = "",
+                        end_rua = "",
+                        end_numero = "",
+                        end_complemento = "",
+                        end_bairro = "",
+                        end_cidade = "",
+                        end_uf = "",
+                        end_cep = "",
+                        latitude = "",
+                        longitude = "",
+                        telefone_1 = "",
+                        telefone_2 = "",
+                        responsavel = "",
+                        responsavel_cargo = "",
+                        responsavel_telefone = "",
+                        responsavel_celular = "",
+                        responsavel_email = "",
                     },
 
                     destinos = new Dictionary<string, Destino>
@@ -1575,12 +1750,61 @@ namespace NewCapit.dist.pages
                         {
                             "1", new Destino
                             {
+                                tipo = "",
                                 cnpj = "61.532.198/0008-15",
                                 razao_social = "DELGA IND E COMERCIO",
+                                nome_fantasia = "",
+                                unidade = "",
+                                codigo = "",
+                                end_rua = "",
+                                end_numero = "",
+                                end_complemento = "",
+                                end_bairro = "",
+                                end_cidade = "",
+                                end_uf = "",
+                                end_cep = "",
+                                latitude = "",
+                                longitude = "",
+                                telefone_1 = "",
+                                telefone_2 = "",
+                                responsavel = "",
+                                responsavel_cargo = "",
+                                responsavel_telefone = "",
+                                responsavel_celular = "",
+                                responsavel_email = "",
                                 dados_adicionais = new DadosAdicionais
-                                {
-                                    nota = "12345",
-                                    remetente = new EntidadeKrona { cnpj = "55.890.016/0001-09", razao_social = "TRANSNOVAG" }
+                                {                                 
+                                    remetente = new EntidadeCompleta 
+                                    {
+                                        tipo = "",
+                                        cnpj = "55.890.016/0001-09", 
+                                        razao_social = "TRANSNOVAG",
+                                        nome_fantasia = "",
+                                        unidade = "",
+                                        codigo = "",
+                                        end_rua = "",
+                                        end_numero = "",
+                                        end_complemento = "",
+                                        end_bairro = "",
+                                        end_cidade = "",
+                                        end_uf = "",
+                                        end_cep = "",
+                                        latitude = "",
+                                        longitude = "",
+                                        telefone_1 = "",
+                                        telefone_2 = "",
+                                        responsavel = "",
+                                        responsavel_cargo = "",
+                                        responsavel_telefone = "",
+                                        responsavel_celular = "",
+                                        responsavel_email = "",
+                                    },
+                                    mercadoria="",
+                                    valor="",
+                                    norma="",
+                                    grupo_norma="",
+                                    nota = "",
+                                    observacao="",
                                 }
                             }
                         }
@@ -1589,9 +1813,40 @@ namespace NewCapit.dist.pages
                     viagem = new Viagem
                     {
                         tipo_viagem = "ENTREGA ÚNICA",
-                        liberacao = idCarga,
+                        rastreada="",
+                        percurso = "",
+                        tipo_cliente = "",
+                        doca_origem = "",
+                        fpp = "",
+                        mercadoria_id = "",
                         valor = "291952.78",
-                        rota = "TNG X DELGA (JARINU)"
+                        peso_total = "",
+                        rota = "TNG X DELGA (JARINU)",
+                        rota_id = "",
+                        inicio_previsto = "",
+                        fim_previsto = "",
+                        liberacao = idCarga,
+                        numero_cliente = "",
+                        observacao = "",
+                        localizador1_1 = "",
+                        id_localizador1_1 = "",
+                        localizador1_2 = "",
+                        id_localizador1_2 = "",
+                        localizador1_3 = "",
+                        id_localizador1_3 = "",
+                        localizador2_1 = "",
+                        id_localizador2_1 = "",
+                        localizador2_2 = "",
+                        id_localizador2_2 = "",
+                        localizador2_3 = "",
+                        id_localizador2_3 = "",
+                        localizador3_1 = "",
+                        id_localizador3_1 = "",
+                        localizador3_2 = "",
+                        id_localizador3_2 = "",
+                        localizador3_3 = "",
+                        id_localizador3_3 = ""
+
                     }
                 }
             };

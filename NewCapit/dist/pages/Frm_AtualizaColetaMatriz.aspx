@@ -14,8 +14,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
@@ -467,8 +468,16 @@
             bindSelect2();
         });
 </script>
-    
-
+   <script type="text/javascript">
+       function moeda(i) {
+           var v = i.value.replace(/\D/g, ''); // Remove tudo o que não é dígito
+           v = (v / 100).toFixed(2) + '';      // Divide por 100 para criar os decimais
+           v = v.replace(".", ",");            // Troca ponto por vírgula
+           v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,"); // Formata milhares (milhões)
+           v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");           // Formata milhares
+           i.value = v;
+       }
+</script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -1508,35 +1517,24 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Valor Total:</span>
-        <asp:TextBox ID="txtValorTotal" class="form-control" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtValorTotal" class="form-control" onkeyup="moeda(this);" runat="server" ></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Previsão Inicio:</span>
-        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Previsão Termino:</span>
-        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
         </div>
     </div>
 </div>
 <div class="row g-3">
-    <div class="col-md-2">
-        <%--<div class="form-group">
-        <span class="details">Id Rota:</span>
-        <asp:TextBox ID="txtIdRotaKrona" class="form-control" runat="server" ReadOnly="true"></asp:TextBox>
-        </div>--%>
-        <asp:TextBox ID="txtId_Rota"
-    runat="server"
-    CssClass="form-control mt-2"
-    ClientIDMode="Static"
-    ReadOnly="true">
-</asp:TextBox>
-    </div>
+    
     <div class="col-md-4">
         <%--<div class="form-group">
         <span class="details">Descrição da Rota:</span>
@@ -1548,6 +1546,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
             OnSelectedIndexChanged="ddlRotaKrona_SelectedIndexChanged">
         </asp:DropDownList>
         </div>--%>
+        <span class="details">&nbsp;</span>
         <asp:DropDownList ID="ddlRotaKrona"
     runat="server"
     CssClass="form-control select2"

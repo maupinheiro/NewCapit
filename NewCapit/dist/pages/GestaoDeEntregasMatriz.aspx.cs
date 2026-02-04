@@ -518,10 +518,12 @@ namespace NewCapit.dist.pages
 
 
                             ScriptManager.RegisterStartupScript(this, GetType(), "ok", "alert('CTe " + numeroDoc + " baixado com sucesso!');", true);
+                            Limpar();
                         }
                         else
                         {
                             ScriptManager.RegisterStartupScript(this, GetType(), "erro", "alert('Erro: Documento não encontrado no banco.');", true);
+                            Limpar();
                         }
                     }
                 }
@@ -570,10 +572,12 @@ namespace NewCapit.dist.pages
                         {
 
                             ScriptManager.RegisterStartupScript(this, GetType(), "ok", "alert('NFS-e " + numeroDoc + " baixado com sucesso!');", true);
+                            Limpar();
                         }
                         else
                         {
                             ScriptManager.RegisterStartupScript(this, GetType(), "erro", "alert('Erro: Documento não encontrado no banco.');", true);
+                            Limpar();
                         }
                     }
                 }
