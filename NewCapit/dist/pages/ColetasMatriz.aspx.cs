@@ -1766,7 +1766,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@tecnologia", SqlDbType.VarChar, 30).Value = DbString(txtTecnologia.Text);
                         cmd.Parameters.Add("@rastreamento", SqlDbType.VarChar, 30).Value = DbString(txtRastreamento.Text);
 
-                        cmd.Parameters.Add("@tipocarreta", SqlDbType.VarChar, 20).Value = DbString(txtConjunto.Text);
+                        cmd.Parameters.Add("@tipocarreta", SqlDbType.VarChar, 80).Value = DbString(txtConjunto.Text);
 
                         // PROPRIETÁRIO / TRANSPORTADORA
                         cmd.Parameters.Add("@codtra", SqlDbType.VarChar, 20).Value = DbString(txtCodProprietario.Text);

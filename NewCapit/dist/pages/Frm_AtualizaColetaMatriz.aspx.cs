@@ -8,6 +8,8 @@ using GMaps.Classes;
 using ICSharpCode.SharpZipLib.Zip;
 using MathNet.Numerics;
 using MathNet.Numerics.Providers.SparseSolver;
+using NewCapit.Models.Krona;
+using Newtonsoft.Json;
 using NPOI.SS.Formula;
 using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
@@ -30,9 +32,11 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Numerics;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -44,9 +48,6 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using static NPOI.HSSF.Util.HSSFColor;
-using System.Net.Http;
-using System.Text.Json;
-using NewCapit.Models.Krona;
 
 
 namespace NewCapit.dist.pages
@@ -1119,7 +1120,7 @@ namespace NewCapit.dist.pages
                             ListaCtePorItem.Remove(index);
 
                             // 3. Sucesso!
-                            MostrarMsg("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
+                            MostrarMsg2("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
 
                             // 4. IMPORTANTE: Rebindar o Repeater. 
                             // Isso fará com que o ItemDataBound rode novamente, 
@@ -1139,7 +1140,7 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-                    MostrarMsg("Aviso: Nenhuma nova leitura pendente para salvar.");
+                    MostrarMsg2("Aviso: Nenhuma nova leitura pendente para salvar.");
                 }
 
 
@@ -1199,7 +1200,7 @@ namespace NewCapit.dist.pages
                             }
 
                             trans.Commit();
-                            MostrarMsg("Alterações salvas com sucesso!");
+                            MostrarMsg2("Alterações salvas com sucesso!");
                         }
                         catch (Exception ex)
                         {
@@ -1209,7 +1210,7 @@ namespace NewCapit.dist.pages
                     }
                     catch (Exception ex)
                     {
-                        MostrarMsg("Erro ao salvar pedidos: " + ex.Message);
+                        MostrarMsg2("Erro ao salvar pedidos: " + ex.Message);
                     }
                     finally
                     {
@@ -1496,52 +1497,184 @@ namespace NewCapit.dist.pages
                 CarregarColetas(novaColeta.Text);
             }
 
+            
             if (e.CommandName == "EnviarSM")
             {
-                
-                // 1. Pegamos o ID da Carga do CommandArgument
-                string idCarga = e.CommandArgument.ToString();
+                // 1. Captura os dados da interface ANTES do processo assíncrono
+                string idCarga = e.CommandArgument.ToString(); 
 
-                // 2. Localizamos os controles dentro da linha (Item) do Repeater
-                // Substitua os IDs "lblPlaca", "txtValor" pelos IDs reais do seu .aspx
-                string placa = ((Label)e.Item.FindControl("lblPlaca")).Text;
-                string valor = ((TextBox)e.Item.FindControl("txtValor")).Text;
-                string nota = ((HiddenField)e.Item.FindControl("hdnNota")).Value;
+                DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
+                DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+                string peso = ((TextBox)e.Item.FindControl("txtPeso")).Text;
+                string valor = ((TextBox)e.Item.FindControl("txtValorTotal")).Text;
+                string previsao_inicial = ((TextBox)e.Item.FindControl("txtPrevisaoInicio")).Text;
+                string previsao_final = ((TextBox)e.Item.FindControl("txtPrevisaoTermino")).Text;
+                string codmotorista = txtCodMotorista.Text;
+                string percurso = ddlPercurso.SelectedItem.Text;
+                string rota = ddlRotaKrona.SelectedItem.Text;
+                string id_rota = ddlRotaKrona.SelectedValue;
+                string placa = txtPlaca.Text;
+                string codveiculo = txtCodFrota.Text;
 
-                Page.RegisterAsyncTask(new PageAsyncTask(async () =>
+                try
                 {
-                    try
+                    // 2. Executa as queries SQL e monta o objeto (Sincronamente para evitar perda de contexto)
+                    var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial, previsao_final, percurso, rota, id_rota, codmotorista, codveiculo);
+
+                    // 3. Serializa o objeto
+                    string jsonEnvio = System.Text.Json.JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+
+                    // 4. Define o caminho dentro da pasta do servidor
+                    string nomeArquivo = $"SM_Solicitacao_{idCarga}_{DateTime.Now:yyyyMMddHHmmss}.json";
+                    string caminhoFisico = Server.MapPath("~/EnviaSM/" + nomeArquivo);
+
+                    // 5. Garante que a pasta existe
+                    string pasta = Server.MapPath("~/EnviaSM/");
+                    if (!System.IO.Directory.Exists(pasta))
+                        System.IO.Directory.CreateDirectory(pasta);
+
+                    // 6. Grava o arquivo imediatamente (Pode ser fora do Async para garantir a auditoria)
+                    System.IO.File.WriteAllText(caminhoFisico, jsonEnvio, System.Text.Encoding.UTF8);
+
+                    // 7. Inicia a tarefa assíncrona APENAS para a chamada da API
+                    Page.RegisterAsyncTask(new PageAsyncTask(async () =>
                     {
-                        // 1. Monta o Objeto (Substitua pelos dados reais da sua query/banco)
-                        var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, nota);
+                        try
+                        {
+                            string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
+                            ProcessarESalvarRetorno(jsonResposta, idCarga, valor,percurso,previsao_inicial,previsao_final,rota,id_rota);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Erro na API: " + ex.Message);
+                        }
+                    }));
 
-                        // 2. Serializa para JSON e salva o arquivo físico (Auditoria)
-                        string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true });
-                        string caminhoArquivo = $@"C:\EnviaSM\SM_SolicitacaoVW_{idCarga}.json";
-
-                        // Garante que o diretório existe e grava
-                        System.IO.Directory.CreateDirectory(@"C:\EnviaSM");
-                        System.IO.File.WriteAllText(caminhoArquivo, jsonEnvio);
-
-                        // 3. Envia para a API
-                        string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
-
-                        // 4. Captura o retorno e salva no Banco de Dados
-                        ProcessarESalvarRetorno(jsonResposta, idCarga);
-
-                        // Opcional: Feedback na tela (Ex: ScriptManager.RegisterStartupScript para um alert)
-                    }
-                    catch (Exception ex)
-                    {
-                        // Registre o erro em algum log ou label da tela
-                        System.Diagnostics.Debug.WriteLine("Erro no Envio SM: " + ex.Message);
-                    }
-                }));
+                    // Feedback visual
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Arquivo gerado e envio processado!');", true);
+                }
+                catch (Exception ex)
+                {
+                    // Exibe o erro real (pode ser conexão de banco ou campo vazio)
+                    string msg = ex.Message.Replace("'", "").Replace("\n", "");
+                    ScriptManager.RegisterStartupScript(this, GetType(), "error", $"alert('Erro ao processar: {msg}');", true);
+                }
             }
         }
 
-        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string nota)
+        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string peso, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota, string codmotorista, string codveiculo)
         {
+            // --- 1. MOTORISTA ---
+            string mot = "select nommot,cpf,numrg,orgaorg,dtnasc,nomemae,estcivil,numregcnh,catcnh,venccnh, endmot,complemento,baimot,cidmot,ufmot,cepmot,fone3,fone2,tipomot,codtra from tbmotoristas where codmot='" + codmotorista + "'";
+            SqlDataAdapter adptm = new SqlDataAdapter(mot, con);
+            DataTable dm = new DataTable();
+            adptm.Fill(dm);
+
+            // Proteção: Se não achar motorista, cria linha vazia para não quebrar o dm.Rows[0]
+            if (dm.Rows.Count == 0)
+            {
+                dm.Columns.Add("codtra"); // Garante que a coluna existe para a próxima query
+                var row = dm.NewRow();
+                row["codtra"] = "0";
+                dm.Rows.Add(row);
+            }
+
+            // --- 2. TRANSPORTADORA (MOTORISTA) ---
+            string codTraMot = dm.Rows[0][19].ToString();
+            DataTable dt = new DataTable();
+            if (codTraMot != "0" && !string.IsNullOrEmpty(codTraMot))
+            {
+                string trans = "select cnpj, nomtra,fantra, baitra, endtra,numero,complemento,baitra,cidtra,uftra,ceptra,fone1 from tbtransportadoras where codtra='" + codTraMot + "'";
+                new SqlDataAdapter(trans, con).Fill(dt);
+            }
+            if (dt.Rows.Count == 0) { dt.Columns.Add("dummy"); dt.Rows.Add(dt.NewRow()); }
+
+            // --- 3. VEÍCULO PRINCIPAL ---
+            string veic = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + codveiculo + "'";
+            DataTable dv = new DataTable();
+            new SqlDataAdapter(veic, con).Fill(dv);
+
+            if (dv.Rows.Count == 0)
+            {
+                // Se o veículo não existe, criamos uma linha fake para as próximas queries (reboques) não darem erro
+                for (int i = 0; i < 23; i++) dv.Columns.Add();
+                var r = dv.NewRow();
+                r[21] = "0"; r[22] = "0"; // IDs de reboque fake
+                dv.Rows.Add(r);
+            }
+
+            // --- 4. REBOQUE 1 (Tratamento especial) ---
+            string idReb1 = dv.Rows[0][21].ToString();
+            DataTable db1 = new DataTable();
+            if (!string.IsNullOrEmpty(idReb1) && idReb1 != "0")
+            {
+                string reb1 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + idReb1 + "'";
+                new SqlDataAdapter(reb1, con).Fill(db1);
+            }
+            if (db1.Rows.Count == 0) { db1 = dv.Clone(); db1.Rows.Add(db1.NewRow()); }
+
+            // --- 5. REBOQUE 2 (Tratamento especial) ---
+            string idReb2 = dv.Rows[0][22].ToString();
+            DataTable db2 = new DataTable();
+            if (!string.IsNullOrEmpty(idReb2) && idReb2 != "0")
+            {
+                string reb2 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + idReb2 + "'";
+                new SqlDataAdapter(reb2, con).Fill(db2);
+            }
+            if (db2.Rows.Count == 0) { db2 = dv.Clone(); db2.Rows.Add(db2.NewRow()); }
+
+            // --- 6. CARGA ---
+            DataTable dg = new DataTable();
+            if (!string.IsNullOrEmpty(idCarga) && idCarga != "0")
+            {
+                string carga = "select codorigem, coddestino, cod_expedidor, cva from tbcargas where carga=" + idCarga;
+                new SqlDataAdapter(carga, con).Fill(dg);
+            }
+
+            // Se a carga falhar ou não existir, criamos a estrutura necessária
+            if (dg.Rows.Count == 0)
+            {
+                // É importante dar NOME às colunas para evitar confusão no Rows[0][index]
+                if (dg.Columns.Count == 0)
+                {
+                    dg.Columns.Add("codorigem");
+                    dg.Columns.Add("coddestino");
+                    dg.Columns.Add("cod_expedidor");
+                }
+                var r = dg.NewRow();
+                r["codorigem"] = "0";
+                r["coddestino"] = "0";
+                r["cod_expedidor"] = "0";
+                dg.Rows.Add(r);
+            }
+
+            // --- 7. ORIGEM (dto), DESTINO (dtd) E EXPEDIDOR (dte) ---
+
+            // Função auxiliar interna para evitar repetição de código e erro de colunas faltando
+            Action<DataTable> AdicionarColunasVazias = (tabela) => {
+                if (tabela.Rows.Count == 0)
+                {
+                    // Garante que a tabela tenha 12 colunas para não dar erro de índice no JSON
+                    for (int i = tabela.Columns.Count; i < 12; i++)
+                    {
+                        tabela.Columns.Add();
+                    }
+                    tabela.Rows.Add(tabela.NewRow());
+                }
+            };
+
+            // Agora você chama passando as suas tabelas específicas:
+            DataTable dto = new DataTable();
+            new SqlDataAdapter("select cnpj, razcli, nomcli, baicli, endcli, numero, complemento, baicli, cidcli, estcli, cepcli, tc1cli from tbclientes where codcli='" + dg.Rows[0][0].ToString() + "'", con).Fill(dto);
+            AdicionarColunasVazias(dto);
+
+            DataTable dtd = new DataTable();
+            new SqlDataAdapter("select cnpj, razcli, nomcli, baicli, endcli, numero, complemento, baicli, cidcli, estcli, cepcli, tc1cli from tbclientes where codcli='" + dg.Rows[0][1].ToString() + "'", con).Fill(dtd);
+            AdicionarColunasVazias(dtd);
+
+            DataTable dte = new DataTable();
+            new SqlDataAdapter("select cnpj, razcli, nomcli, baicli, endcli, numero, complemento, baicli, cidcli, estcli, cepcli, tc1cli from tbclientes where codcli='" + dg.Rows[0][2].ToString() + "'", con).Fill(dte);
+            AdicionarColunasVazias(dte);
             return new SolicitacaoViagemRequest
             {
                 kronaService = new KronaService
@@ -1552,35 +1685,241 @@ namespace NewCapit.dist.pages
                         senha = "WSTRANSNOVAG2024"
                     },
 
-                    transportador = new EntidadeKrona
+                    transportador = new Transportador
                     {
-                        cnpj = "55.890.016/0001-09",
-                        razao_social = "TRANSNOVAG TRANSPORTES"
+                        tipo = "TRANSPORTADOR",
+                        cnpj = dt.Rows[0][0].ToString(),
+                        razao_social = dt.Rows[0][1].ToString(),
+                        nome_fantasia= dt.Rows[0][2].ToString(),
+                        unidade = dt.Rows[0][3].ToString(),
+                        codigo="",
+                        end_rua= dt.Rows[0][4].ToString(),
+                        end_numero = dt.Rows[0][5].ToString(),
+                        end_complemento = dt.Rows[0][6].ToString(),
+                        end_bairro = dt.Rows[0][7].ToString(),
+                        end_cidade = dt.Rows[0][8].ToString(),
+                        end_uf = dt.Rows[0][9].ToString(),
+                        end_cep = dt.Rows[0][10].ToString(),
+                        latitude = "",
+                        longitude = "",
+                        telefone_1 = dt.Rows[0][11].ToString(),
+                        telefone_2 = "",
+                        responsavel = "",
+                        responsavel_cargo = "",
+                        responsavel_telefone = "",
+                        responsavel_celular = "",
+                        responsavel_email = "",
                     },
 
                     motorista_1 = new Motorista
                     {
-                        nome = "SILVIO TELES PITANGA",
-                        cpf = "124.308.458-81"
+                        nome = dm.Rows[0][0].ToString(),
+                        cpf = dm.Rows[0][1].ToString(),
+                        rg = dm.Rows[0][2].ToString(),
+                        orgao_emissao = dm.Rows[0][3].ToString(),
+                        data_nascimento = dm.Rows[0][4].ToString(),
+                        nome_mae = dm.Rows[0][5].ToString(),
+                        estado_civil = dm.Rows[0][6].ToString(),
+                        escolaridade = "",
+                        cnh_numero = dm.Rows[0][7].ToString(),
+                        cnh_categoria = dm.Rows[0][8].ToString(),
+                        cnh_vencimento = dm.Rows[0][9].ToString(),
+                        end_rua = dm.Rows[0][10].ToString(),
+                        end_numero = "",
+                        end_complemento = dm.Rows[0][11].ToString(),
+                        end_bairro = dm.Rows[0][12].ToString(),
+                        end_cidade = dm.Rows[0][13].ToString(),
+                        end_uf = dm.Rows[0][14].ToString(),
+                        end_cep = dm.Rows[0][15].ToString(),
+                        fone = dm.Rows[0][16].ToString(),
+                        celular = dm.Rows[0][17].ToString(),
+                        nextel = "",
+                        mopp = "",
+                        aso = "",
+                        cdd = "",
+                        capacitacao = "",
+                        vinculo = dm.Rows[0][18].ToString(),
+
+
                     },
 
                     veiculo = new Veiculo
                     {
-                        placa = "GHG-2E86",
-                        tecnologia = "SASCAR"
+                        placa = dv.Rows[0][0].ToString(),
+                        renavam = dv.Rows[0][1].ToString(),
+                        marca = dv.Rows[0][2].ToString(),
+                        modelo = dv.Rows[0][3].ToString(),
+                        cor = dv.Rows[0][4].ToString(),
+                        ano = dv.Rows[0][5].ToString(),
+                        tipo = dv.Rows[0][6].ToString(),
+                        capacidade = dv.Rows[0][7].ToString(),
+                        numero_att = dv.Rows[0][8].ToString(),
+                        numero_frota = "",
+                        transp_frota = "",
+                        proprietario = dv.Rows[0][9].ToString(),
+                        proprietario_cnpj = dv.Rows[0][10].ToString(),
+                        end_rua = dv.Rows[0][11].ToString(),
+                        end_numero = dv.Rows[0][12].ToString(),
+                        end_complemento = dv.Rows[0][13].ToString(),
+                        end_bairro = dv.Rows[0][14].ToString(),
+                        end_cidade = dv.Rows[0][15].ToString(),
+                        end_uf = dv.Rows[0][16].ToString(),
+                        end_cep = dv.Rows[0][17].ToString(),
+                        tecnologia = dv.Rows[0][18].ToString(),
+                        id_rastreador = dv.Rows[0][19].ToString(),
+                        comunicacao = dv.Rows[0][20].ToString(),
+                        tecnologia_sec = "",
+                        id_rastreador_sec = "",
+                        comunicacao_sec = "",
+                        fixo = "N"
+
                     },
 
-                    destinos = new Dictionary<string, Destino>
+                    reboque_1 = new Veiculo
+                    {
+                        placa = db1.Rows[0][0].ToString(),
+                        renavam = db1.Rows[0][1].ToString(),
+                        marca = db1.Rows[0][2].ToString(),
+                        modelo = db1.Rows[0][3].ToString(),
+                        cor = db1.Rows[0][4].ToString(),
+                        ano = db1.Rows[0][5].ToString(),
+                        tipo = db1.Rows[0][6].ToString(),
+                        capacidade = db1.Rows[0][7].ToString(),
+                        numero_att = db1.Rows[0][8].ToString(),
+                        numero_frota = "",
+                        transp_frota = "",
+                        proprietario = db1.Rows[0][9].ToString(),
+                        proprietario_cnpj = db1.Rows[0][10].ToString(),
+                        end_rua = db1.Rows[0][11].ToString(),
+                        end_numero = db1.Rows[0][12].ToString(),
+                        end_complemento = db1.Rows[0][13].ToString(),
+                        end_bairro = db1.Rows[0][14].ToString(),
+                        end_cidade = db1.Rows[0][15].ToString(),
+                        end_uf = db1.Rows[0][16].ToString(),
+                        end_cep = db1.Rows[0][17].ToString(),
+                        tecnologia = db1.Rows[0][18].ToString(),
+                        id_rastreador = db1.Rows[0][19].ToString(),
+                        comunicacao = db1.Rows[0][20].ToString(),
+                        tecnologia_sec = "",
+                        id_rastreador_sec = "",
+                        comunicacao_sec = "",
+                        fixo = "N"
+                    },
+
+                    reboque_2 = new Veiculo
+                    {
+                        placa = db2.Rows[0][0].ToString(),
+                        renavam = db2.Rows[0][1].ToString(),
+                        marca = db2.Rows[0][2].ToString(),
+                        modelo = db2.Rows[0][3].ToString(),
+                        cor = db2.Rows[0][4].ToString(),
+                        ano = db2.Rows[0][5].ToString(),
+                        tipo = db2.Rows[0][6].ToString(),
+                        capacidade = db2.Rows[0][7].ToString(),
+                        numero_att = db2.Rows[0][8].ToString(),
+                        numero_frota = "",
+                        transp_frota = "",
+                        proprietario = db2.Rows[0][9].ToString(),
+                        proprietario_cnpj = db2.Rows[0][10].ToString(),
+                        end_rua = db2.Rows[0][11].ToString(),
+                        end_numero = db2.Rows[0][12].ToString(),
+                        end_complemento = db2.Rows[0][13].ToString(),
+                        end_bairro = db2.Rows[0][14].ToString(),
+                        end_cidade = db2.Rows[0][15].ToString(),
+                        end_uf = db2.Rows[0][16].ToString(),
+                        end_cep = db2.Rows[0][17].ToString(),
+                        tecnologia = db2.Rows[0][18].ToString(),
+                        id_rastreador = db2.Rows[0][19].ToString(),
+                        comunicacao = db2.Rows[0][20].ToString(),
+                        tecnologia_sec = "",
+                        id_rastreador_sec = "",
+                        comunicacao_sec = "",
+                        fixo = "N"
+                    },
+
+                    origem = new EntidadeCompleta
+                    {
+                        tipo = "TRANSPORTADOR",
+                        cnpj = dto.Rows[0][0].ToString(),
+                        razao_social = dto.Rows[0][1].ToString(),
+                        nome_fantasia = dto.Rows[0][2].ToString(),
+                        unidade = dto.Rows[0][3].ToString(),
+                        codigo = "",
+                        end_rua = dto.Rows[0][4].ToString(),
+                        end_numero = dto.Rows[0][5].ToString(),
+                        end_complemento = dto.Rows[0][6].ToString(),
+                        end_bairro = dto.Rows[0][7].ToString(),
+                        end_cidade = dto.Rows[0][8].ToString(),
+                        end_uf = dto.Rows[0][9].ToString(),
+                        end_cep = dto.Rows[0][10].ToString(),
+                        latitude = "",
+                        longitude = "",
+                        telefone_1 = dto.Rows[0][11].ToString(),
+                        telefone_2 = "",
+                        responsavel = "",
+                        responsavel_cargo = "",
+                        responsavel_telefone = "",
+                        responsavel_celular = "",
+                        responsavel_email = "",
+                    },
+
+                     destinos = new Dictionary<string, Destino>
                     {
                         {
                             "1", new Destino
                             {
-                                cnpj = "61.532.198/0008-15",
-                                razao_social = "DELGA IND E COMERCIO",
+                                // --- CAMPOS DO CLIENTE (Raiz do nó "1") ---
+                                tipo = "CLIENTE",
+                                cnpj = dtd.Rows[0][0].ToString(),
+                                razao_social = dtd.Rows[0][1].ToString(),
+                                nome_fantasia = dtd.Rows[0][2].ToString(),
+                                unidade = dtd.Rows[0][3].ToString(),
+                                codigo = "",
+                                end_rua = dtd.Rows[0][4].ToString(),
+                                end_numero = dtd.Rows[0][5].ToString(),
+                                end_complemento = dtd.Rows[0][6].ToString(),
+                                end_bairro = dtd.Rows[0][7].ToString(),
+                                end_cidade = dtd.Rows[0][8].ToString(),
+                                end_uf = dtd.Rows[0][9].ToString(),
+                                end_cep = dtd.Rows[0][10].ToString(),
+                                telefone_1 = dtd.Rows[0][11].ToString(),
+                                latitude = "",
+                                longitude = "", 
+                                telefone_2 = "", 
+                                responsavel = "",
+                                responsavel_cargo = "", 
+                                responsavel_telefone = "", 
+                                responsavel_celular = "", 
+                                responsavel_email = "",
+
+                                // --- NÓ DADOS_ADICIONAIS (Conforme o exemplo) ---
                                 dados_adicionais = new DadosAdicionais
                                 {
-                                    nota = "12345",
-                                    remetente = new EntidadeKrona { cnpj = "55.890.016/0001-09", razao_social = "TRANSNOVAG" }
+                                    remetente = new EntidadeCompleta
+                                    {
+                                        tipo = "TRANSPORTADOR",
+                                        cnpj = dte.Rows[0][0].ToString(),
+                                        razao_social = dte.Rows[0][1].ToString(),
+                                        nome_fantasia = dte.Rows[0][2].ToString(),
+                                        unidade = dte.Rows[0][3].ToString(),
+                                        codigo = "",
+                                        end_rua = dte.Rows[0][4].ToString(),
+                                        end_numero = dte.Rows[0][5].ToString(),
+                                        end_complemento = dte.Rows[0][6].ToString(),
+                                        end_bairro = dte.Rows[0][7].ToString(),
+                                        end_cidade = dte.Rows[0][8].ToString(),
+                                        end_uf = dte.Rows[0][9].ToString(),
+                                        end_cep = dte.Rows[0][10].ToString(),
+                                        telefone_1 = dte.Rows[0][11].ToString(),
+                                        latitude = "", longitude = "", telefone_2 = "", responsavel = "",
+                                        responsavel_cargo = "", responsavel_telefone = "", responsavel_celular = "", responsavel_email = ""
+                                    },
+                                    mercadoria = "",
+                                    valor = "",
+                                    norma = "",
+                                    grupo_norma = "",
+                                    nota = "",
+                                    observacao = ""
                                 }
                             }
                         }
@@ -1589,9 +1928,40 @@ namespace NewCapit.dist.pages
                     viagem = new Viagem
                     {
                         tipo_viagem = "ENTREGA ÚNICA",
+                        rastreada="S",
+                        percurso = percurso.ToUpper(),
+                        tipo_cliente = "TRANSPORTADOR",
+                        doca_origem = "",
+                        fpp = "",
+                        mercadoria_id = "12",
+                        valor = valor.Replace(".", "").Replace(",", "."),
+                        peso_total = peso,
+                        rota = rota,
+                        rota_id =   id_rota,
+                        inicio_previsto = DateTime.Parse(previsao_inicial).ToString("yyyy-MM-dd HH:mm:ss"),
+                        fim_previsto = DateTime.Parse(previsao_final).ToString("yyyy-MM-dd HH:mm:ss"),
                         liberacao = idCarga,
-                        valor = "291952.78",
-                        rota = "TNG X DELGA (JARINU)"
+                        numero_cliente = dg.Rows[0][3].ToString(),
+                        observacao = "",
+                        localizador1_1 = "",
+                        id_localizador1_1 = "",
+                        localizador1_2 = "",
+                        id_localizador1_2 = "",
+                        localizador1_3 = "",
+                        id_localizador1_3 = "",
+                        localizador2_1 = "",
+                        id_localizador2_1 = "",
+                        localizador2_2 = "",
+                        id_localizador2_2 = "",
+                        localizador2_3 = "",
+                        id_localizador2_3 = "",
+                        localizador3_1 = "",
+                        id_localizador3_1 = "",
+                        localizador3_2 = "",
+                        id_localizador3_2 = "",
+                        localizador3_3 = "",
+                        id_localizador3_3 = ""
+
                     }
                 }
             };
@@ -1612,29 +1982,78 @@ namespace NewCapit.dist.pages
         }
 
         // MÉTODO PARA SALVAR NO BANCO
-        private void ProcessarESalvarRetorno(string jsonResposta, string idCarga)
+      
+
+    private void ProcessarESalvarRetorno(string jsonResposta, string idCarga, string valor, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota)
         {
-            // Aqui você pode salvar o retorno bruto (JSON) ou extrair o número da SM
-            // Exemplo de salvamento simples no banco (ADO.NET):
-            /*
-            using (SqlConnection conn = new SqlConnection("SuaConnectionString")) {
-                string sql = "UPDATE SuasColetas SET RespostaApi = @resp WHERE IdCarga = @id";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@resp", jsonResposta);
-                cmd.Parameters.AddWithValue("@id", idCarga);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+            try
+            {
+                // 1. Deserializa a resposta para pegar o número do protocolo (SM)
+                var retorno = JsonConvert.DeserializeObject<KronaResponse>(jsonResposta);
+
+                // O número da SM na Krona é o campo "protocolo"
+                string numeroSM = retorno?.protocolo ?? "";
+                string status = retorno?.status ?? "";
+                string mensagem = retorno?.mensagem ?? "";
+
+                // Só procede com o update se o status for de sucesso (geralmente "1" ou "Sucesso" na Krona)
+                // Se preferir salvar mesmo com erro para log, remova o IF
+
+                using (SqlConnection conn = new SqlConnection("SuaConnectionString"))
+                {
+                    // Ajustei o SQL para bater com os parâmetros que você definiu
+                    string sql = @"UPDATE tbcargas 
+                               SET
+                                num_sm=@num_sm, 
+                                percurso=@percurso, 
+                                valor_total=@valor_total, 
+                                previsao_inicio_krona=@previsao_inicio_krona, 
+                                previsao_termino_krona=@previsao_termino_krona
+                               WHERE carga = @carga";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+
+                    // Atribuição dos parâmetros
+                    cmd.Parameters.AddWithValue("@num_sm", numeroSM);
+                    cmd.Parameters.AddWithValue("@carga", idCarga);
+
+                    cmd.Parameters.AddWithValue("@percurso", percurso);
+                    cmd.Parameters.AddWithValue("@valor_total", valor.Replace(".", "").Replace(",", "."));
+                    cmd.Parameters.AddWithValue("@previsao_inicio_krona", DateTime.Parse(previsao_inicial).ToString("yyyy-MM-dd HH:mm:ss.000"));
+                    cmd.Parameters.AddWithValue("@previsao_termino_krona", DateTime.Parse(previsao_final).ToString("yyyy-MM-dd HH:mm:ss.000"));
+                   
+
+                    // Opcional: Se você tiver o usuário logado na sessão
+                    cmd.Parameters.AddWithValue("@usu_envio_krona", Session["Usuario"]?.ToString() ?? "SISTEMA");
+
+                    /* Nota: Se você precisar salvar 'valor_total' ou 'previsoes' que vêm do banco, 
+                       eles devem ser passados como parâmetros aqui também. 
+                       Se esses dados vêm da tela, você deve passá-los para este método.
+                    */
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (status == "1")
+                {
+                    // Sucesso
+                    // Exemplo: ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('SM Gerada: " + numeroSM + "');", true);
+                }
             }
-            */
+            catch (Exception ex)
+            {
+                // Log de erro
+            }
         }
 
-        protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlMotorista_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtCodMotorista.Text = ddlMotorista.SelectedValue;    
+            txtCodMotorista.Text = ddlMotorista.SelectedValue;
             string sql = @"SELECT codmot, nommot, status, cargo, nucleo, cpf, venccnh, codliberacao, validade, venceti, cartaomot, tipomot, venccartao, ISNULL(caminhofoto, '/fotos/motoristasemfoto.jpg') AS caminhofoto,fone2, codtra, transp, frota 
                    FROM tbmotoristas 
                    WHERE codmot = @id";
-            
+
             using (SqlCommand cmd = new SqlCommand(sql, con))
             {
                 cmd.Parameters.AddWithValue("@id", txtCodMotorista.Text);
@@ -1658,13 +2077,13 @@ namespace NewCapit.dist.pages
                 txtFilialMot.Text = dt.Rows[0]["nucleo"].ToString();
                 txtTipoMot.Text = dt.Rows[0]["tipomot"].ToString();
                 txtFuncao.Text = dt.Rows[0]["cargo"].ToString();
-                
+
                 if (dt.Rows[0]["venceti"].ToString() != "")
                 {
                     txtExameToxic.Text = Convert.ToDateTime(dt.Rows[0]["venceti"]).ToString("dd/MM/yyyy");
 
                 }
-                    if (dt.Rows[0]["venccnh"].ToString() != "")
+                if (dt.Rows[0]["venccnh"].ToString() != "")
                 {
                     txtCNH.Text = Convert.ToDateTime(dt.Rows[0]["venccnh"]).ToString("dd/MM/yyyy");
                 }
@@ -1672,7 +2091,7 @@ namespace NewCapit.dist.pages
                 {
                     txtLibGR.Text = Convert.ToDateTime(dt.Rows[0]["validade"]).ToString("dd/MM/yyyy");
                 }
-                
+
                 txtCelular.Text = dt.Rows[0]["fone2"].ToString();
                 txtCPF.Text = dt.Rows[0]["cpf"].ToString();
                 txtCartao.Text = dt.Rows[0]["cartaomot"].ToString();
@@ -1753,34 +2172,34 @@ namespace NewCapit.dist.pages
                 // valida GR
                 DateTime dataGR;
                 if (txtLibGR.Text != "")
-                {                
-                if (!DateTime.TryParse(txtLibGR.Text, out dataGR))
                 {
-                    MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-                }
-                else
-                {
-                    // valida liberação de risco 
-                    DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
-                    TimeSpan diferencaGR = validadeGR - DateTime.Today;
-
-                    if (validadeGR < DateTime.Today)
+                    if (!DateTime.TryParse(txtLibGR.Text, out dataGR))
                     {
-                        MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
-                        txtLibGR.BackColor = System.Drawing.Color.Red;
-                        txtLibGR.ForeColor = System.Drawing.Color.White;
+                        MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
                         txtCodMotorista.Text = "";
                         txtCodMotorista.Focus();
                     }
-                    else if (diferencaGR.TotalDays <= 30)
+                    else
                     {
-                        MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
-                        txtLibGR.BackColor = System.Drawing.Color.Khaki;
-                        txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
+                        // valida liberação de risco 
+                        DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
+                        TimeSpan diferencaGR = validadeGR - DateTime.Today;
+
+                        if (validadeGR < DateTime.Today)
+                        {
+                            MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
+                            txtLibGR.BackColor = System.Drawing.Color.Red;
+                            txtLibGR.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaGR.TotalDays <= 30)
+                        {
+                            MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
+                            txtLibGR.BackColor = System.Drawing.Color.Khaki;
+                            txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
                     }
-                }
                 }
                 txtCodVeiculo.Text = dt.Rows[0]["frota"].ToString();
 
@@ -2658,12 +3077,12 @@ namespace NewCapit.dist.pages
             // Alimenta o Repeater com todos os dados acumulados
             rptColetas.DataSource = dadosAtuais;
             rptColetas.DataBind();
-           
-            
+
+
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-            
+
             string query = @"UPDATE tbcarregamentos SET
                             codmotorista = @codmotorista,
                             nucleo = @nucleo,
@@ -2735,13 +3154,13 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@tecnologia", SafeValue(txtTecnologia.Text));
                 cmd.Parameters.AddWithValue("@rastreamento", SafeValue(txtRastreamento.Text));
                 cmd.Parameters.AddWithValue("@tipocarreta", SafeValue(txtConjunto.Text));
-                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));  
+                cmd.Parameters.AddWithValue("@codtra", SafeValue(txtCodProprietario.Text));
                 cmd.Parameters.AddWithValue("@transportadora", SafeValue(txtProprietario.Text));
                 cmd.Parameters.AddWithValue("@codcontato", SafeValue(txtCodFrota.Text));
                 cmd.Parameters.AddWithValue("@fonecorporativo", SafeValue(txtFoneCorp.Text));
                 cmd.Parameters.AddWithValue("@numero_gr", SafeValue(txtLiberacao.Text));
                 cmd.Parameters.AddWithValue("@numero_protocolo_cet", SafeValue(txtProtocoloCET.Text));
-              
+
 
 
 
@@ -3075,7 +3494,7 @@ namespace NewCapit.dist.pages
             // Opcional: limpar ou fechar modal
             ClientScript.RegisterStartupScript(this.GetType(), "HideModal", "hideModal();", true);
 
-        }      
+        }
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
         {
             string novaCarga = novaCargaVazia.Text.Trim();
@@ -3176,10 +3595,10 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                MostrarMsg2("Informar campos obrigatórios da carga!"); 
+                MostrarMsg2("Informar campos obrigatórios da carga!");
             }
 
-            
+
 
         }
         private void PreencherClienteInicial()
@@ -3272,7 +3691,7 @@ namespace NewCapit.dist.pages
             //    txtMunicipioOrigem.Text = dt.Rows[0][2].ToString();
             //    txtUfDestino.Text = dt.Rows[0][3].ToString();
             //    txtMunicipioDestino.Text = dt.Rows[0][4].ToString();
-               
+
             //}
             //else
             //{
@@ -3344,7 +3763,7 @@ namespace NewCapit.dist.pages
         }
         protected void codCliFinal_TextChanged(object sender, EventArgs e)
         {
-            
+
             if (!string.IsNullOrWhiteSpace(codCliFinal.Text))
             {
                 string codigoDestinatario = codCliFinal.Text.Trim();
@@ -3670,16 +4089,16 @@ namespace NewCapit.dist.pages
                     ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
                     ddl.DataBind();
 
-                    
+
 
                     // 2. Pegar o valor que veio do banco para esta linha
                     // Importante: motcar deve ser o ID do motorista
                     string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
 
-                   
-                            ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
-                            //ddl.SelectedItem.Text = motoristaSalvo;
-                    
+
+                    ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
+                    //ddl.SelectedItem.Text = motoristaSalvo;
+
                 }
             }
         }
@@ -4680,7 +5099,7 @@ namespace NewCapit.dist.pages
                     // --- 3. TRATAMENTO DOS NÚMEROS (Remover zeros à esquerda) ---
                     string numTratado = chave.Substring(25, 9).TrimStart('0');
                     string serieTratada = chave.Substring(22, 3).TrimStart('0');
-                    string Emissao = chave.Substring(4, 2)+"/" + "20"+chave.Substring(2, 2);
+                    string Emissao = chave.Substring(4, 2) + "/" + "20" + chave.Substring(2, 2);
 
                     var cte = new CteLido
                     {
@@ -4706,17 +5125,17 @@ namespace NewCapit.dist.pages
                     {
                         CarregarGridCte(gv, idViagem, index);
                     }
-                   
+
                 }
                 else
                 {
                     MostrarMsg2("CNPJ do emissor não encontrado no cadastro de clientes.");
 
-                  
+
 
                     // 2. Limpa o campo
                     txt.Text = string.Empty;
-                                       
+
 
                     txt.Focus();
                 }
@@ -4754,7 +5173,7 @@ namespace NewCapit.dist.pages
             return existe;
         }
 
-               
+
         public class CteLido
         {
             public string ChaveOriginal { get; set; } // Adicione este campo
@@ -4777,6 +5196,119 @@ namespace NewCapit.dist.pages
 
                 return (Dictionary<int, List<CteLido>>)Session["CTE_ITENS"];
             }
+        }
+
+        // mostrar dados da nota fiscal na grid
+        public class NFeResponse
+        {
+            public string chave { get; set; }
+            public string numero { get; set; }
+            public string serie { get; set; }
+            public DateTime data_emissao { get; set; }
+            public string status { get; set; }
+            public Emitente emitente { get; set; }
+            public Destinatario destinatario { get; set; }
+            public List<NFeProduto> produtos { get; set; }
+        }
+
+        public class NFeProduto
+        {
+            public string produto { get; set; }
+            public decimal quantidade { get; set; }
+            public decimal peso { get; set; }
+            public decimal valor { get; set; }
+        }
+
+        protected async void txtChaveNF_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txtChave = (TextBox)sender;
+            RepeaterItem item = (RepeaterItem)txtChave.NamingContainer;
+
+            TextBox txtCNPJRem = (TextBox)item.FindControl("txtCNPJRemetente");
+            TextBox txtCNPJDest = (TextBox)item.FindControl("txtCNPJDestinatario");
+
+            Label lblChave = (Label)item.FindControl("lblChaveNF");
+            Label lblNumero = (Label)item.FindControl("lblNumeroNF");
+            Label lblSerie = (Label)item.FindControl("lblSerieNF");
+            Label lblEmissao = (Label)item.FindControl("lblEmissaoNF");
+            Label lblStatus = (Label)item.FindControl("lblStatusNF");
+
+            GridView gv = (GridView)item.FindControl("gvProdutosNF");
+
+            Label lblPeso = (Label)item.FindControl("lblPesoTotalNF");
+            Label lblValor = (Label)item.FindControl("lblValorTotalNF");
+
+            try
+            {
+                string chave = txtChave.Text.Trim();
+
+                MeuDanfeService service = new MeuDanfeService();
+                NFeResponse nfe = await service.ConsultarNFe(chave);
+
+                // ✅ Validação CNPJ
+                if (LimparCNPJ(nfe.emitente.cnpj) != LimparCNPJ(txtCNPJRem.Text))
+                    throw new Exception("CNPJ do remetente não confere");
+
+                if (LimparCNPJ(nfe.destinatario.cpf_cnpj) != LimparCNPJ(txtCNPJDest.Text))
+                    throw new Exception("CNPJ do destinatário não confere");
+
+                // Preenche labels
+                lblChave.Text = nfe.chave;
+                lblNumero.Text = nfe.numero;
+                lblSerie.Text = nfe.serie;
+                lblEmissao.Text = nfe.data_emissao.ToString("dd/MM/yyyy");
+                lblStatus.Text = nfe.status;
+
+                // Grid
+                gv.DataSource = nfe.produtos;
+                gv.DataBind();
+
+                // Totais
+                lblPeso.Text = nfe.produtos.Sum(p => p.peso).ToString("N3");
+                lblValor.Text = nfe.produtos.Sum(p => p.valor)
+                    .ToString("C", new CultureInfo("pt-BR"));
+
+                // Guarda no próprio item
+                item.DataItem = nfe;
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "erro", $"alert('{ex.Message}');", true);
+            }
+        }
+
+        private string LimparCNPJ(string cnpj)
+        {
+            return new string(cnpj.Where(char.IsDigit).ToArray());
+        }
+        //private void LimparTela()
+        //{
+        //    gvProdutosNF.DataSource = null;
+        //    gvProdutosNF.DataBind();
+
+        //    lblChaveNF.Text = "";
+        //    lblNumeroNF.Text = "";
+        //    lblSerieNF.Text = "";
+        //    lblEmissaoNF.Text = "";
+        //    lblStatusNF.Text = "";
+        //    lblPesoTotalNF.Text = "";
+        //    lblValorTotalNF.Text = "";
+
+        //    ViewState["NFE"] = null;
+        //}
+
+        // fim da nota fiscal
+        public class Emitente
+        {
+            public string nome { get; set; }
+            public string cnpj { get; set; }
+        }
+
+        public class Destinatario
+        {
+            public string nome { get; set; }
+            public string cpf_cnpj { get; set; }
         }
 
 
@@ -4881,8 +5413,8 @@ namespace NewCapit.dist.pages
 
                     GMarker marker = new GMarker(latlng1, mOpts);
 
-                    /* GInfoWindow window2 = new GInfoWindow(marker, latlng1.ToString(), false, GListener.Event.mouseover);
-                     GMap1.Add(window2);*/
+                    GInfoWindow window2 = new GInfoWindow(marker, latlng1.ToString(), false, GListener.Event.mouseover);
+                     GMap1.Add(window2);
 
                     GMap1.Add(marker);
                     GMap1.Add(window);
@@ -4935,7 +5467,6 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
-
         protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
         {
             if (ViewState["placaAtual"] != null)

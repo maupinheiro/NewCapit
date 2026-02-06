@@ -356,7 +356,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="btnSalvarBaixa" />
-            <asp:PostBackTrigger ControlID="btnBuscar" />
+            <asp:AsyncPostBackTrigger ControlID="btnBuscar" />
         </Triggers>
     </asp:UpdatePanel>
 </div>

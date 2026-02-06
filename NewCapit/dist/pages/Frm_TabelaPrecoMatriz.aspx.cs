@@ -543,7 +543,7 @@ namespace NewCapit.dist.pages
             if (txtCodRemetente.Text != "")
             {
                 string cod = txtCodRemetente.Text;
-                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao,cnpj FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -573,6 +573,7 @@ namespace NewCapit.dist.pages
                     else
                     {
                         cboRemetente.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJRemetente.Text = dt.Rows[0][6].ToString();
                         txtMunicipioRemetente.Text = dt.Rows[0][2].ToString();
                         txtUFRemetente.Text = dt.Rows[0][3].ToString();
                         txtCodExpedidor.Focus();
@@ -612,7 +613,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli, cnpj FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -621,6 +622,7 @@ namespace NewCapit.dist.pages
                 {
                     txtCodRemetente.Text = reader["codcli"].ToString();
                     txtMunicipioRemetente.Text = reader["cidcli"].ToString();
+                    txtCNPJRemetente.Text = reader["cnpj"].ToString();
                     txtUFRemetente.Text = reader["estcli"].ToString();
                 }
             }
@@ -639,7 +641,7 @@ namespace NewCapit.dist.pages
             if (txtCodExpedidor.Text != "")
             {
                 string cod = txtCodExpedidor.Text;
-                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao, cepcli FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao, cepcli, cnpj FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -669,9 +671,10 @@ namespace NewCapit.dist.pages
                     else
                     {
                         cboExpedidor.SelectedItem.Text = dt.Rows[0][1].ToString();
-                        txtCidExpedidor.Text = dt.Rows[0][2].ToString();
+                        txtCidExpedidor.Text = dt.Rows[0][2].ToString();                        
                         txtUFExpedidor.Text = dt.Rows[0][3].ToString();
                         sCepOrigem = dt.Rows[0][6].ToString();
+                        txtCNPJExpedidor.Text = dt.Rows[0][7].ToString();
                         txtCodDestinatario.Focus();
                         return;
                     }
@@ -709,7 +712,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli, cnpj FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -717,6 +720,7 @@ namespace NewCapit.dist.pages
                 if (reader.Read())
                 {
                     txtCodExpedidor.Text = reader["codcli"].ToString();
+                    txtCNPJExpedidor.Text = reader["cnpj"].ToString();
                     txtCidExpedidor.Text = reader["cidcli"].ToString();
                     txtUFExpedidor.Text = reader["estcli"].ToString();
                 }
@@ -736,7 +740,7 @@ namespace NewCapit.dist.pages
             if (txtCodDestinatario.Text != "")
             {
                 string cod = txtCodDestinatario.Text;
-                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao, cnpj FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -768,6 +772,7 @@ namespace NewCapit.dist.pages
                         cboDestinatario.SelectedItem.Text = dt.Rows[0][1].ToString();
                         txtMunicipioDestinatario.Text = dt.Rows[0][2].ToString();
                         txtUFDestinatario.Text = dt.Rows[0][3].ToString();
+                        txtCNPJDestinatario.Text = dt.Rows[0][6].ToString();
                         txtCodRecebedor.Focus();
                         return;
                     }
@@ -805,7 +810,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli, cnpj FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -813,6 +818,7 @@ namespace NewCapit.dist.pages
                 if (reader.Read())
                 {
                     txtCodDestinatario.Text = reader["codcli"].ToString();
+                    txtCNPJDestinatario.Text = reader["cnpj"].ToString();
                     txtMunicipioDestinatario.Text = reader["cidcli"].ToString();
                     txtUFDestinatario.Text = reader["estcli"].ToString();
                 }
@@ -824,6 +830,7 @@ namespace NewCapit.dist.pages
             txtCodDestinatario.Text = string.Empty;
             cboDestinatario.SelectedItem.Text = string.Empty;
             txtMunicipioDestinatario.Text = string.Empty;
+            txtCNPJDestinatario.Text = string.Empty;
             txtUFDestinatario.Text = string.Empty;
         }
 
@@ -832,7 +839,7 @@ namespace NewCapit.dist.pages
             if (txtCodRecebedor.Text != "")
             {
                 string cod = txtCodRecebedor.Text;
-                string sql = "SELECT codcli, razcli, cidcli, estcli, cepcli, ativo_inativo, fl_exclusao, cepcli FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, cepcli, ativo_inativo, fl_exclusao, cnpj FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -865,6 +872,7 @@ namespace NewCapit.dist.pages
                         txtCidRecebedor.Text = dt.Rows[0][2].ToString();
                         txtUFRecebedor.Text = dt.Rows[0][3].ToString();
                         sCepDestino = dt.Rows[0][4].ToString();
+                        txtCNPJRecebedor.Text = dt.Rows[0][7].ToString();
                         txtCodConsignatario.Focus();
                         return;
                     }
@@ -902,7 +910,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli, cnpj FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -910,6 +918,7 @@ namespace NewCapit.dist.pages
                 if (reader.Read())
                 {
                     txtCodRecebedor.Text = reader["codcli"].ToString();
+                    txtCNPJRecebedor.Text = reader["cnpj"].ToString();
                     txtCidRecebedor.Text = reader["cidcli"].ToString();
                     txtUFRecebedor.Text = reader["estcli"].ToString();
                 }
@@ -920,6 +929,7 @@ namespace NewCapit.dist.pages
         {
             txtCodRecebedor.Text = string.Empty;
             cboRecebedor.SelectedItem.Text = string.Empty;
+            txtCNPJRecebedor.Text = string.Empty;
             txtCidRecebedor.Text = string.Empty;
             txtUFRecebedor.Text = string.Empty;
         }
@@ -929,7 +939,7 @@ namespace NewCapit.dist.pages
             if (txtCodConsignatario.Text != "")
             {
                 string cod = txtCodConsignatario.Text;
-                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao, cnpj FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -961,6 +971,7 @@ namespace NewCapit.dist.pages
                         cboConsignatario.SelectedItem.Text = dt.Rows[0][1].ToString();
                         txtCidConsignatario.Text = dt.Rows[0][2].ToString();
                         txtUFConsignatario.Text = dt.Rows[0][3].ToString();
+                        txtCNPJConsignatario.Text = dt.Rows[0][6].ToString();
                         txtCodPagador.Focus();
                         return;
                     }
@@ -998,7 +1009,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli, cnpj FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -1006,6 +1017,7 @@ namespace NewCapit.dist.pages
                 if (reader.Read())
                 {
                     txtCodConsignatario.Text = reader["codcli"].ToString();
+                    txtCNPJConsignatario.Text = reader["cnpj"].ToString();
                     txtCidConsignatario.Text = reader["cidcli"].ToString();
                     txtUFConsignatario.Text = reader["estcli"].ToString();
                 }
@@ -1017,6 +1029,7 @@ namespace NewCapit.dist.pages
             txtCodConsignatario.Text = string.Empty;
             cboConsignatario.SelectedItem.Text = string.Empty;
             txtCidConsignatario.Text = string.Empty;
+            txtCNPJConsignatario.Text = string.Empty;
             txtUFConsignatario.Text = string.Empty;
         }
 
@@ -1025,7 +1038,7 @@ namespace NewCapit.dist.pages
             if (txtCodPagador.Text != "")
             {
                 string cod = txtCodPagador.Text;
-                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                string sql = "SELECT codcli, razcli, cidcli, estcli, ativo_inativo, fl_exclusao, cnpj FROM tbclientes where codcli = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -1057,8 +1070,9 @@ namespace NewCapit.dist.pages
                         cboPagador.SelectedItem.Text = dt.Rows[0][1].ToString();
                         txtCidPagador.Text = dt.Rows[0][2].ToString();
                         txtUFPagador.Text = dt.Rows[0][3].ToString();
-                       // return;
-                        
+                        txtCNPJPagador.Text = dt.Rows[0][6].ToString();
+                        // return;
+
                     }
                     
                     if (txtCodRemetente.Text == "")
@@ -1299,7 +1313,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 conn.Open();
-                string query = "SELECT codcli, razcli, cidcli, estcli FROM tbclientes WHERE codcli = @ID";
+                string query = "SELECT codcli, razcli, cidcli, estcli, cnpj FROM tbclientes WHERE codcli = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -1307,6 +1321,7 @@ namespace NewCapit.dist.pages
                 if (reader.Read())
                 {
                     txtCodPagador.Text = reader["codcli"].ToString();
+                    txtCNPJPagador.Text = reader["cnpj"].ToString();
                     txtCidPagador.Text = reader["cidcli"].ToString();
                     txtUFPagador.Text = reader["estcli"].ToString();
 
@@ -1359,6 +1374,7 @@ namespace NewCapit.dist.pages
             txtCodPagador.Text = string.Empty;
             cboPagador.SelectedItem.Text = string.Empty;
             txtCidPagador.Text = string.Empty;
+            txtCNPJPagador.Text = string.Empty;
             txtUFPagador.Text = string.Empty;
         }
 
@@ -1513,7 +1529,7 @@ namespace NewCapit.dist.pages
             string[] destinatario = cboDestinatario.Text.Split(' ');
             string[] recebedor = cboRecebedor.Text.Split(' ');
 
-            string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Exped./Recb.: {txtCodExpedidor.Text} - {expedidor[0]}({txtCidExpedidor.Text}/{txtUFExpedidor.Text})x {txtCodRecebedor.Text} - {recebedor[0]}({txtCidRecebedor.Text}/{txtUFRecebedor.Text}) - Material: {cboTipoMaterial.SelectedItem.Text} - Veículo: {cboTipoVeiculo.SelectedItem.Text}";
+            string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Exped./Recb.: {txtCodExpedidor.Text} - {expedidor[0]}({txtCidExpedidor.Text}/{txtUFExpedidor.Text}) x {txtCodRecebedor.Text} - {recebedor[0]}({txtCidRecebedor.Text}/{txtUFRecebedor.Text}) - Material: {cboTipoMaterial.SelectedItem.Text} - Veículo: {cboTipoVeiculo.SelectedItem.Text}";
 
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
