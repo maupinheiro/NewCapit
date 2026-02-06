@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-       <!-- Bootstrap CSS -->
+     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- jQuery e Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -14,9 +14,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    
+   
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
@@ -134,89 +133,51 @@
            VALIDAÇÕES
         ========================= */
         function validarDatas(item) {
+            // 1. Identifica o container da linha (o <tr> com classe expandable-body)
             let container = item.closest('.expandable-body');
             if (!container) return;
 
-            // --- SELEÇÃO DE CAMPOS ---
+            // --- SELEÇÃO DE CAMPOS USANDO CLASSES (Mais seguro que ID no ASP.NET) ---
             const txtSaidaOrigem = container.querySelector('.saida-origem');
-            const txtDuracao = container.querySelector('input[id*="txtDuracao"]'); // Formato HH:mm:ss
-            const txtPrevisaoChegada = container.querySelector('input[id*="txtPrevisaoChegada"]');
-
             const txtChegadaDestino = container.querySelector('.chegada-destino');
             const txtSaidaPlanta = container.querySelector('.saida-planta');
-            const ddlStatus = container.querySelector('.ddlStatus');
 
-            // --- NOVA LÓGICA: CÁLCULO DE PREVISÃO (Somar Duração) ---
-            if (txtSaidaOrigem && txtSaidaOrigem.value && txtDuracao && txtPrevisaoChegada) {
-                let dataSaida = new Date(txtSaidaOrigem.value);
-                let tempoStr = txtDuracao.value; // Esperado "HH:mm:ss"
+            // Campos de destino (onde os cálculos aparecem)
+            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
+            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
+            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
 
-                if (!isNaN(dataSaida) && tempoStr.includes(":")) {
-                    let partes = tempoStr.split(':');
-                    let h = parseInt(partes[0]) || 0;
-                    let m = parseInt(partes[1]) || 0;
-                    let s = parseInt(partes[2]) || 0;
-
-                    // Adiciona o tempo à data de saída
-                    dataSaida.setHours(dataSaida.getHours() + h);
-                    dataSaida.setMinutes(dataSaida.getMinutes() + m);
-                    dataSaida.setSeconds(dataSaida.getSeconds() + s);
-
-                    // Formata para o input datetime-local (yyyy-MM-ddTHH:mm)
-                    let ano = dataSaida.getFullYear();
-                    let mes = String(dataSaida.getMonth() + 1).padStart(2, '0');
-                    let dia = String(dataSaida.getDate()).padStart(2, '0');
-                    let hora = String(dataSaida.getHours()).padStart(2, '0');
-                    let min = String(dataSaida.getMinutes()).padStart(2, '0');
-
-                    txtPrevisaoChegada.value = `${ano}-${mes}-${dia}T${hora}:${min}`;
-
-                    // --- REGRA DO STATUS 'CARREGANDO' ---
-                    // Se preencheu saída origem e ainda não tem chegada no destino, vira 'Carregando'
-                    if (ddlStatus && !txtChegadaDestino.value) {
-                        selecionarTextoNoDDL(ddlStatus, "Carregando");
-                    }
-                }
-            }
-
-            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA (Já existente no seu código) ---
+            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA ---
             function formatarDiferenca(inicio, fim) {
                 if (!inicio || !fim) return "";
                 const d1 = new Date(inicio);
                 const d2 = new Date(fim);
                 if (isNaN(d1) || isNaN(d2)) return "";
                 if (d2 < d1) return "Inválido";
+
                 const diffMs = d2 - d1;
                 const totalMinutos = Math.floor(diffMs / 60000);
-                return `${Math.floor(totalMinutos / 60)}h ${totalMinutos % 60}min`;
+                const horas = Math.floor(totalMinutos / 60);
+                const minutos = totalMinutos % 60;
+                return `${horas}h ${minutos}min`;
             }
 
-            // --- CÁLCULOS DE TEMPOS DECORRIDOS ---
-            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
-            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
-            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
+            // --- EXECUÇÃO DOS CÁLCULOS ---
 
-            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg)
+            // 1. Tempo de Trânsito/Espera (Exemplo)
+            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg) {
                 txtAgCarreg.value = formatarDiferenca(txtSaidaOrigem.value, txtChegadaDestino.value);
-
-            if (txtChegadaDestino && txtSaidaPlanta && txtAgDescarga)
-                txtAgDescarga.value = formatarDiferenca(txtChegadaDestino.value, txtSaidaPlanta.value);
-
-            if (txtSaidaOrigem && txtSaidaPlanta && txtDurTransp)
-                txtDurTransp.value = formatarDiferenca(txtSaidaOrigem.value, txtSaidaPlanta.value);
-
-            // 3. Atualiza o Status Geral (Hierarquia que você já tinha)
-            atualizarStatusECores(container);
-        }
-
-        // Função auxiliar para mudar o DropDown pelo texto
-        function selecionarTextoNoDDL(ddl, texto) {
-            for (let i = 0; i < ddl.options.length; i++) {
-                if (ddl.options[i].text.trim() === texto) {
-                    ddl.selectedIndex = i;
-                    break;
-                }
             }
+
+            // 2. Tempo de Descarga
+            if (txtSaidaPlanta && txtChegadaDestino && txtAgDescarga) {
+                txtAgDescarga.value = formatarDiferenca(txtChegadaDestino.value, txtSaidaPlanta.value);
+            }
+            if (txtSaidaPlanta && txtSaidaOrigem && txtDurTransp) {
+                txtDurTransp.value = formatarDiferenca(txtSaidaOrigem.value, txtSaidaPlanta.value);
+            }
+            // 3. Atualiza o Status Automaticamente
+            atualizarStatusECores(container);
         }
 
         /* =========================
@@ -452,22 +413,6 @@
             }
         }
     </script>  
-    <script type="text/javascript">
-        function bindSelect2() {
-            $('.select2').select2(); // Use a classe ou ID do seu ddl
-        }
-
-        // Roda no carregamento inicial
-        $(document).ready(function () {
-            bindSelect2();
-        });
-
-        // Roda após cada PostBack (UpdatePanel)
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
-        prm.add_endRequest(function () {
-            bindSelect2();
-        });
-</script>
    <script type="text/javascript">
        function moeda(i) {
            var v = i.value.replace(/\D/g, ''); // Remove tudo o que não é dígito
@@ -1651,25 +1596,25 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Peso Total:</span>
-        <asp:TextBox ID="txtPeso" class="form-control" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtPeso" class="form-control" Text='<%# Eval("peso") %>' runat="server"></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Valor Total:</span>
-        <asp:TextBox ID="txtValorTotal" class="form-control" onkeyup="moeda(this);" runat="server" ></asp:TextBox>
+        <asp:TextBox ID="txtValorTotal" class="form-control" Text='<%# Eval("valor_total") %>' onkeyup="moeda(this);" runat="server" ></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Previsão Inicio:</span>
-        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" Text='<%# Eval("previsao_inicio_krona","{0:yyyy-MM-ddTHH:mm}") %>' TextMode="DateTimeLocal" runat="server"></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Previsão Termino:</span>
-        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" TextMode="DateTimeLocal" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" TextMode="DateTimeLocal" Text='<%# Eval("previsao_termino_krona","{0:yyyy-MM-ddTHH:mm}") %>' runat="server"></asp:TextBox>
         </div>
     </div>
 </div>
@@ -2149,8 +2094,8 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="form-group">
-                                                        <span class="details">Origem:</span>
-                                                        <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" class="form-control select2"></asp:DropDownList>
+                                                        <span class="details">Origem:</span><br />
+                                                        <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" class="form-select select2" Width="80%"></asp:DropDownList>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -2185,7 +2130,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                 <div class="col-md-8">
                                                     <div class="form-group">
                                                         <span class="details">Destin:</span>
-                                                        <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-control select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged"></asp:DropDownList>
+                                                        <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-select select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged" Width="80%"></asp:DropDownList>
                                                         <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
                                                     </div>
                                                 </div>
