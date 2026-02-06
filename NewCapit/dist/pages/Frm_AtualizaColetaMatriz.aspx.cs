@@ -5198,6 +5198,119 @@ namespace NewCapit.dist.pages
             }
         }
 
+        // mostrar dados da nota fiscal na grid
+        public class NFeResponse
+        {
+            public string chave { get; set; }
+            public string numero { get; set; }
+            public string serie { get; set; }
+            public DateTime data_emissao { get; set; }
+            public string status { get; set; }
+            public Emitente emitente { get; set; }
+            public Destinatario destinatario { get; set; }
+            public List<NFeProduto> produtos { get; set; }
+        }
+
+        public class NFeProduto
+        {
+            public string produto { get; set; }
+            public decimal quantidade { get; set; }
+            public decimal peso { get; set; }
+            public decimal valor { get; set; }
+        }
+
+        protected async void txtChaveNF_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txtChave = (TextBox)sender;
+            RepeaterItem item = (RepeaterItem)txtChave.NamingContainer;
+
+            TextBox txtCNPJRem = (TextBox)item.FindControl("txtCNPJRemetente");
+            TextBox txtCNPJDest = (TextBox)item.FindControl("txtCNPJDestinatario");
+
+            Label lblChave = (Label)item.FindControl("lblChaveNF");
+            Label lblNumero = (Label)item.FindControl("lblNumeroNF");
+            Label lblSerie = (Label)item.FindControl("lblSerieNF");
+            Label lblEmissao = (Label)item.FindControl("lblEmissaoNF");
+            Label lblStatus = (Label)item.FindControl("lblStatusNF");
+
+            GridView gv = (GridView)item.FindControl("gvProdutosNF");
+
+            Label lblPeso = (Label)item.FindControl("lblPesoTotalNF");
+            Label lblValor = (Label)item.FindControl("lblValorTotalNF");
+
+            try
+            {
+                string chave = txtChave.Text.Trim();
+
+                MeuDanfeService service = new MeuDanfeService();
+                NFeResponse nfe = await service.ConsultarNFe(chave);
+
+                // ✅ Validação CNPJ
+                if (LimparCNPJ(nfe.emitente.cnpj) != LimparCNPJ(txtCNPJRem.Text))
+                    throw new Exception("CNPJ do remetente não confere");
+
+                if (LimparCNPJ(nfe.destinatario.cpf_cnpj) != LimparCNPJ(txtCNPJDest.Text))
+                    throw new Exception("CNPJ do destinatário não confere");
+
+                // Preenche labels
+                lblChave.Text = nfe.chave;
+                lblNumero.Text = nfe.numero;
+                lblSerie.Text = nfe.serie;
+                lblEmissao.Text = nfe.data_emissao.ToString("dd/MM/yyyy");
+                lblStatus.Text = nfe.status;
+
+                // Grid
+                gv.DataSource = nfe.produtos;
+                gv.DataBind();
+
+                // Totais
+                lblPeso.Text = nfe.produtos.Sum(p => p.peso).ToString("N3");
+                lblValor.Text = nfe.produtos.Sum(p => p.valor)
+                    .ToString("C", new CultureInfo("pt-BR"));
+
+                // Guarda no próprio item
+                item.DataItem = nfe;
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "erro", $"alert('{ex.Message}');", true);
+            }
+        }
+
+        private string LimparCNPJ(string cnpj)
+        {
+            return new string(cnpj.Where(char.IsDigit).ToArray());
+        }
+        //private void LimparTela()
+        //{
+        //    gvProdutosNF.DataSource = null;
+        //    gvProdutosNF.DataBind();
+
+        //    lblChaveNF.Text = "";
+        //    lblNumeroNF.Text = "";
+        //    lblSerieNF.Text = "";
+        //    lblEmissaoNF.Text = "";
+        //    lblStatusNF.Text = "";
+        //    lblPesoTotalNF.Text = "";
+        //    lblValorTotalNF.Text = "";
+
+        //    ViewState["NFE"] = null;
+        //}
+
+        // fim da nota fiscal
+        public class Emitente
+        {
+            public string nome { get; set; }
+            public string cnpj { get; set; }
+        }
+
+        public class Destinatario
+        {
+            public string nome { get; set; }
+            public string cpf_cnpj { get; set; }
+        }
+
 
         public void CarregaMap(string ds_placa)
         {
@@ -5354,7 +5467,6 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
-
         protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
         {
             if (ViewState["placaAtual"] != null)

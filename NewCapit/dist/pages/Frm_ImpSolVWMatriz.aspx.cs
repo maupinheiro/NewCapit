@@ -46,10 +46,12 @@ namespace NewCapit.dist.pages
         private static string nomePlanta;
         private static string codCliOrigem;
         private static string razCliOrigem;
+        private static string cnpjCliOrigem;
         private static string cidCliOrigem;
         private static string estCliOrigem;
         private static string codCliDestino;
         private static string razCliDestino;
+        private static string cnpjCliDestino;
         private static string cidCliDestino;
         private static string estCliDestino;
         private static string codigoTipoGeracao;
@@ -63,10 +65,12 @@ namespace NewCapit.dist.pages
         private static string descricaoTipoVeiculo;
         private static string codCliExpedidor;
         private static string razCliExpedidor;
+        private static string cnpjCliExpedidor;
         private static string cidCliExpedidor;
         private static string estCliExpedidor;
         private static string codCliRecebedor;
         private static string razCliRecebedor;
+        private static string cnpjCliRecebedor;
         private static string cidCliRecebedor;
         private static string estCliRecebedor;
         private static decimal sPeso;
@@ -80,8 +84,10 @@ namespace NewCapit.dist.pages
         private static string sDistancia = "0";
         private static string codCliPagador;
         private static string razCliPagador;
+        private static string cnpjCliPagador;
         private static string cidCliPagador;
         private static string estCliPagador;
+        private static string codSapiens;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -269,7 +275,7 @@ namespace NewCapit.dist.pages
 
                         // Pesquisar dados do cliente origem
                         using (SqlCommand cmd = new SqlCommand(@"
-                 SELECT codcli, razcli, cidcli, estcli
+                 SELECT codcli, razcli, cidcli, estcli, cnpj
                  FROM tbclientes
                  WHERE codvw = @codvw", conn))
                         {
@@ -283,6 +289,7 @@ namespace NewCapit.dist.pages
                                 {
                                     codCliOrigem = dr["codcli"].ToString();
                                     razCliOrigem = dr["razcli"].ToString();
+                                    cnpjCliOrigem = dr["cnpj"].ToString();
                                     cidCliOrigem = dr["cidcli"].ToString();
                                     estCliOrigem = dr["estcli"].ToString();
                                 }
@@ -291,6 +298,7 @@ namespace NewCapit.dist.pages
                                     // Não encontrou
                                     codCliOrigem = "";
                                     razCliOrigem = "";
+                                    cnpjCliOrigem = "";
                                     cidCliOrigem = "";
                                     estCliOrigem = "";
 
@@ -303,7 +311,7 @@ namespace NewCapit.dist.pages
 
                         // Pesquisar dados do cliente destino
                         using (SqlCommand cmd = new SqlCommand(@"
-                 SELECT codcli, razcli, cidcli, estcli
+                 SELECT codcli, razcli, cidcli, estcli, cnpj, codsapiens
                  FROM tbclientes
                  WHERE codvw = @codvw", conn))
                         {
@@ -317,14 +325,17 @@ namespace NewCapit.dist.pages
                                 {
                                     codCliDestino = dr["codcli"].ToString();
                                     razCliDestino = dr["razcli"].ToString();
+                                    cnpjCliDestino = dr["cnpj"].ToString();
                                     cidCliDestino = dr["cidcli"].ToString();
                                     estCliDestino = dr["estcli"].ToString();
+                                    codSapiens = dr["codsapiens"].ToString();
                                 }
                                 else
                                 {
                                     // Não encontrou
                                     codCliDestino = "";
                                     razCliDestino = "";
+                                    cnpjCliDestino = "";
                                     cidCliDestino = "";
                                     estCliDestino = "";
 
@@ -438,15 +449,18 @@ namespace NewCapit.dist.pages
                         codCliExpedidor = codCliOrigem;
                         razCliExpedidor = razCliOrigem;
                         cidCliExpedidor = cidCliOrigem;
+                        cnpjCliExpedidor = cnpjCliOrigem;
                         estCliExpedidor = estCliOrigem;
 
                         codCliOrigem = "1020";
                         razCliOrigem = "VOLKSWAGEN DO BRASIL INDUSTRIA DE VEICULOS AUTOMOTORES LTDA";
                         cidCliOrigem = "SÃO BERNARDO DO CAMPO";
                         estCliOrigem = "SP";
+                        cnpjCliOrigem = "59.104.422/0057-04";
 
                         codCliRecebedor = codCliDestino;
                         razCliRecebedor = razCliDestino;
+                        cnpjCliRecebedor = cnpjCliDestino;
                         cidCliRecebedor = cidCliDestino;
                         estCliRecebedor = estCliDestino;
 
@@ -456,11 +470,13 @@ namespace NewCapit.dist.pages
 
                         codCliExpedidor = codCliOrigem;
                         razCliExpedidor = razCliOrigem;
+                        cnpjCliExpedidor = cnpjCliOrigem;
                         cidCliExpedidor = cidCliOrigem;
                         estCliExpedidor = estCliOrigem;
 
                         codCliRecebedor = codCliDestino;
                         razCliRecebedor = razCliDestino;
+                        cnpjCliRecebedor = cnpjCliDestino;
                         cidCliRecebedor = cidCliDestino;
                         estCliRecebedor = estCliDestino;
                     }
@@ -555,36 +571,44 @@ namespace NewCapit.dist.pages
             string nomePagador = null;
             string cidPagador = null;
             string ufPagador = null;
+
+            string cidExpedidor = cidCliExpedidor;
+            string ufExpedidor = estCliExpedidor;
+            string cidRecebedor = cidCliRecebedor;
+            string ufRecebedor = estCliExpedidor;
+            string rotaEntrega = null;
             string achou = null;
 
 
             string sqlPesquisarFrete = @"
-            SELECT cod_pagador, pagador, cid_pagador, uf_pagador, tempo, deslocamento, emitepedagio, distancia
-            FROM tbtabeladefretes
-            WHERE cod_expedidor = @cod_expedidor
-              AND cod_recebedor = @cod_recebedor
-              AND tipo_veiculo = @tipo_veiculo
-              AND tipo_material = 'OUTROS'";
+            SELECT rota, desc_rota, distancia, deslocamento, pedagio, tempo 
+            FROM tbrotasdeentregas
+            WHERE cidade_expedidor = @cidade_expedidor
+              AND uf_expedidor = @uf_expedidor
+              AND cidade_recebedor = @cidade_recebedor
+              AND uf_recebedor = @uf_recebedor";
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             using (SqlCommand cmdPesquisarFrete = new SqlCommand(sqlPesquisarFrete, con))
             {
-                cmdPesquisarFrete.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = codCliExpedidor;
-                cmdPesquisarFrete.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = codCliRecebedor;
-                cmdPesquisarFrete.Parameters.Add("@tipo_veiculo", SqlDbType.VarChar, 50).Value = descVeicVW;
-                cmdPesquisarFrete.Parameters.Add("@tipo_material", SqlDbType.VarChar, 50).Value = "OUTROS";
+                cmdPesquisarFrete.Parameters.Add("@cidade_expedidor", SqlDbType.VarChar, 120).Value = cidExpedidor;
+                cmdPesquisarFrete.Parameters.Add("@uf_expedidor", SqlDbType.VarChar, 50).Value = ufExpedidor;
+                cmdPesquisarFrete.Parameters.Add("@cidade_recebedor", SqlDbType.VarChar, 120).Value = cidRecebedor;
+                cmdPesquisarFrete.Parameters.Add("@uf_recebedor", SqlDbType.VarChar, 50).Value = ufRecebedor;
                 con.Open();
                 using (SqlDataReader drPesquisarFrete = cmdPesquisarFrete.ExecuteReader())
                 {
                     if (drPesquisarFrete.Read())
                     {
-                        codCliPagador = drPesquisarFrete["cod_pagador"].ToString();
-                        razCliPagador = drPesquisarFrete["pagador"].ToString();
-                        cidCliPagador = drPesquisarFrete["cid_pagador"].ToString();
-                        estCliPagador = drPesquisarFrete["uf_pagador"].ToString();
+                        //codCliPagador = drPesquisarFrete["cod_pagador"].ToString();
+                        //razCliPagador = drPesquisarFrete["pagador"].ToString();
+                        //cidCliPagador = drPesquisarFrete["cid_pagador"].ToString();
+                        //estCliPagador = drPesquisarFrete["uf_pagador"].ToString();
+
                         duracaoFrete = drPesquisarFrete["tempo"]?.ToString();
                         deslocamentoFrete = drPesquisarFrete["deslocamento"]?.ToString();
-                        emitePedagioFrete = drPesquisarFrete["emitepedagio"]?.ToString();
+                        emitePedagioFrete = drPesquisarFrete["pedagio"]?.ToString();
+                        rotaEntrega = drPesquisarFrete["rota"]?.ToString() + " - " + drPesquisarFrete["desc_rota"]?.ToString();
                         distanciaFrete = drPesquisarFrete["distancia"] == DBNull.Value
                         ? (decimal?)null
                         : Convert.ToDecimal(drPesquisarFrete["distancia"]);
@@ -597,10 +621,11 @@ namespace NewCapit.dist.pages
                     }
                     else
                     {
-                        codCliPagador = null;
-                        razCliPagador = null;
-                        cidCliPagador = null;
-                        estCliPagador = null;
+                        cidExpedidor = null;
+                        ufExpedidor = null;
+                        cidRecebedor = null;
+                        ufRecebedor = null;
+                        rotaEntrega = null;
                         sDuracao = null;
                         sDeslocamento = null;
                         sEmitePedagio = null;
@@ -609,7 +634,7 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
-            string frete = codCliExpedidor + "/" + codCliRecebedor + "/" + descVeicVW + "/OUTROS";
+            string frete = rotaEntrega;
             //conn.Open();
 
             // ===============================
@@ -618,13 +643,13 @@ namespace NewCapit.dist.pages
              if (!CargaJaExiste(conn, numSolic))
                 {
                     string sqlCarga = @"INSERT INTO tbcargas (carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, cadastro, gr, solicitante, empresa, andamento, codvworigem, codvwdestino, 
-                  distancia, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, nucleo, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao,  duracao, deslocamento, conta_debito_solicitacao, centro_custo_solicitacao, emitepedagio, desc_veic_vw, cod_pagador, pagador, cid_pagador, uf_pagador, data_hora_coleta)
+                  distancia, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, nucleo, tipo_solicitacao, tipo_geracao_solicitacao, tipo_veiculo_solicitacao,  duracao, deslocamento, conta_debito_solicitacao, centro_custo_solicitacao, emitepedagio, desc_veic_vw, cod_pagador, pagador, cid_pagador, uf_pagador, data_hora_coleta, rota_entrega, cnpj_remetente, cnpj_destinatario, cnpj_expedidor, cnpj_recebedor, cnpj_pagador, observacao)
                     VALUES
-                    (@carga, @emissao, @status, @tomador, @entrega, @peso, @material, 
+                    (@carga, @emissao, @status, @tomador, @entrega, @peso, @material,
                      @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, 
                      @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @cadastro, @gr, @solicitante, @empresa, @andamento, @codvworigem, @codvwdestino, @distancia, @cod_expedidor, @expedidor,
                        @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @nucleo, @tipo_solicitacao,
-                        @tipo_geracao_solicitacao, @tipo_veiculo_solicitacao,  @duracao, @deslocamento, @conta_debito_solicitacao, @centro_custo_solicitacao, @emitepedagio, @desc_veic_vw, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @data_hora_coleta)";
+                        @tipo_geracao_solicitacao, @tipo_veiculo_solicitacao,  @duracao, @deslocamento, @conta_debito_solicitacao, @centro_custo_solicitacao, @emitepedagio, @desc_veic_vw, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @data_hora_coleta, @rota_entrega, @cnpj_remetente, @cnpj_destinatario, @cnpj_expedidor, @cnpj_recebedor, @cnpj_pagador, @observacao)";
 
                     using (SqlCommand cmd = new SqlCommand(sqlCarga, conn))
                     {
@@ -646,9 +671,24 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@ufclidestino", SqlDbType.Char, 2).Value = estCliDestino;
                         cmd.Parameters.Add("@cidorigem", SqlDbType.VarChar, 50).Value = cidCliOrigem;
                         cmd.Parameters.Add("@ciddestino", SqlDbType.VarChar, 50).Value = cidCliDestino;
-                        cmd.Parameters.Add("@cadastro", SqlDbType.VarChar, 80).Value = Frm_ImpSolVWMatriz.DataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + usuario.ToUpper();
+                    cmd.Parameters.Add("@cnpj_remetente", SqlDbType.VarChar, 50).Value = cnpjCliOrigem;
+                    cmd.Parameters.Add("@cnpj_expedidor", SqlDbType.VarChar, 50).Value = cnpjCliExpedidor;
+                    cmd.Parameters.Add("@cnpj_destinatario", SqlDbType.VarChar, 50).Value = cnpjCliDestino;
+                    cmd.Parameters.Add("@cnpj_recebedor", SqlDbType.VarChar, 50).Value = cnpjCliRecebedor;
+
+                    cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = "1020";
+                    cmd.Parameters.Add("@pagador", SqlDbType.VarChar, 120)
+                       .Value = "VOLKSWAGEN DO BRASIL INDUSTRIA DE VEICULOS AUTOMOTORES LTDA";
+                    cmd.Parameters.Add("@cnpj_pagador", SqlDbType.VarChar, 50).Value = "59.104.422/0057-04";
+                    cmd.Parameters.Add("@cid_pagador", SqlDbType.VarChar, 50)
+                       .Value = "SÃO BERNARDO DO CAMPO";
+                    cmd.Parameters.Add("@uf_pagador", SqlDbType.VarChar, 2)
+                       .Value = "SP"; 
+
+                    cmd.Parameters.Add("@cadastro", SqlDbType.VarChar, 80).Value = Frm_ImpSolVWMatriz.DataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + usuario.ToUpper();
                         cmd.Parameters.Add("@gr", SqlDbType.VarChar, 50).Value = grPlanta;
                         cmd.Parameters.Add("@solicitante", SqlDbType.VarChar, 50).Value = nomePlanta;
+                        cmd.Parameters.Add("@rota_entrega", SqlDbType.VarChar, 50).Value = frete;
                         cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 50).Value = "1111";
                         cmd.Parameters.Add("@andamento", SqlDbType.VarChar, 50).Value = "Pendente";
                         cmd.Parameters.Add("@codvworigem", SqlDbType.VarChar, 10).Value = lblOrigem;
@@ -676,17 +716,12 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@centro_custo_solicitacao", SqlDbType.VarChar, 20).Value = centroCusto;
                         cmd.Parameters.Add("@emitepedagio", SqlDbType.VarChar, 3).Value = sEmitePedagio;
                         cmd.Parameters.Add("@desc_veic_vw", SqlDbType.VarChar, 25).Value = descVeicVW;
-                        cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = DbInt(codCliPagador);
-                        cmd.Parameters.Add("@pagador", SqlDbType.VarChar, 120)
-                           .Value = DbString(razCliPagador);
-                        cmd.Parameters.Add("@cid_pagador", SqlDbType.VarChar, 50)
-                           .Value = DbString(cidCliPagador);
-                        cmd.Parameters.Add("@uf_pagador", SqlDbType.VarChar, 2)
-                           .Value = DbString(estCliPagador);
+                        cmd.Parameters.Add("@observacao", SqlDbType.VarChar, 25).Value = "Código SAPIENS: " + codSapiens;
+
                         cmd.Parameters.Add("@data_hora_coleta", SqlDbType.DateTime)
                            .Value = DbString(lblColeta + " " + lblHora);
 
-                    foreach (SqlParameter p in cmd.Parameters)
+                        foreach (SqlParameter p in cmd.Parameters)
                         {
                             if (p.Value == null)
                                 p.Value = DBNull.Value;

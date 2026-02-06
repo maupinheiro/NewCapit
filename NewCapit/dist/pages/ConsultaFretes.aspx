@@ -16,18 +16,29 @@
     </style>
     <!-- Page Heading -->
     <div class="content-wrapper">
-        <div class="content-header">
-            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800">
-                    <i class="fas fa-file-invoice-dollar"></i>&nbsp;Gestão de Fretes</h1>
-                <a href="Frm_TabelaPrecoMatriz.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-file-invoice-dollar"></i>&nbsp;Novo Cadastro            
-                </a>
 
+        <div class="content-header">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-2 text-gray-800">
+                            <i class="fas fa-file-invoice-dollar"></i>&nbsp;Gestão de Fretes</h1>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-2">
+                    <a href="Frm_TabelaPrecoMatriz.aspx" class="d-none d-lg-inline-block btn btn-primary shadow-lg w-100"><i
+                        class="fas fa-file-invoice-dollar"></i>&nbsp;Novo Cadastro            
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <a href="Frm_TabelaPrecoMatriz.aspx" class="d-none d-lg-inline-block btn btn-success shadow-lg  w-100"><i
+                        class="fas fa-file-invoice-dollar"></i>&nbsp;Reajustes          
+                    </a>
+                </div>
             </div>
         </div>
-        <!-- DataTales Example -->
-
         <div class="card shadow mb-4">
             <div class="card-body">
                 <%--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">--%>
@@ -69,7 +80,7 @@
                                         <ItemTemplate>
                                             <%# Eval("cod_recebedor") + " - " + Eval("recebedor") %>
                                             <br>
-                                           <span class="negrito"><%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor") %></span>
+                                            <span class="negrito"><%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor") %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
@@ -116,7 +127,7 @@
                     </div>
 
                 </div>
+            </div>
         </div>
-    </div>
     </div>
 </asp:Content>
