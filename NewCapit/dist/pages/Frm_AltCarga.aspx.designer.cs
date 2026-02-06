@@ -39,7 +39,7 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboGR;
+        protected global::System.Web.UI.WebControls.TextBox cboGR;
 
         /// <summary>
         /// Controle txtCadastro.
@@ -60,24 +60,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtID;
 
         /// <summary>
-        /// Controle txtFrete.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFrete;
-
-        /// <summary>
-        /// Controle cboFrete.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboFrete;
-
-        /// <summary>
         /// Controle txtCodRemetente.
         /// </summary>
         /// <remarks>
@@ -93,7 +75,16 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRemetente;
+        protected global::System.Web.UI.WebControls.DropDownList cboRemetente;
+
+        /// <summary>
+        /// Controle txtCNPJRemetente.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJRemetente;
 
         /// <summary>
         /// Controle txtMunicipioRemetente.
@@ -129,7 +120,16 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboExpedidor;
+        protected global::System.Web.UI.WebControls.DropDownList cboExpedidor;
+
+        /// <summary>
+        /// Controle txtCNPJExpedidor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJExpedidor;
 
         /// <summary>
         /// Controle txtCidExpedidor.
@@ -165,7 +165,16 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboDestinatario;
+        protected global::System.Web.UI.WebControls.DropDownList cboDestinatario;
+
+        /// <summary>
+        /// Controle txtCNPJDestinatario.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJDestinatario;
 
         /// <summary>
         /// Controle txtMunicipioDestinatario.
@@ -201,7 +210,16 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox cboRecebedor;
+        protected global::System.Web.UI.WebControls.DropDownList cboRecebedor;
+
+        /// <summary>
+        /// Controle txtCNPJRecebedor.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJRecebedor;
 
         /// <summary>
         /// Controle txtCidRecebedor.
@@ -237,7 +255,16 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtConsignatario;
+        protected global::System.Web.UI.WebControls.DropDownList txtConsignatario;
+
+        /// <summary>
+        /// Controle txtCNPJConsignatario.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJConsignatario;
 
         /// <summary>
         /// Controle txtCidConsignatario.
@@ -273,7 +300,16 @@ namespace NewCapit.dist.pages
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPagador;
+        protected global::System.Web.UI.WebControls.DropDownList txtPagador;
+
+        /// <summary>
+        /// Controle txtCNPJPagador.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJPagador;
 
         /// <summary>
         /// Controle txtCidPagador.
@@ -303,13 +339,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtFilial;
 
         /// <summary>
-        /// Controle txtTipoVeiculo.
+        /// Controle txtDeslocamento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTipoVeiculo;
+        protected global::System.Web.UI.WebControls.TextBox txtDeslocamento;
 
         /// <summary>
         /// Controle txtDistancia.
@@ -319,15 +355,6 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDistancia;
-
-        /// <summary>
-        /// Controle txtDeslocamento.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDeslocamento;
 
         /// <summary>
         /// Controle txtDuracao.
@@ -348,6 +375,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPedagio;
 
         /// <summary>
+        /// Controle txtRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRota;
+
+        /// <summary>
         /// Controle txtObservacao.
         /// </summary>
         /// <remarks>
@@ -355,6 +391,24 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtObservacao;
+
+        /// <summary>
+        /// Controle txtTipoVeiculo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTipoVeiculo;
+
+        /// <summary>
+        /// Controle txtLotacao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLotacao;
 
         /// <summary>
         /// Controle txtNumPedido.

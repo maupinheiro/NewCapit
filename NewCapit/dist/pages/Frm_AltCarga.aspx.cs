@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using static NewCapit.Main;
+using static NewCapit.dist.pages.Frm_TabelaPrecoMatriz;
 
 namespace NewCapit.dist.pages
 {
@@ -40,14 +41,42 @@ namespace NewCapit.dist.pages
 
                 }
                 //PreencherNumCarga();
-                PreencherComboSolicitantes();
-                PreencherComboGR();
-                PreencherComboFretes();
+                CarregarClientes(cboRemetente, cboExpedidor, cboDestinatario, cboRecebedor, txtConsignatario, txtPagador);
+                PreencherComboSolicitantes();                
                 PreencherComboMateriais();
                 PreencherComboDeposito();
 
                 CarregaDados();
             }
+        }
+        private void CarregarClientes(params DropDownList[] combos)
+        {
+            // Consulta SQL que retorna os dados desejados
+            string query = "SELECT codcli, razcli, ativo_inativo, fl_exclusao FROM tbclientes where ativo_inativo = 'ATIVO' and fl_exclusao is null ORDER BY razcli";
+
+            // Crie uma conexão com o banco de dados
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                DataTable dt = new DataTable();
+                dt.Load(dr);
+
+                foreach (DropDownList ddl in combos)
+                {
+                    ddl.DataSource = dt;
+                    ddl.DataTextField = "razcli";   // texto exibido
+                    ddl.DataValueField = "codcli";  // valor
+                    ddl.DataBind();
+
+                    ddl.Items.Insert(0, new ListItem("Selecione...", ""));
+                }
+            }
+
+
+
         }
         public void CarregaDados()
         {
@@ -73,39 +102,45 @@ namespace NewCapit.dist.pages
                 txtCadastro.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy HH:mm");
 
                 txtCodRemetente.Text = dt.Rows[0][12].ToString();
-                cboRemetente.Text = dt.Rows[0][13].ToString();
+                cboRemetente.SelectedItem.Text = dt.Rows[0][13].ToString();
+                txtCNPJRemetente.Text = dt.Rows[0][117].ToString();
                 txtMunicipioRemetente.Text = dt.Rows[0][23].ToString();
                 txtUFRemetente.Text = dt.Rows[0][19].ToString();
 
                 txtCodExpedidor.Text = dt.Rows[0][64].ToString();
-                cboExpedidor.Text = dt.Rows[0][65].ToString();
+                cboExpedidor.SelectedItem.Text = dt.Rows[0][65].ToString();
+                txtCNPJExpedidor.Text = dt.Rows[0][118].ToString();
                 txtCidExpedidor.Text = dt.Rows[0][66].ToString();
                 txtUFExpedidor.Text = dt.Rows[0][67].ToString();
 
                 txtCodDestinatario.Text = dt.Rows[0][14].ToString();
-                cboDestinatario.Text = dt.Rows[0][15].ToString();
+                cboDestinatario.SelectedItem.Text = dt.Rows[0][15].ToString();
+                txtCNPJDestinatario.Text = dt.Rows[0][119].ToString();
                 txtMunicipioDestinatario.Text = dt.Rows[0][24].ToString();
                 txtUFDestinatario.Text = dt.Rows[0][20].ToString();
                 txtUsuCadastro.Text = dt.Rows[0][26].ToString();
 
                 txtCodRecebedor.Text = dt.Rows[0][68].ToString();
-                cboRecebedor.Text = dt.Rows[0][69].ToString();
+                cboRecebedor.SelectedItem.Text = dt.Rows[0][69].ToString();
+                txtCNPJRecebedor.Text = dt.Rows[0][120].ToString();
                 txtCidRecebedor.Text = dt.Rows[0][70].ToString();
                 txtUFRecebedor.Text = dt.Rows[0][71].ToString();
 
                 txtCodConsignatario.Text = dt.Rows[0][72].ToString();
-                txtConsignatario.Text = dt.Rows[0][73].ToString();
+                txtConsignatario.SelectedItem.Text = dt.Rows[0][73].ToString();
+                txtCNPJConsignatario.Text = dt.Rows[0][121].ToString();
                 txtCidConsignatario.Text = dt.Rows[0][74].ToString();
                 txtUFConsignatario.Text = dt.Rows[0][75].ToString();
 
                 txtCodPagador.Text = dt.Rows[0][76].ToString();
-                txtPagador.Text = dt.Rows[0][77].ToString();
+                txtPagador.SelectedItem.Text = dt.Rows[0][77].ToString();
+                txtCNPJPagador.Text = dt.Rows[0][122].ToString();
                 txtCidPagador.Text = dt.Rows[0][78].ToString();
                 txtUFPagador.Text = dt.Rows[0][79].ToString();
 
                 cbSolicitantes.Items.Insert(0, new ListItem(dt.Rows[0][30].ToString(), ""));
-                cboGR.Items.Insert(0, new ListItem(dt.Rows[0][28].ToString(), ""));
-                cboFrete.Items.Insert(0, new ListItem(dt.Rows[0][4].ToString(), ""));
+                cboGR.Text =dt.Rows[0][28].ToString();
+                //cboFrete.Items.Insert(0, new ListItem(dt.Rows[0][4].ToString(), ""));
 
                 txtFilial.Text = dt.Rows[0][80].ToString();
                 txtTipoVeiculo.Text = dt.Rows[0][83].ToString();
@@ -114,10 +149,11 @@ namespace NewCapit.dist.pages
                 txtDuracao.Text = dt.Rows[0][81].ToString();
                 txtPedagio.Text = dt.Rows[0][63].ToString();
                 txtObservacao.Text = dt.Rows[0][16].ToString();
+                txtRota.Text = dt.Rows[0][123].ToString();
 
 
 
-                txtFrete.Text = dt.Rows[0][82].ToString();
+                //txtFrete.Text = dt.Rows[0][82].ToString();
                 if (novaCarga.Text != "")
                 {
                     string numeroCarga = novaCarga.Text.Trim();
@@ -208,7 +244,7 @@ namespace NewCapit.dist.pages
         private void PreencherComboSolicitantes()
         {
             // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, nome FROM tbsolicitantes";
+            string query = "SELECT id, nome FROM tbsolicitantes where status = 'Ativo' order by nome";
 
             // Crie uma conexão com o banco de dados
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -240,41 +276,7 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void PreencherComboGR()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT id, nomgr FROM tbgr";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
-
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
-
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    // Preencher o ComboBox com os dados do DataReader
-                    cboGR.DataSource = reader;
-                    cboGR.DataTextField = "nomgr";  // Campo que será mostrado no ComboBox
-                    cboGR.DataValueField = "id";  // Campo que será o valor de cada item                    
-                    cboGR.DataBind();  // Realiza o binding dos dados                   
-                    cboGR.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
         private void PreencherComboMateriais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -345,207 +347,207 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void PreencherComboFretes()
-        {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT cod_frete, desc_frete, fl_exclusao FROM tbtabeladefretes where fl_exclusao is null  and situacao = 'ATIVO' order by desc_frete";
+        //private void PreencherComboFretes()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT cod_frete, desc_frete, fl_exclusao FROM tbtabeladefretes where fl_exclusao is null  and situacao = 'ATIVO' order by desc_frete";
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                try
-                {
-                    // Abra a conexão com o banco de dados
-                    conn.Open();
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-                    // Crie o comando SQL
-                    SqlCommand cmd = new SqlCommand(query, conn);
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
 
-                    // Execute o comando e obtenha os dados em um DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    // Preencher o ComboBox com os dados do DataReader
-                    cboFrete.DataSource = reader;
-                    cboFrete.DataTextField = "desc_frete";  // Campo que será mostrado no ComboBox
-                    cboFrete.DataValueField = "cod_frete";  // Campo que será o valor de cada item                    
-                    cboFrete.DataBind();  // Realiza o binding dos dados                   
-                    cboFrete.Items.Insert(0, new ListItem("Selecione...", "0"));
-                    // Feche o reader
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    // Trate exceções
-                    Response.Write("Erro: " + ex.Message);
-                }
-            }
-        }
-        protected void txtFrete_TextChanged(object sender, EventArgs e)
-        {
-            if (txtFrete.Text != "")
-            {
-                string cod = txtFrete.Text;
-                string sql = "SELECT  cod_frete, desc_frete, cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_destinatario, destinatario, cid_destinatario, uf_destinatario,cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, nucleo, tipo_veiculo,  tempo, deslocamento, distancia, emitepedagio, fl_exclusao, situacao FROM tbtabeladefretes where cod_frete = '" + cod + "' and situacao = 'ATIVO' and fl_exclusao is null";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                DataTable dt = new DataTable();
-                conn.Open();
-                da.Fill(dt);
-                conn.Close();
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            cboFrete.DataSource = reader;
+        //            cboFrete.DataTextField = "desc_frete";  // Campo que será mostrado no ComboBox
+        //            cboFrete.DataValueField = "cod_frete";  // Campo que será o valor de cada item                    
+        //            cboFrete.DataBind();  // Realiza o binding dos dados                   
+        //            cboFrete.Items.Insert(0, new ListItem("Selecione...", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
+        //protected void txtFrete_TextChanged(object sender, EventArgs e)
+        //{
+        //    if (txtFrete.Text != "")
+        //    {
+        //        string cod = txtFrete.Text;
+        //        string sql = "SELECT  cod_frete, desc_frete, cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_destinatario, destinatario, cid_destinatario, uf_destinatario,cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, nucleo, tipo_veiculo,  tempo, deslocamento, distancia, emitepedagio, fl_exclusao, situacao FROM tbtabeladefretes where cod_frete = '" + cod + "' and situacao = 'ATIVO' and fl_exclusao is null";
+        //        SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+        //        DataTable dt = new DataTable();
+        //        conn.Open();
+        //        da.Fill(dt);
+        //        conn.Close();
 
-                if (dt.Rows.Count > 0)
-                {
-                    if (dt.Rows[0][17].ToString() == null)
-                    {
-                        // Acione o toast quando a página for carregada
-                        string script = "<script>showToast('Tabela de frete deletada do sistema.');</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        txtFrete.Text = "";
-                        txtFrete.Focus();
-                        return;
-                    }
-                    else if (dt.Rows[0][18].ToString() == "INATIVO")
-                    {
-                        // Acione o toast quando a página for carregada
-                        string script = "<script>showToast('Tabela de frete inativa no sistema.');</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        txtFrete.Text = "";
-                        txtFrete.Focus();
-                        return;
-                    }
-                    else
-                    {
-                        txtFrete.Text = dt.Rows[0][0].ToString();
-                        cboFrete.SelectedItem.Text = dt.Rows[0][1].ToString();
-                        txtCodRemetente.Text = dt.Rows[0][2].ToString();
-                        cboRemetente.Text = dt.Rows[0][3].ToString();
-                        txtMunicipioRemetente.Text = dt.Rows[0][4].ToString();
-                        txtUFRemetente.Text = dt.Rows[0][5].ToString();
+        //        if (dt.Rows.Count > 0)
+        //        {
+        //            if (dt.Rows[0][17].ToString() == null)
+        //            {
+        //                // Acione o toast quando a página for carregada
+        //                string script = "<script>showToast('Tabela de frete deletada do sistema.');</script>";
+        //                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+        //                txtFrete.Text = "";
+        //                txtFrete.Focus();
+        //                return;
+        //            }
+        //            else if (dt.Rows[0][18].ToString() == "INATIVO")
+        //            {
+        //                // Acione o toast quando a página for carregada
+        //                string script = "<script>showToast('Tabela de frete inativa no sistema.');</script>";
+        //                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+        //                txtFrete.Text = "";
+        //                txtFrete.Focus();
+        //                return;
+        //            }
+        //            else
+        //            {
+        //                txtFrete.Text = dt.Rows[0][0].ToString();
+        //                cboFrete.SelectedItem.Text = dt.Rows[0][1].ToString();
+        //                txtCodRemetente.Text = dt.Rows[0][2].ToString();
+        //                cboRemetente.Text = dt.Rows[0][3].ToString();
+        //                txtMunicipioRemetente.Text = dt.Rows[0][4].ToString();
+        //                txtUFRemetente.Text = dt.Rows[0][5].ToString();
 
-                        txtCodExpedidor.Text = dt.Rows[0][6].ToString();
-                        cboExpedidor.Text = dt.Rows[0][7].ToString();
-                        txtCidExpedidor.Text = dt.Rows[0][8].ToString();
-                        txtUFExpedidor.Text = dt.Rows[0][9].ToString();
+        //                txtCodExpedidor.Text = dt.Rows[0][6].ToString();
+        //                cboExpedidor.Text = dt.Rows[0][7].ToString();
+        //                txtCidExpedidor.Text = dt.Rows[0][8].ToString();
+        //                txtUFExpedidor.Text = dt.Rows[0][9].ToString();
 
-                        txtCodDestinatario.Text = dt.Rows[0][10].ToString();
-                        cboDestinatario.Text = dt.Rows[0][11].ToString();
-                        txtMunicipioDestinatario.Text = dt.Rows[0][12].ToString();
-                        txtUFDestinatario.Text = dt.Rows[0][13].ToString();
+        //                txtCodDestinatario.Text = dt.Rows[0][10].ToString();
+        //                cboDestinatario.Text = dt.Rows[0][11].ToString();
+        //                txtMunicipioDestinatario.Text = dt.Rows[0][12].ToString();
+        //                txtUFDestinatario.Text = dt.Rows[0][13].ToString();
 
-                        txtCodRecebedor.Text = dt.Rows[0][14].ToString();
-                        cboRecebedor.Text = dt.Rows[0][15].ToString();
-                        txtCidRecebedor.Text = dt.Rows[0][16].ToString();
-                        txtUFRecebedor.Text = dt.Rows[0][17].ToString();
+        //                txtCodRecebedor.Text = dt.Rows[0][14].ToString();
+        //                cboRecebedor.Text = dt.Rows[0][15].ToString();
+        //                txtCidRecebedor.Text = dt.Rows[0][16].ToString();
+        //                txtUFRecebedor.Text = dt.Rows[0][17].ToString();
 
-                        txtCodConsignatario.Text = dt.Rows[0][18].ToString();
-                        txtConsignatario.Text = dt.Rows[0][19].ToString();
-                        txtCidConsignatario.Text = dt.Rows[0][20].ToString();
-                        txtUFConsignatario.Text = dt.Rows[0][21].ToString();
+        //                txtCodConsignatario.Text = dt.Rows[0][18].ToString();
+        //                txtConsignatario.Text = dt.Rows[0][19].ToString();
+        //                txtCidConsignatario.Text = dt.Rows[0][20].ToString();
+        //                txtUFConsignatario.Text = dt.Rows[0][21].ToString();
 
-                        txtCodPagador.Text = dt.Rows[0][22].ToString();
-                        txtPagador.Text = dt.Rows[0][23].ToString();
-                        txtCidPagador.Text = dt.Rows[0][24].ToString();
-                        txtUFPagador.Text = dt.Rows[0][25].ToString();
+        //                txtCodPagador.Text = dt.Rows[0][22].ToString();
+        //                txtPagador.Text = dt.Rows[0][23].ToString();
+        //                txtCidPagador.Text = dt.Rows[0][24].ToString();
+        //                txtUFPagador.Text = dt.Rows[0][25].ToString();
 
-                        txtFilial.Text = dt.Rows[0][26].ToString();
-                        txtTipoVeiculo.Text = dt.Rows[0][27].ToString();
-                        txtDuracao.Text = dt.Rows[0][28].ToString();
-                        txtDeslocamento.Text = dt.Rows[0][29].ToString();
-                        txtDistancia.Text = dt.Rows[0][30].ToString();
-                        txtPedagio.Text = dt.Rows[0][31].ToString();
-                        return;
-                    }
+        //                txtFilial.Text = dt.Rows[0][26].ToString();
+        //                txtTipoVeiculo.Text = dt.Rows[0][27].ToString();
+        //                txtDuracao.Text = dt.Rows[0][28].ToString();
+        //                txtDeslocamento.Text = dt.Rows[0][29].ToString();
+        //                txtDistancia.Text = dt.Rows[0][30].ToString();
+        //                txtPedagio.Text = dt.Rows[0][31].ToString();
+        //                return;
+        //            }
 
-                }
-                else
-                {
-                    // Acione o toast quando a página for carregada
-                    string script = "<script>showToast('Tabela de frete não encontrada no sistema.');</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                    txtFrete.Text = "";
-                    txtFrete.Focus();
-                    return;
-                }
-            }
+        //        }
+        //        else
+        //        {
+        //            // Acione o toast quando a página for carregada
+        //            string script = "<script>showToast('Tabela de frete não encontrada no sistema.');</script>";
+        //            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+        //            txtFrete.Text = "";
+        //            txtFrete.Focus();
+        //            return;
+        //        }
+        //    }
 
-        }
-        protected void cboFrete_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idSelecionado = int.Parse(cboFrete.SelectedValue);
+        //}
+        //protected void cboFrete_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    int idSelecionado = int.Parse(cboFrete.SelectedValue);
 
-            // Preencher os campos com base no valor selecionado
-            if (idSelecionado > 0)
-            {
-                PreencherCamposFrete(idSelecionado);
-            }
-            else
-            {
-                LimparCamposFrete();
-            }
-        }
-        // Função para preencher os campos com os dados do banco
-        private void PreencherCamposFrete(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                conn.Open();
-                string query = "SELECT cod_frete, desc_frete, cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_destinatario, destinatario, cid_destinatario, uf_destinatario,cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, nucleo, tipo_veiculo,  tempo, deslocamento, distancia, emitepedagio, fl_exclusao, situacao FROM tbtabeladefretes WHERE cod_frete = @ID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ID", id);
-                SqlDataReader reader = cmd.ExecuteReader();
+        //    // Preencher os campos com base no valor selecionado
+        //    if (idSelecionado > 0)
+        //    {
+        //        PreencherCamposFrete(idSelecionado);
+        //    }
+        //    else
+        //    {
+        //        LimparCamposFrete();
+        //    }
+        //}
+        //// Função para preencher os campos com os dados do banco
+        //private void PreencherCamposFrete(int id)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        conn.Open();
+        //        string query = "SELECT cod_frete, desc_frete, cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_destinatario, destinatario, cid_destinatario, uf_destinatario,cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, nucleo, tipo_veiculo,  tempo, deslocamento, distancia, emitepedagio, fl_exclusao, situacao FROM tbtabeladefretes WHERE cod_frete = @ID";
+        //        SqlCommand cmd = new SqlCommand(query, conn);
+        //        cmd.Parameters.AddWithValue("@ID", id);
+        //        SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    txtFrete.Text = reader["cod_frete"].ToString();
-                    cboFrete.SelectedItem.Text = reader["desc_frete"].ToString();
-                    txtCodRemetente.Text = reader["cod_remetente"].ToString();
-                    cboRemetente.Text = reader["remetente"].ToString();
-                    txtMunicipioRemetente.Text = reader["cid_remetente"].ToString();
-                    txtUFRemetente.Text = reader["uf_remetente"].ToString();
+        //        if (reader.Read())
+        //        {
+        //            txtFrete.Text = reader["cod_frete"].ToString();
+        //            cboFrete.SelectedItem.Text = reader["desc_frete"].ToString();
+        //            txtCodRemetente.Text = reader["cod_remetente"].ToString();
+        //            cboRemetente.Text = reader["remetente"].ToString();
+        //            txtMunicipioRemetente.Text = reader["cid_remetente"].ToString();
+        //            txtUFRemetente.Text = reader["uf_remetente"].ToString();
 
-                    txtCodExpedidor.Text = reader["cod_expedidor"].ToString();
-                    cboExpedidor.Text = reader["expedidor"].ToString();
-                    txtCidExpedidor.Text = reader["cid_expedidor"].ToString();
-                    txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
+        //            txtCodExpedidor.Text = reader["cod_expedidor"].ToString();
+        //            cboExpedidor.Text = reader["expedidor"].ToString();
+        //            txtCidExpedidor.Text = reader["cid_expedidor"].ToString();
+        //            txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
 
-                    txtCodDestinatario.Text = reader["cod_destinatario"].ToString();
-                    cboDestinatario.Text = reader["destinatario"].ToString();
-                    txtMunicipioDestinatario.Text = reader["cid_destinatario"].ToString();
-                    txtUFDestinatario.Text = reader["uf_destinatario"].ToString();
+        //            txtCodDestinatario.Text = reader["cod_destinatario"].ToString();
+        //            cboDestinatario.Text = reader["destinatario"].ToString();
+        //            txtMunicipioDestinatario.Text = reader["cid_destinatario"].ToString();
+        //            txtUFDestinatario.Text = reader["uf_destinatario"].ToString();
 
-                    txtCodRecebedor.Text = reader["cod_recebedor"].ToString();
-                    cboRecebedor.Text = reader["recebedor"].ToString();
-                    txtCidRecebedor.Text = reader["cid_recebedor"].ToString();
-                    txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
+        //            txtCodRecebedor.Text = reader["cod_recebedor"].ToString();
+        //            cboRecebedor.Text = reader["recebedor"].ToString();
+        //            txtCidRecebedor.Text = reader["cid_recebedor"].ToString();
+        //            txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
 
-                    txtCodConsignatario.Text = reader["cod_consignatario"].ToString();
-                    txtConsignatario.Text = reader["consignatario"].ToString();
-                    txtCidConsignatario.Text = reader["cid_consignatario"].ToString();
-                    txtUFConsignatario.Text = reader["uf_consignatario"].ToString();
+        //            txtCodConsignatario.Text = reader["cod_consignatario"].ToString();
+        //            txtConsignatario.Text = reader["consignatario"].ToString();
+        //            txtCidConsignatario.Text = reader["cid_consignatario"].ToString();
+        //            txtUFConsignatario.Text = reader["uf_consignatario"].ToString();
 
-                    txtCodPagador.Text = reader["cod_pagador"].ToString();
-                    txtPagador.Text = reader["pagador"].ToString();
-                    txtCidPagador.Text = reader["cid_pagador"].ToString();
-                    txtUFPagador.Text = reader["uf_pagador"].ToString();
+        //            txtCodPagador.Text = reader["cod_pagador"].ToString();
+        //            txtPagador.Text = reader["pagador"].ToString();
+        //            txtCidPagador.Text = reader["cid_pagador"].ToString();
+        //            txtUFPagador.Text = reader["uf_pagador"].ToString();
 
-                    txtFilial.Text = reader["nucleo"].ToString();
-                    txtTipoVeiculo.Text = reader["tipo_veiculo"].ToString();
-                    txtDuracao.Text = reader["tempo"].ToString();
-                    txtDeslocamento.Text = reader["deslocamento"].ToString();
-                    txtDistancia.Text = reader["distancia"].ToString();
-                    txtPedagio.Text = reader["emitepedagio"].ToString();
-                    return;
+        //            txtFilial.Text = reader["nucleo"].ToString();
+        //            txtTipoVeiculo.Text = reader["tipo_veiculo"].ToString();
+        //            txtDuracao.Text = reader["tempo"].ToString();
+        //            txtDeslocamento.Text = reader["deslocamento"].ToString();
+        //            txtDistancia.Text = reader["distancia"].ToString();
+        //            txtPedagio.Text = reader["emitepedagio"].ToString();
+        //            return;
 
-                }
+        //        }
 
-            }
-        }
-        // Função para limpar os campos
-        private void LimparCamposFrete()
-        {
-            //txtCodPagador.Text = string.Empty;
-            //txtCidPagador.Text = string.Empty;
-            //txtUFPagador.Text = string.Empty;
-        }
+        //    }
+        //}
+        //// Função para limpar os campos
+        //private void LimparCamposFrete()
+        //{
+        //    //txtCodPagador.Text = string.Empty;
+        //    //txtCidPagador.Text = string.Empty;
+        //    //txtUFPagador.Text = string.Empty;
+        //}
         protected void txtNumPedido_TextChanged(object sender, EventArgs e)
         {
             string numeroCarga = novaCarga.Text.Trim();
@@ -622,17 +624,7 @@ namespace NewCapit.dist.pages
                     }
 
                 }
-            }
-            else
-            {
-                // Acione o toast quando a página for carregada
-                string script = "<script>showToast('Escolha uma rota válida, para continuar...');</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                txtFrete.Text = "";
-                txtFrete.Focus();
-                return;
-            }
-
+            }            
         }
         private void CarregarGrid(string numeroCarga)
         {
@@ -688,14 +680,7 @@ namespace NewCapit.dist.pages
                     string script = "<script>showToast('Preenchimento obrigatório para o Solicitante!');</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                     cbSolicitantes.Focus();
-                }
-                else if (cboGR.SelectedItem.Value == "0")
-                {
-                    // Acione o toast quando a página for carregada
-                    string script = "<script>showToast('Preenchimento obrigatório para a Gerenciadora de Risco (GR)!');</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                    cboGR.Focus();
-                }
+                }                
                 else
                 {
                     string cod = txtNumPedido.Text;
@@ -727,9 +712,9 @@ namespace NewCapit.dist.pages
                                     cmdUpdate.Parameters.AddWithValue("@controledocliente", txtControleCliente.Text);
                                     cmdUpdate.Parameters.AddWithValue("@observacao", txtObservacao.Text.ToUpper());
                                     cmdUpdate.Parameters.AddWithValue("@solicitante", cbSolicitantes.SelectedItem.Text);
-                                    cmdUpdate.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
+                                    cmdUpdate.Parameters.AddWithValue("@gr", cboGR.Text);
                                     cmdUpdate.Parameters.AddWithValue("@atualizacao", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
-                                    cmdUpdate.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
+                                    cmdUpdate.Parameters.AddWithValue("@tomador", txtPagador.SelectedItem.Text);
                                     cmdUpdate.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
                                     con.Open();
                                     int rowsAffected = cmdUpdate.ExecuteNonQuery();
@@ -784,10 +769,10 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@andamento", "PENDENTE");
                             comando.Parameters.AddWithValue("@ufcliorigem", txtUFRemetente.Text);
                             comando.Parameters.AddWithValue("@ufclidestino", txtUFDestinatario.Text);
-                            comando.Parameters.AddWithValue("@tomador", txtCodPagador.Text.Trim() + " - " + txtPagador.Text.Trim() + "(" + txtFrete.Text.Trim() + ")");
+                            comando.Parameters.AddWithValue("@tomador", txtPagador.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@cidorigem", txtMunicipioRemetente.Text);
                             comando.Parameters.AddWithValue("@ciddestino", txtMunicipioDestinatario.Text);
-                            comando.Parameters.AddWithValue("@gr", cboGR.SelectedItem.Text);
+                            comando.Parameters.AddWithValue("@gr", cboGR.Text);
                             comando.Parameters.AddWithValue("@cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
 
                             try
@@ -906,14 +891,7 @@ namespace NewCapit.dist.pages
                     string script = "<script>showToast('Preenchimento obrigatório para o Solicitante!');</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
                     cbSolicitantes.Focus();
-                }
-                else if (cboGR.SelectedItem.Value == "0")
-                {
-                    // Acione o toast quando a página for carregada
-                    string script = "<script>showToast('Preenchimento obrigatório para a Gerenciadora de Risco (GR)!');</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                    cboGR.Focus();
-                }
+                }                
                 else
                 {
                     conn.Close();
@@ -980,7 +958,7 @@ namespace NewCapit.dist.pages
 
                             cmd.Parameters.Add("@carga", SqlDbType.NVarChar, 50).Value = novaCarga.Text;
                             cmd.Parameters.Add("@tomador", SqlDbType.NVarChar, 170).Value =
-                                $"{txtCodPagador.Text} - {txtPagador.Text} ({txtFrete.Text})";
+                                txtPagador.SelectedItem.Text;
 
                             cmd.Parameters.Add("@entrega", SqlDbType.NVarChar, 20).Value = cboEntrega.SelectedItem.Text;
                             cmd.Parameters.Add("@peso", SqlDbType.Decimal).Value = totalPesoCarga;
@@ -989,17 +967,17 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.Add("@situacao", SqlDbType.NVarChar, 20).Value = cboSituacao.SelectedItem.Text;
 
                             cmd.Parameters.Add("@codorigem", SqlDbType.Int).Value = SafeConvert.SafeInt(txtCodRemetente.Text);
-                            cmd.Parameters.Add("@cliorigem", SqlDbType.NVarChar, 150).Value = cboRemetente.Text;
+                            cmd.Parameters.Add("@cliorigem", SqlDbType.NVarChar, 150).Value = cboRemetente.SelectedItem.Text;
 
                             cmd.Parameters.Add("@coddestino", SqlDbType.Int).Value = SafeConvert.SafeInt(txtCodDestinatario.Text);
-                            cmd.Parameters.Add("@clidestino", SqlDbType.NVarChar, 150).Value = cboDestinatario.Text;
+                            cmd.Parameters.Add("@clidestino", SqlDbType.NVarChar, 150).Value = cboDestinatario.SelectedItem.Text;
 
                             cmd.Parameters.Add("@observacao", SqlDbType.NVarChar).Value = txtObservacao.Text.ToUpper();
                             cmd.Parameters.Add("@ufcliorigem", SqlDbType.NVarChar, 2).Value = txtUFRemetente.Text;
                             cmd.Parameters.Add("@ufclidestino", SqlDbType.NVarChar, 2).Value = txtUFDestinatario.Text;
 
                             cmd.Parameters.Add("@pedidos", SqlDbType.NVarChar).Value = gvPedidos.Rows.Count.ToString();
-                            cmd.Parameters.Add("@gr", SqlDbType.NVarChar, 50).Value = cboGR.SelectedItem.Text;
+                            cmd.Parameters.Add("@gr", SqlDbType.NVarChar, 50).Value = cboGR.Text;
                             cmd.Parameters.Add("@ot", SqlDbType.NVarChar, 50).Value = txtControleCliente.Text;
                             cmd.Parameters.Add("@solicitante", SqlDbType.NVarChar, 50).Value = cbSolicitantes.SelectedItem.Text;
                             cmd.Parameters.Add("@empresa", SqlDbType.NVarChar, 50).Value = "1111";
@@ -1014,29 +992,23 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.Add("@nucleo", SqlDbType.NVarChar, 50).Value = txtFilial.Text;
 
                             cmd.Parameters.Add("@cod_expedidor", SqlDbType.Int).Value = SafeConvert.SafeInt(txtCodExpedidor.Text);
-                            cmd.Parameters.Add("@expedidor", SqlDbType.NVarChar, 150).Value = cboExpedidor.Text;
+                            cmd.Parameters.Add("@expedidor", SqlDbType.NVarChar, 150).Value = cboExpedidor.SelectedItem.Text;
                             cmd.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar, 50).Value = txtCidExpedidor.Text;
                             cmd.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2).Value = txtUFExpedidor.Text;
-
                             cmd.Parameters.Add("@cod_recebedor", SqlDbType.Int).Value = SafeConvert.SafeInt(txtCodRecebedor.Text);
-                            cmd.Parameters.Add("@recebedor", SqlDbType.NVarChar, 150).Value = cboRecebedor.Text;
+                            cmd.Parameters.Add("@recebedor", SqlDbType.NVarChar, 150).Value = cboRecebedor.SelectedItem.Text;
                             cmd.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar, 50).Value = txtCidRecebedor.Text;
                             cmd.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2).Value = txtUFRecebedor.Text;
-
                             cmd.Parameters.Add("@cod_consignatario", SqlDbType.Int).Value =
                                 SafeConvert.SafeIntNullable(txtCodConsignatario.Text) ?? (object)DBNull.Value;
-
-                            cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar, 150).Value = txtConsignatario.Text;
+                            cmd.Parameters.Add("@consignatario", SqlDbType.NVarChar, 150).Value = txtConsignatario.SelectedItem.Text;
                             cmd.Parameters.Add("@cid_consignatario", SqlDbType.NVarChar, 50).Value = txtCidConsignatario.Text;
                             cmd.Parameters.Add("@uf_consignatario", SqlDbType.NVarChar, 2).Value = txtUFConsignatario.Text;
-
                             cmd.Parameters.Add("@cod_pagador", SqlDbType.Int).Value = SafeConvert.SafeInt(txtCodPagador.Text);
-                            cmd.Parameters.Add("@pagador", SqlDbType.NVarChar, 150).Value = txtPagador.Text;
+                            cmd.Parameters.Add("@pagador", SqlDbType.NVarChar, 150).Value = txtPagador.SelectedItem.Text;
                             cmd.Parameters.Add("@cid_pagador", SqlDbType.NVarChar, 50).Value = txtCidPagador.Text;
                             cmd.Parameters.Add("@uf_pagador", SqlDbType.NVarChar, 2).Value = txtUFPagador.Text;
-
-                            cmd.Parameters.Add("@duracao", SqlDbType.NVarChar, 15).Value = txtDuracao.Text;
-                            cmd.Parameters.Add("@cod_tomador", SqlDbType.Int).Value = SafeConvert.SafeInt(txtFrete.Text);
+                            cmd.Parameters.Add("@duracao", SqlDbType.NVarChar, 15).Value = txtDuracao.Text;                            
                             cmd.Parameters.Add("@tipo_veiculo", SqlDbType.NVarChar, 50).Value = txtTipoVeiculo.Text;
                             cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar, 30).Value = txtDeslocamento.Text;
 
@@ -1060,7 +1032,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void txtPrevEntrega_TextChanged(object sender, EventArgs e)
         {
             if (txtPrevEntrega.Text != "")
@@ -1082,6 +1053,7 @@ namespace NewCapit.dist.pages
             }
 
         }
+
         public static bool DataValida(string dataTexto, out DateTime data)
         {
             string formato = "dd/MM/yyyy";
@@ -1093,6 +1065,899 @@ namespace NewCapit.dist.pages
                 out data
             );
         }
+        public RotaEntrega ObterRotaPorDescricao(string nomeRota)
+        {
+            const string sql = @"
+            SELECT 
+                rota,
+                desc_rota,
+                distancia,
+                tempo,
+                deslocamento,
+                pedagio
+            FROM tbrotasdeentregas
+            WHERE desc_rota COLLATE Latin1_General_CI_AI LIKE '%' + @nomeRota + '%'
+        ";
 
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.Add("@nomeRota", SqlDbType.VarChar).Value = nomeRota;
+                conn.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (!dr.Read())
+                        return null;
+
+                    return new RotaEntrega
+                    {
+                        Rota = DbSafe.ToString(dr["rota"]),
+                        Descricao = DbSafe.ToString(dr["desc_rota"]),
+                        Distancia = DbSafe.ToDecimal(dr["distancia"]),
+                        Tempo = DbSafe.ToTimeSpan(dr["tempo"]),
+                        EmitePedagio = DbSafe.ToString(dr["pedagio"]),
+                        Percurso = DbSafe.ToString(dr["deslocamento"])
+                    };
+                }
+            }
+        }
+        private void PreencherCamposRota(RotaEntrega rota)
+        {
+            // txtRota.Text = rota.Rota;           
+            txtDistancia.Text = rota.Distancia.ToString("N2");
+            txtDuracao.Text = rota.Tempo.ToString(@"hh\:mm");
+            txtRota.Text = rota.Rota + " - " + rota.Descricao;
+            txtDeslocamento.Text = rota.Percurso;
+            txtPedagio.Text = rota.EmitePedagio;
+        }
+        protected void BuscarRota(string nomeRota)
+        {
+            var rota = ObterRotaPorDescricao(nomeRota);
+
+            if (rota == null)
+            {
+                // LimparCamposRota();
+                return;
+            }
+
+            PreencherCamposRota(rota);
+        }
+
+        protected void txtCodRemetente_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodRemetente.Text != "")
+            {
+                string cod = txtCodRemetente.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Remetente deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRemetente.Text = "";
+                        txtCodRemetente.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Remetente inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRemetente.Text = "";
+                        txtCodRemetente.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodRemetente.Text = dt.Rows[0][0].ToString();
+                        cboRemetente.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJRemetente.Text = dt.Rows[0][2].ToString();
+                        txtMunicipioRemetente.Text = dt.Rows[0][3].ToString();
+                        txtUFRemetente.Text = dt.Rows[0][4].ToString();
+                        txtCodExpedidor.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Remetente não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodRemetente.Text = "";
+                    txtCodRemetente.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtCodExpedidor_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodExpedidor.Text != "")
+            {
+                string cod = txtCodExpedidor.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Expedidor deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodExpedidor.Text = "";
+                        txtCodExpedidor.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Expedidor inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodExpedidor.Text = "";
+                        txtCodExpedidor.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodExpedidor.Text = dt.Rows[0][0].ToString();
+                        cboExpedidor.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJExpedidor.Text = dt.Rows[0][2].ToString();
+                        txtCidExpedidor.Text = dt.Rows[0][3].ToString();
+                        txtUFExpedidor.Text = dt.Rows[0][4].ToString();
+                        txtCodDestinatario.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Expedidor não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodExpedidor.Text = "";
+                    txtCodExpedidor.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtCodDestinatario_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodDestinatario.Text != "")
+            {
+                string cod = txtCodDestinatario.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Destinatário deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodDestinatario.Text = "";
+                        txtCodDestinatario.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Destinatário inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodDestinatario.Text = "";
+                        txtCodDestinatario.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodDestinatario.Text = dt.Rows[0][0].ToString();
+                        cboDestinatario.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJDestinatario.Text = dt.Rows[0][2].ToString();
+                        txtMunicipioDestinatario.Text = dt.Rows[0][3].ToString();
+                        txtUFDestinatario.Text = dt.Rows[0][4].ToString();
+                        txtObservacao.Text = "CODIGOS - Reflection: " + dt.Rows[0][0].ToString() + " VW: " + dt.Rows[0][7].ToString() + " Sapiens: " + dt.Rows[0][8].ToString();
+                        txtCodRecebedor.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Destinatário não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodDestinatario.Text = "";
+                    txtCodDestinatario.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtCodRecebedor_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodRecebedor.Text != "")
+            {
+                string cod = txtCodRecebedor.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Destinatário deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRecebedor.Text = "";
+                        txtCodRecebedor.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Recebedor inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRecebedor.Text = "";
+                        txtCodRecebedor.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodRecebedor.Text = dt.Rows[0][0].ToString();
+                        cboRecebedor.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJRecebedor.Text = dt.Rows[0][2].ToString();
+                        txtCidRecebedor.Text = dt.Rows[0][3].ToString();
+                        txtUFRecebedor.Text = dt.Rows[0][4].ToString();
+                        txtCodConsignatario.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Recebedor não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodRecebedor.Text = "";
+                    txtCodRecebedor.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtCodConsignatario_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodConsignatario.Text != "")
+            {
+                string cod = txtCodConsignatario.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Consignatário deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodConsignatario.Text = "";
+                        txtCodConsignatario.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Consignatário inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodConsignatario.Text = "";
+                        txtCodConsignatario.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodConsignatario.Text = dt.Rows[0][0].ToString();
+                        txtConsignatario.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJConsignatario.Text = dt.Rows[0][2].ToString();
+                        txtCidConsignatario.Text = dt.Rows[0][3].ToString();
+                        txtUFConsignatario.Text = dt.Rows[0][4].ToString();
+                        txtCodPagador.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Consignatário não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodConsignatario.Text = "";
+                    txtCodConsignatario.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtCodPagador_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodPagador.Text != "")
+            {
+                string cod = txtCodPagador.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Pagador deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodPagador.Text = "";
+                        txtCodPagador.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Pagador inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodPagador.Text = "";
+                        txtCodPagador.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodPagador.Text = dt.Rows[0][0].ToString();
+                        txtPagador.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJPagador.Text = dt.Rows[0][2].ToString();
+                        txtCidPagador.Text = dt.Rows[0][3].ToString();
+                        txtUFPagador.Text = dt.Rows[0][4].ToString();
+
+                        if (txtCodRemetente.Text == "")
+                        {
+                            // MostrarMsg("Digite o Remetente, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Remetente, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRemetente.Text = string.Empty;
+                            txtCodRemetente.Focus();
+                            return;
+                        }
+                        if (txtCodExpedidor.Text == "")
+                        {
+                            // MostrarMsg("Digite o Expedidor, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Expedidor, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodExpedidor.Text = string.Empty;
+                            txtCodExpedidor.Focus();
+                            return;
+                        }
+                        if (txtCodDestinatario.Text == "")
+                        {
+                            //MostrarMsg("Digite o Destinatário, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Destinatário, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodDestinatario.Text = string.Empty;
+                            txtCodDestinatario.Focus();
+                            return;
+                        }
+                        if (txtCodRecebedor.Text == "")
+                        {
+                            //MostrarMsg("Digite o Recebedor, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Recebedor, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRecebedor.Text = string.Empty;
+                            txtCodRecebedor.Focus();
+                            return;
+                        }
+                        if (txtCodPagador.Text == "")
+                        {
+                            //MostrarMsg("Digite o Pagador, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Pagador, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodPagador.Text = string.Empty;
+                            txtCodPagador.Focus();
+                            return;
+                        }
+                        string nomeRota = txtCidExpedidor.Text.Trim() + "/" + txtUFExpedidor.Text.Trim() + " X " + txtCidRecebedor.Text.Trim() + "/" + txtUFRecebedor.Text.Trim();
+
+                        BuscarRota(nomeRota);
+
+
+
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Pagador não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodPagador.Text = "";
+                    txtCodPagador.Focus();
+                    return;
+                }
+            }
+
+        }
+
+        protected void cboRemetente_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodRemetente.Text = cboRemetente.SelectedValue;
+            if (txtCodRemetente.Text != "")
+            {
+                string cod = txtCodRemetente.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(txtCodRemetente.Text.Trim() + ' - Remetente deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRemetente.Text = "";
+                        txtCodRemetente.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Remetente inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRemetente.Text = "";
+                        txtCodRemetente.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodRemetente.Text = dt.Rows[0][0].ToString();
+                        cboRemetente.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJRemetente.Text = dt.Rows[0][2].ToString();
+                        txtMunicipioRemetente.Text = dt.Rows[0][3].ToString();
+                        txtUFRemetente.Text = dt.Rows[0][4].ToString();
+                        txtCodExpedidor.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Remetente não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodRemetente.Text = "";
+                    txtCodRemetente.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void cboExpedidor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodExpedidor.Text = cboExpedidor.SelectedValue;
+            if (txtCodExpedidor.Text != "")
+            {
+                string cod = txtCodExpedidor.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Expedidor deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodExpedidor.Text = "";
+                        txtCodExpedidor.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Expedidor inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodExpedidor.Text = "";
+                        txtCodExpedidor.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodExpedidor.Text = dt.Rows[0][0].ToString();
+                        cboExpedidor.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJExpedidor.Text = dt.Rows[0][2].ToString();
+                        txtCidExpedidor.Text = dt.Rows[0][3].ToString();
+                        txtUFExpedidor.Text = dt.Rows[0][4].ToString();
+                        txtCodDestinatario.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Expedidor não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodExpedidor.Text = "";
+                    txtCodExpedidor.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void cboDestinatario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodDestinatario.Text = cboDestinatario.SelectedValue;
+            if (txtCodDestinatario.Text != "")
+            {
+                string cod = txtCodDestinatario.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Destinatário deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodDestinatario.Text = "";
+                        txtCodDestinatario.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Destinatário inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodDestinatario.Text = "";
+                        txtCodDestinatario.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodDestinatario.Text = dt.Rows[0][0].ToString();
+                        cboDestinatario.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJDestinatario.Text = dt.Rows[0][2].ToString();
+                        txtMunicipioDestinatario.Text = dt.Rows[0][3].ToString();
+                        txtUFDestinatario.Text = dt.Rows[0][4].ToString();
+                        txtObservacao.Text = "CODIGOS - Reflection: " + dt.Rows[0][0].ToString() + " VW: " + dt.Rows[0][7].ToString() + " Sapiens: " + dt.Rows[0][8].ToString();
+                        txtCodRecebedor.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Destinatario não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodDestinatario.Text = "";
+                    txtCodDestinatario.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void cboRecebedor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodRecebedor.Text = cboRecebedor.SelectedValue;
+            if (txtCodRecebedor.Text != "")
+            {
+                string cod = txtCodRecebedor.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Recebedor deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRecebedor.Text = "";
+                        txtCodRecebedor.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Recebedor inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodRecebedor.Text = "";
+                        txtCodRecebedor.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodRecebedor.Text = dt.Rows[0][0].ToString();
+                        cboRecebedor.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJRecebedor.Text = dt.Rows[0][2].ToString();
+                        txtCidRecebedor.Text = dt.Rows[0][3].ToString();
+                        txtUFRecebedor.Text = dt.Rows[0][4].ToString();
+                        txtCodConsignatario.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Recebedor não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodRecebedor.Text = "";
+                    txtCodRecebedor.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtConsignatario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodConsignatario.Text = txtConsignatario.SelectedValue;
+            if (txtCodConsignatario.Text != "")
+            {
+                string cod = txtCodConsignatario.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Consignatário deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodConsignatario.Text = "";
+                        txtCodConsignatario.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Consignatário inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodConsignatario.Text = "";
+                        txtCodConsignatario.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodConsignatario.Text = dt.Rows[0][0].ToString();
+                        txtConsignatario.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJConsignatario.Text = dt.Rows[0][2].ToString();
+                        txtCidConsignatario.Text = dt.Rows[0][3].ToString();
+                        txtUFConsignatario.Text = dt.Rows[0][4].ToString();
+                        txtCodPagador.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Consignatário não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodConsignatario.Text = "";
+                    txtCodConsignatario.Focus();
+                    return;
+                }
+            }
+
+        }
+        protected void txtPagador_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodPagador.Text = txtPagador.SelectedValue;
+            if (txtCodPagador.Text != "")
+            {
+                string cod = txtCodPagador.Text;
+                string sql = "SELECT  codcli, razcli, cnpj, cidcli, estcli, ativo_inativo, fl_exclusao, codvw, codsapiens FROM tbclientes where codcli = '" + cod + "' OR codvw = '" + cod + "' OR codsapiens = '" + cod + "' and ativo_inativo = 'ATIVO' and fl_exclusao is null";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][6].ToString() == null)
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Pagador deletado do sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodPagador.Text = "";
+                        txtCodPagador.Focus();
+                        return;
+                    }
+                    else if (dt.Rows[0][5].ToString() == "INATIVO")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Pagador inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        txtCodPagador.Text = "";
+                        txtCodPagador.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        txtCodPagador.Text = dt.Rows[0][0].ToString();
+                        txtPagador.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        txtCNPJPagador.Text = dt.Rows[0][2].ToString();
+                        txtCidPagador.Text = dt.Rows[0][3].ToString();
+                        txtUFPagador.Text = dt.Rows[0][4].ToString();
+                        if (txtCodRemetente.Text == "")
+                        {
+                            // MostrarMsg("Digite o Remetente, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Remetente, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRemetente.Text = string.Empty;
+                            txtCodRemetente.Focus();
+                            return;
+                        }
+                        if (txtCodExpedidor.Text == "")
+                        {
+                            // MostrarMsg("Digite o Expedidor, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Expedidor, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodExpedidor.Text = string.Empty;
+                            txtCodExpedidor.Focus();
+                            return;
+                        }
+                        if (txtCodDestinatario.Text == "")
+                        {
+                            //MostrarMsg("Digite o Destinatário, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Destinatário, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodDestinatario.Text = string.Empty;
+                            txtCodDestinatario.Focus();
+                            return;
+                        }
+                        if (txtCodRecebedor.Text == "")
+                        {
+                            //MostrarMsg("Digite o Recebedor, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Recebedor, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodRecebedor.Text = string.Empty;
+                            txtCodRecebedor.Focus();
+                            return;
+                        }
+                        if (txtCodPagador.Text == "")
+                        {
+                            //MostrarMsg("Digite o Pagador, por favor!", "danger");
+                            // Acione o toast quando a página for carregada
+                            string script = "<script>showToast(' - Digite o Pagador, por favor!');</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                            txtCodPagador.Text = string.Empty;
+                            txtCodPagador.Focus();
+                            return;
+                        }
+                        string nomeRota = txtCidExpedidor.Text.Trim() + "/" + txtUFExpedidor.Text.Trim() + " X " + txtCidRecebedor.Text.Trim() + "/" + txtUFRecebedor.Text.Trim();
+
+                        BuscarRota(nomeRota);
+
+
+
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Pagador não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    txtCodPagador.Text = "";
+                    txtCodPagador.Focus();
+                    return;
+                }
+            }
+
+        }
+
+        protected void cbSolicitantes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string idSolicitante = cbSolicitantes.SelectedValue;
+            if (idSolicitante != "")
+            {
+                string cod = idSolicitante;
+                string sql = "SELECT  id, nome, gr, status FROM tbsolicitantes where id = '" + cod + "' and status = 'Ativo' ";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                conn.Open();
+                da.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0][3].ToString() == "Inativo")
+                    {
+                        // Acione o toast quando a página for carregada
+                        string script = "<script>showToast(' - Solicitante inativo no sistema.');</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                        //txtCodPagador.Text = "";
+                        //txtCodPagador.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        cbSolicitantes.SelectedItem.Text = dt.Rows[0][1].ToString();
+                        cboGR.Text = dt.Rows[0][2].ToString();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    // Acione o toast quando a página for carregada
+                    string script = "<script>showToast(' - Solicitante não encontrado no sistema.');</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+                    return;
+                }
+            }
+
+        }
     }
 }

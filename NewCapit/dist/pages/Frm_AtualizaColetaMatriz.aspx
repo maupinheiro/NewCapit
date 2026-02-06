@@ -1026,10 +1026,13 @@
                                                                                     <div class="col-md-1">
                                                                                         <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("codorigem") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-5">
+                                                                                    <div class="col-md-4">
                                                                                         <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cliorigem") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-2">
+                                                                                        <asp:TextBox ID="txtCNPJREmetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_remetente") %>'></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cidorigem") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-1">
@@ -1042,10 +1045,13 @@
                                                                                     <div class="col-md-1">
                                                                                         <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cod_expedidor") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-5">
+                                                                                    <div class="col-md-4">
                                                                                         <asp:TextBox ID="cboExpedidor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("expedidor") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-2">
+    <asp:TextBox ID="txtCNPJExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_expedidor") %>'></asp:TextBox>
+</div>
+                                                                                    <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cid_expedidor") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-1">
@@ -1058,10 +1064,13 @@
                                                                                     <div class="col-md-1">
                                                                                         <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("coddestino") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-5">
+                                                                                    <div class="col-md-4">
                                                                                         <asp:TextBox ID="cboDestinatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("clidestino") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-2">
+    <asp:TextBox ID="txtCNPJDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_destinatario") %>'></asp:TextBox>
+</div>
+                                                                                    <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("ciddestino") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-1">
@@ -1074,10 +1083,13 @@
                                                                                     <div class="col-md-1">
                                                                                         <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cod_recebedor") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-5">
+                                                                                    <div class="col-md-4">
                                                                                         <asp:TextBox ID="cboRecebedor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("recebedor") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-2">
+                                                                                        <asp:TextBox ID="txtCNPJRecebedor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_recebedor") %>'></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cid_recebedor") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-1">
@@ -1090,10 +1102,13 @@
                                                                                     <div class="col-md-1">
                                                                                         <asp:TextBox ID="txtCodConsignatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cod_consignatario") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-5">
+                                                                                    <div class="col-md-4">
                                                                                         <asp:TextBox ID="txtConsignatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("consignatario") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-2">
+                                                                                        <asp:TextBox ID="txtCNPJConsignatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_consignatario") %>'></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtCidConsignatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cid_consignatario") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-1">
@@ -1106,10 +1121,13 @@
                                                                                     <div class="col-md-1">
                                                                                         <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cod_pagador") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-5">
+                                                                                    <div class="col-md-4">
                                                                                         <asp:TextBox ID="txtPagador" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("pagador") %>'></asp:TextBox>
                                                                                     </div>
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-2">
+                                                                                        <asp:TextBox ID="txtCNPJPagador" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_pagador") %>'></asp:TextBox>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cid_pagador") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-1">
@@ -1149,7 +1167,17 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-md-2" id="divComprovante" runat="server" visible="false">
+                                                                                    <div class="col-md-7">
+    <div class="form-group">
+        <span class="details">Rota:</span>
+        <div class="input-group">
+            <asp:TextBox ID="txtRotaEntrega" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("rota_entrega") %>'></asp:TextBox>
+        </div>
+    </div>
+</div>
+
+
+                                                                                    <%--<div class="col-md-2" id="divComprovante" runat="server" visible="false">
                                                                                         <div class="form-group">
                                                                                             <span class="details">Comprovante:</span>
                                                                                             <div class="input-group">
@@ -1164,7 +1192,7 @@
                                                                                                 <asp:TextBox ID="lblQuant" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text=""></asp:TextBox>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    </div>--%>
                                                                                 </div>
                                                                                 <div class="row g-3">
                                                                                     <div class="col-md-1">
@@ -1279,7 +1307,16 @@
                                                                                         </div>
 
                                                                                 </div>
-
+                                                                                <div class="row g-3">
+    <div class="col-md-12">
+        <div class="form-group">
+            <span class="details">Observações:</span>
+            <div class="input-group">
+                <asp:TextBox ID="TextBox1" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("observacao") %>'></asp:TextBox>
+            </div>
+        </div>
+    </div>
+                                                                                </div>
 
                                                                             </div>
                                                                         </div>
@@ -1390,13 +1427,116 @@ DataFormatString="{0:dd/MM/yyyy}" />
 
 <div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
     <!-- Conteúdo Notas Fiscais -->
+   <%-- <asp:Repeater ID="rptNotas" runat="server">
+    <ItemTemplate>
+
+        <asp:TextBox ID="txtChaveNF" runat="server"
+            AutoPostBack="true"
+            OnTextChanged="txtChaveNF_TextChanged" />
+
+        <asp:TextBox ID="txtCNPJRemetente" runat="server" />
+        <asp:TextBox ID="txtCNPJDestinatario" runat="server" />
+
+        <asp:Label ID="lblNumeroNF" runat="server" />
+        <asp:Label ID="lblSerieNF" runat="server" />
+        <asp:Label ID="lblEmissaoNF" runat="server" />
+        <asp:Label ID="lblStatusNF" runat="server" />
+
+        <asp:GridView ID="gvProdutosNF" runat="server"
+            AutoGenerateColumns="false">
+            <Columns>
+                <asp:BoundField DataField="produto" HeaderText="Produto" />
+                <asp:BoundField DataField="quantidade" HeaderText="Qtd" />
+                <asp:BoundField DataField="peso" HeaderText="Peso" />
+                <asp:BoundField DataField="valor" HeaderText="Valor" />
+            </Columns>
+        </asp:GridView>
+
+        <asp:Label ID="lblPesoTotalNF" runat="server" />
+        <asp:Label ID="lblValorTotalNF" runat="server" />
+
+    </ItemTemplate>
+</asp:Repeater>--%>
+
+
+     <div class="row g-3">
+        <div class="col-md-6">
+           <asp:TextBox ID="txtChaveNF" runat="server"
+            CssClass="form-control"
+            AutoPostBack="true"
+    
+            placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
+            <!-- OnTextChanged="txtChaveNF_TextChanged" -->
+         </div>
+     </div>
+     <div class="row g-3">
+        <div class="col-md-3">
+            <label for="inputNotaFiscal" style="text-align: left">Chave de Acesso:</label>
+            <asp:Label ID="lblChaveNF" runat="server" />
+        </div>
+        <div class="col-md-2">
+            <label for="inputNotaFiscal" style="text-align: left">Nota Fiscal:</label>
+            <asp:Label ID="lblNumeroNF" runat="server" />
+        </div>
+        <div class="col-md-1">
+            <label for="inputNotaFiscal" style="text-align: left">Série:</label>
+            <asp:Label ID="lblSerieNF" runat="server" />
+        </div>
+        <div class="col-md-2">
+            <label for="inputNotaFiscal" style="text-align: left">Emissão:</label>
+            <asp:Label ID="lblEmissaoNF" runat="server" />
+        </div>
+        <div class="col-md-2">
+            <label for="inputNotaFiscal" style="text-align: left">Status:</label>
+            <asp:Label ID="lblStatusNF" runat="server" />
+        </div>        
+     </div>
+     <div class="row g-3">          
+        <div class="col-md-12">
+            <asp:GridView ID="gvProdutosNF" runat="server"
+                CssClass="table table-bordered"
+                AutoGenerateColumns="false">
+                <Columns>
+                    <asp:BoundField DataField="produto" HeaderText="Produto" />
+                    <asp:BoundField DataField="quantidade" HeaderText="Qtd" />
+                    <asp:BoundField DataField="peso" HeaderText="Peso" DataFormatString="{0:N3}" />
+                    <asp:BoundField DataField="valor" HeaderText="Valor" DataFormatString="{0:C}" />
+                </Columns>
+            </asp:GridView>
+        </div>
+     </div>
+     <div class="row g-3">          
+         <div class="col-md-3">
+
+         </div>
+         <div class="col-md-3">
+
+         </div>
+         <div class="col-md-3">
+
+         </div>
+         <br />
+         <div class="col-md-3">
+             <strong>Peso Total:</strong>
+                <asp:Label ID="lblPesoTotalNF" runat="server" />
+
+                <br />
+
+             <strong>Valor Total:</strong>
+                <asp:Label ID="lblValorTotalNF" runat="server" />
+
+         </div>
+     </div>     
+
+
+
 </div>
 
 <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
 <!-- Conteúdo CT-e / NFS-e MDF-e -->
 <div class="form-group row">
    <div class="col-md-4">
-       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e" runat="server" maxlength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
+       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e (44 dígitos)" runat="server" maxlength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
    </div>
    <!-- NFS-e -->
    <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">NFS-e:</label>

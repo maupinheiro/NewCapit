@@ -5051,6 +5051,7 @@
       <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
     </Compile>
     <Compile Include="KronaModels.cs" />
+    <Compile Include="MeuDanfeService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>

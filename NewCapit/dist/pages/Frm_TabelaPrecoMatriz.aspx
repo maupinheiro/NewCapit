@@ -171,10 +171,13 @@
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control"  OnTextChanged="txtCodRemetente_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboRemetente" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboRemetente_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
@@ -188,10 +191,13 @@
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control"  OnTextChanged="txtCodExpedidor_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboExpedidor" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboExpedidor_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
@@ -204,10 +210,13 @@
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" OnTextChanged="txtCodDestinatario_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboDestinatario" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboDestinatario_SelectedIndexChanged" AutoPostBack="true" ></asp:DropDownList>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
@@ -220,10 +229,13 @@
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control"  OnTextChanged="txtCodRecebedor_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control select2" ></asp:DropDownList>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
@@ -236,10 +248,13 @@
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtCodConsignatario" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodConsignatario_TextChanged"></asp:TextBox>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboConsignatario" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboConsignatario_SelectedIndexChanged"></asp:DropDownList>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJConsignatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <asp:TextBox ID="txtCidConsignatario" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
@@ -252,10 +267,13 @@
                                             <div class="col-md-1">
                                                 <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodPagador_TextChanged"></asp:TextBox>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <asp:DropDownList ID="cboPagador" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboPagador_SelectedIndexChanged"></asp:DropDownList>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-1">
