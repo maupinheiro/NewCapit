@@ -1496,96 +1496,234 @@ namespace NewCapit.dist.pages
                 CarregarColetas(novaColeta.Text);
             }
 
+            //if (e.CommandName == "EnviarSM")
+            //{
+
+            //    // 1. Pegamos o ID da Carga do CommandArgument
+            //    string idCarga = e.CommandArgument.ToString();
+
+            //    // 2. Localizamos os controles dentro da linha (Item) do Repeater
+            //    // Substitua os IDs "lblPlaca", "txtValor" pelos IDs reais do seu .aspx
+            //    DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
+            //    DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+            //    string peso = ((TextBox)e.Item.FindControl("txtPeso")).Text;
+            //    string valor = ((TextBox)e.Item.FindControl("txtValorTotal")).Text;
+            //    string previsao_inicial = ((TextBox)e.Item.FindControl("txtPrevisaoInicio")).Text;
+            //    string previsao_final = ((TextBox)e.Item.FindControl("txtPrevisaoTermino")).Text;
+            //    string placa = txtPlaca.Text;
+
+            //    string percurso = ddlPercurso.SelectedItem.Text;
+            //    string rota = ddlRotaKrona.SelectedItem.Text;
+            //    string id_rota = ddlRotaKrona.SelectedValue.ToString();
+            //    //string nota = ((HiddenField)e.Item.FindControl("hdnNota")).Value;
+
+            //    Page.RegisterAsyncTask(new PageAsyncTask(async () =>
+            //    {
+            //        try
+            //        {
+            //            // 1. Monta o Objeto (Substitua pelos dados reais da sua query/banco)
+            //            var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial, previsao_final, percurso, rota, id_rota);
+
+            //            // 2. Serializa para JSON e salva o arquivo físico (Auditoria)
+            //            string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true });
+            //            string caminhoArquivo = $@"C:\EnviaSM\SM_SolicitacaoVW_{idCarga}.json";
+
+            //            // Garante que o diretório existe e grava
+            //            System.IO.Directory.CreateDirectory(@"C:\EnviaSM");
+            //            System.IO.File.WriteAllText(caminhoArquivo, jsonEnvio);
+
+            //            // 3. Envia para a API
+            //            //string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
+
+            //            //// 4. Captura o retorno e salva no Banco de Dados
+            //            //ProcessarESalvarRetorno(jsonResposta, idCarga);
+
+            //            // Opcional: Feedback na tela (Ex: ScriptManager.RegisterStartupScript para um alert)
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            // Registre o erro em algum log ou label da tela
+            //            System.Diagnostics.Debug.WriteLine("Erro no Envio SM: " + ex.Message);
+            //        }
+            //    }));
+            //}
             if (e.CommandName == "EnviarSM")
             {
-                
-                // 1. Pegamos o ID da Carga do CommandArgument
-                string idCarga = e.CommandArgument.ToString();
+                // 1. Captura os dados da interface ANTES do processo assíncrono
+                string idCarga = e.CommandArgument.ToString(); 
 
-                // 2. Localizamos os controles dentro da linha (Item) do Repeater
-                // Substitua os IDs "lblPlaca", "txtValor" pelos IDs reais do seu .aspx
                 DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
                 DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
                 string peso = ((TextBox)e.Item.FindControl("txtPeso")).Text;
                 string valor = ((TextBox)e.Item.FindControl("txtValorTotal")).Text;
                 string previsao_inicial = ((TextBox)e.Item.FindControl("txtPrevisaoInicio")).Text;
                 string previsao_final = ((TextBox)e.Item.FindControl("txtPrevisaoTermino")).Text;
-                string placa = txtPlaca.Text;
-
+                string codmotorista = txtCodMotorista.Text;
                 string percurso = ddlPercurso.SelectedItem.Text;
                 string rota = ddlRotaKrona.SelectedItem.Text;
-                string id_rota = ddlRotaKrona.SelectedValue.ToString();
-                //string nota = ((HiddenField)e.Item.FindControl("hdnNota")).Value;
+                string id_rota = ddlRotaKrona.SelectedValue;
+                string placa = txtPlaca.Text;
+                string codveiculo = txtCodFrota.Text;
 
-                Page.RegisterAsyncTask(new PageAsyncTask(async () =>
+                try
                 {
-                    try
+                    // 2. Executa as queries SQL e monta o objeto (Sincronamente para evitar perda de contexto)
+                    var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial, previsao_final, percurso, rota, id_rota, codmotorista, codveiculo);
+
+                    // 3. Serializa o objeto
+                    string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+
+                    // 4. Define o caminho dentro da pasta do servidor
+                    string nomeArquivo = $"SM_Solicitacao_{idCarga}_{DateTime.Now:yyyyMMddHHmmss}.json";
+                    string caminhoFisico = Server.MapPath("~/EnviaSM/" + nomeArquivo);
+
+                    // 5. Garante que a pasta existe
+                    string pasta = Server.MapPath("~/EnviaSM/");
+                    if (!System.IO.Directory.Exists(pasta))
+                        System.IO.Directory.CreateDirectory(pasta);
+
+                    // 6. Grava o arquivo imediatamente (Pode ser fora do Async para garantir a auditoria)
+                    System.IO.File.WriteAllText(caminhoFisico, jsonEnvio, System.Text.Encoding.UTF8);
+
+                    // 7. Inicia a tarefa assíncrona APENAS para a chamada da API
+                    Page.RegisterAsyncTask(new PageAsyncTask(async () =>
                     {
-                        // 1. Monta o Objeto (Substitua pelos dados reais da sua query/banco)
-                        var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial,previsao_final,percurso, rota,id_rota);
+                        try
+                        {
+                            // string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
+                            // ProcessarESalvarRetorno(jsonResposta, idCarga);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Erro na API: " + ex.Message);
+                        }
+                    }));
 
-                        // 2. Serializa para JSON e salva o arquivo físico (Auditoria)
-                        string jsonEnvio = JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true });
-                        string caminhoArquivo = $@"C:\EnviaSM\SM_SolicitacaoVW_{idCarga}.json";
-
-                        // Garante que o diretório existe e grava
-                        System.IO.Directory.CreateDirectory(@"C:\EnviaSM");
-                        System.IO.File.WriteAllText(caminhoArquivo, jsonEnvio);
-
-                        // 3. Envia para a API
-                        string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
-
-                        // 4. Captura o retorno e salva no Banco de Dados
-                        ProcessarESalvarRetorno(jsonResposta, idCarga);
-
-                        // Opcional: Feedback na tela (Ex: ScriptManager.RegisterStartupScript para um alert)
-                    }
-                    catch (Exception ex)
-                    {
-                        // Registre o erro em algum log ou label da tela
-                        System.Diagnostics.Debug.WriteLine("Erro no Envio SM: " + ex.Message);
-                    }
-                }));
+                    // Feedback visual
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Arquivo gerado e envio processado!');", true);
+                }
+                catch (Exception ex)
+                {
+                    // Exibe o erro real (pode ser conexão de banco ou campo vazio)
+                    string msg = ex.Message.Replace("'", "").Replace("\n", "");
+                    ScriptManager.RegisterStartupScript(this, GetType(), "error", $"alert('Erro ao processar: {msg}');", true);
+                }
             }
         }
 
-        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string peso, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota)
+        private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string peso, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota, string codmotorista, string codveiculo)
         {
-            string mot = "select nommot,cpf,numrg,orgaorg,dtnasc,nomemae,estcivil,numregcnh,catcnh,venccnh, endmot,complemento,baimot,cidmot,ufmot,cepmot,fone3,fone2,tipomot,codtra from tbmotoristas where codmot='"+txtCodMotorista.Text+"'";
+            // --- 1. MOTORISTA ---
+            string mot = "select nommot,cpf,numrg,orgaorg,dtnasc,nomemae,estcivil,numregcnh,catcnh,venccnh, endmot,complemento,baimot,cidmot,ufmot,cepmot,fone3,fone2,tipomot,codtra from tbmotoristas where codmot='" + codmotorista + "'";
             SqlDataAdapter adptm = new SqlDataAdapter(mot, con);
             DataTable dm = new DataTable();
-            con.Open();
             adptm.Fill(dm);
-            con.Close();
 
-            string trans = "select cnpj, nomtra,fantra, baitra, endtra,numero,complemento,baitra,cidtra,uftra,ceptra,fone1 from tbtransportadoras where codtra='" + dm.Rows[0][20].ToString() + "'";
-            SqlDataAdapter adptt = new SqlDataAdapter(trans, con);
+            // Proteção: Se não achar motorista, cria linha vazia para não quebrar o dm.Rows[0]
+            if (dm.Rows.Count == 0)
+            {
+                dm.Columns.Add("codtra"); // Garante que a coluna existe para a próxima query
+                var row = dm.NewRow();
+                row["codtra"] = "0";
+                dm.Rows.Add(row);
+            }
+
+            // --- 2. TRANSPORTADORA (MOTORISTA) ---
+            string codTraMot = dm.Rows[0][19].ToString();
             DataTable dt = new DataTable();
-            con.Open();
-            adptt.Fill(dt);
-            con.Close();
+            if (codTraMot != "0" && !string.IsNullOrEmpty(codTraMot))
+            {
+                string trans = "select cnpj, nomtra,fantra, baitra, endtra,numero,complemento,baitra,cidtra,uftra,ceptra,fone1 from tbtransportadoras where codtra='" + codTraMot + "'";
+                new SqlDataAdapter(trans, con).Fill(dt);
+            }
+            if (dt.Rows.Count == 0) { dt.Columns.Add("dummy"); dt.Rows.Add(dt.NewRow()); }
 
-            string veic = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + txtCodVeiculo.Text + "'";
-            SqlDataAdapter adptv = new SqlDataAdapter(veic, con);
+            // --- 3. VEÍCULO PRINCIPAL ---
+            string veic = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + codveiculo + "'";
             DataTable dv = new DataTable();
-            con.Open();
-            adptv.Fill(dv);
-            con.Close();
+            new SqlDataAdapter(veic, con).Fill(dv);
 
-            string reb1 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + txtCodVeiculo.Text + "'";
-            SqlDataAdapter adpt1 = new SqlDataAdapter(reb1, con);
+            if (dv.Rows.Count == 0)
+            {
+                // Se o veículo não existe, criamos uma linha fake para as próximas queries (reboques) não darem erro
+                for (int i = 0; i < 23; i++) dv.Columns.Add();
+                var r = dv.NewRow();
+                r[21] = "0"; r[22] = "0"; // IDs de reboque fake
+                dv.Rows.Add(r);
+            }
+
+            // --- 4. REBOQUE 1 (Tratamento especial) ---
+            string idReb1 = dv.Rows[0][21].ToString();
             DataTable db1 = new DataTable();
-            con.Open();
-            adpt1.Fill(db1);
-            con.Close();
+            if (!string.IsNullOrEmpty(idReb1) && idReb1 != "0")
+            {
+                string reb1 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + idReb1 + "'";
+                new SqlDataAdapter(reb1, con).Fill(db1);
+            }
+            if (db1.Rows.Count == 0) { db1 = dv.Clone(); db1.Rows.Add(db1.NewRow()); }
 
-            string reb2 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao,reboque1,reboque2 from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + txtCodVeiculo.Text + "'";
-            SqlDataAdapter adpt2 = new SqlDataAdapter(reb2, con);
+            // --- 5. REBOQUE 2 (Tratamento especial) ---
+            string idReb2 = dv.Rows[0][22].ToString();
             DataTable db2 = new DataTable();
-            con.Open();
-            adpt2.Fill(db2);
-            con.Close();
+            if (!string.IsNullOrEmpty(idReb2) && idReb2 != "0")
+            {
+                string reb2 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + idReb2 + "'";
+                new SqlDataAdapter(reb2, con).Fill(db2);
+            }
+            if (db2.Rows.Count == 0) { db2 = dv.Clone(); db2.Rows.Add(db2.NewRow()); }
 
+            // --- 6. CARGA ---
+            DataTable dg = new DataTable();
+            if (!string.IsNullOrEmpty(idCarga) && idCarga != "0")
+            {
+                string carga = "select codorigem, coddestino, cod_expedidor, cva from tbcargas where carga=" + idCarga;
+                new SqlDataAdapter(carga, con).Fill(dg);
+            }
+
+            // Se a carga falhar ou não existir, criamos a estrutura necessária
+            if (dg.Rows.Count == 0)
+            {
+                // É importante dar NOME às colunas para evitar confusão no Rows[0][index]
+                if (dg.Columns.Count == 0)
+                {
+                    dg.Columns.Add("codorigem");
+                    dg.Columns.Add("coddestino");
+                    dg.Columns.Add("cod_expedidor");
+                }
+                var r = dg.NewRow();
+                r["codorigem"] = "0";
+                r["coddestino"] = "0";
+                r["cod_expedidor"] = "0";
+                dg.Rows.Add(r);
+            }
+
+            // --- 7. ORIGEM (dto), DESTINO (dtd) E EXPEDIDOR (dte) ---
+
+            // Função auxiliar interna para evitar repetição de código e erro de colunas faltando
+            Action<DataTable> AdicionarColunasVazias = (tabela) => {
+                if (tabela.Rows.Count == 0)
+                {
+                    // Garante que a tabela tenha 12 colunas para não dar erro de índice no JSON
+                    for (int i = tabela.Columns.Count; i < 12; i++)
+                    {
+                        tabela.Columns.Add();
+                    }
+                    tabela.Rows.Add(tabela.NewRow());
+                }
+            };
+
+            // Agora você chama passando as suas tabelas específicas:
+            DataTable dto = new DataTable();
+            new SqlDataAdapter("select cnpj, razcli, nomcli, baicli, endcli, numero, complemento, baicli, cidcli, estcli, cepcli, tc1cli from tbclientes where codcli='" + dg.Rows[0][0].ToString() + "'", con).Fill(dto);
+            AdicionarColunasVazias(dto);
+
+            DataTable dtd = new DataTable();
+            new SqlDataAdapter("select cnpj, razcli, nomcli, baicli, endcli, numero, complemento, baicli, cidcli, estcli, cepcli, tc1cli from tbclientes where codcli='" + dg.Rows[0][1].ToString() + "'", con).Fill(dtd);
+            AdicionarColunasVazias(dtd);
+
+            DataTable dte = new DataTable();
+            new SqlDataAdapter("select cnpj, razcli, nomcli, baicli, endcli, numero, complemento, baicli, cidcli, estcli, cepcli, tc1cli from tbclientes where codcli='" + dg.Rows[0][2].ToString() + "'", con).Fill(dte);
+            AdicionarColunasVazias(dte);
             return new SolicitacaoViagemRequest
             {
                 kronaService = new KronaService
@@ -1631,25 +1769,25 @@ namespace NewCapit.dist.pages
                         data_nascimento = dm.Rows[0][4].ToString(),
                         nome_mae = dm.Rows[0][5].ToString(),
                         estado_civil = dm.Rows[0][6].ToString(),
-                        escolaridade = dm.Rows[0][7].ToString(),
-                        cnh_numero = dm.Rows[0][8].ToString(),
-                        cnh_categoria = dm.Rows[0][9].ToString(),
-                        cnh_vencimento = dm.Rows[0][10].ToString(),
-                        end_rua = dm.Rows[0][11].ToString(),
-                        end_numero = dm.Rows[0][0].ToString(),
-                        end_complemento = dm.Rows[0][12].ToString(),
-                        end_bairro = dm.Rows[0][13].ToString(),
-                        end_cidade = dm.Rows[0][14].ToString(),
-                        end_uf = dm.Rows[0][15].ToString(),
-                        end_cep = dm.Rows[0][16].ToString(),
-                        fone = dm.Rows[0][17].ToString(),
-                        celular = dm.Rows[0][18].ToString(),
+                        escolaridade = "",
+                        cnh_numero = dm.Rows[0][7].ToString(),
+                        cnh_categoria = dm.Rows[0][8].ToString(),
+                        cnh_vencimento = dm.Rows[0][9].ToString(),
+                        end_rua = dm.Rows[0][10].ToString(),
+                        end_numero = "",
+                        end_complemento = dm.Rows[0][11].ToString(),
+                        end_bairro = dm.Rows[0][12].ToString(),
+                        end_cidade = dm.Rows[0][13].ToString(),
+                        end_uf = dm.Rows[0][14].ToString(),
+                        end_cep = dm.Rows[0][15].ToString(),
+                        fone = dm.Rows[0][16].ToString(),
+                        celular = dm.Rows[0][17].ToString(),
                         nextel = "",
                         mopp = "",
                         aso = "",
                         cdd = "",
                         capacitacao = "",
-                        vinculo = dm.Rows[0][19].ToString(),
+                        vinculo = dm.Rows[0][18].ToString(),
 
 
                     },
@@ -1686,57 +1824,86 @@ namespace NewCapit.dist.pages
 
                     },
 
-                    
-
                     reboque_1 = new Veiculo
                     {
-                        placa = "GHG-2E86",
-                        renavam = "",
-                        marca = "",
-                        modelo = "",
-                        cor = "",
-                        ano = "",
-                        tipo = "",
-                        capacidade = "",
-                        numero_att = "",
+                        placa = db1.Rows[0][0].ToString(),
+                        renavam = db1.Rows[0][1].ToString(),
+                        marca = db1.Rows[0][2].ToString(),
+                        modelo = db1.Rows[0][3].ToString(),
+                        cor = db1.Rows[0][4].ToString(),
+                        ano = db1.Rows[0][5].ToString(),
+                        tipo = db1.Rows[0][6].ToString(),
+                        capacidade = db1.Rows[0][7].ToString(),
+                        numero_att = db1.Rows[0][8].ToString(),
                         numero_frota = "",
                         transp_frota = "",
-                        proprietario = "",
-                        proprietario_cnpj = "",
-                        end_rua = "",
-                        end_numero = "",
-                        end_complemento = "",
-                        end_bairro = "",
-                        end_cidade = "",
-                        end_uf = "",
-                        end_cep = "",
-                        tecnologia = "SASCAR",
-                        id_rastreador = "",
-                        comunicacao = "",
+                        proprietario = db1.Rows[0][9].ToString(),
+                        proprietario_cnpj = db1.Rows[0][10].ToString(),
+                        end_rua = db1.Rows[0][11].ToString(),
+                        end_numero = db1.Rows[0][12].ToString(),
+                        end_complemento = db1.Rows[0][13].ToString(),
+                        end_bairro = db1.Rows[0][14].ToString(),
+                        end_cidade = db1.Rows[0][15].ToString(),
+                        end_uf = db1.Rows[0][16].ToString(),
+                        end_cep = db1.Rows[0][17].ToString(),
+                        tecnologia = db1.Rows[0][18].ToString(),
+                        id_rastreador = db1.Rows[0][19].ToString(),
+                        comunicacao = db1.Rows[0][20].ToString(),
                         tecnologia_sec = "",
                         id_rastreador_sec = "",
                         comunicacao_sec = "",
-                        fixo = ""
+                        fixo = "N"
+                    },
+
+                    reboque_2 = new Veiculo
+                    {
+                        placa = db2.Rows[0][0].ToString(),
+                        renavam = db2.Rows[0][1].ToString(),
+                        marca = db2.Rows[0][2].ToString(),
+                        modelo = db2.Rows[0][3].ToString(),
+                        cor = db2.Rows[0][4].ToString(),
+                        ano = db2.Rows[0][5].ToString(),
+                        tipo = db2.Rows[0][6].ToString(),
+                        capacidade = db2.Rows[0][7].ToString(),
+                        numero_att = db2.Rows[0][8].ToString(),
+                        numero_frota = "",
+                        transp_frota = "",
+                        proprietario = db2.Rows[0][9].ToString(),
+                        proprietario_cnpj = db2.Rows[0][10].ToString(),
+                        end_rua = db2.Rows[0][11].ToString(),
+                        end_numero = db2.Rows[0][12].ToString(),
+                        end_complemento = db2.Rows[0][13].ToString(),
+                        end_bairro = db2.Rows[0][14].ToString(),
+                        end_cidade = db2.Rows[0][15].ToString(),
+                        end_uf = db2.Rows[0][16].ToString(),
+                        end_cep = db2.Rows[0][17].ToString(),
+                        tecnologia = db2.Rows[0][18].ToString(),
+                        id_rastreador = db2.Rows[0][19].ToString(),
+                        comunicacao = db2.Rows[0][20].ToString(),
+                        tecnologia_sec = "",
+                        id_rastreador_sec = "",
+                        comunicacao_sec = "",
+                        fixo = "N"
                     },
 
                     origem = new EntidadeCompleta
                     {
-                        tipo = "",
-                        cnpj = "55.890.016/0001-09",
-                        razao_social = "TRANSNOVAG TRANSPORTES",
-                        nome_fantasia = "",
-                        unidade = "",
+                        tipo = "TRANSPORTADOR",
+                        cnpj = dto.Rows[0][0].ToString(),
+                        razao_social = dto.Rows[0][1].ToString(),
+                        nome_fantasia = dto.Rows[0][2].ToString(),
+                        unidade = dto.Rows[0][3].ToString(),
                         codigo = "",
-                        end_rua = "",
-                        end_numero = "",
-                        end_complemento = "",
-                        end_bairro = "",
-                        end_cidade = "",
-                        end_uf = "",
-                        end_cep = "",
+                        end_rua = dto.Rows[0][4].ToString(),
+                        end_numero = dto.Rows[0][5].ToString(),
+                        end_complemento = dto.Rows[0][6].ToString(),
+                        end_bairro = dto.Rows[0][7].ToString(),
+                        end_cidade = dto.Rows[0][8].ToString(),
+                        end_uf = dto.Rows[0][9].ToString(),
+                        end_cep = dto.Rows[0][10].ToString(),
                         latitude = "",
                         longitude = "",
-                        telefone_1 = "",
+                        telefone_1 = dto.Rows[0][11].ToString(),
                         telefone_2 = "",
                         responsavel = "",
                         responsavel_cargo = "",
@@ -1745,66 +1912,63 @@ namespace NewCapit.dist.pages
                         responsavel_email = "",
                     },
 
-                    destinos = new Dictionary<string, Destino>
+                     destinos = new Dictionary<string, Destino>
                     {
                         {
                             "1", new Destino
                             {
-                                tipo = "",
-                                cnpj = "61.532.198/0008-15",
-                                razao_social = "DELGA IND E COMERCIO",
-                                nome_fantasia = "",
-                                unidade = "",
+                                // --- CAMPOS DO CLIENTE (Raiz do nó "1") ---
+                                tipo = "CLIENTE",
+                                cnpj = dtd.Rows[0][0].ToString(),
+                                razao_social = dtd.Rows[0][1].ToString(),
+                                nome_fantasia = dtd.Rows[0][2].ToString(),
+                                unidade = dtd.Rows[0][3].ToString(),
                                 codigo = "",
-                                end_rua = "",
-                                end_numero = "",
-                                end_complemento = "",
-                                end_bairro = "",
-                                end_cidade = "",
-                                end_uf = "",
-                                end_cep = "",
+                                end_rua = dtd.Rows[0][4].ToString(),
+                                end_numero = dtd.Rows[0][5].ToString(),
+                                end_complemento = dtd.Rows[0][6].ToString(),
+                                end_bairro = dtd.Rows[0][7].ToString(),
+                                end_cidade = dtd.Rows[0][8].ToString(),
+                                end_uf = dtd.Rows[0][9].ToString(),
+                                end_cep = dtd.Rows[0][10].ToString(),
+                                telefone_1 = dtd.Rows[0][11].ToString(),
                                 latitude = "",
-                                longitude = "",
-                                telefone_1 = "",
-                                telefone_2 = "",
+                                longitude = "", 
+                                telefone_2 = "", 
                                 responsavel = "",
-                                responsavel_cargo = "",
-                                responsavel_telefone = "",
-                                responsavel_celular = "",
+                                responsavel_cargo = "", 
+                                responsavel_telefone = "", 
+                                responsavel_celular = "", 
                                 responsavel_email = "",
+
+                                // --- NÓ DADOS_ADICIONAIS (Conforme o exemplo) ---
                                 dados_adicionais = new DadosAdicionais
-                                {                                 
-                                    remetente = new EntidadeCompleta 
+                                {
+                                    remetente = new EntidadeCompleta
                                     {
-                                        tipo = "",
-                                        cnpj = "55.890.016/0001-09", 
-                                        razao_social = "TRANSNOVAG",
-                                        nome_fantasia = "",
-                                        unidade = "",
+                                        tipo = "TRANSPORTADOR",
+                                        cnpj = dte.Rows[0][0].ToString(),
+                                        razao_social = dte.Rows[0][1].ToString(),
+                                        nome_fantasia = dte.Rows[0][2].ToString(),
+                                        unidade = dte.Rows[0][3].ToString(),
                                         codigo = "",
-                                        end_rua = "",
-                                        end_numero = "",
-                                        end_complemento = "",
-                                        end_bairro = "",
-                                        end_cidade = "",
-                                        end_uf = "",
-                                        end_cep = "",
-                                        latitude = "",
-                                        longitude = "",
-                                        telefone_1 = "",
-                                        telefone_2 = "",
-                                        responsavel = "",
-                                        responsavel_cargo = "",
-                                        responsavel_telefone = "",
-                                        responsavel_celular = "",
-                                        responsavel_email = "",
+                                        end_rua = dte.Rows[0][4].ToString(),
+                                        end_numero = dte.Rows[0][5].ToString(),
+                                        end_complemento = dte.Rows[0][6].ToString(),
+                                        end_bairro = dte.Rows[0][7].ToString(),
+                                        end_cidade = dte.Rows[0][8].ToString(),
+                                        end_uf = dte.Rows[0][9].ToString(),
+                                        end_cep = dte.Rows[0][10].ToString(),
+                                        telefone_1 = dte.Rows[0][11].ToString(),
+                                        latitude = "", longitude = "", telefone_2 = "", responsavel = "",
+                                        responsavel_cargo = "", responsavel_telefone = "", responsavel_celular = "", responsavel_email = ""
                                     },
-                                    mercadoria="",
-                                    valor="",
-                                    norma="",
-                                    grupo_norma="",
+                                    mercadoria = "",
+                                    valor = "",
+                                    norma = "",
+                                    grupo_norma = "",
                                     nota = "",
-                                    observacao="",
+                                    observacao = ""
                                 }
                             }
                         }
@@ -1813,20 +1977,20 @@ namespace NewCapit.dist.pages
                     viagem = new Viagem
                     {
                         tipo_viagem = "ENTREGA ÚNICA",
-                        rastreada="",
-                        percurso = "",
-                        tipo_cliente = "",
+                        rastreada="S",
+                        percurso = percurso.ToUpper(),
+                        tipo_cliente = "TRANSPORTADOR",
                         doca_origem = "",
                         fpp = "",
-                        mercadoria_id = "",
-                        valor = "291952.78",
-                        peso_total = "",
-                        rota = "TNG X DELGA (JARINU)",
-                        rota_id = "",
-                        inicio_previsto = "",
-                        fim_previsto = "",
+                        mercadoria_id = "12",
+                        valor = valor.Replace(".", "").Replace(",", "."),
+                        peso_total = peso,
+                        rota = rota,
+                        rota_id =   id_rota,
+                        inicio_previsto = DateTime.Parse(previsao_inicial).ToString("yyyy-MM-dd HH:mm:ss"),
+                        fim_previsto = DateTime.Parse(previsao_final).ToString("yyyy-MM-dd HH:mm:ss"),
                         liberacao = idCarga,
-                        numero_cliente = "",
+                        numero_cliente = dg.Rows[0][3].ToString(),
                         observacao = "",
                         localizador1_1 = "",
                         id_localizador1_1 = "",

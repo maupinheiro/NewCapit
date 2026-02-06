@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,11 +16,11 @@ namespace NewCapit.Models.Krona
         public UsuarioLogin usuario_login { get; set; }
         public Transportador transportador { get; set; }
         public Motorista motorista_1 { get; set; }
-        public Motorista motorista_2 { get; set; }
+       
         public Veiculo veiculo { get; set; }
         public Veiculo reboque_1 { get; set; }
         public Veiculo reboque_2 { get; set; }
-        public Veiculo reboque_3 { get; set; }
+        
         public EntidadeCompleta origem { get; set; }
         public Dictionary<string, Destino> destinos { get; set; }
         public Viagem viagem { get; set; }
@@ -125,9 +126,34 @@ namespace NewCapit.Models.Krona
         public string end_cep { get; set; }
     }
 
-   
-    public class Destino : EntidadeCompleta
+
+    public class Destino
     {
+        // 1. Declaramos os campos da entidade PRIMEIRO
+        public string tipo { get; set; }
+        public string cnpj { get; set; }
+        public string razao_social { get; set; }
+        public string nome_fantasia { get; set; }
+        public string unidade { get; set; }
+        public string codigo { get; set; }
+        public string end_rua { get; set; }
+        public string end_numero { get; set; }
+        public string end_complemento { get; set; }
+        public string end_bairro { get; set; }
+        public string end_cidade { get; set; }
+        public string end_uf { get; set; }
+        public string end_cep { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+        public string telefone_1 { get; set; }
+        public string telefone_2 { get; set; }
+        public string responsavel { get; set; }
+        public string responsavel_cargo { get; set; }
+        public string responsavel_telefone { get; set; }
+        public string responsavel_celular { get; set; }
+        public string responsavel_email { get; set; }
+
+        // 2. Declaramos os dados_adicionais por ÚLTIMO
         public DadosAdicionais dados_adicionais { get; set; }
     }
 

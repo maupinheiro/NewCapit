@@ -1549,8 +1549,8 @@ DataFormatString="{0:dd/MM/yyyy}" />
         <span class="details">&nbsp;</span>
         <asp:DropDownList ID="ddlRotaKrona"
     runat="server"
-    CssClass="form-control select2"
-    ClientIDMode="Static">
+    CssClass="form-select select2"
+    >
 </asp:DropDownList>
 
     </div>
@@ -1562,7 +1562,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
     </div>
     <div class="col-md-2">
         <br />
-        <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" runat="server" Text="Enviar SM" />
+        <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" CommandName="EnviarSM" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Enviar SM" />
     </div>
 </div>
 </div>
