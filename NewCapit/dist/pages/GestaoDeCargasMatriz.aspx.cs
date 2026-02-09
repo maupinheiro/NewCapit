@@ -44,13 +44,14 @@ namespace NewCapit.dist.pages
         }
         protected void CarregarGrid()
         {
-           
             string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, expedidor, cid_expedidor, recebedor, cid_recebedor, andamento, idviagem FROM tbcargas where empresa = '1111' ";
+                // 1. Base da query
+                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao, expedidor, cid_expedidor, recebedor, cid_recebedor, andamento, idviagem FROM tbcargas WHERE empresa = '1111' ";
 
+                // 2. Montagem dinâmica da string
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     query += " AND previsao >= @DataInicio";
 
@@ -60,8 +61,16 @@ namespace NewCapit.dist.pages
                 if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
                     query += " AND andamento = @Status";
 
+                if (!string.IsNullOrEmpty(txtPesquisa.Text))
+                    // Note os parênteses para proteger o OR e a remoção das aspas no @Pesquisa
+                    query += " AND (carga = @Pesquisa OR clidestino LIKE @PesquisaPerc)";
+
+                query += " ORDER BY emissao DESC";
+
+                // 3. Criação do comando APÓS a string estar completa
                 SqlCommand cmd = new SqlCommand(query, conn);
 
+                // 4. Adição dos parâmetros
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     cmd.Parameters.AddWithValue("@DataInicio", DateTime.Parse(DataInicio.Text));
 
@@ -70,9 +79,13 @@ namespace NewCapit.dist.pages
 
                 if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
                     cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedValue);
-                query += @"
-                ORDER BY emissao DESC) ";
 
+                if (!string.IsNullOrEmpty(txtPesquisa.Text))
+                {
+                    cmd.Parameters.AddWithValue("@Pesquisa", txtPesquisa.Text);
+                    // Passamos o valor com o % direto no parâmetro
+                    cmd.Parameters.AddWithValue("@PesquisaPerc", txtPesquisa.Text + "%");
+                }
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -80,11 +93,9 @@ namespace NewCapit.dist.pages
 
                 gvCargas.DataSource = dt;
                 gvCargas.DataBind();
-
-                // Armazena os dados no ViewState para usar na exportação
                 ViewState["Cargas"] = dt;
-            }            
-        }       
+            }
+        }
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
             CarregarGrid();   

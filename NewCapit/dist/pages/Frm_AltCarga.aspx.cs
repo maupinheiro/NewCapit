@@ -942,7 +942,7 @@ namespace NewCapit.dist.pages
                         cid_pagador = @cid_pagador,
                         uf_pagador = @uf_pagador,
                         duracao = @duracao,
-                        cod_tomador = @cod_tomador,
+                      
                         tipo_veiculo = @tipo_veiculo,
                         deslocamento = @deslocamento,
                         atualizacao = @atualizacao
@@ -1011,7 +1011,7 @@ namespace NewCapit.dist.pages
                             cmd.Parameters.Add("@duracao", SqlDbType.NVarChar, 15).Value = txtDuracao.Text;                            
                             cmd.Parameters.Add("@tipo_veiculo", SqlDbType.NVarChar, 50).Value = txtTipoVeiculo.Text;
                             cmd.Parameters.Add("@deslocamento", SqlDbType.NVarChar, 30).Value = txtDeslocamento.Text;
-
+                           
                             cmd.Parameters.Add("@atualizacao", SqlDbType.NVarChar, 80).Value =
                                 $"{DateTime.Now:dd/MM/yyyy HH:mm} - {nomeUsuario.ToUpper()}";
 

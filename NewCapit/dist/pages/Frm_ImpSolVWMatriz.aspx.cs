@@ -575,7 +575,7 @@ namespace NewCapit.dist.pages
             string cidExpedidor = cidCliExpedidor;
             string ufExpedidor = estCliExpedidor;
             string cidRecebedor = cidCliRecebedor;
-            string ufRecebedor = estCliExpedidor;
+            string ufRecebedor = estCliRecebedor;
             string rotaEntrega = null;
             string achou = null;
 
