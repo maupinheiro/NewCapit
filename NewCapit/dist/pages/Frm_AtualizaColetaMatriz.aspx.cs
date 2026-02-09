@@ -5593,5 +5593,32 @@ namespace NewCapit.dist.pages
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
 
+        void GravarHistorico(
+        string tabela,
+        int idRegistro,
+        string campo,
+        string valorAntigo,
+        string valorNovo,
+        string usuario)
+        {
+            if (valorAntigo == valorNovo) return;
+
+            SqlCommand cmd = new SqlCommand(@"
+        INSERT INTO tbHistoricoCampo
+        (tabela, idRegistro, campo, valorAntigo, valorNovo, usuario, dataAlteracao)
+        VALUES
+        (@tabela, @idRegistro, @campo, @valorAntigo, @valorNovo, @usuario, GETDATE())
+    ", con);
+
+            cmd.Parameters.AddWithValue("@tabela", tabela);
+            cmd.Parameters.AddWithValue("@idRegistro", idRegistro);
+            cmd.Parameters.AddWithValue("@campo", campo);
+            cmd.Parameters.AddWithValue("@valorAntigo", valorAntigo ?? "");
+            cmd.Parameters.AddWithValue("@valorNovo", valorNovo ?? "");
+            cmd.Parameters.AddWithValue("@usuario", usuario);
+
+            cmd.ExecuteNonQuery();
+        }
+
     }
 }

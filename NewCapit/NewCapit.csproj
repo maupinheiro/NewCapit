@@ -364,6 +364,7 @@
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\ControleDePedagio.aspx" />
     <Content Include="dist\pages\ControleDeRotas.aspx" />
+    <Content Include="dist\pages\ControlesValidades.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\exempolos.aspx" />
@@ -4660,6 +4661,13 @@
     </Compile>
     <Compile Include="dist\pages\ControleDeRotas.aspx.designer.cs">
       <DependentUpon>ControleDeRotas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ControlesValidades.aspx.cs">
+      <DependentUpon>ControlesValidades.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControlesValidades.aspx.designer.cs">
+      <DependentUpon>ControlesValidades.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\demo_motorista.aspx.cs">
       <DependentUpon>demo_motorista.aspx</DependentUpon>

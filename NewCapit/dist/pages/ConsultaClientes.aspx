@@ -172,7 +172,7 @@
             </div>
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                    <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="25" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                    <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
                             <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />
@@ -218,14 +218,7 @@
                 <asp:HiddenField ID="txtconformmessageValue" runat="server" />
             </div>
         </div>
-    </div>
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 2.1.0
-        </div>
-        <strong>Copyright &copy; 2021-2025 Capit Logística.</strong> Todos os direitos reservados.
-    </footer>
-
+    </div>    
     <script>
         function myFunction() {
             // Declare variables

@@ -403,22 +403,22 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                               <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
-                                                     <i class="fas fa-pallet nav-icon"></i>
-                                                     <p>Pedidos</p>
-                                               </a>                                                
+                                                <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
+                                                    <i class="fas fa-pallet nav-icon"></i>
+                                                    <p>Pedidos</p>
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
                                                     <i class="fas fa-boxes nav-icon"></i>
                                                     <p>Cargas</p>
-                                                </a>                                                
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/dist/pages/Frm_ImpSolVWMatriz.aspx" class="nav-link">
                                                     <i class="far fa-folder-open nav-icon"></i>
-                                                    <p>Imp. Solic. VW</p> 
-                                                </a>                                           
+                                                    <p>Imp. Solic. VW</p>
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link">
@@ -426,13 +426,13 @@
                                                     <p>
                                                         Coletas/Entregas 
                                                     </p>
-                                                </a>                                                
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/dist/pages/ControleDePedagio.aspx" class="nav-link">
                                                     <i class="fas fa-map-marker-alt nav-icon"></i>
                                                     <p>Controle de Pedágio</p>
-                                                </a>                                         
+                                                </a>
                                             </li>
                                             <%--<li class="nav-item">
                                                 <a href="#" class="nav-link">
@@ -587,18 +587,24 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
+                                        <a href="/dist/pages/ControlesValidades.aspx" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Controla Validades</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="/dist/pages/ControleCarretas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Gestão de Carretas</p>
                                         </a>
                                     </li>
-                                     <li class="nav-item">
+                                    <li class="nav-item">
                                         <a href="/dist/pages/GestaoDeMultas.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Gestão de Multas</p>
                                         </a>
                                     </li>
-                                   <%-- <li class="nav-item">
+                                    <%-- <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Laudo Opacidade</p>

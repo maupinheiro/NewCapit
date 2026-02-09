@@ -311,7 +311,7 @@
         </div>
         <div class="card-body">
             <div class="card-body table-responsive p-0" style="height: 590px;font-size:smaller;">              
-                <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>   
                         <asp:BoundField DataField="codvei" HeaderText="FROTA" />
