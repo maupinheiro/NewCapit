@@ -121,24 +121,42 @@ namespace NewCapit.dist.pages
 
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
-            DataTable dt = ViewState["Cargas"] as DataTable;
-            if (dt == null) return;
+            // Corrigido para a chave que você realmente usa no ViewState
+            DataTable dt = ViewState["rptCarregamento"] as DataTable;
+
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                // Opcional: Avisar o usuário que não há dados
+                return;
+            }
 
             using (XLWorkbook wb = new XLWorkbook())
             {
-                var ws = wb.Worksheets.Add("Cargas");
-                ws.Cell(1, 1).InsertTable(dt);
+                // Adiciona a planilha
+                var ws = wb.Worksheets.Add("Relatório de Cargas");
+
+                // Insere os dados do DataTable
+                // O método InsertTable cria uma tabela formatada do Excel automaticamente
+                var table = ws.Cell(1, 1).InsertTable(dt);
+
+                // Ajusta a largura das colunas
                 ws.Columns().AdjustToContents();
 
-                using (MemoryStream ms = new MemoryStream())
+                // Configuração do Response para Download
+                Response.Clear();
+                Response.Buffer = true;
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;filename=Relatorio_Cargas.xlsx");
+
+                using (MemoryStream MyMemoryStream = new MemoryStream())
                 {
-                    wb.SaveAs(ms);
-                    Response.Clear();
-                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("content-disposition", "attachment;filename=Relatorio.xlsx");
-                    ms.WriteTo(Response.OutputStream);
+                    wb.SaveAs(MyMemoryStream);
+                    MyMemoryStream.WriteTo(Response.OutputStream);
                     Response.Flush();
-                    Response.End();
+
+                    // É importante usar o HttpContext para evitar o erro de 'Thread Aborted'
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
             }
         }

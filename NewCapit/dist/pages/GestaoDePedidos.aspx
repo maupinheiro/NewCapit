@@ -108,13 +108,12 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <input type="text" id="txtPesquisa" class="form-control mb-2"
-                                        placeholder="Pesquisar..."
-                                        onkeyup="filtrarGrid()" />
+                                    <asp:TextBox ID="txtPesquisa" runat="server" class="form-control mb-2" OnTextChanged="btnFiltrar_Click"></asp:TextBox>
+                                   
                                 </div>
                             </div>
                             <div class="container-fluid">
-                                <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
+                               
                                     <asp:GridView runat="server" ID="gvPedidos" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvPedidos_PageIndexChanging" ShowHeaderWhenEmpty="True" OnRowCommand="gvPedidos_RowCommand">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>

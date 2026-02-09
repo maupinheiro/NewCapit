@@ -40,12 +40,12 @@ namespace NewCapit.dist.pages
         }
         protected void CarregarGridPedidos()
         {
-
             string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT Id, pedido, solicitante, carga, CONVERT(varchar, previsao, 103) AS previsao, cliorigem, clidestino, andamento, chegada, idviagem FROM tbpedidos";
+                // 1. Iniciamos com "WHERE 1=1" para poder concatenar "AND" livremente
+                string query = "SELECT Id, pedido, solicitante, carga, CONVERT(varchar, previsao, 103) AS previsao, cliorigem, clidestino, andamento, chegada, idviagem FROM tbpedidos WHERE 1=1";
 
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     query += " AND previsao >= @DataInicio";
@@ -56,8 +56,17 @@ namespace NewCapit.dist.pages
                 if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
                     query += " AND andamento = @Status";
 
+                if (!string.IsNullOrEmpty(txtPesquisa.Text))
+                {
+                    // Ajustado: Coluna antes do LIKE e parênteses para isolar o OR
+                    query += " AND (pedido = @Pesquisa OR solicitante = @Pesquisa OR clidestino LIKE @PesquisaLike)";
+                }
+
+                query += " ORDER BY Id DESC"; // Troquei 'emissao' por 'Id' ou outra coluna existente, pois 'emissao' não está no seu SELECT
+
                 SqlCommand cmd = new SqlCommand(query, conn);
 
+                // 2. Adição dos parâmetros
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     cmd.Parameters.AddWithValue("@DataInicio", DateTime.Parse(DataInicio.Text));
 
@@ -66,19 +75,28 @@ namespace NewCapit.dist.pages
 
                 if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
                     cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedValue);
-                query += @"
-                ORDER BY emissao DESC) ";
 
+                if (!string.IsNullOrEmpty(txtPesquisa.Text))
+                {
+                    cmd.Parameters.AddWithValue("@Pesquisa", txtPesquisa.Text);
+                    cmd.Parameters.AddWithValue("@PesquisaLike", "%" + txtPesquisa.Text + "%");
+                }
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
-                da.Fill(dt);
 
-                gvPedidos.DataSource = dt;
-                gvPedidos.DataBind();
-
-                // Armazena os dados no ViewState para usar na exportação
-                ViewState["Pedidos"] = dt;
+                try
+                {
+                    da.Fill(dt);
+                    gvPedidos.DataSource = dt;
+                    gvPedidos.DataBind();
+                    ViewState["Pedidos"] = dt;
+                }
+                catch (Exception ex)
+                {
+                    // Opcional: Tratar erro de conversão de data ou banco
+                    // Response.Write(ex.Message);
+                }
             }
         }
         protected void btnFiltrar_Click(object sender, EventArgs e)

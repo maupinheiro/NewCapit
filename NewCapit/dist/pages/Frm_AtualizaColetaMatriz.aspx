@@ -133,51 +133,89 @@
            VALIDAÇÕES
         ========================= */
         function validarDatas(item) {
-            // 1. Identifica o container da linha (o <tr> com classe expandable-body)
             let container = item.closest('.expandable-body');
             if (!container) return;
 
-            // --- SELEÇÃO DE CAMPOS USANDO CLASSES (Mais seguro que ID no ASP.NET) ---
+            // --- SELEÇÃO DE CAMPOS ---
             const txtSaidaOrigem = container.querySelector('.saida-origem');
+            const txtDuracao = container.querySelector('input[id*="txtDuracao"]'); // Formato HH:mm:ss
+            const txtPrevisaoChegada = container.querySelector('input[id*="txtPrevisaoChegada"]');
+
             const txtChegadaDestino = container.querySelector('.chegada-destino');
             const txtSaidaPlanta = container.querySelector('.saida-planta');
+            const ddlStatus = container.querySelector('.ddlStatus');
 
-            // Campos de destino (onde os cálculos aparecem)
-            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
-            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
-            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
+            // --- NOVA LÓGICA: CÁLCULO DE PREVISÃO (Somar Duração) ---
+            if (txtSaidaOrigem && txtSaidaOrigem.value && txtDuracao && txtPrevisaoChegada) {
+                let dataSaida = new Date(txtSaidaOrigem.value);
+                let tempoStr = txtDuracao.value; // Esperado "HH:mm:ss"
 
-            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA ---
+                if (!isNaN(dataSaida) && tempoStr.includes(":")) {
+                    let partes = tempoStr.split(':');
+                    let h = parseInt(partes[0]) || 0;
+                    let m = parseInt(partes[1]) || 0;
+                    let s = parseInt(partes[2]) || 0;
+
+                    // Adiciona o tempo à data de saída
+                    dataSaida.setHours(dataSaida.getHours() + h);
+                    dataSaida.setMinutes(dataSaida.getMinutes() + m);
+                    dataSaida.setSeconds(dataSaida.getSeconds() + s);
+
+                    // Formata para o input datetime-local (yyyy-MM-ddTHH:mm)
+                    let ano = dataSaida.getFullYear();
+                    let mes = String(dataSaida.getMonth() + 1).padStart(2, '0');
+                    let dia = String(dataSaida.getDate()).padStart(2, '0');
+                    let hora = String(dataSaida.getHours()).padStart(2, '0');
+                    let min = String(dataSaida.getMinutes()).padStart(2, '0');
+
+                    txtPrevisaoChegada.value = `${ano}-${mes}-${dia}T${hora}:${min}`;
+
+                    // --- REGRA DO STATUS 'CARREGANDO' ---
+                    // Se preencheu saída origem e ainda não tem chegada no destino, vira 'Carregando'
+                    if (ddlStatus && !txtChegadaDestino.value) {
+                        selecionarTextoNoDDL(ddlStatus, "Carregando");
+                    }
+                }
+            }
+
+            // --- FUNÇÃO AUXILIAR PARA DIFERENÇA (Já existente no seu código) ---
             function formatarDiferenca(inicio, fim) {
                 if (!inicio || !fim) return "";
                 const d1 = new Date(inicio);
                 const d2 = new Date(fim);
                 if (isNaN(d1) || isNaN(d2)) return "";
                 if (d2 < d1) return "Inválido";
-
                 const diffMs = d2 - d1;
                 const totalMinutos = Math.floor(diffMs / 60000);
-                const horas = Math.floor(totalMinutos / 60);
-                const minutos = totalMinutos % 60;
-                return `${horas}h ${minutos}min`;
+                return `${Math.floor(totalMinutos / 60)}h ${totalMinutos % 60}min`;
             }
 
-            // --- EXECUÇÃO DOS CÁLCULOS ---
+            // --- CÁLCULOS DE TEMPOS DECORRIDOS ---
+            const txtAgCarreg = container.querySelector('input[id*="txtAgCarreg"]');
+            const txtAgDescarga = container.querySelector('input[id*="txtAgDescarga"]');
+            const txtDurTransp = container.querySelector('input[id*="txtDurTransp"]');
 
-            // 1. Tempo de Trânsito/Espera (Exemplo)
-            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg) {
+            if (txtSaidaOrigem && txtChegadaDestino && txtAgCarreg)
                 txtAgCarreg.value = formatarDiferenca(txtSaidaOrigem.value, txtChegadaDestino.value);
-            }
 
-            // 2. Tempo de Descarga
-            if (txtSaidaPlanta && txtChegadaDestino && txtAgDescarga) {
+            if (txtChegadaDestino && txtSaidaPlanta && txtAgDescarga)
                 txtAgDescarga.value = formatarDiferenca(txtChegadaDestino.value, txtSaidaPlanta.value);
-            }
-            if (txtSaidaPlanta && txtSaidaOrigem && txtDurTransp) {
+
+            if (txtSaidaOrigem && txtSaidaPlanta && txtDurTransp)
                 txtDurTransp.value = formatarDiferenca(txtSaidaOrigem.value, txtSaidaPlanta.value);
-            }
-            // 3. Atualiza o Status Automaticamente
+
+            // 3. Atualiza o Status Geral (Hierarquia que você já tinha)
             atualizarStatusECores(container);
+        }
+
+        // Função auxiliar para mudar o DropDown pelo texto
+        function selecionarTextoNoDDL(ddl, texto) {
+            for (let i = 0; i < ddl.options.length; i++) {
+                if (ddl.options[i].text.trim() === texto) {
+                    ddl.selectedIndex = i;
+                    break;
+                }
+            }
         }
 
         /* =========================
@@ -1576,7 +1614,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <div class="col-md-2">
         <div class="form-group">
         <span class="details">Num. SM:</span>
-        <asp:TextBox ID="txtSM" class="form-control" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtSM" class="form-control" Text='<%# Eval("num_sm") %>' runat="server"></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
@@ -1642,7 +1680,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <div class="col-md-4">
         <div class="form-group">
         <span class="details">Enviada Por:</span>
-        <asp:TextBox ID="txtSmEnviadaPor" class="form-control" runat="server"></asp:TextBox>
+        <asp:TextBox ID="txtSmEnviadaPor" class="form-control" Text='<%# Eval("usu_envio_krona")%>' runat="server"></asp:TextBox>
         </div>
     </div>
     <div class="col-md-2">
@@ -1725,7 +1763,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                             <div class="form-group">
                                                                                                 <span class="details">Janela Gate Destino:</span>
                                                                                                 <div class="input-group">
-                                                                                                    <asp:TextBox ID="txtGateDestino" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_destino","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                                                                                    <asp:TextBox ID="txtGateDestino" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("gate_destino","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
                                                                                                 </div>
                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                             </div>

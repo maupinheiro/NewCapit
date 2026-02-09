@@ -109,9 +109,9 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <input type="text" id="txtPesquisa" class="form-control mb-2"
-                                        placeholder="Pesquisar..."
-                                        onkeyup="filtrarGrid()" />
+                                    <asp:TextBox ID="txtPesquisa" CssClass="form-control" OnTextChanged="btnFiltrar_Click" AutoPostBack="true" runat="server"></asp:TextBox>
+                                    
+                                   
                                 </div>
                             </div>
                             <div class="container-fluid">
