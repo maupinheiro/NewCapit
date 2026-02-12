@@ -11,6 +11,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
@@ -372,9 +373,9 @@ namespace NewCapit.dist.pages
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@UF_Origem", origem[1].ToUpper());
-                cmd.Parameters.AddWithValue("@Origem", origem[0].ToUpper());
+                cmd.Parameters.AddWithValue("@Origem", RemoverAcentos(origem[0].ToUpper()));
                 cmd.Parameters.AddWithValue("@UF_Destino", destino[1].ToUpper());
-                cmd.Parameters.AddWithValue("@Destino", destino[0].ToUpper());
+                cmd.Parameters.AddWithValue("@Destino", RemoverAcentos(destino[0].ToUpper()));
                 cmd.Parameters.AddWithValue("@Distancia", distancia);
                 cmd.Parameters.AddWithValue("@tempo_min", tempo);
 
@@ -383,9 +384,9 @@ namespace NewCapit.dist.pages
             }
 
             string uforigem = origem[1].ToUpper();
-            string cidadeorigem = origem[0].ToUpper();
+            string cidadeorigem = RemoverAcentos(origem[0].ToUpper());
             string ufdestino = destino[1].ToUpper();
-            string cidadedestino = destino[0].ToUpper();
+            string cidadedestino = RemoverAcentos(destino[0].ToUpper());
 
             InsertRotaPopup(distancia, tempo,uforigem,cidadeorigem, ufdestino,cidadedestino);
 
@@ -407,8 +408,8 @@ namespace NewCapit.dist.pages
             string ufOrigem = ddlUfOrigem.SelectedValue;
             string ufDestino = ddlUfDestino.SelectedValue;
 
-            string cidadeOrigem = ddlCidadeOrigem.SelectedValue;
-            string cidadeDestino = ddlCidadeDestino.SelectedValue;
+            string cidadeOrigem = RemoverAcentos(ddlCidadeOrigem.SelectedValue);
+            string cidadeDestino = RemoverAcentos(ddlCidadeDestino.SelectedValue);
 
             if (ufOrigem != ufDestino)
             {
@@ -551,9 +552,9 @@ namespace NewCapit.dist.pages
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@rota", rota);
                 cmd.Parameters.AddWithValue("@desc_rota", descr_rota);
-                cmd.Parameters.AddWithValue("@cidade_expedidor", ddlCidadeOrigem.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@cidade_expedidor",RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text));
                 cmd.Parameters.AddWithValue("@uf_expedidor", ddlUfOrigem.SelectedItem.Text);
-                cmd.Parameters.AddWithValue("@cidade_recebedor", ddlCidadeDestino.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@cidade_recebedor", RemoverAcentos(ddlCidadeDestino.SelectedItem.Text));
                 cmd.Parameters.AddWithValue("@uf_recebedor", ddlUfDestino.SelectedItem.Text); // 👈 corrigido
                 cmd.Parameters.AddWithValue("@distancia", distancia);
                 cmd.Parameters.AddWithValue("@tempo", resultado);
@@ -666,9 +667,9 @@ namespace NewCapit.dist.pages
             //    CultureInfo.InvariantCulture);
 
             string descr_rota =
-                ddlCidadeOrigem.SelectedItem.Text.ToUpper() + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
+                RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
                 " X " +
-                ddlCidadeDestino.SelectedItem.Text.ToUpper() + "/" + ddlUfDestino.SelectedItem.Text.ToUpper();
+                RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "/" + ddlUfDestino.SelectedItem.Text.ToUpper();
 
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -696,11 +697,11 @@ namespace NewCapit.dist.pages
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@rota", rota);
-                cmd.Parameters.AddWithValue("@desc_rota", descr_rota);
-                cmd.Parameters.AddWithValue("@cidade_expedidor", cidadeorigem_);
-                cmd.Parameters.AddWithValue("@uf_expedidor", uforigem_);
-                cmd.Parameters.AddWithValue("@cidade_recebedor", cidadedestino_);
-                cmd.Parameters.AddWithValue("@uf_recebedor", ufdestino_); // 👈 corrigido
+                cmd.Parameters.AddWithValue("@desc_rota", RemoverAcentos(descr_rota.ToUpper()));
+                cmd.Parameters.AddWithValue("@cidade_expedidor", RemoverAcentos(cidadeorigem_.ToUpper()));
+                cmd.Parameters.AddWithValue("@uf_expedidor", uforigem_.ToUpper());
+                cmd.Parameters.AddWithValue("@cidade_recebedor", RemoverAcentos(cidadedestino_.ToUpper()));
+                cmd.Parameters.AddWithValue("@uf_recebedor", ufdestino_.ToUpper()); // 👈 corrigido
                 cmd.Parameters.AddWithValue("@distancia", distancia_);
                 cmd.Parameters.AddWithValue("@tempo", resultado);
                 cmd.Parameters.AddWithValue("@deslocamento", lblDeslocamentoNovo.Text);
@@ -739,7 +740,7 @@ namespace NewCapit.dist.pages
         {
            
 
-            string sqld = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem='"+ ddlUfOrigem.SelectedItem.Text+ "' and Origem='"+ ddlCidadeOrigem.SelectedItem.Text + "' and UF_Destino='"+ ddlUfDestino.SelectedItem.Text + "' and Destino='"+ ddlCidadeDestino.SelectedItem.Text + "'";
+            string sqld = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem='"+ RemoverAcentos(ddlUfOrigem.SelectedItem.Text.ToUpper()) + "' and Origem='"+ RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "' and UF_Destino='"+ RemoverAcentos(ddlUfDestino.SelectedItem.Text.ToUpper()) + "' and Destino='"+ RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "'";
             SqlDataAdapter adp = new SqlDataAdapter(sqld, conn);
             DataTable dt = new DataTable();
             conn.Open();
@@ -839,5 +840,26 @@ namespace NewCapit.dist.pages
 
         }
 
+        public static string RemoverAcentos(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                return texto;
+
+            var normalized = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
     }
+
+
 }

@@ -454,7 +454,7 @@ namespace NewCapit.dist.pages
 
                         codCliOrigem = "1020";
                         razCliOrigem = "VOLKSWAGEN DO BRASIL INDUSTRIA DE VEICULOS AUTOMOTORES LTDA";
-                        cidCliOrigem = "SÃO BERNARDO DO CAMPO";
+                        cidCliOrigem = "SAO BERNARDO DO CAMPO";
                         estCliOrigem = "SP";
                         cnpjCliOrigem = "59.104.422/0057-04";
 
@@ -681,7 +681,7 @@ namespace NewCapit.dist.pages
                        .Value = "VOLKSWAGEN DO BRASIL INDUSTRIA DE VEICULOS AUTOMOTORES LTDA";
                     cmd.Parameters.Add("@cnpj_pagador", SqlDbType.VarChar, 50).Value = "59.104.422/0057-04";
                     cmd.Parameters.Add("@cid_pagador", SqlDbType.VarChar, 50)
-                       .Value = "SÃO BERNARDO DO CAMPO";
+                       .Value = "SAO BERNARDO DO CAMPO";
                     cmd.Parameters.Add("@uf_pagador", SqlDbType.VarChar, 2)
                        .Value = "SP"; 
 

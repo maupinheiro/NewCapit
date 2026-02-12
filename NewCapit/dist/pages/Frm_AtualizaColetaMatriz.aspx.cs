@@ -1568,50 +1568,35 @@ namespace NewCapit.dist.pages
                 string rota = ddlRotaKrona.SelectedItem.Text;
                 string id_rota = ddlRotaKrona.SelectedValue;
                 string placa = txtPlaca.Text;
-                string codveiculo = txtCodFrota.Text;
+                string codveiculo = txtCodVeiculo.Text;
 
                 try
                 {
-                    // 2. Executa as queries SQL e monta o objeto (Sincronamente para evitar perda de contexto)
+                    // 1. Monta o objeto
                     var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial, previsao_final, percurso, rota, id_rota, codmotorista, codveiculo);
 
-                    // 3. Serializa o objeto
-                    string jsonEnvio = System.Text.Json.JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+                    // 2. Serializa
+                    string jsonEnvio = System.Text.Json.JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
 
-                    // 4. Define o caminho dentro da pasta do servidor
-                    string nomeArquivo = $"SM_Solicitacao_{idCarga}.json";
-                    string caminhoFisico = Server.MapPath("~/EnviaSM/" + nomeArquivo);
-
-                    // 5. Garante que a pasta existe
-                    string pasta = Server.MapPath("~/EnviaSM/");
-                    if (!System.IO.Directory.Exists(pasta))
-                        System.IO.Directory.CreateDirectory(pasta);
-
-                    // 6. Grava o arquivo imediatamente (Pode ser fora do Async para garantir a auditoria)
+                    // 3. Grava Arquivo Físico (Auditoria)
+                    string caminhoFisico = Server.MapPath("~/EnviaSM/SM_Solicitacao_" + idCarga + ".json");
                     System.IO.File.WriteAllText(caminhoFisico, jsonEnvio, System.Text.Encoding.UTF8);
 
-                    // 7. Inicia a tarefa assíncrona APENAS para a chamada da API
-                    Page.RegisterAsyncTask(new PageAsyncTask(async () =>
-                    {
-                        try
-                        {
-                            string jsonResposta = await EnviarRequisicaoKrona(jsonEnvio);
-                            ProcessarESalvarRetorno(jsonResposta, idCarga, valor,percurso,previsao_inicial,previsao_final,rota,id_rota);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Erro na API: " + ex.Message);
-                        }
-                    }));
+                    // 4. ENVIO SÍNCRONO (A página vai "carregar" enquanto espera a resposta)
+                    string jsonResposta = EnviarRequisicaoKronaSincrona(jsonEnvio);
 
-                    // Feedback visual
-                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Arquivo gerado e envio processado!');", true);
+                    // 5. Salva no Banco (Corrigindo a ordem dos parâmetros para bater com a definição do método)
+                    // Ordem correta baseada no seu método: (json, carga, valor, previsao_init, previsao_fim, percurso, rota, id_rota)
+                    ProcessarESalvarRetorno(jsonResposta, idCarga, valor, previsao_inicial, previsao_final, percurso, rota, id_rota);
+
                 }
                 catch (Exception ex)
                 {
-                    // Exibe o erro real (pode ser conexão de banco ou campo vazio)
-                    string msg = ex.Message.Replace("'", "").Replace("\n", "");
-                    ScriptManager.RegisterStartupScript(this, GetType(), "error", $"alert('Erro ao processar: {msg}');", true);
+                    MostrarMsg2("Erro: " + ex.Message);
                 }
             }
         }
@@ -1638,7 +1623,7 @@ namespace NewCapit.dist.pages
             DataTable dt = new DataTable();
             if (codTraMot != "0" && !string.IsNullOrEmpty(codTraMot))
             {
-                string trans = "select cnpj, nomtra,fantra, baitra, endtra,numero,complemento,baitra,cidtra,uftra,ceptra,fone1 from tbtransportadoras where codtra='" + codTraMot + "'";
+                string trans = "select cnpj, nomtra,fantra, baitra, endtra,numero,complemento,baitra,cidtra,uftra,ceptra,fone1 from tbtransportadoras where codtra='1111'";
                 new SqlDataAdapter(trans, con).Fill(dt);
             }
             if (dt.Rows.Count == 0) { dt.Columns.Add("dummy"); dt.Rows.Add(dt.NewRow()); }
@@ -1662,7 +1647,7 @@ namespace NewCapit.dist.pages
             DataTable db1 = new DataTable();
             if (!string.IsNullOrEmpty(idReb1) && idReb1 != "0")
             {
-                string reb1 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + idReb1 + "'";
+                string reb1 = "select STUFF(placacarreta, 4, 0, '-') AS placacarreta,renavan,marca,modelo,cor,anocarreta,tipocarreta,tara,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,tecnologia,idrastreador,comunicacao from tbcarretas as v inner join tbtransportadoras as t on v.codprop=t.codtra where placacarreta='" + idReb1 + "'";
                 new SqlDataAdapter(reb1, con).Fill(db1);
             }
             if (db1.Rows.Count == 0) { db1 = dv.Clone(); db1.Rows.Add(db1.NewRow()); }
@@ -1672,7 +1657,7 @@ namespace NewCapit.dist.pages
             DataTable db2 = new DataTable();
             if (!string.IsNullOrEmpty(idReb2) && idReb2 != "0")
             {
-                string reb2 = "select plavei,renavan,marca,modelo,cor,ano,tipoveiculo,cap,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,rastreador,terminal,comunicacao from tbveiculos as v inner join tbtransportadoras as t on v.codtra=t.codtra where codvei='" + idReb2 + "'";
+                string reb2 = "select STUFF(placacarreta, 4, 0, '-') AS placacarreta,renavan,marca,modelo,cor,anocarreta,tipocarreta,tara,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,tecnologia,idrastreador,comunicacao from tbcarretas as v inner join tbtransportadoras as t on v.codprop=t.codtra where placacarreta='" + idReb2 + "'";
                 new SqlDataAdapter(reb2, con).Fill(db2);
             }
             if (db2.Rows.Count == 0) { db2 = dv.Clone(); db2.Rows.Add(db2.NewRow()); }
@@ -1771,6 +1756,7 @@ namespace NewCapit.dist.pages
                         cpf = dm.Rows[0][1].ToString(),
                         rg = dm.Rows[0][2].ToString(),
                         orgao_emissao = dm.Rows[0][3].ToString(),
+                        rg_uf = "",
                         data_nascimento = dm.Rows[0][4].ToString(),
                         nome_mae = dm.Rows[0][5].ToString(),
                         estado_civil = dm.Rows[0][6].ToString(),
@@ -1799,7 +1785,7 @@ namespace NewCapit.dist.pages
 
                     veiculo = new Veiculo
                     {
-                        placa = dv.Rows[0][0].ToString(),
+                        placa = dv.Rows[0][0].ToString().Substring(0, 3) + "-" + placa.Substring(3),
                         renavam = dv.Rows[0][1].ToString(),
                         marca = dv.Rows[0][2].ToString(),
                         modelo = dv.Rows[0][3].ToString(),
@@ -1808,21 +1794,22 @@ namespace NewCapit.dist.pages
                         tipo = dv.Rows[0][6].ToString(),
                         capacidade = dv.Rows[0][7].ToString(),
                         numero_att = dv.Rows[0][8].ToString(),
+                        validade_antt = "",
                         numero_frota = "",
                         transp_frota = "",
-                        proprietario = dv.Rows[0][9].ToString(),
-                        proprietario_cnpj = dv.Rows[0][10].ToString(),
-                        end_rua = dv.Rows[0][11].ToString(),
-                        end_numero = dv.Rows[0][12].ToString(),
-                        end_complemento = dv.Rows[0][13].ToString(),
-                        end_bairro = dv.Rows[0][14].ToString(),
-                        end_cidade = dv.Rows[0][15].ToString(),
-                        end_uf = dv.Rows[0][16].ToString(),
-                        end_cep = dv.Rows[0][17].ToString(),
+                        proprietario = "TRANSNOVAG TRANSPORTES SA",
+                        proprietario_cnpj = "55.890.016/0001-09",
+                        end_rua = "Rua Cadiriri",
+                        end_numero = "851",
+                        end_complemento = "",
+                        end_bairro = "Parque da Mooca",
+                        end_cidade = "São Paulo",
+                        end_uf = "SP",
+                        end_cep = "03109-040",
                         tecnologia = dv.Rows[0][18].ToString(),
                         id_rastreador = dv.Rows[0][19].ToString(),
                         comunicacao = dv.Rows[0][20].ToString(),
-                        tecnologia_sec = "",
+                        tecnologia_sec = "", 
                         id_rastreador_sec = "",
                         comunicacao_sec = "",
                         fixo = "N"
@@ -1832,7 +1819,7 @@ namespace NewCapit.dist.pages
                     reboque_1 = new Veiculo
                     {
                         placa = db1.Rows[0][0].ToString(),
-                        renavam = db1.Rows[0][1].ToString(),
+                        renavam = db1.Rows[0][1].ToString() ?? "",
                         marca = db1.Rows[0][2].ToString(),
                         modelo = db1.Rows[0][3].ToString(),
                         cor = db1.Rows[0][4].ToString(),
@@ -1840,6 +1827,7 @@ namespace NewCapit.dist.pages
                         tipo = db1.Rows[0][6].ToString(),
                         capacidade = db1.Rows[0][7].ToString(),
                         numero_att = db1.Rows[0][8].ToString(),
+                        validade_antt = "",
                         numero_frota = "",
                         transp_frota = "",
                         proprietario = db1.Rows[0][9].ToString(),
@@ -1864,6 +1852,7 @@ namespace NewCapit.dist.pages
                     {
                         placa = db2.Rows[0][0].ToString(),
                         renavam = db2.Rows[0][1].ToString(),
+
                         marca = db2.Rows[0][2].ToString(),
                         modelo = db2.Rows[0][3].ToString(),
                         cor = db2.Rows[0][4].ToString(),
@@ -1871,6 +1860,7 @@ namespace NewCapit.dist.pages
                         tipo = db2.Rows[0][6].ToString(),
                         capacidade = db2.Rows[0][7].ToString(),
                         numero_att = db2.Rows[0][8].ToString(),
+                        validade_antt = "",
                         numero_frota = "",
                         transp_frota = "",
                         proprietario = db2.Rows[0][9].ToString(),
@@ -1989,7 +1979,7 @@ namespace NewCapit.dist.pages
                         fpp = "",
                         mercadoria_id = "12",
                         valor = valor.Replace(".", "").Replace(",", "."),
-                        peso_total = peso,
+                        peso_total = peso.Replace(",000", ""),
                         rota = rota,
                         rota_id =   id_rota,
                         inicio_previsto = DateTime.Parse(previsao_inicial).ToString("yyyy-MM-dd HH:mm:ss"),
@@ -2021,84 +2011,93 @@ namespace NewCapit.dist.pages
             };
         }
 
-        private async Task<string> EnviarRequisicaoKrona(string jsonContent)
+        private string EnviarRequisicaoKronaSincrona(string jsonContent)
         {
             string url = "https://k1.grupokrona.com.br/kronaservice/viagem_new";
 
             using (var client = new HttpClient())
             {
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
+                // 1. Criamos o conteúdo
+                var content = new StringContent(jsonContent, Encoding.UTF8);
 
-                // Retorna o corpo da resposta (seja sucesso ou erro)
-                return await response.Content.ReadAsStringAsync();
+                // 2. Limpamos o Content-Type padrão que o .NET coloca (que vem com o charset)
+                content.Headers.ContentType.Parameters.Clear();
+
+                // 3. Forçamos apenas application/json sem mais nada
+                content.Headers.ContentType.MediaType = "application/json";
+
+                // 4. Executa a chamada
+                var response = client.PostAsync(url, content).Result;
+                return response.Content.ReadAsStringAsync().Result;
             }
         }
 
         // MÉTODO PARA SALVAR NO BANCO
-      
 
-    private void ProcessarESalvarRetorno(string jsonResposta, string idCarga, string valor, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota)
+
+        private void ProcessarESalvarRetorno(string jsonResposta, string idCarga, string valor, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota)
         {
             try
             {
-                // 1. Deserializa a resposta para pegar o número do protocolo (SM)
+                string nomeUsuario = Session["UsuarioLogado"].ToString();
+                if (string.IsNullOrEmpty(jsonResposta))
+                {
+                    MostrarMsg2("Erro: A API da Krona não retornou nenhum dado.");
+                    return;
+                }
+
                 var retorno = JsonConvert.DeserializeObject<KronaResponse>(jsonResposta);
 
-                // O número da SM na Krona é o campo "protocolo"
-                string numeroSM = retorno?.protocolo ?? "";
+                // Tenta pegar o número da SM de qualquer um dos campos possíveis
+                string numeroSM = retorno?.protocolo ?? retorno?.sm ?? "";
                 string status = retorno?.status ?? "";
-                string mensagem = retorno?.mensagem ?? "";
 
-                // Só procede com o update se o status for de sucesso (geralmente "1" ou "Sucesso" na Krona)
-                // Se preferir salvar mesmo com erro para log, remova o IF
+                // Tenta pegar a mensagem de erro de qualquer campo
+                string mensagemErro = retorno?.mensagem ?? retorno?.erro ?? "";
+
+                // Se NÃO tem número de SM, precisamos saber o motivo real
+                if (string.IsNullOrEmpty(numeroSM))
+                {
+                    // Se a mensagem de erro também estiver vazia, mostramos o JSON bruto para depurar
+                    string msgFinal = !string.IsNullOrEmpty(mensagemErro) ? mensagemErro : "Resposta bruta: " + jsonResposta;
+                    MostrarMsg2("Krona não gerou SM. Motivo: " + msgFinal);
+                    return;
+                }
 
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
-                    // Ajustei o SQL para bater com os parâmetros que você definiu
+                    // SQL corrigido com a vírgula antes de usu_envio_krona
                     string sql = @"UPDATE tbcargas 
-                                SET
-                                num_sm=@num_sm, 
+                            SET num_sm=@num_sm, 
                                 percurso=@percurso, 
                                 valor_total=@valor_total, 
                                 previsao_inicio_krona=@previsao_inicio_krona, 
-                                previsao_termino_krona=@previsao_termino_krona
-                                usu_envio_krona=@usu_envio_krona
-                                WHERE carga = @carga";
+                                previsao_termino_krona=@previsao_termino_krona, 
+                                usu_envio_krona=@usu_envio_krona,
+                                rota_entrega=@rota_entrega,
+                                id_rota_entrega = @id_rota_entrega
+                            WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-
-                    // Atribuição dos parâmetros
                     cmd.Parameters.AddWithValue("@num_sm", numeroSM);
                     cmd.Parameters.AddWithValue("@carga", idCarga);
-
                     cmd.Parameters.AddWithValue("@percurso", percurso);
                     cmd.Parameters.AddWithValue("@valor_total", valor.Replace(".", "").Replace(",", "."));
-                    cmd.Parameters.AddWithValue("@previsao_inicio_krona", DateTime.Parse(previsao_inicial).ToString("yyyy-MM-dd HH:mm:ss.000"));
-                    cmd.Parameters.AddWithValue("@previsao_termino_krona", DateTime.Parse(previsao_final).ToString("yyyy-MM-dd HH:mm:ss.000"));
-                   
-
-                    // Opcional: Se você tiver o usuário logado na sessão
-                    cmd.Parameters.AddWithValue("@usu_envio_krona", Session["Usuario"]?.ToString() ?? "SISTEMA");
-
-                    /* Nota: Se você precisar salvar 'valor_total' ou 'previsoes' que vêm do banco, 
-                        eles devem ser passados como parâmetros aqui também. 
-                        Se esses dados vêm da tela, você deve passá-los para este método.
-                    */
+                    cmd.Parameters.AddWithValue("@previsao_inicio_krona", DateTime.Parse(previsao_inicial));
+                    cmd.Parameters.AddWithValue("@previsao_termino_krona", DateTime.Parse(previsao_final));
+                    cmd.Parameters.AddWithValue("@usu_envio_krona", nomeUsuario ?? "SISTEMA");
+                    cmd.Parameters.AddWithValue("@rota_entrega",rota);
+                    cmd.Parameters.AddWithValue("@id_rota_entrega", id_rota);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
 
-                if (status == "1")
-                {
-                    // Sucesso
-                    // Exemplo: ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('SM Gerada: " + numeroSM + "');", true);
-                }
+                MostrarMsg2("Sucesso! SM Gerada: " + numeroSM);
             }
             catch (Exception ex)
             {
-                // Log de erro
+                MostrarMsg2("Erro ao processar SM: " + ex.Message);
             }
         }
 

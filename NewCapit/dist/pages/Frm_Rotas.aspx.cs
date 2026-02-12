@@ -1,16 +1,18 @@
-﻿using System;
+﻿using NPOI.SS.Formula.PTG;
+using NPOI.SS.UserModel;
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Drawing.Imaging;
-using NPOI.SS.UserModel;
-using NPOI.SS.Formula.PTG;
-using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
@@ -1009,22 +1011,22 @@ namespace NewCapit.dist.pages
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         // parâmetros
-                        cmd.Parameters.AddWithValue("@desc_rota", txtDesc_Rota.Text.Trim());
+                        cmd.Parameters.AddWithValue("@desc_rota", RemoverAcentos(txtDesc_Rota.Text.Trim()));
                         cmd.Parameters.AddWithValue("@codigo_remetente", txtCodRemetente.Text.Trim());
                         cmd.Parameters.AddWithValue("@nome_remetente", cboRemetente.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@cidade_remetente", txtMunicipioRemetente.Text.Trim());
+                        cmd.Parameters.AddWithValue("@cidade_remetente", RemoverAcentos(txtMunicipioRemetente.Text.Trim()));
                         cmd.Parameters.AddWithValue("@uf_remetente", txtUFRemetente.Text.Trim());
                         cmd.Parameters.AddWithValue("@codigo_expedidor", txtCodExpedidor.Text.Trim());
                         cmd.Parameters.AddWithValue("@nome_expedidor", cboExpedidor.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@cidade_expedidor", txtCidExpedidor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@cidade_expedidor", RemoverAcentos(txtCidExpedidor.Text.Trim()));
                         cmd.Parameters.AddWithValue("@uf_expedidor", txtUFExpedidor.Text.Trim());
                         cmd.Parameters.AddWithValue("@codigo_destinatario", txtCodDestinatario.Text.Trim());
                         cmd.Parameters.AddWithValue("@nome_destinatario", cboDestinatario.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@cidade_destinatario", txtMunicipioDestinatario.Text.Trim());
+                        cmd.Parameters.AddWithValue("@cidade_destinatario", RemoverAcentos(txtMunicipioDestinatario.Text.Trim()));
                         cmd.Parameters.AddWithValue("@uf_destinatario", txtUFDestinatario.Text.Trim());
                         cmd.Parameters.AddWithValue("@codigo_recebedor", txtCodRecebedor.Text.Trim());
                         cmd.Parameters.AddWithValue("@nome_recebedor", cboRecebedor.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@cidade_recebedor", txtCidRecebedor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@cidade_recebedor", RemoverAcentos(txtCidRecebedor.Text.Trim()));
                         cmd.Parameters.AddWithValue("@uf_recebedor", txtUFRecebedor.Text.Trim());
                         cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text.Trim().Replace(',', '.'));
                         cmd.Parameters.AddWithValue("@tempo", txtDuracao.Text.Trim());
@@ -1040,6 +1042,25 @@ namespace NewCapit.dist.pages
                 }
             }
 
+        }
+
+        public static string RemoverAcentos(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                return texto;
+
+            var normalized = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

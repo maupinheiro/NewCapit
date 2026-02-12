@@ -20,7 +20,7 @@ namespace NewCapit.Models.Krona
         public Veiculo veiculo { get; set; }
         public Veiculo reboque_1 { get; set; }
         public Veiculo reboque_2 { get; set; }
-        
+
         public EntidadeCompleta origem { get; set; }
         public Dictionary<string, Destino> destinos { get; set; }
         public Viagem viagem { get; set; }
@@ -96,19 +96,10 @@ namespace NewCapit.Models.Krona
     {
         public string placa { get; set; }
         public string renavam { get; set; }
-        public string chassi { get; set; }
-        public string uf { get; set; }
         public string cor { get; set; }
         public string marca { get; set; }
         public string modelo { get; set; }
         public string tipo { get; set; }
-        public string tecnologia { get; set; }
-        public string id_rastreador { get; set; }
-        public string comunicacao { get; set; }
-        public string tecnologia_sec { get; set; }
-        public string id_rastreador_sec { get; set; }
-        public string comunicacao_sec { get; set; }
-        public string fixo { get; set; }
         public string ano { get; set; }
         public string capacidade { get; set; }
         public string numero_att { get; set; }
@@ -124,6 +115,13 @@ namespace NewCapit.Models.Krona
         public string end_cidade { get; set; }
         public string end_uf { get; set; }
         public string end_cep { get; set; }
+        public string tecnologia { get; set; }
+        public string id_rastreador { get; set; }
+        public string comunicacao { get; set; }
+        public string tecnologia_sec { get; set; }
+        public string id_rastreador_sec { get; set; }
+        public string comunicacao_sec { get; set; }
+        public string fixo { get; set; }
     }
 
 
@@ -213,5 +211,7 @@ namespace NewCapit.Models.Krona
         public string status { get; set; }
         public string mensagem { get; set; }
         public string protocolo { get; set; }
+        public string sm { get; set; } // Adicionado como alternativa
+        public string erro { get; set; } // Adicionado para capturar erros de validação
     }
 }
