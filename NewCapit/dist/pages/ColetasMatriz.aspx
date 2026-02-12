@@ -13,6 +13,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
     <script>
         function passarCargaParaForm() {
             var novaCarga = document.getElementById('<%= hdNovaCarga.ClientID %>').value;
@@ -176,7 +177,25 @@
             reInitializeBootstrap();
         });
     </script>--%>
+        <script type="text/javascript">
+            function BloquearBotao(btn) {
+                // Verifica se a página é válida (se houver validators)
+                if (typeof (Page_ClientValidate) == 'function') {
+                    if (Page_ClientValidate() == false) { return false; }
+                }
 
+                // Desabilita o botão
+                btn.disabled = true;
+                btn.value = "Processando...";
+
+                // Opcional: Mostra uma div de "Aguarde"
+                // document.getElementById('minhaDivCarregando').style.display = 'block';
+
+                // Garante que o postback ocorra
+                __doPostBack(btn.name, "");
+                return true;
+            }
+</script>
 
     <div class="content-wrapper">
         <section class="content">
@@ -718,7 +737,7 @@
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-md-2">
-                                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnSalvar_Click" runat="server" Text="Cadastrar" />
+                                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnSalvar_Click" OnClientClick="return BloquearBotao(this);"  UseSubmitBehavior="false" runat="server" Text="Cadastrar" />
                                         </div>
                                         <div class="col-md-2">
                                             <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
