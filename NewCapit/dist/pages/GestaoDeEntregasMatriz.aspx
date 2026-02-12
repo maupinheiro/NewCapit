@@ -14,6 +14,7 @@
    
     <link href="bootstrap.min.css" rel="stylesheet" />
     <script src="bootstrap.bundle.min.js"></script>
+       
     <script>
         function buscarDocumento() {
 
@@ -48,8 +49,16 @@
         }
     </script>
 
-     <div class="container-fluid">
-    <div class="content-wrapper">        
+    <script>
+        function SelecionarTodos(source) {
+            let checkboxes = document.querySelectorAll('[id*="chkSelecionar"]');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+    </script>
+
+
+    <div class="container-fluid">
+    <section class="content-wrapper">        
         <section class="content">           
                 <br />
                 <div id="toastContainerVermelho" class="alert alert-danger alert-dismissible" style="display: none;">
@@ -105,6 +114,26 @@
                                     <asp:Button ID="btnBaixar" runat="server" CssClass="btn btn-info w-100" Text="Baixar DOC" OnClick="btnBaixar_Click" />
                                 </div>
                                 <div class="col-md-2">
+                                    <label>&nbsp;</label><br />
+                                    <asp:Button ID="btnAbrirMdfe" runat="server"
+                                        CssClass="btn btn-secondary w-100"
+                                        Text="Gerenciar MDF-e"
+                                        OnClick="btnAbrirMdfe_Click" 
+                                        PostBack="true"/>
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-10">
+                                        <asp:TextBox 
+                                            ID="txtPesquisar"
+                                            runat="server"
+                                            AutoPostBack="true"
+                                            OnTextChanged="txtPesquisar_TextChanged"
+                                            CssClass="form-control"
+                                            placeholder="Pesquisar..." />
+                                </div>
+                                <div class="col-md-2">
                                     <div class="form-group">
                                       <div class="custom-control custom-switch custom-switch-off-primary custom-switch-on-success">
                                         <input type="checkbox" class="custom-control-input" id="chkOcultarViagens" 
@@ -120,17 +149,6 @@
                                     </div>
 
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                        <asp:TextBox 
-                                            ID="txtPesquisar"
-                                            runat="server"
-                                            AutoPostBack="true"
-                                            OnTextChanged="txtPesquisar_TextChanged"
-                                            CssClass="form-control"
-                                            placeholder="Pesquisar..." />
                                 </div>
                             </div>
                             <div class="container-fluid">                                
@@ -280,14 +298,12 @@
                                         <!-- /.card -->
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+         </section>
+    </section>
          <!-- Modal -->
          <div class="modal fade" role="dialog" id="modalCTE" tabindex="-1">
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -304,7 +320,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12 d-flex gap-4">
                                 <div class="form-check">
-                                    <asp:RadioButton ID="gridRadiosCTe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" />
+                                    <asp:RadioButton ID="gridRadiosCTe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" Checked="true" />
                                     <label class="form-check-label" for="<%= gridRadiosCTe.ClientID %>">CT-e</label>
                                 </div>
                                 <div class="form-check">
@@ -360,13 +376,101 @@
         </Triggers>
     </asp:UpdatePanel>
 </div>
+         <!-- modal Gerenciar MDFe -->
+         <div class="modal fade" id="modalMdfe" tabindex="-1">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
 
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gerenciar MDF-e</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-        </section>
-           
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <asp:TextBox ID="txtPesquisarMDFe" runat="server"
+                                    CssClass="form-control"
+                                    Placeholder="Pesquisar MDF-e..."
+                                    AutoPostBack="true"
+                                    OnTextChanged="FiltroChanged" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <asp:DropDownList ID="ddlFiltroStatus" runat="server"
+                                    CssClass="form-control"
+                                    AutoPostBack="true"
+                                    OnSelectedIndexChanged="FiltroChanged">
+                                    <asp:ListItem Text="Pendentes" Value="Pendente" />
+                                    <asp:ListItem Text="Baixados" Value="Baixado" />
+                                    <asp:ListItem Text="Todos" Value="Todos" />
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+
+                        <asp:GridView ID="gvMdfe" runat="server"
+                            CssClass="table table-bordered table-sm"
+                            AutoGenerateColumns="false"
+                            DataKeyNames="id">
+
+                            <Columns>
+                                <asp:BoundField DataField="mdfe_uf" HeaderText="UF" />
+                                <asp:BoundField DataField="mdfe_empresa" HeaderText="Empresa" />
+
+                                <asp:TemplateField HeaderText="">
+                                    <HeaderTemplate>
+                                        <input type="checkbox" onclick="SelecionarTodos(this)" />
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <asp:CheckBox ID="chkSelecionar" runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>    
+
+                                <asp:BoundField DataField="mdfe_numero" HeaderText="Número" />
+                                <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />
+                                
+                                <asp:TemplateField HeaderText="Situação MDF-e">
+                                    <ItemTemplate>
+                                        <span class='badge <%# Eval("mdfe_situacao").ToString() == "Baixado" ? "bg-success" : "bg-warning text-dark" %>'>
+                                            <%# Eval("mdfe_situacao") ?? "Pendente" %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:BoundField DataField="status" HeaderText="Status" />
+
+                                <asp:TemplateField HeaderText="Local da Coleta">
+                                    <ItemTemplate>
+                                        <%# Eval("cid_expedidor") %>/<%# Eval("uf_expedidor") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Local da Entrega">
+                                    <ItemTemplate>
+                                        <%# Eval("cid_recebedor") %>/<%# Eval("uf_recebedor") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                
+                                <asp:BoundField DataField="mdfe_baixado" HeaderText="Baixado Por" />
+                                <asp:BoundField DataField="mdfe_data_baixa" HeaderText="Data Baixa" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                            </Columns>
+
+                        </asp:GridView>
+                    </div>
+
+                    <div class="modal-footer">
+                        <asp:Button ID="btnBaixarMDFe" runat="server"
+                            CssClass="btn btn-success"
+                            Text="Baixar"
+                            OnClick="btnBaixarMDFe_Click" />
+
+                        <asp:Button ID="btnCancelarMDFe" runat="server"
+                            CssClass="btn btn-danger"
+                            Text="Cancelar"
+                            OnClick="btnCancelarMDFe_Click" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-   
-
-
-
 </asp:Content>

@@ -14,6 +14,7 @@ using OfficeOpenXml; // Namespace da EPPlus
 using OfficeOpenXml.Style;
 using ClosedXML.Excel;
 using System.Web.UI.HtmlControls;
+using System.Web.Configuration;
 
 namespace NewCapit.dist.pages
 {
@@ -788,6 +789,107 @@ namespace NewCapit.dist.pages
             }
                
         }
+
+        protected void btnAbrirMdfe_Click(object sender, EventArgs e)
+        {
+            ddlFiltroStatus.SelectedValue = "Pendente";
+            CarregarMdfe();
+            ReabrirModal();
+
+        }
+
+        protected void FiltroChanged(object sender, EventArgs e)
+        {
+            CarregarMdfe();
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "openModal", "$('#modalMdfe').modal('show');", true);
+        }
+        
+        void CarregarMdfe()
+        {
+            string sql = @"
+                    SELECT id, status, mdfe_uf, mdfe_empresa, mdfe_numero, mdfe_serie,
+                           mdfe_situacao, cid_expedidor, uf_expedidor,
+                           cid_recebedor, uf_recebedor, mdfe_dv,
+                           mdfe_baixado, mdfe_data_baixa
+                    FROM tbcargas
+                    WHERE mdfe IS NOT NULL
+                ";
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvMdfe.DataSource = dt;
+                gvMdfe.DataBind();
+                //Response.Write(dt.Rows.Count);
+
+            }
+        }
+
+        protected void btnBaixarMDFe_Click(object sender, EventArgs e)
+        {
+    //        string usuario = Session["usuario"].ToString();
+
+    //        string sql = @"
+    //    UPDATE tbcargas
+    //    SET mdfe_situacao = 'Baixado',
+    //        mdfe_baixado = @usuario,
+    //        mdfe_data_baixa = GETDATE()
+    //    WHERE mdfe IS NOT NULL
+    //";
+
+    //        ExecutarSql(sql, usuario);
+        }
+
+        protected void btnCancelarMDFe_Click(object sender, EventArgs e)
+        {
+    //        string sql = @"
+    //    UPDATE tbcargas
+    //    SET mdfe = NULL,
+    //        mdfe_situacao = NULL,
+    //        mdfe_empresa = NULL,
+    //        mdfe_numero = NULL,
+    //        mdfe_serie = NULL,
+    //        mdfe_uf = NULL,
+    //        mdfe_dv = NULL,
+    //        mdfe_baixado = NULL,
+    //        mdfe_data_baixa = NULL
+    //    WHERE mdfe IS NOT NULL
+    //";
+
+    //        ExecutarSql(sql, null);
+        }
+
+        void ExecutarSql(string sql, string usuario)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                if (usuario != null)
+                    cmd.Parameters.AddWithValue("@usuario", usuario);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            CarregarMdfe();
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "openModal", "$('#modalMdfe').modal('show');", true);
+        }
+        void ReabrirModal()
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(),
+                "modalMdfe",
+                "var modal = new bootstrap.Modal(document.getElementById('modalMdfe')); modal.show();",
+                true);
+        }
+
+
+
 
     }
 }

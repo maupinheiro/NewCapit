@@ -382,13 +382,13 @@
                     $meuSelect.select2('destroy');
                 }
 
-                $meuSelect.select2({
-                    width: '100%',
-                    placeholder: "Selecione...",
-                    allowClear: true,
-                    // Isso resolve o problema do dropdown sumir ou não abrir:
-                    dropdownParent: $meuModal.length ? $meuModal : $(document.body)
-                });
+                //$meuSelect.select2({
+                //    width: '100%',
+                //    placeholder: "Selecione...",
+                //    allowClear: true,
+                //    // Isso resolve o problema do dropdown sumir ou não abrir:
+                //    dropdownParent: $meuModal.length ? $meuModal : $(document.body)
+                //});
             });
         }
 
@@ -1538,9 +1538,18 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <!-- MDF-e --> 
     <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">MDF-e:</label>
       <div class="col-md-4">
-         <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>
+        <%-- <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>--%>
+
+          <asp:TextBox ID="txtMDFe" runat="server"
+              CssClass="form-control"
+              Text='<%# Eval("mdfe")%>'
+              AutoPostBack="true"
+              OnTextChanged="txtMDFe_TextChanged"
+              MaxLength="44" />
       </div>
    </div>
+
+    <br>
 
 </br>
 <div class="row g-3">
@@ -2262,5 +2271,5 @@ DataFormatString="{0:dd/MM/yyyy}" />
             </div>
         </section>
     </div>
-</asp:Content>
+     </span></asp:Content>
 

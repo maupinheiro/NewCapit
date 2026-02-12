@@ -94,7 +94,7 @@ namespace NewCapit.dist.pages
                 PreencherComboMotoristas();
                 CarregaDados();
                 CarregaMap(txtPlaca.Text);
-
+                
                 PreencherClienteInicial();
                 PreencherClienteFinal();
                
@@ -5647,6 +5647,157 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+
+        protected void txtMDFe_TextChanged(object sender, EventArgs e)
+        {
+
+            // 35260255890016000109580010000169611446726211
+            TextBox txtMDFe = (TextBox)sender;
+
+            // Pega o item do repeater
+            RepeaterItem item = (RepeaterItem)txtMDFe.NamingContainer;
+
+            // Agora você pode acessar outros controles do mesmo item
+            HiddenField hdflIdviagem = (HiddenField)item.FindControl("hdflIdviagem");
+
+            string chave = txtMDFe.Text.Trim();
+            string idViagem = hdflIdviagem.Value;
+
+
+            // 🔎 1 - Validar tamanho
+            if (chave.Length != 44 || !chave.All(char.IsDigit))
+            {
+                MostrarMsg("A chave de acesso deve conter 44 dígitos numéricos.", "danger");
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+
+                // 🔎 2 - Verificar se já existe
+                SqlCommand cmdExiste = new SqlCommand(
+                    "SELECT COUNT(*) FROM tbcargas WHERE mdfe = @mdfe", conn);
+                cmdExiste.Parameters.AddWithValue("@mdfe", chave);
+
+                int existe = (int)cmdExiste.ExecuteScalar();
+                if (existe > 0)
+                {
+                    MostrarMsg("Esta chave já está cadastrada.", "warning");
+                    return;
+                }
+
+                // =============================
+                // 🔎 3 - Extrair dados da chave
+                // =============================
+
+                string ufCodigo = chave.Substring(0, 2);          // posição 1-2
+                string cnpj = chave.Substring(6, 14);             // posição 7-20
+                string serie = chave.Substring(22, 3);            // posição 23-25
+                string numero = chave.Substring(25, 9);           // posição 26-34
+                string dv = chave.Substring(43, 1);               // posição 44
+
+                serie = Convert.ToInt32(serie).ToString();   // remove zeros
+                numero = Convert.ToInt64(numero).ToString(); // remove zeros
+
+                // =============================
+                // 🔎 4 - Buscar UF
+                // =============================
+
+                SqlCommand cmdUF = new SqlCommand(
+                    "SELECT Estado FROM tbestadosbrasileiros WHERE Uf = @uf", conn);
+                cmdUF.Parameters.AddWithValue("@uf", ufCodigo);
+
+                object estadoObj = cmdUF.ExecuteScalar();
+                if (estadoObj == null)
+                {
+                    MostrarMsg("UF não encontrada.", "danger");
+                    return;
+                }
+                string estado = estadoObj.ToString();
+
+                // =============================
+                // 🔎 5 - Buscar Empresa (CNPJ)
+                // =============================
+
+                SqlCommand cmdEmpresa = new SqlCommand(@"
+            SELECT nomcli 
+            FROM tbclientes 
+            WHERE REPLACE(REPLACE(REPLACE(cnpj,'.',''),'/',''),'-','') = @cnpj", conn);
+
+                cmdEmpresa.Parameters.AddWithValue("@cnpj", cnpj);
+
+                object empresaObj = cmdEmpresa.ExecuteScalar();
+                if (empresaObj == null)
+                {
+                    MostrarMsg("Empresa não encontrada para o CNPJ informado.", "danger");
+                    return;
+                }
+                string empresa = empresaObj.ToString();
+
+                // =============================
+                // 🔎 6 - Validar Dígito Verificador
+                // =============================
+
+                if (!ValidarChaveMDFe(chave))
+                {
+                    MostrarMsg("Chave inválida (dígito verificador incorreto).", "danger");
+                    return;
+                }
+
+                // =============================
+                // 🔎 7 - Atualizar tbcargas
+                // =============================
+
+                SqlCommand cmdUpdate = new SqlCommand(@"
+            UPDATE tbcargas
+            SET mdfe = @mdfe,
+                mdfe_uf = @uf,
+                mdfe_empresa = @empresa,
+                mdfe_numero = @numero,
+                mdfe_serie = @serie,
+                mdfe_situacao = 'Pendente',
+                mdfe_dv = @dv
+            WHERE carga = @carga", conn);
+
+                cmdUpdate.Parameters.AddWithValue("@mdfe", chave);
+                cmdUpdate.Parameters.AddWithValue("@uf", estado);
+                cmdUpdate.Parameters.AddWithValue("@empresa", empresa);
+                cmdUpdate.Parameters.AddWithValue("@numero", numero);
+                cmdUpdate.Parameters.AddWithValue("@serie", serie);
+                cmdUpdate.Parameters.AddWithValue("@dv", dv);
+                cmdUpdate.Parameters.AddWithValue("@carga", idViagem);
+
+                cmdUpdate.ExecuteNonQuery();
+
+                MostrarMsg("MDF-e vinculado com sucesso.", "success");
+            }
+        }
+
+        private bool ValidarChaveMDFe(string chave)
+        {
+            int[] peso = { 4, 3, 2, 9, 8, 7, 6, 5 };
+            int soma = 0;
+            int pesoIndex = 0;
+
+            for (int i = 0; i < 43; i++)
+            {
+                soma += (chave[i] - '0') * peso[pesoIndex];
+                pesoIndex++;
+                if (pesoIndex == 8)
+                    pesoIndex = 0;
+            }
+
+            int resto = soma % 11;
+            int dvCalculado = (resto == 0 || resto == 1) ? 0 : 11 - resto;
+
+            return dvCalculado.ToString() == chave[43].ToString();
+        }
+
+
+
+
+
 
         void GravarHistorico(
         string tabela,
