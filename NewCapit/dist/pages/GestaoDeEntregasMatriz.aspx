@@ -49,10 +49,27 @@
         }
     </script>
 
-    <script>
+   <%-- <script>
         function SelecionarTodos(source) {
             let checkboxes = document.querySelectorAll('[id*="chkSelecionar"]');
             checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+    </script>--%>
+    <script type="text/javascript">
+        // Esta função roda sempre que o UpdatePanel termina de carregar
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function () {
+            // Se houver algum backdrop travado, nós removemos
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('overflow', 'auto');
+        });
+
+        // Função para selecionar todos os checkboxes (ajuste do seu código)
+        function SelecionarTodos(headerCheckBox) {
+            var grid = headerCheckBox.closest('table');
+            var checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(chk => chk.checked = headerCheckBox.checked);
         }
     </script>
 
@@ -376,101 +393,125 @@
         </Triggers>
     </asp:UpdatePanel>
 </div>
-         <!-- modal Gerenciar MDFe -->
-         <div class="modal fade" id="modalMdfe" tabindex="-1">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content">
+        <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+            <ContentTemplate>
+                 <div class="modal fade" id="modalMdfe" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
 
-                    <div class="modal-header">
-                        <h5 class="modal-title">Gerenciar MDF-e</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <asp:TextBox ID="txtPesquisarMDFe" runat="server"
-                                    CssClass="form-control"
-                                    Placeholder="Pesquisar MDF-e..."
-                                    AutoPostBack="true"
-                                    OnTextChanged="FiltroChanged" />
-                            </div>
-
-                            <div class="col-md-3">
-                                <asp:DropDownList ID="ddlFiltroStatus" runat="server"
-                                    CssClass="form-control"
-                                    AutoPostBack="true"
-                                    OnSelectedIndexChanged="FiltroChanged">
-                                    <asp:ListItem Text="Pendentes" Value="Pendente" />
-                                    <asp:ListItem Text="Baixados" Value="Baixado" />
-                                    <asp:ListItem Text="Todos" Value="Todos" />
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-
-                        <asp:GridView ID="gvMdfe" runat="server"
-                            CssClass="table table-bordered table-sm"
-                            AutoGenerateColumns="false"
-                            DataKeyNames="id">
-
-                            <Columns>
-                                <asp:BoundField DataField="mdfe_uf" HeaderText="UF" />
-                                <asp:BoundField DataField="mdfe_empresa" HeaderText="Empresa" />
-
-                                <asp:TemplateField HeaderText="">
-                                    <HeaderTemplate>
-                                        <input type="checkbox" onclick="SelecionarTodos(this)" />
-                                    </HeaderTemplate>
-                                    <ItemTemplate>
-                                        <asp:CheckBox ID="chkSelecionar" runat="server" />
-                                    </ItemTemplate>
-                                </asp:TemplateField>    
-
-                                <asp:BoundField DataField="mdfe_numero" HeaderText="Número" />
-                                <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />
-                                
-                                <asp:TemplateField HeaderText="Situação MDF-e">
-                                    <ItemTemplate>
-                                        <span class='badge <%# Eval("mdfe_situacao").ToString() == "Baixado" ? "bg-success" : "bg-warning text-dark" %>'>
-                                            <%# Eval("mdfe_situacao") ?? "Pendente" %>
-                                        </span>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-
-                                <asp:BoundField DataField="status" HeaderText="Status" />
-
-                                <asp:TemplateField HeaderText="Local da Coleta">
-                                    <ItemTemplate>
-                                        <%# Eval("cid_expedidor") %>/<%# Eval("uf_expedidor") %>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Local da Entrega">
-                                    <ItemTemplate>
-                                        <%# Eval("cid_recebedor") %>/<%# Eval("uf_recebedor") %>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                
-                                <asp:BoundField DataField="mdfe_baixado" HeaderText="Baixado Por" />
-                                <asp:BoundField DataField="mdfe_data_baixa" HeaderText="Data Baixa" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
-                            </Columns>
-
-                        </asp:GridView>
-                    </div>
-
-                    <div class="modal-footer">
-                        <asp:Button ID="btnBaixarMDFe" runat="server"
-                            CssClass="btn btn-success"
-                            Text="Baixar"
-                            OnClick="btnBaixarMDFe_Click" />
-
-                        <asp:Button ID="btnCancelarMDFe" runat="server"
-                            CssClass="btn btn-danger"
-                            Text="Cancelar"
-                            OnClick="btnCancelarMDFe_Click" />
-                    </div>
-
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Gerenciar MDF-e</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <asp:TextBox ID="txtPesquisarMDFe" runat="server"
+                            CssClass="form-control"
+                            Placeholder="Pesquisar MDF-e..."
+                            AutoPostBack="true"
+                            OnTextChanged="FiltroChanged" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <asp:DropDownList ID="ddlFiltroStatus" runat="server"
+                            CssClass="form-control"
+                            AutoPostBack="true"
+                            OnSelectedIndexChanged="FiltroChanged">
+                            <asp:ListItem Text="Todos" Value="" />
+                            <asp:ListItem Text="Pendentes" Value="Pendente" />
+                            <asp:ListItem Text="Baixados" Value="Baixado" />
+                            
+                        </asp:DropDownList>
+                    </div>
+                </div>
+
+                <asp:GridView ID="gvMdfe" runat="server" OnRowCommand="gvMdfe_RowCommand"
+                    CssClass="table table-bordered table-sm"
+                    AutoGenerateColumns="false"
+                    DataKeyNames="id">
+
+                    <Columns>
+                        <asp:BoundField DataField="mdfe_uf" HeaderText="UF" />
+                        <asp:BoundField DataField="mdfe_empresa" HeaderText="Empresa" />
+
+                        <asp:TemplateField HeaderText="">
+                            <HeaderTemplate>
+                                <input type="checkbox" onclick="SelecionarTodos(this)" />
+                            </HeaderTemplate>
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkSelecionar" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>    
+
+                        <asp:BoundField DataField="mdfe_numero" HeaderText="Número" />
+                        <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />
+                        
+                        <asp:TemplateField HeaderText="Situação MDF-e">
+                            <ItemTemplate>
+                                <span class='badge <%# Eval("mdfe_situacao").ToString() == "Baixado" ? "bg-success" : "bg-warning text-dark" %>'>
+                                    <%# Eval("mdfe_situacao") ?? "Pendente" %>
+                                </span>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="status" HeaderText="Status" />
+
+                        <asp:TemplateField HeaderText="Local da Coleta">
+                            <ItemTemplate>
+                                <%# Eval("cid_expedidor") %>/<%# Eval("uf_expedidor") %>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Local da Entrega">
+                            <ItemTemplate>
+                                <%# Eval("cid_recebedor") %>/<%# Eval("uf_recebedor") %>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        
+                        <asp:BoundField DataField="mdfe_baixado" HeaderText="Baixado Por" />
+                        <asp:BoundField DataField="mdfe_data_baixa" HeaderText="Data Baixa" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                         <asp:TemplateField HeaderText="Ações">
+                         <ItemTemplate>
+                             <asp:LinkButton ID="btnCancelarLinha" runat="server" 
+                                 CommandName="CancelarMDF" 
+                                 CommandArgument='<%# Eval("id") %>' 
+                                 CssClass="btn btn-outline-danger btn-sm"
+                                 OnClientClick="return confirm('Deseja realmente cancelar este MDF-e?');">
+                                 <i class="fas fa-trash"></i> Cancelar
+                             </asp:LinkButton>
+                         </ItemTemplate>
+                     </asp:TemplateField>
+                    </Columns>
+                   
+
+                </asp:GridView>
+            </div>
+
+            <div class="modal-footer">
+                <asp:Button ID="btnBaixarMDFe" runat="server"
+                    CssClass="btn btn-success"
+                    Text="Baixar"
+                    OnClick="btnBaixarMDFe_Click" />
+
+                <asp:Button ID="btnCancelarMDFe" runat="server"  data-bs-dismiss="modal"
+                    CssClass="btn btn-danger"
+                    Text="Cancelar"
+                    OnClick="btnCancelarMDFe_Click" />
+            </div>
+
         </div>
+    </div>
+</div>
+            </ContentTemplate>
+            <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="txtPesquisarMDFe" EventName="TextChanged" />
+                <asp:AsyncPostBackTrigger ControlID="ddlFiltroStatus" EventName="SelectedIndexChanged" />
+                <asp:AsyncPostBackTrigger ControlID="btnBaixarMDFe" EventName="Click" />
+                <asp:AsyncPostBackTrigger ControlID="btnCancelarMDFe" EventName="Click" />
+            </Triggers>
+        </asp:UpdatePanel>
+         <!-- modal Gerenciar MDFe -->
+         
     </div>
 </asp:Content>

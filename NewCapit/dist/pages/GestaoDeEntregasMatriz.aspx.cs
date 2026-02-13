@@ -800,7 +800,7 @@ namespace NewCapit.dist.pages
 
         protected void FiltroChanged(object sender, EventArgs e)
         {
-            CarregarMdfe();
+            CarregarMdfeFiltro();
             ScriptManager.RegisterStartupScript(this, GetType(),
                 "openModal", "$('#modalMdfe').modal('show');", true);
         }
@@ -816,9 +816,12 @@ namespace NewCapit.dist.pages
                     WHERE mdfe IS NOT NULL
                 ";
 
+            
+
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
+               
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -829,39 +832,125 @@ namespace NewCapit.dist.pages
 
             }
         }
+        void CarregarMdfeFiltro()
+        {
+            string sql = @"
+                    SELECT id, status, mdfe_uf, mdfe_empresa, mdfe_numero, mdfe_serie,
+                           mdfe_situacao, cid_expedidor, uf_expedidor,
+                           cid_recebedor, uf_recebedor, mdfe_dv,
+                           mdfe_baixado, mdfe_data_baixa
+                    FROM tbcargas
+                    WHERE mdfe IS NOT NULL
+                ";
 
+            if (!string.IsNullOrEmpty(ddlFiltroStatus.SelectedValue))
+                sql += " AND mdfe_situacao = @Status";
+            if (!string.IsNullOrEmpty(txtPesquisarMDFe.Text))
+            {
+                // Ajustado: Coluna antes do LIKE e parênteses para isolar o OR
+                sql += " AND (mdfe_numero = @Pesquisa OR mdfe_empresa = @Pesquisa OR clidestino LIKE @PesquisaLike or carga=@Pesquisa)";
+            }
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                if (!string.IsNullOrEmpty(ddlFiltroStatus.SelectedValue))
+                    cmd.Parameters.AddWithValue("@Status", ddlFiltroStatus.SelectedValue);
+                if (!string.IsNullOrEmpty(txtPesquisarMDFe.Text))
+                {
+                    cmd.Parameters.AddWithValue("@Pesquisa", txtPesquisarMDFe.Text);
+                    cmd.Parameters.AddWithValue("@PesquisaLike", "%" + txtPesquisarMDFe.Text + "%");
+                }
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvMdfe.DataSource = dt;
+                gvMdfe.DataBind();
+                //Response.Write(dt.Rows.Count);
+
+            }
+        }
         protected void btnBaixarMDFe_Click(object sender, EventArgs e)
         {
-    //        string usuario = Session["usuario"].ToString();
+            string usuario = Session["usuario"]?.ToString() ?? "Sistema";
+            bool selecionouAlgum = false;
 
-    //        string sql = @"
-    //    UPDATE tbcargas
-    //    SET mdfe_situacao = 'Baixado',
-    //        mdfe_baixado = @usuario,
-    //        mdfe_data_baixa = GETDATE()
-    //    WHERE mdfe IS NOT NULL
-    //";
+            // Percorre cada linha da Grid
+            foreach (GridViewRow row in gvMdfe.Rows)
+            {
+                // Encontra o CheckBox dentro da linha pelo ID
+                CheckBox chk = (CheckBox)row.FindControl("chkSelecionar");
 
-    //        ExecutarSql(sql, usuario);
+                if (chk != null && chk.Checked)
+                {
+                    selecionouAlgum = true;
+
+                    // Pega o ID da linha (definido no DataKeyNames="id" da GridView)
+                    string idMdf = gvMdfe.DataKeys[row.RowIndex].Value.ToString();
+
+                    // Se precisar de outro valor de uma coluna BoundField (ex: Número do MDF-e na coluna 3)
+                    // string numero = row.Cells[3].Text;
+
+                    AtualizarBaixaNoBanco(idMdf, usuario);
+                }
+            }
+
+            if (selecionouAlgum)
+            {
+                // Recarrega a grid para refletir as mudanças
+                CarregarMdfe(); // Chame sua função que preenche a gvMdfe
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
+                    "$('#modalMdfe').modal('hide'); alert('MDF-e(s) baixado(s) com sucesso!');", true);
+            }
+            else
+            {
+                // Opcional: avisar que nada foi selecionado sem fechar o modal
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Aviso", "alert('Selecione ao menos um item!');", true);
+            }
+        }
+
+        private void AtualizarBaixaNoBanco(string id, string usuario)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // Importante: Filtramos pelo ID da linha selecionada
+                string sql = @"UPDATE tb_sua_tabela 
+                       SET mdfe_situacao = 'Baixado', 
+                           mdfe_baixado = @usuario, 
+                           mdfe_data_baixa = GETDATE() 
+                       WHERE id = @id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@usuario", usuario);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         protected void btnCancelarMDFe_Click(object sender, EventArgs e)
         {
-    //        string sql = @"
-    //    UPDATE tbcargas
-    //    SET mdfe = NULL,
-    //        mdfe_situacao = NULL,
-    //        mdfe_empresa = NULL,
-    //        mdfe_numero = NULL,
-    //        mdfe_serie = NULL,
-    //        mdfe_uf = NULL,
-    //        mdfe_dv = NULL,
-    //        mdfe_baixado = NULL,
-    //        mdfe_data_baixa = NULL
-    //    WHERE mdfe IS NOT NULL
-    //";
+            //        string sql = @"
+            //UPDATE tbcargas
+            //    SET mdfe = NULL,
+            //        mdfe_situacao = NULL,
+            //        mdfe_empresa = NULL,
+            //        mdfe_numero = NULL,
+            //        mdfe_serie = NULL,
+            //        mdfe_uf = NULL,
+            //        mdfe_dv = NULL,
+            //        mdfe_baixado = NULL,
+            //        mdfe_data_baixa = NULL
+            //    WHERE mdfe IS NOT NULL
+            //";
 
-    //        ExecutarSql(sql, null);
+            //        ExecutarSql(sql, null);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
+                    "$('#modalMdfe').modal('hide');", true);
         }
 
         void ExecutarSql(string sql, string usuario)
@@ -888,8 +977,49 @@ namespace NewCapit.dist.pages
                 true);
         }
 
+        protected void gvMdfe_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "CancelarMDF")
+            {
+                // O CommandArgument contém o ID que passamos no Eval("id")
+                string idMdf = e.CommandArgument.ToString();
 
+                CancelarMDFNoBanco(idMdf);
 
+                // Atualiza a Grid para mostrar que os dados sumiram/mudaram
+                CarregarMdfe();
 
+                // Alerta opcional via JS
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('MDF-e cancelado com sucesso!');", true);
+            }
+        }
+
+        private void CancelarMDFNoBanco(string id)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // SQL baseado no seu modelo, filtrando estritamente pelo ID da linha
+                string sql = @"
+            UPDATE tbcargas 
+            SET mdfe = NULL, 
+                mdfe_situacao = NULL, 
+                mdfe_empresa = NULL, 
+                mdfe_numero = NULL, 
+                mdfe_serie = NULL, 
+                mdfe_uf = NULL, 
+                mdfe_dv = NULL, 
+                mdfe_baixado = NULL, 
+                mdfe_data_baixa = NULL 
+            WHERE id = @id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
