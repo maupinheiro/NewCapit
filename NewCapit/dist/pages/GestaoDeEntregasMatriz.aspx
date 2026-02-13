@@ -420,8 +420,8 @@
                             AutoPostBack="true"
                             OnSelectedIndexChanged="FiltroChanged">
                             <asp:ListItem Text="Todos" Value="" />
-                            <asp:ListItem Text="Pendentes" Value="Pendente" />
                             <asp:ListItem Text="Baixados" Value="Baixado" />
+                            <asp:ListItem Text="Pendentes" Value="Pendente" />
                             
                         </asp:DropDownList>
                     </div>
@@ -496,7 +496,7 @@
 
                 <asp:Button ID="btnCancelarMDFe" runat="server"  data-bs-dismiss="modal"
                     CssClass="btn btn-danger"
-                    Text="Cancelar"
+                    Text="Fechar"
                     OnClick="btnCancelarMDFe_Click" />
             </div>
 
@@ -514,4 +514,20 @@
          <!-- modal Gerenciar MDFe -->
          
     </div>
+    <script type="text/javascript">
+        // Captura o fim de qualquer atualização do UpdatePanel
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+
+        prm.add_endRequest(function () {
+            // 1. Remove a div preta que escurece a tela
+            $('.modal-backdrop').remove();
+
+            // 2. Libera o scroll da página (o 'trava' vem daqui)
+            $('body').removeClass('modal-open');
+            $('body').css('overflow', 'auto');
+
+            // 3. Simula o clique falso que você pediu em uma área neutra
+            $('body').trigger('click');
+        });
+</script>
 </asp:Content>

@@ -744,7 +744,7 @@ namespace NewCapit.dist.pages
                     }
                 }
 
-                string sqlg = "select rota_entrega from tbcargas where carga="+carga+ " and  rota_entrega is not null";
+                string sqlg = "select rota_krona from tbcargas where carga="+carga+ " and  rota_krona is not null";
                 DataTable dt = new DataTable();
                 SqlDataAdapter adp = new SqlDataAdapter(sqlg,con);
                 con.Open();
@@ -2074,8 +2074,8 @@ namespace NewCapit.dist.pages
                                 previsao_inicio_krona=@previsao_inicio_krona, 
                                 previsao_termino_krona=@previsao_termino_krona, 
                                 usu_envio_krona=@usu_envio_krona,
-                                rota_entrega=@rota_entrega,
-                                id_rota_entrega = @id_rota_entrega
+                                rota_krona=@rota_krona,
+                                id_rota_krona = @id_rota_krona
                             WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -2086,14 +2086,16 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@previsao_inicio_krona", DateTime.Parse(previsao_inicial));
                     cmd.Parameters.AddWithValue("@previsao_termino_krona", DateTime.Parse(previsao_final));
                     cmd.Parameters.AddWithValue("@usu_envio_krona", nomeUsuario ?? "SISTEMA");
-                    cmd.Parameters.AddWithValue("@rota_entrega",rota);
-                    cmd.Parameters.AddWithValue("@id_rota_entrega", id_rota);
+                    cmd.Parameters.AddWithValue("@rota_krona",rota);
+                    cmd.Parameters.AddWithValue("@id_rota_krona", id_rota);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
 
                 MostrarMsg2("Sucesso! SM Gerada: " + numeroSM);
+                ViewState["Coletas"] = null;
+                CarregarColetas(novaColeta.Text);
             }
             catch (Exception ex)
             {

@@ -792,8 +792,8 @@ namespace NewCapit.dist.pages
 
         protected void btnAbrirMdfe_Click(object sender, EventArgs e)
         {
-            ddlFiltroStatus.SelectedValue = "Pendente";
-            CarregarMdfe();
+            
+            CarregarMdfeFiltro();
             ReabrirModal();
 
         }
@@ -901,8 +901,10 @@ namespace NewCapit.dist.pages
                 // Recarrega a grid para refletir as mudanças
                 CarregarMdfe(); // Chame sua função que preenche a gvMdfe
 
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
-                    "$('#modalMdfe').modal('hide'); alert('MDF-e(s) baixado(s) com sucesso!');", true);
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
+                //    "$('#modalMdfe').modal('hide'); alert('MDF-e(s) baixado(s) com sucesso!');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharEDesbloquear",
+                    "$('#modalMdfe').modal('hide'); $('body').removeClass('modal-open'); $('.modal-backdrop').remove();", true);
             }
             else
             {
@@ -917,7 +919,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // Importante: Filtramos pelo ID da linha selecionada
-                string sql = @"UPDATE tb_sua_tabela 
+                string sql = @"UPDATE tbcargas 
                        SET mdfe_situacao = 'Baixado', 
                            mdfe_baixado = @usuario, 
                            mdfe_data_baixa = GETDATE() 
@@ -949,8 +951,10 @@ namespace NewCapit.dist.pages
             //";
 
             //        ExecutarSql(sql, null);
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
-                    "$('#modalMdfe').modal('hide');", true);
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
+            //        "$('#modalMdfe').modal('hide');", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharEDesbloquear",
+                     "$('#modalMdfe').modal('hide'); $('body').removeClass('modal-open'); $('.modal-backdrop').remove();", true);
         }
 
         void ExecutarSql(string sql, string usuario)
