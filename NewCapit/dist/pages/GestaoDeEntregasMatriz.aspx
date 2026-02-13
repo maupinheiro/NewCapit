@@ -161,7 +161,7 @@
                                                 <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                                                 <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
                                                     <HeaderTemplate>
-                                                        <table class="table table-striped table-bordere table-hover" AutoGenerateColumns="false">
+                                                        <table class="table table-bordered dataTable1 table-hover" AutoGenerateColumns="false">
                                                             <thead>
                                                                 <tr text-align: center;>
                                                                     <th>#</th>
@@ -179,7 +179,7 @@
                                                     <ItemTemplate> 
                                                         <tr onclick="toggleDetalhes(this)">
                                                             <td style="text-align: center; vertical-align: middle;">
-                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 60px; height:60px;" runat="server"
+                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 60px; height:60px;" runat="server" CssClass="rounded-circle"
                                                                      CommandName="Editar"
                                                                      CommandArgument='<%# Eval("num_carregamento") %>'
                                                                      OnCommand="lnkEditar_Command"

@@ -1544,6 +1544,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
               CssClass="form-control"
               Text='<%# Eval("mdfe")%>'
               AutoPostBack="true"
+              placeholder="Chave de Acesso do MDFe (44 dígitos)"
               OnTextChanged="txtMDFe_TextChanged"
               MaxLength="44" />
       </div>

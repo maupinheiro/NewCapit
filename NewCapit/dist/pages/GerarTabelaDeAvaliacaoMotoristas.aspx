@@ -152,7 +152,7 @@
                                             <!-- /.card-header -->
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    <asp:GridView runat="server" ID="gvMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="50" ShowHeaderWhenEmpty="True">
+                                                    <asp:GridView runat="server" ID="gvMotoristas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" ShowHeaderWhenEmpty="True">
                                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                                         <Columns>
                                                             <%--tamanho da foto 45x45--%>

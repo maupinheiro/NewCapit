@@ -19,7 +19,7 @@ namespace NewCapit.Models.Krona
        
         public Veiculo veiculo { get; set; }
         public Veiculo reboque_1 { get; set; }
-        public Veiculo reboque_2 { get; set; }
+        //public Veiculo reboque_2 { get; set; }
 
         public EntidadeCompleta origem { get; set; }
         public Dictionary<string, Destino> destinos { get; set; }
@@ -95,19 +95,21 @@ namespace NewCapit.Models.Krona
     public class Veiculo
     {
         public string placa { get; set; }
-        public string renavam { get; set; }
-        public string cor { get; set; }
+        public string renavan { get; set; }
+        
         public string marca { get; set; }
         public string modelo { get; set; }
-        public string tipo { get; set; }
+        public string cor { get; set; }
         public string ano { get; set; }
+        public string tipo { get; set; }
+        
         public string capacidade { get; set; }
-        public string numero_att { get; set; }
+        public string numero_antt { get; set; }
         public string validade_antt { get; set; }
         public string numero_frota { get; set; }
         public string transp_frota { get; set; }
         public string proprietario { get; set; }
-        public string proprietario_cnpj { get; set ; }
+        public string proprietario_cpfcnpj { get; set ; }
         public string end_rua { get; set; }
         public string end_numero { get; set; }
         public string end_complemento { get; set; }

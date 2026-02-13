@@ -1358,7 +1358,7 @@ namespace NewCapit.dist.pages
                     }
                     catch (Exception ex)
                     {
-                        MostrarMsg("Erro ao salvar MDFe: " + ex.Message);
+                        MostrarMsg2("Erro ao salvar MDFe: " + ex.Message);
                     }
                     finally
                     {
@@ -1653,14 +1653,14 @@ namespace NewCapit.dist.pages
             if (db1.Rows.Count == 0) { db1 = dv.Clone(); db1.Rows.Add(db1.NewRow()); }
 
             // --- 5. REBOQUE 2 (Tratamento especial) ---
-            string idReb2 = dv.Rows[0][22].ToString();
-            DataTable db2 = new DataTable();
-            if (!string.IsNullOrEmpty(idReb2) && idReb2 != "0")
-            {
-                string reb2 = "select STUFF(placacarreta, 4, 0, '-') AS placacarreta,renavan,marca,modelo,cor,anocarreta,tipocarreta,tara,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,tecnologia,idrastreador,comunicacao from tbcarretas as v inner join tbtransportadoras as t on v.codprop=t.codtra where placacarreta='" + idReb2 + "'";
-                new SqlDataAdapter(reb2, con).Fill(db2);
-            }
-            if (db2.Rows.Count == 0) { db2 = dv.Clone(); db2.Rows.Add(db2.NewRow()); }
+            //string idReb2 = dv.Rows[0][22].ToString();
+            //DataTable db2 = new DataTable();
+            //if (!string.IsNullOrEmpty(idReb2) && idReb2 != "0")
+            //{
+            //    string reb2 = "select STUFF(placacarreta, 4, 0, '-') AS placacarreta,renavan,marca,modelo,cor,anocarreta,tipocarreta,tara,v.antt,t.nomtra,t.cnpj,endtra,numero,complemento,baitra,cidtra,uftra,ceptra,tecnologia,idrastreador,comunicacao from tbcarretas as v inner join tbtransportadoras as t on v.codprop=t.codtra where placacarreta='" + idReb2 + "'";
+            //    new SqlDataAdapter(reb2, con).Fill(db2);
+            //}
+            //if (db2.Rows.Count == 0) { db2 = dv.Clone(); db2.Rows.Add(db2.NewRow()); }
 
             // --- 6. CARGA ---
             DataTable dg = new DataTable();
@@ -1786,19 +1786,19 @@ namespace NewCapit.dist.pages
                     veiculo = new Veiculo
                     {
                         placa = dv.Rows[0][0].ToString().Substring(0, 3) + "-" + placa.Substring(3),
-                        renavam = dv.Rows[0][1].ToString(),
+                        renavan = dv.Rows[0][1].ToString(),
                         marca = dv.Rows[0][2].ToString(),
                         modelo = dv.Rows[0][3].ToString(),
                         cor = dv.Rows[0][4].ToString(),
                         ano = dv.Rows[0][5].ToString(),
                         tipo = dv.Rows[0][6].ToString(),
                         capacidade = dv.Rows[0][7].ToString(),
-                        numero_att = dv.Rows[0][8].ToString(),
+                        numero_antt = dv.Rows[0][8].ToString(),
                         validade_antt = "",
                         numero_frota = "",
                         transp_frota = "",
                         proprietario = "TRANSNOVAG TRANSPORTES SA",
-                        proprietario_cnpj = "55.890.016/0001-09",
+                        proprietario_cpfcnpj = "55.890.016/0001-09",
                         end_rua = "Rua Cadiriri",
                         end_numero = "851",
                         end_complemento = "",
@@ -1819,19 +1819,19 @@ namespace NewCapit.dist.pages
                     reboque_1 = new Veiculo
                     {
                         placa = db1.Rows[0][0].ToString(),
-                        renavam = db1.Rows[0][1].ToString() ?? "",
+                        renavan = db1.Rows[0][1].ToString() ?? "",
                         marca = db1.Rows[0][2].ToString(),
                         modelo = db1.Rows[0][3].ToString(),
                         cor = db1.Rows[0][4].ToString(),
                         ano = db1.Rows[0][5].ToString(),
                         tipo = db1.Rows[0][6].ToString(),
                         capacidade = db1.Rows[0][7].ToString(),
-                        numero_att = db1.Rows[0][8].ToString(),
+                        numero_antt = db1.Rows[0][8].ToString(),
                         validade_antt = "",
                         numero_frota = "",
                         transp_frota = "",
                         proprietario = db1.Rows[0][9].ToString(),
-                        proprietario_cnpj = db1.Rows[0][10].ToString(),
+                        proprietario_cpfcnpj = db1.Rows[0][10].ToString(),
                         end_rua = db1.Rows[0][11].ToString(),
                         end_numero = db1.Rows[0][12].ToString(),
                         end_complemento = db1.Rows[0][13].ToString(),
@@ -1848,38 +1848,38 @@ namespace NewCapit.dist.pages
                         fixo = "N"
                     },
 
-                    reboque_2 = new Veiculo
-                    {
-                        placa = db2.Rows[0][0].ToString(),
-                        renavam = db2.Rows[0][1].ToString(),
+                    //reboque_2 = new Veiculo
+                    //{
+                    //    placa = db2.Rows[0][0].ToString(),
+                    //    renavam = db2.Rows[0][1].ToString(),
 
-                        marca = db2.Rows[0][2].ToString(),
-                        modelo = db2.Rows[0][3].ToString(),
-                        cor = db2.Rows[0][4].ToString(),
-                        ano = db2.Rows[0][5].ToString(),
-                        tipo = db2.Rows[0][6].ToString(),
-                        capacidade = db2.Rows[0][7].ToString(),
-                        numero_att = db2.Rows[0][8].ToString(),
-                        validade_antt = "",
-                        numero_frota = "",
-                        transp_frota = "",
-                        proprietario = db2.Rows[0][9].ToString(),
-                        proprietario_cnpj = db2.Rows[0][10].ToString(),
-                        end_rua = db2.Rows[0][11].ToString(),
-                        end_numero = db2.Rows[0][12].ToString(),
-                        end_complemento = db2.Rows[0][13].ToString(),
-                        end_bairro = db2.Rows[0][14].ToString(),
-                        end_cidade = db2.Rows[0][15].ToString(),
-                        end_uf = db2.Rows[0][16].ToString(),
-                        end_cep = db2.Rows[0][17].ToString(),
-                        tecnologia = db2.Rows[0][18].ToString(),
-                        id_rastreador = db2.Rows[0][19].ToString(),
-                        comunicacao = db2.Rows[0][20].ToString(),
-                        tecnologia_sec = "",
-                        id_rastreador_sec = "",
-                        comunicacao_sec = "",
-                        fixo = "N"
-                    },
+                    //    marca = db2.Rows[0][2].ToString(),
+                    //    modelo = db2.Rows[0][3].ToString(),
+                    //    cor = db2.Rows[0][4].ToString(),
+                    //    ano = db2.Rows[0][5].ToString(),
+                    //    tipo = db2.Rows[0][6].ToString(),
+                    //    capacidade = db2.Rows[0][7].ToString(),
+                    //    numero_att = db2.Rows[0][8].ToString(),
+                    //    validade_antt = "",
+                    //    numero_frota = "",
+                    //    transp_frota = "",
+                    //    proprietario = db2.Rows[0][9].ToString(),
+                    //    proprietario_cnpj = db2.Rows[0][10].ToString(),
+                    //    end_rua = db2.Rows[0][11].ToString(),
+                    //    end_numero = db2.Rows[0][12].ToString(),
+                    //    end_complemento = db2.Rows[0][13].ToString(),
+                    //    end_bairro = db2.Rows[0][14].ToString(),
+                    //    end_cidade = db2.Rows[0][15].ToString(),
+                    //    end_uf = db2.Rows[0][16].ToString(),
+                    //    end_cep = db2.Rows[0][17].ToString(),
+                    //    tecnologia = db2.Rows[0][18].ToString(),
+                    //    id_rastreador = db2.Rows[0][19].ToString(),
+                    //    comunicacao = db2.Rows[0][20].ToString(),
+                    //    tecnologia_sec = "",
+                    //    id_rastreador_sec = "",
+                    //    comunicacao_sec = "",
+                    //    fixo = "N"
+                    //},
 
                     origem = new EntidadeCompleta
                     {
@@ -5666,7 +5666,7 @@ namespace NewCapit.dist.pages
             // 🔎 1 - Validar tamanho
             if (chave.Length != 44 || !chave.All(char.IsDigit))
             {
-                MostrarMsg("A chave de acesso deve conter 44 dígitos numéricos.", "danger");
+                MostrarMsg2("A chave de acesso deve conter 44 dígitos numéricos.");
                 return;
             }
 
@@ -5710,7 +5710,7 @@ namespace NewCapit.dist.pages
                 object estadoObj = cmdUF.ExecuteScalar();
                 if (estadoObj == null)
                 {
-                    MostrarMsg("UF não encontrada.", "danger");
+                    MostrarMsg2("UF não encontrada.");
                     return;
                 }
                 string estado = estadoObj.ToString();
@@ -5729,7 +5729,7 @@ namespace NewCapit.dist.pages
                 object empresaObj = cmdEmpresa.ExecuteScalar();
                 if (empresaObj == null)
                 {
-                    MostrarMsg("Empresa não encontrada para o CNPJ informado.", "danger");
+                    MostrarMsg2("Empresa não encontrada para o CNPJ informado.");
                     return;
                 }
                 string empresa = empresaObj.ToString();
@@ -5740,7 +5740,7 @@ namespace NewCapit.dist.pages
 
                 if (!ValidarChaveMDFe(chave))
                 {
-                    MostrarMsg("Chave inválida (dígito verificador incorreto).", "danger");
+                    MostrarMsg2("Chave inválida (dígito verificador incorreto).");
                     return;
                 }
 
@@ -5769,7 +5769,7 @@ namespace NewCapit.dist.pages
 
                 cmdUpdate.ExecuteNonQuery();
 
-                MostrarMsg("MDF-e vinculado com sucesso.", "success");
+                MostrarMsg2("MDF-e vinculado com sucesso.");
             }
         }
 
