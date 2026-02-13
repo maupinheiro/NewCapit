@@ -232,7 +232,7 @@
 
         <asp:BoundField DataField="Dia" HeaderText="Dia" />
 
-        <asp:BoundField DataField="Marcacao" HeaderText="Marcações" />
+        <asp:BoundField DataField="Marcacao" HeaderText="Marcações" HeaderStyle-HorizontalAlign="Left" />
 
       
 

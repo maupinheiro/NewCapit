@@ -59,7 +59,7 @@ namespace NewCapit.dist.pages
                 if (!string.IsNullOrEmpty(txtPesquisa.Text))
                 {
                     // Ajustado: Coluna antes do LIKE e parênteses para isolar o OR
-                    query += " AND (pedido = @Pesquisa OR solicitante = @Pesquisa OR clidestino LIKE @PesquisaLike)";
+                    query += " AND (pedido = @Pesquisa OR solicitante = @Pesquisa OR clidestino LIKE @PesquisaLike or carga=@Pesquisa)";
                 }
 
                 query += " ORDER BY Id DESC"; // Troquei 'emissao' por 'Id' ou outra coluna existente, pois 'emissao' não está no seu SELECT
@@ -101,6 +101,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
+            gvPedidos.PageIndex = 0;
             CarregarGridPedidos();
         }
 
