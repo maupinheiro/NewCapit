@@ -699,6 +699,7 @@ namespace NewCapit.dist.pages
                 {
                     // 🔘 Botões
                     Button btnAtualizar = (Button)e.Item.FindControl("btnAtualizarColeta");
+                    Button btnPedagioManual = (Button)e.Item.FindControl("btnPedagadioManual");
                     Button btnWhats = (Button)e.Item.FindControl("WhatsApp");
                     Button btnOrdem = (Button)e.Item.FindControl("btnOrdemColeta");
 
@@ -1551,7 +1552,45 @@ namespace NewCapit.dist.pages
                 CarregarColetas(novaColeta.Text);
             }
 
-            
+            if (e.CommandName == "PedagioManual")
+            {
+                using (SqlConnection conn = new SqlConnection(
+    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string query = @"UPDATE tbcarregamentos SET 
+                    pedagio = @pedagio,                                 
+                    pedagiofeito = @pedagiofeito 
+                    WHERE num_carregamento = @num_carregamento";
+
+                    using (SqlCommand cmdPedagio = new SqlCommand(query, conn))
+                    {
+                        cmdPedagio.Parameters.Add("@num_carregamento", SqlDbType.Int)
+                                             .Value = Convert.ToInt32(novaColeta.Text);
+
+                        cmdPedagio.Parameters.Add("@pedagio", SqlDbType.VarChar)
+                                             .Value = "SIM";
+
+                        cmdPedagio.Parameters.Add("@pedagiofeito", SqlDbType.VarChar)
+                                             .Value = "Pendente";
+
+                        conn.Open();
+                        int linhas = cmdPedagio.ExecuteNonQuery();
+
+                        if (linhas == 0)
+                        {
+                            throw new Exception("Nenhum registro encontrado para atualizar.");
+                        }
+                    }
+                }
+
+
+                // Após atualizar, recarregar os dados no Repeater
+               // MostrarMsg2("Pedágio enviado com sucesso!");
+                //ViewState["Coletas"] = null;
+                //CarregarColetas(novaColeta.Text);
+            }
+
+
             if (e.CommandName == "EnviarSM")
             {
                 // 1. Captura os dados da interface ANTES do processo assíncrono

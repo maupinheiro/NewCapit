@@ -1,10 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaColetaMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaColetaMatriz" Async="true"%>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_AtualizaColetaMatriz.aspx.cs" Inherits="NewCapit.dist.pages.Frm_AtualizaColetaMatriz" Async="true" %>
 
 <%@ Register Assembly="GMaps" Namespace="Subgurim.Controles" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-     <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- jQuery e Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -14,8 +14,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-   
+
+
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
@@ -286,83 +286,83 @@
         if (typeof inicializarAbas === "function") inicializarAbas();
     </script>
     <script>
-                 function inicializarAbas() {
-                     console.log("Iniciando limpeza e restauração de abas...");
+        function inicializarAbas() {
+            console.log("Iniciando limpeza e restauração de abas...");
 
-                     // 1. Restaurar o estado das abas salvas nos HiddenFields
-                     document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
-                         const targetId = hf.value; // Ex: #tabNotas_0 ou tabNotas_0
-                         if (!targetId) return;
+            // 1. Restaurar o estado das abas salvas nos HiddenFields
+            document.querySelectorAll('.hf-aba-ativa').forEach(hf => {
+                const targetId = hf.value; // Ex: #tabNotas_0 ou tabNotas_0
+                if (!targetId) return;
 
-                         // Garante que o ID comece com # para o seletor CSS
-                         const selector = targetId.startsWith('#') ? targetId : '#' + targetId;
-                         const btnAba = document.querySelector(`button[data-bs-target="${targetId}"], button[data-bs-target="${selector}"]`);
+                // Garante que o ID comece com # para o seletor CSS
+                const selector = targetId.startsWith('#') ? targetId : '#' + targetId;
+                const btnAba = document.querySelector(`button[data-bs-target="${targetId}"], button[data-bs-target="${selector}"]`);
 
-                         if (btnAba) {
-                             console.log("Ativando aba e conteúdo para:", selector);
+                if (btnAba) {
+                    console.log("Ativando aba e conteúdo para:", selector);
 
-                             // A. Forçar ativação do Botão
-                             const container = btnAba.closest('.upd-tabs-container');
-                             if (container) {
-                                 // Remove active de todos os botões do grupo
-                                 container.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-                                 btnAba.classList.add('active');
+                    // A. Forçar ativação do Botão
+                    const container = btnAba.closest('.upd-tabs-container');
+                    if (container) {
+                        // Remove active de todos os botões do grupo
+                        container.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                        btnAba.classList.add('active');
 
-                                 // B. Forçar ativação do Painel de Conteúdo
-                                 // O ID do painel é o targetId sem o #
-                                 const paneId = selector.replace('#', '');
-                                 const pane = document.getElementById(paneId);
+                        // B. Forçar ativação do Painel de Conteúdo
+                        // O ID do painel é o targetId sem o #
+                        const paneId = selector.replace('#', '');
+                        const pane = document.getElementById(paneId);
 
-                                 if (pane) {
-                                     // Remove show/active de todos os painéis do grupo
-                                     container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 'active'));
-                                     pane.classList.add('show');
-                                     pane.classList.add('active');
-                                 } else {
-                                     console.error("Painel não encontrado:", paneId);
-                                 }
-                             }
-                         }
-                         configurarFocoScanner();
-                     });
-
-                     // 2. Configurar o evento de clique (sem usar o evento do Bootstrap que pode falhar)
-                     document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
-                         btn.onclick = function () {
-                             const target = this.getAttribute('data-bs-target');
-                             const container = this.closest('.upd-tabs-container');
-                             if (container) {
-                                 const hf = container.querySelector('.hf-aba-ativa');
-                                 if (hf) {
-                                     hf.value = target;
-                                     console.log("Novo estado salvo:", target);
-                                 }
-                             }
-                         };
-                     });
-                 }
-                function configurarFocoScanner() {
-                    $('.chave-cte').off('keydown').on('keydown', function (e) {
-                        if (e.which === 13) { // 13 é o Enter
-                            e.preventDefault(); // Impede o Submit padrão do formulário
-                            $(this).blur();      // Tira o foco para forçar o OnTextChanged do ASP.NET
-                            return false;
+                        if (pane) {
+                            // Remove show/active de todos os painéis do grupo
+                            container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 'active'));
+                            pane.classList.add('show');
+                            pane.classList.add('active');
+                        } else {
+                            console.error("Painel não encontrado:", paneId);
                         }
-                    });
+                    }
                 }
+                configurarFocoScanner();
+            });
+
+            // 2. Configurar o evento de clique (sem usar o evento do Bootstrap que pode falhar)
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+                btn.onclick = function () {
+                    const target = this.getAttribute('data-bs-target');
+                    const container = this.closest('.upd-tabs-container');
+                    if (container) {
+                        const hf = container.querySelector('.hf-aba-ativa');
+                        if (hf) {
+                            hf.value = target;
+                            console.log("Novo estado salvo:", target);
+                        }
+                    }
+                };
+            });
+        }
+        function configurarFocoScanner() {
+            $('.chave-cte').off('keydown').on('keydown', function (e) {
+                if (e.which === 13) { // 13 é o Enter
+                    e.preventDefault(); // Impede o Submit padrão do formulário
+                    $(this).blur();      // Tira o foco para forçar o OnTextChanged do ASP.NET
+                    return false;
+                }
+            });
+        }
 
         // Chame isso dentro da sua função inicializarAbas()
-                 // Carregamento inicial
-                 document.addEventListener('DOMContentLoaded', inicializarAbas);
+        // Carregamento inicial
+        document.addEventListener('DOMContentLoaded', inicializarAbas);
 
-                 // Pós-Postback do UpdatePanel
-                 if (typeof Sys !== 'undefined') {
-                     var prm = Sys.WebForms.PageRequestManager.getInstance();
-                     prm.add_endRequest(function () {
-                         // Um pequeno delay de 10ms ajuda o DOM a "assentar" no UpdatePanel
-                         setTimeout(inicializarAbas, 10);
-                     });
-                 }
+        // Pós-Postback do UpdatePanel
+        if (typeof Sys !== 'undefined') {
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_endRequest(function () {
+                // Um pequeno delay de 10ms ajuda o DOM a "assentar" no UpdatePanel
+                setTimeout(inicializarAbas, 10);
+            });
+        }
     </script>
     <script type="text/javascript">
         function abrirModal() {
@@ -450,17 +450,17 @@
                 }
             }
         }
-    </script>  
-   <script type="text/javascript">
-       function moeda(i) {
-           var v = i.value.replace(/\D/g, ''); // Remove tudo o que não é dígito
-           v = (v / 100).toFixed(2) + '';      // Divide por 100 para criar os decimais
-           v = v.replace(".", ",");            // Troca ponto por vírgula
-           v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,"); // Formata milhares (milhões)
-           v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");           // Formata milhares
-           i.value = v;
-       }
-</script>
+    </script>
+    <script type="text/javascript">
+        function moeda(i) {
+            var v = i.value.replace(/\D/g, ''); // Remove tudo o que não é dígito
+            v = (v / 100).toFixed(2) + '';      // Divide por 100 para criar os decimais
+            v = v.replace(".", ",");            // Troca ponto por vírgula
+            v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,"); // Formata milhares (milhões)
+            v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");           // Formata milhares
+            i.value = v;
+        }
+    </script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -566,7 +566,7 @@
                                             </div>
                                             <asp:HiddenField ID="txtconformmessageValue" runat="server" />
                                         </div>
-                                       
+
                                         <div class="col-md-1">
                                             <div class="form-group">
                                                 <span class="details">CÓD./FROTA:</span>
@@ -592,18 +592,18 @@
                                             </div>
                                         </div>
 
-                                         <div class="col-md-1">
-                                             <div class="form-group">
-                                                 <span class="details">CONTATO:</span>
-                                                 <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold"  Style="text-align: center" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
-                                             </div>
-                                         </div>
-                                         <div class="col-md-2">
-                                             <div class="form-group">
-                                                 <span class="details">FONE CORPORATIVO:</span>
-                                                 <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold"  Style="text-align: center" ReadOnly="true"></asp:TextBox>
-                                             </div>
-                                         </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <span class="details">CONTATO:</span>
+                                                <asp:TextBox ID="txtCodFrota" runat="server" class="form-control font-weight-bold" Style="text-align: center" AutoPostBack="true" OnTextChanged="btnPesquisarContato_Click"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">FONE CORPORATIVO:</span>
+                                                <asp:TextBox ID="txtFoneCorp" runat="server" class="form-control font-weight-bold" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
                                         <div class="col-md-1">
                                             <br />
                                             <asp:Button ID="btnSalvar1" CssClass="btn btn-outline-success w-100" runat="server" OnClick="btnSalvar1_Click" Text="Atualizar" />
@@ -1041,8 +1041,8 @@
                                                                                         <asp:TextBox ID="cboExpedidor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("expedidor") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-2">
-    <asp:TextBox ID="txtCNPJExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_expedidor") %>'></asp:TextBox>
-</div>
+                                                                                        <asp:TextBox ID="txtCNPJExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_expedidor") %>'></asp:TextBox>
+                                                                                    </div>
                                                                                     <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cid_expedidor") %>'></asp:TextBox>
                                                                                     </div>
@@ -1060,8 +1060,8 @@
                                                                                         <asp:TextBox ID="cboDestinatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("clidestino") %>'></asp:TextBox>
                                                                                     </div>
                                                                                     <div class="col-md-2">
-    <asp:TextBox ID="txtCNPJDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_destinatario") %>'></asp:TextBox>
-</div>
+                                                                                        <asp:TextBox ID="txtCNPJDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("cnpj_destinatario") %>'></asp:TextBox>
+                                                                                    </div>
                                                                                     <div class="col-md-3">
                                                                                         <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true" Text='<%# Eval("ciddestino") %>'></asp:TextBox>
                                                                                     </div>
@@ -1159,32 +1159,18 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-md-7">
-    <div class="form-group">
-        <span class="details">Rota:</span>
-        <div class="input-group">
-            <asp:TextBox ID="txtRotaEntrega" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("rota_entrega") %>'></asp:TextBox>
-        </div>
-    </div>
-</div>
-
-
-                                                                                    <%--<div class="col-md-2" id="divComprovante" runat="server" visible="false">
+                                                                                      <div class="col-md-2">
+      <br />
+      <asp:Button ID="btnPedagioManual" runat="server" Text="Pedágio Manual" CssClass="btn btn-outline-danger w-100" CommandName="PedagioManual" CommandArgument='<%# Eval("carga") %>' />
+  </div>
+                                                                                    <div class="col-md-5">
                                                                                         <div class="form-group">
-                                                                                            <span class="details">Comprovante:</span>
+                                                                                            <span class="details">Rota:</span>
                                                                                             <div class="input-group">
-                                                                                                <asp:TextBox ID="lblVeiculo" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text=""></asp:TextBox>
+                                                                                                <asp:TextBox ID="txtRotaEntrega" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("rota_entrega") %>'></asp:TextBox>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-md-1" id="divValorPedagio" runat="server" visible="false">
-                                                                                        <div class="form-group">
-                                                                                            <span class="details">Valor Pedágio:</span>
-                                                                                            <div class="input-group">
-                                                                                                <asp:TextBox ID="lblQuant" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text=""></asp:TextBox>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>--%>
                                                                                 </div>
                                                                                 <div class="row g-3">
                                                                                     <div class="col-md-1">
@@ -1294,132 +1280,132 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-md-1">
-                                                                                            <br />
-                                                                                            <asp:Button ID="btnSalvarDadosColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="AtualizarColeta" CommandArgument='<%# Eval("carga") %>' />
-                                                                                        </div>
+                                                                                        <br />
+                                                                                        <asp:Button ID="btnSalvarDadosColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="AtualizarColeta" CommandArgument='<%# Eval("carga") %>' />
+                                                                                    </div>
 
                                                                                 </div>
                                                                                 <div class="row g-3">
-    <div class="col-md-12">
-        <div class="form-group">
-            <span class="details">Observações:</span>
-            <div class="input-group">
-                <asp:TextBox ID="TextBox1" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("observacao") %>'></asp:TextBox>
-            </div>
-        </div>
-    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <span class="details">Observações:</span>
+                                                                                            <div class="input-group">
+                                                                                                <asp:TextBox ID="TextBox1" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("observacao") %>'></asp:TextBox>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
 
                                                                             </div>
                                                                         </div>
 
-<div class="card card-outline card-info collapsed-card">
-<div class="card-header">
-<h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Detalhes da Coleta</h3>
-<div class="card-tools">
-<button type="button" class="btn btn-tool" data-card-widget="collapse">
-<i class="fas fa-plus"></i>
-</button>
-</div>
-<!-- /.card-tools -->
-</div>
-<!-- /.card-header -->
-<div class="card-body">
-<asp:UpdatePanel ID="updTabs" runat="server">
-<ContentTemplate>
-    <div class="upd-tabs-container">
-<input type="hidden" id="hfAbaAtiva" runat="server" class="hf-aba-ativa" />
-<!-- COLE AS ABAS AQUI -->
-<ul class="nav nav-tabs" role="tablist">
-<li class="nav-item">
-<button class="nav-link active" data-bs-toggle="tab" data-bs-target='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
-📦 Pedidos
-</button>
-</li>
-<li class="nav-item active">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
-🧾 Notas Fiscais
-</button>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
-🧾 CT-e / NFS-e / MDF-e
-</button>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
-Pedágio
-</button>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
-Krona
-</button>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabDespesa_" + ((RepeaterItem)Container).ItemIndex %>'>
-Despesa Motorista
-</button>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
-Histórico
-</button>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabAlteracao_" + ((RepeaterItem)Container).ItemIndex %>'>
-Alterações
-</button>
-</li>
-</ul>
-    
-<div class="tab-content border border-top-0 p-3">
-<!-- ABA PEDIDOS -->
-<div class="tab-pane fade show active" id='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
-<asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" DataKeyNames="pedido" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
-<Columns>
-<asp:BoundField DataField="pedido" HeaderText="Pedido" />
-<asp:BoundField DataField="emissao"
-HeaderText="Emissão"
-DataFormatString="{0:dd/MM/yyyy}" />
-<asp:BoundField DataField="peso" HeaderText="Peso" />
-<asp:BoundField DataField="material" HeaderText="Material" />
-<asp:BoundField DataField="portao" HeaderText="Portão" />
-<asp:TemplateField HeaderText="Motorista">
-<ItemTemplate>                                                                                                           
-    <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">
-    </asp:DropDownList>                                                                                                 
+                                                                        <div class="card card-outline card-info collapsed-card">
+                                                                            <div class="card-header">
+                                                                                <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Detalhes da Coleta</h3>
+                                                                                <div class="card-tools">
+                                                                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                                                        <i class="fas fa-plus"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <!-- /.card-tools -->
+                                                                            </div>
+                                                                            <!-- /.card-header -->
+                                                                            <div class="card-body">
+                                                                                <asp:UpdatePanel ID="updTabs" runat="server">
+                                                                                    <ContentTemplate>
+                                                                                        <div class="upd-tabs-container">
+                                                                                            <input type="hidden" id="hfAbaAtiva" runat="server" class="hf-aba-ativa" />
+                                                                                            <!-- COLE AS ABAS AQUI -->
+                                                                                            <ul class="nav nav-tabs" role="tablist">
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        📦 Pedidos
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item active">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        🧾 Notas Fiscais
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        🧾 CT-e / NFS-e / MDF-e
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        Pedágio
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        Krona
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabDespesa_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        Despesa Motorista
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        Histórico
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                                <li class="nav-item">
+                                                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target='<%# "tabAlteracao_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        Alterações
+                                                                                                    </button>
+                                                                                                </li>
+                                                                                            </ul>
 
-</ItemTemplate>
-  </asp:TemplateField>
-<asp:TemplateField HeaderText="Início">
-    <ItemTemplate>
-        <asp:TextBox ID="txtInicioCar" TextMode="DateTimeLocal" runat="server" 
-            CssClass="form-control hora-inicio" 
-            Text='<%# Eval("iniciocar") != DBNull.Value ? Convert.ToDateTime(Eval("iniciocar")).ToString("yyyy-MM-ddTHH:mm") : "" %>' ></asp:TextBox>
-    </ItemTemplate>
-</asp:TemplateField>
+                                                                                            <div class="tab-content border border-top-0 p-3">
+                                                                                                <!-- ABA PEDIDOS -->
+                                                                                                <div class="tab-pane fade show active" id='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <asp:GridView ID="gvPedidos" runat="server" CssClass="table table-sm table-striped" DataKeyNames="pedido" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
+                                                                                                        <Columns>
+                                                                                                            <asp:BoundField DataField="pedido" HeaderText="Pedido" />
+                                                                                                            <asp:BoundField DataField="emissao"
+                                                                                                                HeaderText="Emissão"
+                                                                                                                DataFormatString="{0:dd/MM/yyyy}" />
+                                                                                                            <asp:BoundField DataField="peso" HeaderText="Peso" />
+                                                                                                            <asp:BoundField DataField="material" HeaderText="Material" />
+                                                                                                            <asp:BoundField DataField="portao" HeaderText="Portão" />
+                                                                                                            <asp:TemplateField HeaderText="Motorista">
+                                                                                                                <ItemTemplate>
+                                                                                                                    <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2">
+                                                                                                                    </asp:DropDownList>
 
-<asp:TemplateField HeaderText="Fim">
-    <ItemTemplate>
-        <asp:TextBox ID="txtTermCar" TextMode="DateTimeLocal" runat="server" 
-            CssClass="form-control hora-fim" 
-            Text='<%# Eval("termcar") != DBNull.Value ? Convert.ToDateTime(Eval("termcar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
-    </ItemTemplate>
-</asp:TemplateField>
+                                                                                                                </ItemTemplate>
+                                                                                                            </asp:TemplateField>
+                                                                                                            <asp:TemplateField HeaderText="Início">
+                                                                                                                <ItemTemplate>
+                                                                                                                    <asp:TextBox ID="txtInicioCar" TextMode="DateTimeLocal" runat="server"
+                                                                                                                        CssClass="form-control hora-inicio"
+                                                                                                                        Text='<%# Eval("iniciocar") != DBNull.Value ? Convert.ToDateTime(Eval("iniciocar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
+                                                                                                                </ItemTemplate>
+                                                                                                            </asp:TemplateField>
 
-<asp:TemplateField HeaderText="Tempo">
-    <ItemTemplate>
-        <asp:TextBox ID="txtTempoTotal" runat="server" CssClass="form-control hora-total" Text='<%# Eval("duracao")%>'  tabIndex="-1"></asp:TextBox>
-    </ItemTemplate>
-</asp:TemplateField>
-</Columns>
-</asp:GridView>
-</div>
+                                                                                                            <asp:TemplateField HeaderText="Fim">
+                                                                                                                <ItemTemplate>
+                                                                                                                    <asp:TextBox ID="txtTermCar" TextMode="DateTimeLocal" runat="server"
+                                                                                                                        CssClass="form-control hora-fim"
+                                                                                                                        Text='<%# Eval("termcar") != DBNull.Value ? Convert.ToDateTime(Eval("termcar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
+                                                                                                                </ItemTemplate>
+                                                                                                            </asp:TemplateField>
 
-<div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
-    <!-- Conteúdo Notas Fiscais -->
-   <%-- <asp:Repeater ID="rptNotas" runat="server">
+                                                                                                            <asp:TemplateField HeaderText="Tempo">
+                                                                                                                <ItemTemplate>
+                                                                                                                    <asp:TextBox ID="txtTempoTotal" runat="server" CssClass="form-control hora-total" Text='<%# Eval("duracao")%>' TabIndex="-1"></asp:TextBox>
+                                                                                                                </ItemTemplate>
+                                                                                                            </asp:TemplateField>
+                                                                                                        </Columns>
+                                                                                                    </asp:GridView>
+                                                                                                </div>
+
+                                                                                                <div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo Notas Fiscais -->
+                                                                                                    <%-- <asp:Repeater ID="rptNotas" runat="server">
     <ItemTemplate>
 
         <asp:TextBox ID="txtChaveNF" runat="server"
@@ -1451,225 +1437,219 @@ DataFormatString="{0:dd/MM/yyyy}" />
 </asp:Repeater>--%>
 
 
-     <div class="row g-3">
-        <div class="col-md-6">
-           <asp:TextBox ID="txtChaveNF" runat="server"
-            CssClass="form-control"
-            AutoPostBack="true"
-    
-            placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
-            <!-- OnTextChanged="txtChaveNF_TextChanged" -->
-         </div>
-     </div>
-     <div class="row g-3">
-        <div class="col-md-3">
-            <label for="inputNotaFiscal" style="text-align: left">Chave de Acesso:</label>
-            <asp:Label ID="lblChaveNF" runat="server" />
-        </div>
-        <div class="col-md-2">
-            <label for="inputNotaFiscal" style="text-align: left">Nota Fiscal:</label>
-            <asp:Label ID="lblNumeroNF" runat="server" />
-        </div>
-        <div class="col-md-1">
-            <label for="inputNotaFiscal" style="text-align: left">Série:</label>
-            <asp:Label ID="lblSerieNF" runat="server" />
-        </div>
-        <div class="col-md-2">
-            <label for="inputNotaFiscal" style="text-align: left">Emissão:</label>
-            <asp:Label ID="lblEmissaoNF" runat="server" />
-        </div>
-        <div class="col-md-2">
-            <label for="inputNotaFiscal" style="text-align: left">Status:</label>
-            <asp:Label ID="lblStatusNF" runat="server" />
-        </div>        
-     </div>
-     <div class="row g-3">          
-        <div class="col-md-12">
-            <asp:GridView ID="gvProdutosNF" runat="server"
-                CssClass="table table-bordered"
-                AutoGenerateColumns="false">
-                <Columns>
-                    <asp:BoundField DataField="produto" HeaderText="Produto" />
-                    <asp:BoundField DataField="quantidade" HeaderText="Qtd" />
-                    <asp:BoundField DataField="peso" HeaderText="Peso" DataFormatString="{0:N3}" />
-                    <asp:BoundField DataField="valor" HeaderText="Valor" DataFormatString="{0:C}" />
-                </Columns>
-            </asp:GridView>
-        </div>
-     </div>
-     <div class="row g-3">          
-         <div class="col-md-3">
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-6">
+                                                                                                            <asp:TextBox ID="txtChaveNF" runat="server"
+                                                                                                                CssClass="form-control"
+                                                                                                                AutoPostBack="true"
+                                                                                                                placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
+                                                                                                            <!-- OnTextChanged="txtChaveNF_TextChanged" -->
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-3">
+                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Chave de Acesso:</label>
+                                                                                                            <asp:Label ID="lblChaveNF" runat="server" />
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Nota Fiscal:</label>
+                                                                                                            <asp:Label ID="lblNumeroNF" runat="server" />
+                                                                                                        </div>
+                                                                                                        <div class="col-md-1">
+                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Série:</label>
+                                                                                                            <asp:Label ID="lblSerieNF" runat="server" />
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Emissão:</label>
+                                                                                                            <asp:Label ID="lblEmissaoNF" runat="server" />
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Status:</label>
+                                                                                                            <asp:Label ID="lblStatusNF" runat="server" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <asp:GridView ID="gvProdutosNF" runat="server"
+                                                                                                                CssClass="table table-bordered"
+                                                                                                                AutoGenerateColumns="false">
+                                                                                                                <Columns>
+                                                                                                                    <asp:BoundField DataField="produto" HeaderText="Produto" />
+                                                                                                                    <asp:BoundField DataField="quantidade" HeaderText="Qtd" />
+                                                                                                                    <asp:BoundField DataField="peso" HeaderText="Peso" DataFormatString="{0:N3}" />
+                                                                                                                    <asp:BoundField DataField="valor" HeaderText="Valor" DataFormatString="{0:C}" />
+                                                                                                                </Columns>
+                                                                                                            </asp:GridView>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-3">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                        </div>
+                                                                                                        <br />
+                                                                                                        <div class="col-md-3">
+                                                                                                            <strong>Peso Total:</strong>
+                                                                                                            <asp:Label ID="lblPesoTotalNF" runat="server" />
 
-         </div>
-         <div class="col-md-3">
+                                                                                                            <br />
 
-         </div>
-         <div class="col-md-3">
+                                                                                                            <strong>Valor Total:</strong>
+                                                                                                            <asp:Label ID="lblValorTotalNF" runat="server" />
 
-         </div>
-         <br />
-         <div class="col-md-3">
-             <strong>Peso Total:</strong>
-                <asp:Label ID="lblPesoTotalNF" runat="server" />
-
-                <br />
-
-             <strong>Valor Total:</strong>
-                <asp:Label ID="lblValorTotalNF" runat="server" />
-
-         </div>
-     </div>     
+                                                                                                        </div>
+                                                                                                    </div>
 
 
 
-</div>
+                                                                                                </div>
 
-<div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'> 
-<!-- Conteúdo CT-e / NFS-e MDF-e -->
-<div class="form-group row">
-   <div class="col-md-4">
-       <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged"  placeholder="Chave de Acesso do CT-e (44 dígitos)" runat="server" maxlength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
-   </div>
-   <!-- NFS-e -->
-   <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">NFS-e:</label>
-    <div class="col-md-2">
-         <asp:TextBox ID="txtNFSe" runat="server" Text='<%# Eval("num_nfse")%>' CssClass="form-control" maxlength="11"></asp:TextBox>
-     </div>
-    <!-- MDF-e --> 
-    <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">MDF-e:</label>
-      <div class="col-md-4">
-        <%-- <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>--%>
+                                                                                                <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo CT-e / NFS-e MDF-e -->
+                                                                                                    <div class="form-group row">
+                                                                                                        <div class="col-md-4">
+                                                                                                            <asp:TextBox ID="txtChaveCte" CssClass="form-control chave-cte" OnTextChanged="txtChaveCte_TextChanged" placeholder="Chave de Acesso do CT-e (44 dígitos)" runat="server" MaxLength="44" AutoPostBack="true" autocomplete="off"></asp:TextBox>
+                                                                                                        </div>
+                                                                                                        <!-- NFS-e -->
+                                                                                                        <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">NFS-e:</label>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <asp:TextBox ID="txtNFSe" runat="server" Text='<%# Eval("num_nfse")%>' CssClass="form-control" MaxLength="11"></asp:TextBox>
+                                                                                                        </div>
+                                                                                                        <!-- MDF-e -->
+                                                                                                        <label for="inputmdfe" class="col-sm-1 col-form-label" style="text-align: right">MDF-e:</label>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <%-- <asp:TextBox ID="txtMDFe" runat="server" CssClass="form-control" Text='<%# Eval("mdfe")%>' maxlength="44"></asp:TextBox>--%>
 
-          <asp:TextBox ID="txtMDFe" runat="server"
-              CssClass="form-control"
-              Text='<%# Eval("mdfe")%>'
-              AutoPostBack="true"
-              placeholder="Chave de Acesso do MDFe (44 dígitos)"
-              OnTextChanged="txtMDFe_TextChanged"
-              MaxLength="44" />
-      </div>
-   </div>
+                                                                                                            <asp:TextBox ID="txtMDFe" runat="server"
+                                                                                                                CssClass="form-control"
+                                                                                                                Text='<%# Eval("mdfe")%>'
+                                                                                                                AutoPostBack="true"
+                                                                                                                placeholder="Chave de Acesso do MDFe (44 dígitos)"
+                                                                                                                OnTextChanged="txtMDFe_TextChanged"
+                                                                                                                MaxLength="44" />
+                                                                                                        </div>
+                                                                                                    </div>
 
-    <br>
+                                                                                                    <br></br>
+                                                                                                    <div class="row g-3">
+                                                                                                        <asp:HiddenField ID="hdflIdviagem" Value='<%# Eval("carga") %>' runat="server" />
+                                                                                                        <asp:GridView ID="gvCte" runat="server"
+                                                                                                            CssClass="table table-sm table-bordered mt-2"
+                                                                                                            AutoGenerateColumns="False"
+                                                                                                            GridLines="None">
+                                                                                                            <Columns>
+                                                                                                                <asp:BoundField DataField="uf_emissor" HeaderText="Estado" />
+                                                                                                                <asp:BoundField DataField="empresa_emissora" HeaderText="Filial" />
+                                                                                                                <asp:BoundField DataField="num_documento" HeaderText="Nº CT-e" />
+                                                                                                                <asp:BoundField DataField="serie_documento" HeaderText="Série" />
+                                                                                                                <asp:BoundField DataField="mes_ano_documento" HeaderText="Emissão" />
+                                                                                                                <asp:TemplateField HeaderText="Status">
+                                                                                                                    <ItemTemplate>
+                                                                                                                        <span class='<%# Eval("Status").ToString().Contains("Lido") ? "badge bg-warning" : "badge bg-success" %>'>
+                                                                                                                            <%# Eval("Status") %>
+                                                                                                                        </span>
+                                                                                                                    </ItemTemplate>
+                                                                                                                </asp:TemplateField>
+                                                                                                            </Columns>
+                                                                                                            <EmptyDataTemplate>
+                                                                                                                <div class="alert alert-info mt-2">Nenhum documento lido para esta carga.</div>
+                                                                                                            </EmptyDataTemplate>
+                                                                                                        </asp:GridView>
+                                                                                                    </div>
+                                                                                                </div>
 
-</br>
-<div class="row g-3">
-    <asp:HiddenField ID="hdflIdviagem" Value='<%# Eval("carga") %>' runat="server" />
-    <asp:GridView ID="gvCte" runat="server" 
-        CssClass="table table-sm table-bordered mt-2" 
-        AutoGenerateColumns="False" 
-        GridLines="None">
-        <Columns>
-         <asp:BoundField DataField="uf_emissor" HeaderText="Estado" />
-        <asp:BoundField DataField="empresa_emissora" HeaderText="Filial" />
-        <asp:BoundField DataField="num_documento" HeaderText="Nº CT-e" />
-        <asp:BoundField DataField="serie_documento" HeaderText="Série" />
-        <asp:BoundField DataField="mes_ano_documento" HeaderText="Emissão" />
-        <asp:TemplateField HeaderText="Status">
-                <ItemTemplate>
-                    <span class='<%# Eval("Status").ToString().Contains("Lido") ? "badge bg-warning" : "badge bg-success" %>'>
-                        <%# Eval("Status") %>
-                    </span>
-                </ItemTemplate>
-            </asp:TemplateField>
-        </Columns>
-        <EmptyDataTemplate>
-            <div class="alert alert-info mt-2">Nenhum documento lido para esta carga.</div>
-        </EmptyDataTemplate>
-    </asp:GridView>
-</div>
-</div>
+                                                                                                <div class="tab-pane fade" id='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo da aba Pedágio -->
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">IdViagem/Comprovante:</span>
+                                                                                                                <asp:TextBox ID="txtIdPedagio" class="form-control" runat="server" Text='<%# Eval("idpedagio") %>' ReadOnly="true"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Valor Creditado:</span>
+                                                                                                                <asp:TextBox ID="txtValorPedagio" class="form-control" runat="server" Text='<%# Eval("valorpedagio", "{0:C2}") %>' ReadOnly="true"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Emissão:</span>
+                                                                                                                <asp:TextBox ID="txtDtemissaoPedagio" class="form-control" runat="server" Text='<%# Eval("dtemissaopedagio", "{0:dd/MM/yyyy HH:mm}") %>' ReadOnly="true"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Emitido Por:</span>
+                                                                                                                <asp:TextBox ID="txtCreditoPedagio" class="form-control" runat="server" Text='<%# Eval("creditopedagio") %>' ReadOnly="true"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Observações:</span>
+                                                                                                                <asp:TextBox ID="txtHistoricoPedagio" TextMode="MultiLine" Rows="3" class="form-control" Text='<%# Eval("historicopedagio") %>' runat="server" ReadOnly="true"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
 
-<div class="tab-pane fade" id='<%# "tabPedagio_" + ((RepeaterItem)Container).ItemIndex %>'>
-<!-- Conteúdo da aba Pedágio -->
-<div class="row g-3">
-<div class="col-md-2">
-<div class="form-group">
-<span class="details">IdViagem/Comprovante:</span>
-<asp:TextBox ID="txtIdPedagio" class="form-control" runat="server" Text='<%# Eval("idpedagio") %>' ReadOnly="true"></asp:TextBox>
-</div>
-</div>
- <div class="col-md-2">
-    <div class="form-group">
-    <span class="details">Valor Creditado:</span>
-    <asp:TextBox ID="txtValorPedagio" class="form-control" runat="server" Text='<%# Eval("valorpedagio", "{0:C2}") %>' ReadOnly="true"></asp:TextBox>
-    </div>
- </div>
- <div class="col-md-2">
-   <div class="form-group">
-   <span class="details">Emissão:</span>
-   <asp:TextBox ID="txtDtemissaoPedagio" class="form-control" runat="server" Text='<%# Eval("dtemissaopedagio", "{0:dd/MM/yyyy HH:mm}") %>' ReadOnly="true" ></asp:TextBox>
-   </div>
- </div>
- <div class="col-md-3">
-   <div class="form-group">
-   <span class="details">Emitido Por:</span>
-   <asp:TextBox ID="txtCreditoPedagio" class="form-control" runat="server" Text='<%# Eval("creditopedagio") %>' ReadOnly="true"></asp:TextBox>
-   </div>
- </div>
-</div>
-<div class="row g-3">
-  <div class="col-md-12">
-     <div class="form-group">
-        <span class="details">Observações:</span>
-        <asp:TextBox ID="txtHistoricoPedagio" TextMode="MultiLine" Rows="3" class="form-control" Text='<%# Eval("historicopedagio") %>' runat="server" ReadOnly="true"></asp:TextBox>
-     </div>
-  </div>
-</div>
-</div>
+                                                                                                <div class="tab-pane fade" id='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo Krona -->
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Num. SM:</span>
+                                                                                                                <asp:TextBox ID="txtSM" class="form-control" Text='<%# Eval("num_sm") %>' runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Percurso:</span>
+                                                                                                                <asp:DropDownList
+                                                                                                                    ID="ddlPercurso"
+                                                                                                                    runat="server"
+                                                                                                                    CssClass="form-select">
 
-<div class="tab-pane fade" id='<%# "tabKrona_" + ((RepeaterItem)Container).ItemIndex %>'>
-<!-- Conteúdo Krona -->
-<div class="row g-3">
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Num. SM:</span>
-        <asp:TextBox ID="txtSM" class="form-control" Text='<%# Eval("num_sm") %>' runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Percurso:</span>
-        <asp:DropDownList 
-            ID="ddlPercurso" 
-            runat="server"
-            CssClass="form-select">
-    
-            <asp:ListItem Text="Selecione..." Value="" />
-            <asp:ListItem Text="Urbano" Value="Urbano" />
-            <asp:ListItem Text="Rodoviário" Value="Rodoriário" />
-        </asp:DropDownList>
-    </div>
-</div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Peso Total:</span>
-        <asp:TextBox ID="txtPeso" class="form-control" Text='<%# Eval("peso") %>' runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Valor Total:</span>
-        <asp:TextBox ID="txtValorTotal" class="form-control" Text='<%# Eval("valor_total") %>' onkeyup="moeda(this);" runat="server" ></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Previsão Inicio:</span>
-        <asp:TextBox ID="txtPrevisaoInicio" class="form-control" Text='<%# Eval("previsao_inicio_krona","{0:yyyy-MM-ddTHH:mm}") %>' TextMode="DateTimeLocal" runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="form-group">
-        <span class="details">Previsão Termino:</span>
-        <asp:TextBox ID="txtPrevisaoTermino" class="form-control" TextMode="DateTimeLocal" Text='<%# Eval("previsao_termino_krona","{0:yyyy-MM-ddTHH:mm}") %>' runat="server"></asp:TextBox>
-        </div>
-    </div>
-</div>
-<div class="row g-3">
-    
-    <div class="col-md-4">
-        <%--<div class="form-group">
+                                                                                                                    <asp:ListItem Text="Selecione..." Value="" />
+                                                                                                                    <asp:ListItem Text="Urbano" Value="Urbano" />
+                                                                                                                    <asp:ListItem Text="Rodoviário" Value="Rodoriário" />
+                                                                                                                </asp:DropDownList>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Peso Total:</span>
+                                                                                                                <asp:TextBox ID="txtPeso" class="form-control" Text='<%# Eval("peso") %>' runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Valor Total:</span>
+                                                                                                                <asp:TextBox ID="txtValorTotal" class="form-control" Text='<%# Eval("valor_total") %>' onkeyup="moeda(this);" runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Previsão Inicio:</span>
+                                                                                                                <asp:TextBox ID="txtPrevisaoInicio" class="form-control" Text='<%# Eval("previsao_inicio_krona","{0:yyyy-MM-ddTHH:mm}") %>' TextMode="DateTimeLocal" runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Previsão Termino:</span>
+                                                                                                                <asp:TextBox ID="txtPrevisaoTermino" class="form-control" TextMode="DateTimeLocal" Text='<%# Eval("previsao_termino_krona","{0:yyyy-MM-ddTHH:mm}") %>' runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row g-3">
+
+                                                                                                        <div class="col-md-4">
+                                                                                                            <%--<div class="form-group">
         <span class="details">Descrição da Rota:</span>
         <asp:DropDownList 
             ID="ddlRotaKrona" 
@@ -1679,62 +1659,63 @@ DataFormatString="{0:dd/MM/yyyy}" />
             OnSelectedIndexChanged="ddlRotaKrona_SelectedIndexChanged">
         </asp:DropDownList>
         </div>--%>
-        <span class="details">&nbsp;</span>
-        <asp:DropDownList ID="ddlRotaKrona"
-    runat="server"
-    CssClass="form-select select2"
-    >
-</asp:DropDownList>
+                                                                                                            <span class="details">&nbsp;</span>
+                                                                                                            <asp:DropDownList ID="ddlRotaKrona"
+                                                                                                                runat="server"
+                                                                                                                CssClass="form-select select2">
+                                                                                                            </asp:DropDownList>
 
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-        <span class="details">Enviada Por:</span>
-        <asp:TextBox ID="txtSmEnviadaPor" class="form-control" Text='<%# Eval("usu_envio_krona")%>' runat="server"></asp:TextBox>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <br />
-        <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" CommandName="EnviarSM" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Enviar SM" />
-    </div>
-</div>
-</div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Enviada Por:</span>
+                                                                                                                <asp:TextBox ID="txtSmEnviadaPor" class="form-control" Text='<%# Eval("usu_envio_krona")%>' runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <br />
+                                                                                                            <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" CommandName="EnviarSM" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Enviar SM" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
 
-<div class="tab-pane fade" id='<%# "tabDespesas_" + ((RepeaterItem)Container).ItemIndex %>'>
-    <!-- Conteúdo Despesa Motorista -->
-</div>
+                                                                                                <div class="tab-pane fade" id='<%# "tabDespesas_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo Despesa Motorista -->
+                                                                                                </div>
 
-<div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
-    <!-- Conteúdo Histórico -->
-    <div class="row g-3">
-        <div class="col-md-12">
-            <div class="form-group">
-                <span class="details">Observações:</span>
-                <asp:TextBox ID="txtHistoricoObservacao" Text='<%# Eval("observacao") %>' TextMode="MultiLine" Rows="4" class="form-control" runat="server"></asp:TextBox>
-            </div>
-        </div>
-</div>
+                                                                                                <div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo Histórico -->
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <span class="details">Observações:</span>
+                                                                                                                <asp:TextBox ID="txtHistoricoObservacao" Text='<%# Eval("observacao") %>' TextMode="MultiLine" Rows="4" class="form-control" runat="server"></asp:TextBox>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
 
-    
-</div>
 
-<div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
-    <!-- Conteúdo Alterações -->
-</div>
-                                                                                        
-</div>
-                                                                                                <div class="row g-3">
-                                                                                        <div class="col-md-10"></div>
-                                                                                        <div class="col-md-2">
-    <br />
-    <asp:Button ID="Button1" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="AtualizarAbas" CommandArgument='<%# Eval("carga") %>' />
-</div></div></div>
-</div>
-</ContentTemplate>
-    
-</asp:UpdatePanel>
-</div>
-</div>
+                                                                                                </div>
+
+                                                                                                <div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                    <!-- Conteúdo Alterações -->
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            <div class="row g-3">
+                                                                                                <div class="col-md-10"></div>
+                                                                                                <div class="col-md-2">
+                                                                                                    <br />
+                                                                                                    <asp:Button ID="Button1" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="AtualizarAbas" CommandArgument='<%# Eval("carga") %>' />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                    </ContentTemplate>
+
+                                                                                </asp:UpdatePanel>
+                                                                            </div>
+                                                                        </div>
 
 
 
@@ -1777,52 +1758,52 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                 </div>
                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                             </div>
-                                                                                        </div>                                                                                        
+                                                                                        </div>
                                                                                         <div class="col-md-2">
-    <div class="form-group">
-        <span class="details">Data e Hora da Coleta:<asp:Label ID="Label2" runat="server" Text=""></asp:Label></span>
-        <div class="input-group">
-            <div class="input-group">
-                <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("data_hora_coleta","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center" ReadOnly="true"></asp:TextBox>
-            </div>
+                                                                                            <div class="form-group">
+                                                                                                <span class="details">Data e Hora da Coleta:<asp:Label ID="Label2" runat="server" Text=""></asp:Label></span>
+                                                                                                <div class="input-group">
+                                                                                                    <div class="input-group">
+                                                                                                        <asp:TextBox ID="txtDataHoraColeta" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("data_hora_coleta","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                                                                                    </div>
 
-        </div>
-        <span class="msg-erro text-danger" style="display: none;"></span>
-    </div>
+                                                                                                </div>
+                                                                                                <span class="msg-erro text-danger" style="display: none;"></span>
                                                                                             </div>
+                                                                                        </div>
                                                                                         <div class="col-md-2">
-    <div class="form-group">
-        <span class="details">Núm. CVA:</span>
-        <div class="input-group">
-            <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
-        </div>
-    </div>
-</div>
-                                                                                                                        
-
-                                                            <div class="col-md-2">
-    <div class="form-group">
-        <span class="details">Veículo Disponível:<asp:Label ID="Label3" runat="server" Text=""></asp:Label></span>
-        <div class="input-group">
-            <div class="input-group">
-                <asp:TextBox ID="txtVeiculoDisponivel" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("disponivel_solicitacao","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
-            </div>
-
-        </div>
-        <span class="msg-erro text-danger" style="display: none;"></span>
-    </div>
-</div>
-
-                                                                                       <div class="col-md-2">
-                                                                                                <div class="form-group">
-                                                                                                    <span class="">Status:</span>
-                                                                                                    <asp:HiddenField ID="hdfStatus" Value='<%# Eval("status") %>' runat="server" />
-                                                                                                    <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control ddlStatus">
-                                                                                                    </asp:DropDownList>
+                                                                                            <div class="form-group">
+                                                                                                <span class="details">Núm. CVA:</span>
+                                                                                                <div class="input-group">
+                                                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
                                                                                                 </div>
                                                                                             </div>
+                                                                                        </div>
 
-                                                                                        
+
+                                                                                        <div class="col-md-2">
+                                                                                            <div class="form-group">
+                                                                                                <span class="details">Veículo Disponível:<asp:Label ID="Label3" runat="server" Text=""></asp:Label></span>
+                                                                                                <div class="input-group">
+                                                                                                    <div class="input-group">
+                                                                                                        <asp:TextBox ID="txtVeiculoDisponivel" runat="server" TextMode="DateTimeLocal" Text='<%# Eval("disponivel_solicitacao","{0:yyyy-MM-ddTHH:mm}") %>' CssClass="form-control gate" Style="text-align: center"></asp:TextBox>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                                <span class="msg-erro text-danger" style="display: none;"></span>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div class="col-md-2">
+                                                                                            <div class="form-group">
+                                                                                                <span class="">Status:</span>
+                                                                                                <asp:HiddenField ID="hdfStatus" Value='<%# Eval("status") %>' runat="server" />
+                                                                                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control ddlStatus">
+                                                                                                </asp:DropDownList>
+                                                                                            </div>
+                                                                                        </div>
+
+
                                                                                     </div>
 
                                                                                     <div class="row g-3">
@@ -1863,7 +1844,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                                                 <div class="input-group">
                                                                                                                     <asp:TextBox ID="txtChegadaDestino" runat="server"
                                                                                                                         Text='<%# Bind("chegadadestino", "{0:yyyy-MM-ddTHH:mm}") %>'
-                                                                                                                        CssClass="form-control chegada-destino"  TextMode="DateTimeLocal" onchange="validarDatas(this)" />
+                                                                                                                        CssClass="form-control chegada-destino" TextMode="DateTimeLocal" onchange="validarDatas(this)" />
 
                                                                                                                 </div>
                                                                                                                 <span class="msg-erro text-danger" style="display: none;"></span>
@@ -1920,10 +1901,10 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                                                                     <div class="row g-3">
                                                                                         <div class="col-md-10"></div>
                                                                                         <div class="col-md-2">
-    <br />
-    <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
-</div>
-<%--<div class="col-md-1">
+                                                                                            <br />
+                                                                                            <asp:Button ID="btnAtualizarColeta" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
+                                                                                        </div>
+                                                                                        <%--<div class="col-md-1">
     <br />
     <asp:Button ID="WhatsApp" runat="server" Text="WhatsApp" CssClass="btn btn-outline-success w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
 </div>                                                                                                                                                                             <div class="col-md-1">
@@ -1931,7 +1912,8 @@ DataFormatString="{0:dd/MM/yyyy}" />
     <asp:Button ID="btnOrdemColeta" runat="server" Text="Impr. O.C." CommandName="Coletas" CommandArgument='<%# Eval("carga") %>' CssClass="btn btn-outline-warning w-100" />
 
 </div>
-  --%>                                                                                  </div>
+                                                                                        --%>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1977,7 +1959,7 @@ DataFormatString="{0:dd/MM/yyyy}" />
                                     </div>
                                 </div>
                                 <div class="row g-3">
-                                    
+
 
                                     <div class="col-md-3">
                                         <br />
@@ -2272,5 +2254,6 @@ DataFormatString="{0:dd/MM/yyyy}" />
             </div>
         </section>
     </div>
-     </span></asp:Content>
+    </span>
+</asp:Content>
 

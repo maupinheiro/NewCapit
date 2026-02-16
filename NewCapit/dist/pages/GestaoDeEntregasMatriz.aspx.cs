@@ -873,7 +873,8 @@ namespace NewCapit.dist.pages
         }
         protected void btnBaixarMDFe_Click(object sender, EventArgs e)
         {
-            string usuario = Session["usuario"]?.ToString() ?? "Sistema";
+            
+            string usuario = Session["UsuarioLogado"].ToString() ?? "Sistema";
             bool selecionouAlgum = false;
 
             // Percorre cada linha da Grid
@@ -917,7 +918,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // Importante: Filtramos pelo ID da linha selecionada
-                string sql = @"UPDATE tb_sua_tabela 
+                string sql = @"UPDATE tbcargas 
                        SET mdfe_situacao = 'Baixado', 
                            mdfe_baixado = @usuario, 
                            mdfe_data_baixa = GETDATE() 

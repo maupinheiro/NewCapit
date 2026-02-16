@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NewCAPIT | Logístia</title>
+    <title>NewCAPIT | Logística</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap JS + jQuery -->
@@ -537,6 +537,10 @@
                                             <i class="fas fa-road nav-icon"></i>
                                             <p>Distância entre Cidades</p>
                                         </a>
+                                        <a href="/dist/pages/GerenciarRotasKrona.aspx" class="nav-link">
+                                            <i class="fas fa-map-marker-alt nav-icon"></i>
+                                            <p>Gerenciar Rotas Krona</p>
+                                        </a>
                                     </li>
                                 </ul>
                             </li>
@@ -600,7 +604,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/GestaoDeMultas.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-traffic-light nav-icon"></i>
                                             <p>Gestão de Multas</p>
                                         </a>
                                     </li>

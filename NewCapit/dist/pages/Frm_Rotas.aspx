@@ -1,221 +1,179 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_Rotas.aspx.cs" Inherits="NewCapit.dist.pages.Frm_Rotas" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function aplicarMascara(input, mascara) {
-                input.addEventListener("input", function () {
-                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
-                    let resultado = "";
-                    let posicao = 0;
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-                    for (let i = 0; i < mascara.length; i++) {
-                        if (mascara[i] === "0") {
-                            if (valor[posicao]) {
-                                resultado += valor[posicao];
-                                posicao++;
-                            } else {
-                                break;
-                            }
-                        } else {
-                            resultado += mascara[i];
-                        }
-                    }
-
-                    input.value = resultado;
-                });
-            }
-
-            // Pegando os elementos no ASP.NET            
-            let txtDuracao = document.getElementById("<%= txtDuracao.ClientID %>");
-            if (txtDuracao) aplicarMascara(txtDuracao, "000:00:00");
-        });
-    </script>
     <div class="content-wrapper">
+
         <!-- Main content -->
-        <section class="content">
-
-            <div class="container-fluid">
+        <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />--%>
+        <br />
+        <div class="col-md-12">
+            <div class="card card-info">
+                <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
+                    <h3 class="card-title">
+                        <h3 class="card-title"><i class="fas fa-route"></i>&nbsp;GERENCIAR ROTAS</h3>
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
                 <br />
-                <div id="toastContainer" class="alert alert-warning alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
-                </div>
-                <div class="card card-info">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-map-marker-alt"></i>&nbsp;ROTAS - NOVO CADASTRO</h3>
+                <br />
+                <br />
+                <br />
+
+                <div class="container-fluid mt-4">
+                    <div id="divMsg" runat="server"
+                        class="alert alert-info alert-dismissible fade show mt-3"
+                        role="alert" style="display: none;">
+                        <span id="lblMsgGeral" runat="server"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                </div>
-                <div class="card-header">
-                    <form class="form-horizontal">
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
-                                <div class="col-sm-1">
-                                    <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
-                                </div>
-                                <%--<div class="col-sm-4">
-                                </div>--%>
-                                <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">DESCRIÇÃO DA ROTA:</label>
-                                <div class="col-sm-8">
-                                    <asp:TextBox ID="txtDesc_Rota" runat="server" CssClass="form-control" Style="text-align: left" ReadOnly="true"></asp:TextBox>
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-xxl-10">
+
+                            <div class="card shadow-lg border-0">
+                                <div class="card-header text-white py-3" style="background-color: #A020F0; font-weight: bold;">
+                                    <h5 class="mb-0 fw-bold">Atualizar Rota
+                                    </h5>
                                 </div>
 
-                            </div>
-                            <!-- REMETENTE -->
-                            <div class="form-group row">
-                                <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">REMETENTE:</label>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodRemetente_TextChanged"></asp:TextBox>
-                                </div>
-                                <div class="col-md-5">
-                                    <asp:DropDownList ID="cboRemetente" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRemetente_SelectedIndexChanged"></asp:DropDownList>
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
+                                <div class="card-body px-4 py-4">
+                                    <div class="form-group row">
+                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
+                                        <div class="col-sm-1">
+                                            <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                        </div>
 
-                            </div>
-                            <!-- EXPEDIDOR -->
-                            <div class="form-group row">
-                                <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">EXPEDIDOR:</label>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodExpedidor" runat="server" CssClass="form-control" OnTextChanged="txtCodExpedidor_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                </div>
-                                <div class="col-md-5">
-                                    <asp:DropDownList ID="cboExpedidor" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboExpedidor_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:TextBox ID="txtCidExpedidor" runat="server" CssClass="form-control" ReadOnly ="true"></asp:TextBox>
-                                </div>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFExpedidor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                            </div>
-                            <!-- DESTINATARIO -->
-                            <div class="form-group row">
-                                <label for="inputDestinatario" class="col-sm-1 col-form-label" style="text-align: right">DESTINATÁRIO:</label>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodDestinatario" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodDestinatario_TextChanged"></asp:TextBox>
-                                </div>
-                                <div class="col-md-5">
-                                    <asp:DropDownList ID="cboDestinatario" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboDestinatario_SelectedIndexChanged"></asp:DropDownList>
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:TextBox ID="txtMunicipioDestinatario" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFDestinatario" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                            </div>
-                            <!-- RECEBEDOR -->
-                            <div class="form-group row">
-                                <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">RECEBEDOR:</label>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtCodRecebedor" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodRecebedor_TextChanged"></asp:TextBox>
-                                </div>
-                                <div class="col-md-5">
-                                    <asp:DropDownList ID="cboRecebedor" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRecebedor_SelectedIndexChanged"></asp:DropDownList>
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:TextBox ID="txtCidRecebedor" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                                <div class="col-md-1">
-                                    <asp:TextBox ID="txtUFRecebedor" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="inputDistancia" class="col-sm-2 col-form-label">DISTÂNCIA(KM):</label>
-                                <asp:TextBox ID="txtDistancia" class="form-control" Style="text-align: center" runat="server" ReadOnly="true"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <label for="inputDuracao" class="col-sm-1 col-form-label">DURAÇÃO:</label>
-                                <asp:TextBox ID="txtDuracao" class="form-control" Style="text-align: center" runat="server" placeholder="000:00:00"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="inputDistancia" class="col-sm-2 col-form-label">DESLOCAMENTO:</label>
-                                <asp:DropDownList ID="cboDeslocamento" runat="server" CssClass="form-control" ReadOnly="true">
-                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                    <asp:ListItem Value="MUNICIPAL" Text="MUNICIPAL"></asp:ListItem>
-                                    <asp:ListItem Value="INTERMUNICIAPAL" Text="INTERMUNICIAPAL"></asp:ListItem>
-                                    <asp:ListItem Value="INTERESTADUAL" Text="INTERESTADUAL"></asp:ListItem>
-                                    <asp:ListItem Value="INTERNACIONAL" Text="INTERNACIONAL"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">STATUS:</label>
-                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" ReadOnly="true">
-                                    <asp:ListItem Value="ATIVA" Text="ATIVO"></asp:ListItem>
-                                    <asp:ListItem Value="INATIVA" Text="INATIVO"></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CADASTRO:</label>
-                                <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
-                            </div>
-                        </div>
+                                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">DESCRIÇÃO DA ROTA:</label>
+                                        <div class="col-sm-3">
+                                            <asp:TextBox ID="txtDesc_Rota" runat="server" CssClass="form-control" Style="text-align: left" ReadOnly="true"></asp:TextBox>
+                                        </div>
+
+                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CADASTRO:</label>
+                                        <div class="col-sm-2">
+                                            <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                        </div>
+
+                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">STATUS:</label>
+                                        <div class="col-sm-1">
+                                            <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
+                                                <asp:ListItem Value="ATIVA" Text="ATIVO"></asp:ListItem>
+                                                <asp:ListItem Value="INATIVA" Text="INATIVO"></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </div>
 
 
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">CADASTRADO EM:</span>
-                                <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" readonly="true"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">POR:</span>
-                                <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                            </div>
-                        </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <span class="details">ATUALIZADO EM:</span>
-                                <asp:Label ID="lbDtAtualizacao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
+                                    </div>
+
+                                    <hr />
+                                    <h6 class="fw-bold text-secondary mb-3">DADOS:</h6>
+                                    <div class="row align-items-end mb-12">
+                                        <div class="form-group row">
+                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Deslocamento:</label>
+                                            <div class="col-md-2">
+                                                <asp:DropDownList ID="cboDeslocamento" runat="server" CssClass="form-control">
+                                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                                    <asp:ListItem Value="MUNICIPAL" Text="MUNICIPAL"></asp:ListItem>
+                                                    <asp:ListItem Value="INTERMUNICIAPAL" Text="INTERMUNICIAPAL"></asp:ListItem>
+                                                    <asp:ListItem Value="INTERESTADUAL" Text="INTERESTADUAL"></asp:ListItem>
+                                                    <asp:ListItem Value="INTERNACIONAL" Text="INTERNACIONAL"></asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-end mb-12">
+                                        <div class="form-group row">
+                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Distância(KM):</label>
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtDistancia" class="form-control" Style="text-align: center" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-end mb-12">
+                                        <div class="form-group row">
+                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Transit Time:</label>
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtDuracao" class="form-control" Style="text-align: center" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-end mb-12">
+                                        <div class="form-group row">
+                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Pedagiada:</label>
+                                            <div class="col-md-2">
+                                                <asp:DropDownList ID="ddlPedagio" runat="server" CssClass="form-control">
+                                                    <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+                                                    <asp:ListItem Value="NÃO" Text="NÃO"></asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="row g-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">CADASTRADO EM:</span>
+                                                <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" readonly="true"></asp:Label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <span class="details">POR:</span>
+                                                <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">ATUALIZADO EM:</span>
+                                                <asp:Label ID="lbDtAtualizacao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <span class="details">POR:</span>
+                                                <asp:TextBox ID="txtAltCad" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <asp:Button ID="btnAlterar" runat="server" OnClick="btnAlterar_Click" CssClass="btn btn-outline-success btn-lg w-100" Text="Atualizar" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="ConsultaRotas.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
+                                        </a>
+                                    </div>
+                                </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <span class="details">POR:</span>
-                                <asp:TextBox ID="txtAltCad" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-1">
-                            <asp:Button ID="btnAlterar" runat="server" OnClick="btnAlterar_Click" CssClass="btn btn-outline-success btn-lg" Text="Alterar" />
-                        </div>
-                        <div class="col-md-1">
-                            <a href="ConsultaRotas.aspx" class="btn btn-outline-danger btn-lg">Sair               
-                            </a>
+                            
                         </div>
                     </div>
                 </div>
-                </div>
-        </section>
-    </div>
-
+            </div>
+        </div>       
+    </div>   
 </asp:Content>
