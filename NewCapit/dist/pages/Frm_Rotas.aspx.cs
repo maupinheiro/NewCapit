@@ -106,17 +106,23 @@ namespace NewCapit.dist.pages
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         // parâmetros
-                        cmd.Parameters.AddWithValue("@desc_rota", txtDesc_Rota.Text.Trim());
+                        cmd.Parameters.AddWithValue("@desc_rota", RemoverAcentos(txtDesc_Rota.Text.Trim()));
                         cmd.Parameters.AddWithValue("@distancia", txtDistancia.Text.Trim().Replace(',', '.'));
                         TimeSpan tempo;
 
-                        if (TimeSpan.TryParse(txtDuracao.Text, out tempo))
+                        string valorDigitado = txtDuracao.Text.Trim();
+
+                        // Validação mínima no C# antes de mandar pro SQL
+                        if (!string.IsNullOrEmpty(valorDigitado) && valorDigitado.Contains(":"))
                         {
-                            cmd.Parameters.Add("@tempo", SqlDbType.Time).Value = tempo;
+                            // Se você mudou para NVARCHAR, pode mandar a string direto, 
+                            // mas passe por um filtro básico:
+                            cmd.Parameters.Add("@tempo", SqlDbType.NVarChar).Value = valorDigitado+"";
                         }
                         else
                         {
-                            throw new Exception("Tempo inválido. Use formato HH:mm:ss");
+                            // Caso alguém tenha burlado a máscara
+                            MostrarMsg("O formato do tempo está incorreto.");
                         }
                         cmd.Parameters.AddWithValue("@deslocamento", cboDeslocamento.SelectedItem.Text);
                         cmd.Parameters.AddWithValue("@pedagio", ddlPedagio.SelectedItem.Text);
@@ -128,9 +134,43 @@ namespace NewCapit.dist.pages
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
+
+                        MostrarMsg("Rota alterada com sucesso.", "success");
                     }
                 }
             }
-        }        
+        }
+        protected void MostrarMsg(string mensagem, string tipo = "warning")
+        {
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgGeral.InnerText = mensagem;
+            divMsg.Style["display"] = "block";
+
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsg');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
+
+        public static string RemoverAcentos(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                return texto;
+
+            var normalized = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
     }
 }
