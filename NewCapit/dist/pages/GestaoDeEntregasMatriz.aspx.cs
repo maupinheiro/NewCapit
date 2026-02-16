@@ -873,7 +873,8 @@ namespace NewCapit.dist.pages
         }
         protected void btnBaixarMDFe_Click(object sender, EventArgs e)
         {
-            string usuario = Session["usuario"]?.ToString() ?? "Sistema";
+            
+            string usuario = Session["UsuarioLogado"].ToString() ?? "Sistema";
             bool selecionouAlgum = false;
 
             // Percorre cada linha da Grid

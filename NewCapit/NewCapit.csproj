@@ -390,6 +390,7 @@
     <Content Include="dist\pages\Frm_DistanciaEntreCidades.aspx" />
     <Content Include="dist\pages\Frm_EditarColeta.aspx" />
     <Content Include="dist\pages\Frm_EditarColetaMatriz.aspx" />
+    <Content Include="dist\pages\Frm_EditarRotaKrona.aspx" />
     <Content Include="dist\pages\Frm_GerarTXT.aspx" />
     <Content Include="dist\pages\Frm_Impressao_Motorista.aspx" />
     <Content Include="dist\pages\Frm_ImpSolVWMatriz.aspx" />
@@ -397,6 +398,7 @@
     <Content Include="dist\pages\Frm_OrdemColetaCNT.aspx" />
     <Content Include="dist\pages\Frm_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx" />
+    <Content Include="dist\pages\GerenciarRotasKrona.aspx" />
     <Content Include="dist\pages\GestaoDeCargasMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeEntregasMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeMultas.aspx" />
@@ -4844,6 +4846,13 @@
     <Compile Include="dist\pages\Frm_EditarColetaMatriz.aspx.designer.cs">
       <DependentUpon>Frm_EditarColetaMatriz.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\Frm_EditarRotaKrona.aspx.cs">
+      <DependentUpon>Frm_EditarRotaKrona.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_EditarRotaKrona.aspx.designer.cs">
+      <DependentUpon>Frm_EditarRotaKrona.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\Frm_GerarTXT.aspx.cs">
       <DependentUpon>Frm_GerarTXT.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4892,6 +4901,13 @@
     </Compile>
     <Compile Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx.designer.cs">
       <DependentUpon>GerarTabelaDeAvaliacaoMotoristas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GerenciarRotasKrona.aspx.cs">
+      <DependentUpon>GerenciarRotasKrona.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GerenciarRotasKrona.aspx.designer.cs">
+      <DependentUpon>GerenciarRotasKrona.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoDeCargasMatriz.aspx.cs">
       <DependentUpon>GestaoDeCargasMatriz.aspx</DependentUpon>
