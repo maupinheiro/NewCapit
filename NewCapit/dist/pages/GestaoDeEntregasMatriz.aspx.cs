@@ -792,7 +792,7 @@ namespace NewCapit.dist.pages
 
         protected void btnAbrirMdfe_Click(object sender, EventArgs e)
         {
-            ddlFiltroStatus.SelectedValue = "Todos";
+            ddlFiltroStatus.SelectedValue = "Pendente";
             CarregarMdfe();
             ReabrirModal();
 
@@ -902,8 +902,10 @@ namespace NewCapit.dist.pages
                 // Recarrega a grid para refletir as mudanças
                 CarregarMdfe(); // Chame sua função que preenche a gvMdfe
 
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
-                    "$('#modalMdfe').modal('hide'); alert('MDF-e(s) baixado(s) com sucesso!');", true);
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
+                //    "$('#modalMdfe').modal('hide'); alert('MDF-e(s) baixado(s) com sucesso!');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharEDesbloquear",
+                    "$('#modalMdfe').modal('hide'); $('body').removeClass('modal-open'); $('.modal-backdrop').remove();", true);
             }
             else
             {
@@ -934,7 +936,22 @@ namespace NewCapit.dist.pages
         }
 
         protected void btnCancelarMDFe_Click(object sender, EventArgs e)
-        {            
+        {
+            //        string sql = @"
+            //UPDATE tbcargas
+            //    SET mdfe = NULL,
+            //        mdfe_situacao = NULL,
+            //        mdfe_empresa = NULL,
+            //        mdfe_numero = NULL,
+            //        mdfe_serie = NULL,
+            //        mdfe_uf = NULL,
+            //        mdfe_dv = NULL,
+            //        mdfe_baixado = NULL,
+            //        mdfe_data_baixa = NULL
+            //    WHERE mdfe IS NOT NULL
+            //";
+
+            //        ExecutarSql(sql, null);
             ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
                     "$('#modalMdfe').modal('hide');", true);
         }

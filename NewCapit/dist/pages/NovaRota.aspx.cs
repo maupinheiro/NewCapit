@@ -521,9 +521,9 @@ namespace NewCapit.dist.pages
                 CultureInfo.InvariantCulture);
 
             string descr_rota =
-                ddlCidadeOrigem.SelectedItem.Text.ToUpper() + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
+                RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
                 " X " +
-                ddlCidadeDestino.SelectedItem.Text.ToUpper() + "/" + ddlUfDestino.SelectedItem.Text;
+                RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "/" + ddlUfDestino.SelectedItem.Text;
 
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))

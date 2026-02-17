@@ -11,6 +11,28 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function mascaraDuracao(campo) {
+            let valor = campo.value.replace(/\D/g, "");
+
+            // limita tamanho se quiser (ex: até 9999 horas = 4 dígitos + 4 de mmss)
+            if (valor.length > 8)
+                valor = valor.substring(0, 8);
+
+            if (valor.length <= 2) {
+                campo.value = valor;
+            }
+            else if (valor.length <= 4) {
+                campo.value = valor.substring(0, valor.length - 2) + ":" + valor.substring(valor.length - 2);
+            }
+            else {
+                campo.value = valor.substring(0, valor.length - 4) + ":" +
+                    valor.substring(valor.length - 4, valor.length - 2) + ":" +
+                    valor.substring(valor.length - 2);
+            }
+        }
+    </script>
+
 
     <div class="content-wrapper">
 
@@ -30,9 +52,7 @@
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                            <i class="fas fa-times"></i>
-                        </button>
+                      
                     </div>
                     <!-- /.card-tools -->
                 </div>
@@ -114,7 +134,14 @@
                                         <div class="form-group row">
                                             <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Transit Time:</label>
                                             <div class="col-md-2">
-                                                <asp:TextBox ID="txtDuracao" class="form-control" Style="text-align: center" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtDuracao" 
+                                                    CssClass="form-control" 
+                                                    Style="text-align: center"
+                                                    runat="server"
+                                                    onkeyup="mascaraDuracao(this)"
+                                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                                </asp:TextBox>
+
                                             </div>
                                         </div>
                                     </div>
