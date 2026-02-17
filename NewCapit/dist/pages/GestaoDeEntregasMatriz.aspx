@@ -430,6 +430,7 @@
                 <asp:GridView ID="gvMdfe" runat="server" OnRowCommand="gvMdfe_RowCommand"
                     CssClass="table table-bordered table-sm"
                     AutoGenerateColumns="false"
+                    HtmlEncode="false"
                     DataKeyNames="id">
 
                     <Columns>
@@ -446,13 +447,23 @@
                         </asp:TemplateField>    
 
                         <asp:BoundField DataField="mdfe_numero" HeaderText="Número" />
-                        <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />
-                        
+                        <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />                       
+                     
                         <asp:TemplateField HeaderText="Situação MDF-e">
                             <ItemTemplate>
-                                <span class='badge <%# Eval("mdfe_situacao").ToString() == "Baixado" ? "bg-success" : "bg-warning text-dark" %>'>
-                                    <%# Eval("mdfe_situacao") ?? "Pendente" %>
-                                </span>
+                                <span class='badge <%# 
+                            (Eval("mdfe_situacao") == null || Eval("mdfe_situacao") == DBNull.Value)
+                                ? "bg-warning text-dark"
+                                : Eval("mdfe_situacao").ToString().Trim().ToUpper() == "BAIXADO"
+                                    ? "bg-success"
+                                    : "bg-warning text-dark"
+                        %>'>
+
+                            <%# Eval("mdfe_situacao") == null || Eval("mdfe_situacao") == DBNull.Value
+                                ? "Pendente"
+                                : Eval("mdfe_situacao") %>
+
+                        </span>
                             </ItemTemplate>
                         </asp:TemplateField>
 

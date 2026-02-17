@@ -792,7 +792,7 @@ namespace NewCapit.dist.pages
 
         protected void btnAbrirMdfe_Click(object sender, EventArgs e)
         {
-            ddlFiltroStatus.SelectedValue = "Pendente";
+            ddlFiltroStatus.SelectedValue = "Todos";
             CarregarMdfe();
             ReabrirModal();
 
@@ -934,22 +934,7 @@ namespace NewCapit.dist.pages
         }
 
         protected void btnCancelarMDFe_Click(object sender, EventArgs e)
-        {
-            //        string sql = @"
-            //UPDATE tbcargas
-            //    SET mdfe = NULL,
-            //        mdfe_situacao = NULL,
-            //        mdfe_empresa = NULL,
-            //        mdfe_numero = NULL,
-            //        mdfe_serie = NULL,
-            //        mdfe_uf = NULL,
-            //        mdfe_dv = NULL,
-            //        mdfe_baixado = NULL,
-            //        mdfe_data_baixa = NULL
-            //    WHERE mdfe IS NOT NULL
-            //";
-
-            //        ExecutarSql(sql, null);
+        {            
             ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
                     "$('#modalMdfe').modal('hide');", true);
         }
@@ -1021,6 +1006,35 @@ namespace NewCapit.dist.pages
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+        protected string GetSituacaoMDFE(object obj)
+        {
+            string situacao = (obj == null || obj == DBNull.Value)
+                ? "Pendente"
+                : obj.ToString().Trim();
+
+            string classe = "bg-warning text-dark"; // padrão = Pendente
+
+            switch (situacao.ToUpper())
+            {
+                case "BAIXADO":
+                    classe = "bg-success";
+                    break;
+
+                case "CANCELADO":
+                    classe = "bg-danger";
+                    break;
+
+                case "ENCERRADO":
+                    classe = "bg-primary";
+                    break;
+
+                case "PENDENTE":
+                    classe = "bg-warning text-dark";
+                    break;
+            }
+
+            return $"<span class='badge {classe}'>{situacao}</span>";
         }
     }
 }

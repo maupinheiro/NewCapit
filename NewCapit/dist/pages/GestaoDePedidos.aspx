@@ -108,7 +108,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <asp:TextBox ID="txtPesquisa" runat="server" class="form-control mb-2" OnTextChanged="btnFiltrar_Click" AutoPostBack="true"></asp:TextBox>
+                                    <asp:TextBox ID="txtPesquisa" runat="server" class="form-control mb-2" placeholder="Pesquisar..." OnTextChanged="btnFiltrar_Click" AutoPostBack="true"></asp:TextBox>
                                    
                                 </div>
                             </div>

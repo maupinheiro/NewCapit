@@ -109,7 +109,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <asp:TextBox ID="txtPesquisa" CssClass="form-control" OnTextChanged="btnFiltrar_Click" AutoPostBack="true" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtPesquisa" CssClass="form-control" placeholder="Pesquisar..." OnTextChanged="btnFiltrar_Click" AutoPostBack="true" runat="server"></asp:TextBox>
                                     
                                    
                                 </div>
@@ -130,18 +130,45 @@
                                             <asp:BoundField DataField="emissao" HeaderText="Emissão" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
                                             <asp:BoundField DataField="peso" HeaderText="Peso" />
                                             <asp:BoundField DataField="status" HeaderText="Status" />
-                                            <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" />                                           
-                                            <asp:BoundField DataField="expedidor" HeaderText="Local de Coleta" />
-                                            <asp:BoundField DataField="cid_expedidor" HeaderText="Município" />
-                                            <asp:BoundField DataField="recebedor" HeaderText="Local de Entrega" />
-                                            <asp:BoundField DataField="cid_recebedor" HeaderText="Município" />
-                                            <asp:BoundField DataField="andamento" HeaderText="Atendimento" />
-                                            <asp:TemplateField HeaderText="O.Coleta" ShowHeader="True" ItemStyle-Width="9">
+                                            <asp:BoundField DataField="previsao" HeaderText="Previsão" DataFormatString="{0:dd/MM/yyyy}" /> 
+                                            <asp:TemplateField HeaderText="Local de Coleta">
                                                 <ItemTemplate>
+                                                    <%# Eval("cod_expedidor") %>
+                                                    <br />
+                                                    <%# Eval("expedidor") %>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Município/UF">
+                                                <ItemTemplate>
+                                                    <%# Eval("cid_expedidor") %>/<%# Eval("uf_expedidor") %>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Local de Entrega">
+                                                <ItemTemplate>
+                                                    <%# Eval("cod_recebedor") %>
+                                                    <br />
+                                                    <%# Eval("recebedor") %>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Município/UF">
+                                                <ItemTemplate>
+                                                    <%# Eval("cid_recebedor") %>/<%# Eval("uf_recebedor") %>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>                                            
+                                            <asp:BoundField DataField="andamento" HeaderText="Atendimento" />
+                                            <asp:TemplateField HeaderText="Coleta" ShowHeader="True" ItemStyle-Width="9">
+                                            <ItemTemplate>
                                                     <asp:LinkButton ID="lnkOc" runat="server" CommandName="Oc" CommandArgument='<%# Eval("idviagem") %>' Text='<%# Eval("idviagem") %>'>
                                                     </asp:LinkButton>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
+
+                                            <asp:BoundField DataField="saidaorigem" HeaderText="Inicio de Viagem" DataFormatString="{0:dd/MM/yyyy}" Visible="false" /> 
+                                            <asp:BoundField DataField="chegadadestino" HeaderText="Chegada Cliente" DataFormatString="{0:dd/MM/yyyy}" Visible="false" /> 
+                                            <asp:BoundField DataField="saidaplanta" HeaderText="Fim de Viagem" DataFormatString="{0:dd/MM/yyyy}" Visible="false" /> 
+                                            <asp:BoundField DataField="ot" HeaderText="OT" Visible="false" />
+                                            <asp:BoundField DataField="codmot" HeaderText="Motorista" Visible="false" />
+                                            <asp:BoundField DataField="frota" HeaderText="Frota" Visible="false" />
                                            
                                         </Columns>
                                     </asp:GridView>
