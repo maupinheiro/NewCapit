@@ -31,13 +31,9 @@ namespace NewCapit.dist.pages
             WHERE tipoveiculo = 'FROTA'
             AND ativo_inativo = 'ATIVO'
             AND (codvei LIKE '%' + @pesquisa + '%'
-            OR plavei LIKE '%' + @pesquisa + '%'
-            OR CONVERT(VARCHAR(10), venclicenciamento, 103) LIKE '%' + @pesquisa + '%'
-            OR CONVERT(VARCHAR(10), vencimentolaudofumaca, 103) LIKE '%' + @pesquisa + '%'
-            OR CONVERT(VARCHAR(10), venclicencacet, 103) LIKE '%' + @pesquisa + '%'
-            OR CONVERT(VARCHAR(10), venccronotacografo, 103) LIKE '%' + @pesquisa + '%'
-            OR nucleo LIKE '%' + @pesquisa + '%'
-            OR protocolocet LIKE '%' + @pesquisa + '%')            
+                OR plavei LIKE '%' + @pesquisa + '%'
+                OR nucleo LIKE '%' + @pesquisa + '%'
+                OR protocolocet LIKE '%' + @pesquisa + '%' )           
             ", conn);
 
                 cmd.Parameters.AddWithValue("@pesquisa", txtPesquisa.Text.Trim());

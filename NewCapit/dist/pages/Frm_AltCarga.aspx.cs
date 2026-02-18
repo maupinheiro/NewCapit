@@ -752,7 +752,7 @@ namespace NewCapit.dist.pages
                             SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                             comando.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
                             comando.Parameters.AddWithValue("@carga", novaCarga.Text);
-                            comando.Parameters.AddWithValue("@emissao", txtCadastro.Text);
+                            comando.Parameters.AddWithValue("@emissao", DateTime.Parse(txtCadastro.Text).ToString("yyyy-MM-dd"));
                             comando.Parameters.AddWithValue("@status", "Pendente");
                             comando.Parameters.AddWithValue("@solicitante", cboSituacao.SelectedItem.Text);
                             comando.Parameters.AddWithValue("@entrega", cboEntrega.SelectedItem.Text);
