@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_EditarRotaKrona.aspx.cs" Inherits="NewCapit.dist.pages.Frm_EditarRotaKrona" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_RotaKrona.aspx.cs" Inherits="NewCapit.dist.pages.Frm_RotaKrona" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -76,7 +75,7 @@
 
                             <div class="card shadow-lg border-0">
                                 <div class="card-header text-white py-3" style="background-color: #A020F0; font-weight: bold;">
-                                    <h5 class="mb-0 fw-bold">Atualizar Rota Krona
+                                    <h5 class="mb-0 fw-bold">Nova Rota Krona
                                     </h5>
                                 </div>
 
@@ -86,14 +85,14 @@
                                             <label class="form-label fw-bold">ID KRONA</label>
                                             <asp:TextBox ID="txtIdKrona" runat="server"
                                                 CssClass="form-control text-center"
-                                                ReadOnly="true"></asp:TextBox>
+                                                ></asp:TextBox>
                                         </div>
 
                                         <div class="col-md-10">
                                             <label class="form-label fw-bold">DESCRIÇÃO DA ROTA</label>
                                             <asp:TextBox ID="txtDescricaoRota" runat="server"
                                                 CssClass="form-control"
-                                                ReadOnly="true"></asp:TextBox>
+                                               ></asp:TextBox>
                                         </div>
                                     </div>
 
@@ -187,7 +186,7 @@
 
                                     <div class="row mt-4">
                                         <div class="col-md-3">
-                                            <asp:Button ID="btnAtualizar" runat="server" Text="Atualizar" CssClass="btn btn-outline-success w-100" OnClick="btnAtualizar_Click" />
+                                            <asp:Button ID="btnAtualizar" runat="server" Text="Cadastrar" CssClass="btn btn-outline-success w-100" OnClick="btnAtualizar_Click" />
                                           
                                         </div>
                                         <div class="col-md-3">

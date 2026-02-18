@@ -11,7 +11,7 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class Frm_EditarRotaKrona
+    public partial class Frm_RotaKrona
     {
 
         /// <summary>

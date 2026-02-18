@@ -15,10 +15,9 @@ using Newtonsoft.Json;
 using MathNet.Numerics;
 using DocumentFormat.OpenXml.Office2010.Excel;
 
-
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_EditarRotaKrona : System.Web.UI.Page
+    public partial class Frm_RotaKrona : System.Web.UI.Page
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string rota;
@@ -31,17 +30,17 @@ namespace NewCapit.dist.pages
                 if (Session["UsuarioLogado"] != null)
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    var lblUsuario = nomeUsuario;                    
+                    var lblUsuario = nomeUsuario;
                 }
                 else
                 {
                     Response.Redirect("Login.aspx");
                 }
                 CarregarClientes(cboExpedidor, cboRecebedor);
-                CarregarRota();
                
+
                 //CarregarCombos();
-               
+
             }
 
         }
@@ -74,74 +73,8 @@ namespace NewCapit.dist.pages
 
 
         }
-        //private void CarregarCombos()
-        //{
-        //    cboExpedidor.DataSource = BuscarClientes();
-        //    cboExpedidor.DataTextField = "nome";
-        //    cboExpedidor.DataValueField = "codigo";
-        //    cboExpedidor.DataBind();
-
-        //    cboRecebedor.DataSource = BuscarClientes();
-        //    cboRecebedor.DataTextField = "nome";
-        //    cboRecebedor.DataValueField = "codigo";
-        //    cboRecebedor.DataBind();
-
-        //    cboExpedidor.Items.Insert(0, new ListItem("-- selecione --", ""));
-        //    cboRecebedor.Items.Insert(0, new ListItem("-- selecione --", ""));
-        //}
-        private void CarregarRota()
-        {
-            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
-            {
-                idQuery = HttpContext.Current.Request.QueryString["id"].ToString();
-            }
-          
-
-            if (!int.TryParse(idQuery, out int id_rota))
-                return;
-
-            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(strConn))
-            {
-                string query = @"
-            SELECT id, id_rota, descricao_rota,
-                   cod_expedidor_rota, expedidor_rota, cnpj_expedidor,
-                   cid_expedidor, uf_expedidor,
-                   cod_recebedor_rota, recebedor_rota, cnpj_recebedor,
-                   cid_recebedor, uf_recebedor
-            FROM tbrotaskrona
-            WHERE id_rota = @id_rota";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.Add("@id_rota", SqlDbType.Int).Value = id_rota;
-
-                    conn.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            txtIdKrona.Text = reader["id_rota"].ToString();
-                            txtDescricaoRota.Text = reader["descricao_rota"].ToString();
-
-                            txtCodExpedidor.Text = reader["cod_expedidor_rota"].ToString();
-                            cboExpedidor.SelectedValue = reader["cod_expedidor_rota"].ToString();
-                            txtCNPJExpedidor.Text = reader["cnpj_expedidor"].ToString();
-                            txtCidExpedidor.Text = reader["cid_expedidor"].ToString();
-                            txtUFExpedidor.Text = reader["uf_expedidor"].ToString();
-
-                            txtCodRecebedor.Text = reader["cod_recebedor_rota"].ToString();
-                            cboRecebedor.SelectedValue = reader["cod_recebedor_rota"].ToString();
-                            txtCNPJRecebedor.Text = reader["cnpj_recebedor"].ToString();
-                            txtCidRecebedor.Text = reader["cid_recebedor"].ToString();
-                            txtUFRecebedor.Text = reader["uf_recebedor"].ToString();
-                        }
-                    }
-                }
-            }
-        }         
+       
+      
         protected void txtCodExpedidor_TextChanged(object sender, EventArgs e)
         {
             if (txtCodExpedidor.Text != "")
@@ -181,7 +114,7 @@ namespace NewCapit.dist.pages
                         txtCNPJExpedidor.Text = dt.Rows[0][2].ToString();
                         txtCidExpedidor.Text = dt.Rows[0][3].ToString();
                         txtUFExpedidor.Text = dt.Rows[0][4].ToString();
-                        
+
                         return;
                     }
 
@@ -237,7 +170,7 @@ namespace NewCapit.dist.pages
                         txtCNPJRecebedor.Text = dt.Rows[0][2].ToString();
                         txtCidRecebedor.Text = dt.Rows[0][3].ToString();
                         txtUFRecebedor.Text = dt.Rows[0][4].ToString();
-                        
+
                         return;
                     }
 
@@ -351,7 +284,7 @@ namespace NewCapit.dist.pages
                         txtCNPJRecebedor.Text = dt.Rows[0][2].ToString();
                         txtCidRecebedor.Text = dt.Rows[0][3].ToString();
                         txtUFRecebedor.Text = dt.Rows[0][4].ToString();
-                        
+
                         return;
                     }
 
@@ -384,84 +317,81 @@ namespace NewCapit.dist.pages
 
         protected void btnAtualizar_Click(object sender, EventArgs e)
         {
-            if (AtualizarRota())
+            // Validação visual simples antes de ir ao banco
+            if (string.IsNullOrEmpty(txtIdKrona.Text) || string.IsNullOrEmpty(txtDescricaoRota.Text))
             {
-                // Se retornar true, exibe mensagem de sucesso
-                MostrarMsg("Dados atualizados com sucesso!","success");
+                MostrarMsg("Por favor, preencha o ID e a Descrição.");
+                return;
+            }
 
-                // Opcional: Recarregar os dados para garantir que a tela está fresca
-                // CarregarRota(); 
+            string resultado = InserirRota();
+
+            if (resultado == "Sucesso")
+            {
+                MostrarMsg("Rota cadastrada com sucesso!","success");
+                // LimparCampos(); // Opcional: criar um método para limpar a tela
             }
             else
             {
-                // Se retornar false, exibe mensagem de erro
-                MostrarMsg("Erro ao atualizar os dados. Verifique os campos e tente novamente.","danger");
+                // Exibe a mensagem de erro ou de duplicidade retornada pelo método
+                MostrarMsg(resultado,"warning");
             }
         }
 
-        private bool AtualizarRota()
+        private string InserirRota()
         {
-            // 1. Validação básica do ID
-            if (!int.TryParse(txtIdKrona.Text, out int id_rota))
-            {
-                // Talvez exibir um alerta: ID inválido
-                return false;
-            }
-
             string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
-            // 2. Query de Update
-            string query = @"
-                        UPDATE tbrotaskrona 
-                        SET 
-                            descricao_rota = @descricao,
-                            cod_expedidor_rota = @codExp,
-                            expedidor_rota = @expedidor,
-                            cnpj_expedidor = @cnpjExp,
-                            cid_expedidor = @cidExp,
-                            uf_expedidor = @ufExp,
-                            cod_recebedor_rota = @codRec,
-                            recebedor_rota = @recebedor,
-                            cnpj_recebedor = @cnpjRec,
-                            cid_recebedor = @cidRec,
-                            uf_recebedor = @ufRec
-                        WHERE id_rota = @id_rota";
 
             using (SqlConnection conn = new SqlConnection(strConn))
             {
+                conn.Open();
+
+                // 1. Validação de Duplicidade (id_rota ou descricao_rota)
+                string sqlCheck = "SELECT COUNT(*) FROM tbrotaskrona WHERE id_rota = @id_rota OR descricao_rota = @descricao";
+                using (SqlCommand cmdCheck = new SqlCommand(sqlCheck, conn))
+                {
+                    cmdCheck.Parameters.Add("@id_rota", SqlDbType.Int).Value = int.Parse(txtIdKrona.Text);
+                    cmdCheck.Parameters.Add("@descricao", SqlDbType.VarChar).Value = txtDescricaoRota.Text;
+
+                    int existe = (int)cmdCheck.ExecuteScalar();
+                    if (existe > 0)
+                    {
+                        return "Já existe uma rota cadastrada com este ID ou Descrição.";
+                    }
+                }
+
+                // 2. Query de Insert
+                string query = @"
+            INSERT INTO tbrotaskrona (
+                id_rota, descricao_rota, cod_expedidor_rota, expedidor_rota, cnpj_expedidor, 
+                cid_expedidor, uf_expedidor, cod_recebedor_rota, recebedor_rota, 
+                cnpj_recebedor, cid_recebedor, uf_recebedor
+            ) VALUES (
+                @id_rota, @descricao, @codExp, @expedidor, @cnpjExp, 
+                @cidExp, @ufExp, @codRec, @recebedor, 
+                @cnpjRec, @cidRec, @ufRec
+            )";
+
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // 3. Mapeamento dos parâmetros (ajuste os nomes dos controles se necessário)
-                    cmd.Parameters.Add("@id_rota", SqlDbType.Int).Value = id_rota;
+                    // Mapeamento dos parâmetros
+                    cmd.Parameters.Add("@id_rota", SqlDbType.Int).Value = int.Parse(txtIdKrona.Text);
                     cmd.Parameters.Add("@descricao", SqlDbType.VarChar).Value = txtDescricaoRota.Text;
 
-                    // Expedidor
                     cmd.Parameters.Add("@codExp", SqlDbType.VarChar).Value = txtCodExpedidor.Text;
-                    cmd.Parameters.Add("@expedidor", SqlDbType.VarChar).Value = cboExpedidor.SelectedItem.Text; // Pega o nome no combo
+                    cmd.Parameters.Add("@expedidor", SqlDbType.VarChar).Value = cboExpedidor.SelectedItem.Text;
                     cmd.Parameters.Add("@cnpjExp", SqlDbType.VarChar).Value = txtCNPJExpedidor.Text;
                     cmd.Parameters.Add("@cidExp", SqlDbType.VarChar).Value = txtCidExpedidor.Text;
                     cmd.Parameters.Add("@ufExp", SqlDbType.VarChar).Value = txtUFExpedidor.Text;
 
-                    // Recebedor
                     cmd.Parameters.Add("@codRec", SqlDbType.VarChar).Value = txtCodRecebedor.Text;
-                    cmd.Parameters.Add("@recebedor", SqlDbType.VarChar).Value = cboRecebedor.SelectedItem.Text; // Pega o nome no combo
+                    cmd.Parameters.Add("@recebedor", SqlDbType.VarChar).Value = cboRecebedor.SelectedItem.Text;
                     cmd.Parameters.Add("@cnpjRec", SqlDbType.VarChar).Value = txtCNPJRecebedor.Text;
                     cmd.Parameters.Add("@cidRec", SqlDbType.VarChar).Value = txtCidRecebedor.Text;
                     cmd.Parameters.Add("@ufRec", SqlDbType.VarChar).Value = txtUFRecebedor.Text;
 
-                    try
-                    {
-                        conn.Open();
-                        int linhasAfetadas = cmd.ExecuteNonQuery();
-
-                        // Retorna true se conseguiu atualizar ao menos uma linha
-                        return linhasAfetadas > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Aqui você pode logar o erro: ex.Message
-                        return false;
-                    }
+                    cmd.ExecuteNonQuery();
+                    return "Sucesso";
                 }
             }
         }

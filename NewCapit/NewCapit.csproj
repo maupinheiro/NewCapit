@@ -420,6 +420,7 @@
     <Content Include="dist\pages\Frm_Rotas.aspx" />
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
+    <Content Include="dist\pages\Frm_RotaKrona.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -5073,6 +5074,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_AtualizaColetaMatriz.aspx.designer.cs">
       <DependentUpon>Frm_AtualizaColetaMatriz.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\Frm_RotaKrona.aspx.cs">
+      <DependentUpon>Frm_RotaKrona.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\Frm_RotaKrona.aspx.designer.cs">
+      <DependentUpon>Frm_RotaKrona.aspx</DependentUpon>
     </Compile>
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />

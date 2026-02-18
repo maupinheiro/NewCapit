@@ -76,9 +76,7 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                               
                             </div>
                             <!-- /.card-tools -->
                         </div>
@@ -94,7 +92,10 @@
                                         OnClick="btnPesquisar_Click" />
                                 </div>
                                 <div class="col-md-2">
-                                    <button class="btn btn-primary">Nova Rota</button>
+                                    <a href="Frm_RotaKrona.aspx"
+                                                class="btn btn-primary">Nova Rota
+                                            </a>
+                                    
                                 </div>
                                 <div class="col-md-3">
     <a href="GerenciarRotasKrona.aspx"
@@ -142,14 +143,11 @@
                                                 CommandName="Editar"
                                                 CommandArgument='<%# Eval("id_rota") %>' />--%>
 
-                                            <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i>Editar</asp:LinkButton>
+                                            <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar"  CssClass="btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
 
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-danger btnRemover"
-                                                data-id='<%# Eval("id_rota") %>'>
-                                                Remover
-       
-                                            </button>
+                                             <asp:LinkButton ID="lnkRemover" runat="server" CommandName="Remover" CommandArgument='<%# Eval("id_rota") %>'  CssClass="btn  btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Remover</asp:LinkButton>
+
+                                          
 
                                         </ItemTemplate>
                                     </asp:TemplateField>

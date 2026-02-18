@@ -71,7 +71,7 @@ namespace NewCapit.dist.pages
                             txtDuracao.Text = reader["tempo"].ToString();
                             cboDeslocamento.SelectedItem.Text = reader["deslocamento"].ToString();
                             ddlStatus.SelectedItem.Text = reader["situacao"].ToString();
-                            ddlPedagio.SelectedItem.Text = reader["pedagio"].ToString();
+                            ddlPedagio.SelectedValue = reader["pedagio"].ToString();
                             txtCadastro.Text = reader["data_cadastro"].ToString();
                             lblDtCadastro.Text = reader["data_cadastro"].ToString();
                             txtUsuCadastro.Text = reader["usuario_cadastro"].ToString();
