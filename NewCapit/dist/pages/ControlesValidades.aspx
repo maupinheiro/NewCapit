@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="card card-info">
-                        <div class="card-header">
+                        <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
                             <h3 class="card-title">
                                 <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;CONTROLA VALIDADES</h3>
                             </h3>
@@ -67,71 +67,84 @@
 
                                 <Columns>
 
-                                    <asp:BoundField DataField="nucleo" HeaderText="Núcleo" />
-                                    <asp:BoundField DataField="codvei" HeaderText="Frota" />
+                                    <asp:BoundField DataField="nucleo" HeaderText="Núcleo" ReadOnly="true"/>
+                                    <asp:BoundField DataField="codvei" HeaderText="Frota" ReadOnly="true"/>
                                     <asp:BoundField DataField="tipvei" HeaderText="Tipo" ReadOnly="true" />
-                                    <asp:BoundField DataField="plavei" HeaderText="Placa" />
+                                    <asp:BoundField DataField="plavei" HeaderText="Placa" ReadOnly="true" />
 
-                                    <asp:TemplateField HeaderText="Licenciamento">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblDataLic" runat="server"
-                                                Text='<%# Eval("venclicenciamento", "{0:dd/MM/yyyy}") %>' />
-                                        </ItemTemplate>
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtDataLic" runat="server"
-                                                Text='<%# Eval("venclicenciamento", "{0:yyyy-MM-dd}") %>'
-                                                TextMode="Date"
-                                                CssClass="form-control" />
+                                    <asp:TemplateField HeaderText="Licenciamento"
+                                         ItemStyle-HorizontalAlign="Center"
+                                         HeaderStyle-HorizontalAlign="Center">
+                                       
+                                        <EditItemTemplate>                                            
+                                            <asp:TextBox ID="txtVencLicenciamento" runat="server"
+                                                Text='<%# Bind("venclicenciamento","{0:dd/MM/yyyy}") %>'
+                                                CssClass="form-control text-center"
+                                                Enabled="false"/>
                                         </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <%# Eval("venclicenciamento","{0:dd/MM/yyyy}") %>
+                                        </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Cronotacógrafo">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblDataTac" runat="server"
-                                                Text='<%# Eval("venccronotacografo", "{0:dd/MM/yyyy}") %>' />
-                                        </ItemTemplate>
-
+                                    <asp:TemplateField HeaderText="Cronotacografo"
+                                        ItemStyle-HorizontalAlign="Center"
+                                        HeaderStyle-HorizontalAlign="Center">
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtDataCrono" runat="server"
-                                                Text='<%# Eval("venccronotacografo", "{0:yyyy-MM-dd}") %>'
-                                                TextMode="Date"
-                                                CssClass="form-control" />
+                                            <asp:TextBox ID="txtVencCronotacografo" runat="server"
+                                                Text='<%# Bind("venccronotacografo","{0:dd/MM/yyyy}") %>'
+                                                CssClass="form-control text-center"
+                                                Enabled="false"/>
                                         </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <%# Eval("venccronotacografo","{0:dd/MM/yyyy}") %>
+                                        </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Venc. Licença CET">
-    
-    <ItemTemplate>
-        <asp:Label ID="lblIconCet" runat="server" CssClass="me-1" />
-        <asp:Label ID="lblDataCet" runat="server"
-            Text='<%# Eval("venclicencacet", "{0:yyyy-MM-dd}") %>' />
-    </ItemTemplate>
-
-    
-    <EditItemTemplate>
-        <asp:TextBox ID="txtVencLicencaCet" runat="server"
-            Text='<%# Bind("venclicencacet", "{0:yyyy-MM-dd}") %>'
-            TextMode="Date"
-            CssClass="form-control" />
-    </EditItemTemplate>
-</asp:TemplateField>
-
-
-
-                                    <asp:TemplateField HeaderText="ProtocoloCET">
+                                    <asp:TemplateField HeaderText="Opacidade"
+                                        ItemStyle-HorizontalAlign="Center"
+                                        HeaderStyle-HorizontalAlign="Center">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtVencLaudoFumaca" runat="server"
+                                                Text='<%# Bind("vencimentolaudofumaca","{0:dd/MM/yyyy}") %>'
+                                                CssClass="form-control text-center"
+                                                Enabled="false"/>
+                                        </EditItemTemplate>
                                         <ItemTemplate>
-                                            <asp:Label ID="lblProtocoloCet" runat="server"
+                                            <%# Eval("vencimentolaudofumaca","{0:dd/MM/yyyy}") %>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="CET"
+                                        ItemStyle-HorizontalAlign="Center"
+                                        HeaderStyle-HorizontalAlign="Center">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtVencLicencaCet" runat="server"
+                                                Text='<%# Bind("venclicencacet","{0:dd/MM/yyyy}") %>'
+                                                CssClass="form-control text-center"
+                                                Enabled="false"/>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <%# Eval("venclicencacet","{0:dd/MM/yyyy}") %>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                  
+                                    <asp:TemplateField HeaderText="Protocolo"
+                                        ItemStyle-HorizontalAlign="Center"
+                                        HeaderStyle-HorizontalAlign="Center">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtProtocoloCet" runat="server"
                                                 Text='<%# Eval("protocolocet") %>' />
                                         </ItemTemplate>
-
                                         <EditItemTemplate>
                                             <asp:TextBox ID="txtProtocoloCet" runat="server"
                                                 Text='<%# Eval("protocolocet") %>'
-                                                CssClass="form-control" />
+                                                CssClass="form-control text-center" 
+                                                Enabled="false"/>
                                         </EditItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:BoundField DataField="ativo_inativo" HeaderText="Status" />
+                                    <asp:BoundField DataField="ativo_inativo" HeaderText="Status" ReadOnly="true" />
 
                                     <asp:TemplateField HeaderText="Ações">
                                         <ItemTemplate>

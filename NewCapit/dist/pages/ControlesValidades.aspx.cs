@@ -28,9 +28,9 @@ namespace NewCapit.dist.pages
                 SqlCommand cmd = new SqlCommand(@"
             SELECT *
             FROM tbveiculos
-            WHERE tipvei = 'FROTA'
-            AND 
-                codvei LIKE '%' + @pesquisa + '%'
+            WHERE tipoveiculo = 'FROTA'
+            AND ativo_inativo = 'ATIVO'
+            AND codvei LIKE '%' + @pesquisa + '%'
                 OR plavei LIKE '%' + @pesquisa + '%'
                 OR nucleo LIKE '%' + @pesquisa + '%'
                 OR protocolocet LIKE '%' + @pesquisa + '%'            
@@ -53,7 +53,7 @@ namespace NewCapit.dist.pages
         }
         protected void gvVeiculos_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            gvVeiculos.EditIndex = e.NewEditIndex;
+            gvVeiculos.EditIndex = e.NewEditIndex;          
             CarregarGrid();
         }
 
@@ -68,213 +68,234 @@ namespace NewCapit.dist.pages
             int id = Convert.ToInt32(gvVeiculos.DataKeys[e.RowIndex].Value);
             GridViewRow row = gvVeiculos.Rows[e.RowIndex];
 
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            TextBox txtVencLic = (TextBox)row.FindControl("txtVencLicenciamento");
+            TextBox txtCrono = (TextBox)row.FindControl("txtVencCronotacografo");
+            TextBox txtLaudo = (TextBox)row.FindControl("txtVencLaudoFumaca");
+            TextBox txtCet = (TextBox)row.FindControl("txtVencLicencaCet");
+            TextBox txtProtocolo = (TextBox)row.FindControl("txtProtocoloCet");
 
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 SqlCommand cmd = new SqlCommand(@"
-            UPDATE tbveiculos SET
-                venclicencacet = @venclicencacet,
-                venclicenciamento = @venclicenciamento,
-                venccronotacografo = @venccronotacografo,
-                protocolocet = @protocolocet,       
-                ativo_inativo = @ativo
-            WHERE id = @id", conn);
+        UPDATE tbveiculos SET                
+            venclicenciamento = @venclicenciamento,
+            venccronotacografo = @venccronotacografo,
+            vencimentolaudofumaca = @vencimentolaudofumaca,
+            venclicencacet = @venclicencacet,
+            protocolocet = @protocolocet 
+        WHERE id = @id", conn);
 
                 cmd.Parameters.AddWithValue("@id", id);
-                //cmd.Parameters.AddWithValue("@nucleo", ((TextBox)row.Cells[0].Controls[0]).Text);
-                //cmd.Parameters.AddWithValue("@codvei", ((TextBox)row.Cells[1].Controls[0]).Text);
-                //cmd.Parameters.AddWithValue("@plavei", ((TextBox)row.Cells[3].Controls[0]).Text);
-                cmd.Parameters.AddWithValue("@venclicencacet", DateTime.Parse(((TextBox)row.Cells[0].Controls[0]).Text));
-                cmd.Parameters.AddWithValue("@protocolocet", NovoTexto(row, "txtProtocoloCet") ?? (object)DBNull.Value);
 
-                cmd.Parameters.AddWithValue("@venclicenciamento", DateTime.Parse(((TextBox)row.Cells[2].Controls[0]).Text));
-                cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(((TextBox)row.Cells[3].Controls[0]).Text));
-               
+                cmd.Parameters.AddWithValue("@venclicenciamento",
+                    string.IsNullOrWhiteSpace(txtVencLic.Text)
+                        ? (object)DBNull.Value
+                        : DateTime.ParseExact(txtVencLic.Text, "dd/MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture));
+
+                cmd.Parameters.AddWithValue("@venccronotacografo",
+                    string.IsNullOrWhiteSpace(txtCrono.Text)
+                        ? (object)DBNull.Value
+                        : DateTime.ParseExact(txtCrono.Text, "dd/MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture));
+
+                cmd.Parameters.AddWithValue("@vencimentolaudofumaca",
+                    string.IsNullOrWhiteSpace(txtLaudo.Text)
+                        ? (object)DBNull.Value
+                        : DateTime.ParseExact(txtLaudo.Text, "dd/MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture));
+
+                cmd.Parameters.AddWithValue("@venclicencacet",
+                    string.IsNullOrWhiteSpace(txtCet.Text)
+                        ? (object)DBNull.Value
+                        : DateTime.ParseExact(txtCet.Text, "dd/MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture));
+
+                cmd.Parameters.AddWithValue("@protocolocet",
+                    string.IsNullOrWhiteSpace(txtProtocolo.Text)
+                        ? (object)DBNull.Value
+                        : txtProtocolo.Text);
+
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
 
             gvVeiculos.EditIndex = -1;
             CarregarGrid();
+
         }
+
+        private void HabilitarSeVencido(GridViewRow row, string idTextBox, string nomeCampo, DateTime hoje)
+        {
+            TextBox txt = (TextBox)row.FindControl(idTextBox);
+
+            object dataObj = DataBinder.Eval(row.DataItem, nomeCampo);
+
+            if (dataObj != DBNull.Value && dataObj != null)
+            {
+                DateTime data = Convert.ToDateTime(dataObj);
+
+                // Vencido OU vencendo em 30 dias
+                if (data <= hoje.AddDays(30))
+                {
+                    txt.Enabled = true;
+                    txt.BackColor = System.Drawing.Color.MistyRose; // opcional destaque
+                }
+            }
+        }
+
 
         protected void gvVeiculos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType != DataControlRowType.DataRow)
+            if (e.Row.RowType == DataControlRowType.DataRow &&
+        (e.Row.RowState & DataControlRowState.Edit) > 0)
+            {
+                DateTime hoje = DateTime.Today;
+
+                DateTime? lic = DataBinder.Eval(e.Row.DataItem, "venclicenciamento") as DateTime?;
+                DateTime? crono = DataBinder.Eval(e.Row.DataItem, "venccronotacografo") as DateTime?;
+                DateTime? laudo = DataBinder.Eval(e.Row.DataItem, "vencimentolaudofumaca") as DateTime?;
+                DateTime? cet = DataBinder.Eval(e.Row.DataItem, "venclicencacet") as DateTime?;
+
+                HabilitarSeVencendo(e.Row, "txtVencLicenciamento", lic, hoje);
+                HabilitarSeVencendo(e.Row, "txtVencCronotacografo", crono, hoje);
+                HabilitarSeVencendo(e.Row, "txtVencLaudoFumaca", laudo, hoje);
+
+                bool cetVencido = EstaVencendo(cet, hoje);
+
+                // CET
+                HabilitarSeVencendo(e.Row, "txtVencLicencaCet", cet, hoje);
+
+                // 🔥 PROTOCOLO só habilita se CET estiver vencido
+                TextBox txtProtocolo = (TextBox)e.Row.FindControl("txtProtocoloCet");
+                if (txtProtocolo != null)
+                {
+                    txtProtocolo.Enabled = cetVencido;
+                }
+            }
+
+            if (e.Row.RowType == DataControlRowType.DataRow &&
+        (e.Row.RowState & DataControlRowState.Edit) == 0)
+            {
+                DateTime hoje = DateTime.Today;
+
+                DateTime? lic = DataBinder.Eval(e.Row.DataItem, "venclicenciamento") as DateTime?;
+                DateTime? crono = DataBinder.Eval(e.Row.DataItem, "venccronotacografo") as DateTime?;
+                DateTime? laudo = DataBinder.Eval(e.Row.DataItem, "vencimentolaudofumaca") as DateTime?;
+                DateTime? cet = DataBinder.Eval(e.Row.DataItem, "venclicencacet") as DateTime?;
+
+                bool temVencido =
+                    EstaVencendo(lic, hoje) ||
+                    EstaVencendo(crono, hoje) ||
+                    EstaVencendo(laudo, hoje) ||
+                    EstaVencendo(cet, hoje);
+
+                LinkButton btnEditar = (LinkButton)e.Row.FindControl("btnEditar");
+
+                if (!temVencido && btnEditar != null)
+                {
+                    btnEditar.Visible = false;
+                }
+            }
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                object dataObjLicenciamento = DataBinder.Eval(e.Row.DataItem, "venclicenciamento"); //4
+                object dataObjCrono = DataBinder.Eval(e.Row.DataItem, "venccronotacografo"); //5
+                object dataObjOpacidade = DataBinder.Eval(e.Row.DataItem, "vencimentolaudofumaca"); //6
+                object dataObjCet = DataBinder.Eval(e.Row.DataItem, "venclicencacet"); //7
+
+                if (dataObjLicenciamento != DBNull.Value && dataObjLicenciamento != null)
+                {
+                    DateTime dataVencLicenciamento = Convert.ToDateTime(dataObjLicenciamento);
+                    int dias = (dataVencLicenciamento - DateTime.Now).Days;
+
+                    if (dias <= 30 && dias >= 0)
+                    {
+                        e.Row.Cells[4].BackColor = System.Drawing.Color.Orange;
+                    }
+
+                    if (dias < 0)
+                    {
+                        e.Row.Cells[4].BackColor = System.Drawing.Color.Red;
+                        e.Row.Cells[4].ForeColor = System.Drawing.Color.White;
+                    }
+                }
+                if (dataObjCrono != DBNull.Value && dataObjCrono != null)
+                {
+                    DateTime dataVencCrono = Convert.ToDateTime(dataObjCrono);
+                    int dias = (dataVencCrono - DateTime.Now).Days;
+
+                    if (dias <= 30 && dias >= 0)
+                    {
+                        e.Row.Cells[5].BackColor = System.Drawing.Color.Orange;
+                    }
+
+                    if (dias < 0)
+                    {
+                        e.Row.Cells[5].BackColor = System.Drawing.Color.Red;
+                        e.Row.Cells[5].ForeColor = System.Drawing.Color.White;
+                    }
+                }
+                if (dataObjOpacidade != DBNull.Value && dataObjOpacidade != null)
+                {
+                    DateTime dataVencOpacidade = Convert.ToDateTime(dataObjOpacidade);
+                    int dias = (dataVencOpacidade - DateTime.Now).Days;
+
+                    if (dias <= 30 && dias >= 0)
+                    {
+                        e.Row.Cells[6].BackColor = System.Drawing.Color.Orange;
+                    }
+
+                    if (dias < 0)
+                    {
+                        e.Row.Cells[6].BackColor = System.Drawing.Color.Red;
+                        e.Row.Cells[6].ForeColor = System.Drawing.Color.White;
+                    }
+                }
+                if (dataObjCet != DBNull.Value && dataObjCet != null)
+                {
+                    DateTime dataVencCet = Convert.ToDateTime(dataObjCet);
+                    int dias = (dataVencCet - DateTime.Now).Days;
+
+                    if (dias <= 30 && dias >= 0)
+                    {
+                        e.Row.Cells[7].BackColor = System.Drawing.Color.Orange;
+                    }
+
+                    if (dias < 0)
+                    {
+                        e.Row.Cells[7].BackColor = System.Drawing.Color.Red;
+                        e.Row.Cells[7].ForeColor = System.Drawing.Color.White;
+                    }
+                }
+            }
+        }
+       
+        private bool EstaVencendo(DateTime? data, DateTime hoje)
+        {
+            if (!data.HasValue)
+                return false;
+
+            return data.Value <= hoje.AddDays(30);
+        }
+
+        private void HabilitarSeVencendo(GridViewRow row, string idTextBox, DateTime? data, DateTime hoje)
+        {
+            TextBox txt = (TextBox)row.FindControl(idTextBox);
+
+            if (txt == null)
                 return;
 
-            object dataItem = e.Row.DataItem;
+            txt.Enabled = false; // padrão desabilitado
 
-            // Datas vindas direto do banco
-            DateTime? vencCet = GetData(dataItem, "venclicencacet");
-            DateTime? vencLic = GetData(dataItem, "venclicenciamento");
-            DateTime? vencTac = GetData(dataItem, "venccronotacografo");
-            
-
-            // 👉 MODO VISUAL (cores / ícones)
-            PintarData(e.Row, vencCet, "lblIconCet", "lblDataCet");
-            PintarData(e.Row, vencLic, "lblIconLic", "lblDataLic");
-            PintarData(e.Row, vencTac, "lblIconTac", "lblDataTac");
-            
-
-            // 👉 MODO EDIÇÃO (habilitar/desabilitar)
-            if ((e.Row.RowState & DataControlRowState.Edit) > 0)
+            if (EstaVencendo(data, hoje))
             {
-                ControlarEdicaoData(e.Row, vencCet, "txtDataCet");
-                ControlarEdicaoData(e.Row, vencLic, "txtDataLic");
-                ControlarEdicaoData(e.Row, vencTac, "txtDataTac");
-                
-                ControlarEdicaoProtocoloCet(e.Row, vencCet);
+                txt.Enabled = true;
+                txt.BackColor = System.Drawing.Color.MistyRose; // opcional
             }
         }
-
-        private bool DataVencendoOuVencida(DateTime data)
-        {
-            int dias = (data - DateTime.Today).Days;
-            return dias <= 30;
-        }
-        private DateTime? GetData(object dataItem, string campo)
-        {
-            object valor = DataBinder.Eval(dataItem, campo);
-            if (valor == null || valor == DBNull.Value)
-                return null;
-
-            return Convert.ToDateTime(valor);
-        }
-        private void PintarData(GridViewRow row, DateTime? data,
-    string lblIconId, string lblDataId)
-        {
-            if (!data.HasValue) return;
-
-            DateTime hoje = DateTime.Today;
-            DateTime venc = data.Value.Date;
-
-            int dias = (venc - hoje).Days;
-
-            Label lblIcon = row.FindControl(lblIconId) as Label;
-            Label lblData = row.FindControl(lblDataId) as Label;
-
-            if (lblIcon == null || lblData == null) return;
-
-            TableCell cell = lblData.NamingContainer as TableCell;
-            if (cell == null) return;
-
-            if (dias < 0)
-            {
-                lblIcon.Text = "<i class='fa fa-times-circle text-danger'></i> ";
-                cell.BackColor = System.Drawing.Color.LightCoral;
-            }
-            else if (dias <= 30)
-            {
-                lblIcon.Text = "<i class='fa fa-exclamation-triangle text-warning'></i> ";
-                cell.BackColor = System.Drawing.Color.Khaki;
-            }
-        }
-
-        private bool DataVencendoOuVencida(DateTime? data)
-        {
-            if (!data.HasValue) return false;
-            return (data.Value - DateTime.Today).Days <= 30;
-        }
-
-        private void ControlarEdicaoData(GridViewRow row, DateTime? data, string txtId)
-        {
-            TextBox txt = row.FindControl(txtId) as TextBox;
-            if (txt == null) return;
-
-            txt.Enabled = DataVencendoOuVencida(data);
-            txt.CssClass = txt.Enabled
-                ? "form-control"
-                : "form-control bg-light";
-        }
-        private void ControlarEdicaoProtocoloCet(GridViewRow row, DateTime? vencCet)
-        {
-            TextBox txt = row.FindControl("txtProtocoloCet") as TextBox;
-            if (txt == null) return;
-
-            txt.Enabled = DataVencendoOuVencida(vencCet);
-            txt.CssClass = txt.Enabled
-                ? "form-control"
-                : "form-control bg-light";
-        }
-
-
-
-
-        private void ControlarEdicaoData(GridViewRow row, string lblId, string txtId)
-        {
-            Label lbl = row.FindControl(lblId) as Label;
-            TextBox txt = row.FindControl(txtId) as TextBox;
-
-            if (lbl == null || txt == null)
-            {
-                return;
-            }
-
-            if (!DateTime.TryParse(lbl.Text, out DateTime venc))
-            {
-                txt.Enabled = false;
-                return;
-            }
-
-            txt.Enabled = DataVencendoOuVencida(venc);
-            txt.CssClass = txt.Enabled
-                ? "form-control"
-                : "form-control bg-light";
-        }
-
-        private void ControlarEdicaoProtocoloCet(GridViewRow row)
-        {
-            Label lblDataCet = row.FindControl("lblDataCet") as Label;
-            TextBox txtProtocolo = row.FindControl("txtProtocoloCet") as TextBox;
-
-            if (lblDataCet == null || txtProtocolo == null)
-                return;
-
-            if (!DateTime.TryParse(lblDataCet.Text, out DateTime vencCet))
-            {
-                txtProtocolo.Enabled = false;
-                return;
-            }
-
-            txtProtocolo.Enabled = DataVencendoOuVencida(vencCet);
-            txtProtocolo.CssClass = txtProtocolo.Enabled
-                ? "form-control"
-                : "form-control bg-light";
-        }
-        string NovoTexto(GridViewRow row, string txtId)
-        {
-            TextBox txt = row.FindControl(txtId) as TextBox;
-            return (txt != null && txt.Enabled)
-                ? txt.Text
-                : null;
-        }
-
-
-
-        //private void TratarVencimento(GridViewRow row, string lblDataId, string lblIconId)
-        //{
-        //    Label lblData = row.FindControl(lblDataId) as Label;
-        //    Label lblIcon = row.FindControl(lblIconId) as Label;
-
-        //    if (lblData == null || lblIcon == null) return;
-        //    if (!DateTime.TryParse(lblData.Text, out DateTime venc)) return;
-
-        //    int dias = (venc - DateTime.Today).Days;
-
-        //    if (dias < 0)
-        //    {
-        //        lblIcon.Text = "❌ ";
-        //        row.BackColor = System.Drawing.Color.LightCoral;
-        //        lblIcon.ToolTip = "Documento vencido";
-        //    }
-        //    else if (dias <= 30)
-        //    {
-        //        lblIcon.Text = "⚠️ ";
-        //        row.BackColor = System.Drawing.Color.Khaki;
-        //        lblIcon.ToolTip = "Vencimento próximo";
-        //    }
-        //}
 
 
 
