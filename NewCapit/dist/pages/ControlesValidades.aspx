@@ -44,7 +44,7 @@
                                 <div class="col-md-4">
                                     <asp:TextBox ID="txtPesquisa" runat="server"
                                         CssClass="form-control"
-                                        Placeholder="Pesquisar por núcleo, código ou placa" />
+                                        Placeholder="Pesquisar ..." />
                                 </div>
                                 <div class="col-md-2">
                                     <asp:Button ID="btnPesquisar" runat="server"

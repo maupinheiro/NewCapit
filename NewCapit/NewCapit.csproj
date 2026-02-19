@@ -415,6 +415,7 @@
     <Content Include="dist\pages\NovaRota.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
+    <Content Include="dist\pages\reajustefretes.aspx" />
     <Content Include="dist\pages\SimuladorFrete.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="dist\pages\Frm_Rotas.aspx" />
@@ -5058,6 +5059,13 @@
       <DependentUpon>OrdemColetaImpressao.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\RastreamentoHub.cs" />
+    <Compile Include="dist\pages\reajustefretes.aspx.cs">
+      <DependentUpon>reajustefretes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\reajustefretes.aspx.designer.cs">
+      <DependentUpon>reajustefretes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\SimuladorFrete.aspx.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

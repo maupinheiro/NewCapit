@@ -16,6 +16,7 @@ using NPOI.OpenXmlFormats.Wordprocessing;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using NPOI.HSSF.Record.Chart;
 using DocumentFormat.OpenXml.Office2010.Drawing;
+using System.Globalization;
 
 namespace NewCapit
 {
@@ -392,7 +393,7 @@ namespace NewCapit
 
                         if (dtv.Rows[0][0].ToString() == "FIM DE JORNADA" || dtv.Rows[0][0].ToString() == "PARADA PERNOITE")
                         {
-                            dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                            dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
                             //JORNADA NORMAL INICIO DE JORNADA
                             #region Jornada Normal
                             //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
@@ -1954,7 +1955,7 @@ namespace NewCapit
                                 SqlDataAdapter adtp4 = new SqlDataAdapter(sql4, con);
                                 DataTable dt4 = new DataTable();
 
-                                dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
 
 
                                 #region Jornada Noturna
@@ -3474,7 +3475,7 @@ namespace NewCapit
                                 if (dtu.Rows[0][0].ToString() == "FIM DE JORNADA" || dtu.Rows[0][0].ToString() == "PARADA PERNOITE")
                                 {
                                     //JORNADA NORMAL REINICIO DE VIAGEM
-                                    dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                    dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
                                     #region Jornada Normal
                                     //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
 
@@ -5009,7 +5010,7 @@ namespace NewCapit
 
                                     if (dti.Rows.Count > 0 && dtf.Rows.Count > 0)
                                     {
-                                        dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                        dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - ddd", new CultureInfo("pt-BR"));
                                         #region Jornada Noturna
 
 
@@ -6542,7 +6543,7 @@ namespace NewCapit
 
                                     if (dtd.Rows.Count > 0)
                                     {
-                                        dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                        dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
                                         #region Jornada Normal
                                         //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
 
@@ -8110,7 +8111,7 @@ namespace NewCapit
 
                                     if (dti.Rows.Count > 0 && dtf.Rows.Count > 0)
                                     {
-                                        dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                        dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
                                         #region Jornada Noturna
 
 
@@ -9642,7 +9643,7 @@ namespace NewCapit
 
                             if (dtd.Rows.Count > 0)
                             {
-                                dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
                                 #region Jornada Normal
                                 //string arquivo = "Transmot" + DateTime.Parse(txtDtInicial.Text).ToString("ddMM") + "001.txt";
 
@@ -11211,7 +11212,7 @@ namespace NewCapit
 
                             if (dti.Rows.Count > 0 && dtf.Rows.Count > 0)
                             {
-                                dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd");
+                                dtRow["Dia"] = DateTime.Parse(dte.Rows[f][0].ToString()).ToString("dd - dddd");
                                 #region Jornada Noturna
 
 
