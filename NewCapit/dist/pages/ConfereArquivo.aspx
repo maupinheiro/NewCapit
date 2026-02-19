@@ -153,7 +153,7 @@
      td {
          border: 1px solid #000;
          padding: 12px;
-         text-align: center;
+         text-align: left;
      }
 
      tbody tr:hover {
@@ -230,7 +230,7 @@
          <asp:GridView ID="gvPonto" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
     <Columns>
 
-        <asp:BoundField DataField="Dia" HeaderText="Dia" />
+        <asp:BoundField DataField="Dia" HeaderText="Dia" HeaderStyle-HorizontalAlign="center"/>
 
         <asp:BoundField DataField="Marcacao" HeaderText="Marcações" HeaderStyle-HorizontalAlign="Left" />
 

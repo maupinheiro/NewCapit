@@ -33,7 +33,7 @@
                     </a>
                 </div>
                 <div class="col-md-2">
-                    <a href="Frm_TabelaPrecoMatriz.aspx" class="d-none d-lg-inline-block btn btn-success shadow-lg  w-100"><i
+                    <a href="reajustefretes.aspx" class="d-none d-lg-inline-block btn btn-success shadow-lg  w-100"><i
                         class="fas fa-file-invoice-dollar"></i>&nbsp;Reajustes          
                     </a>
                 </div>

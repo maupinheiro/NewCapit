@@ -110,7 +110,7 @@
                                     <h6 class="fw-bold text-secondary mb-3">DADOS:</h6>
                                     <div class="row align-items-end mb-12">
                                         <div class="form-group row">
-                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Deslocamento:</label>
+                                            <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Deslocamento:</label>
                                             <div class="col-md-2">
                                                 <asp:DropDownList ID="cboDeslocamento" runat="server" CssClass="form-control">
                                                     <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
@@ -124,7 +124,7 @@
                                     </div>
                                     <div class="row align-items-end mb-12">
                                         <div class="form-group row">
-                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Distância(KM):</label>
+                                            <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Distância(KM):</label>
                                             <div class="col-md-2">
                                                 <asp:TextBox ID="txtDistancia" class="form-control" Style="text-align: center" runat="server"></asp:TextBox>
                                             </div>
@@ -132,7 +132,7 @@
                                     </div>
                                     <div class="row align-items-end mb-12">
                                         <div class="form-group row">
-                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Transit Time:</label>
+                                            <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Transit Time:</label>
                                             <div class="col-md-2">
                                                 <asp:TextBox ID="txtDuracao" 
                                                     CssClass="form-control" 
@@ -147,7 +147,7 @@
                                     </div>
                                     <div class="row align-items-end mb-12">
                                         <div class="form-group row">
-                                            <label for="inputExpedidor" class="col-sm-1 col-form-label" style="text-align: right">Pedagiada:</label>
+                                            <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Pedagiada:</label>
                                             <div class="col-md-2">
                                                 <asp:DropDownList ID="ddlPedagio" runat="server" CssClass="form-control">
                                                     <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
