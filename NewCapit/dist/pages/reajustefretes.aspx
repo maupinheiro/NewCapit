@@ -12,6 +12,18 @@
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                width: '100%',
+                placeholder: "Selecione ou pesquise..."
+            });
+        });
+    </script>
+
 
     <div class="content-wrapper">
         <section class="content">
@@ -44,67 +56,120 @@
                         <div class="card-body">
                             <div class="card shadow">
                                 <div class="card-header bg-warning">
-                                    <h5>Reajuste de Frete Avançado</h5>
+                                    <h5>Reajuste Avançado de Frete</h5>
                                 </div>
 
                                 <div class="card-body">
 
                                     <div class="row">
 
-                                        <div class="col-md-3">
-                                            <label>Cliente</label>
-                                            <asp:DropDownList ID="ddlCliente" runat="server" CssClass="form-control" />
-                                        </div>
+                                        <!-- CLIENTE -->
+                                        <div class="form-group row">
+                                            <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">CLIENTE:</label>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" OnTextChanged="txtCodRemetente_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <asp:DropDownList ID="cboRemetente" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cboRemetente_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <asp:TextBox ID="txtMunicipioRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtUFRemetente" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
 
-                                        <div class="col-md-3">
-                                            <label>Rota</label>
-                                            <asp:DropDownList ID="ddlRota" runat="server" CssClass="form-control" />
                                         </div>
-
-                                        <div class="col-md-3">
-                                            <label>Pagador</label>
-                                            <asp:DropDownList ID="ddlPagador" runat="server" CssClass="form-control" />
+                                        <!-- PAGADOR -->
+                                        <div class="form-group row">
+                                            <label for="inputPagador" class="col-sm-1 col-form-label" style="text-align: right">PAGADOR:</label>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtCodPagador" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtCodPagador_TextChanged"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <asp:DropDownList ID="cboPagador" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboPagador_SelectedIndexChanged"></asp:DropDownList>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtCNPJPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <asp:TextBox ID="txtCidPagador" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtUFPagador" Style="text-align: center" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
                                         </div>
+                                        <!-- ROTA -->
+                                        <div class="form-group row">
+                                            <label for="inputRota" class="col-sm-1 col-form-label" style="text-align: right">ROTA:</label>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtCodRota" runat="server" CssClass="form-control" OnTextChanged="txtCodRota_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <asp:DropDownList ID="cboRota" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboRota_SelectedIndexChanged"></asp:DropDownList>
+                                            </div>
+                                            <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">MATERIAL:</label>
+                                            <div class="col-md-2">
+                                                <asp:DropDownList ID="cboTipoMaterial" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                            </div>
+                                            <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">VEÍCULO:</label>
+                                            <div class="col-md-2">
+                                                <asp:DropDownList ID="cboTipoVeiculo" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                            </div>
 
-                                        <div class="col-md-3">
-                                            <label>Tipo Veículo</label>
-                                            <asp:DropDownList ID="ddlTipoVeiculo" runat="server" CssClass="form-control" />
                                         </div>
+                                        <!-- MATERIAL / VEICULO -->
+                                        <div class="form-group row">
+                                            <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">CIDADE:</label>
+                                            <div class="col-md-5">
+                                                <asp:DropDownList ID="ddlCidade" runat="server" CssClass="form-control select2"></asp:DropDownList>
+                                            </div>                                            
+                                            <label for="inputRecebedor" class="col-sm-1 col-form-label" style="text-align: right">FAIXA DE KM:</label>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtKMInicial" runat="server" CssClass="form-control" placeholder="Km inicial" TextMode="Number"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <asp:TextBox ID="txtKMFinal" runat="server" CssClass="form-control" placeholder="Km final" TextMode="Number"></asp:TextBox>
+                                            </div>
 
+                                        </div>
                                     </div>
 
                                     <div class="row mt-3">
 
-                                        <div class="col-md-3">
-                                            <label>Tipo Material</label>
-                                            <asp:DropDownList ID="ddlMaterial" runat="server" CssClass="form-control" />
-                                        </div>
-
                                         <div class="col-md-2">
-                                            <label>% Reajuste</label>
+                                            <label>Reajuste (%)</label>
                                             <asp:TextBox ID="txtPercentual" runat="server" CssClass="form-control" />
                                         </div>
 
                                         <div class="col-md-2">
-                                            <label>Tipo</label>
-                                            <asp:DropDownList ID="ddlTipoReajuste" runat="server" CssClass="form-control">
-                                                <asp:ListItem Text="Percentual" Value="P" />
-                                                <asp:ListItem Text="Valor Fixo +" Value="V" />
+                                            <label>Aplicar Para</label>
+                                            <asp:DropDownList ID="ddlAplicarPara" runat="server" CssClass="form-control">
+                                                <asp:ListItem Text="Selecione..." Value="" />
+                                                <asp:ListItem Text="Transnovag" Value="frete_tng" />
+                                                <asp:ListItem Text="Agregado" Value="frete_agregado" />
+                                                <asp:ListItem Text="Terceiro" Value="frete_terceiro" />
                                             </asp:DropDownList>
                                         </div>
 
                                         <div class="col-md-2 d-flex align-items-end">
-                                            <asp:Button ID="btnSimular"
-                                                runat="server"
+                                            <asp:Button ID="btnSimular" runat="server"
                                                 Text="Simular"
-                                                CssClass="btn btn-info w-100"
-                                                OnClick="btnSimular_Click" />
+                                                CssClass="btn btn-info w-100" />
+                                            <%--OnClick="btnSimular_Click"--%>
                                         </div>
 
                                     </div>
 
                                     <hr />
 
+
+
+
+                                    <hr />
                                     <asp:GridView ID="gvSimulacao"
                                         runat="server"
                                         CssClass="table table-bordered"
@@ -114,13 +179,16 @@
                                         <asp:Button ID="btnAplicar"
                                             runat="server"
                                             Text="Aplicar Reajuste"
-                                            CssClass="btn btn-success"
-                                            OnClick="btnAplicar_Click" />
+                                            CssClass="btn btn-success btn-lg" />
+                                        <%--OnClick="btnAplicar_Click"--%>
+                                    </div>
+                                    <div class="text-right mt-3">
+                                        <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg">Fechar               
+                                        </a>
                                     </div>
 
                                 </div>
                             </div>
-
 
                         </div>
                     </div>
