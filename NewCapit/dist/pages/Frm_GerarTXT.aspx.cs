@@ -1849,6 +1849,13 @@ namespace NewCapit.dist.pages
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                {
+
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                }
                                                 else
                                                 {
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -1920,6 +1927,13 @@ namespace NewCapit.dist.pages
                                                         //}
                                                         else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                         {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -2001,6 +2015,13 @@ namespace NewCapit.dist.pages
                                                     //}
                                                     else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                     {
+
+                                                    }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                     }
                                                     else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -3349,6 +3370,13 @@ namespace NewCapit.dist.pages
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         }
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                    }
                                                     else
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -3420,6 +3448,13 @@ namespace NewCapit.dist.pages
                                                             //}
                                                             else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                             {
+
+                                                            }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                             }
                                                             else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -3501,6 +3536,13 @@ namespace NewCapit.dist.pages
                                                         //}
                                                         else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                         {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -4862,6 +4904,13 @@ namespace NewCapit.dist.pages
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                        }
                                                         else
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -4933,6 +4982,13 @@ namespace NewCapit.dist.pages
                                                                 //}
                                                                 else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                 {
+
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -5014,6 +5070,13 @@ namespace NewCapit.dist.pages
                                                             //}
                                                             else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                             {
+
+                                                            }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                             }
                                                             else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -6361,6 +6424,13 @@ namespace NewCapit.dist.pages
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                 }
                                                             }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                            }
                                                             else
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -6432,6 +6502,13 @@ namespace NewCapit.dist.pages
                                                                     //}
                                                                     else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                     {
+
+                                                                    }
+                                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                    {
+
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                     }
                                                                     else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -6513,6 +6590,13 @@ namespace NewCapit.dist.pages
                                                                 //}
                                                                 else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                 {
+
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -7911,6 +7995,13 @@ namespace NewCapit.dist.pages
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                 }
                                                             }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                            }
                                                             else
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -7982,6 +8073,13 @@ namespace NewCapit.dist.pages
                                                                     //}
                                                                     else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                     {
+
+                                                                    }
+                                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                    {
+
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                     }
                                                                     else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -8063,6 +8161,13 @@ namespace NewCapit.dist.pages
                                                                 //}
                                                                 else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                 {
+
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -9412,6 +9517,13 @@ namespace NewCapit.dist.pages
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                                 }
                                                             }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                            }
                                                             else
                                                             {
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -9483,6 +9595,13 @@ namespace NewCapit.dist.pages
                                                                     //}
                                                                     else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                     {
+
+                                                                    }
+                                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                    {
+
+                                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                     }
                                                                     else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -9564,6 +9683,13 @@ namespace NewCapit.dist.pages
                                                                 //}
                                                                 else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                                 {
+
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                                 }
                                                                 else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -10962,6 +11088,13 @@ namespace NewCapit.dist.pages
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         }
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                    }
                                                     else
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -11033,6 +11166,13 @@ namespace NewCapit.dist.pages
                                                             //}
                                                             else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                             {
+
+                                                            }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                             }
                                                             else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -11114,6 +11254,13 @@ namespace NewCapit.dist.pages
                                                         //}
                                                         else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                         {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -12462,6 +12609,13 @@ namespace NewCapit.dist.pages
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         }
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+
+                                                    }
                                                     else
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -12533,6 +12687,13 @@ namespace NewCapit.dist.pages
                                                             //}
                                                             else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                             {
+
+                                                            }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                             }
                                                             else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
@@ -12614,6 +12775,13 @@ namespace NewCapit.dist.pages
                                                         //}
                                                         else if (dt4.Rows[a][2].ToString() == "INICIO DE JORNADA" || dt4.Rows[a][2].ToString() == "INICIO JORNADA CAMINHAO" || dt4.Rows[a][2].ToString() == "INICIO JORNADA")
                                                         {
+
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
 
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "FIM DE JORNADA")
