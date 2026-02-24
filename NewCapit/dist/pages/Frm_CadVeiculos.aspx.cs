@@ -326,7 +326,7 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@venclicenciamento", txtLicenciamento.Text.Trim());
+                    cmd.Parameters.AddWithValue("@venclicenciamento", SafeDate(txtLicenciamento.Text.Trim()));
                     cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text.Trim());
                     cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToString().Trim().ToUpper());
@@ -344,8 +344,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
                     cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text.Trim());
-                    cmd.Parameters.AddWithValue("@venccronotacografo", DateTime.Parse(txtCronotacografo.Text.Trim()).ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", txtOpacidade.Text.Trim());
+                    cmd.Parameters.AddWithValue("@venccronotacografo", SafeDate(txtCronotacografo.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", SafeDate(txtOpacidade.Text.Trim()));
 
 
                     // Abrindo a conexão e executando a query
@@ -375,6 +375,14 @@ namespace NewCapit
                 Response.Redirect("ConsultaVeiculos.aspx");
 
             }
+        }
+        private object SafeDate(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
         }
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {

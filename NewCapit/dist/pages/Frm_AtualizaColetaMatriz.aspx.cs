@@ -33,6 +33,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Numerics;
 using System.Security.Principal;
@@ -49,6 +50,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using System.Xml;
 using static NPOI.HSSF.Util.HSSFColor;
 
 
@@ -1429,76 +1431,7 @@ namespace NewCapit.dist.pages
                 BuscarCteSalvos(idViagem);
                 CarregarPedidos(int.Parse(carga), gv);
             }
-
-
-
-            // Após atualizar, recarregar os dados no Repeater
-            
-            //if (e.CommandName == "Ocorrencias")
-            //{
-            //    int id = Convert.ToInt32(e.CommandArgument);
-
-            //    string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            //    using (SqlConnection conn = new SqlConnection(connStr))
-            //    {
-            //        conn.Open();
-
-            //        SqlCommand cmd1 = new SqlCommand("SELECT carga,cva, andamento FROM tbcargas WHERE carga = @Id", conn);
-            //        cmd1.Parameters.AddWithValue("@Id", id);
-            //        SqlDataReader reader1 = cmd1.ExecuteReader();
-            //        if (reader1.Read())
-            //        {
-            //            lblCVA.BackColor = System.Drawing.Color.Magenta;
-            //            lblCVA.ForeColor = System.Drawing.Color.White;
-            //            lblCVA.Text = reader1["cva"].ToString();
-
-            //            lblColeta.BackColor = System.Drawing.Color.LightGreen;
-            //            lblColeta.Text = reader1["carga"].ToString();
-
-            //            if (reader1["andamento"].ToString() == "CONCLUIDO")
-            //            {
-            //                lblStatus.BackColor = System.Drawing.Color.LightGreen;
-            //                lblStatus.Text = reader1["andamento"].ToString();
-            //            }
-            //            else if (reader1["andamento"].ToString() == "PENDENTE" || reader1["andamento"].ToString() == "Pendente")
-            //            {
-            //                lblStatus.BackColor = System.Drawing.Color.Yellow;
-            //                lblStatus.Text = reader1["andamento"].ToString();
-            //            }
-            //            else if (reader1["andamento"].ToString() == "EM ANDAMENTO")
-            //            {
-            //                lblStatus.BackColor = System.Drawing.Color.Purple;
-            //                lblCVA.ForeColor = System.Drawing.Color.White;
-            //                lblStatus.Text = reader1["andamento"].ToString();
-            //            }
-            //            else
-            //            {
-            //                lblStatus.BackColor = System.Drawing.Color.Black;
-            //                lblStatus.Text = reader1["andamento"].ToString();
-            //            }
-
-            //            using (SqlConnection con = new SqlConnection(connStr))
-            //            {
-            //                string query = "SELECT id, responsavel, motivo, observacao, data_inclusao, usuario_inclusao FROM tbocorrencias WHERE carga = @numeroCarga";
-
-            //                SqlCommand cmd = new SqlCommand(query, con);
-            //                cmd.Parameters.AddWithValue("@numeroCarga", id);
-
-            //                SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //                DataTable dt = new DataTable();
-            //                da.Fill(dt);
-
-            //                GridViewCarga.DataSource = dt;
-            //                GridViewCarga.DataBind();
-            //            }
-
-
-            //            // Exibe o modal com JavaScript
-            //            ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalOcorrencia').modal('show');", true);
-
-            //        }
-            //    }
-            //}
+                        
             if (e.CommandName == "Coletas")
             {
                 int id = Convert.ToInt32(e.CommandArgument);
@@ -1555,7 +1488,7 @@ namespace NewCapit.dist.pages
             if (e.CommandName == "PedagioManual")
             {
                 using (SqlConnection conn = new SqlConnection(
-    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     string query = @"UPDATE tbcarregamentos SET 
                     pedagio = @pedagio,                                 
@@ -1638,7 +1571,251 @@ namespace NewCapit.dist.pages
                     MostrarMsg2("Erro: " + ex.Message);
                 }
             }
+
+            if (e.CommandName == "BuscarNfe")
+            {
+                string idCarga = e.CommandArgument.ToString();
+                string chave = ((TextBox)e.Item.FindControl("txtChaveNF")).Text;
+
+                //string chave = "35260259104422002446550370009554061775712904";
+                string apiKey = "025caf00-6477-4d97-b133-f34ad21594f3";
+
+                // ========= 1ª CHAMADA (PUT) =========
+                var request = (HttpWebRequest)WebRequest.Create(
+                    "https://api.meudanfe.com.br/v2/fd/add/" + chave);
+
+                request.Method = "PUT";
+                request.Accept = "application/json";
+                request.Headers.Add("Api-Key", apiKey);
+                request.ContentLength = 0; // 👈 MUITO IMPORTANTE
+
+                string jsonPut;
+
+                using (var requestStream = request.GetRequestStream())
+                {
+                    // não escreve nada, só força o envio do corpo vazio
+                }
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    jsonPut = reader.ReadToEnd();
+                }
+
+                var serializer = new JavaScriptSerializer();
+                RetornoPut retornoPut = serializer.Deserialize<RetornoPut>(jsonPut);
+
+                // ========= SE STATUS FOR OK =========
+                if (retornoPut.status == "OK")
+                {
+                    // ========= 2ª CHAMADA (GET XML) =========
+                    var requestXml = (HttpWebRequest)WebRequest.Create(
+                        "https://api.meudanfe.com.br/v2/fd/get/xml/" + chave);
+
+                    requestXml.Method = "GET";
+                    requestXml.Accept = "application/json";
+                    requestXml.Headers.Add("Api-Key", apiKey);
+
+                    string jsonXml;
+
+                    using (var responseXml = (HttpWebResponse)requestXml.GetResponse())
+                    using (var readerXml = new StreamReader(responseXml.GetResponseStream()))
+                    {
+                        jsonXml = readerXml.ReadToEnd();
+                    }
+
+                    RetornoXml retornoXml = serializer.Deserialize<RetornoXml>(jsonXml);
+
+                    string xmlNfe = retornoXml.data;
+
+                    // aqui você já tem o XML puro
+                    // pode salvar em arquivo, banco, ou carregar em XmlDocument
+
+                    // exemplo salvando em arquivo:
+                    //File.WriteAllText(Server.MapPath("~/nfe.xml"), xmlNfe);
+
+                    SalvarXmlNoBanco(xmlNfe, idCarga);
+
+
+                }
+                else
+                {
+                    // erro retornado pela API
+                    string msgErro = retornoPut.statusMessage;
+
+                    MostrarMsg2("Erro ao executar o processo: " + msgErro);
+                }
+
+            }
         }
+        public class RetornoPut
+        {
+            public string value { get; set; }
+            public string type { get; set; }
+            public string status { get; set; }
+            public string statusMessage { get; set; }
+        }
+
+        public class RetornoXml
+        {
+            public string name { get; set; }
+            public string type { get; set; }
+            public string format { get; set; }
+            public string data { get; set; } // aqui vem o XML
+        }
+        public void SalvarXmlNoBanco(string xml, string carga)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            XmlNamespaceManager ns = new XmlNamespaceManager(doc.NameTable);
+            ns.AddNamespace("nfe", "http://www.portalfiscal.inf.br/nfe");
+
+            // ===== DADOS PRINCIPAIS =====
+            string chave = doc.SelectSingleNode("//nfe:infNFe", ns).Attributes["Id"].Value.Replace("NFe", "");
+            string numero = doc.SelectSingleNode("//nfe:ide/nfe:nNF", ns)?.InnerText;
+            string serie = doc.SelectSingleNode("//nfe:ide/nfe:serie", ns)?.InnerText;
+            string dhEmi = doc.SelectSingleNode("//nfe:ide/nfe:dhEmi", ns)?.InnerText;
+
+            string emitCnpj = doc.SelectSingleNode("//nfe:emit/nfe:CNPJ", ns)?.InnerText;
+            string emitNome = doc.SelectSingleNode("//nfe:emit/nfe:xNome", ns)?.InnerText;
+            string emitFant = doc.SelectSingleNode("//nfe:emit/nfe:xFant", ns)?.InnerText;
+            string emitIE = doc.SelectSingleNode("//nfe:emit/nfe:IE", ns)?.InnerText;
+            string emitEnd = doc.SelectSingleNode("//nfe:emit/nfe:enderEmit/nfe:xLgr", ns)?.InnerText;
+            string emitNum = doc.SelectSingleNode("//nfe:emit/nfe:enderEmit/nfe:nro", ns)?.InnerText;
+            string emitBairro = doc.SelectSingleNode("//nfe:emit/nfe:enderEmit/nfe:xBairro", ns)?.InnerText;
+            string emitMun = doc.SelectSingleNode("//nfe:emit/nfe:enderEmit/nfe:xMun", ns)?.InnerText;
+            string emitUF = doc.SelectSingleNode("//nfe:emit/nfe:enderEmit/nfe:UF", ns)?.InnerText;
+            string emitCEP = doc.SelectSingleNode("//nfe:emit/nfe:enderEmit/nfe:CEP", ns)?.InnerText;
+
+            string destCnpj = doc.SelectSingleNode("//nfe:dest/nfe:CNPJ", ns)?.InnerText;
+            string destNome = doc.SelectSingleNode("//nfe:dest/nfe:xNome", ns)?.InnerText;
+            string destIE = doc.SelectSingleNode("//nfe:dest/nfe:IE", ns)?.InnerText;
+            string destEnd = doc.SelectSingleNode("//nfe:dest/nfe:enderDest/nfe:xLgr", ns)?.InnerText;
+            string destNum = doc.SelectSingleNode("//nfe:dest/nfe:enderDest/nfe:nro", ns)?.InnerText;
+            string destBairro = doc.SelectSingleNode("//nfe:dest/nfe:enderDest/nfe:xBairro", ns)?.InnerText;
+            string destMun = doc.SelectSingleNode("//nfe:dest/nfe:enderDest/nfe:xMun", ns)?.InnerText;
+            string destUF = doc.SelectSingleNode("//nfe:dest/nfe:enderDest/nfe:UF", ns)?.InnerText;
+            string destCEP = doc.SelectSingleNode("//nfe:dest/nfe:enderDest/nfe:CEP", ns)?.InnerText;
+
+            string vbc = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vBC", ns)?.InnerText;
+            string vicms = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vICMS", ns)?.InnerText;
+            string vprod = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vProd", ns)?.InnerText;
+            string vfrete = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vFrete", ns)?.InnerText;
+            string vseg = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vSeg", ns)?.InnerText;
+            string vdesc = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vDesc", ns)?.InnerText;
+            string vipi = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vIPI", ns)?.InnerText;
+            string vpis = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vPIS", ns)?.InnerText;
+            string vcofins = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vCOFINS", ns)?.InnerText;
+            string vnf = doc.SelectSingleNode("//nfe:ICMSTot/nfe:vNF", ns)?.InnerText;
+
+            string protocolo = doc.SelectSingleNode("//nfe:protNFe/nfe:infProt/nfe:nProt", ns)?.InnerText;
+            string dataAut = doc.SelectSingleNode("//nfe:protNFe/nfe:infProt/nfe:dhRecbto", ns)?.InnerText;
+
+            int idNfe;
+
+            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                con.Open();
+
+                string sqlNfe = @"
+                        INSERT INTO tbnfe
+                        (chavenfe,numeronfe,serienfe,datemissao,
+                        emit_cnpj,emit_nome,emit_fantasia,emit_ie,emit_endereco,emit_numero,emit_bairro,emit_municipio,emit_uf,emit_cep,
+                        dest_cnpj,dest_nome,dest_ie,dest_endereco,dest_numero,dest_bairro,dest_municipio,dest_uf,dest_cep,
+                        vbc,vicms,vprod,vfrete,vseg,vdesc,vipi,vpis,vcofins,vnf,
+                        protocolo,dataautorizacao,carga)
+                        VALUES
+                        (@chave,@numero,@serie,@dataemi,
+                        @emitcnpj,@emitnome,@emitfant,@emitie,@emitend,@emitnum,@emitbairro,@emitmun,@emituf,@emitcep,
+                        @destcnpj,@destnome,@destie,@destend,@destnum,@destbairro,@destmun,@destuf,@destcep,
+                        @vbc,@vicms,@vprod,@vfrete,@vseg,@vdesc,@vipi,@vpis,@vcofins,@vnf,
+                        @prot,@dataaut,@carga);
+                        SELECT SCOPE_IDENTITY();";
+
+                SqlCommand cmd = new SqlCommand(sqlNfe, con);
+
+                cmd.Parameters.AddWithValue("@chave", chave);
+                cmd.Parameters.AddWithValue("@numero", numero);
+                cmd.Parameters.AddWithValue("@serie", serie);
+                cmd.Parameters.AddWithValue("@dataemi", DateTime.Parse(dhEmi));
+                cmd.Parameters.AddWithValue("@emitcnpj", emitCnpj);
+                cmd.Parameters.AddWithValue("@emitnome", emitNome);
+                cmd.Parameters.AddWithValue("@emitfant", emitFant);
+                cmd.Parameters.AddWithValue("@emitie", emitIE);
+                cmd.Parameters.AddWithValue("@emitend", emitEnd);
+                cmd.Parameters.AddWithValue("@emitnum", emitNum);
+                cmd.Parameters.AddWithValue("@emitbairro", emitBairro);
+                cmd.Parameters.AddWithValue("@emitmun", emitMun);
+                cmd.Parameters.AddWithValue("@emituf", emitUF);
+                cmd.Parameters.AddWithValue("@emitcep", emitCEP);
+                cmd.Parameters.AddWithValue("@destcnpj", destCnpj);
+                cmd.Parameters.AddWithValue("@destnome", destNome);
+                cmd.Parameters.AddWithValue("@destie", destIE);
+                cmd.Parameters.AddWithValue("@destend", destEnd);
+                cmd.Parameters.AddWithValue("@destnum", destNum);
+                cmd.Parameters.AddWithValue("@destbairro", destBairro);
+                cmd.Parameters.AddWithValue("@destmun", destMun);
+                cmd.Parameters.AddWithValue("@destuf", destUF);
+                cmd.Parameters.AddWithValue("@destcep", destCEP);
+                cmd.Parameters.AddWithValue("@vbc", vbc);
+                cmd.Parameters.AddWithValue("@vicms", vicms);
+                cmd.Parameters.AddWithValue("@vprod", vprod);
+                cmd.Parameters.AddWithValue("@vfrete", vfrete);
+                cmd.Parameters.AddWithValue("@vseg", vseg);
+                cmd.Parameters.AddWithValue("@vdesc", vdesc);
+                cmd.Parameters.AddWithValue("@vipi", vipi);
+                cmd.Parameters.AddWithValue("@vpis", vpis);
+                cmd.Parameters.AddWithValue("@vcofins", vcofins);
+                cmd.Parameters.AddWithValue("@vnf", vnf);
+                cmd.Parameters.AddWithValue("@prot", protocolo);
+                cmd.Parameters.AddWithValue("@dataaut", DateTime.Parse(dataAut));
+                cmd.Parameters.AddWithValue("@carga", carga);
+
+                idNfe = Convert.ToInt32(cmd.ExecuteScalar());
+
+                // ===== ITENS =====
+                var itens = doc.SelectNodes("//nfe:det", ns);
+
+                foreach (XmlNode item in itens)
+                {
+                    string sqlItem = @"
+                            INSERT INTO tbnfeitem
+                            (idnfe,numerolinha,codproduto,descricao,ncm,cfop,unidade,quantidade,valorunitario,valortotal,
+                            icms_origem,icms_cst,ipi_cst,pis_cst,cofins_cst)
+                            VALUES
+                            (@id,@linha,@cod,@desc,@ncm,@cfop,@und,@qtd,@vun,@vtot,
+                            @orig,@cst,@ipi,@pis,@cof)";
+
+                    SqlCommand cmdItem = new SqlCommand(sqlItem, con);
+
+                    cmdItem.Parameters.AddWithValue("@id", idNfe);
+                    cmdItem.Parameters.AddWithValue("@linha", item["nItem"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@cod", item["prod"]["cProd"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@desc", item["prod"]["xProd"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@ncm", item["prod"]["NCM"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@cfop", item["prod"]["CFOP"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@und", item["prod"]["uCom"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@qtd", item["prod"]["qCom"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@vun", item["prod"]["vUnCom"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@vtot", item["prod"]["vProd"].InnerText);
+                    cmdItem.Parameters.AddWithValue("@orig", XmlValue(item, "imposto/ICMS/*/orig"));
+                    cmdItem.Parameters.AddWithValue("@cst", XmlValue(item, "imposto/ICMS/*/CST"));
+                    cmdItem.Parameters.AddWithValue("@ipi", XmlValue(item, "imposto/IPI/*/CST"));
+                    cmdItem.Parameters.AddWithValue("@pis", XmlValue(item, "imposto/PIS/*/CST"));
+                    cmdItem.Parameters.AddWithValue("@cof", XmlValue(item, "imposto/COFINS/*/CST"));
+
+
+                    cmdItem.ExecuteNonQuery();
+                }
+            }
+        }
+        object XmlValue(XmlNode node, string xpath)
+        {
+            var n = node.SelectSingleNode(xpath);
+            return n == null ? DBNull.Value : (object)n.InnerText;
+        }
+
 
         private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string peso, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota, string codmotorista, string codveiculo)
         {
