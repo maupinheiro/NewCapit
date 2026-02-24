@@ -1404,37 +1404,7 @@
                                                                                                 </div>
 
                                                                                                 <div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
-                                                                                                    <!-- Conteúdo Notas Fiscais -->
-                                                                                                    <%-- <asp:Repeater ID="rptNotas" runat="server">
-    <ItemTemplate>
-
-        <asp:TextBox ID="txtChaveNF" runat="server"
-            AutoPostBack="true"
-            OnTextChanged="txtChaveNF_TextChanged" />
-
-        <asp:TextBox ID="txtCNPJRemetente" runat="server" />
-        <asp:TextBox ID="txtCNPJDestinatario" runat="server" />
-
-        <asp:Label ID="lblNumeroNF" runat="server" />
-        <asp:Label ID="lblSerieNF" runat="server" />
-        <asp:Label ID="lblEmissaoNF" runat="server" />
-        <asp:Label ID="lblStatusNF" runat="server" />
-
-        <asp:GridView ID="gvProdutosNF" runat="server"
-            AutoGenerateColumns="false">
-            <Columns>
-                <asp:BoundField DataField="produto" HeaderText="Produto" />
-                <asp:BoundField DataField="quantidade" HeaderText="Qtd" />
-                <asp:BoundField DataField="peso" HeaderText="Peso" />
-                <asp:BoundField DataField="valor" HeaderText="Valor" />
-            </Columns>
-        </asp:GridView>
-
-        <asp:Label ID="lblPesoTotalNF" runat="server" />
-        <asp:Label ID="lblValorTotalNF" runat="server" />
-
-    </ItemTemplate>
-</asp:Repeater>--%>
+                                                                                             
 
 
                                                                                                     <div class="row g-3">
@@ -1445,6 +1415,9 @@
                                                                                                                 placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
                                                                                                             <!-- OnTextChanged="txtChaveNF_TextChanged" -->
                                                                                                         </div>
+                                                                                                         <div class="col-md-2">
+                                                                                                             <asp:Button ID="btnBuscarNfe" CssClass="btn btn-outline-success w-100" CommandName="BuscarNfe" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Buscar NFe" />
+                                                                                                         </div>
                                                                                                     </div>
                                                                                                     <div class="row g-3">
                                                                                                         <div class="col-md-3">

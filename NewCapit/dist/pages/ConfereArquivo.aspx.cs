@@ -1549,6 +1549,14 @@ namespace NewCapit
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                 }
                                             }
+                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                            {
+
+                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                marcacoes.Add(hora);
+
+                                            }
                                             else
                                             {
                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -1627,6 +1635,14 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                         marcacoes.Add(hora);
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                    }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        marcacoes.Add(hora);
+
                                                     }
                                                     else
                                                     {
@@ -1710,11 +1726,20 @@ namespace NewCapit
 
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                {
+
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                    marcacoes.Add(hora);
+
+                                                }
                                                 else
                                                 {
                                                     // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                 }
+
                                             }
                                             else
                                             {
@@ -3067,6 +3092,14 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                {
+
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                    marcacoes.Add(hora);
+
+                                                }
                                                 else
                                                 {
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -3145,6 +3178,14 @@ namespace NewCapit
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                             marcacoes.Add(hora);
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
                                                         }
                                                         else
                                                         {
@@ -3228,11 +3269,20 @@ namespace NewCapit
 
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        marcacoes.Add(hora);
+
+                                                    }
                                                     else
                                                     {
                                                         // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
+
                                                 }
                                                 else
                                                 {
@@ -4630,6 +4680,14 @@ namespace NewCapit
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         }
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        marcacoes.Add(hora);
+
+                                                    }
                                                     else
                                                     {
                                                         //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -4708,6 +4766,14 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                 marcacoes.Add(hora);
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                            }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                marcacoes.Add(hora);
+
                                                             }
                                                             else
                                                             {
@@ -4791,11 +4857,20 @@ namespace NewCapit
 
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
+                                                        }
                                                         else
                                                         {
                                                             // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                         }
+
                                                     }
                                                     else
                                                     {
@@ -6154,6 +6229,14 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
+                                                        }
                                                         else
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -6232,6 +6315,14 @@ namespace NewCapit
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                     marcacoes.Add(hora);
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    marcacoes.Add(hora);
+
                                                                 }
                                                                 else
                                                                 {
@@ -6315,11 +6406,20 @@ namespace NewCapit
 
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                marcacoes.Add(hora);
+
+                                                            }
                                                             else
                                                             {
                                                                 // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
+
                                                         }
                                                         else
                                                         {
@@ -7730,6 +7830,14 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
+                                                        }
                                                         else
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -7808,6 +7916,14 @@ namespace NewCapit
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                     marcacoes.Add(hora);
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    marcacoes.Add(hora);
+
                                                                 }
                                                                 else
                                                                 {
@@ -7891,11 +8007,20 @@ namespace NewCapit
 
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                marcacoes.Add(hora);
+
+                                                            }
                                                             else
                                                             {
                                                                 // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
+
                                                         }
                                                         else
                                                         {
@@ -9255,6 +9380,14 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
                                                         }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
+                                                        }
                                                         else
                                                         {
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -9333,6 +9466,14 @@ namespace NewCapit
                                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                     marcacoes.Add(hora);
                                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                                }
+                                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                                {
+
+                                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                    marcacoes.Add(hora);
+
                                                                 }
                                                                 else
                                                                 {
@@ -9416,11 +9557,20 @@ namespace NewCapit
 
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
+                                                            else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                            {
+
+                                                                //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                                //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                                marcacoes.Add(hora);
+
+                                                            }
                                                             else
                                                             {
                                                                 // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                             }
+
                                                         }
                                                         else
                                                         {
@@ -10830,6 +10980,14 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                {
+
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                    marcacoes.Add(hora);
+
+                                                }
                                                 else
                                                 {
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -10908,6 +11066,14 @@ namespace NewCapit
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                             marcacoes.Add(hora);
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
                                                         }
                                                         else
                                                         {
@@ -10991,11 +11157,20 @@ namespace NewCapit
 
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        marcacoes.Add(hora);
+
+                                                    }
                                                     else
                                                     {
                                                         // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
+
                                                 }
                                                 else
                                                 {
@@ -12356,6 +12531,14 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
                                                 }
+                                                else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                {
+
+                                                    //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                    //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                    marcacoes.Add(hora);
+
+                                                }
                                                 else
                                                 {
                                                     //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
@@ -12434,6 +12617,14 @@ namespace NewCapit
                                                             //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                             marcacoes.Add(hora);
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
+                                                        }
+                                                        else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                        {
+
+                                                            //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                            //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                            marcacoes.Add(hora);
+
                                                         }
                                                         else
                                                         {
@@ -12517,11 +12708,20 @@ namespace NewCapit
 
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
+                                                    else if (dt4.Rows[a][2].ToString() == "RETORNO PERNOITE")
+                                                    {
+
+                                                        //write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
+                                                        //write.WriteLine("+00" + hora.Replace(":", "") + data.Replace("/", "") + cracha.PadLeft(10, '0') + "02020000");
+                                                        marcacoes.Add(hora);
+
+                                                    }
                                                     else
                                                     {
                                                         // write.WriteLine(cracha + ";" + data + ";" + hora + ";1;0202");
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
                                                     }
+
                                                 }
                                                 else
                                                 {

@@ -299,9 +299,9 @@ namespace NewCapit
         {
             //string[] cod_transp = ddlAgregados.SelectedItem.ToString().Split('-');
 
-            string sql = @"INSERT INTO tbveiculos (codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca, venclicencacet)
+            string sql = @"INSERT INTO tbveiculos (codvei, tipvei, tipoveiculo, modelo, ano, dtcvei, nucleo, ativo_inativo, plavei, rastreamento, codrastreador, rastreador, codtra, transp,usucad, dtccad, venclicenciamento, marca, renavan, cor, comunicacao, antt, ufplaca, cidplaca, dataaquisicao, comprimento, largura, altura, tacografo, modelotacografo, controlepatrimonio, chassi, terminal, codigo, venccronotacografo, vencimentolaudofumaca)
               VALUES
-              (@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca, @venclicencacet)";
+              (@codvei, @tipvei, @tipoveiculo, @modelo, @ano, @dtcvei, @nucleo, @ativo_inativo, @plavei, @rastreamento, @codrastreador, @rastreador, @codtra, @transp, @usucad, @dtccad, @venclicenciamento, @marca, @renavan, @cor, @comunicacao, @antt, @ufplaca, @cidplaca, @dataaquisicao, @comprimento, @largura, @altura, @tacografo, @modelotacografo, @controlepatrimonio, @chassi, @terminal, @codigo, @venccronotacografo, @vencimentolaudofumaca)";
 
             try
             {
@@ -326,16 +326,15 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@transp", ddlAgregados.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@usucad", txtUsuCadastro.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@dtccad", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
-                    cmd.Parameters.AddWithValue("@venclicenciamento", SafeDate(txtLicenciamento.Text));
-                cmd.Parameters.AddWithValue("@venclicencacet", SafeDate(txtVencCET.Text));
-                cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString().Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@venclicenciamento", SafeDate(txtLicenciamento.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@marca", ddlMarca.SelectedItem.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@renavan", txtRenavam.Text.Trim());
                     cmd.Parameters.AddWithValue("@cor", ddlCor.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@comunicacao", ddlComunicacao.SelectedItem.Text.ToString().Trim());
                     cmd.Parameters.AddWithValue("@antt", txtAntt.Text.Trim());
                     cmd.Parameters.AddWithValue("@ufplaca", ddlEstados.SelectedItem.Text.ToString().Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@cidplaca", ddlCidades.SelectedItem.Text.ToString().Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@dataaquisicao", SafeDate(txtDataAquisicao.Text));
+                    cmd.Parameters.AddWithValue("@dataaquisicao", txtDataAquisicao.Text.Trim());
                     cmd.Parameters.AddWithValue("@comprimento", txtComprimento.Text.Trim());
                     cmd.Parameters.AddWithValue("@largura", txtLargura.Text.Trim());
                     cmd.Parameters.AddWithValue("@altura", txtAltura.Text.Trim());
@@ -345,8 +344,8 @@ namespace NewCapit
                     cmd.Parameters.AddWithValue("@chassi", txtChassi.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@terminal", txtId.Text.Trim());
                     cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text.Trim());
-                    cmd.Parameters.AddWithValue("@venccronotacografo", SafeDate(txtCronotacografo.Text));
-                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", SafeDate(txtOpacidade.Text));
+                    cmd.Parameters.AddWithValue("@venccronotacografo", SafeDate(txtCronotacografo.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@vencimentolaudofumaca", SafeDate(txtOpacidade.Text.Trim()));
 
 
                     // Abrindo a conexão e executando a query
@@ -367,16 +366,24 @@ namespace NewCapit
                         Thread.Sleep(5000);
                     }
                 }
-        }
+            }
             catch (Exception ex)
             {
 
                 ExibirToastErro("Erro ao salvar os dados do veículo. " + ex.Message);
-        Thread.Sleep(5000);
+                Thread.Sleep(5000);
                 Response.Redirect("ConsultaVeiculos.aspx");
 
             }
-}
+        }
+        private object SafeDate(string input)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(input, out dt))
+                return dt.ToString("yyyy-MM-dd");
+            else
+                return DBNull.Value;
+        }
         protected void ddlTecnologia_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodRastreador.Text = ddlTecnologia.SelectedValue.ToString();
@@ -611,14 +618,6 @@ namespace NewCapit
         protected void cboTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-        }
-        private object SafeDate(string input)
-        {
-            DateTime dt;
-            if (DateTime.TryParse(input, out dt))
-                return dt.ToString("yyyy-MM-dd");
-            else
-                return DBNull.Value;
         }
     }
 }
