@@ -15,49 +15,157 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
-        /// Controle ddlCliente.
+        /// Controle txtCodRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCliente;
+        protected global::System.Web.UI.WebControls.TextBox txtCodRemetente;
 
         /// <summary>
-        /// Controle ddlRota.
+        /// Controle cboRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlRota;
+        protected global::System.Web.UI.WebControls.DropDownList cboRemetente;
 
         /// <summary>
-        /// Controle ddlPagador.
+        /// Controle txtCNPJRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPagador;
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJRemetente;
 
         /// <summary>
-        /// Controle ddlTipoVeiculo.
+        /// Controle txtMunicipioRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoVeiculo;
+        protected global::System.Web.UI.WebControls.TextBox txtMunicipioRemetente;
 
         /// <summary>
-        /// Controle ddlMaterial.
+        /// Controle txtUFRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlMaterial;
+        protected global::System.Web.UI.WebControls.TextBox txtUFRemetente;
+
+        /// <summary>
+        /// Controle txtCodPagador.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodPagador;
+
+        /// <summary>
+        /// Controle cboPagador.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboPagador;
+
+        /// <summary>
+        /// Controle txtCNPJPagador.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJPagador;
+
+        /// <summary>
+        /// Controle txtCidPagador.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCidPagador;
+
+        /// <summary>
+        /// Controle txtUFPagador.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUFPagador;
+
+        /// <summary>
+        /// Controle txtCodRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodRota;
+
+        /// <summary>
+        /// Controle cboRota.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboRota;
+
+        /// <summary>
+        /// Controle cboTipoMaterial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboTipoMaterial;
+
+        /// <summary>
+        /// Controle cboTipoVeiculo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboTipoVeiculo;
+
+        /// <summary>
+        /// Controle ddlCidade.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCidade;
+
+        /// <summary>
+        /// Controle txtKMInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtKMInicial;
+
+        /// <summary>
+        /// Controle txtKMFinal.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtKMFinal;
 
         /// <summary>
         /// Controle txtPercentual.
@@ -69,13 +177,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPercentual;
 
         /// <summary>
-        /// Controle ddlTipoReajuste.
+        /// Controle ddlAplicarPara.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoReajuste;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAplicarPara;
 
         /// <summary>
         /// Controle btnSimular.
