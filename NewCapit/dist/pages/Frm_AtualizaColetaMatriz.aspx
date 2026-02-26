@@ -461,6 +461,28 @@
             i.value = v;
         }
     </script>
+   <script>
+       function formatarPeso(campo) {
+           // remove tudo que não for número
+           let valor = campo.value.replace(/\D/g, '');
+
+           if (valor.length < 4) {
+               campo.value = "0." + valor.padStart(3, "0");
+               return;
+           }
+
+           let inteiro = valor.substring(0, valor.length - 3);
+           let decimal = valor.substring(valor.length - 3);
+
+           // remove zeros à esquerda do inteiro
+           inteiro = inteiro.replace(/^0+/, '');
+           if (inteiro === "") inteiro = "0";
+
+           campo.value = inteiro + "." + decimal;
+       }
+   </script>
+
+
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -1419,61 +1441,54 @@
                                                                                                              <asp:Button ID="btnBuscarNfe" CssClass="btn btn-outline-success w-100" CommandName="BuscarNfe" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Buscar NFe" />
                                                                                                          </div>
                                                                                                     </div>
-                                                                                                    <div class="row g-3">
-                                                                                                        <div class="col-md-3">
-                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Chave de Acesso:</label>
-                                                                                                            <asp:Label ID="lblChaveNF" runat="server" />
-                                                                                                        </div>
-                                                                                                        <div class="col-md-2">
-                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Nota Fiscal:</label>
-                                                                                                            <asp:Label ID="lblNumeroNF" runat="server" />
-                                                                                                        </div>
-                                                                                                        <div class="col-md-1">
-                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Série:</label>
-                                                                                                            <asp:Label ID="lblSerieNF" runat="server" />
-                                                                                                        </div>
-                                                                                                        <div class="col-md-2">
-                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Emissão:</label>
-                                                                                                            <asp:Label ID="lblEmissaoNF" runat="server" />
-                                                                                                        </div>
-                                                                                                        <div class="col-md-2">
-                                                                                                            <label for="inputNotaFiscal" style="text-align: left">Status:</label>
-                                                                                                            <asp:Label ID="lblStatusNF" runat="server" />
-                                                                                                        </div>
-                                                                                                    </div>
+                                                                                                   <br />
                                                                                                     <div class="row g-3">
                                                                                                         <div class="col-md-12">
-                                                                                                            <asp:GridView ID="gvProdutosNF" runat="server"
+                                                                                                            <asp:GridView ID="gvNF" runat="server" OnRowCommand="gvNF_RowCommand"
                                                                                                                 CssClass="table table-bordered"
                                                                                                                 AutoGenerateColumns="false">
                                                                                                                 <Columns>
-                                                                                                                    <asp:BoundField DataField="produto" HeaderText="Produto" />
-                                                                                                                    <asp:BoundField DataField="quantidade" HeaderText="Qtd" />
-                                                                                                                    <asp:BoundField DataField="peso" HeaderText="Peso" DataFormatString="{0:N3}" />
-                                                                                                                    <asp:BoundField DataField="valor" HeaderText="Valor" DataFormatString="{0:C}" />
+                                                                                                                    <asp:BoundField DataField="chavenfe" HeaderText="Chave NF-e" />
+                                                                                                                    <asp:BoundField DataField="numeronfe" HeaderText="Numero" />
+                                                                                                                    <asp:BoundField DataField="serienfe" HeaderText="Serie"  />
+                                                                                                                   <asp:TemplateField HeaderText="Peso Total">
+                                                                                                                        <ItemTemplate>
+                                                                                                                            <asp:TextBox ID="txtPeso" runat="server"
+                                                                                                                                Text='<%# Bind("peso","{0:0.000}") %>'
+                                                                                                                                CssClass="form-control"
+                                                                                                                                Width="100px"
+                                                                                                                                onkeyup="formatarPeso(this)" />
+        
+                                                                                                                            <asp:HiddenField ID="hfIdNfe" runat="server"
+                                                                                                                                Value='<%# Bind("idnfe") %>' />
+                                                                                                                        </ItemTemplate>
+                                                                                                                    </asp:TemplateField>
+                                                                                                                    <asp:BoundField DataField="vnf" HeaderText="Valor NF" DataFormatString="{0:N3}" />
+                                                                                                                    <asp:TemplateField HeaderText="Ação">
+                                                                                                                        <ItemTemplate>
+                                                                                                                            <asp:Button ID="btnSalvarPeso" runat="server"
+                                                                                                                                Text="Salvar"
+                                                                                                                                CssClass="btn btn-sm btn-success"
+                                                                                                                                CommandName="SalvarPeso" />
+                                                                                                                        </ItemTemplate>
+
+                                                                                                                    </asp:TemplateField>
+                                                                                                                     <asp:TemplateField HeaderText="PDF">
+                                                                                                                        <ItemTemplate>
+                                                                                                                            <asp:Button 
+                                                                                                                                ID="btnDanfe" 
+                                                                                                                                runat="server"
+                                                                                                                                Text="Baixar DANFE"
+                                                                                                                                CssClass="btn btn-sm btn-warning"
+                                                                                                                                CommandName="BaixarDanfe"
+                                                                                                                                CommandArgument='<%# Eval("chavenfe") %>' />
+                                                                                                                        </ItemTemplate>
+                                                                                                                    </asp:TemplateField>
                                                                                                                 </Columns>
                                                                                                             </asp:GridView>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <div class="row g-3">
-                                                                                                        <div class="col-md-3">
-                                                                                                        </div>
-                                                                                                        <div class="col-md-3">
-                                                                                                        </div>
-                                                                                                        <div class="col-md-3">
-                                                                                                        </div>
-                                                                                                        <br />
-                                                                                                        <div class="col-md-3">
-                                                                                                            <strong>Peso Total:</strong>
-                                                                                                            <asp:Label ID="lblPesoTotalNF" runat="server" />
-
-                                                                                                            <br />
-
-                                                                                                            <strong>Valor Total:</strong>
-                                                                                                            <asp:Label ID="lblValorTotalNF" runat="server" />
-
-                                                                                                        </div>
-                                                                                                    </div>
+                                                                                                    
 
 
 
@@ -1685,6 +1700,9 @@
                                                                                         </div>
                                                                                         </div>
                                                                                     </ContentTemplate>
+                                                                                    <Triggers>
+                                                                                        <asp:PostBackTrigger ControlID="gvNF" />
+                                                                                    </Triggers>
 
                                                                                 </asp:UpdatePanel>
                                                                             </div>

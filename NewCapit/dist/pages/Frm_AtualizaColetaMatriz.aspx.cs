@@ -68,6 +68,8 @@ namespace NewCapit.dist.pages
         string cvaOC;
         string chegada;
         string andamentoCarga;
+        public string Data { get; set; } // errado se não mapear
+
 
         BigInteger idveiculo;
         string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade,preferencia,bloqueio;
@@ -815,8 +817,45 @@ namespace NewCapit.dist.pages
                 }
             }
 
-        }
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                string idCarga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+                GridView gvn = (GridView)e.Item.FindControl("gvNF");
+                int index = e.Item.ItemIndex;
 
+                if (gvn != null)
+                {
+                    CarregarNF(idCarga,  gvn);
+                }
+            }
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                GridView gv = (GridView)e.Item.FindControl("gvNF");
+                gv.RowCommand += gvNF_RowCommand;
+            }
+
+        }
+        private void CarregarNF(string idCarga, GridView gvn)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"select idnfe, chavenfe, numeronfe,serienfe,peso,vnf from tbnfe where carga=@carga";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add("@carga", SqlDbType.Int).Value = idCarga;
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        gvn.DataSource = dr;
+                        gvn.DataBind();
+                    }
+
+                }
+            }
+        }
         private void CarregarPedidos(int idCarga, GridView gv)
         {
             using (SqlConnection conn = new SqlConnection(
@@ -1375,6 +1414,21 @@ namespace NewCapit.dist.pages
                     try
                     {
                         if (con.State == ConnectionState.Closed) con.Open();
+                        string sqlExiste = "SELECT COUNT(1) FROM tbnfse WHERE num_documento = @num_documento";
+
+                        using (SqlCommand cmdExiste = new SqlCommand(sqlExiste, con))
+                        {
+                           
+                            cmdExiste.Parameters.AddWithValue("@num_documento", txtNFSe.Text);
+
+                            int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
+
+                            if (existe > 0)
+                            {
+                                MostrarMsg2("Já existe uma NFS-e cadastrada com esta chave:\n" + txtNFSe.Text);
+                                return; // ⛔ não continua o método
+                            }
+                        }
 
                         using (SqlTransaction trans = con.BeginTransaction())
                         {
@@ -1665,6 +1719,8 @@ namespace NewCapit.dist.pages
         }
         public void SalvarXmlNoBanco(string xml, string carga)
         {
+
+
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
 
@@ -1713,6 +1769,81 @@ namespace NewCapit.dist.pages
             string dataAut = doc.SelectSingleNode("//nfe:protNFe/nfe:infProt/nfe:dhRecbto", ns)?.InnerText;
 
             int idNfe;
+            if (con.State == ConnectionState.Closed) con.Open();
+            string sqlExiste = "SELECT COUNT(1) FROM tbnfe WHERE chavenfe = @chave";
+
+            using (SqlCommand cmdExiste = new SqlCommand(sqlExiste, con))
+            {
+                
+                cmdExiste.Parameters.AddWithValue("@chave", chave);
+
+                int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
+
+                if (existe > 0)
+                {
+                    MostrarMsg2("Já existe uma NF-e cadastrada com esta chave:\n" + chave);
+                    return; // ⛔ não continua o método
+                }
+                con.Close();
+            }
+
+            string emitCnpjLimpo = LimpaCnpj(emitCnpj);
+            string destCnpjLimpo = LimpaCnpj(destCnpj);
+
+            string cnpjRemCarga = "";
+            string cnpjDestCarga = "";
+            if (con.State == ConnectionState.Closed) con.Open();
+            string sqlCarga = @"
+                                select 
+                                 REPLACE(REPLACE(REPLACE(cnpj_remetente, '.', ''), '/', ''), '-', '') AS cnpj_remetente,
+                                 REPLACE(REPLACE(REPLACE(cnpj_destinatario, '.', ''), '/', ''), '-', '') AS cnpj_destinatario
+                                from tbcargas
+                                where carga = @carga";
+
+            using (SqlCommand cmdCarga = new SqlCommand(sqlCarga, con))
+            {
+                
+                cmdCarga.Parameters.AddWithValue("@carga", carga);
+                
+                using (SqlDataReader dr = cmdCarga.ExecuteReader())
+                {
+                    if (!dr.Read())
+                        MostrarMsg2("Carga não encontrada na tbcargas.");
+
+                    cnpjRemCarga = dr["cnpj_remetente"].ToString().Trim();
+                    cnpjDestCarga = dr["cnpj_destinatario"].ToString().Trim();
+                }
+                con.Close();
+            }
+
+            // 🔍 VALIDAÇÃO DE CAMPOS EM BRANCO
+            if (string.IsNullOrWhiteSpace(cnpjRemCarga) && string.IsNullOrWhiteSpace(cnpjDestCarga))
+            {
+                MostrarMsg2("CNPJ do REMETENTE e do DESTINATÁRIO não estão cadastrados na carga.");
+            }
+
+            if (string.IsNullOrWhiteSpace(cnpjRemCarga))
+            {
+                MostrarMsg2("CNPJ do REMETENTE não está cadastrado na carga.");
+            }
+
+            if (string.IsNullOrWhiteSpace(cnpjDestCarga))
+            {
+                MostrarMsg2("CNPJ do DESTINATÁRIO não está cadastrado na carga.");
+            }
+
+            // 🔐 VALIDAÇÃO DE CONFERÊNCIA COM O XML
+            if (emitCnpjLimpo != cnpjRemCarga)
+            {
+                MostrarMsg2("CNPJ do EMITENTE da NF não confere com o REMETENTE da carga.");
+            }
+
+            if (destCnpjLimpo != cnpjDestCarga)
+            {
+                MostrarMsg2("CNPJ do DESTINATÁRIO da NF não confere com o DESTINATÁRIO da carga.");
+            }
+
+            
 
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -1816,6 +1947,10 @@ namespace NewCapit.dist.pages
             return n == null ? DBNull.Value : (object)n.InnerText;
         }
 
+        private string LimpaCnpj(string cnpj)
+        {
+            return cnpj.Replace(".", "").Replace("/", "").Replace("-", "").Trim();
+        }
 
         private SolicitacaoViagemRequest CriarObjetoSolicitacao(string idCarga, string placa, string valor, string peso, string previsao_inicial, string previsao_final, string percurso, string rota, string id_rota, string codmotorista, string codveiculo)
         {
@@ -5726,6 +5861,103 @@ namespace NewCapit.dist.pages
 
 
         }
+
+        protected void gvNF_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "SalvarPeso")
+            {
+                GridView gv = (GridView)sender;
+                GridViewRow row = (GridViewRow)((System.Web.UI.Control)e.CommandSource).NamingContainer;
+
+                TextBox txtPeso = (TextBox)row.FindControl("txtPeso");
+                HiddenField hfIdNfe = (HiddenField)row.FindControl("hfIdNfe");
+
+                decimal peso = Convert.ToDecimal(txtPeso.Text.Replace(",", "."),
+                                  System.Globalization.CultureInfo.InvariantCulture);
+
+                int idNfe = Convert.ToInt32(hfIdNfe.Value);
+
+                AtualizarPeso(idNfe, peso);
+            }
+            if (e.CommandName == "BaixarDanfe")
+            {
+                string chaveNfe = e.CommandArgument.ToString();
+
+                BaixarDanfe(chaveNfe);
+            }
+
+        }
+
+        public void BaixarDanfe(string chave)
+        {
+            string url = "https://api.meudanfe.com.br/v2/fd/get/da/" + chave;
+
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.Method = "GET";
+            req.Headers.Add("Api-Key", "025caf00-6477-4d97-b133-f34ad21594f3");
+            req.Accept = "application/json";
+
+            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
+            using (StreamReader reader = new StreamReader(resp.GetResponseStream()))
+            {
+                string json = reader.ReadToEnd();
+
+                DanfeResult result = JsonConvert.DeserializeObject<DanfeResult>(json);
+
+                if (result == null || string.IsNullOrEmpty(result.data))
+                   MostrarMsg2("API não retornou o PDF. Resposta: " + json);
+
+                byte[] pdfBytes = Convert.FromBase64String(result.data);
+
+                HttpContext.Current.Response.Clear();
+                HttpContext.Current.Response.ContentType = "application/pdf";
+                HttpContext.Current.Response.AddHeader(
+                    "Content-Disposition",
+                    "attachment; filename=" + result.name
+                );
+                HttpContext.Current.Response.BinaryWrite(pdfBytes);
+                HttpContext.Current.Response.End();
+            }
+        }
+
+
+        private void AtualizarPeso(int idNfe, decimal peso)
+        {
+            
+
+            using (SqlConnection con = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                con.Open();
+
+                string sql = "UPDATE tbnfe SET peso = @peso WHERE idnfe = @id";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@peso", peso);
+                    cmd.Parameters.AddWithValue("@id", idNfe);
+                    cmd.ExecuteNonQuery();
+
+                    MostrarMsg2("Peso salvo com sucesso");
+                }
+            }
+        }
+       
+        public class ApiDanfeResponse
+        {
+            public bool success { get; set; }
+            public string name { get; set; }
+            public string data { get; set; }
+        }
+
+        public class DanfeResult
+        {
+            public string name { get; set; }
+            public string type { get; set; }
+            public string format { get; set; }
+            public string data { get; set; }
+        }
+
         protected void MostrarMsgMapa(string mensagem, string tipo = "info")
         {
             divMsgMapa.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
