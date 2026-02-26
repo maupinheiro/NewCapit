@@ -1400,7 +1400,7 @@ namespace NewCapit
                                                     //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                 }
-                                                marcacoes.Add(hora);
+                                                //marcacoes.Add(hora);
                                             }
                                             else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                             {
@@ -2943,7 +2943,7 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
-                                                    marcacoes.Add(hora);
+                                                    //marcacoes.Add(hora);
                                                 }
                                                 else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                 {
@@ -4531,7 +4531,7 @@ namespace NewCapit
                                                             //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                         }
-                                                        marcacoes.Add(hora);
+                                                        //marcacoes.Add(hora);
                                                     }
                                                     else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                     {
@@ -6080,7 +6080,7 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-                                                            marcacoes.Add(hora);
+                                                            //marcacoes.Add(hora);
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -7681,7 +7681,7 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-                                                            marcacoes.Add(hora);
+                                                            //marcacoes.Add(hora);
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -9231,7 +9231,7 @@ namespace NewCapit
                                                                 //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                             }
-                                                            marcacoes.Add(hora);
+                                                            //marcacoes.Add(hora);
                                                         }
                                                         else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                         {
@@ -10831,7 +10831,7 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
-                                                    marcacoes.Add(hora);
+                                                    //marcacoes.Add(hora);
                                                 }
                                                 else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                 {
@@ -12382,7 +12382,7 @@ namespace NewCapit
                                                         //write.WriteLine(cracha + ";" + data + ";" + DateTime.Parse(hora).AddMinutes(1).ToString("HH:mm") + ";1;2");
 
                                                     }
-                                                    marcacoes.Add(hora);
+                                                    //marcacoes.Add(hora);
                                                 }
                                                 else if (dt4.Rows[a][2].ToString() == "REINICIO DE VIAGEM")
                                                 {

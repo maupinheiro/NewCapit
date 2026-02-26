@@ -793,7 +793,7 @@ namespace NewCapit.dist.pages
         protected void btnAbrirMdfe_Click(object sender, EventArgs e)
         {
             ddlFiltroStatus.SelectedValue = "Pendente";
-            CarregarMdfe();
+            CarregarMdfeFiltro();
             ReabrirModal();
 
         }
@@ -805,33 +805,7 @@ namespace NewCapit.dist.pages
                 "openModal", "$('#modalMdfe').modal('show');", true);
         }
         
-        void CarregarMdfe()
-        {
-            string sql = @"
-                    SELECT id, status, mdfe_uf, mdfe_empresa, mdfe_numero, mdfe_serie,
-                           mdfe_situacao, cid_expedidor, uf_expedidor,
-                           cid_recebedor, uf_recebedor, mdfe_dv,
-                           mdfe_baixado, mdfe_data_baixa
-                    FROM tbcargas
-                    WHERE mdfe IS NOT NULL
-                ";
-
-            
-
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
-            {
-               
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                gvMdfe.DataSource = dt;
-                gvMdfe.DataBind();
-                //Response.Write(dt.Rows.Count);
-
-            }
-        }
+        
         void CarregarMdfeFiltro()
         {
             string sql = @"
@@ -900,7 +874,7 @@ namespace NewCapit.dist.pages
             if (selecionouAlgum)
             {
                 // Recarrega a grid para refletir as mudanças
-                CarregarMdfe(); // Chame sua função que preenche a gvMdfe
+                CarregarMdfeFiltro(); // Chame sua função que preenche a gvMdfe
 
                 //ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
                 //    "$('#modalMdfe').modal('hide'); alert('MDF-e(s) baixado(s) com sucesso!');", true);
@@ -912,6 +886,8 @@ namespace NewCapit.dist.pages
                 // Opcional: avisar que nada foi selecionado sem fechar o modal
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "Aviso", "alert('Selecione ao menos um item!');", true);
             }
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "openModal", "$('#modalMdfe').modal('show');", true);
         }
 
         private void AtualizarBaixaNoBanco(string id, string usuario)
@@ -937,21 +913,7 @@ namespace NewCapit.dist.pages
 
         protected void btnCancelarMDFe_Click(object sender, EventArgs e)
         {
-            //        string sql = @"
-            //UPDATE tbcargas
-            //    SET mdfe = NULL,
-            //        mdfe_situacao = NULL,
-            //        mdfe_empresa = NULL,
-            //        mdfe_numero = NULL,
-            //        mdfe_serie = NULL,
-            //        mdfe_uf = NULL,
-            //        mdfe_dv = NULL,
-            //        mdfe_baixado = NULL,
-            //        mdfe_data_baixa = NULL
-            //    WHERE mdfe IS NOT NULL
-            //";
-
-            //        ExecutarSql(sql, null);
+            
             ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
                     "$('#modalMdfe').modal('hide');", true);
         }
@@ -968,7 +930,7 @@ namespace NewCapit.dist.pages
                 cmd.ExecuteNonQuery();
             }
 
-            CarregarMdfe();
+            CarregarMdfeFiltro();
             ScriptManager.RegisterStartupScript(this, GetType(),
                 "openModal", "$('#modalMdfe').modal('show');", true);
         }
@@ -990,7 +952,7 @@ namespace NewCapit.dist.pages
                 CancelarMDFNoBanco(idMdf);
 
                 // Atualiza a Grid para mostrar que os dados sumiram/mudaram
-                CarregarMdfe();
+                CarregarMdfeFiltro();
 
                 // Alerta opcional via JS
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('MDF-e cancelado com sucesso!');", true);

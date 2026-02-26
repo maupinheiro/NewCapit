@@ -1630,6 +1630,8 @@ namespace NewCapit.dist.pages
             {
                 string idCarga = e.CommandArgument.ToString();
                 string chave = ((TextBox)e.Item.FindControl("txtChaveNF")).Text;
+                GridView gvn = (GridView)e.Item.FindControl("gvNF");
+                TextBox txtChaveNF = (TextBox)e.Item.FindControl("txtChaveNF");
 
                 //string chave = "35260259104422002446550370009554061775712904";
                 string apiKey = "025caf00-6477-4d97-b133-f34ad21594f3";
@@ -1689,6 +1691,9 @@ namespace NewCapit.dist.pages
                     //File.WriteAllText(Server.MapPath("~/nfe.xml"), xmlNfe);
 
                     SalvarXmlNoBanco(xmlNfe, idCarga);
+                    txtChaveNF.Text = string.Empty;
+                    txtChaveNF.Focus();
+                    CarregarNF(idCarga, gvn);
 
 
                 }
@@ -1820,27 +1825,32 @@ namespace NewCapit.dist.pages
             if (string.IsNullOrWhiteSpace(cnpjRemCarga) && string.IsNullOrWhiteSpace(cnpjDestCarga))
             {
                 MostrarMsg2("CNPJ do REMETENTE e do DESTINATÁRIO não estão cadastrados na carga.");
+                return;
             }
 
             if (string.IsNullOrWhiteSpace(cnpjRemCarga))
             {
                 MostrarMsg2("CNPJ do REMETENTE não está cadastrado na carga.");
+                return;
             }
 
             if (string.IsNullOrWhiteSpace(cnpjDestCarga))
             {
                 MostrarMsg2("CNPJ do DESTINATÁRIO não está cadastrado na carga.");
+                return;
             }
 
             // 🔐 VALIDAÇÃO DE CONFERÊNCIA COM O XML
             if (emitCnpjLimpo != cnpjRemCarga)
             {
                 MostrarMsg2("CNPJ do EMITENTE da NF não confere com o REMETENTE da carga.");
+                return;
             }
 
             if (destCnpjLimpo != cnpjDestCarga)
             {
                 MostrarMsg2("CNPJ do DESTINATÁRIO da NF não confere com o DESTINATÁRIO da carga.");
+                return;
             }
 
             
@@ -1872,8 +1882,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@dataemi", DateTime.Parse(dhEmi));
                 cmd.Parameters.AddWithValue("@emitcnpj", emitCnpj);
                 cmd.Parameters.AddWithValue("@emitnome", emitNome);
-                cmd.Parameters.AddWithValue("@emitfant", emitFant);
-                cmd.Parameters.AddWithValue("@emitie", emitIE);
+                AddParam(cmd, "@emitfant", emitFant);
+                AddParam(cmd, "@emitie", emitIE);
                 cmd.Parameters.AddWithValue("@emitend", emitEnd);
                 cmd.Parameters.AddWithValue("@emitnum", emitNum);
                 cmd.Parameters.AddWithValue("@emitbairro", emitBairro);
@@ -1882,7 +1892,7 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@emitcep", emitCEP);
                 cmd.Parameters.AddWithValue("@destcnpj", destCnpj);
                 cmd.Parameters.AddWithValue("@destnome", destNome);
-                cmd.Parameters.AddWithValue("@destie", destIE);
+                AddParam(cmd, "@destie", destIE);
                 cmd.Parameters.AddWithValue("@destend", destEnd);
                 cmd.Parameters.AddWithValue("@destnum", destNum);
                 cmd.Parameters.AddWithValue("@destbairro", destBairro);
@@ -1893,8 +1903,8 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@vicms", vicms);
                 cmd.Parameters.AddWithValue("@vprod", vprod);
                 cmd.Parameters.AddWithValue("@vfrete", vfrete);
-                cmd.Parameters.AddWithValue("@vseg", vseg);
-                cmd.Parameters.AddWithValue("@vdesc", vdesc);
+                AddParam(cmd, "@vseg", vseg);
+                AddParam(cmd, "@vdesc", vdesc);
                 cmd.Parameters.AddWithValue("@vipi", vipi);
                 cmd.Parameters.AddWithValue("@vpis", vpis);
                 cmd.Parameters.AddWithValue("@vcofins", vcofins);
@@ -1946,7 +1956,13 @@ namespace NewCapit.dist.pages
             var n = node.SelectSingleNode(xpath);
             return n == null ? DBNull.Value : (object)n.InnerText;
         }
-
+        void AddParam(SqlCommand cmd, string nome, object valor)
+        {
+            cmd.Parameters.AddWithValue(nome,
+                valor == null || string.IsNullOrWhiteSpace(valor.ToString())
+                ? (object)DBNull.Value
+                : valor);
+        }
         private string LimpaCnpj(string cnpj)
         {
             return cnpj.Replace(".", "").Replace("/", "").Replace("-", "").Trim();

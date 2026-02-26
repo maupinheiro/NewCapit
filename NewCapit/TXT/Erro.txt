@@ -1,0 +1,3 @@
+Erro! Contate o administrador. Detalhes do erro 50586: "The conversion of a varchar data type to a datetime data type resulted in an out-of-range value."
+Erro! Contate o administrador. Detalhes do erro 50586: "The conversion of a varchar data type to a datetime data type resulted in an out-of-range value."
+Erro! Contate o administrador. Detalhes do erro 50586: "The conversion of a varchar data type to a datetime data type resulted in an out-of-range value."

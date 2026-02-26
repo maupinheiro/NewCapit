@@ -955,7 +955,7 @@
                                         </div>
                                         <asp:UpdatePanel ID="updMapa" runat="server">
                                             <ContentTemplate>
-                                                <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="60000" OnTick="tmAtualizaMapa_Tick" />
+                                                <asp:Timer ID="tmAtualizaMapa" runat="server" Interval="100000" OnTick="tmAtualizaMapa_Tick" />
                                                 <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="570px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True" />
                                             </ContentTemplate>
                                             <Triggers>
