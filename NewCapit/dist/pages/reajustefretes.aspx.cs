@@ -76,27 +76,34 @@ namespace NewCapit.dist.pages
         }
         private void PreencherCombosClientes(params DropDownList[] combos)
         {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 SqlCommand cmd = new SqlCommand(
-                    "SELECT DISTINCT id, razcli FROM tbclientes where fl_exclusao is not null and ativo_inativo = 'ATIVO' ORDER BY razcli", conn);
+                    "SELECT codcli, razcli FROM tbclientes " +
+                    "WHERE fl_exclusao IS NULL AND ativo_inativo = 'ATIVO' " +
+                    "ORDER BY razcli", conn);
 
                 conn.Open();
                 SqlDataReader dr = cmd.ExecuteReader();
 
-                cboRemetente.Items.Clear();                
-                cboPagador.Items.Clear();
-
-                cboRemetente.Items.Add(" Selecione...");               
-                cboPagador.Items.Add(" Selecione...");
+                foreach (var combo in combos)
+                {
+                    combo.Items.Clear();
+                    combo.Items.Add(new ListItem("Selecione...", ""));
+                }
 
                 while (dr.Read())
                 {
-                    cboRemetente.Items.Add(dr["razcli"].ToString());                    
-                    cboPagador.Items.Add(dr["razcli"].ToString());
+                    string texto = dr["razcli"].ToString();
+                    string valor = dr["codcli"].ToString();
+
+                    foreach (var combo in combos)
+                    {
+                        combo.Items.Add(new ListItem(texto, valor));
+                    }
                 }
             }
-
         }
         private void PreencherComboMateriais()
         {
