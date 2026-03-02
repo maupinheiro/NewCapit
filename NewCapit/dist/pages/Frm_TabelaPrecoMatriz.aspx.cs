@@ -66,6 +66,7 @@ namespace NewCapit.dist.pages
             txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm"); 
             txtStatusRota.Text = "ATIVO";
+            txtTipoCargaANTT.Text = "Carga Geral";
         }
         private void PreencherCombosClientes()
         {
@@ -1558,11 +1559,11 @@ namespace NewCapit.dist.pages
                     string sql = @"
                     INSERT INTO tbtabeladefretes
                     (
-                        cod_frete, desc_frete, rota, desc_rota,  cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor,  cod_destinatario, destinatario, cid_destinatario, uf_destinatario, cod_recebedor, recebedor, cid_recebedor, uf_recebedor,  cod_consignatario, consignatario, cid_consignatario, uf_consignatario,  cod_pagador, pagador, cid_pagador, uf_pagador,  distancia, Tempo, frete_tng, frete_agregado, frete_agregado_com_desc_carreta, frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros, tipo_veiculo, tipo_material, data_cadastro, situacao, tipo_viagem, deslocamento, vigencia_inicial, vigencia_final, lotacao_minima, valor_fixo_terceiro, aluguel_carreta, desc_carreta, valor_fixo_tng, valor_especial, desc_especial, valor_com_desconto_especial,  observacao, cadastro_usuario, emitepedagio, vigencia_inicial_agregado, vigencia_final_agregado, vigencia_inicial_terceiro, vigencia_final_terceiro, despesa_adm,  codmot_especial, nommot_especial, codtra_especial, transp_especial, perc_frete_agregado, perc_frete_terceiro, perc_frete_especial, cobra_hora_parada, valor_hora_parada, franquia_hora_parada
+                        cod_frete, desc_frete, rota, desc_rota,  cod_remetente, remetente, cid_remetente, uf_remetente, cod_expedidor, expedidor, cid_expedidor, uf_expedidor,  cod_destinatario, destinatario, cid_destinatario, uf_destinatario, cod_recebedor, recebedor, cid_recebedor, uf_recebedor,  cod_consignatario, consignatario, cid_consignatario, uf_consignatario,  cod_pagador, pagador, cid_pagador, uf_pagador,  distancia, Tempo, frete_tng, frete_agregado, frete_agregado_com_desc_carreta, frete_terceiro, adicional_sobrenf, sec_cat, despacho, pedagio, outros, tipo_veiculo, tipo_material, data_cadastro, situacao, tipo_viagem, deslocamento, vigencia_inicial, vigencia_final, lotacao_minima, valor_fixo_terceiro, aluguel_carreta, desc_carreta, valor_fixo_tng, valor_especial, desc_especial, valor_com_desconto_especial,  observacao, cadastro_usuario, emitepedagio, vigencia_inicial_agregado, vigencia_final_agregado, vigencia_inicial_terceiro, vigencia_final_terceiro, despesa_adm,  codmot_especial, nommot_especial, codtra_especial, transp_especial, perc_frete_agregado, perc_frete_terceiro, perc_frete_especial, cobra_hora_parada, valor_hora_parada, franquia_hora_parada, quant_eixos, tabela_antt, tipo_carga_antt, resolucao_vigente, endereco_resolucao
                     )
                     VALUES
                     (
-                        @cod_frete, @desc_frete, @rota, @desc_rota,  @cod_remetente, @remetente, @cid_remetente, @uf_remetente, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor,  @cod_destinatario, @destinatario, @cid_destinatario, @uf_destinatario, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor,  @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario,  @cod_pagador, @pagador, @cid_pagador, @uf_pagador,  @distancia, @Tempo, @frete_tng, @frete_agregado, @frete_agregado_com_desc_carreta, @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao, @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final, @lotacao_minima, @valor_fixo_terceiro, @aluguel_carreta, @desc_carreta, @valor_fixo_tng, @valor_especial, @desc_especial, @valor_com_desconto_especial, @observacao, @cadastro_usuario, @emitepedagio, @vigencia_inicial_agregado, @vigencia_final_agregado, @vigencia_inicial_terceiro, @vigencia_final_terceiro, @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial, @transp_especial, @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial,@cobra_hora_parada, @valor_hora_parada, @franquia_hora_parada                      
+                        @cod_frete, @desc_frete, @rota, @desc_rota,  @cod_remetente, @remetente, @cid_remetente, @uf_remetente, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor,  @cod_destinatario, @destinatario, @cid_destinatario, @uf_destinatario, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor,  @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario,  @cod_pagador, @pagador, @cid_pagador, @uf_pagador,  @distancia, @Tempo, @frete_tng, @frete_agregado, @frete_agregado_com_desc_carreta, @frete_terceiro, @adicional_sobrenf, @sec_cat, @despacho, @pedagio, @outros, @tipo_veiculo, @tipo_material, @data_cadastro, @situacao, @tipo_viagem, @deslocamento, @vigencia_inicial, @vigencia_final, @lotacao_minima, @valor_fixo_terceiro, @aluguel_carreta, @desc_carreta, @valor_fixo_tng, @valor_especial, @desc_especial, @valor_com_desconto_especial, @observacao, @cadastro_usuario, @emitepedagio, @vigencia_inicial_agregado, @vigencia_final_agregado, @vigencia_inicial_terceiro, @vigencia_final_terceiro, @despesa_adm, @codmot_especial, @nommot_especial, @codtra_especial, @transp_especial, @perc_frete_agregado, @perc_frete_terceiro, @perc_frete_especial,@cobra_hora_parada, @valor_hora_parada, @franquia_hora_parada, @quant_eixos, @tabela_antt, @tipo_carga_antt, @resolucao_vigente, @endereco_resolucao                      
                     )";
 
                     using (SqlCommand cmd = new SqlCommand(sql, con))
@@ -1655,7 +1656,11 @@ namespace NewCapit.dist.pages
                             string.IsNullOrWhiteSpace(txt) ? (object)DBNull.Value : ToTimeSpanSafe(txt);
 
                         //cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = ToTimeSpanSafe(txtFranquia.Text);
-
+                        cmd.Parameters.Add("@quant_eixos", SqlDbType.Int).Value = ddlEixos.SelectedItem.Text;
+                        cmd.Parameters.Add("@tabela_antt", SqlDbType.NChar).Value = ddlTabela.SelectedItem.Text.Trim();
+                        cmd.Parameters.Add("@tipo_carga_antt", SqlDbType.NVarChar).Value = txtTipoCargaANTT.SelectedItem.Text.Trim();
+                        cmd.Parameters.Add("@resolucao_vigente", SqlDbType.NVarChar).Value = lnkUrl.Text.ToString().Trim();
+                        cmd.Parameters.Add("@endereco_resolucao", SqlDbType.NVarChar).Value = lnkUrl.NavigateUrl;
 
                         con.Open();
                         cmd.ExecuteNonQuery();
@@ -1798,9 +1803,81 @@ namespace NewCapit.dist.pages
             {
                 return value == DBNull.Value ? string.Empty : value.ToString();
             }
+        }         
+
+        protected void ddlTabela_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // 🔎 Verifica distância
+            if (string.IsNullOrWhiteSpace(txtDistancia.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+                    "alert('Informe a distância primeiro.');", true);
+                ddlTabela.SelectedIndex = 0;
+                return;
+            }
+
+            // 🔎 Verifica eixos
+            if (ddlEixos.SelectedIndex == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+                    "alert('Selecione a quantidade de eixos.');", true);
+                ddlTabela.SelectedIndex = 0;
+                return;
+            }
+
+            // ✅ Converter valores
+            decimal distancia;
+            if (!decimal.TryParse(txtDistancia.Text, out distancia))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+                    "alert('Distância inválida.');", true);
+                return;
+            }
+
+            int eixos = Convert.ToInt32(ddlEixos.SelectedValue);
+            decimal valorKm = 0;
+            decimal ccd = 0;
+
+            string coluna = "_" + eixos + "Eixos";
+            string cargaDescarga = "Valor" + eixos + "Eixos";
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = $@"
+            SELECT {coluna}, {cargaDescarga}, resolucao, link
+            FROM tbresolucoesantt
+            WHERE RTRIM(vigente) = 'SIM'
+            AND Tabela = @tabela
+            AND TipoCarga = @tipoCarga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@tabela", ddlTabela.SelectedValue);
+                cmd.Parameters.AddWithValue("@tipoCarga", txtTipoCargaANTT.Text);                
+
+                conn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    if (dr[coluna] != DBNull.Value)
+                        valorKm = Convert.ToDecimal(dr[coluna]);
+
+                    if (dr[cargaDescarga] != DBNull.Value)
+                        ccd = Convert.ToDecimal(dr[cargaDescarga]);
+
+                    if (dr["resolucao"] != DBNull.Value)
+                        lnkUrl.Text = dr["resolucao"].ToString();
+                    lnkUrl.NavigateUrl = dr["link"].ToString().Trim();                    
+                }
+            }
+
+            // ✅ AGORA SIM a variável existe
+            decimal frete = (distancia * valorKm) + ccd;
+
+            txtFreteTNG.Text = frete.ToString("N2");
+            txtFreteTerceiro.Text = frete.ToString("N2");
         }
-
-
 
     }
 }

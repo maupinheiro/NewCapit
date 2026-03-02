@@ -37,13 +37,14 @@ namespace NewCapit.dist.pages
                 }
 
 
-                PreencherComboFiliais();
-
+                PreencherComboFiliais();                
                 DateTime dataHoraAtual = DateTime.Now;                
                 txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");               
                 CarregaDadosAgregado();
             }
         }
+        
+
 
         private void PreencherComboFiliais()
         {
@@ -366,6 +367,38 @@ namespace NewCapit.dist.pages
 
 
 
+        }
+
+        [System.Web.Services.WebMethod]
+        public static object BuscarBancos(string termo)
+        {
+            List<object> lista = new List<object>();
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(@"
+            SELECT codigo, nome 
+            FROM tbbancos
+            WHERE nome LIKE @termo OR codigo LIKE @termo
+            ORDER BY nome", conn);
+
+                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    lista.Add(new
+                    {
+                        id = dr["codigo"].ToString(),
+                        text = dr["codigo"] + " - " + dr["nome"]
+                    });
+                }
+            }
+
+            return lista;
         }
     }
 }
