@@ -27,6 +27,7 @@ namespace NewCapit.dist.pages
         string customRadioAgregado;
         string id;
         string rota;
+        string resLink;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -412,6 +413,13 @@ namespace NewCapit.dist.pages
                     txtPercTNGAgregado.Text = Convert.ToDecimal(dr["perc_frete_agregado"]).ToString("N2");
                     txtPercTngTerceiro.Text = Convert.ToDecimal(dr["perc_frete_terceiro"]).ToString("N2");
                     txtPercTNGEspecial.Text = Convert.ToDecimal(dr["perc_frete_especial"]).ToString("N2");
+
+                    // tabela frete minimo ANTT
+                    ddlEixos.SelectedItem.Text = dr["quant_eixos"].ToString();
+                    txtTipoCargaANTT.SelectedItem.Text = dr["tipo_carga_antt"].ToString();
+                    ddlTabela.SelectedItem.Text = dr["tabela_antt"].ToString();
+                    lnkUrl.Text = dr["resolucao_vigente"].ToString();
+                    lnkUrl.NavigateUrl = dr["endereco_resolucao"].ToString();
 
                     // 🔹 Datas (com verificação)
                     txtVigenciaInicial.Text = dr["vigencia_inicial"] != DBNull.Value ? Convert.ToDateTime(dr["vigencia_inicial"]).ToString("yyyy-MM-dd") : "";
@@ -1041,19 +1049,19 @@ namespace NewCapit.dist.pages
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 string sql = @"
-                                            UPDATE tbtabeladefretes SET
-                                                desc_frete = @desc_frete,
-                                                rota = @rota,
-                                                desc_rota = @desc_rota,
-                                                cod_remetente = @cod_remetente,
-                                                remetente = @remetente,
-                                                cid_remetente = @cid_remetente,
-                                                uf_remetente = @uf_remetente,
-                                                cod_expedidor = @cod_expedidor,
-                                                expedidor = @expedidor,
-                                                cid_expedidor = @cid_expedidor,
-                                                uf_expedidor = @uf_expedidor,
-                                                cod_destinatario = @cod_destinatario,
+                              UPDATE tbtabeladefretes SET
+                                     desc_frete = @desc_frete,
+                                     rota = @rota,
+                                     desc_rota = @desc_rota,
+                                     cod_remetente = @cod_remetente,
+                                     remetente = @remetente,
+                                     cid_remetente = @cid_remetente,
+                                     uf_remetente = @uf_remetente,
+                                     cod_expedidor = @cod_expedidor,
+                                     expedidor = @expedidor,
+                                     cid_expedidor = @cid_expedidor,
+                                     uf_expedidor = @uf_expedidor,
+                                     cod_destinatario = @cod_destinatario,
                                                 destinatario = @destinatario,
                                                 cid_destinatario = @cid_destinatario,
                                                 uf_destinatario = @uf_destinatario,
@@ -1114,7 +1122,12 @@ namespace NewCapit.dist.pages
                                                 perc_frete_especial = @perc_frete_especial,
                                                 cobra_hora_parada = @cobra_hora_parada, 
                                                 valor_hora_parada = @valor_hora_parada,
-                                                franquia_hora_parada = @franquia_hora_parada
+                                                franquia_hora_parada = @franquia_hora_parada,
+                                                quant_eixos = @quant_eixos,
+                                                tabela_antt = @tabela_antt,
+                                                tipo_carga_antt = @tipo_carga_antt,
+                                                resolucao_vigente = @resolucao_vigente,
+                                                endereco_resolucao = @endereco_resolucao
                                             WHERE cod_frete = @cod_frete";
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
@@ -1123,7 +1136,7 @@ namespace NewCapit.dist.pages
                     {
                         id = HttpContext.Current.Request.QueryString["id"].ToString();
                     }
-                    // Mesmo mapeamento de parâmetros do seu INSERT
+                    // Mesmo mapeamento de parâmetros do seu UPDATE
                     cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(id);
                     cmd.Parameters.Add("@desc_frete", SqlDbType.NVarChar).Value = descr_frete;
                     cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
@@ -1213,6 +1226,13 @@ namespace NewCapit.dist.pages
 
                     cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = franquiaHora;
 
+                    cmd.Parameters.Add("@quant_eixos", SqlDbType.Int).Value = ddlEixos.SelectedItem.Text;
+                    cmd.Parameters.Add("@tabela_antt", SqlDbType.NChar).Value = ddlTabela.SelectedItem.Text.Trim();
+                    cmd.Parameters.Add("@tipo_carga_antt", SqlDbType.NVarChar).Value = txtTipoCargaANTT.SelectedItem.Text.Trim();
+                    cmd.Parameters.Add("@resolucao_vigente", SqlDbType.NVarChar).Value = lnkUrl.Text.ToString().Trim();
+                    cmd.Parameters.Add("@endereco_resolucao", SqlDbType.NVarChar).Value = lnkUrl.NavigateUrl;
+
+
                     // cmd.Parameters.Add("@franquia_hora_parada", SqlDbType.Time).Value = txtFranquia.Text;
 
 
@@ -1292,5 +1312,78 @@ namespace NewCapit.dist.pages
         //    ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         //}
 
+        protected void ddlTabela_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // 🔎 Verifica distância
+            if (string.IsNullOrWhiteSpace(txtDistancia.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+                    "alert('Informe a distância primeiro.');", true);
+                ddlTabela.SelectedIndex = 0;
+                return;
+            }
+
+            // 🔎 Verifica eixos
+            if (ddlEixos.SelectedIndex == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+                    "alert('Selecione a quantidade de eixos.');", true);
+                ddlTabela.SelectedIndex = 0;
+                return;
+            }
+
+            // ✅ Converter valores
+            decimal distancia;
+            if (!decimal.TryParse(txtDistancia.Text, out distancia))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+                    "alert('Distância inválida.');", true);
+                return;
+            }
+
+            int eixos = Convert.ToInt32(ddlEixos.SelectedValue);
+            decimal valorKm = 0;
+            decimal ccd = 0;
+
+            string coluna = "_" + eixos + "Eixos";
+            string cargaDescarga = "Valor" + eixos + "Eixos";
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = $@"
+            SELECT {coluna}, {cargaDescarga}, resolucao, link
+            FROM tbresolucoesantt
+            WHERE RTRIM(vigente) = 'SIM'
+            AND Tabela = @tabela
+            AND TipoCarga = @tipoCarga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@tabela", ddlTabela.SelectedValue);
+                cmd.Parameters.AddWithValue("@tipoCarga", txtTipoCargaANTT.Text);
+                conn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    if (dr[coluna] != DBNull.Value)
+                        valorKm = Convert.ToDecimal(dr[coluna]);
+
+                    if (dr[cargaDescarga] != DBNull.Value)
+                        ccd = Convert.ToDecimal(dr[cargaDescarga]);
+
+                    if (dr["resolucao"] != DBNull.Value)
+                        lnkUrl.Text = dr["resolucao"].ToString();
+                        lnkUrl.NavigateUrl = dr["link"].ToString().Trim();
+                        string resLink = dr["link"].ToString().Trim();
+                }
+            }
+
+            // ✅ AGORA SIM a variável existe
+            decimal frete = (distancia * valorKm) + ccd;
+
+            txtFreteTNG.Text = frete.ToString("N2");
+            txtFreteTerceiro.Text = frete.ToString("N2");
+        }
     }
 }

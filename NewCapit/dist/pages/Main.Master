@@ -517,30 +517,42 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaClientes.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Gestão</p>
-                                        </a>
-                                        <a href="/dist/pages/ConsultaRotas.aspx" class="nav-link">
-                                            <i class="fas fa-map-marker-alt nav-icon"></i>
-                                            <p>Gestão de Rotas</p>
-                                        </a>
-                                        <a href="/dist/pages/ConsultaFretes.aspx" class="nav-link">
-                                            <i class="fas fa-dollar-sign nav-icon"></i>
-                                            <p>Gestão de Fretes</p>
-                                        </a>
-                                        <a href="/dist/pages/SimuladorFrete.aspx" class="nav-link">
-                                            <i class="far fa-money-bill-alt nav-icon"></i>
-                                            <p>Simular Frete</p>
-                                        </a>
-                                        <a href="/dist/pages/Frm_DistanciaEntreCidades.aspx" class="nav-link">
-                                            <i class="fas fa-road nav-icon"></i>
-                                            <p>Distância entre Cidades</p>
-                                        </a>
-                                        <a href="/dist/pages/GerenciarRotasKrona.aspx" class="nav-link">
-                                            <i class="fas fa-map-marker-alt nav-icon"></i>
-                                            <p>Gestão de Rotas Krona</p>
-                                        </a>
+                                        <li class="nav-item">
+                                            <a href="/dist/pages/ConsultaClientes.aspx" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Gestão</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/dist/pages/ConsultaRotas.aspx" class="nav-link">
+                                                <i class="fas fa-map-marker-alt nav-icon"></i>
+                                                <p>Gestão de Rotas</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/dist/pages/ConsultaFretes.aspx" class="nav-link">
+                                                <i class="fas fa-dollar-sign nav-icon"></i>
+                                                <p>Gestão de Fretes</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/dist/pages/SimuladorFrete.aspx" class="nav-link">
+                                                <i class="far fa-money-bill-alt nav-icon"></i>
+                                                <p>Simular Frete</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/dist/pages/Frm_DistanciaEntreCidades.aspx" class="nav-link">
+                                                <i class="fas fa-road nav-icon"></i>
+                                                <p>Distância entre Cidades</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/dist/pages/GerenciarRotasKrona.aspx" class="nav-link">
+                                                <i class="fas fa-map-marker-alt nav-icon"></i>
+                                                <p>Gestão de Rotas Krona</p>
+                                            </a>
+                                        </li>
                                     </li>
                                 </ul>
                             </li>
@@ -567,9 +579,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/dist/pages/FreteMinimoANTT.aspx" class="nav-link">
+                                        <%--<a href="/dist/pages/FreteMinimoANTT.aspx" class="nav-link">--%>
+                                        <a href="https://calculadorafrete.antt.gov.br/"
+                                            class="nav-link"
+                                            target="_blank"
+                                            rel="noopener noreferrer">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Frete Minimo ANTT</p>
+                                            <p>Frete Mínimo ANTT</p>
                                         </a>
                                     </li>
                                 </ul>
