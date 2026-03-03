@@ -461,28 +461,57 @@
             i.value = v;
         }
     </script>
-   <script>
-       function formatarPeso(campo) {
-           // remove tudo que não for número
-           let valor = campo.value.replace(/\D/g, '');
+    <script>
+        function formatarPeso(campo) {
+            // remove tudo que não for número
+            let valor = campo.value.replace(/\D/g, '');
 
-           if (valor.length < 4) {
-               campo.value = "0." + valor.padStart(3, "0");
-               return;
-           }
+            if (valor.length < 4) {
+                campo.value = "0." + valor.padStart(3, "0");
+                return;
+            }
 
-           let inteiro = valor.substring(0, valor.length - 3);
-           let decimal = valor.substring(valor.length - 3);
+            let inteiro = valor.substring(0, valor.length - 3);
+            let decimal = valor.substring(valor.length - 3);
 
-           // remove zeros à esquerda do inteiro
-           inteiro = inteiro.replace(/^0+/, '');
-           if (inteiro === "") inteiro = "0";
+            // remove zeros à esquerda do inteiro
+            inteiro = inteiro.replace(/^0+/, '');
+            if (inteiro === "") inteiro = "0";
 
-           campo.value = inteiro + "." + decimal;
-       }
-   </script>
+            campo.value = inteiro + "." + decimal;
+        }
+    </script>
 
+    <script>
+        function validarCampos() {
 
+            if (document.getElementById('<%= codCliInicial.ClientID %>').value == '') {
+                alert('Informe o código origem!');
+                return false;
+            }
+            if (document.getElementById('<%= codCliFinal.ClientID %>').value == '') {
+                alert('Informe o código destino!');
+                return false;
+            }
+            if (document.getElementById('<%= ddlTipoMaterial.ClientID %>').value == '') {
+                alert('Selecione o tipo de viagem!');
+                return false;
+            }
+            if (document.getElementById('<%= txtPesoVazio.ClientID %>').value == '') {
+                alert('Informe o peso!');
+                return false;
+            }
+            if (document.getElementById('<%= txtDuracaoVazio.ClientID %>').value == '') {
+                alert('Informe a duração da viagem (TT)!');
+                return false;
+            }
+            if (document.getElementById('<%= txtCod_PagadorVazio.ClientID %>').value == '') {
+                alert('Informe o pagador da viagem!');
+                return false;
+            }
+            return true;
+        }
+    </script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -1181,10 +1210,10 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                      <div class="col-md-2">
-      <br />
-      <asp:Button ID="btnPedagioManual" runat="server" Text="Pedágio Manual" CssClass="btn btn-outline-danger w-100" CommandName="PedagioManual" CommandArgument='<%# Eval("carga") %>' />
-  </div>
+                                                                                    <div class="col-md-2">
+                                                                                        <br />
+                                                                                        <asp:Button ID="btnPedagioManual" runat="server" Text="Pedágio Manual" CssClass="btn btn-outline-danger w-100" CommandName="PedagioManual" CommandArgument='<%# Eval("carga") %>' />
+                                                                                    </div>
                                                                                     <div class="col-md-5">
                                                                                         <div class="form-group">
                                                                                             <span class="details">Rota:</span>
@@ -1426,7 +1455,7 @@
                                                                                                 </div>
 
                                                                                                 <div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
-                                                                                             
+
 
 
                                                                                                     <div class="row g-3">
@@ -1437,11 +1466,11 @@
                                                                                                                 placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
                                                                                                             <!-- OnTextChanged="txtChaveNF_TextChanged" -->
                                                                                                         </div>
-                                                                                                         <div class="col-md-2">
-                                                                                                             <asp:Button ID="btnBuscarNfe" CssClass="btn btn-outline-success w-100" CommandName="BuscarNfe" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Buscar NFe" />
-                                                                                                         </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <asp:Button ID="btnBuscarNfe" CssClass="btn btn-outline-success w-100" CommandName="BuscarNfe" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Buscar NFe" />
+                                                                                                        </div>
                                                                                                     </div>
-                                                                                                   <br />
+                                                                                                    <br />
                                                                                                     <div class="row g-3">
                                                                                                         <div class="col-md-12">
                                                                                                             <asp:GridView ID="gvNF" runat="server" OnRowCommand="gvNF_RowCommand"
@@ -1450,15 +1479,15 @@
                                                                                                                 <Columns>
                                                                                                                     <asp:BoundField DataField="chavenfe" HeaderText="Chave NF-e" />
                                                                                                                     <asp:BoundField DataField="numeronfe" HeaderText="Numero" />
-                                                                                                                    <asp:BoundField DataField="serienfe" HeaderText="Serie"  />
-                                                                                                                   <asp:TemplateField HeaderText="Peso Total">
+                                                                                                                    <asp:BoundField DataField="serienfe" HeaderText="Serie" />
+                                                                                                                    <asp:TemplateField HeaderText="Peso Total">
                                                                                                                         <ItemTemplate>
                                                                                                                             <asp:TextBox ID="txtPeso" runat="server"
                                                                                                                                 Text='<%# Bind("peso","{0:0.000}") %>'
                                                                                                                                 CssClass="form-control"
                                                                                                                                 Width="100px"
                                                                                                                                 onkeyup="formatarPeso(this)" />
-        
+
                                                                                                                             <asp:HiddenField ID="hfIdNfe" runat="server"
                                                                                                                                 Value='<%# Bind("idnfe") %>' />
                                                                                                                         </ItemTemplate>
@@ -1473,10 +1502,10 @@
                                                                                                                         </ItemTemplate>
 
                                                                                                                     </asp:TemplateField>
-                                                                                                                     <asp:TemplateField HeaderText="PDF">
+                                                                                                                    <asp:TemplateField HeaderText="PDF">
                                                                                                                         <ItemTemplate>
-                                                                                                                            <asp:Button 
-                                                                                                                                ID="btnDanfe" 
+                                                                                                                            <asp:Button
+                                                                                                                                ID="btnDanfe"
                                                                                                                                 runat="server"
                                                                                                                                 Text="Baixar DANFE"
                                                                                                                                 CssClass="btn btn-sm btn-warning"
@@ -1488,7 +1517,7 @@
                                                                                                             </asp:GridView>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    
+
 
 
 
@@ -2106,6 +2135,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <asp:Label ID="lblErroModal" runat="server" CssClass="text-danger"></asp:Label>
                                             <div class="row g-3">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -2150,7 +2180,7 @@
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="form-group">
-                                                        <span class="details">Destin:</span>
+                                                        <span class="details">Destino:</span>
                                                         <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-select select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged" Width="80%"></asp:DropDownList>
                                                         <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
                                                     </div>
@@ -2180,8 +2210,9 @@
                                             <div class="row g-3">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <span class="">Viagem:</span>
-                                                        <asp:DropDownList ID="ddlTipoMaterial" runat="server" CssClass="form-control">
+                                                        <span class="">Tipo de Viagem:</span>
+                                                        <asp:DropDownList ID="ddlTipoMaterial" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlTipoMaterial_SelectedIndexChanged">
+                                                            <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                             <asp:ListItem Value="Almoxarifado" Text="Almoxarifado"></asp:ListItem>
                                                             <asp:ListItem Value="Vazio" Text="Vazio"></asp:ListItem>
                                                             <asp:ListItem Value="Embalagem" Text="Embalagem"></asp:ListItem>
@@ -2231,7 +2262,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                            <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnSalvarColeta_Click" />
+                                            <asp:Button ID="btnSalvarColeta" runat="server" Text="Salvar" class="btn btn-primary" OnClick="btnSalvarColeta_Click" OnClientClick="return validarCampos();" />
                                         </div>
                                     </ContentTemplate>
                                     <Triggers>

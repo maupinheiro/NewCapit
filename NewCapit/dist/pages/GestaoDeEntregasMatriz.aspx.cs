@@ -356,7 +356,7 @@ namespace NewCapit.dist.pages
                             break;
 
                         case "Ag. Carregamento":
-                            lblStatus.CssClass += " bg-red text-white";
+                            lblStatus.CssClass += " bg-red text-warning";
                             break;
 
                         case "Ag. Documentos":
@@ -374,6 +374,15 @@ namespace NewCapit.dist.pages
                             break;
                         case "Concluido":
                             lblStatus.CssClass += " bg-info text-white";
+                            break;
+                        case "Liberado Vazio":
+                            lblStatus.CssClass += " bg-info text-pink";
+                            break;
+                        case "Veic. Quebrado":
+                            lblStatus.CssClass += " bg-success text-purple";
+                            break;
+                        case "Cancelada":
+                            lblStatus.CssClass += " bg-warning text-purple";
                             break;
                     }
                 }

@@ -83,17 +83,18 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-                    txtAtualizadoPor.Text = nomeUsuario;
+                   // txtAtualizadoPor.Text = nomeUsuario;
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
-                    txtAtualizadoPor.Text = lblUsuario;
+                    // txtAtualizadoPor.Text = lblUsuario;
+                    //lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                     Response.Redirect("Login.aspx");
 
                 }
                 DateTime dataHoraAtual = DateTime.Now;
-                lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                //lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
                 PreencherComboMotoristas();
                 CarregaDados();
@@ -572,6 +573,15 @@ namespace NewCapit.dist.pages
             txtTransportadora.Text = dt.Rows[0][146].ToString();
             txtLiberacao.Text = dt.Rows[0][171].ToString();
             txtProtocoloCET.Text = dt.Rows[0][172].ToString();
+            txtAtualizadoPor.Text = dt.Rows[0][141].ToString();
+            DateTime? data = null;
+
+            if (dt.Rows[0]["dtalt"] != DBNull.Value)
+            {
+                data = Convert.ToDateTime(dt.Rows[0]["dtalt"]);
+            }
+            string dataAlteracao = data?.ToString("dd/MM/yyyy HH:mm");
+            lblAtualizadoEm.Text = dataAlteracao;
 
             string idviagem;
             idviagem = num_coleta;
@@ -1045,7 +1055,10 @@ namespace NewCapit.dist.pages
             dtsaida=@dtsaida,
             dtchegada=@dtchegada,
             dtconclusao=@dtconclusao,
-            uf_recebedor = @uf_recebedor
+            uf_recebedor = @uf_recebedor,
+            dtalt = @dtalt,
+            usualt = @usualt
+
         WHERE num_carregamento = @num_carregamento";
 
                     using (SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn))
@@ -1121,6 +1134,8 @@ namespace NewCapit.dist.pages
                             .Value = string.IsNullOrWhiteSpace(txtUFRecebedor.Text)
                                 ? (object)DBNull.Value
                                 : txtUFRecebedor.Text.Trim();
+                        cmdCarregamento.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        cmdCarregamento.Parameters.AddWithValue("@usualt", Session["UsuarioLogado"].ToString());
 
                         conn.Open();
                         cmdCarregamento.ExecuteNonQuery();
@@ -3505,7 +3520,6 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
-
             string query = @"UPDATE tbcarregamentos SET
                             codmotorista = @codmotorista,
                             nucleo = @nucleo,
@@ -3585,10 +3599,6 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@numero_protocolo_cet", SafeValue(txtProtocoloCET.Text));
 
 
-
-
-
-
                 //cmd.Parameters.AddWithValue("@comissao", SafeValue(txtComissao.Text));
                 //cmd.Parameters.AddWithValue("@vlpernoite", SafeValue(txtPernoite.Text));
                 //cmd.Parameters.AddWithValue("@cafe", SafeValue(txtCafe.Text));
@@ -3597,7 +3607,7 @@ namespace NewCapit.dist.pages
 
                 cmd.Parameters.AddWithValue("@empresa", SafeValue("1111"));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                cmd.Parameters.AddWithValue("@usualt", nomeUsuario);
+                cmd.Parameters.AddWithValue("@usualt", Session["UsuarioLogado"].ToString());
 
 
                 try
@@ -3920,6 +3930,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvarColeta_Click(object sender, EventArgs e)
         {
+            //AplicarRegras();
             string novaCarga = novaCargaVazia.Text.Trim();
             int numCarga = int.Parse(novaCargaVazia.Text.Trim());
             string pesoTexto = txtPesoVazio.Text.Trim().Replace(".", ",");
@@ -3979,7 +3990,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
                     cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                     //cmd.Parameters.AddWithValue("@distancia", distancia);
-                    cmd.Parameters.AddWithValue("@andamento", "PENDENTE");
+                    cmd.Parameters.AddWithValue("@andamento", "Pendente");
                     cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
                     cmd.Parameters.AddWithValue("@pagador", primeiroNome);
                     cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
@@ -5987,6 +5998,12 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+
+        protected void ddlTipoMaterial_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AplicarRegras();
+        }
+
         protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
         {
             if (ViewState["placaAtual"] != null)
@@ -6258,6 +6275,37 @@ namespace NewCapit.dist.pages
 
             return dvCalculado.ToString() == chave[43].ToString();
         }
+        protected void AplicarRegras()
+        {            
+            string tipoMaterial = ddlTipoMaterial.SelectedValue;
+            int codInicial = Convert.ToInt32(codCliInicial.Text);
+
+            // 🟢 ALMOXARIFADO
+            if (tipoMaterial == "Almoxarifado")
+            {
+                if (codInicial == 1000 || codInicial == 7236)
+                {
+                    txtCod_PagadorVazio.Text = codInicial.ToString();
+                    txtPagadorVazio.Text = "FERROLENE SA INDUSTRIA E COMERCIO DE METAIS";
+                }
+            }
+
+            // 🟢 EMBALAGEM
+            else if (tipoMaterial == "Embalagem")
+            {
+                txtCod_PagadorVazio.Text = "1000";
+                txtPagadorVazio.Text = "FERROLENE SA INDUSTRIA E COMERCIO DE METAIS";
+            }
+
+            // 🟢 TIPO MATERIAL VAZIO
+            else if (tipoMaterial == "Vazio")
+            {
+                txtCod_PagadorVazio.Text = "1111";
+                txtPagadorVazio.Text = "TRANSNOVAG TRANSPORTES SA";
+            }
+        }
+
+
 
 
 

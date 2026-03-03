@@ -655,15 +655,15 @@
                                                             <div class="col-sm-1">
                                                                 <asp:TextBox ID="txtAdicional" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                             </div>
-                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SEC-CAT:</label>
+                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right" placeholder="Valor da Coleta">COLETA:</label>
                                                             <div class="col-sm-1">
                                                                 <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                             </div>
-                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">DESPACHO:</label>
+                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right" placeholder="Valor da Descarga">DESCARGA:</label>
                                                             <div class="col-sm-1">
                                                                 <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
                                                             </div>
-                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">PEDÁGIO:</label>
+                                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right" placeholder="Valor do GR">GRIS(%):</label>
                                                             <div class="col-sm-1">
                                                                 <asp:TextBox ID="txtPedagio" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                             </div>
