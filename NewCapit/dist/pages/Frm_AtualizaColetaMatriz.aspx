@@ -1730,7 +1730,8 @@
                                                                                         </div>
                                                                                     </ContentTemplate>
                                                                                     <Triggers>
-                                                                                        <asp:PostBackTrigger ControlID="gvNF" />
+                                                                                        <asp:AsyncPostBackTrigger ControlID="gvNF" />
+                                                                                        <asp:AsyncPostBackTrigger ControlID="btnBuscarNfe" />
                                                                                     </Triggers>
 
                                                                                 </asp:UpdatePanel>

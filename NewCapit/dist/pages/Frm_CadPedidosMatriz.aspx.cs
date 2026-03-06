@@ -1,17 +1,19 @@
-﻿using System;
+﻿using NPOI.SS.Formula;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NPOI.SS.Formula;
 using static NewCapit.dist.pages.Frm_TabelaPrecoMatriz;
 using static NewCapit.Main;
 
@@ -960,6 +962,44 @@ namespace NewCapit.dist.pages
                         txtTipoVeiculo.Text = "CAVALO TRUCADO";
                         cTipoVeiculo = txtTipoVeiculo.Text;
                     }
+
+                    bool existefrete = VerificaFrete(
+                                txtCodRemetente.Text,
+                                txtCodExpedidor.Text,
+                                txtCodDestinatario.Text,
+                                txtCodRecebedor.Text,
+                                txtCodPagador.Text,
+                                cboMaterial.SelectedItem.Text,
+                                cTipoVeiculo
+                            );
+
+                    // PRIMEIRA PASSAGEM: ainda não confirmou
+                    if (!existefrete && hdContinuar.Value != "1")
+                    {
+                        ScriptManager.RegisterStartupScript(
+                            this,
+                            this.GetType(),
+                            "confirmFrete",
+                            "if(confirm('Não há frete cadastrado, deseja continuar?')){" +
+                            "document.getElementById('" + hdContinuar.ClientID + "').value='1';" +
+                            "__doPostBack('" + ((Control)sender).UniqueID + "','');" +
+                            "}",
+                            true
+                        );
+
+                        return; // PARA o código aqui
+                    }
+
+                    // 👉 SE CHEGOU AQUI:
+                    // - ou existe frete
+                    // - ou o usuário clicou SIM
+
+                    if (!existefrete && hdContinuar.Value == "1")
+                    {
+                        EnviarEmailAviso(); // 👈 ENVIA O EMAIL
+                    }
+
+
                     string sqlSalvarPedido = "insert into tbcargas " + "(carga, emissao, status, tomador, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, ufcliorigem, ufclidestino, pedidos, gr, ot, solicitante, empresa, andamento,cadastro, distancia, emitepedagio, cidorigem, ciddestino, nucleo, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_consignatario, consignatario, cid_consignatario, uf_consignatario, cod_pagador, pagador, cid_pagador, uf_pagador, duracao, tipo_veiculo, deslocamento, cnpj_remetente, cnpj_expedidor, cnpj_destinatario, cnpj_recebedor, cnpj_consignatario, cnpj_pagador, rota_entrega)" +
                     "values" + "(@carga, @emissao, @status, @tomador, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @ufcliorigem, @ufclidestino, @pedidos, @gr, @ot, @solicitante, @empresa, @andamento, @cadastro, @distancia, @emitepedagio, @cidorigem, @ciddestino, @nucleo, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_consignatario, @consignatario, @cid_consignatario, @uf_consignatario, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao, @tipo_veiculo, @deslocamento, @cnpj_remetente, @cnpj_expedidor, @cnpj_destinatario, @cnpj_recebedor, @cnpj_consignatario, @cnpj_pagador, @rota_entrega)";
                     SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
@@ -1068,6 +1108,152 @@ namespace NewCapit.dist.pages
 
                 }
             }
+        }
+
+        public bool VerificaFrete(
+                            string codremetente,
+                            string codexpedidor,
+                            string coddestinatario,
+                            string codrecebedor,
+                            string codpagador,
+                            string material,
+                            string tipoveiculo)
+            {
+            bool existe = false;
+
+            try
+            {
+                string sql = @"select count(1) 
+                       from tbtabeladefretes 
+                       where cod_remetente = @cod_remetente 
+                         and cod_expedidor = @cod_expedidor 
+                         and cod_destinatario = @cod_destinatario 
+                         and cod_recebedor = @cod_recebedor 
+                         and cod_pagador = @cod_pagador 
+                         and tipo_material = @tipo_material 
+                         and tipo_veiculo = @tipo_veiculo";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@cod_remetente", codremetente);
+                    cmd.Parameters.AddWithValue("@cod_expedidor", codexpedidor);
+                    cmd.Parameters.AddWithValue("@cod_destinatario", coddestinatario);
+                    cmd.Parameters.AddWithValue("@cod_recebedor", codrecebedor);
+                    cmd.Parameters.AddWithValue("@cod_pagador", codpagador);
+                    cmd.Parameters.AddWithValue("@tipo_material", material);
+                    cmd.Parameters.AddWithValue("@tipo_veiculo", tipoveiculo);
+
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    existe = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return existe;
+        }
+        private void EnviarEmailAviso()
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("sistemacapit@gmail.com");
+            mail.To.Add("progtrans2@transnovag.com.br");
+            mail.CC.Add("mauricio@capit.com.br");
+            mail.Subject = "Carga "+novaCarga.Text+" não possui tabela de frete cadastrado!";
+            mail.IsBodyHtml = true;
+
+            mail.Body = $@"
+                    <html>
+                    <head>
+                        <style>
+                            body {{
+                                font-family: Arial, Helvetica, sans-serif;
+                                font-size: 14px;
+                                color: #333;
+                            }}
+                            h2 {{
+                                color: #2F5597;
+                            }}
+                            table {{
+                                border-collapse: collapse;
+                                width: 100%;
+                                margin-top: 10px;
+                            }}
+                            th, td {{
+                                border: 1px solid #ccc;
+                                padding: 8px;
+                                text-align: left;
+                            }}
+                            th {{
+                                background-color: #f2f2f2;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+
+                        <h2>Cadastro de Tabela de Frete</h2>
+
+                        <p>
+                            Seguem os dados para o cadastro da tabela de frete referente à carga:
+                            <strong>{novaCarga.Text}</strong>
+                        </p>
+
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Informação</th>
+                            </tr>
+                            <tr>
+                                <td>Cód. Remetente</td>
+                                <td>{txtCodRemetente.Text} - {cboRemetente.SelectedItem.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Expedidor</td>
+                                <td>{txtCodExpedidor.Text} - {cboExpedidor.SelectedItem.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Destinatário</td>
+                                <td>{txtCodDestinatario.Text} - {cboDestinatario.SelectedItem.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Recebedor</td>
+                                <td>{txtCodRecebedor.Text} - {cboRecebedor.SelectedItem.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Pagador</td>
+                                <td>{txtCodPagador.Text} - {txtPagador.SelectedItem.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Material</td>
+                                <td>{cboMaterial.SelectedItem.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Tipo de Veículo</td>
+                                <td>{cTipoVeiculo}</td>
+                            </tr>
+                        </table>
+
+                        <p style='margin-top:15px;'>
+                            Este e-mail foi enviado automaticamente pelo sistema.
+                        </p>
+
+                    </body>
+                    </html>";
+
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            smtp.EnableSsl = true; // Obrigatório para porta 587
+            smtp.UseDefaultCredentials = false; // Deve vir ANTES da atribuição de credenciais
+
+            // Use a senha de 16 dígitos que você gerou no Google aqui:
+            smtp.Credentials = new NetworkCredential("sistemacapit@gmail.com", "jaoe jzhn ktfw nmyq");
+
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+            smtp.Send(mail);
         }
 
         private object SafeDateTimeValue(string input)

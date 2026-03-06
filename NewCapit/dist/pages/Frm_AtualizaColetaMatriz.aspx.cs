@@ -1828,7 +1828,13 @@ namespace NewCapit.dist.pages
                 using (SqlDataReader dr = cmdCarga.ExecuteReader())
                 {
                     if (!dr.Read())
+                    {
                         MostrarMsg2("Carga não encontrada na tbcargas.");
+                        return;
+                    }
+
+
+
 
                     cnpjRemCarga = dr["cnpj_remetente"].ToString().Trim();
                     cnpjDestCarga = dr["cnpj_destinatario"].ToString().Trim();
@@ -5584,9 +5590,19 @@ namespace NewCapit.dist.pages
         }
         public void MostrarMsg2(string mensagem)
         {
-            // Substitua o alert por um Toastr ou SweetAlert se preferir, mas o RegisterStartupScript é essencial
-            string script = $"alert('{mensagem.Replace("'", "")}');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "Popup", script, true);
+            // Limpa a string para evitar quebras no JS
+            string mensagemLimpa = mensagem.Replace("'", "").Replace("\n", "\\n").Replace("\r", "");
+            string script = $"alert('{mensagemLimpa}');";
+
+            // O segredo está em usar o ScriptManager.RegisterStartupScript 
+            // referenciando o controle específico ou a página de forma global para AJAX
+            ScriptManager.RegisterStartupScript(
+                this.Page,
+                typeof(Page),
+                Guid.NewGuid().ToString(), // Chave única para evitar conflitos
+                script,
+                true
+            );
         }
 
         // Função auxiliar para checar o banco
