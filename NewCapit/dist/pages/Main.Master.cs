@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.IO;
-using System.Globalization;
 
 namespace NewCapit
 {
@@ -81,6 +82,26 @@ namespace NewCapit
             }
            
            
+        }
+
+        protected void btnSair_Click(object sender, EventArgs e)
+        {
+            // 1. Pega o valor da session para uma variável local
+            var idParaLog = Session["IdSessaoLog"].ToString();
+
+            if (idParaLog != null)
+            {
+                // 2. Grava no banco PRIMEIRO
+                UsersDAL.RegistrarLogout(idParaLog);
+            }
+
+            // 3. SÓ AGORA limpa a sessão
+            Session.Remove("IdSessaoLog"); // Remove apenas este para garantir
+            Session.Clear();
+            Session.Abandon();
+
+            // 4. Redireciona
+            Response.Redirect("~/Login.aspx");
         }
 
         public static class SafeConvert

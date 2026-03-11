@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -25,5 +26,16 @@ namespace NewCapit
        }
    );
         }
+
+        protected void Session_End(object sender, EventArgs e)
+        {
+            // Este código corre sozinho quando a sessão expira (timeout)
+            var idLog = Session["IdSessaoLog"].ToString();
+            if (idLog != null)
+            {
+                UsersDAL.RegistrarLogout(idLog);
+            }
+        }
     }
+
 }

@@ -62,6 +62,7 @@ namespace NewCapit.dist.pages
         string pagador;
         string material;
         string tipoveiculo;
+        string peso;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -1638,8 +1639,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
-
         protected void MostrarMsg(string mensagem, string tipo = "warning")
         {
             divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
@@ -2071,7 +2070,7 @@ namespace NewCapit.dist.pages
         }
         private void EnviarEmailAviso(string carga)
         {
-            string sqlc = "select codorigem, cliorigem, cod_expedidor, expedidor,coddestino, clidestino,cod_recebedor, recebedor,cod_pagador,pagador,material,veiculo from tbcargas where carga=" + carga;
+            string sqlc = "select codorigem, cliorigem, cod_expedidor, expedidor,coddestino, clidestino,cod_recebedor, recebedor,cod_pagador,pagador,material,veiculo,peso from tbcargas where carga=" + carga;
             SqlDataAdapter adpt = new SqlDataAdapter(sqlc, conn);
             DataTable dt = new DataTable();
             if (conn.State == ConnectionState.Closed)
@@ -2090,11 +2089,12 @@ namespace NewCapit.dist.pages
             pagador = dt.Rows[0][9].ToString();
             material = dt.Rows[0][10].ToString();
             tipoveiculo = dt.Rows[0][11].ToString();
+            peso = dt.Rows[0][12].ToString();
 
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress("sistemacapit@gmail.com");
-            mail.To.Add("progtrans2@transnovag.com.br");
-            mail.CC.Add("mauricio@capit.com.br");
+            mail.To.Add("progtrans2@transnovag.com.br,contabil@transnovag.com.br");
+            //mail.CC.Add("mauricio@capit.com.br");
             mail.Subject = "Carga " + carga + " não possui tabela de frete cadastrado!";
             mail.IsBodyHtml = true;
 
@@ -2166,6 +2166,10 @@ namespace NewCapit.dist.pages
                             <tr>
                                 <td>Tipo de Veículo</td>
                                 <td>{tipoveiculo}</td>
+                            </tr>
+                            <tr>
+                                <td>Peso</td>
+                                <td>{peso}</td>
                             </tr>
                         </table>
 

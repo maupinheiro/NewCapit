@@ -838,6 +838,24 @@ namespace NewCapit.dist.pages
                         }
                     }
                 }
+                decimal totalPesoCarga = 0;
+                if (ViewState["TotalPesoCarga"] != null)
+                    totalPesoCarga = Convert.ToDecimal(ViewState["TotalPesoCarga"]);
+                if (totalPesoCarga <= 12000)
+                {
+                    txtTipoVeiculo.Text = "TRUCK";
+                    cTipoVeiculo = txtTipoVeiculo.Text;
+                }
+                if (totalPesoCarga > 12000 && totalPesoCarga <= 25000)
+                {
+                    txtTipoVeiculo.Text = "CAVALO SIMPLES";
+                    cTipoVeiculo = txtTipoVeiculo.Text;
+                }
+                if (totalPesoCarga > 25000)
+                {
+                    txtTipoVeiculo.Text = "CAVALO TRUCADO";
+                    cTipoVeiculo = txtTipoVeiculo.Text;
+                }
                 string numeroCarga = novaCarga.Text.Trim();
                 CarregarGrid(numeroCarga);
             }
@@ -962,7 +980,7 @@ namespace NewCapit.dist.pages
                         txtTipoVeiculo.Text = "CAVALO TRUCADO";
                         cTipoVeiculo = txtTipoVeiculo.Text;
                     }
-
+                    string totalPeso = ViewState["TotalPesoCarga"].ToString();
                     bool existefrete = VerificaFrete(
                                 txtCodRemetente.Text,
                                 txtCodExpedidor.Text,
@@ -970,7 +988,7 @@ namespace NewCapit.dist.pages
                                 txtCodRecebedor.Text,
                                 txtCodPagador.Text,
                                 cboMaterial.SelectedItem.Text,
-                                cTipoVeiculo
+                                txtTipoVeiculo.Text, totalPeso
                             );
 
                     // PRIMEIRA PASSAGEM: ainda não confirmou
@@ -996,7 +1014,7 @@ namespace NewCapit.dist.pages
 
                     if (!existefrete && hdContinuar.Value == "1")
                     {
-                        EnviarEmailAviso(); // 👈 ENVIA O EMAIL
+                        EnviarEmailAviso(totalPeso); // 👈 ENVIA O EMAIL
                     }
 
 
@@ -1117,7 +1135,8 @@ namespace NewCapit.dist.pages
                             string codrecebedor,
                             string codpagador,
                             string material,
-                            string tipoveiculo)
+                            string tipoveiculo,
+                            string totalpesocarga)
             {
             bool existe = false;
 
@@ -1157,12 +1176,12 @@ namespace NewCapit.dist.pages
 
             return existe;
         }
-        private void EnviarEmailAviso()
+        private void EnviarEmailAviso(string totalPeso)
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress("sistemacapit@gmail.com");
-            mail.To.Add("progtrans2@transnovag.com.br");
-            mail.CC.Add("mauricio@capit.com.br");
+            mail.To.Add("progtrans2@transnovag.com.br,contabil@transnovag.com.br");
+            //mail.CC.Add("mauricio@capit.com.br");
             mail.Subject = "Carga "+novaCarga.Text+" não possui tabela de frete cadastrado!";
             mail.IsBodyHtml = true;
 
@@ -1233,7 +1252,11 @@ namespace NewCapit.dist.pages
                             </tr>
                             <tr>
                                 <td>Tipo de Veículo</td>
-                                <td>{cTipoVeiculo}</td>
+                                <td>{txtTipoVeiculo.Text}</td>
+                            </tr>
+                            <tr>
+                                <td>Peso</td>
+                                <td>{totalPeso}</td>
                             </tr>
                         </table>
 

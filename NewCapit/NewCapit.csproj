@@ -571,6 +571,7 @@
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\exempolos.aspx" />
+    <Content Include="dist\pages\FechoSistema.aspx" />
     <Content Include="dist\pages\FreteMinimoANTT.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltCarga.aspx" />
@@ -4896,6 +4897,13 @@
     </Compile>
     <Compile Include="dist\pages\exempolos.aspx.designer.cs">
       <DependentUpon>exempolos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\FechoSistema.aspx.cs">
+      <DependentUpon>FechoSistema.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\FechoSistema.aspx.designer.cs">
+      <DependentUpon>FechoSistema.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\FreteMinimoANTT.aspx.cs">
       <DependentUpon>FreteMinimoANTT.aspx</DependentUpon>
