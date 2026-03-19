@@ -577,12 +577,6 @@
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\exempolos.aspx" />
-<<<<<<< HEAD
-    <Content Include="dist\pages\FinalizarOS.aspx" />
-    <Content Include="dist\pages\FinalizarOSGrid.aspx" />
-=======
-    <Content Include="dist\pages\FechoSistema.aspx" />
->>>>>>> master
     <Content Include="dist\pages\FreteMinimoANTT.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltCarga.aspx" />
@@ -638,11 +632,6 @@
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_RotaKrona.aspx" />
-<<<<<<< HEAD
-    <Content Include="dist\pages\WebForm1.aspx" />
-=======
-    <Content Include="dist\pages\TrocaSenha.aspx" />
->>>>>>> master
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4940,29 +4929,6 @@
     <Compile Include="dist\pages\exempolos.aspx.designer.cs">
       <DependentUpon>exempolos.aspx</DependentUpon>
     </Compile>
-<<<<<<< HEAD
-    <Compile Include="dist\pages\FinalizarOS.aspx.cs">
-      <DependentUpon>FinalizarOS.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOS.aspx.designer.cs">
-      <DependentUpon>FinalizarOS.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOSGrid.aspx.cs">
-      <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOSGrid.aspx.designer.cs">
-      <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
-=======
-    <Compile Include="dist\pages\FechoSistema.aspx.cs">
-      <DependentUpon>FechoSistema.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\FechoSistema.aspx.designer.cs">
-      <DependentUpon>FechoSistema.aspx</DependentUpon>
->>>>>>> master
-    </Compile>
     <Compile Include="dist\pages\FreteMinimoANTT.aspx.cs">
       <DependentUpon>FreteMinimoANTT.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5368,24 +5334,6 @@
     <Compile Include="dist\pages\Frm_RotaKrona.aspx.designer.cs">
       <DependentUpon>Frm_RotaKrona.aspx</DependentUpon>
     </Compile>
-<<<<<<< HEAD
-    <Compile Include="dist\pages\WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="EventoOS .cs" />
-=======
-    <Compile Include="dist\pages\TrocaSenha.aspx.cs">
-      <DependentUpon>TrocaSenha.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\TrocaSenha.aspx.designer.cs">
-      <DependentUpon>TrocaSenha.aspx</DependentUpon>
-    </Compile>
->>>>>>> master
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />
     <Compile Include="Startup.cs" />
