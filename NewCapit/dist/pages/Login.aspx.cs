@@ -17,66 +17,54 @@ namespace NewCapit
         }
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsuario.Text) || string.IsNullOrWhiteSpace(txtSenha.Text))
+            if (txtUsuario.Text.Trim() == "" || txtSenha.Text.Trim() == "")
             {
                 this.lblError.Text = "Por favor, entre com Usuário e Senha!";
+
             }
             else
             {
                 this.lblError.Text = "";
+
                 var usuario = txtUsuario.Text.Trim();
                 var senha = txtSenha.Text.Trim();
+                //string departamento, funcao, empresaUsuario, foto;
+                var obj = new Users
+                {
+                    nm_usuario = usuario,
+                    ds_senha = senha                  
 
-                var obj = new Users { nm_usuario = usuario, ds_senha = senha };
+                };
                 var user = UsersDAL.CheckLogin(obj);
-
                 if (user != null)
                 {
-                    // --- Grava as Sessions (Mantendo seu código original) ---
-                    Session["UsuarioLogado"] = user.nm_nome;
-                    Session["EmpresaTrabalho"] = user.emp_usuario;
-                    Session["FuncaoUsuario"] = user.fun_usuario;
-                    Session["CodUsuario"] = user.cod_usuario.ToString();
-                    Session["PermissaoUsuario"] = user.fl_permissao;
-                    Session["FotoUsuario"] = user.foto_usuario;
+                    //Dados do usuário
+                    string nomeUsuario = user.nm_nome;
+                    string nomeEmpresa = user.emp_usuario;
+                    string funcaoUsuario = user.fun_usuario;
+                    string permissaoUsuario = user.fl_permissao;
+                    //O cod do funcionario é passado para a página master para carregar a foto na pagina//
+                    string codFuncionario = user.cod_usuario.ToString();
+                    string fotoFuncionario = user.foto_usuario;
+                 
+                    Session["UsuarioLogado"] = nomeUsuario;
+                    Session["EmpresaTrabalho"] = nomeEmpresa;
+                    Session["FuncaoUsuario"] = funcaoUsuario;
+                    Session["CodUsuario"] = codFuncionario;
+                    Session["PermissaoUsuario"] = permissaoUsuario;
+                    Session["FotoUsuario"] = fotoFuncionario;
 
                     int idLog = UsersDAL.RegistrarLogin(user.cod_usuario);
-                    Session["IdSessaoLog"] = idLog;
-
-                    // --- NOVA LÓGICA DE VERIFICAÇÃO DE SENHA ---
-                    bool precisaTrocar = false;
-
-                    if (user.dt_troca_senha == null)
-                    {
-                        // Se a data for nula
-                        precisaTrocar = true;
-                    }
-                    else
-                    {
-                        // Calcula a diferença em dias entre hoje e a última troca
-                        TimeSpan diferenca = DateTime.Now - user.dt_troca_senha.Value;
-                        if (diferenca.TotalDays > 60)
-                        {
-                            precisaTrocar = true;
-                        }
-                    }
-
-                    if (precisaTrocar)
-                    {
-                        // Redireciona para troca de senha (ajuste o caminho se necessário)
-                        Response.Redirect("TrocaSenha.aspx");
-                    }
-                    else
-                    {
-                        // Fluxo normal
-                        Response.Redirect("/dist/pages/Home.aspx");
-                    }
+                    Session["IdSessaoLog"] = idLog; // Importante para o logout saber quem atualizar
+                    Response.Redirect("/dist/pages/Home.aspx");
                 }
-                else
+                else 
                 {
                     lblError.Text = "Usuário ou Senha Incorreto(s)!";
                 }
+
             }
+
         }
     }
 }

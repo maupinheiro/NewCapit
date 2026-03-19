@@ -101,13 +101,22 @@ namespace NewCapit.dist.pages
                 //gvCargas.DataBind();
 
                 // Armazena os dados no ViewState para usar na exportação
-                Session["Cargas"] = dt;
+                ViewState["Cargas"] = dt;
             }
         }
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
-            bool ocultar = bool.Parse(hfOcultarViagens.Value);
-            FiltrarViagens(ocultar);
+            bool ocultar = false;
+
+            if (bool.TryParse(hfOcultarViagens.Value, out ocultar))
+            {
+                FiltrarViagens(ocultar);
+            }
+            else
+            {
+                // fallback de segurança
+                CarregarColetas();
+            }
         }
 
 
@@ -223,22 +232,20 @@ namespace NewCapit.dist.pages
 
         private void CarregarColetas()
         {
-            string pesquisa = txtPesquisar.Text;
-            var dados = DAL.ConEntrega.FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim(),pesquisa);
+            var dados = DAL.ConEntrega.FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
 
             rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
 
-            Session["rptCarregamento"] = dados;
+            ViewState["rptCarregamento"] = dados;
             lblMensagem.Text = string.Empty;
         }
         private void CarregarGridBarraPesquisa()
         {
-            string pesquisa = txtPesquisar.Text;
             DataTable dados = DAL.ConEntrega
-        .FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim(),pesquisa);
+        .FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
 
-            Session["rptCarregamento"] = dados;
+            ViewState["rptCarregamento"] = dados;
 
             rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
@@ -247,9 +254,33 @@ namespace NewCapit.dist.pages
         }
         protected void txtPesquisar_TextChanged(object sender, EventArgs e)
         {
-            bool ocultar = bool.Parse(hfOcultarViagens.Value);
-            FiltrarViagens(ocultar);
+            DataTable dt = ViewState["rptCarregamento"] as DataTable;
+            if (dt == null) return;
 
+            string filtro = txtPesquisar.Text.Trim().Replace("'", "''");
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                rptCarregamento.DataSource = dt;
+                rptCarregamento.DataBind();
+                return;
+            }
+
+            List<string> filtros = new List<string>();
+
+            foreach (DataColumn col in dt.Columns)
+            {
+                filtros.Add(
+                    $"CONVERT([{col.ColumnName}], 'System.String') LIKE '%{filtro}%'"
+                );
+            }
+
+            DataView dv = new DataView(dt);
+            dv.RowFilter = string.Join(" OR ", filtros);
+
+            rptCarregamento.DataSource = dv;
+            rptCarregamento.DataBind();
+            lblMensagem.Text = "Pesquisa retornou (" + dv.Count + ") registro(s).";
         }
 
 
@@ -263,17 +294,16 @@ namespace NewCapit.dist.pages
         }
         private void CarregarColetasConcluidas()
         {
-            string pesquisa = txtPesquisar.Text;
             var dados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida(
                 GetDataInicio(),
-                GetDataFim(),pesquisa
+                GetDataFim()
 
             );
 
             rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
 
-            Session["rptCarregamento"] = dados;
+            ViewState["rptCarregamento"] = dados;
             lblMensagem.Text = string.Empty;
         }
 

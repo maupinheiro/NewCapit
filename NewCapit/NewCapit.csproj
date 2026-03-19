@@ -5309,7 +5309,6 @@
     <Compile Include="dist\pages\reajustefretes.aspx.designer.cs">
       <DependentUpon>reajustefretes.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\SapiensIntegrationService.cs" />
     <Compile Include="dist\pages\SimuladorFrete.aspx.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

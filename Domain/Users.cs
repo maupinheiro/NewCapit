@@ -25,8 +25,6 @@ namespace Domain
         public string nm_nome { get; set;}
         public string fl_permissao { get; set; }
 
-        public DateTime? dt_troca_senha { get; set; } // O '?' permite valores nulos
-
 
     }
 }
