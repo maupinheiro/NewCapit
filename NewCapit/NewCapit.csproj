@@ -49,7 +49,7 @@
       <HintPath>bin\AjaxControlToolkit.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <HintPath>..\packages\BouncyCastle.Cryptography.2.6.2\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.3.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.105.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
@@ -86,9 +86,6 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.5, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13.5\lib\net461\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
@@ -244,7 +241,6 @@
     <Content Include="dist\bandeiras\icone-mato-grosso-do-sul.png" />
     <Content Include="dist\bandeiras\icone-paraiba.png" />
     <Content Include="dist\bandeiras\icone-sergipe.png" />
-    <Content Include="dist\pages\AbrirOS.aspx" />
     <Content Include="dist\pages\ColetasMatriz.aspx" />
     <Content Include="dist\pages\ConfereArquivo.aspx" />
     <Content Include="ConsultaAgregados.aspx" />
@@ -364,18 +360,14 @@
     <Content Include="dist\js\adminlte.min.js" />
     <Content Include="dist\js\demo.js" />
     <Content Include="dist\pages\Consulta_Agregados.aspx" />
-    <Content Include="dist\pages\controlaestoque.aspx" />
     <Content Include="dist\pages\ControleCreditoAbastecimento.aspx" />
     <Content Include="dist\pages\ControleCarretas.aspx" />
     <Content Include="dist\pages\ControleDePedagio.aspx" />
     <Content Include="dist\pages\ControleDeRotas.aspx" />
     <Content Include="dist\pages\ControlesValidades.aspx" />
-    <Content Include="dist\pages\DashboardManutencao.aspx" />
     <Content Include="dist\pages\demo_motorista.aspx" />
     <Content Include="dist\pages\demo_motorista21.aspx" />
     <Content Include="dist\pages\exempolos.aspx" />
-    <Content Include="dist\pages\FinalizarOS.aspx" />
-    <Content Include="dist\pages\FinalizarOSGrid.aspx" />
     <Content Include="dist\pages\FreteMinimoANTT.aspx" />
     <Content Include="dist\pages\FrmCadCarreta.aspx" />
     <Content Include="dist\pages\Frm_AltCarga.aspx" />
@@ -414,7 +406,6 @@
     <Content Include="dist\pages\GestaoPostos.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
-    <Content Include="dist\pages\ListaOS.aspx" />
     <Content Include="dist\pages\MapaVeiculoConsulta.aspx" />
     <Content Include="dist\pages\MapaClientePesquisa.aspx" />
     <Content Include="dist\pages\MapaCliente.aspx" />
@@ -431,7 +422,6 @@
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_RotaKrona.aspx" />
-    <Content Include="dist\pages\WebForm1.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -739,9 +729,6 @@
     <Content Include="img\caminhoes.png" />
     <Content Include="img\logo.png" />
     <Content Include="img\logo_transnovag.png" />
-    <Content Include="img\os_aberta.png" />
-    <Content Include="img\os_cancelada.png" />
-    <Content Include="img\os_finalizada.png" />
     <Content Include="img\percentualAgregados.png" />
     <Content Include="img\regiao-centro-oeste.jpg" />
     <Content Include="img\regiao-nordeste.jpg" />
@@ -4520,7 +4507,6 @@
     <Content Include="dist\bandeiras\icone-sao-paulo.png" />
     <Content Include="dist\bandeiras\icone-tocantins.png" />
     <Content Include="dist\pages\UploadHandler.ashx" />
-    <Content Include="dist\css\gridOS.less" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
@@ -4538,13 +4524,6 @@
     </Compile>
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\pages\AbrirOS.aspx.cs">
-      <DependentUpon>AbrirOS.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\AbrirOS.aspx.designer.cs">
-      <DependentUpon>AbrirOS.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ColetasMatriz.aspx.cs">
       <DependentUpon>ColetasMatriz.aspx</DependentUpon>
@@ -4659,13 +4638,6 @@
     <Compile Include="dist\pages\Consulta_Agregados.aspx.designer.cs">
       <DependentUpon>Consulta_Agregados.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\controlaestoque.aspx.cs">
-      <DependentUpon>controlaestoque.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\controlaestoque.aspx.designer.cs">
-      <DependentUpon>controlaestoque.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\ControleCreditoAbastecimento.aspx.cs">
       <DependentUpon>ControleCreditoAbastecimento.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4701,13 +4673,6 @@
     <Compile Include="dist\pages\ControlesValidades.aspx.designer.cs">
       <DependentUpon>ControlesValidades.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\DashboardManutencao.aspx.cs">
-      <DependentUpon>DashboardManutencao.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\DashboardManutencao.aspx.designer.cs">
-      <DependentUpon>DashboardManutencao.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\demo_motorista.aspx.cs">
       <DependentUpon>demo_motorista.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4728,20 +4693,6 @@
     </Compile>
     <Compile Include="dist\pages\exempolos.aspx.designer.cs">
       <DependentUpon>exempolos.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOS.aspx.cs">
-      <DependentUpon>FinalizarOS.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOS.aspx.designer.cs">
-      <DependentUpon>FinalizarOS.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOSGrid.aspx.cs">
-      <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\FinalizarOSGrid.aspx.designer.cs">
-      <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\FreteMinimoANTT.aspx.cs">
       <DependentUpon>FreteMinimoANTT.aspx</DependentUpon>
@@ -4946,7 +4897,6 @@
     <Compile Include="dist\pages\Frm_TabelaPrecoMatriz.aspx.designer.cs">
       <DependentUpon>Frm_TabelaPrecoMatriz.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\GeradorPDFOS.cs" />
     <Compile Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx.cs">
       <DependentUpon>GerarTabelaDeAvaliacaoMotoristas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5045,13 +4995,6 @@
     <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\ListaOS.aspx.cs">
-      <DependentUpon>ListaOS.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\ListaOS.aspx.designer.cs">
-      <DependentUpon>ListaOS.aspx</DependentUpon>
-    </Compile>
     <Compile Include="dist\pages\MapaVeiculoConsulta.aspx.cs">
       <DependentUpon>MapaVeiculoConsulta.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5147,14 +5090,6 @@
     <Compile Include="dist\pages\Frm_RotaKrona.aspx.designer.cs">
       <DependentUpon>Frm_RotaKrona.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\pages\WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\pages\WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="EventoOS .cs" />
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />
     <Compile Include="Startup.cs" />
