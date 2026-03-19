@@ -1,38 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Configuration;
-using System.Web.UI.HtmlControls;
-using System.Collections;
-using Org.BouncyCastle.Asn1.Cmp;
-using NPOI.SS.Formula.Functions;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Domain;
-using static NPOI.HSSF.Util.HSSFColor;
-using System.Threading;
-using System.Diagnostics.Eventing.Reader;
-using System.Web.Services.Description;
-using NPOI.SS.UserModel;
 using ICSharpCode.SharpZipLib.Zip;
 using MathNet.Numerics.Providers.SparseSolver;
-using System.Drawing.Drawing2D;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Runtime.InteropServices.ComTypes;
-using System.Globalization;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
+using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
+using Org.BouncyCastle.Asn1.Cmp;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
-using System.Web.Script.Serialization;
+using System.Drawing.Drawing2D;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.Script.Serialization;
+using System.Web.Services.Description;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 using System.Windows.Interop;
 using System.Windows.Media.Media3D;
+using System.Xml.Linq;
+using static NPOI.HSSF.Util.HSSFColor;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace NewCapit.dist.pages
@@ -47,8 +49,20 @@ namespace NewCapit.dist.pages
         DateTime dataHoraAtual = DateTime.Now;
         double distancia;
         string sDuracao, sPercurso;
-        string sOTCliente;       
-        
+        string sOTCliente;
+        string codremetente;
+        string remetente;
+        string codexpedidor;
+        string expedidor;
+        string coddestinatario;
+        string destinatario;
+        string codrecebedor;
+        string recebedor;
+        string codpagador;
+        string pagador;
+        string material;
+        string tipoveiculo;
+        string peso;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -1625,8 +1639,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
-
         protected void MostrarMsg(string mensagem, string tipo = "warning")
         {
             divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
@@ -1920,6 +1932,13 @@ namespace NewCapit.dist.pages
 
                         string carga = gvCargas.DataKeys[row.RowIndex].Value.ToString();
 
+                       bool existefrete = VerificaFrete(carga);
+
+                        if (!existefrete)
+                        {
+                            EnviarEmailAviso(carga); // 👈 ENVIA O EMAIL
+                        }
+
                         string updateCargas = @"
                     UPDATE tbcargas SET
                         emissao = @emissao,
@@ -1993,7 +2012,185 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        public bool VerificaFrete(string carga)
+        {
+            bool existe = false;
 
+            string sqlc = "select codorigem, cod_expedidor,coddestino,cod_recebedor,cod_pagador,material,veiculo from tbcargas where carga=" + carga;
+            SqlDataAdapter adpt = new SqlDataAdapter(sqlc, conn);
+            DataTable dt = new DataTable();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            adpt.Fill(dt);
+            conn.Close();
+            codremetente = dt.Rows[0][0].ToString();
+            codexpedidor= dt.Rows[0][1].ToString();
+            coddestinatario = dt.Rows[0][2].ToString();
+            codrecebedor = dt.Rows[0][3].ToString();
+            codpagador = dt.Rows[0][4].ToString();
+            material = dt.Rows[0][5].ToString();
+            tipoveiculo = dt.Rows[0][6].ToString();
+            conn.Close();
+
+            try
+            {
+                string sql = @"select count(1) 
+                       from tbtabeladefretes 
+                       where cod_remetente = @cod_remetente 
+                         and cod_expedidor = @cod_expedidor 
+                         and cod_destinatario = @cod_destinatario 
+                         and cod_recebedor = @cod_recebedor 
+                         and cod_pagador = @cod_pagador 
+                         and tipo_material = @tipo_material 
+                         and tipo_veiculo = @tipo_veiculo";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@cod_remetente", codremetente);
+                    cmd.Parameters.AddWithValue("@cod_expedidor", codexpedidor);
+                    cmd.Parameters.AddWithValue("@cod_destinatario", coddestinatario);
+                    cmd.Parameters.AddWithValue("@cod_recebedor", codrecebedor);
+                    cmd.Parameters.AddWithValue("@cod_pagador", codpagador);
+                    cmd.Parameters.AddWithValue("@tipo_material", material);
+                    cmd.Parameters.AddWithValue("@tipo_veiculo", tipoveiculo);
+
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    existe = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return existe;
+        }
+        private void EnviarEmailAviso(string carga)
+        {
+            string sqlc = "select codorigem, cliorigem, cod_expedidor, expedidor,coddestino, clidestino,cod_recebedor, recebedor,cod_pagador,pagador,material,veiculo,peso from tbcargas where carga=" + carga;
+            SqlDataAdapter adpt = new SqlDataAdapter(sqlc, conn);
+            DataTable dt = new DataTable();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            adpt.Fill(dt);
+            conn.Close();
+            codremetente = dt.Rows[0][0].ToString();
+            remetente = dt.Rows[0][1].ToString();
+            codexpedidor = dt.Rows[0][2].ToString();
+            expedidor = dt.Rows[0][3].ToString();
+            coddestinatario = dt.Rows[0][4].ToString();
+            destinatario = dt.Rows[0][5].ToString();
+            codrecebedor = dt.Rows[0][6].ToString();
+            recebedor = dt.Rows[0][7].ToString();
+            codpagador = dt.Rows[0][8].ToString();
+            pagador = dt.Rows[0][9].ToString();
+            material = dt.Rows[0][10].ToString();
+            tipoveiculo = dt.Rows[0][11].ToString();
+            peso = dt.Rows[0][12].ToString();
+
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("sistemacapit@gmail.com");
+            mail.To.Add("progtrans2@transnovag.com.br,contabil@transnovag.com.br");
+            //mail.CC.Add("mauricio@capit.com.br");
+            mail.Subject = "Carga " + carga + " não possui tabela de frete cadastrado!";
+            mail.IsBodyHtml = true;
+
+            mail.Body = $@"
+                    <html>
+                    <head>
+                        <style>
+                            body {{
+                                font-family: Arial, Helvetica, sans-serif;
+                                font-size: 14px;
+                                color: #333;
+                            }}
+                            h2 {{
+                                color: #2F5597;
+                            }}
+                            table {{
+                                border-collapse: collapse;
+                                width: 100%;
+                                margin-top: 10px;
+                            }}
+                            th, td {{
+                                border: 1px solid #ccc;
+                                padding: 8px;
+                                text-align: left;
+                            }}
+                            th {{
+                                background-color: #f2f2f2;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+
+                        <h2>Cadastro de Tabela de Frete</h2>
+
+                        <p>
+                            Seguem os dados para o cadastro da tabela de frete referente à carga:
+                            <strong>{carga}</strong>
+                        </p>
+
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Informação</th>
+                            </tr>
+                            <tr>
+                                <td>Cód. Remetente</td>
+                                <td>{codremetente} - {remetente}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Expedidor</td>
+                                <td>{codexpedidor} - {expedidor}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Destinatário</td>
+                                <td>{coddestinatario} - {destinatario}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Recebedor</td>
+                                <td>{codrecebedor} - {recebedor}</td>
+                            </tr>
+                            <tr>
+                                <td>Cód. Pagador</td>
+                                <td>{codpagador} - {pagador}</td>
+                            </tr>
+                            <tr>
+                                <td>Material</td>
+                                <td>{material}</td>
+                            </tr>
+                            <tr>
+                                <td>Tipo de Veículo</td>
+                                <td>{tipoveiculo}</td>
+                            </tr>
+                            <tr>
+                                <td>Peso</td>
+                                <td>{peso}</td>
+                            </tr>
+                        </table>
+
+                        <p style='margin-top:15px;'>
+                            Este e-mail foi enviado automaticamente pelo sistema.
+                        </p>
+
+                    </body>
+                    </html>";
+
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            smtp.EnableSsl = true; // Obrigatório para porta 587
+            smtp.UseDefaultCredentials = false; // Deve vir ANTES da atribuição de credenciais
+
+            // Use a senha de 16 dígitos que você gerou no Google aqui:
+            smtp.Credentials = new NetworkCredential("sistemacapit@gmail.com", "jaoe jzhn ktfw nmyq");
+
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+            smtp.Send(mail);
+        }
 
         private object SafeValue(string input)
         {

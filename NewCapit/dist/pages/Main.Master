@@ -192,6 +192,10 @@
 
             return true;
         }
+        window.addEventListener("beforeunload", function (e) {
+            // Faz uma chamada rápida para uma página de logout silenciosa
+            navigator.sendBeacon("/FechoSistama.aspx");
+        });
     </script>
 
 
@@ -811,7 +815,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/dist/pages/#" class="nav-link">
+                                        <a href="/dist/pages/TrocaSenha.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Trocar Senha</p>
                                         </a>
@@ -853,7 +857,7 @@
                         Deseja realmente sair do sistema?
                     </div>
                     <div class="modal-footer">
-                        <asp:Button ID="btnSair" runat="server" class="btn btn-primary" Text="Sim" OnClientClick="fecharModal(); return false;" />
+                        <asp:Button ID="btnSair" runat="server" class="btn btn-primary" Text="Sim" OnClick="btnSair_Click" OnClientClick="fecharModal(); return false;" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
 
                     </div>

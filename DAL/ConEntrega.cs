@@ -34,8 +34,9 @@ namespace DAL
         }
 
         public static DataTable FetchDataTableEntregasMatriz(
-    DateTime? dataInicio,
-    DateTime? dataFim)
+        DateTime? dataInicio,
+        DateTime? dataFim,
+        string pesquisa)
         {
             var sql = @"
         SELECT 
@@ -55,6 +56,15 @@ namespace DAL
 
             if (dataFim.HasValue)
                 sql += " AND c.emissao <= @DataFim";
+            if (!string.IsNullOrEmpty(pesquisa))
+            {
+                sql += @" AND (
+                        c.carga LIKE @Pesquisa OR
+                        c.status LIKE @Pesquisa OR
+                        c.situacao LIKE @Pesquisa OR
+                        c.expedidor like @Pesquisa
+                    )";
+            }
 
             sql += " ORDER BY c.veiculo, c.emissao ASC";
 
@@ -71,6 +81,10 @@ namespace DAL
                         "@DataFim",
                         dataFim.Value.Date.AddDays(1).AddSeconds(-1)
                     );
+                if (!string.IsNullOrEmpty(pesquisa))
+                {
+                    cmd.Parameters.AddWithValue("@Pesquisa", "%" + pesquisa + "%");
+                }
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -83,8 +97,9 @@ namespace DAL
 
 
         public static DataTable FetchDataTableEntregasMatrizConcluida(
-    DateTime? dataInicio,
-    DateTime? dataFim)
+        DateTime? dataInicio,
+        DateTime? dataFim,
+        string pesquisa)
         {
             string sql = @"
         SELECT 
@@ -102,8 +117,17 @@ namespace DAL
 
            
 
-            if (dataFim.HasValue)
-                sql += " AND c.emissao <= @DataFim";
+            if (dataFim.HasValue && dataInicio.HasValue)
+                sql += " AND c.emissao between @DataInicio and @DataFim";
+            if (!string.IsNullOrEmpty(pesquisa))
+            {
+                sql += @" AND (
+                        c.carga LIKE @Pesquisa OR
+                        c.status LIKE @Pesquisa OR
+                        c.situacao LIKE @Pesquisa OR
+                        c.expedidor like @Pesquisa
+                    )";
+            }
 
             sql += " ORDER BY c.veiculo, c.emissao ASC";
 
@@ -120,7 +144,10 @@ namespace DAL
                         "@DataFim",
                         dataFim.Value.Date.AddDays(1).AddSeconds(-1)
                     );
-
+                if (!string.IsNullOrEmpty(pesquisa))
+                {
+                    cmd.Parameters.AddWithValue("@Pesquisa", "%" + pesquisa + "%");
+                }
                 using (var reader = cmd.ExecuteReader())
                 {
                     DataTable dataTable = new DataTable();

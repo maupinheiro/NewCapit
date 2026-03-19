@@ -13011,21 +13011,19 @@ namespace NewCapit.dist.pages
                         }
                     }
 
+                    //else
+                    //{
 
-
-                    else
-                    {
-
-                        string retorno = "Erro! Contate o administrador. Detalhes do erro 60340: Não há marcações";
-                        System.Text.StringBuilder sb2 = new System.Text.StringBuilder();
-                        sb2.Append("<script type = 'text/javascript'>");
-                        sb2.Append("window.onload=function(){");
-                        sb2.Append("alert('");
-                        sb2.Append(retorno);
-                        sb2.Append("')};");
-                        sb2.Append("</script>");
-                        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb2.ToString());
-                    }
+                    //    string retorno = "Erro! Contate o administrador. Detalhes do erro 60340: Não há marcações";
+                    //    System.Text.StringBuilder sb2 = new System.Text.StringBuilder();
+                    //    sb2.Append("<script type = 'text/javascript'>");
+                    //    sb2.Append("window.onload=function(){");
+                    //    sb2.Append("alert('");
+                    //    sb2.Append(retorno);
+                    //    sb2.Append("')};");
+                    //    sb2.Append("</script>");
+                    //    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb2.ToString());
+                    //}
 
 
 

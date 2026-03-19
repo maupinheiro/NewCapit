@@ -13,13 +13,24 @@ namespace DAL
 {
     public class UsersDAL
     {
-        public static Users CheckLogin(Users obj) 
+       
+        public static Users CheckLogin(Users obj)
         {
-            string sqlQuery = "SELECT * FROM tb_usuario WHERE (nm_usuario = @nm_usuario) AND (ds_senha = @ds_senha)";
+            // É sempre boa prática listar as colunas em vez de usar *
+            string sqlQuery = "SELECT *, dt_troca_senha FROM tb_usuario WHERE nm_usuario = @nm_usuario AND ds_senha = @ds_senha";
 
             using (var con = ConnectionUtil.GetConnection())
             {
-                return con.Query<Users>(sqlQuery, obj).FirstOrDefault();
+                // Se a conexão não estiver aberta, o Dapper costuma abrir, 
+                // mas garantir a abertura evita erros de State em alguns provedores.
+                if (con.State != System.Data.ConnectionState.Open)
+                    con.Open();
+
+                return con.Query<Users>(sqlQuery, new
+                {
+                    nm_usuario = obj.nm_usuario,
+                    ds_senha = obj.ds_senha
+                }).FirstOrDefault();
             }
         }
 
@@ -112,6 +123,53 @@ namespace DAL
             using (var con = ConnectionUtil.GetConnection())
             {
                 return con.Query<ConsultaReboque>(sqlQuery, objReboque).FirstOrDefault();
+            }
+        }
+
+        public static int RegistrarLogin(int codUsuario)
+        {
+            int idGerado = 0;
+            string sql = "INSERT INTO LogSessoes (cod_usuario, dt_login) VALUES (@cod, GETDATE()); SELECT SCOPE_IDENTITY();";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.Add("@cod", SqlDbType.Int).Value = codUsuario;
+
+                if (con.State == ConnectionState.Closed) con.Open();
+
+                object result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                {
+                    idGerado = Convert.ToInt32(result);
+                }
+            }
+            return idGerado;
+        }
+
+        public static void RegistrarLogout(object idLog)
+        {
+            if (idLog == null) return;
+
+            // Use try-catch aqui para não deixar o erro passar em branco
+            try
+            {
+                using (var con = ConnectionUtil.GetConnection())
+                {
+                    string sql = "UPDATE LogSessoes SET dt_logout = GETDATE() WHERE id_log = @idLog";
+                    SqlCommand cmd = new SqlCommand(sql, con);
+                    cmd.Parameters.AddWithValue("@idLog", idLog);
+
+                    if (con.State == ConnectionState.Closed) con.Open();
+                    int linhasAfetadas = cmd.ExecuteNonQuery();
+
+                    // Se linhasAfetadas for 0, o ID passado não existe na tabela
+                }
+            }
+            catch (Exception ex)
+            {
+                // Se der erro de banco, ele vai estourar aqui
+                throw new Exception("Falha no Banco: " + ex.Message);
             }
         }
     }
