@@ -695,25 +695,95 @@
                             <!-- Manutencão Ipiranga -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-building"></i>
+                                    <i class="nav-icon fas fa-tools"></i>
                                     <p>
-                                        Fornecedores               
+                                        Manutenção               
                                         <i class="fas fa-angle-left right"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
-                                            <i class="far fa-check-circle nav-icon"></i>
+                                        <a href="/dist/pages/DashboardManutencao.aspx" class="nav-link">
+                                            <i class="fas fa-truck nav-icon"></i>
                                             <p>Gestão</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-building nav-icon"></i>
+                                            <p>Fornecedores</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-hard-hat nav-icon"></i>
+                                            <p>Profissionais</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <%--/dist/pages/controlaestoque.aspx--%>
+                                            <i class="fas fa-wrench nav-icon"></i>
+                                            <p>Estoque de Peças</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-charging-station nav-icon"></i>
+                                            <p>Combustíveis</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-road nav-icon"></i>
+                                            <p>Pneus</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/AbrirOS.aspx" class="nav-link">
+                                            <i class="fas fa-file-alt nav-icon"></i>
+                                            <p>Abrir O.S.</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ListaOS.aspx" class="nav-link">
+                                            <i class="far fa-file-alt nav-icon"></i>
+                                            <p>Listar O.S.</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/FinalizarOS.aspx" class="nav-link">
+                                            <i class="fas fa-calendar-alt nav-icon"></i>
+                                            <p>Finalizar O.S.</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
                                         <a href="/dist/pages/GestaoPostos.aspx" class="nav-link">
-                                            <i class="far fa-check-circle nav-icon"></i>
+                                            <i class="fas fa-gas-pump nav-icon"></i>
                                             <p>Gestão de Postos</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-tachometer-alt nav-icon"></i>
+                                            <p>Cronotacógrafo</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-smog nav-icon"></i>
+                                            <p>Opacidade</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                            <i class="fas fa-book nav-icon"></i>
+                                            <p>Relatórios</p>
+                                        </a>
+                                    </li>
+
+
                                     <%--<li class="nav-item">
                                         <a href="/dist/pages/#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
