@@ -13,13 +13,24 @@ namespace DAL
 {
     public class UsersDAL
     {
-        public static Users CheckLogin(Users obj) 
+       
+        public static Users CheckLogin(Users obj)
         {
-            string sqlQuery = "SELECT * FROM tb_usuario WHERE (nm_usuario = @nm_usuario) AND (ds_senha = @ds_senha)";
+            // É sempre boa prática listar as colunas em vez de usar *
+            string sqlQuery = "SELECT *, dt_troca_senha FROM tb_usuario WHERE nm_usuario = @nm_usuario AND ds_senha = @ds_senha";
 
             using (var con = ConnectionUtil.GetConnection())
             {
-                return con.Query<Users>(sqlQuery, obj).FirstOrDefault();
+                // Se a conexão não estiver aberta, o Dapper costuma abrir, 
+                // mas garantir a abertura evita erros de State em alguns provedores.
+                if (con.State != System.Data.ConnectionState.Open)
+                    con.Open();
+
+                return con.Query<Users>(sqlQuery, new
+                {
+                    nm_usuario = obj.nm_usuario,
+                    ds_senha = obj.ds_senha
+                }).FirstOrDefault();
             }
         }
 

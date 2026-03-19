@@ -626,6 +626,7 @@
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
     <Content Include="dist\pages\Frm_AtualizaColetaMatriz.aspx" />
     <Content Include="dist\pages\Frm_RotaKrona.aspx" />
+    <Content Include="dist\pages\TrocaSenha.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -5277,6 +5278,7 @@
     <Compile Include="dist\pages\reajustefretes.aspx.designer.cs">
       <DependentUpon>reajustefretes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\SapiensIntegrationService.cs" />
     <Compile Include="dist\pages\SimuladorFrete.aspx.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5300,6 +5302,13 @@
     </Compile>
     <Compile Include="dist\pages\Frm_RotaKrona.aspx.designer.cs">
       <DependentUpon>Frm_RotaKrona.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\TrocaSenha.aspx.cs">
+      <DependentUpon>TrocaSenha.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\TrocaSenha.aspx.designer.cs">
+      <DependentUpon>TrocaSenha.aspx</DependentUpon>
     </Compile>
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />

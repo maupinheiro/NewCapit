@@ -745,7 +745,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/dist/pages/#" class="nav-link">
+                                        <a href="/dist/pages/TrocaSenha.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Trocar Senha</p>
                                         </a>

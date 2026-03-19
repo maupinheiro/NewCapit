@@ -1721,6 +1721,111 @@ namespace NewCapit.dist.pages
                 }
 
             }
+            if (e.CommandName == "GeraDoc")
+            {
+                int idCarga = int.Parse(e.CommandArgument.ToString());
+                if (!PossuiNotasLancadas(idCarga))
+                {
+                    MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
+                    return; // Interrompe a execução aqui
+                }
+                string numeroDocumento = "";
+
+                // 3. Verifique se o que está sendo exportado é Serviço ou CT-e
+                // Pode ser um RadioButton ou você pode checar no banco antes
+                bool ehServico = VerificarSeEhServico(idCarga);
+
+                try
+                {
+                    // 4. Instancia a classe única
+                    var srv = new SapiensIntegrationService();
+
+                    // 5. Chama o método que faz toda a montagem (Reg 1, 2, 3, 4, 6 e 10)
+                    string conteudoArquivo = srv.GerarArquivoCompleto(idCarga, numeroDocumento, ehServico);
+
+                    if (!string.IsNullOrEmpty(conteudoArquivo))
+                    {
+                        // 6. Define o nome do arquivo conforme o tipo
+                        string prefixo = ehServico ? "NFSe" : "CTe";
+                        string nomeFinal = $"Sapiens_{prefixo}_{numeroDocumento}.txt";
+
+                        // 7. Dispara o download para o usuário
+                        DispararDownload(conteudoArquivo, nomeFinal);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Aqui você pode usar seu sistema de log do NewCapit
+                    
+                    MostrarMsg2("Erro ao gerar arquivo: " + ex.Message);
+                }
+
+
+
+
+            }
+        }
+        private bool PossuiNotasLancadas(int idCarga)
+        {
+            bool temNota = false;
+            string connString = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // Usamos IF EXISTS para ser mais rápido, pois só precisamos saber se há pelo menos uma
+                string sql = "SELECT CASE WHEN EXISTS (SELECT 1 FROM tbnfe WHERE carga = @carga) THEN 1 ELSE 0 END";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@carga", idCarga);
+
+                conn.Open();
+                temNota = (int)cmd.ExecuteScalar() == 1;
+            }
+
+            return temNota;
+        }
+        private bool VerificarSeEhServico(int idCarga)
+        {
+            bool resultado = false;
+            string connString = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // Sua query: seleciona origem e destino da carga
+                string sql = "SELECT cidorigem, ciddestino FROM tbcargas WHERE carga = @carga";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@carga", idCarga);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        string origem = reader["cidorigem"].ToString();
+                        string destino = reader["ciddestino"].ToString();
+
+                        // Regra: Cidades iguais = Serviço (NFSe)
+                        if (origem == destino)
+                        {
+                            resultado = true;
+                        }
+                    }
+                }
+            }
+            return resultado;
+        }
+        private void DispararDownload(string texto, string nomeArquivo)
+        {
+            Response.Clear();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment;filename=" + nomeArquivo);
+            Response.Charset = "ISO-8859-1"; // Padrão Windows que o Sapiens lê bem
+            Response.ContentType = "text/plain";
+
+            // Escreve o conteúdo gerado pela classe
+            Response.Output.Write(texto);
+            Response.Flush();
+            Response.End();
         }
         public class RetornoPut
         {
