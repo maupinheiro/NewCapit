@@ -118,7 +118,7 @@ namespace NewCapit.dist.pages
                             sb.Append("alert('");
                             sb.Append(retorno);
                             sb.Append("');"); // Fecha o comando do alert
-                            sb.Append("window.location.href = 'Home.aspx';"); // Redireciona após o OK
+                            sb.Append("window.location.href = '/dist/pages/Home.aspx';"); // Redireciona após o OK
                             sb.Append("};");
                             sb.Append("</script>");
 

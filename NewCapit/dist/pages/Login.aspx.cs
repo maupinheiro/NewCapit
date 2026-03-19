@@ -64,7 +64,7 @@ namespace NewCapit
                     if (precisaTrocar)
                     {
                         // Redireciona para troca de senha (ajuste o caminho se necessário)
-                        Response.Redirect("TrocaSenha.aspx");
+                        Response.Redirect("/dist/pages/TrocaSenha.aspx");
                     }
                     else
                     {

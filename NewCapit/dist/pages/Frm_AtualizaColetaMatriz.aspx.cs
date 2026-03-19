@@ -3783,7 +3783,7 @@ namespace NewCapit.dist.pages
                 string sql = @"
             -- 1. Verifica se há cargas não concluídas
             DECLARE @NaoConcluidas INT;
-            SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status <> 'Concluido';
+            SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status NOT IN ('Concluido', 'Liberado Vazio') ;
 
             -- 2. Verifica se existe PELO MENOS UM CT-e para esta viagem
             DECLARE @TotalCTe INT;
@@ -4949,7 +4949,7 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                MostrarMsg2("Necessário Anexar Ct-e a Carga para finalizar a Ordem de Coleta!");
+                MostrarMsg2(mensagemErro);
             }
 
         }
