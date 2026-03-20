@@ -467,6 +467,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-2">
+                            <asp:HiddenField ID="hdContinuar" runat="server" Value="0" />
                             <asp:Button ID="btnSalvar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" Text="Salvar" OnClick="btnSalvar_Click" />
                         </div>
                         <div class="col-md-2">

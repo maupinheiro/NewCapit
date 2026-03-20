@@ -54,7 +54,8 @@ namespace NewCapit
                     Session["PermissaoUsuario"] = permissaoUsuario;
                     Session["FotoUsuario"] = fotoFuncionario;
 
-                    //Chama a página principal
+                    int idLog = UsersDAL.RegistrarLogin(user.cod_usuario);
+                    Session["IdSessaoLog"] = idLog; // Importante para o logout saber quem atualizar
                     Response.Redirect("/dist/pages/Home.aspx");
                 }
                 else 

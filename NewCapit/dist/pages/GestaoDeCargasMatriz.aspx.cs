@@ -93,15 +93,14 @@ namespace NewCapit.dist.pages
 
                 gvCargas.DataSource = dt;
                 gvCargas.DataBind();
-                ViewState["Cargas"] = dt;
+                Session["Cargas"] = dt;
             }
         }
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
             CarregarGrid();   
         }
-
-        
+                
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
             DataTable dt = ViewState["Cargas"] as DataTable;
@@ -136,9 +135,6 @@ namespace NewCapit.dist.pages
             }
         }
         
-
-
-
         protected void gvCargas_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
         {
             gvCargas.PageIndex = e.NewPageIndex;

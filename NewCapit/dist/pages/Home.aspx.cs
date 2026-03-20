@@ -31,6 +31,10 @@ namespace NewCapit.dist.pages
                 CarregaBloco();
                 CarregaGraficos();
                 lblData.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy") + " - " + DateTime.Now.ToString("dd/MM/yyyy");
+                //string idlog = Session["IdSessaoLog"].ToString();
+                //string mensagemErro = "Id Log: "+idlog ;
+                //string script = $"alert('{mensagemErro}');";
+                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
             }
             if (Session["UsuarioLogado"] != null)
             {

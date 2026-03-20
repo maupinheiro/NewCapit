@@ -114,6 +114,53 @@ namespace DAL
                 return con.Query<ConsultaReboque>(sqlQuery, objReboque).FirstOrDefault();
             }
         }
+
+        public static int RegistrarLogin(int codUsuario)
+        {
+            int idGerado = 0;
+            string sql = "INSERT INTO LogSessoes (cod_usuario, dt_login) VALUES (@cod, GETDATE()); SELECT SCOPE_IDENTITY();";
+
+            using (var con = ConnectionUtil.GetConnection())
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.Add("@cod", SqlDbType.Int).Value = codUsuario;
+
+                if (con.State == ConnectionState.Closed) con.Open();
+
+                object result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                {
+                    idGerado = Convert.ToInt32(result);
+                }
+            }
+            return idGerado;
+        }
+
+        public static void RegistrarLogout(object idLog)
+        {
+            if (idLog == null) return;
+
+            // Use try-catch aqui para não deixar o erro passar em branco
+            try
+            {
+                using (var con = ConnectionUtil.GetConnection())
+                {
+                    string sql = "UPDATE LogSessoes SET dt_logout = GETDATE() WHERE id_log = @idLog";
+                    SqlCommand cmd = new SqlCommand(sql, con);
+                    cmd.Parameters.AddWithValue("@idLog", idLog);
+
+                    if (con.State == ConnectionState.Closed) con.Open();
+                    int linhasAfetadas = cmd.ExecuteNonQuery();
+
+                    // Se linhasAfetadas for 0, o ID passado não existe na tabela
+                }
+            }
+            catch (Exception ex)
+            {
+                // Se der erro de banco, ele vai estourar aqui
+                throw new Exception("Falha no Banco: " + ex.Message);
+            }
+        }
     }
    
 }
