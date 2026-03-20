@@ -629,6 +629,7 @@
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\reajustefretes.aspx" />
     <Content Include="dist\pages\SimuladorFrete.aspx" />
+    <Content Include="dist\pages\TrocaSenha.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="dist\pages\Frm_Rotas.aspx" />
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
@@ -5333,6 +5334,13 @@
     </Compile>
     <Compile Include="dist\pages\SimuladorFrete.aspx.designer.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\TrocaSenha.aspx.cs">
+      <DependentUpon>TrocaSenha.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\TrocaSenha.aspx.designer.cs">
+      <DependentUpon>TrocaSenha.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\UploadHandler.ashx.cs">
       <DependentUpon>UploadHandler.ashx</DependentUpon>
