@@ -447,8 +447,8 @@
     <Content Include="dist\bandeiras\icone-mato-grosso-do-sul.png" />
     <Content Include="dist\bandeiras\icone-paraiba.png" />
     <Content Include="dist\bandeiras\icone-sergipe.png" />
-    <Content Include="dist\FinalizarOS.aspx" />
-    <Content Include="dist\FinalizarOSGrid.aspx" />
+    <Content Include="dist\pages\FinalizarOS.aspx" />
+    <Content Include="dist\pages\FinalizarOSGrid.aspx" />
     <Content Include="dist\pages\AbrirOS.aspx" />
     <Content Include="dist\pages\ColetasMatriz.aspx" />
     <Content Include="dist\pages\ConfereArquivo.aspx" />
@@ -4741,19 +4741,19 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\EventoOS.cs" />
-    <Compile Include="dist\FinalizarOS.aspx.cs">
+    <Compile Include="dist\pages\EventoOS.cs" />
+    <Compile Include="dist\pages\FinalizarOS.aspx.cs">
       <DependentUpon>FinalizarOS.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\FinalizarOS.aspx.designer.cs">
+    <Compile Include="dist\pages\FinalizarOS.aspx.designer.cs">
       <DependentUpon>FinalizarOS.aspx</DependentUpon>
     </Compile>
-    <Compile Include="dist\FinalizarOSGrid.aspx.cs">
+    <Compile Include="dist\pages\FinalizarOSGrid.aspx.cs">
       <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\FinalizarOSGrid.aspx.designer.cs">
+    <Compile Include="dist\pages\FinalizarOSGrid.aspx.designer.cs">
       <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\AbrirOS.aspx.cs">
@@ -5326,6 +5326,7 @@
     <Compile Include="dist\pages\reajustefretes.aspx.designer.cs">
       <DependentUpon>reajustefretes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\SapiensIntegrationService.cs" />
     <Compile Include="dist\pages\SimuladorFrete.aspx.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
