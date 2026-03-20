@@ -45,6 +45,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.Services;
+<<<<<<< Updated upstream
 using System.Web.Services.Description;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -52,6 +53,9 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using static NPOI.HSSF.Util.HSSFColor;
+=======
+using DocumentFormat.OpenXml.Office.Word;
+>>>>>>> Stashed changes
 
 
 namespace NewCapit.dist.pages
@@ -102,7 +106,11 @@ namespace NewCapit.dist.pages
                 
                 PreencherClienteInicial();
                 PreencherClienteFinal();
+<<<<<<< Updated upstream
                
+=======
+                
+>>>>>>> Stashed changes
 
             }
             //CarregarFotoMotorista(fotoMotorista);
@@ -741,7 +749,11 @@ namespace NewCapit.dist.pages
         e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+<<<<<<< Updated upstream
                 string carga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+=======
+
+>>>>>>> Stashed changes
                 using (SqlConnection conn = new SqlConnection(
                     ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 {
@@ -759,6 +771,7 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+<<<<<<< Updated upstream
                 string sqlg = "select rota_krona from tbcargas where carga="+carga+ " and  rota_krona is not null";
                 DataTable dt = new DataTable();
                 SqlDataAdapter adp = new SqlDataAdapter(sqlg,con);
@@ -843,6 +856,11 @@ namespace NewCapit.dist.pages
                 GridView gv = (GridView)e.Item.FindControl("gvNF");
                 gv.RowCommand += gvNF_RowCommand;
             }
+=======
+                ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
+            }
+
+>>>>>>> Stashed changes
 
         }
         private void CarregarNF(string idCarga, GridView gvn)
@@ -4443,9 +4461,15 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string sql = @"SELECT pedido, emissao, peso, material, portao,
+<<<<<<< Updated upstream
                             iniciocar, termcar
                     FROM tbPedidos
                     WHERE id = @idCarga";
+=======
+                              iniciocar, termcar
+                       FROM tbPedidos
+                       WHERE id = @idCarga";
+>>>>>>> Stashed changes
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
@@ -4479,6 +4503,7 @@ namespace NewCapit.dist.pages
             //ddl.Items.Insert(0, new ListItem("Selecione", ""));
         }
 
+<<<<<<< Updated upstream
         private DataTable BuscarTodosMotoristas()
         {
             DataTable dt = new DataTable();
@@ -4489,6 +4514,8 @@ namespace NewCapit.dist.pages
             }
             return dt;
         }
+=======
+>>>>>>> Stashed changes
         protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType != DataControlRowType.DataRow) return;
@@ -4504,6 +4531,7 @@ namespace NewCapit.dist.pages
             }
 
             // Calcular tempo
+<<<<<<< Updated upstream
             //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
             //DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
 
@@ -4540,6 +4568,17 @@ namespace NewCapit.dist.pages
                     //ddl.SelectedItem.Text = motoristaSalvo;
 
                 }
+=======
+            DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
+            DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
+
+            Label lblTempo = (Label)e.Row.FindControl("lblTempo");
+
+            if (inicio.HasValue && fim.HasValue)
+            {
+                TimeSpan t = fim.Value - inicio.Value;
+                lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+>>>>>>> Stashed changes
             }
         }
 
@@ -6145,6 +6184,7 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+<<<<<<< Updated upstream
 
         protected void txtMDFe_TextChanged(object sender, EventArgs e)
         {
@@ -6354,6 +6394,8 @@ namespace NewCapit.dist.pages
 
             cmd.ExecuteNonQuery();
         }
+=======
+>>>>>>> Stashed changes
 
     }
 }
