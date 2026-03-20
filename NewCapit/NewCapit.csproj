@@ -447,6 +447,8 @@
     <Content Include="dist\bandeiras\icone-mato-grosso-do-sul.png" />
     <Content Include="dist\bandeiras\icone-paraiba.png" />
     <Content Include="dist\bandeiras\icone-sergipe.png" />
+    <Content Include="dist\FinalizarOS.aspx" />
+    <Content Include="dist\FinalizarOSGrid.aspx" />
     <Content Include="dist\pages\AbrirOS.aspx" />
     <Content Include="dist\pages\ColetasMatriz.aspx" />
     <Content Include="dist\pages\ConfereArquivo.aspx" />
@@ -4738,6 +4740,21 @@
     </Compile>
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\EventoOS.cs" />
+    <Compile Include="dist\FinalizarOS.aspx.cs">
+      <DependentUpon>FinalizarOS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\FinalizarOS.aspx.designer.cs">
+      <DependentUpon>FinalizarOS.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\FinalizarOSGrid.aspx.cs">
+      <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\FinalizarOSGrid.aspx.designer.cs">
+      <DependentUpon>FinalizarOSGrid.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\AbrirOS.aspx.cs">
       <DependentUpon>AbrirOS.aspx</DependentUpon>
