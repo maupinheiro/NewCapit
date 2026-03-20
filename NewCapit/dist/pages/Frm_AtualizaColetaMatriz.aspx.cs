@@ -4526,7 +4526,7 @@ namespace NewCapit.dist.pages
                 DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
                 if (ddl != null)
                 {
-                    GetMotoristas(ddl);
+                    //GetMotoristas(ddl);
                 }
             }
 
