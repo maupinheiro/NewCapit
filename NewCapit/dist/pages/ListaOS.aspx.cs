@@ -1,18 +1,22 @@
-﻿using System;
+﻿using DAL;
+using DocumentFormat.OpenXml.Office.Word;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Globalization;
+using static NewCapit.dist.pages.AbrirOS;
 
 namespace NewCapit.dist.pages
 {
     public partial class ListaOS : System.Web.UI.Page
     {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -246,6 +250,85 @@ namespace NewCapit.dist.pages
             {
                 //Response.Redirect("EditarOS.aspx?os=" + numeroOS);
             }
+
+            if (e.CommandName == "pdf")
+            {
+
+                // 2. Busca os dados que acabaram de ser gravados na tabela
+                string sqlBusca = "SELECT * FROM tbordem_servico WHERE id_os = @id"; // Ajuste 'id_os' para o nome da sua PK
+
+                // Garante que a conexão está aberta para o segundo comando
+                if (con.State == ConnectionState.Closed) con.Open();
+
+                using (SqlCommand cmdBusca = new SqlCommand(sqlBusca, con))
+                {
+                    cmdBusca.Parameters.AddWithValue("@id", numeroOS);
+
+                    using (SqlDataReader dr = cmdBusca.ExecuteReader())
+                    {
+                        OrdemServico os = new OrdemServico();
+
+                        if (dr.Read())
+                        {
+                            // --- Populando o objeto PDF com os campos da TABELA ---
+                            os.numero_os = numeroOS;
+                            os.data_abertura = Convert.ToDateTime(dr["data_abertura"]);
+                            os.resp_abertura = dr["resp_abertura"].ToString();
+
+                            // Veículo
+                            os.id_veiculo = dr["id_veiculo"].ToString();
+                           
+                            os.placa = dr["placa"].ToString();
+                            os.tipo_veiculo = dr["tipo_veiculo"].ToString();
+                            os.marca = dr["marca"].ToString();
+                            os.modelo = dr["modelo"].ToString();
+                            os.ano_modelo = dr["ano_modelo"].ToString();
+                            os.nucleo_veiculo = dr["nucleo_veiculo"].ToString();
+                            os.km_abertura = dr["km_abertura"].ToString();
+
+                            // Motorista
+                            os.id_motorista = dr["id_motorista"].ToString();
+                            os.nome_motorista = dr["nome_motorista"].ToString();
+                            os.transp_motorista = dr["transp_motorista"].ToString();
+                            os.nucleo_motorista = dr["nucleo_motorista"].ToString();
+
+                            // Serviço
+                            os.tipo_os = dr["tipo_os"].ToString();
+                            os.tipo_servico = dr["interno_externo"].ToString();
+
+                            // Fornecedor (Lógica: se nulo no banco, assume Interno)
+                            if (dr["id_fornecedor"] == DBNull.Value)
+                            {
+                                os.id_fornecedor = "6424";
+                                os.nome_fornecedor = "MANUTENÇÃO - INTERNA";
+                            }
+                            else
+                            {
+                                os.id_fornecedor = dr["id_fornecedor"].ToString();
+                                os.nome_fornecedor = dr["nome_fornecedor"].ToString();
+                            }
+
+                            // Descrições
+                            os.parte_mecanica = dr["parte_mecanica"].ToString();
+                            os.parte_eletrica = dr["parte_eletrica"].ToString();
+                            os.parte_borracharia = dr["parte_borracharia"].ToString();
+                            os.parte_funilaria = dr["parte_funilaria"].ToString();
+
+                            // 3. Gera o PDF após fechar o Reader (dentro do if para garantir que achou a OS)
+                            dr.Close(); // Fechar o Reader antes de gerar o PDF para liberar a conexão
+
+                            byte[] pdf = GeradorPDFOS.GerarPDF(os);
+
+                            Response.Clear();
+                            Response.ContentType = "application/pdf";
+                            Response.AddHeader("content-disposition", "attachment;filename=OS_" + numeroOS + ".pdf");
+                            Response.BinaryWrite(pdf);
+                            Response.Flush();
+                            HttpContext.Current.ApplicationInstance.CompleteRequest();
+                        }
+                    }
+                }
+            }
         }
         
         protected void gvOS_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -282,6 +365,49 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // 1. Obtém o valor, converte para string e remove espaços em branco (Trim)
+                // Usamos ToUpper para garantir que "finalizada", "Finalizada" ou "FINALIZADA" funcionem
+                string status = DataBinder.Eval(e.Row.DataItem, "status_texto")?.ToString().Trim().ToUpper() ?? "";
+
+                LinkButton btnFinalizar = (LinkButton)e.Row.FindControl("btnFinalizar");
+                Label lblStatus = (Label)e.Row.FindControl("lblStatus");
+                Image imgStatus = (Image)e.Row.FindControl("imgStatus");
+
+                if (btnFinalizar != null)
+                {
+                    // 2. Verificação múltipla para garantir a captura do status
+                    if (status == "FINALIZADA" || status == "FINALIZADO")
+                    {
+                        // Desativa a funcionalidade de clique no servidor
+                        btnFinalizar.Enabled = false;
+
+                        // Força o visual de desabilitado do Bootstrap (cinza e sem eventos de mouse)
+                        btnFinalizar.CssClass = "btn btn-secondary btn-sm disabled";
+                        btnFinalizar.Attributes.Add("style", "pointer-events: none; cursor: default;");
+
+                        // Limpa o CommandName para garantir que o RowCommand não processe nada
+                        btnFinalizar.CommandName = "";
+                        btnFinalizar.Text = "Concluída";
+                    }
+                }
+
+                // Aproveitando para definir a imagem do status conforme prometido
+                if (imgStatus != null)
+                {
+                    if (status == "FINALIZADA" || status == "FINALIZADO")
+                    {
+                        imgStatus.ImageUrl = "~/img/os_finalizada.png"; // Altere para o seu caminho real
+                        if (lblStatus != null) lblStatus.ForeColor = System.Drawing.Color.Green;
+                    }
+                    else
+                    {
+                        imgStatus.ImageUrl = "~/img/os_aberta.png"; // Altere para o seu caminho real
+                    }
+                }
+            }
         }
 
         public string CorDias(int dias)
@@ -294,5 +420,12 @@ namespace NewCapit.dist.pages
 
             return "badge bg-danger";       // vermelho
         }
+
+        protected void btnAbrirOs_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("AbrirOs.aspx");
+        }
+
+
     }
 }

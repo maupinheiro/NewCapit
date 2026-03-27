@@ -44,8 +44,8 @@
            
             </div>
              <div class="row">
-                 <div class="col-md-12" ondblclick="return abre_mapa('mapa.aspx',1400,700);">
-                     <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="700px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True"  OnMarkerClick="GMap1_MarkerClick" />
+                 <div class="col-md-12" ondblclick="return abre_mapa('mapa.aspx',1400,980);">
+                     <cc1:GMap ID="GMap1" runat="server" Width="100%" Height="980px" Key="AIzaSyApI6da0E4OJktNZ-zZHgL6A5jtk0L6Cww" enableServerEvents="True"  OnMarkerClick="GMap1_MarkerClick" />
                       
                      </div>
                  </div>

@@ -18,26 +18,18 @@ namespace NewCapit.dist.pages
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                // Document doc = new Document(PageSize.A4, 20, 20, 100, 70);
-                Document doc = new Document(PageSize.A4, 20, 20, 110, 150);
+                // 1. DIMINUIÇÃO DAS MARGENS: 
+                // Alterado o recuo superior de 110 para 80 e o inferior de 150 para 40
+                Document doc = new Document(PageSize.A4, 20, 20, 80, 40);
                 PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
                 // LOGO
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(
-                HttpContext.Current.Server.MapPath("~/img/logo_transnovag.png"));
-
+                    HttpContext.Current.Server.MapPath("~/img/logo_transnovag.png"));
                 logo.ScaleToFit(50, 60);
 
                 // QR CODE
-
-                //                BarcodeQRCode qr = new BarcodeQRCode(
-                //"https://sistema.suaempresa.com/os?id=" + os.numero_os,
-                //120, 120, null);
-
-                BarcodeQRCode qr = new BarcodeQRCode(
-                "OS:" + os.numero_os + "|PLACA:" + os.placa,
-                120, 120, null);
-
+                BarcodeQRCode qr = new BarcodeQRCode("OS:" + os.numero_os + "|PLACA:" + os.placa, 120, 120, null);
                 iTextSharp.text.Image imgQr = qr.GetImage();
                 imgQr.ScaleAbsolute(60, 60);
 
@@ -46,142 +38,99 @@ namespace NewCapit.dist.pages
                 evento.os = os;
                 evento.logo = logo;
                 evento.qr = imgQr;
-
                 writer.PageEvent = evento;
 
                 doc.Open();
-                FontPDF titulo = new FontPDF(FontPDF.FontFamily.HELVETICA, 8, FontPDF.BOLD);
-                FontPDF cab = new FontPDF(FontPDF.FontFamily.HELVETICA, 8, FontPDF.BOLD);
-                FontPDF txt = new FontPDF(FontPDF.FontFamily.HELVETICA, 8, FontPDF.BOLD);
 
-                // fonte tamanho 8
-                iTextSharp.text.Font fonte8 = new iTextSharp.text.Font(
-                    iTextSharp.text.Font.FontFamily.HELVETICA, 8);
-                // fonte tamanho 10 negrito
-                iTextSharp.text.Font fonte10negrito = new iTextSharp.text.Font(
-    iTextSharp.text.Font.FontFamily.HELVETICA, 10, iTextSharp.text.Font.BOLD);
-                // título
-                var fonteTitulo = new iTextSharp.text.Font(
-                    iTextSharp.text.Font.FontFamily.HELVETICA, 20, iTextSharp.text.Font.BOLD);
+                // Fontes
+                iTextSharp.text.Font fonte8 = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 8);
+                iTextSharp.text.Font fonte10negrito = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 10, iTextSharp.text.Font.BOLD);
 
-                // VEÍCULO                
-                //doc.Add(new Paragraph(" ", cab));
-                // tabela veículo
+                // --- TABELA VEÍCULO ---
                 PdfPTable vei = new PdfPTable(2);
                 vei.WidthPercentage = 100;
-                vei.SplitRows = true;
-                vei.SplitLate = false;
-                vei.KeepTogether = false;                
+                vei.SpacingBefore = 2f; // Reduz o espaço antes da primeira tabela
                 vei.AddCell(new Phrase("Veículo: " + os.id_veiculo + " - " + os.placa + " / " + os.tipo_veiculo, fonte8));
                 vei.AddCell(new Phrase("Marca: " + os.marca + " - " + os.modelo + " / " + os.ano_modelo, fonte8));
                 doc.Add(vei);
+
                 PdfPTable veiLinha2 = new PdfPTable(2);
                 veiLinha2.WidthPercentage = 100;
                 veiLinha2.AddCell(new Phrase("Núcleo: " + os.nucleo_veiculo, fonte8));
                 veiLinha2.AddCell(new Phrase("KM: " + os.km_abertura, fonte8));
                 doc.Add(veiLinha2);
 
-                // MOTORISTA
-                doc.Add(new Paragraph(" ", cab));
+                // --- MOTORISTA ---
+                // Removido o doc.Add(new Paragraph(" ", cab)) que criava linhas vazias
                 PdfPTable mot = new PdfPTable(2);
-                mot.SplitRows = true;
-                mot.SplitLate = false;
-                mot.KeepTogether = false;
                 mot.WidthPercentage = 100;
+                mot.SpacingBefore = 5f; // Espaço controlado em vez de parágrafo vazio
                 mot.AddCell(new Phrase("Motorista: " + os.id_motorista + " - " + os.nome_motorista, fonte8));
                 mot.AddCell(new Phrase("Transportadora: " + os.transp_motorista + " / " + os.nucleo_motorista, fonte8));
                 doc.Add(mot);
 
-                // TIPO OS
-                doc.Add(new Paragraph(" ", cab));
+                // --- TIPO OS ---
                 PdfPTable tipo = new PdfPTable(2);
                 tipo.WidthPercentage = 100;
-                tipo.SplitRows = true;
-                tipo.SplitLate = false;
-                tipo.KeepTogether = false;
+                tipo.SpacingBefore = 5f;
                 float[] larguraTipo = { 30f, 70f };
                 tipo.SetWidths(larguraTipo);
                 tipo.AddCell(new Phrase("Tipo OS: " + os.tipo_os + " - " + os.tipo_servico, fonte8));
                 tipo.AddCell(new Phrase("Fornecedor: " + os.id_fornecedor + " - " + os.nome_fornecedor, fonte8));
                 doc.Add(tipo);
 
-                // MECÂNICA                
-                doc.Add(new Paragraph(" ", cab));
+                // --- MECÂNICA ---
                 PdfPTable mecanica = new PdfPTable(1);
                 mecanica.WidthPercentage = 100;
-                mecanica.SplitRows = true;
-                mecanica.SplitLate = false;
-                mecanica.KeepTogether = false;
+                mecanica.SpacingBefore = 5f;
                 mecanica.AddCell("1 - MECÂNICA");
                 mecanica.AddCell(new Phrase("DEFEITOS APRESENTADOS:", fonte10negrito));
                 mecanica.AddCell(new Phrase(os.parte_mecanica, fonte8));
                 doc.Add(mecanica);
 
-                // SERVIÇO EXECUTADO
+                // SERVIÇO EXECUTADO (Reutilizável)
                 PdfPTable serv = new PdfPTable(1);
                 serv.WidthPercentage = 100;
-                serv.SplitRows = true;
-                serv.SplitLate = false;
-                serv.KeepTogether = false;
                 serv.AddCell(new Phrase("SERVIÇO EXECUTADO:", fonte10negrito));
-                for (int i = 0; i < 5; i++)
-                    serv.AddCell(" ");
+                // Diminuído o número de linhas vazias de 5 para 3 para economizar espaço
+                for (int i = 0; i < 3; i++) serv.AddCell(" ");
                 doc.Add(serv);
-                // PEÇAS  
                 doc.Add(CriarTabelaPecas(fonte8));
 
-                // ELETRICA                
-                doc.Add(new Paragraph(" ", cab));
+                // --- ELÉTRICA ---
                 PdfPTable eletrica = new PdfPTable(1);
                 eletrica.WidthPercentage = 100;
-                eletrica.SplitRows = true;
-                eletrica.SplitLate = false;
-                eletrica.KeepTogether = false;
+                eletrica.SpacingBefore = 8f;
                 eletrica.AddCell("2 - ELETRICA");
                 eletrica.AddCell(new Phrase("DEFEITOS APRESENTADOS:", fonte10negrito));
                 eletrica.AddCell(new Phrase(os.parte_eletrica, fonte8));
                 doc.Add(eletrica);
-                // SERVIÇO EXECUTADO              
                 doc.Add(serv);
-                // PEÇAS  
                 doc.Add(CriarTabelaPecas(fonte8));
 
-                // BORRACHARIA                
-                doc.Add(new Paragraph(" ", cab));
+                // --- BORRACHARIA ---
                 PdfPTable borracharia = new PdfPTable(1);
                 borracharia.WidthPercentage = 100;
-                borracharia.SplitRows = true;
-                borracharia.SplitLate = false;
-                borracharia.KeepTogether = false;
+                borracharia.SpacingBefore = 8f;
                 borracharia.AddCell("3 - BORRACHARIA");
                 borracharia.AddCell(new Phrase("DEFEITOS APRESENTADOS:", fonte10negrito));
                 borracharia.AddCell(new Phrase(os.parte_borracharia, fonte8));
                 doc.Add(borracharia);
-                // SERVIÇO EXECUTADO              
                 doc.Add(serv);
-                // PEÇAS  
                 doc.Add(CriarTabelaPecas(fonte8));
 
-                // FUNILARIA                
-                doc.Add(new Paragraph(" ", cab));
+                // --- FUNILARIA ---
                 PdfPTable funilaria = new PdfPTable(1);
                 funilaria.WidthPercentage = 100;
-                funilaria.SplitRows = true;
-                funilaria.SplitLate = false;
-                funilaria.KeepTogether = false;
+                funilaria.SpacingBefore = 8f;
                 funilaria.AddCell("4 - FUNILARIA");
                 funilaria.AddCell(new Phrase("DEFEITOS APRESENTADOS:", fonte10negrito));
                 funilaria.AddCell(new Phrase(os.parte_funilaria, fonte8));
                 doc.Add(funilaria);
-                // SERVIÇO EXECUTADO              
                 doc.Add(serv);
-                // PEÇAS  
                 doc.Add(CriarTabelaPecas(fonte8));
-                doc.Add(new Paragraph(" ", cab));
 
-                // doc.Add(imgQr);
                 doc.Close();
-
                 return ms.ToArray();
             }
         }

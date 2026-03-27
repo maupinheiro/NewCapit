@@ -10,8 +10,7 @@ using System.Data.SqlClient;
 using System.Web.Script.Serialization;
 using System.IO;
 using System.Collections;
-using OfficeOpenXml; // Namespace da EPPlus
-using OfficeOpenXml.Style;
+ 
 using ClosedXML.Excel;
 using System.Web.UI.HtmlControls;
 using System.Web.Configuration;
@@ -101,7 +100,7 @@ namespace NewCapit.dist.pages
                 //gvCargas.DataBind();
 
                 // Armazena os dados no ViewState para usar na exportação
-                ViewState["Cargas"] = dt;
+                Session["Cargas"] = dt;
             }
         }
         protected void btnFiltrar_Click(object sender, EventArgs e)
@@ -245,7 +244,7 @@ namespace NewCapit.dist.pages
             DataTable dados = DAL.ConEntrega
         .FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
 
-            ViewState["rptCarregamento"] = dados;
+            Session["rptCarregamento"] = dados;
 
             rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
@@ -303,7 +302,7 @@ namespace NewCapit.dist.pages
             rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
 
-            ViewState["rptCarregamento"] = dados;
+            Session["rptCarregamento"] = dados;
             lblMensagem.Text = string.Empty;
         }
 

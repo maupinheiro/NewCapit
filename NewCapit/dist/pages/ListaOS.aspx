@@ -89,11 +89,18 @@
                                                 TextMode="Date"></asp:TextBox>
                                         </div>
 
-                                        <div class="col-md-2">
+                                        <div class="col-md-1">
                                             <asp:Button ID="btnPesquisar" runat="server"
                                                 Text="Pesquisar"
                                                 CssClass="btn btn-primary"
                                                 OnClick="PesquisarOS" />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <asp:Button ID="btnAbrirOs" runat="server"
+                                                Text="Abrir O.S."
+                                                CssClass="btn btn-success"
+                                                 OnClick="btnAbrirOs_Click"
+                                                 />
                                         </div>
 
                                     </div>
@@ -166,9 +173,10 @@
                                                     <asp:LinkButton
                                                         ID="btnFinalizar"
                                                         runat="server"
-                                                        CssClass="btn btn-success btn-sm"
+                                                        CssClass='<%# Eval("status_texto").ToString() == "Finalizado" ? "btn btn-secondary btn-sm disabled" : "btn btn-success btn-sm" %>'
                                                         CommandName="Finalizar"
-                                                        CommandArgument='<%# Eval("id_os") %>'>
+                                                        CommandArgument='<%# Eval("id_os") %>'
+                                                        Enabled='<%# Eval("status_texto").ToString() != "Finalizado" %>'>
                                                         Finalizar
                                                     </asp:LinkButton>
                                                 </ItemTemplate>
