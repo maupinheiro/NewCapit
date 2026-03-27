@@ -33,8 +33,10 @@ namespace NewCapit.dist.pages
         protected void btnPlaca_Click(object sender, EventArgs e)
         {
             string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf   ";
-            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where v.ds_placa='"+txtPlaca.Text+ "'";
-            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where v.ds_placa=@placa";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim());
+            SqlDataAdapter adpt = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             con.Open();
             adpt.Fill(dt);
@@ -112,7 +114,7 @@ namespace NewCapit.dist.pages
         GInfoWindow window;
         protected void Page_Load(object sender, EventArgs e)
         {
-            CarregaMap();
+            
 
             if (!IsPostBack)
             {
@@ -130,182 +132,180 @@ namespace NewCapit.dist.pages
 
                     Response.Redirect("Login.aspx");
                 }
+                CarregaMap();
             }
         }
         public void CarregaMap()
         {
-            GLatLng latlng = new GLatLng(-23, -48);
+            // 1. Configurações Iniciais do Mapa
+            GLatLng centroInicial = new GLatLng(-23.5505, -46.6333); // Ex: Centro de SP ou sua preferência
+            GMap1.setCenter(centroInicial, 5);
 
-            GMap1.setCenter(latlng, 5);
-
-
-
-            string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long, nr_direcao  ";
-            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo WHERE YEAR(t.dt_posicao) = YEAR(GETDATE())";
-            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            adpt.Fill(dt);
-            con.Close();
-
-            for (int r = 0; r < dt.Rows.Count - 1; r++)
+            // Configura as opções de interface apenas UMA VEZ (fora do loop)
+            GMapUIOptions options = new GMapUIOptions
             {
-                //GMap1.Add(new GMapUI());
-                GMapUIOptions options = new GMapUIOptions();
-                options.maptypes_hybrid = true;
-                options.keyboard = true;
-                options.maptypes_physical = true;
-                options.zoom_scrollwheel = true;
-                options.controls_scalecontrol = true;
-                options.controls_maptypecontrol = true;
-                options.controls_menumaptypecontrol = true;
+                maptypes_hybrid = true,
+                keyboard = true,
+                maptypes_physical = true,
+                zoom_scrollwheel = true,
+                controls_scalecontrol = true,
+                controls_maptypecontrol = true,
+                controls_menumaptypecontrol = true
+            };
+            GMap1.Add(new GMapUI(options));
 
+            // 2. Busca de Dados
+            // Importante: Verifique se a conexão 'con' está instanciada corretamente no topo da classe
+            string sql = @"SELECT t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, 
+                          t.fl_ignicao, t.ds_lat, t.ds_long, t.nr_direcao 
+                   FROM tb_transmissao AS t 
+                   INNER JOIN tb_veiculo_sascar AS v ON t.nr_idveiculo = v.nr_idveiculo 
+                   WHERE YEAR(t.dt_posicao) = YEAR(GETDATE())";
 
+            DataTable dt = new DataTable();
 
-
-                GMap1.Add(new GMapUI(options));
-
-                GLatLng latlng1 = new GLatLng(Convert.ToDouble(dt.Rows[r][6].ToString(), CultureInfo.InvariantCulture), Convert.ToDouble(dt.Rows[r][7].ToString(), CultureInfo.InvariantCulture));
-                /* GIcon ico = new GIcon();
-                 ico.image = "/img/ico_truck.png";
-                 GMap1.Add(new GMarker(latlng1));*/
-                //GLatLng latlng1 = new GLatLng(-23.679611666666666, -46.592063333333336);
-
-                GIcon ico = new GIcon();
-
-
-                ico.iconAnchor = new GPoint(25, 10);
-                string valor = dt.Rows[0][11]?.ToString() ?? "";
-
-                if (valor.Length > 0)
+            try
+            {
+                using (SqlDataAdapter adpt = new SqlDataAdapter(sql, con))
                 {
-                    string prefixo = valor.Substring(0, 1);
-
-                    switch (prefixo)
-                    {
-                        case "0":
-                            ico.image = "../img/ico_truck.png";
-                            break;
-                        case "1":
-                            ico.image = "../img/ico_truck1.png";
-                            break;
-                        case "2":
-                            ico.image = "../img/ico_truck2.png";
-                            break;
-                        case "3":
-                            ico.image = "../img/ico_truck3.png";
-                            break;
-                        case "4":
-                            ico.image = "../img/ico_truck4.png";
-                            break;
-                        case "5":
-                            ico.image = "../img/ico_truck5.png";
-                            break;
-                        case "6":
-                            ico.image = "../img/ico_truck6.png";
-                            break;
-                        case "7":
-                            ico.image = "../img/ico_truck7.png";
-                            break;
-                        default:
-                            ico.image = "../img/ico_truck.png";
-                            break;
-                    }
+                    con.Open();
+                    adpt.Fill(dt);
+                    con.Close();
                 }
-                else
-                {
-                    // caso valor esteja vazio ou nulo
-                    ico.image = "../img/ico_truck.png";
-                }
-
-                GMarkerOptions mOpts = new GMarkerOptions();
-                mOpts.clickable = true;
-                mOpts.icon = ico;
-                mOpts.draggable = false;
-
-                GMarker marker = new GMarker(latlng1, mOpts);
-
-                /* GInfoWindow window2 = new GInfoWindow(marker, latlng1.ToString(), false, GListener.Event.mouseover);
-                 GMap1.Add(window2);*/
-
-                GMap1.Add(marker);
-
-
-
-
-
-
+            }
+            catch (Exception ex)
+            {
+                // Logar erro se necessário: ex.Message
+                if (con.State == ConnectionState.Open) con.Close();
+                return;
             }
 
+            // 3. Renderização dos Marcadores
+            // Corrigido: r < dt.Rows.Count para não pular o último registro
+            for (int r = 0; r < dt.Rows.Count; r++)
+            {
+                try
+                {
+                    // Conversão segura de coordenadas
+                    double latitude = Convert.ToDouble(dt.Rows[r]["ds_lat"].ToString(), CultureInfo.InvariantCulture);
+                    double longitude = Convert.ToDouble(dt.Rows[r]["ds_long"].ToString(), CultureInfo.InvariantCulture);
+                    GLatLng posicaoVeiculo = new GLatLng(latitude, longitude);
 
+                    // Definição do Ícone
+                    GIcon ico = new GIcon();
+                    ico.iconAnchor = new GPoint(25, 10);
 
+                    // Corrigido: Pegando o valor da linha ATUAL [r] e não sempre da [0]
+                    string direcaoStr = dt.Rows[r]["nr_direcao"]?.ToString() ?? "";
+                    string iconPath = "../img/ico_truck.png"; // Default
 
+                    if (!string.IsNullOrEmpty(direcaoStr))
+                    {
+                        string prefixo = direcaoStr.Substring(0, 1);
+                        // Mapeia o prefixo para a imagem correspondente
+                        iconPath = $"../img/ico_truck{prefixo}.png";
 
+                        // Caso o prefixo seja "0", usamos a imagem padrão sem número
+                        if (prefixo == "0") iconPath = "../img/ico_truck.png";
+                    }
+
+                    ico.image = iconPath;
+
+                    // Opções do Marcador
+                    GMarkerOptions mOpts = new GMarkerOptions
+                    {
+                        clickable = true,
+                        icon = ico,
+                        draggable = false,
+                        title = dt.Rows[r]["ds_placa"].ToString() // Tooltip com a placa
+                    };
+
+                    GMarker marker = new GMarker(posicaoVeiculo, mOpts);
+
+                    // Adiciona o marcador ao mapa
+                    GMap1.Add(marker);
+                }
+                catch
+                {
+                    // Se uma linha falhar (ex: lat/long inválido), pula para a próxima
+                    continue;
+                }
+            }
         }
 
 
         protected string GMap1_MarkerClick(object s, GAjaxServerEventArgs e)
         {
+            // 1. Criar o comando com Parâmetros para evitar o erro de conversão (Arithmetic Overflow)
+            string sql = @"SELECT t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, 
+                          t.nr_dist_referencia, t.fl_ignicao, t.ds_lat, t.ds_long, 
+                          t.nr_velocidade, t.ds_rua, t.ds_uf 
+                   FROM tb_transmissao as t 
+                   INNER JOIN tb_veiculo_sascar as v ON t.nr_idveiculo = v.nr_idveiculo 
+                   WHERE t.ds_lat = @lat AND t.ds_long = @lon 
+                   AND YEAR(t.dt_posicao) = YEAR(GETDATE())";
 
-
-
-
-            string sql = "Select t.nr_idveiculo, v.ds_placa, t.ds_cidade, t.dt_posicao, t.nr_dist_referencia, t.fl_ignicao,t.ds_lat,t.ds_long,t.nr_velocidade, t.ds_rua, t.ds_uf   ";
-            sql += " from tb_transmissao as t inner join tb_veiculo_sascar as v on t.nr_idveiculo=v.nr_idveiculo where t.ds_lat=" + e.point.lat.ToString().Replace(",", ".") + " and t.ds_long=" + e.point.lng.ToString().Replace(",", ".")+ " and YEAR(t.dt_posicao) = YEAR(GETDATE())";
-            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
-            con.Open();
-            adpt.Fill(dt);
-            con.Close();
 
             try
             {
-                hora = DateTime.Parse(dt.Rows[0][3].ToString()).ToString("dd/MM/yyyy - HH:mm:ss");
-
-                placa = dt.Rows[0][1].ToString();
-                lat = dt.Rows[0][6].ToString();
-                lon = dt.Rows[0][7].ToString();
-
-                if (dt.Rows[0][5].ToString() == "1")
+                using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    ignicao = "Ligada";
+                    // O segredo está aqui: o ADO.NET trata a conversão numérica para você
+                    cmd.Parameters.AddWithValue("@lat", e.point.lat);
+                    cmd.Parameters.AddWithValue("@lon", e.point.lng);
+
+                    if (con.State == ConnectionState.Closed) con.Open();
+
+                    using (SqlDataAdapter adpt = new SqlDataAdapter(cmd))
+                    {
+                        adpt.Fill(dt);
+                    }
+                    con.Close();
                 }
-                else
+
+                if (dt.Rows.Count > 0)
                 {
-                    ignicao = "Desligada";
+                    // 2. Extração dos dados usando nomes de colunas (mais seguro que índices)
+                    DataRow row = dt.Rows[0];
+
+                    hora = Convert.ToDateTime(row["dt_posicao"]).ToString("dd/MM/yyyy - HH:mm:ss");
+                    placa = row["ds_placa"].ToString();
+                    lat = row["ds_lat"].ToString();
+                    lon = row["ds_long"].ToString();
+                    ignicao = row["fl_ignicao"].ToString() == "1" ? "Ligada" : "Desligada";
+                    velocidade = row["nr_velocidade"].ToString() + " Km/h";
+                    rua = row["ds_rua"].ToString();
+                    uf = row["ds_uf"].ToString();
+
+                    // 3. Criar a Janela de Informações
+                    GLatLng latlng = new GLatLng(e.point.lat, e.point.lng);
+
+                    string conteudo = string.Format(
+                        "<b>Informações:</b><br />" +
+                        "Horário: {0}<br/>Placa: {1}<br/>Lat: {2}<br/>Long: {3}<br/>" +
+                        "End: {4}<br/>UF: {5}<br/>Ignição: {6}<br/>Velocidade: {7}",
+                        hora, placa, lat, lon, rua, uf, ignicao, velocidade);
+
+                    window = new GInfoWindow(latlng, conteudo, true);
+
+                    // Adiciona ao mapa para que o componente saiba o que renderizar
+                    GMap1.Add(window);
+
+                    return window.ToString(e.map);
                 }
-
-
-                velocidade = dt.Rows[0][8].ToString() + " Km/h";
-                rua = dt.Rows[0][9].ToString();
-                uf = dt.Rows[0][10].ToString();
-
-                GLatLng latlng1 = new GLatLng(Convert.ToDouble(dt.Rows[0][6].ToString(), CultureInfo.InvariantCulture), Convert.ToDouble(dt.Rows[0][7].ToString(), CultureInfo.InvariantCulture));
-                GLatLng latlng2 = new GLatLng(Convert.ToDouble(dt.Rows[0][6].ToString(), CultureInfo.InvariantCulture), Convert.ToDouble(dt.Rows[0][7].ToString(), CultureInfo.InvariantCulture));
-
-                window = new GInfoWindow(latlng1, string.Format(@"<b>Informações:</b><br />Horário: {0}<br/>Placa: {1}<br/>Lat: {2}<br/>Long: {3}<br/>End: {4}<br/>UF: {5}<br/>Ignição: {6}<br/>Velocidade: {7}",
-                                                  hora, placa, lat, lon, rua, uf, ignicao, velocidade), true);
-
-
-
-                GMap1.Add(window);
             }
-            catch
+            catch (Exception ex)
             {
-                CarregaMap();
+                // Se houver erro, logue ou trate, mas não deixe a página quebrar
+                // CarregaMap(); // Opcional
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open) con.Close();
             }
 
-
-
-            //return "document.getElementById('Msg1').innerHTML="+ e.point.lat.ToString() + ";" + "document.getElementById('Msg2').innerHTML="+ e.point.lng.ToString();
-
-            return window.ToString(e.map);
-
-
-
-
-
-
+            return "";
         }
     }
 }
