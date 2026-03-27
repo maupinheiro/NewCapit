@@ -11,53 +11,8 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class controlaestoque
+    public partial class HistoricoPeca
     {
-
-        /// <summary>
-        /// Controle txtPesquisa.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPesquisa;
-
-        /// <summary>
-        /// Controle btnPesquisaPeca.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPesquisaPeca;
-
-        /// <summary>
-        /// Controle gvEstoque.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvEstoque;
-
-        /// <summary>
-        /// Controle UpdatePanel1.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-
-        /// <summary>
-        /// Controle lblMsgModal.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMsgModal;
 
         /// <summary>
         /// Controle divMsg.
@@ -78,48 +33,57 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Label lblMsgGeral;
 
         /// <summary>
-        /// Controle ddlTipo.
+        /// Controle txtIdPeca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipo;
+        protected global::System.Web.UI.WebControls.TextBox txtIdPeca;
 
         /// <summary>
-        /// Controle txtDescricaoPecaModal.
+        /// Controle txtPeca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDescricaoPecaModal;
+        protected global::System.Web.UI.WebControls.TextBox txtPeca;
 
         /// <summary>
-        /// Controle ddlUnidadeModal.
+        /// Controle txtEstoqueAtual.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlUnidadeModal;
+        protected global::System.Web.UI.WebControls.TextBox txtEstoqueAtual;
 
         /// <summary>
-        /// Controle txtEstoqueMinimoModal.
+        /// Controle txtUnidade.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEstoqueMinimoModal;
+        protected global::System.Web.UI.WebControls.TextBox txtUnidade;
 
         /// <summary>
-        /// Controle btnSalvarPecaModal.
+        /// Controle ddlPeriodo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvarPecaModal;
+        protected global::System.Web.UI.WebControls.DropDownList ddlPeriodo;
+
+        /// <summary>
+        /// Controle gvHistorico.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvHistorico;
     }
 }

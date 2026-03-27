@@ -32,7 +32,7 @@
                     <div class="card card-info">
                         <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
                             <h3 class="card-title">
-                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Manutenção - Abertura de Ordem de Serviço</h3>
+                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Manutenção</h3>
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
@@ -50,7 +50,7 @@
                         <div class="card-body">
                             <div class="card shadow">
                                 <div class="card-header bg-secondary text-white">
-                                    <h5>Ordem de Serviço</h5>
+                                    <h5>Abrir Ordem de Serviço</h5>
                                 </div>
                                 <div class="card-body">
                                     <br />

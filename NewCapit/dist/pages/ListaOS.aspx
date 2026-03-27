@@ -16,7 +16,7 @@
                     <div class="card card-info">
                         <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
                             <h3 class="card-title">
-                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Manutenção - Abertura de Ordem de Serviço</h3>
+                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Manutenção</h3>
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
@@ -34,7 +34,7 @@
                         <div class="card-body">
                             <div class="card">
                                 <div class="card-header bg-secondary text-white">
-                                    Lista Ordens de Serviço
+                                    Controle de Ordem de Serviço
                                 </div>
 
                                 <div class="card-body">
@@ -102,6 +102,7 @@
                                     <asp:GridView ID="gvOS" runat="server"
                                         CssClass="table table-bordered table-hover"
                                         AutoGenerateColumns="False"
+                                        HeaderStyle-CssClass="gv-header-custom"
                                         OnRowCommand="gvOS_RowCommand"
                                         OnRowDataBound="gvOS_RowDataBound">
 

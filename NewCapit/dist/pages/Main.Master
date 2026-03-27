@@ -129,6 +129,15 @@
             "timeOut": "10000"
         };
     </script>
+    <style>
+    /* Cabeçalho da GridView */
+    .gv-header-custom th {
+        background-color: #cce5ff !important; /* azul clarinho */
+        color: #000000 !important; /* texto preto */
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
     <asp:ContentPlaceHolder ID="head" runat="server">
         <style>
             .img-custom {
@@ -437,42 +446,7 @@
                                                     <i class="fas fa-map-marker-alt nav-icon"></i>
                                                     <p>Controle de Pedágio</p>
                                                 </a>
-                                            </li>
-                                            <%--<li class="nav-item">
-                                                <a href="#" class="nav-link">
-                                                    <i class="nav-icon fas fa-fire-extinguisher"></i>
-                                                    <p>
-                                                        Manutenção Ipiranga               
-        <i class="fas fa-angle-left right"></i>
-                                                    </p>
-                                                </a>
-                                                <ul class="nav nav-treeview">
-                                                    <li class="nav-item">
-                                                        <a href="#" class="nav-link">
-                                                            <i class="fas fa-oil-can nav-icon"></i>
-                                                            <p>Manutenção</p>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="#" class="nav-link">
-                                                            <i class="far fa-circle nav-icon"></i>
-                                                            <p>Fornecedores</p>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="#" class="nav-link">
-                                                            <i class="far fa-circle nav-icon"></i>
-                                                            <p>Postos</p>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="#" class="nav-link">
-                                                            <i class="fas fa-gas-pump nav-icon"></i>
-                                                            <p>Combustível</p>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>--%>
+                                            </li>                                            
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -482,18 +456,24 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                                <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
-                                                    <i class="fas fa-shipping-fast nav-icon"></i>
-                                                    <p>Solicitações VW</p>
-                                                </a>
-                                                <a href="ImportarPlanejamento.aspx" class="nav-link">
-                                                    <i class="fas fa-boxes nav-icon"></i>
-                                                    <p>Importar Planejamento</p>
-                                                </a>
-                                                <a href="/dist/pages/ConsultaColetasCNT.aspx" class="nav-link">
-                                                    <i class="fas fa-calendar-alt nav-icon"></i>
-                                                    <p>Coletas</p>
-                                                </a>
+                                                <li class="nav-item">
+                                                    <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
+                                                        <i class="fas fa-shipping-fast nav-icon"></i>
+                                                        <p>Solicitações VW</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="ImportarPlanejamento.aspx" class="nav-link">
+                                                        <i class="fas fa-boxes nav-icon"></i>
+                                                        <p>Importar Planejamento</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/dist/pages/ConsultaColetasCNT.aspx" class="nav-link">
+                                                        <i class="fas fa-calendar-alt nav-icon"></i>
+                                                        <p>Coletas</p>
+                                                    </a>
+                                                </li>    
                                                 <%-- <a href="#" class="nav-link">
                                                     <i class="nav-icon fas fa-chart-pie"></i>
                                                     <p>KPI Solicitações</p>
@@ -501,12 +481,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <%--<li class="nav-item">
-                                        <a href="./index3.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Minas Gerais</p>
-                                        </a>
-                                    </li>--%>
+                                    
                                 </ul>
                             </li>
 
@@ -719,14 +694,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                        <a href="/dist/pages/ColaboradoresManutencao.aspx" class="nav-link">
                                             <i class="fas fa-hard-hat nav-icon"></i>
-                                            <p>Profissionais</p>
+                                            <p>Colaboradores</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <%--/dist/pages/controlaestoque.aspx--%>
+                                        <a href="/dist/pages/controlaestoque.aspx" class="nav-link">
                                             <i class="fas fa-wrench nav-icon"></i>
                                             <p>Estoque de Peças</p>
                                         </a>
@@ -738,21 +712,21 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
+                                        <a href="/dist/pages/ControlePneus.aspx" class="nav-link">
                                             <i class="fas fa-road nav-icon"></i>
                                             <p>Pneus</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/dist/pages/AbrirOS.aspx" class="nav-link">
-                                            <i class="fas fa-file-alt nav-icon"></i>
-                                            <p>Abrir O.S.</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/dist/pages/ListaOS.aspx" class="nav-link">
                                             <i class="far fa-file-alt nav-icon"></i>
                                             <p>Listar O.S.</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/AbrirOS.aspx" class="nav-link">
+                                            <i class="fas fa-file-alt nav-icon"></i>
+                                            <p>Abrir O.S.</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">

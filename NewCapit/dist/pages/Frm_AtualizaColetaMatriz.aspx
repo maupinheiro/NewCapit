@@ -1850,12 +1850,12 @@
         </asp:DropDownList>
         </div>--%>
 <<<<<<< Updated upstream
-                                                                                                            <span class="details">&nbsp;</span>
+                                                                                                           <%-- <span class="details">&nbsp;</span>
                                                                                                             <asp:DropDownList ID="ddlRotaKrona"
                                                                                                                 runat="server"
                                                                                                                 CssClass="form-select select2">
-                                                                                                            </asp:DropDownList>
-=======
+                                                                                                            </asp:DropDownList>--%>
+
         <asp:DropDownList ID="ddlRotaKrona"
     runat="server"
     CssClass="form-control select2"
@@ -1875,19 +1875,18 @@
     </div>
 </div>
 </div>
->>>>>>> Stashed changes
 
                                                                                                         </div>
-                                                                                                        <div class="col-md-4">
+                                                                                                        <%--<div class="col-md-4">
                                                                                                             <div class="form-group">
                                                                                                                 <span class="details">Enviada Por:</span>
                                                                                                                 <asp:TextBox ID="txtSmEnviadaPor" class="form-control" Text='<%# Eval("usu_envio_krona")%>' runat="server"></asp:TextBox>
                                                                                                             </div>
-                                                                                                        </div>
-                                                                                                        <div class="col-md-2">
+                                                                                                        </div>--%>
+                                                                                                        <%--<div class="col-md-2">
                                                                                                             <br />
                                                                                                             <asp:Button ID="btnEnviarSM" CssClass="btn btn-outline-success w-100" CommandName="EnviarSM" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Enviar SM" />
-                                                                                                        </div>
+                                                                                                        </div>--%>
                                                                                                     </div>
                                                                                                 </div>
 
@@ -1941,10 +1940,10 @@
 </div>
                                                                                                 <div class="row g-3">
                                                                                         <div class="col-md-10"></div>
-                                                                                        <div class="col-md-2">
+                                                                                        <%--<div class="col-md-2">
     <br />
     <asp:Button ID="Button1" runat="server" Text="Atualizar" CssClass="btn btn-outline-info w-100" CommandName="Atualizar" CommandArgument='<%# Eval("carga") %>' />
-</div></div></div>
+</div>--%></div></div>
 </div>
 </ContentTemplate>
 </asp:UpdatePanel>
@@ -2030,7 +2029,7 @@
                                                                                             </div>
                                                                                         </div>
 =======
-    <div class="form-group">
+    <%--<div class="form-group">
         <span class="details">Data e Hora da Coleta:<asp:Label ID="Label2" runat="server" Text=""></asp:Label></span>
         <div class="input-group">
             <div class="input-group">
@@ -2039,20 +2038,20 @@
 
         </div>
         <span class="msg-erro text-danger" style="display: none;"></span>
-    </div>
+    </div>--%>
                                                                                             </div>
                                                                                         <div class="col-md-2">
-    <div class="form-group">
+    <%--<div class="form-group">
         <span class="details">Núm. CVA:</span>
         <div class="input-group">
             <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
         </div>
-    </div>
+    </div>--%>
 </div>
                                                                                                                         
 
                                                             <div class="col-md-2">
-    <div class="form-group">
+   <%-- <div class="form-group">
         <span class="details">Veículo Disponível:<asp:Label ID="Label3" runat="server" Text=""></asp:Label></span>
         <div class="input-group">
             <div class="input-group">
@@ -2061,7 +2060,7 @@
 
         </div>
         <span class="msg-erro text-danger" style="display: none;"></span>
-    </div>
+    </div>--%>
 </div>
 >>>>>>> Stashed changes
 

@@ -389,7 +389,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string sql = "SELECT cracha, nome FROM tbprofissional_manutencao";
+                string sql = "SELECT cracha, nome FROM tbprofissional_manutencao WHERE fl_exclusao IS NULL AND status = 'ATIVO'";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();

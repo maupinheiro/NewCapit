@@ -7,6 +7,9 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Configuration;
+using System.Globalization;
 
 namespace NewCapit.dist.pages
 {
@@ -18,120 +21,180 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-                CarregarProdutos();
-                CarregarEstoque();
-                CarregarHistorico();
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                    Response.Redirect("Login.aspx");
+                }
+                ListarPecas();
+
             }
         }
-
-        private void CarregarProdutos()
+        private void ListarPecas()
         {
-            using (SqlConnection conn = new SqlConnection(conexao))
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas ORDER BY descricao_peca";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                ddlProdutos.DataSource = dt;
-                ddlProdutos.DataTextField = "descricao_peca";
-                ddlProdutos.DataValueField = "id_peca";
-                ddlProdutos.DataBind();
-                ddlProdutos.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
-            }
-        }
-
-        private void CarregarEstoque(string pesquisa = null)
-        {
-            using (SqlConnection conn = new SqlConnection(conexao))
-            {
-                string sql = "SELECT * FROM tbestoque_pecas WHERE (@pesquisa IS NULL OR descricao_peca LIKE '%' + @pesquisa + '%') ORDER BY descricao_peca";
+                string sql = @"SELECT 
+                id_peca,
+                descricao_peca,
+                unidade,
+                estoque_peca,
+                estoque_minimo,
+                valor_unitario
+                FROM tbestoque_pecas
+                where (
+                    @pesquisa IS NULL
+                    OR id_peca LIKE '%' + @pesquisa + '%'
+                    OR descricao_peca LIKE '%' + @pesquisa + '%'    
+                    )
+                    ORDER BY descricao_peca DESC";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@pesquisa", string.IsNullOrWhiteSpace(pesquisa) ? (object)DBNull.Value : pesquisa.Trim());
 
+                cmd.Parameters.AddWithValue("@pesquisa",
+                string.IsNullOrWhiteSpace(txtPesquisa.Text) ? (object)DBNull.Value : txtPesquisa.Text);
+                conn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-
                 gvEstoque.DataSource = dt;
                 gvEstoque.DataBind();
             }
         }
-
-        protected void btnPesquisarProduto_Click(object sender, EventArgs e)
-        {
-            CarregarEstoque(txtPesquisaProduto.Text);
-        }
-
         protected void gvEstoque_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                int estoqueAtual = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "estoque_peca"));
-                int estoqueMinimo = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "estoque_minimo"));
+                object estoqueObj = DataBinder.Eval(e.Row.DataItem, "estoque_peca");
+                int estoqueAtual = estoqueObj != DBNull.Value ? Convert.ToInt32(estoqueObj) : 0;
 
-                if (estoqueAtual < estoqueMinimo)
+                object estoqueMinObj = DataBinder.Eval(e.Row.DataItem, "estoque_minimo");
+                int estoqueMin = estoqueMinObj != DBNull.Value ? Convert.ToInt32(estoqueMinObj) : 0;
+
+                if (estoqueAtual <= estoqueMin)
                 {
-                    e.Row.BackColor = System.Drawing.Color.LightCoral; // destaque em vermelho
+                    e.Row.CssClass = "estoque-baixo";
+                    e.Row.ToolTip = "Atenção: Estoque abaixo ou igual ao mínimo!";
                 }
             }
         }
-
-        protected void btnMovimentar_Click(object sender, EventArgs e)
+        protected void gvEstoque_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            int idProduto = Convert.ToInt32(ddlProdutos.SelectedValue);
-            string tipoMov = ddlTipoMov.SelectedValue;
-            int qtd = Convert.ToInt32(txtQtd.Text);
-            string obs = txtObs.Text;
-            string responsavel = Session["UsuarioLogado"].ToString();
+            if (e.CommandName == "entrada")
+            {
+                string idPeca = e.CommandArgument.ToString();
 
-            using (SqlConnection conn = new SqlConnection(conexao))
+                Response.Redirect("EntradaPecas.aspx?id=" + idPeca);
+            }
+            if (e.CommandName == "historico")
+            {
+                string idPeca = e.CommandArgument.ToString();
+
+                Response.Redirect("HistoricoPeca.aspx?id=" + idPeca);
+            }
+        }
+        protected void PesquisaPeca(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                System.Configuration.ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"SELECT 
+                id_peca,
+                descricao_peca,
+                unidade,
+                estoque_peca,
+                estoque_minimo,
+                valor_unitario
+                FROM tbestoque_pecas
+                where (
+                    @pesquisa IS NULL
+                    OR id_peca LIKE '%' + @pesquisa + '%'
+                    OR descricao_peca LIKE '%' + @pesquisa + '%'    
+                    )
+                    ORDER BY descricao_peca DESC";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@pesquisa",
+                string.IsNullOrWhiteSpace(txtPesquisa.Text) ? (object)DBNull.Value : txtPesquisa.Text);
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                gvEstoque.DataSource = dt;
+                gvEstoque.DataBind();
+            }
+        }
+        protected void btnSalvarPecaModal_Click(object sender, EventArgs e)
+        {
+            string descricao = txtDescricaoPecaModal.Text.Trim();
+            string unidade = ddlUnidadeModal.SelectedValue;
+            string estoque = txtEstoqueMinimoModal.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(txtDescricaoPecaModal.Text) ||
+        string.IsNullOrEmpty(ddlUnidadeModal.SelectedValue))
+            {
+                //lblMsgModal.Text = "Preencha todos os campos corretamente!";
+                Mensagem("info", "Preencha todos os campos corretamente!");
+
+                // 🔥 Reabre o modal
+                ScriptManager.RegisterStartupScript(this, GetType(), "modal", "$('#modalCadastrarPeca').modal('show');", true);
+                return;
+            }
+
+            // salvar normalmente...
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 conn.Open();
 
-                string sqlMov = @"INSERT INTO tbmovimentacao_pecas 
-                              (id_peca, tipoMov, quantidade, dataMov, responsavel, observacao)
-                              VALUES (@idProd, @tipo, @qtd, GETDATE(), @resp, @obs)";
-                SqlCommand cmdMov = new SqlCommand(sqlMov, conn);
-                cmdMov.Parameters.AddWithValue("@idProd", idProduto);
-                cmdMov.Parameters.AddWithValue("@tipo", tipoMov);
-                cmdMov.Parameters.AddWithValue("@qtd", qtd);
-                cmdMov.Parameters.AddWithValue("@resp", responsavel);
-                cmdMov.Parameters.AddWithValue("@obs", obs);
-                cmdMov.ExecuteNonQuery();
+                // Verifica se a peça já existe
+                string sqlCheck = "SELECT COUNT(*) FROM tbestoque_pecas WHERE descricao_peca=@desc";
+                SqlCommand cmdCheck = new SqlCommand(sqlCheck, conn);
+                cmdCheck.Parameters.AddWithValue("@desc", descricao.ToUpper());
+                int count = Convert.ToInt32(cmdCheck.ExecuteScalar());
 
-                string sqlAtualiza = tipoMov == "E" ?
-                    "UPDATE tbestoque_pecas SET estoque_peca = estoque_peca + @qtd WHERE id_peca = @idProd" :
-                    "UPDATE tbestoque_pecas SET estoque_peca = estoque_peca - @qtd WHERE id_peca = @idProd";
-                SqlCommand cmdAtualiza = new SqlCommand(sqlAtualiza, conn);
-                cmdAtualiza.Parameters.AddWithValue("@qtd", qtd);
-                cmdAtualiza.Parameters.AddWithValue("@idProd", idProduto);
-                cmdAtualiza.ExecuteNonQuery();
+                if (count > 0)
+                {
+                    Mensagem("danger", "Peça já cadastrada no sistema.");
+                    return; // Mantém modal aberto
+                }
+
+                // Inserir nova peça
+                string sqlInsert = @"INSERT INTO tbestoque_pecas (descricao_peca, unidade, estoque_minimo) 
+                             VALUES (@desc, @unidade, @estoqueMin)";
+                SqlCommand cmdInsert = new SqlCommand(sqlInsert, conn);
+                cmdInsert.Parameters.AddWithValue("@desc", descricao.ToUpper());
+                cmdInsert.Parameters.AddWithValue("@unidade", unidade);
+                cmdInsert.Parameters.AddWithValue("@estoqueMin", estoque);
+                cmdInsert.ExecuteNonQuery();
+
+                // Limpa campos e mensagens
+                txtDescricaoPecaModal.Text = "";
+                ddlUnidadeModal.SelectedIndex = 0;
+                txtEstoqueMinimoModal.Text = "";
+                lblMsgModal.Text = "";
+                Mensagem("success", "Peça cadastrada com sucesso.");
+                // Fecha o modal somente após salvar com sucesso
+                // Se quiser fechar após salvar:
+                ScriptManager.RegisterStartupScript(this, GetType(), "modal", "$('#modalCadastrarPeca').modal('hide');", true);
             }
-
-            CarregarEstoque();
-            CarregarHistorico();
-
-            txtQtd.Text = "";
-            txtObs.Text = "";
+            // Atualiza GridView
+            ListarPecas();
         }
-
-        private void CarregarHistorico()
+        protected void Mensagem(string tipo, string texto)
         {
-            using (SqlConnection conn = new SqlConnection(conexao))
-            {
-                string sql = @"
-            SELECT m.idMov, p.descricao_peca, m.tipoMov, m.quantidade, m.dataMov, m.responsavel, m.observacao
-            FROM tbmovimentacao_pecas m
-            INNER JOIN tbestoque_pecas p ON m.id_peca = p.id_peca
-            ORDER BY m.dataMov DESC";
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+            divMsg.Visible = true;
 
-                gvHistorico.DataSource = dt;
-                gvHistorico.DataBind();
-            }
+            divMsg.Attributes["class"] =
+                "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+
+            lblMsgGeral.Text = texto;
         }
+
+
     }
 }

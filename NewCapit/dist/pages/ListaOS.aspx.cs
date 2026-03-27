@@ -17,8 +17,19 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                    Response.Redirect("Login.aspx");
+                }
                 ListarOS();
             }
+
         }
         private void ListarOS()
         {
@@ -236,28 +247,7 @@ namespace NewCapit.dist.pages
                 //Response.Redirect("EditarOS.aspx?os=" + numeroOS);
             }
         }
-        //protected void gvOS_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
-        //    if (e.Row.RowType == DataControlRowType.DataRow)
-        //    {
-        //        string status = DataBinder.Eval(e.Row.DataItem, "status_texto").ToString();
-
-        //        switch (status)
-        //        {
-        //            case "Aberta":
-        //                e.Row.BackColor = System.Drawing.Color.LightGreen;
-        //                break;
-        //            case "Finalizada":
-        //                e.Row.BackColor = System.Drawing.Color.Orange;
-        //                break;
-        //            case "Cancelada":
-        //                e.Row.BackColor = System.Drawing.Color.Red;
-        //                e.Row.ForeColor = System.Drawing.Color.White;
-        //                break;
-        //        }
-        //    }
-        //}
-
+        
         protected void gvOS_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
