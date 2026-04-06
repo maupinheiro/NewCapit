@@ -1,8 +1,9 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="FinalizarOSGrid.aspx.cs" Inherits="NewCapit.dist.pages.FinalizarOSGrid" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="FinalizarOSGrid.aspx.cs"  Inherits="NewCapit.dist.pages.FinalizarOSGrid" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>     
     <script>
 
         function calcularTempo(inicio, termino) {
@@ -71,10 +72,119 @@
 
         });
     </script>
+    <script>
+        function mostrarDivs() {
+            var ddl = document.getElementById('<%= ddlTipoServico.ClientID %>');
+            var numero = document.getElementById('<%= divNumeroPneu.ClientID %>');
+            var status = document.getElementById('<%= divStatusPneu.ClientID %>');
+            var situacao = document.getElementById('<%= divSituacaoPneu.ClientID %>');
+            var destino = document.getElementById('<%= divDestinoPneu.ClientID %>');
+            var posicao = document.getElementById('<%= divPosicaoPneu.ClientID %>');
+            var kmInicial = document.getElementById('<%= divKMInicialPneu.ClientID %>');
+            var kmFinal = document.getElementById('<%= divKMFinalPneu.ClientID %>');
 
+            if (ddl.value == 'Pneu') {
+                numero.style.display = 'block';
+                status.style.display = 'block';
+                situacao.style.display = 'block';
+                destino.style.display = 'block';
+                posicao.style.display = 'block';
+                kmInicial.style.display = 'block';
+                kmFinal.style.display = 'block';
+                atualizarDestino();
+            } else {
+                numero.style.display = 'none';
+                status.style.display = 'none';
+                situacao.style.display = 'none';
+                destino.style.display = 'none';
+                posicao.style.display = 'none';
+                kmInicial.style.display = 'none';
+                kmFinal.style.display = 'none';
+            }
 
+        }
+        function iniciarSelect2() {
+            $('.select2').each(function () {
+                if ($(this).hasClass("select2-hidden-accessible")) {
+                    $(this).select2('destroy');
+                }
+            });
 
+            $('.select2').select2();
+        }
 
+        function iniciarSelect2() {
+            $('.select2').select2();
+        }
+
+        Sys.Application.add_load(function () {
+            mostrarDivs();
+            iniciarSelect2();
+        });
+    </script>
+    <%--<script>
+        function atualizarDestino() {
+            var situacao = document.getElementById('<%= ddlSituacao.ClientID %>').value;
+            var destino = document.getElementById('<%= ddlDestino.ClientID %>');
+
+            // Limpa opções existentes
+            destino.options.length = 0;
+
+            // Sempre adicionar a primeira opção
+            var placeholder = document.createElement("option");
+            placeholder.text = "Selecione...";
+            placeholder.value = "";
+            destino.add(placeholder);
+
+            if (situacao === "Instalação") {
+                var opt = document.createElement("option");
+                opt.text = "Em Uso";
+                opt.value = "Em Uso";
+                destino.add(opt);
+            } else if (situacao === "Retirada") {
+                var opcoes = ["Estoque", "Conserto", "Reforma", "Descarte"];
+                opcoes.forEach(function (item) {
+                    var opt = document.createElement("option");
+                    opt.text = item;
+                    opt.value = item;
+                    destino.add(opt);
+                });
+            }
+        }
+    </script>--%>
+    <%--<script>
+        function preencherDadosPneu() {
+            var ddl = document.getElementById('<%= ddlNumeroPneu.ClientID %>');
+            var selected = ddl.options[ddl.selectedIndex];
+
+            if (!selected.value) return;
+
+            var parte = selected.getAttribute("data-parte");
+            var status = selected.getAttribute("data-status");
+            var km = selected.getAttribute("data-km");
+
+            // 👉 DropDownList correto
+            var ddlParte = document.getElementById('<%= ddlParteBorracharia.ClientID %>');
+            ddlParte.value = parte;
+
+            // 👉 Se estiver usando Select2
+            $('#<%= ddlParteBorracharia.ClientID %>').val(parte).trigger('change');
+
+            // 👉 TextBox normal
+            document.getElementById('<%= txtStatusPneu.ClientID %>').value = status;
+            document.getElementById('<%= txtKmInicial.ClientID %>').value = km;
+        }
+    </script>--%>
+    <%--<script>
+        $(document).ready(function () {
+            $('#<%= ddlNumeroPneu.ClientID %>').on('change', function () {
+                preencherDadosPneu();
+            });
+        });
+    </script>--%>
+    <%--<script>
+        $('#<%= ddlNumeroPneu.ClientID %>').prepend('<option value="">Selecione...</option>').val('').trigger('change');
+    </script>--%>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -250,11 +360,11 @@
 
                                         <div class="col-md-2">
                                             <label>Tipo:</label>
-                                            <asp:TextBox ID="txtTipVei" runat="server" CssClass="form-control" ReadOnly="true" />
+                                            <asp:TextBox ID="txtTipVei" runat="server" CssClass="form-control" ReadOnly="true"/>
                                         </div>
 
                                         <div class="col-md-2">
-                                            <label>Marca</label>
+                                            <label>Marca:</label>
                                             <asp:TextBox ID="txtMarca" runat="server" CssClass="form-control" ReadOnly="true" />
                                         </div>
 
@@ -300,7 +410,7 @@
                                                 <asp:TextBox ID="txtParteMecanica" runat="server"
                                                     TextMode="MultiLine"
                                                     Rows="3"
-                                                    CssClass="form-control"  ReadOnly="true"></asp:TextBox>
+                                                    CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="form-group">
                                                 <label>Serviço Executado:</label>
@@ -633,44 +743,139 @@ Excluir
                                                 Text="Borracharia"
                                                 CssClass="form-control">
                                             </asp:TextBox>
-                                            <div class="form-group">
-                                                <label>Descrição do Problema:</label>
-                                                <asp:TextBox ID="txtParteBorracharia" runat="server"
-                                                    TextMode="MultiLine"
-                                                    Rows="3"
-                                                    CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label>Descrição do Problema:</label>
+                                                    <asp:TextBox ID="txtParteBorracharia" runat="server"
+                                                        TextMode="MultiLine"
+                                                        Rows="3"
+                                                        CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Serviço Executado:</label>
-                                                <asp:TextBox ID="txtServExecBorracharia" runat="server"
-                                                    TextMode="MultiLine"
-                                                    Rows="3"
-                                                    CssClass="form-control"></asp:TextBox>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label>Serviço Executado:</label>
+                                                    <asp:TextBox ID="txtServExecBorracharia" runat="server"
+                                                        TextMode="MultiLine"
+                                                        Rows="3"
+                                                        CssClass="form-control"></asp:TextBox>
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <label>
                                                     <h3>Peças Trocadas</h3>
                                                     <hr />
                                                 </label>
+                                            </div>
+                                            <asp:UpdatePanel ID="uPdt1" runat="server">
+                                                <ContentTemplate>
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <label>Peça:</label>
+                                                            <asp:DropDownList
+                                                                ID="ddlTipoServico"
+                                                                runat="server"
+                                                                CssClass="form-control"
+                                                                onchange="mostrarDivs()">
+                                                                <asp:ListItem></asp:ListItem>
+                                                                <asp:ListItem>Pneu</asp:ListItem>
+                                                                <asp:ListItem>Outros</asp:ListItem>
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                        <div class="col-md-1" id="divSituacaoPneu" runat="server" style="display: none;">
+                                                            <label>Serviço:</label>
+                                                            <asp:DropDownList
+                                                                ID="ddlSituacao"
+                                                                runat="server"
+                                                                CssClass="form-control" 
+                                                                OnSelectedIndexChanged="ddlSituacao_SelectedIndexChanged"
+                                                                AutoPostBack="true">
+                                                                <asp:ListItem></asp:ListItem>
+                                                                <asp:ListItem Text="Retirada" Value="Retirada"></asp:ListItem>
+                                                                <asp:ListItem Text="Instalação" Value="Instalação"></asp:ListItem>
+                                                            </asp:DropDownList>
+                                                           
+                                                        </div>
+                                                        <div class="col-md-1" id="divNumeroPneu" runat="server" style="display: none;">
+                                                            <label>Nº Pneu:</label>
+                                                            <asp:DropDownList
+                                                                ID="ddlNumeroPneu"
+                                                                runat="server"
+                                                                AutoPostBack="true"                                OnSelectedIndexChanged="ddlNumeroPneu_SelectedIndexChanged"
+                                                                CssClass="form-control select2" >
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label>Peça / Serviço Executado:</label>
+                                                            <asp:DropDownList
+                                                                ID="ddlParteBorracharia"
+                                                                runat="server"
+                                                                CssClass="form-control select2">
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                        <div class="col-md-1" id="divStatusPneu" runat="server" style="display: none;">
+                                                            <label>Status:</label>
+                                                            <asp:TextBox ID="txtStatusPneu"
+                                                                runat="server"
+                                                                CssClass="form-control"
+                                                                Style="text-align: center">
+                                                            </asp:TextBox>
+                                                        </div>
+                                                        <div class="col-md-1" id="divDestinoPneu" runat="server" style="display: none;">
+                                                            <label>Destino:</label>
+                                                            <asp:DropDownList
+                                                                ID="ddlDestino"
+                                                                runat="server"  
+                                                                CssClass="form-control">
+                                                                <asp:ListItem Value="">Selecione...</asp:ListItem>
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                        <div class="col-md-2" id="divPosicaoPneu" runat="server" style="display: none;">
+                                                            <label>Posição:</label>
+                                                            <asp:DropDownList ID="ddlPosicao" runat="server" CssClass="form-control">
+                                                                <asp:ListItem Value="">Selecione...</asp:ListItem>
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                        <div class="col-md-1" id="divKMInicialPneu" runat="server" style="display: none;">
+                                                            <label>KM Inicial:</label>
+                                                            <asp:TextBox ID="txtKmInicial"
+                                                                runat="server"
+                                                                CssClass="form-control"
+                                                                type="number"
+                                                                Style="text-align: center">
+                                                            </asp:TextBox>
+                                                        </div>
+                                                        <div class="col-md-1" id="divKMFinalPneu" runat="server" style="display: none;">
+                                                            <label>KM Final:</label>
+                                                            <asp:TextBox ID="txtKMFinal"
+                                                                runat="server"
+                                                                CssClass="form-control"
+                                                                type="number"
+                                                                Style="text-align: center">
+                                                            </asp:TextBox>
+                                                        </div>
+                                                    </div>
+                                                </ContentTemplate>
+                                                <Triggers>
 
-                                                <div class="col-md-3">
-                                                    <label>Peça / Serviço Executado:</label>
-                                                    <asp:DropDownList
-                                                        ID="ddlParteBorracharia"
-                                                        runat="server"
-                                                        CssClass="form-control select2">
-                                                    </asp:DropDownList>
-                                                </div>
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlTipoServico" EventName="SelectedIndexChanged" />
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlSituacao" EventName="SelectedIndexChanged" />
 
+
+                                                </Triggers>
+
+                                            </asp:UpdatePanel>
+
+                                            <div class="row">
                                                 <div class="col-md-1">
                                                     <label>Qtd.:</label>
                                                     <asp:TextBox ID="txtQuantBorracharia"
                                                         runat="server"
                                                         CssClass="form-control"
+                                                        TextMode="number"
                                                         Style="text-align: center">
                                                     </asp:TextBox>
                                                 </div>
-
                                                 <div class="col-md-2">
                                                     <label>Inicio:</label>
                                                     <asp:TextBox ID="txtInicioBorracharia"
@@ -680,7 +885,6 @@ Excluir
                                                         placeholder="dd/mm/aaaa hh:mm">
                                                     </asp:TextBox>
                                                 </div>
-
                                                 <div class="col-md-2">
                                                     <label>Termino:</label>
                                                     <asp:TextBox ID="txtFimBorracharia"
@@ -690,7 +894,6 @@ Excluir
                                                         placeholder="dd/mm/aaaa hh:mm">
                                                     </asp:TextBox>
                                                 </div>
-
                                                 <div class="col-md-3">
                                                     <label>Mecânico:</label>
                                                     <asp:DropDownList ID="ddlBorracheiro"
@@ -699,11 +902,11 @@ Excluir
                                                     </asp:DropDownList>
                                                 </div>
 
-                                                <div class="col-md-1">
+                                                <div class="col-md-2">
                                                     <label>&nbsp;</label><br />
                                                     <asp:Button ID="btnTrocarBorracharia"
                                                         runat="server"
-                                                        Text="Lançar Peça"
+                                                        Text="Lançar Serviço"
                                                         CssClass="btn btn-success w-100"
                                                         OnClick="btnTrocarBorracharia_Click" />
                                                 </div>

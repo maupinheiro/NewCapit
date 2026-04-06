@@ -47,7 +47,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <asp:GridView runat="server" ID="gvListLimiteCredito" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="ID" OnRowCommand="gvListLimiteCredito_RowCommand" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListLimiteCredito_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                    <asp:GridView runat="server" ID="gvListLimiteCredito" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="ID" HeaderStyle-CssClass="gv-header-custom" OnRowCommand="gvListLimiteCredito_RowCommand" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListLimiteCredito_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
                             <asp:TemplateField HeaderText="PROP.">

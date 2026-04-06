@@ -11,7 +11,7 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class ControlePneus
+    public partial class NumerarPneu
     {
 
         /// <summary>
@@ -33,93 +33,102 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Label lblMsgGeral;
 
         /// <summary>
-        /// Controle gvPneus.
+        /// Controle txtDescricao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvPneus;
+        protected global::System.Web.UI.WebControls.TextBox txtDescricao;
 
         /// <summary>
-        /// Controle hfPneuMov.
+        /// Controle txtID.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfPneuMov;
+        protected global::System.Web.UI.WebControls.TextBox txtID;
 
         /// <summary>
-        /// Controle ddlVeiculo.
+        /// Controle txtDtCompra.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlVeiculo;
+        protected global::System.Web.UI.WebControls.TextBox txtDtCompra;
 
         /// <summary>
-        /// Controle ddlPosicao.
+        /// Controle txtValor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPosicao;
+        protected global::System.Web.UI.WebControls.TextBox txtValor;
 
         /// <summary>
-        /// Controle txtKMMov.
+        /// Controle txtResp_entrada.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtKMMov;
+        protected global::System.Web.UI.WebControls.TextBox txtResp_entrada;
 
         /// <summary>
-        /// Controle btnSalvarMov.
+        /// Controle txtNumero.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvarMov;
+        protected global::System.Web.UI.WebControls.TextBox txtNumero;
 
         /// <summary>
-        /// Controle hfPneuRecap.
+        /// Controle txtMarca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfPneuRecap;
+        protected global::System.Web.UI.WebControls.TextBox txtMarca;
 
         /// <summary>
-        /// Controle txtCusto.
+        /// Controle txtModelo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCusto;
+        protected global::System.Web.UI.WebControls.TextBox txtModelo;
 
         /// <summary>
-        /// Controle txtKMRecap.
+        /// Controle txtMedida.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtKMRecap;
+        protected global::System.Web.UI.WebControls.TextBox txtMedida;
 
         /// <summary>
-        /// Controle btnSalvarRecap.
+        /// Controle txtStatus.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvarRecap;
+        protected global::System.Web.UI.WebControls.TextBox txtStatus;
+
+        /// <summary>
+        /// Controle btnSalvar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSalvar;
     }
 }

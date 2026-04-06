@@ -36,12 +36,14 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+
                 CarregaDados();
+                AtualizarNumeroPneu();
+                PreencherDestino();
+                PreencherPosicao();
                 CarregarPecas();
                 CarregarMecanicos();
-                CalcularTotais();
-
-
+                CalcularTotais();                
             }
         }
         public void CarregaDados()
@@ -80,7 +82,7 @@ namespace NewCapit.dist.pages
                     txtNucleo_Motorista.Text = dr["nucleo_motorista"].ToString();
 
                     txtPlaca.Text = dr["placa"].ToString();
-                    txtTipVei.Text = dr["tipo_veiculo"].ToString();
+                    txtTipVei.Text = dr["tipo_veiculo"].ToString();                    
                     txtMarca.Text = dr["marca"].ToString();
                     txtModelo.Text = dr["modelo"].ToString();
                     txtAno.Text = dr["ano_modelo"].ToString();
@@ -164,6 +166,8 @@ namespace NewCapit.dist.pages
                     CarregarGrid();
                     CarregarGridEletrica();
                     CarregarGridBorracharia();
+                    //PreencherPosicao();
+                   
                     CarregarGridFunilaria();
                     CalcularTotais();
                     encontrou = true;
@@ -1279,6 +1283,14 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             int mecanico = Convert.ToInt32(ddlBorracheiro.SelectedValue);
             string nome_mecanico = ddlBorracheiro.SelectedItem.Text;
             string tipo = txtTipoBorracharia.Text;
+            
+            // Informações do pneu
+            string retirada_instalacao = ddlSituacao.SelectedItem.Text;
+            int num_pneu = Convert.ToInt32(ddlNumeroPneu.SelectedValue);
+            string destino_pneu = ddlDestino.SelectedItem.Text;
+            string posicao_pneu = ddlPosicao.SelectedItem.Text;
+            int km_inicial_pneu = Convert.ToInt32(txtKmInicial.Text);
+            int km_final_pneu = Convert.ToInt32(txtKMFinal.Text);
 
             DateTime inicio = Convert.ToDateTime(txtInicioBorracharia.Text);
             DateTime termino = Convert.ToDateTime(txtFimBorracharia.Text);
@@ -1288,7 +1300,7 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             using (SqlConnection conn = new SqlConnection(
     WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                conn.Open();   // <<< obrigatório
+                conn.Open();  
 
                 string sqlConsultaEstoque = "SELECT estoque_peca FROM tbestoque_pecas WHERE id_peca=@peca";
 
@@ -1318,9 +1330,9 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 // insere peça na OS
                 string sqlInsert = @"INSERT INTO tbos_pecas
         (id_os,id_peca,descricao,quant,valor_unitario,valor_total,
-        cracha,nome,inicio,termino,tempo_minutos,tipo)
+        cracha,nome,inicio,termino,tempo_minutos,tipo,retirada_instalacao,num_pneu,destino_pneu,posicao_pneu,km_inicial_pneu,km_final_pneu)
         VALUES
-        (@os,@peca,@descricao,@qtde,@valor,@total,@mecanico,@nome,@inicio,@termino,@tempo,@tipo)";
+        (@os,@peca,@descricao,@qtde,@valor,@total,@mecanico,@nome,@inicio,@termino,@tempo,@tipo,@retirada_instalacao,@num_pneu,@destino_pneu,@posicao_pneu,@km_inicial_pneu,@km_final_pneu)";
 
                 SqlCommand cmd = new SqlCommand(sqlInsert, conn);
 
@@ -1336,7 +1348,12 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 cmd.Parameters.AddWithValue("@termino", termino);
                 cmd.Parameters.AddWithValue("@tempo", tempo);
                 cmd.Parameters.AddWithValue("@tipo", tipo);
-
+                cmd.Parameters.AddWithValue("@retirada_instalacao", retirada_instalacao);
+                cmd.Parameters.AddWithValue("@num_pneu", num_pneu);
+                cmd.Parameters.AddWithValue("@destino_pneu", destino_pneu);
+                cmd.Parameters.AddWithValue("@posicao_pneu", posicao_pneu);
+                cmd.Parameters.AddWithValue("@km_inicial_pneu", km_inicial_pneu);
+                cmd.Parameters.AddWithValue("@km_final_pneu", km_final_pneu);   
                 cmd.ExecuteNonQuery();
 
                 // BAIXA ESTOQUE
@@ -1350,6 +1367,37 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 cmdEstoque.Parameters.AddWithValue("@peca", peca);
 
                 cmdEstoque.ExecuteNonQuery();
+
+                // ATUALIZA PNEU
+                string sqlPneu = @"UPDATE tbpneus
+                SET placa=@placa, DataInstalacao=GETDATE(), ordem_servico=@ordemServico, Status=@status, KmAtual=@kmAtual, posicao=@posicao 
+                WHERE numero = @num_pneu";
+
+                SqlCommand cmdPneu = new SqlCommand(sqlPneu, conn);
+
+                cmdPneu.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim());
+                cmdPneu.Parameters.AddWithValue("@ordemServico", os);
+                cmdPneu.Parameters.AddWithValue("@status", destino_pneu);
+                cmdPneu.Parameters.AddWithValue("@KmAtual", km_inicial_pneu);
+                cmdPneu.Parameters.AddWithValue("@posicao", posicao_pneu);
+                cmdPneu.ExecuteNonQuery();
+
+                // INSERE A MOVIMENTAÇÃO
+                string sqlMovimentacao = @"INSERT INTO tbmovimentacaopneu                (Num_pneu,IdVeiculo,Placa,Posicao,TipoMovimentacao,retirada_instalacao,KM,Km_final,DataMovimentacao,OrdemServico)
+                  VALUES
+                  (@num_pneu,@IdVeiculo,@Placa,@Posicao,@TipoMovimentacao,@retirada_instalacao,@KM,@Km_final,GETDATE(),@OrdemServico)";
+
+                SqlCommand cmdMovimentacao = new SqlCommand(sqlMovimentacao, conn);
+                cmdMovimentacao.Parameters.AddWithValue("@num_pneu", num_pneu);
+                cmdMovimentacao.Parameters.AddWithValue("@IdVeiculo", txtCodVeiculo.Text.Trim());
+                cmdMovimentacao.Parameters.AddWithValue("@Placa", txtPlaca.Text.Trim());
+                cmdMovimentacao.Parameters.AddWithValue("@Posicao", posicao_pneu);
+                cmdMovimentacao.Parameters.AddWithValue("@TipoMovimentacao", destino_pneu);
+                cmdMovimentacao.Parameters.AddWithValue("@retirada_instalacao", retirada_instalacao);
+                cmdMovimentacao.Parameters.AddWithValue("@km", km_inicial_pneu);
+                cmdMovimentacao.Parameters.AddWithValue("@km_final", km_final_pneu);
+                cmdMovimentacao.Parameters.AddWithValue("@OrdemServico", os);
+                cmdMovimentacao.ExecuteNonQuery();
             }
 
             ddlParteBorracharia.SelectedIndex = 0;
@@ -1518,5 +1566,374 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             CalcularTotais();
         }
 
+        [System.Web.Services.WebMethod]
+        public static List<string> BuscarPneus(string placa, string situacao)
+        {
+            List<string> lista = new List<string>();
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "";
+
+                if (situacao == "Retirada")
+                {
+                    sql = "SELECT numero FROM tbpneus WHERE placa = @placa";
+                }
+                else if (situacao == "Instalação")
+                {
+                    sql = "SELECT numero FROM tbpneus WHERE status = 'Estoque' AND numero <> ''";
+                }
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@placa", placa ?? "");
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    lista.Add(dr["numero"].ToString());
+                }
+            }
+
+            return lista;
+        }
+        protected void AtualizarNumeroPneu2()
+        {
+            string tipoServico = ddlTipoServico.SelectedValue;
+            string situacao = ddlSituacao.SelectedValue;
+            string placa = txtPlaca.Text.Trim();
+
+            if (tipoServico == "Pneu" && situacao == "Retirada")
+            {
+                using (SqlConnection conn = new SqlConnection(
+     WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    string query = @"SELECT *
+                             FROM tbpneus 
+                             WHERE placa = @placa";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@placa", placa);
+
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    ddlNumeroPneu.Items.Clear();
+                    ddlNumeroPneu.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione", ""));
+
+                    while (reader.Read())
+                    {
+                        ddlNumeroPneu.Items.Add(new System.Web.UI.WebControls.ListItem(
+                            reader["numero"].ToString(),
+                            reader["numero"].ToString()
+                        ));
+                    }
+                }
+            }
+            else if (tipoServico == "Pneu" && situacao == "Instalação")
+            {       
+                using (SqlConnection conn = new SqlConnection(
+     WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    string query = @"SELECT * 
+                             FROM tbpneus 
+                             WHERE status = 'Estoque' AND numero <> ''";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);                 
+
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    ddlNumeroPneu.Items.Clear();
+                    // Primeiro item (placeholder)
+                    ddlNumeroPneu.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+
+                    while (reader.Read())
+                    {
+                        System.Web.UI.WebControls.ListItem item = new System.Web.UI.WebControls.ListItem();
+                        item.Text = reader["numero"].ToString();
+                        item.Value = reader["numero"].ToString();
+
+                        // atributos personalizados
+                        item.Attributes["data-parte"] = reader["id_peca"].ToString();
+                        item.Attributes["data-status"] = reader["status"].ToString();
+                        item.Attributes["data-km"] = reader["kmatual"].ToString();
+                        
+                        ddlNumeroPneu.Items.Add(item);
+                    }
+                    txtStatus.ReadOnly = true;
+                    txtKMFinal.ReadOnly = true;
+                    txtQuantBorracharia.Text = "1";
+                    txtQuantBorracharia.ReadOnly = true;
+
+                    //ddlNumeroPneu.Items.Clear();
+                    //ddlNumeroPneu.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione", ""));
+
+                    //while (reader.Read())
+                    //{
+                    //    ddlNumeroPneu.Items.Add(new System.Web.UI.WebControls.ListItem(
+                    //        reader["numero"].ToString(),
+                    //        reader["numero"].ToString()                           
+                    //    ));
+                    //    ddlParteBorracharia.SelectedItem.Text = reader["descricao"].ToString();
+                    //    txtStatusPneu.Text = reader["status"].ToString();
+                    //    txtKmInicial.Text = reader["kmatual"].ToString();
+                    //}
+                }
+            }
+            else
+            {
+                ddlNumeroPneu.Items.Clear();
+                ddlNumeroPneu.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione", ""));
+            }
+        }
+        protected void AtualizarNumeroPneu()
+        {
+            string tipoServico = ddlTipoServico.SelectedValue;
+            string situacao = ddlSituacao.SelectedValue;
+            string placa = txtPlaca.Text.Trim();
+
+            if (tipoServico == "Pneu" && situacao == "Retirada")
+            {               
+                    string query = @"SELECT * FROM tbpneus WHERE placa = @placa";
+                    
+                    // Crie uma conexão com o banco de dados
+                    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                    {
+                        try
+                        {
+                            // Abra a conexão com o banco de dados
+                            conn.Open();
+
+                            SqlCommand cmd = new SqlCommand(query, conn);
+                            cmd.Parameters.AddWithValue("@placa", placa);
+                            // Crie o comando SQL                          
+
+                            // Execute o comando e obtenha os dados em um DataReader
+                            SqlDataReader reader = cmd.ExecuteReader();
+
+                            // Preencher o ComboBox com os dados do DataReader
+                            ddlNumeroPneu.DataSource = reader;
+                            ddlNumeroPneu.DataTextField = "numero";  // Campo que será mostrado no ComboBox
+                            ddlNumeroPneu.DataValueField = "numero";  // Campo que será o valor de cada item                    
+                            ddlNumeroPneu.DataBind();  // Realiza o binding dos dados                   
+                            ddlNumeroPneu.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
+                            // Feche o reader
+                            reader.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Trate exceções
+                            Response.Write("Erro: " + ex.Message);
+                        }
+                    }
+            }
+            else if (tipoServico == "Pneu" && situacao == "Instalação")
+            {
+                string query = @"SELECT * FROM tbpneus WHERE status = 'Estoque' AND numero <> ''";
+
+                // Crie uma conexão com o banco de dados
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    try
+                    {
+                        // Abra a conexão com o banco de dados
+                        conn.Open();
+
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        //cmd.Parameters.AddWithValue("@placa", placa);
+                        // Crie o comando SQL                          
+
+                        // Execute o comando e obtenha os dados em um DataReader
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        // Preencher o ComboBox com os dados do DataReader
+                        ddlNumeroPneu.DataSource = reader;
+                        ddlNumeroPneu.DataTextField = "numero";  // Campo que será mostrado no ComboBox
+                        ddlNumeroPneu.DataValueField = "numero";  // Campo que será o valor de cada item                    
+                        ddlNumeroPneu.DataBind();  // Realiza o binding dos dados                   
+                        ddlNumeroPneu.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", "0"));
+                        // Feche o reader
+                        reader.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Trate exceções
+                        Response.Write("Erro: " + ex.Message);
+                    }
+                }
+
+            }
+
+
+        }
+        protected void ddlSituacao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+            AtualizarNumeroPneu();
+            PreencherDestino();
+        }
+        public void PreencherDestino()
+        {
+            ddlDestino.Items.Clear();
+            ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+            
+            string situacao = ddlSituacao.SelectedValue;
+            if (situacao == "Instalação")
+            {
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Em Uso"));   
+            }
+            else
+            {
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Estoque"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Conserto"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Reforma"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Descarte"));  
+            }
+        }
+        public void PreencherPosicao()
+        {
+            ddlPosicao.Items.Clear();
+            ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+
+            string tipoVei = txtTipVei.Text.Trim().ToUpper();
+
+            if (tipoVei == "CARRETA")
+            {
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 1º Eixo LED"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 1º Eixo LEF"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 2º Eixo LED"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 2º Eixo LEF"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 3º Eixo LED"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 3º Eixo LEF"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 1º Eixo LDD"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 1º Eixo LDF"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 2º Eixo LDD"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 2º Eixo LDF"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 3º Eixo LDD"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Carreta 3º Eixo LDF"));
+            }
+            else
+            {
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Dianteiro Esquerdo"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Dianteiro Direito"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Traseiro Esquerdo Dentro"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Traseiro Esquerdo Fora"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Traseiro Direito Dentro"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Traseiro Direito Fora"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Tração Esquerdo Dentro"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Tração Esquerdo Fora"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Tração Direito Dentro"));
+                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Tração Direito Fora"));               
+            }            
+        }
+
+        protected void ddlDestino_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PreencherDestino();
+        }
+
+        //   protected void ddlNumeroPneu_SelectedIndexChanged(object sender, EventArgs e)
+        //   {
+        //       string tipoServico = ddlTipoServico.SelectedValue;
+        //       string situacao = ddlSituacao.SelectedValue;
+        //       string placa = txtPlaca.Text.Trim();
+        //       string numero = ddlNumeroPneu.SelectedValue;
+
+        //       using (SqlConnection conn = new SqlConnection(
+        //WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //       {
+        //           string query = @"SELECT * FROM tbpneus WHERE numero = @numero";
+
+        //           SqlCommand cmd = new SqlCommand(query, conn);
+        //           cmd.Parameters.AddWithValue("@numero", numero);
+        //           conn.Open();
+        //           SqlDataReader reader = cmd.ExecuteReader();
+        //           while (reader.Read())
+        //           {
+        //               if (tipoServico == "Pneu" && situacao == "Retirada")
+        //               {
+        //                   // ddlParteBorracharia.SelectedItem.Text = reader["descricao"].ToString(); 
+        //                   // ddlDestino.SelectedItem.Text = reader["status"].ToString();
+        //                   // ddlPosicao.SelectedItem.Text = reader["posicao"].ToString();
+        //                   //CarregarPecas();
+        //                   ddlParteBorracharia.SelectedValue = reader["descricao"].ToString();
+        //                   txtStatus.Text = reader["status"].ToString();
+        //                   PreencherDestino();
+        //                   ddlDestino.SelectedValue = reader["status"].ToString();
+        //                   txtKmInicial.Text = reader["kmatual"].ToString();
+        //                   PreencherPosicao();
+        //                   ddlPosicao.SelectedValue = reader["posicao"].ToString();
+
+        //               }
+        //               else if (tipoServico == "Pneu" && situacao == "Instalação")
+        //               {
+        //                   //ddlParteBorracharia.SelectedItem.Text = reader["descricao"].ToString();
+        //                   //CarregarPecas();
+        //                   ddlParteBorracharia.SelectedValue = reader["descricao"].ToString();
+        //                   txtStatus.Text = reader["status"].ToString();
+        //               }
+        //           }
+        //       }
+        //   }
+        protected void ddlNumeroPneu_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tipoServico = ddlTipoServico.SelectedValue;
+            string situacao = ddlSituacao.SelectedValue;
+            string numero = ddlNumeroPneu.SelectedValue;
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string query = "SELECT * FROM tbpneus WHERE numero = @numero";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@numero", numero);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string descricao = reader["descricao"].ToString();
+                    string status = reader["status"].ToString();
+                    string km = reader["kmatual"].ToString();
+                    string posicao = reader["posicao"].ToString();
+
+                    // 🔥 PRIMEIRO carrega os dropdowns
+                    PreencherDestino();
+                    PreencherPosicao();
+                    //CarregarPecas(); // se necessário
+
+                    if (tipoServico == "Pneu" && situacao == "Retirada")
+                    {
+                        if (ddlParteBorracharia.Items.FindByValue(descricao) != null)
+                            ddlParteBorracharia.SelectedValue = descricao;
+
+                        txtStatus.Text = status;
+
+                        if (ddlDestino.Items.FindByValue(status) != null)
+                            ddlDestino.SelectedValue = status;
+
+                        txtKmInicial.Text = km;
+
+                        if (ddlPosicao.Items.FindByValue(posicao) != null)
+                            ddlPosicao.SelectedValue = posicao;
+                    }
+                    else if (tipoServico == "Pneu" && situacao == "Instalação")
+                    {
+                        if (ddlParteBorracharia.Items.FindByValue(descricao) != null)
+                            ddlParteBorracharia.SelectedValue = descricao;
+
+                        txtStatus.Text = status;
+                    }
+                }
+            }
+        }
     }
 }

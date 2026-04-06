@@ -11,115 +11,88 @@ namespace NewCapit.dist.pages
 {
 
 
-    public partial class ControlePneus
+    public partial class ControleAbastecimento
     {
 
         /// <summary>
-        /// Controle divMsg.
+        /// Controle txtDataInicial.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsg;
+        protected global::System.Web.UI.WebControls.TextBox txtDataInicial;
 
         /// <summary>
-        /// Controle lblMsgGeral.
+        /// Controle txtDataFinal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMsgGeral;
+        protected global::System.Web.UI.WebControls.TextBox txtDataFinal;
 
         /// <summary>
-        /// Controle gvPneus.
+        /// Controle txtBusca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvPneus;
+        protected global::System.Web.UI.WebControls.TextBox txtBusca;
 
         /// <summary>
-        /// Controle hfPneuMov.
+        /// Controle btnFiltrar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfPneuMov;
+        protected global::System.Web.UI.WebControls.Button btnFiltrar;
 
         /// <summary>
-        /// Controle ddlVeiculo.
+        /// Controle gvAbastecimento.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlVeiculo;
+        protected global::System.Web.UI.WebControls.GridView gvAbastecimento;
 
         /// <summary>
-        /// Controle ddlPosicao.
+        /// Controle txtOrdemModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPosicao;
+        protected global::System.Web.UI.WebControls.TextBox txtOrdemModal;
 
         /// <summary>
-        /// Controle txtKMMov.
+        /// Controle txtMotoristaModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtKMMov;
+        protected global::System.Web.UI.WebControls.TextBox txtMotoristaModal;
 
         /// <summary>
-        /// Controle btnSalvarMov.
+        /// Controle txtPlacaModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvarMov;
+        protected global::System.Web.UI.WebControls.TextBox txtPlacaModal;
 
         /// <summary>
-        /// Controle hfPneuRecap.
+        /// Controle txtPostoModal.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfPneuRecap;
-
-        /// <summary>
-        /// Controle txtCusto.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCusto;
-
-        /// <summary>
-        /// Controle txtKMRecap.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtKMRecap;
-
-        /// <summary>
-        /// Controle btnSalvarRecap.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSalvarRecap;
+        protected global::System.Web.UI.WebControls.TextBox txtPostoModal;
     }
 }

@@ -106,6 +106,7 @@
                                         <asp:BoundField DataField="unidade" HeaderText="UNIDADE" />
                                         <asp:BoundField DataField="estoque_peca" HeaderText="ESTOQUE ATUAL" />
                                         <asp:BoundField DataField="estoque_minimo" HeaderText="ESTOQUE MINIMO" />
+                                        <asp:BoundField DataField="tipo_peca" HeaderText="TIPO DE FORNECEDOR" />
                                         <asp:BoundField
                                             DataField="valor_unitario"
                                             HeaderText="VALOR UNIT."
@@ -164,7 +165,7 @@
                                         </div>
                                         <!-- Tipo -->
                                         <div class="form-group">
-                                            <label>Unidade</label>
+                                            <label>Produto:</label>
                                             <asp:DropDownList ID="ddlTipo" runat="server" CssClass="form-control">
                                                 <asp:ListItem Text="Selecione..." Value="" />
                                                 <asp:ListItem Text="PNEU" Value="PNEU" />
@@ -188,6 +189,7 @@
                                                 <asp:ListItem Text="GALÃO" Value="GALÃO" />
                                                 <asp:ListItem Text="BARRICA" Value="BARRICA" />
                                                 <asp:ListItem Text="CAIXA" Value="CAIXA" />
+                                                <asp:ListItem Text="OUTROS" Value="OUTROS" />
                                             </asp:DropDownList>
                                         </div>
 

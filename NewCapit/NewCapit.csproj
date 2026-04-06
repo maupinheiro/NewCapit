@@ -448,7 +448,9 @@
     <Content Include="dist\bandeiras\icone-paraiba.png" />
     <Content Include="dist\bandeiras\icone-sergipe.png" />
     <Content Include="dist\pages\ColaboradoresManutencao.aspx" />
+    <Content Include="dist\pages\ControleAbastecimento.aspx" />
     <Content Include="dist\pages\ControlePneus.aspx" />
+    <Content Include="dist\pages\EntradaCombustivel.aspx" />
     <Content Include="dist\pages\EntradaPecas.aspx" />
     <Content Include="dist\pages\FinalizarOS.aspx" />
     <Content Include="dist\pages\FinalizarOSGrid.aspx" />
@@ -629,6 +631,7 @@
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
     <Content Include="dist\pages\NovaRota.aspx" />
+    <Content Include="dist\pages\NumerarPneu.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\reajustefretes.aspx" />
@@ -4754,12 +4757,26 @@
     <Compile Include="dist\pages\ColaboradoresManutencao.aspx.designer.cs">
       <DependentUpon>ColaboradoresManutencao.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ControleAbastecimento.aspx.cs">
+      <DependentUpon>ControleAbastecimento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleAbastecimento.aspx.designer.cs">
+      <DependentUpon>ControleAbastecimento.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\ControlePneus.aspx.cs">
       <DependentUpon>ControlePneus.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="dist\pages\ControlePneus.aspx.designer.cs">
       <DependentUpon>ControlePneus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\EntradaCombustivel.aspx.cs">
+      <DependentUpon>EntradaCombustivel.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\EntradaCombustivel.aspx.designer.cs">
+      <DependentUpon>EntradaCombustivel.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\EntradaPecas.aspx.cs">
       <DependentUpon>EntradaPecas.aspx</DependentUpon>
@@ -5337,6 +5354,13 @@
     </Compile>
     <Compile Include="dist\pages\NovaRota.aspx.designer.cs">
       <DependentUpon>NovaRota.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\NumerarPneu.aspx.cs">
+      <DependentUpon>NumerarPneu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\NumerarPneu.aspx.designer.cs">
+      <DependentUpon>NumerarPneu.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\OrdemColetaImpressaoIndividual.aspx.cs">
       <DependentUpon>OrdemColetaImpressaoIndividual.aspx</DependentUpon>

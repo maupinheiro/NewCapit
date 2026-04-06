@@ -92,67 +92,68 @@
             });
         });
     </script>
-     <script>
-         $(function () {
-             $("#txtS10").inputmask("currency", {
-                 prefix: "R$ ",
-                 groupSeparator: ".",
-                 radixPoint: ",",
-                 digits: 2,
-                 autoGroup: true,
-                 rightAlign: false
-             });
-         });
-     </script>
-     <script>
-         $(function () {
-             $("#txtEtanol").inputmask("currency", {
-                 prefix: "R$ ",
-                 groupSeparator: ".",
-                 radixPoint: ",",
-                 digits: 2,
-                 autoGroup: true,
-                 rightAlign: false
-             });
-         });
-     </script>
-     <script>
-         $(function () {
-             $("#txtGasolina").inputmask("currency", {
-                 prefix: "R$ ",
-                 groupSeparator: ".",
-                 radixPoint: ",",
-                 digits: 2,
-                 autoGroup: true,
-                 rightAlign: false
-             });
-         });
-     </script>
-     <script>
-         $(function () {
-             $("#txtArla").inputmask("currency", {
-                 prefix: "R$ ",
-                 groupSeparator: ".",
-                 radixPoint: ",",
-                 digits: 2,
-                 autoGroup: true,
-                 rightAlign: false
-             });
-         });
-     </script>
+    <script>
+        $(function () {
+            $("#txtS10").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtEtanol").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtGasolina").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtArla").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
 
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
                 <br />
-                <div id="toastContainer" class="alert alert-warning alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
+                <div id="divMsg" runat="server"
+                    class="alert alert-dismissible fade show mt-3"
+                    role="alert" visible="false">
+                    <asp:Label ID="lblMsgGeral" runat="server"></asp:Label>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
                 <div class="card card-success">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-gas-pump"></i>&nbsp;POSTOS DE COMBUSTÍVEL
+                        <h3 class="card-title"><i class="fas fa-gas-pump"></i>&nbsp;Gestão de Postos
                             <br />
                             <small>Reajuste de Preço</small></h3>
                     </div>
