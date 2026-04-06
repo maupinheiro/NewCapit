@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Globalization;
 
 namespace NewCapit.dist.pages
 {
@@ -43,11 +44,11 @@ namespace NewCapit.dist.pages
         }
         public void CarregaDadosFornecedor()
         {
-            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+            if (HttpContext.Current.Request.QueryString["codfor"].ToString() != "")
             {
-                id = HttpContext.Current.Request.QueryString["id"].ToString();
+                id = HttpContext.Current.Request.QueryString["codfor"].ToString();
             }
-            string sql = "SELECT codfor, razaosocial, fantasia, cnpj, inscestadual, inscccm, tipoempresa, abertura, situacaoreceita, tipofornecedor, contato, fonefixo, fonecelular, email, site, cep, endereco, numero, complemento, bairro, cidade, estado, pais, combustivel_S10, combustivel_S500, combustivel_etanol, combustivel_gasolina, combustivel_arla, data_cadastro, usuario_cadastro FROM tbfornecedores WHERE id = " + id;
+            string sql = "SELECT codfor, razaosocial, fantasia, cnpj, inscestadual, inscccm, tipoempresa, abertura, situacaoreceita, tipofornecedor, contato, fonefixo, fonecelular, email, site, cep, endereco, numero, complemento, bairro, cidade, estado, pais, combustivel_S10, combustivel_S500, combustivel_etanol, combustivel_gasolina, combustivel_arla, data_cadastro, usuario_cadastro,data_alteracao, usuario_alteracao FROM tbfornecedores WHERE codfor = " + id;
 
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
@@ -94,137 +95,184 @@ namespace NewCapit.dist.pages
                     txtArla.Text = dt.Rows[0][27].ToString();
                     lblDtCadastro.Text = Convert.ToDateTime(dt.Rows[0][28]).ToString("dd/MM/yyyy HH:mm");
                     txtUsuCadastro.Text = dt.Rows[0][29].ToString();
+                    if (dt.Rows.Count > 0)
+                    {
+                        object valor = dt.Rows[0]["data_alteracao"];
+
+                        if (valor != DBNull.Value && valor != null)
+                            lblDataAlteracao.Text = Convert.ToDateTime(valor).ToString("dd/MM/yyyy HH:mm");
+                        else
+                            lblDataAlteracao.Text = "-"; // ou string vazia, se preferir
+                    }
+                    txtAlteradoPor.Text = dt.Rows[0]["usuario_alteracao"].ToString();
                 }
                 
 
             }
-        }
-
-
+        }       
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
-            {
-                id = HttpContext.Current.Request.QueryString["id"].ToString();
-            }
-            decimal novoValorS500;
-            decimal novoValorS10;
-            decimal novoValorEtanol;
-            decimal novoValorGasolina;
-            decimal novoValorArla;
+            string codigoPosto = txtCodFor.Text.Trim();
+            string nomePosto = txtNomFor.Text.Trim();
             string nomeUsuario = Session["UsuarioLogado"].ToString();
 
-            if (!decimal.TryParse(txtS500.Text
-                                     .Replace("R$", "")
-                                     .Trim()
-                                     .Replace(".", "")
-                                     .Replace(",", "."),
-                                  System.Globalization.NumberStyles.Any,
-                                  System.Globalization.CultureInfo.InvariantCulture,
-                                  out novoValorS500))
+            decimal novoValorS500 = 0;
+            decimal novoValorS10 = 0;
+            decimal novoValorEtanol = 0;
+            decimal novoValorGasolina = 0;
+            decimal novoValorArla = 0;
+
+            // Diesel S500
+            if (!string.IsNullOrWhiteSpace(txtS500.Text))
             {
-                string script = "<script>showToast('Valor do Diesel S500, é inválido.');</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                txtS500.Focus();
-                return;
+                if (!decimal.TryParse(txtS500.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out novoValorS500))
+                {
+                    Mensagem("warning", "Valor do Diesel S500 inválido");
+                    txtS500.Text = "";
+                    txtS500.Focus();
+                    return;
+                }
             }
-            if (!decimal.TryParse(txtS10.Text
-                                    .Replace("R$", "")
-                                    .Trim()
-                                    .Replace(".", "")
-                                    .Replace(",", "."),
-                                 System.Globalization.NumberStyles.Any,
-                                 System.Globalization.CultureInfo.InvariantCulture,
-                                 out novoValorS10))
+
+            // Diesel S10
+            if (!string.IsNullOrWhiteSpace(txtS10.Text))
             {
-                string script = "<script>showToast('Valor do Diesel S10, é inválido.');</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                txtS10.Focus();
-                return;
+                if (!decimal.TryParse(txtS10.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out novoValorS10))
+                {                    
+                    Mensagem("warning", "Valor do Diesel S10 inválido");
+                    txtS10.Text = "";
+                    txtS10.Focus();
+                    return;
+                }
             }
-            if (!decimal.TryParse(txtEtanol.Text
-                                    .Replace("R$", "")
-                                    .Trim()
-                                    .Replace(".", "")
-                                    .Replace(",", "."),
-                                 System.Globalization.NumberStyles.Any,
-                                 System.Globalization.CultureInfo.InvariantCulture,
-                                 out novoValorEtanol))
+
+            // Etanol
+            if (!string.IsNullOrWhiteSpace(txtEtanol.Text))
             {
-                string script = "<script>showToast('Valor do Etanol, é inválido.');</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                txtEtanol.Focus();
-                return;
+                if (!decimal.TryParse(txtEtanol.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out novoValorEtanol))
+                {                   
+                    Mensagem("warning", "Valor do Etanol inválido");
+                    txtEtanol.Text = "";
+                    txtEtanol.Focus();
+                    return;
+                }
             }
-            if (!decimal.TryParse(txtGasolina.Text
-                                    .Replace("R$", "")
-                                    .Trim()
-                                    .Replace(".", "")
-                                    .Replace(",", "."),
-                                 System.Globalization.NumberStyles.Any,
-                                 System.Globalization.CultureInfo.InvariantCulture,
-                                 out novoValorGasolina))
+
+            // Gasolina
+            if (!string.IsNullOrWhiteSpace(txtGasolina.Text))
             {
-                string script = "<script>showToast('Valor da Gasolina, é inválido.');</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                txtGasolina.Focus();
-                return;
+                if (!decimal.TryParse(txtGasolina.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out novoValorGasolina))
+                {                   
+                    Mensagem("warning", "Valor da Gasolina inválido");
+                    txtGasolina.Text = "";
+                    txtGasolina.Focus();
+                    return;
+                }
             }
-            if (!decimal.TryParse(txtArla.Text
-                                    .Replace("R$", "")
-                                    .Trim()
-                                    .Replace(".", "")
-                                    .Replace(",", "."),
-                                 System.Globalization.NumberStyles.Any,
-                                 System.Globalization.CultureInfo.InvariantCulture,
-                                 out novoValorArla))
+
+            // Arla
+            if (!string.IsNullOrWhiteSpace(txtArla.Text))
             {
-                string script = "<script>showToast('Valor da Arla, é inválido.');</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                txtArla.Focus();
-                return;
+                if (!decimal.TryParse(txtArla.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out novoValorArla))
+                {                   
+                    Mensagem("warning", "Valor do Arla 32 inválido");
+                    txtArla.Text = "";
+                    txtArla.Focus();
+                    return;
+                }
             }
-            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string query = "UPDATE tbfornecedores SET combustivel_S500 = @combustivel_S500,combustivel_S10=@combustivel_S10, combustivel_Etanol=@combustivel_Etanol, combustivel_gasolina=@combustivel_gasolina, combustivel_arla=@combustivel_arla, data_alteracao=@data_alteracao, usuario_alteracao=@usuario_alteracao WHERE id = @Id";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.Add("@combustivel_S500", SqlDbType.Decimal).Value = novoValorS500;
-                cmd.Parameters.Add("@combustivel_S10", SqlDbType.Decimal).Value = novoValorS10;
-                cmd.Parameters.Add("@combustivel_Etanol", SqlDbType.Decimal).Value = novoValorEtanol;
-                cmd.Parameters.Add("@combustivel_gasolina", SqlDbType.Decimal).Value = novoValorGasolina;
-                cmd.Parameters.Add("@combustivel_arla", SqlDbType.Decimal).Value = novoValorArla;
-                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-                cmd.Parameters.Add("@data_alteracao", SqlDbType.VarChar).Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-                cmd.Parameters.Add("@usuario_alteracao", SqlDbType.VarChar).Value = nomeUsuario;
+                conn.Open();
+                SqlTransaction trans = conn.BeginTransaction();
+
                 try
                 {
-                    con.Open();
-                    int linhasAfetadas = cmd.ExecuteNonQuery();
+                    // 1️⃣ Ler valores atuais do fornecedor
+                    string selectFornecedor = @"SELECT combustivel_S500, combustivel_S10, combustivel_Etanol, combustivel_gasolina, combustivel_arla
+                                    FROM tbfornecedores
+                                    WHERE codfor = @codfor";
 
-                    if (linhasAfetadas > 0)
+                    SqlCommand cmdSelect = new SqlCommand(selectFornecedor, conn, trans);
+                    cmdSelect.Parameters.AddWithValue("@codfor", codigoPosto);
+
+                    SqlDataReader dr = cmdSelect.ExecuteReader();
+                    decimal dbS500 = 0, dbS10 = 0, dbEtanol = 0, dbGasolina = 0, dbArla = 0;
+
+                    if (dr.Read())
                     {
-                        // Acione o toast quando a página for carregada
-                        string script = "<script>showToast('Reajuste atualizado com sucesso.');</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        txtS500.Focus();
+                        dbS500 = dr["combustivel_S500"] != DBNull.Value ? Convert.ToDecimal(dr["combustivel_S500"]) : 0;
+                        dbS10 = dr["combustivel_S10"] != DBNull.Value ? Convert.ToDecimal(dr["combustivel_S10"]) : 0;
+                        dbEtanol = dr["combustivel_Etanol"] != DBNull.Value ? Convert.ToDecimal(dr["combustivel_Etanol"]) : 0;
+                        dbGasolina = dr["combustivel_gasolina"] != DBNull.Value ? Convert.ToDecimal(dr["combustivel_gasolina"]) : 0;
+                        dbArla = dr["combustivel_arla"] != DBNull.Value ? Convert.ToDecimal(dr["combustivel_arla"]) : 0;
                     }
-                    else
+                    dr.Close();
+
+                    // 2️⃣ Função para atualizar histórico + fornecedor se valor mudou
+                    void AtualizarSeMudou(string combustivel, decimal valorNovo, decimal valorAtual, string campoFornecedor)
                     {
-                        // Acione o toast quando a página for carregada
-                        string script = "<script>showToast('Id não encontrado para atualização.');</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        txtS500.Focus();
+                        if (valorNovo != valorAtual)
+                        {
+                            // Atualiza histórico
+                            string updateHist = @"UPDATE tbPrecoCombustivel
+                                      SET status = 'INATIVO', dtreajuste = GETDATE()
+                                      WHERE codposto = @codposto AND combustivel = @combustivel AND status = 'ATIVO'";
+                            SqlCommand cmdUpdate = new SqlCommand(updateHist, conn, trans);
+                            cmdUpdate.Parameters.AddWithValue("@codposto", codigoPosto);
+                            cmdUpdate.Parameters.AddWithValue("@combustivel", combustivel);
+                            cmdUpdate.ExecuteNonQuery();
+
+                            // Inserir novo registro histórico
+                            string insertHist = @"INSERT INTO tbPrecoCombustivel
+                                      (codposto, nomeposto, combustivel, valor, dtinicio, status, reajustadopor)
+                                      VALUES (@codposto, @nomeposto, @combustivel, @valor, GETDATE(), 'ATIVO', @reajustadopor)";
+                            SqlCommand cmdInsert = new SqlCommand(insertHist, conn, trans);
+                            cmdInsert.Parameters.AddWithValue("@codposto", codigoPosto);
+                            cmdInsert.Parameters.AddWithValue("@nomeposto", nomePosto);
+                            cmdInsert.Parameters.AddWithValue("@combustivel", combustivel);
+                            cmdInsert.Parameters.AddWithValue("@valor", valorNovo);
+                            cmdInsert.Parameters.AddWithValue("@reajustadopor", nomeUsuario);
+                            cmdInsert.ExecuteNonQuery();
+
+                            // Atualiza tbfornecedores
+                            string updateFornecedor = $"UPDATE tbfornecedores SET {campoFornecedor}=@valor, data_alteracao=GETDATE(), usuario_alteracao=@usuario WHERE codfor=@codfor";
+                            SqlCommand cmdFornecedor = new SqlCommand(updateFornecedor, conn, trans);
+                            cmdFornecedor.Parameters.AddWithValue("@valor", valorNovo);
+                            cmdFornecedor.Parameters.AddWithValue("@usuario", nomeUsuario);
+                            cmdFornecedor.Parameters.AddWithValue("@codfor", codigoPosto);
+                            cmdFornecedor.ExecuteNonQuery();
+                        }
                     }
+
+                    // 3️⃣ Comparar e atualizar somente se mudou
+                    AtualizarSeMudou("DIESEL S500", novoValorS500, dbS500, "combustivel_S500");
+                    AtualizarSeMudou("DIESEL S10", novoValorS10, dbS10, "combustivel_S10");
+                    AtualizarSeMudou("ETANOL", novoValorEtanol, dbEtanol, "combustivel_Etanol");
+                    AtualizarSeMudou("GASOLINA", novoValorGasolina, dbGasolina, "combustivel_gasolina");
+                    AtualizarSeMudou("ARLA 32", novoValorArla, dbArla, "combustivel_arla");
+
+                    trans.Commit();
+                    Mensagem("success", "Reajuste salvo com sucesso!");
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    //lblMensagem.Text = "Erro: " + ex.Message;
-                    // Acione o toast quando a página for carregada
-                    string script = "<script>showToast('Erro ao atualizar fornecedor.');</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                    txtS500.Focus();
+                    trans.Rollback();
+                    Mensagem("danger", "Erro: " + ex.Message + " ao salvar reajuste.");
+                    return;
                 }
             }
+        }
+        protected void Mensagem(string tipo, string texto)
+        {
+            divMsg.Visible = true;
+
+            divMsg.Attributes["class"] =
+                "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+
+            lblMsgGeral.Text = texto;
         }
     }
 }

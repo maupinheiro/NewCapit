@@ -1024,7 +1024,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
                     cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
                     cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@frota", txtCodFrota.Text.Trim() ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@frota", txtCodVeiculo.Text.Trim() ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
 
@@ -4020,7 +4020,7 @@ namespace NewCapit.dist.pages
                                     cmds.Parameters.Add("@carga", SqlDbType.VarChar).Value = carga;
                                     cmds.Parameters.Add("@idviagem", SqlDbType.VarChar).Value = novaColeta.Text;
                                     cmds.Parameters.Add("@codmot", SqlDbType.VarChar).Value = txtCodMotorista.Text;
-                                    cmds.Parameters.Add("@frota", SqlDbType.VarChar).Value = txtCodFrota.Text;
+                                    cmds.Parameters.Add("@frota", SqlDbType.VarChar).Value = txtCodVeiculo.Text;
                                     cmds.Parameters.Add("@status", SqlDbType.VarChar).Value = "Pendente";
                                     cmds.Parameters.Add("@andamento", SqlDbType.VarChar).Value = "EM ANDAMENTO";
                                     cmds.Parameters.Add("@atendimento", SqlDbType.VarChar).Value = "";

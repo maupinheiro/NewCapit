@@ -130,14 +130,14 @@
         };
     </script>
     <style>
-    /* Cabeçalho da GridView */
-    .gv-header-custom th {
-        background-color: #cce5ff !important; /* azul clarinho */
-        color: #000000 !important; /* texto preto */
-        font-weight: bold;
-        text-align: center;
-    }
-</style>
+        /* Cabeçalho da GridView */
+        .gv-header-custom th {
+            background-color: #cce5ff !important; /* azul clarinho */
+            color: #000000 !important; /* texto preto */
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
     <asp:ContentPlaceHolder ID="head" runat="server">
         <style>
             .img-custom {
@@ -446,7 +446,7 @@
                                                     <i class="fas fa-map-marker-alt nav-icon"></i>
                                                     <p>Controle de Pedágio</p>
                                                 </a>
-                                            </li>                                            
+                                            </li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -473,7 +473,7 @@
                                                         <i class="fas fa-calendar-alt nav-icon"></i>
                                                         <p>Coletas</p>
                                                     </a>
-                                                </li>    
+                                                </li>
                                                 <%-- <a href="#" class="nav-link">
                                                     <i class="nav-icon fas fa-chart-pie"></i>
                                                     <p>KPI Solicitações</p>
@@ -481,7 +481,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    
+
                                 </ul>
                             </li>
 
@@ -623,7 +623,7 @@
                                     </li>--%>
                                 </ul>
                             </li>
-
+                            <!-- Motoristas-->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-user-tie"></i>
@@ -671,7 +671,38 @@
                                     </li>--%>
                                 </ul>
                             </li>
-                            <!-- Manutencão Ipiranga -->
+
+                            <!-- Gestão de Postos -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-gas-pump nav-icon"></i>
+                                    <p>
+                                        Gestão de Postos               
+        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/EntradaCombustivel.aspx" class="nav-link">
+                                            <i class="fas fa-gas-pump nav-icon"></i>
+                                            <p>Combustíveis</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/GestaoPostos.aspx" class="nav-link">
+                                            <i class="fas fa-gas-pump nav-icon"></i>
+                                            <p>Autorizados</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/dist/pages/ControleAbastecimento.aspx" class="nav-link">
+                                            <i class="fas fa-gas-pump nav-icon"></i>
+                                            <p>Controle</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Manutencão -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-tools"></i>
@@ -706,12 +737,6 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
-                                            <i class="fas fa-charging-station nav-icon"></i>
-                                            <p>Combustíveis</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a href="/dist/pages/ControlePneus.aspx" class="nav-link">
                                             <i class="fas fa-road nav-icon"></i>
                                             <p>Pneus</p>
@@ -736,13 +761,7 @@
                                         </a>
                                     </li>
 
-                                    <li class="nav-item">
-                                        <a href="/dist/pages/GestaoPostos.aspx" class="nav-link">
-                                            <i class="fas fa-gas-pump nav-icon"></i>
-                                            <p>Gestão de Postos</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
+                                    <%-- <li class="nav-item">
                                         <a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link">
                                             <i class="fas fa-tachometer-alt nav-icon"></i>
                                             <p>Cronotacógrafo</p>
@@ -759,25 +778,9 @@
                                             <i class="fas fa-book nav-icon"></i>
                                             <p>Relatórios</p>
                                         </a>
-                                    </li>
-
-
-                                    <%--<li class="nav-item">
-                                        <a href="/dist/pages/#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Trocar Foto</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Controle de Usuários</p>
-                                        </a>
                                     </li>--%>
                                 </ul>
                             </li>
-
-
                             <!-- Usuários -->
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -794,12 +797,12 @@
                                             <p>Trocar Senha</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    <%--<li class="nav-item">
                                         <a href="/dist/pages/#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Trocar Foto</p>
                                         </a>
-                                    </li>
+                                    </li>--%>
                                     <li class="nav-item">
                                         <a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>

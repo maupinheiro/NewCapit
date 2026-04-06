@@ -45,7 +45,8 @@ namespace NewCapit.dist.pages
                 unidade,
                 estoque_peca,
                 estoque_minimo,
-                valor_unitario
+                valor_unitario,
+                tipo_peca       
                 FROM tbestoque_pecas
                 where (
                     @pesquisa IS NULL
@@ -80,12 +81,31 @@ namespace NewCapit.dist.pages
                     e.Row.CssClass = "estoque-baixo";
                     e.Row.ToolTip = "Atenção: Estoque abaixo ou igual ao mínimo!";
                 }
+
+                // Pega o valor do TIPO_PECA
+                string tipoPeca = DataBinder.Eval(e.Row.DataItem, "tipo_peca").ToString();
+
+                // Localiza o botão de Entrada
+                
+                LinkButton btnEntrada = (LinkButton)e.Row.FindControl("btnEntrada");
+                if (tipoPeca.Equals("COMBUSTIVEL", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Desabilita botão
+                    btnEntrada.Enabled = false;
+
+                    // Opcional: muda cor / tooltip
+                    btnEntrada.CssClass = "btn btn-secondary btn-sm disabled";
+                    btnEntrada.ToolTip = "Não é possível dar entrada em combustível, por aqui.";
+
+                    // Opcional: destaca a linha
+                    e.Row.BackColor = System.Drawing.Color.LightYellow;
+                }
             }
         }
         protected void gvEstoque_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "entrada")
-            {
+            { 
                 string idPeca = e.CommandArgument.ToString();
 
                 Response.Redirect("EntradaPecas.aspx?id=" + idPeca);

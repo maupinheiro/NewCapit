@@ -43,7 +43,7 @@
                                 runat="server" 
                                 AutoGenerateColumns="false"
                                 HeaderStyle-CssClass="gv-header-custom"
-                                CssClass="table table-bordered"
+                                CssClass="table table-bordered table-hover"
                                 OnRowCommand="gvPneus_RowCommand">
                                 <Columns>
                                     <asp:BoundField DataField="Id" HeaderText="ID" />
@@ -61,8 +61,13 @@
                                     <asp:TemplateField>
                                         <ItemTemplate>
                                             <asp:LinkButton runat="server" CommandName="Editar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-warning btn-sm">Editar</asp:LinkButton>
-                                            <asp:LinkButton runat="server" CommandName="Excluir" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-danger btn-sm">Descartar</asp:LinkButton>
-                                            <asp:LinkButton runat="server" CommandName="Movimentar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-info btn-sm">Movimentar</asp:LinkButton>
+                                            <asp:LinkButton
+                                                runat="server"
+                                                OnClientClick="return confirm('Confirma o Descarte do PNEU?');"
+                                                CommandName="Excluir" 
+                                                CommandArgument='<%# Eval("Id") %>'
+                                                CssClass="btn btn-danger btn-sm">Descartar</asp:LinkButton>
+                                            <%--<asp:LinkButton runat="server" CommandName="Movimentar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-info btn-sm">Movimentar</asp:LinkButton>--%>
 
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -136,7 +141,7 @@
         </div>
     </div>
      <!-- MODAL CADASTRO COMPLETO -->
- <div class="modal fade" id="modalPneu" tabindex="-1">
+ <%--<div class="modal fade" id="modalPneu" tabindex="-1">
      <div class="modal-dialog">
          <div class="modal-content">
              <div class="modal-header">
@@ -199,7 +204,7 @@
          var modal = new bootstrap.Modal(document.getElementById('modalPneu'));
          modal.show();
      }
-     </script>
+     </script>--%>
 
 
 </asp:Content>

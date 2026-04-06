@@ -133,7 +133,9 @@
                     <div class="card card-info">
                         <!-- Header -->
                         <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
-                            <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Manutenção</h3>
+                            <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Manutenção
+                                <br />
+                                <small>Controle de Colaboradores</small></h3>
                         </div>
 
                         <!-- Formulário de cadastro -->

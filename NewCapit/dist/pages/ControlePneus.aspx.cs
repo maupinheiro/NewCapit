@@ -46,94 +46,15 @@ namespace NewCapit.dist.pages
                 gvPneus.DataBind();
             }
         }
-        protected void btnSalvar_Click(object sender, EventArgs e)
-        {
-            bool erro = false;
-
-            if (string.IsNullOrEmpty(txtNumero.Text)) { txtNumero.CssClass += " erro"; erro = true; }
-            if (string.IsNullOrEmpty(txtMarca.Text)) { txtMarca.CssClass += " erro"; erro = true; }
-            if (string.IsNullOrEmpty(txtKM.Text)) { txtKM.CssClass += " erro"; erro = true; }
-
-            if (erro)
-            {
-                lblErro.Text = "Preencha os campos obrigatórios";
-                ScriptManager.RegisterStartupScript(this, GetType(), "modal", "abrirModal();", true);
-                return;
-            }
-            string numero = txtNumero.Text.Trim();
-            using (SqlConnection conn = new SqlConnection(conexao))
-            {
-                conn.Open();
-
-                // 1. Verifica se já existe
-                SqlCommand cmdVerifica = new SqlCommand(
-                    "SELECT COUNT(*) FROM tbpneus WHERE numero = @numero", conn);
-
-                cmdVerifica.Parameters.AddWithValue("@numero", numero);
-
-                int existe = (int)cmdVerifica.ExecuteScalar();
-
-                if (existe > 0)
-                {
-                    // Já existe → bloqueia
-                    lblErro.Text = "Este número já está cadastrado!";
-                    lblErro.ForeColor = System.Drawing.Color.Red;
-                    txtNumero.Focus();
-                    return;
-                }
-
-
-                SqlCommand cmd;
-
-                if (string.IsNullOrEmpty(hfId.Value))
-                {
-                    cmd = new SqlCommand("INSERT INTO tbPneus (Numero,Marca,Modelo,Medida,KMAtual,Status) VALUES (@n,@m,@mo,@me,@km,@s)", conn);
-                }
-                else
-                {
-                    cmd = new SqlCommand("UPDATE tbPneus SET Numero=@n,Marca=@m,Modelo=@mo,Medida=@me,KMAtual=@km,Status=@s WHERE Id=@id", conn);
-                    cmd.Parameters.AddWithValue("@id", hfId.Value);
-                }
-
-                cmd.Parameters.AddWithValue("@n", txtNumero.Text);
-                cmd.Parameters.AddWithValue("@m", txtMarca.Text);
-                cmd.Parameters.AddWithValue("@mo", txtModelo.Text);
-                cmd.Parameters.AddWithValue("@me", txtMedida.Text);
-                cmd.Parameters.AddWithValue("@km", txtKM.Text);
-                cmd.Parameters.AddWithValue("@s", ddlStatus.SelectedValue);
-
-                cmd.ExecuteNonQuery();
-            }
-
-            Limpar();
-            CarregarGrid();
-        }
+        
         protected void gvPneus_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
         {
             int id = Convert.ToInt32(e.CommandArgument);
 
             if (e.CommandName == "Editar")
-            {
-                using (SqlConnection conn = new SqlConnection(conexao))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM tbPneus WHERE Id=@id", conn);
-                    cmd.Parameters.AddWithValue("@id", id);
-                    SqlDataReader dr = cmd.ExecuteReader();
-
-                    if (dr.Read())
-                    {
-                        hfId.Value = dr["Id"].ToString();
-                        txtNumero.Text = dr["Numero"].ToString();
-                        txtMarca.Text = dr["Marca"].ToString();
-                        txtModelo.Text = dr["Modelo"].ToString();
-                        txtMedida.Text = dr["Medida"].ToString();
-                        txtKM.Text = dr["KMAtual"].ToString();
-                        ddlStatus.SelectedValue = dr["Status"].ToString();
-                    }
-                }
-
-                ScriptManager.RegisterStartupScript(this, GetType(), "modal", "abrirModal();", true);
+            {               
+               string idPneu = e.CommandArgument.ToString();
+               Response.Redirect("NumerarPneu.aspx?id=" + idPneu);               
             }
             else if (e.CommandName == "Excluir")
             {
@@ -155,40 +76,30 @@ namespace NewCapit.dist.pages
 
                 CarregarGrid();
             }
-            else if (e.CommandName == "Movimentar")
-            {
-                // Abre modal de movimentação
-                hfPneuMov.Value = id.ToString();
+            //else if (e.CommandName == "Movimentar")
+            //{
+            //    // Abre modal de movimentação
+            //    hfPneuMov.Value = id.ToString();
 
-                // Carrega veículos no dropdown
-                using (SqlConnection conn = new SqlConnection(conexao))
-                {
-                    conn.Open();
-                    SqlDataAdapter da = new SqlDataAdapter("SELECT id, codvei, plavei FROM tbVeiculos", conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    ddlVeiculo.DataSource = dt;
-                    ddlVeiculo.DataTextField = "plavei";
-                    ddlVeiculo.DataValueField = "id";
-                    ddlVeiculo.DataBind();
-                }
+            //    // Carrega veículos no dropdown
+            //    using (SqlConnection conn = new SqlConnection(conexao))
+            //    {
+            //        conn.Open();
+            //        SqlDataAdapter da = new SqlDataAdapter("SELECT id, codvei, plavei FROM tbVeiculos", conn);
+            //        DataTable dt = new DataTable();
+            //        da.Fill(dt);
+            //        ddlVeiculo.DataSource = dt;
+            //        ddlVeiculo.DataTextField = "plavei";
+            //        ddlVeiculo.DataValueField = "id";
+            //        ddlVeiculo.DataBind();
+            //    }
 
-                ScriptManager.RegisterStartupScript(this, GetType(), "modalMov", "var modal = new bootstrap.Modal(document.getElementById('modalMov')); modal.show();", true);
-            }
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "modalMov", "var modal = new bootstrap.Modal(document.getElementById('modalMov')); modal.show();", true);
+            //}
 
 
         }       
-        void Limpar()
-        {
-            hfId.Value = "";
-            txtNumero.Text = "";
-            txtMarca.Text = "";
-            txtModelo.Text = "";
-            txtMedida.Text = "";
-            txtKM.Text = "";
-            ddlStatus.SelectedIndex = 0;
-            lblErro.Text = "";
-        }
+        
         protected void Mensagem(string tipo, string texto)
         {
             divMsg.Visible = true;
