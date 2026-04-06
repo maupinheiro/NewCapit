@@ -145,8 +145,8 @@
                                         <asp:TextBox 
                                             ID="txtPesquisar"
                                             runat="server"
-                                            AutoPostBack="true"
-                                            OnTextChanged="txtPesquisar_TextChanged"
+                                          
+                                            
                                             CssClass="form-control"
                                             placeholder="Pesquisar..." />
                                 </div>
@@ -310,6 +310,24 @@
 
 
                                             </div>
+                                           <div class="pagination-container" style="margin-top: 20px; text-align: center;">
+                                            <div class="btn-group">
+                                                <asp:LinkButton ID="btnAnterior" runat="server" CssClass="btn btn-outline-primary" OnClick="Pagina_Click" CommandArgument="Prev"><i class="fa fa-chevron-left"></i> Anterior</asp:LinkButton>
+        
+                                                <asp:Repeater ID="rptPaginacao" runat="server">
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="btnPagina" runat="server" 
+                                                            CssClass='<%# Convert.ToInt32(Eval("PageIndex")) == Convert.ToInt32(ViewState["PaginaAtual"]) ? "btn btn-primary active" : "btn btn-outline-primary" %>' 
+                                                            Text='<%# Eval("PageText") %>' 
+                                                            CommandArgument='<%# Eval("PageIndex") %>' 
+                                                            OnClick="Pagina_Click">
+                                                        </asp:LinkButton>
+                                                    </ItemTemplate>
+                                                </asp:Repeater>
+
+                                                <asp:LinkButton ID="btnProximo" runat="server" CssClass="btn btn-outline-primary" OnClick="Pagina_Click" CommandArgument="Next">Próximo <i class="fa fa-chevron-right"></i></asp:LinkButton>
+    </div>
+</div>
                                             <!-- /.card-body -->
                                         </div>
                                         <!-- /.card -->

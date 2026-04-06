@@ -1724,46 +1724,158 @@ namespace NewCapit.dist.pages
             if (e.CommandName == "GeraDoc")
             {
                 int idCarga = int.Parse(e.CommandArgument.ToString());
+
                 if (!PossuiNotasLancadas(idCarga))
                 {
                     MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
-                    return; // Interrompe a execução aqui
+                    return;
                 }
-                string numeroDocumento = "";
 
-                // 3. Verifique se o que está sendo exportado é Serviço ou CT-e
-                // Pode ser um RadioButton ou você pode checar no banco antes
+                // 3. Define se é Serviço e busca o próximo número sequencial
                 bool ehServico = VerificarSeEhServico(idCarga);
+
+                // Chama o método específico e armazena o número retornado
+                string numeroDocumento = ehServico ? GerarEObterProximoNFse() : GerarEObterProximoCte();
+
+                if (string.IsNullOrEmpty(numeroDocumento))
+                {
+                    MostrarMsg2("Erro ao gerar a numeração do documento.");
+                    return;
+                }
 
                 try
                 {
-                    // 4. Instancia a classe única
                     var srv = new SapiensIntegrationService();
-
-                    // 5. Chama o método que faz toda a montagem (Reg 1, 2, 3, 4, 6 e 10)
                     string conteudoArquivo = srv.GerarArquivoCompleto(idCarga, numeroDocumento, ehServico);
 
                     if (!string.IsNullOrEmpty(conteudoArquivo))
                     {
-                        // 6. Define o nome do arquivo conforme o tipo
                         string prefixo = ehServico ? "NFSe" : "CTe";
                         string nomeFinal = $"Sapiens_{prefixo}_{numeroDocumento}.txt";
-
-                        // 7. Dispara o download para o usuário
                         DispararDownload(conteudoArquivo, nomeFinal);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Aqui você pode usar seu sistema de log do NewCapit
-
                     MostrarMsg2("Erro ao gerar arquivo: " + ex.Message);
                 }
-
-
-
-
             }
+
+            if (e.CommandName == "GeraXml")
+            {
+                try
+                {
+                    int idCarga = int.Parse(e.CommandArgument.ToString());
+
+                    // 1. Validação de segurança
+                    if (!PossuiNotasLancadas(idCarga))
+                    {
+                        MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
+                        return;
+                    }
+
+                    // 2. Determina o tipo e busca o próximo número no banco
+                    bool ehServico = VerificarSeEhServico(idCarga);
+                    string numeroDoc = ehServico ? GerarEObterProximoNFse() : GerarEObterProximoCte();
+
+                    if (string.IsNullOrEmpty(numeroDoc)) return;
+
+                    // 3. Gerar o XML
+                    // Note que agora não precisamos buscar motorista/notas aqui fora, 
+                    // pois o srvXml.GerarXml vai fazer isso sozinho lá dentro usando o idCarga.
+                    var srvXml = new XmlExportService();
+
+                    string conteudoXml = ehServico ?
+                        srvXml.GerarXmlNfse(idCarga, numeroDoc) : // Passando apenas 2 argumentos
+                        srvXml.GerarXmlCte(idCarga, numeroDoc);  // Passando apenas 2 argumentos
+
+                    string nomeXml = $"{(ehServico ? "NFSe" : "CTe")}_{numeroDoc}.xml";
+                    DispararDownload(conteudoXml, nomeXml, "text/xml");
+
+                }
+                catch (Exception ex)
+                {
+                    MostrarMsg2("Erro ao processar documento: " + ex.Message);
+                }
+            }
+
+        }
+        private string GerarEObterProximoCte()
+        {
+            string numdocumento = "";
+            string query = "SELECT (cte + incremento) as ProximCte FROM tbcontadores WHERE id = 1";
+            string updateSql = "UPDATE tbcontadores SET cte = @cte WHERE id = 1";
+            string connString = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    // 1. Busca o próximo número
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            numdocumento = result.ToString();
+                        }
+                    }
+
+                    // 2. Atualiza o contador no banco para o próximo uso
+                    if (!string.IsNullOrEmpty(numdocumento))
+                    {
+                        using (SqlCommand cmdUp = new SqlCommand(updateSql, conn))
+                        {
+                            cmdUp.Parameters.AddWithValue("@cte", numdocumento);
+                            cmdUp.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MostrarMsg2("Erro no contador CTE: " + ex.Message);
+                }
+            }
+            return numdocumento;
+        }
+
+        private string GerarEObterProximoNFse()
+        {
+            string numdocumento = "";
+            string query = "SELECT (nfse + incremento) as ProximCte FROM tbcontadores WHERE id = 1";
+            string updateSql = "UPDATE tbcontadores SET nfse = @nfse WHERE id = 1";
+            string connString = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            numdocumento = result.ToString();
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(numdocumento))
+                    {
+                        using (SqlCommand cmdUp = new SqlCommand(updateSql, conn))
+                        {
+                            cmdUp.Parameters.AddWithValue("@nfse", numdocumento);
+                            cmdUp.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MostrarMsg2("Erro no contador NFSe: " + ex.Message);
+                }
+            }
+            return numdocumento;
         }
         private bool PossuiNotasLancadas(int idCarga)
         {
@@ -1814,18 +1926,35 @@ namespace NewCapit.dist.pages
             }
             return resultado;
         }
-        private void DispararDownload(string texto, string nomeArquivo)
+        // Adicionamos o '= "application/octet-stream"' no final. 
+        // Isso torna o terceiro parâmetro opcional e não quebra as chamadas antigas.
+        private void DispararDownload(string texto, string nomeArquivo, string contentType = "application/octet-stream")
         {
             Response.Clear();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=" + nomeArquivo);
-            Response.Charset = "ISO-8859-1"; // Padrão Windows que o Sapiens lê bem
-            Response.ContentType = "text/plain";
+            Response.ClearContent();
+            Response.ClearHeaders();
 
-            // Escreve o conteúdo gerado pela classe
-            Response.Output.Write(texto);
+            // Agora ele usa o contentType que você passar (ou o padrão se não passar nada)
+            Response.ContentType = contentType;
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + nomeArquivo);
+
+            // IMPORTANTE: Para XML o ideal é UTF-8, para o TXT do Sapiens é ISO.
+            // Vamos ajustar para respeitar o formato:
+            byte[] dados;
+            if (contentType.Contains("xml"))
+            {
+                dados = Encoding.UTF8.GetBytes(texto);
+            }
+            else
+            {
+                dados = Encoding.GetEncoding("ISO-8859-1").GetBytes(texto);
+            }
+
+            Response.AddHeader("Content-Length", dados.Length.ToString());
+            Response.BinaryWrite(dados);
             Response.Flush();
-            Response.End();
+
+            try { Response.End(); } catch { }
         }
         public class RetornoPut
         {

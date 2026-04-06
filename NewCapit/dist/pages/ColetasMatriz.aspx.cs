@@ -306,20 +306,34 @@ namespace NewCapit.dist.pages
                 txtFilialMot.Text = dt.Rows[0]["nucleo"].ToString();
                 txtTipoMot.Text = dt.Rows[0]["tipomot"].ToString();
                 txtFuncao.Text = dt.Rows[0]["cargo"].ToString();
+                // Validação para o Exame Toxicológico
                 if (dt.Rows[0]["venceti"] != DBNull.Value)
                 {
-                    txtExameToxic.Text = Convert.ToDateTime(dt.Rows[0]["venceti"])
-                                         .ToString("dd/MM/yyyy");
+                    if (DateTime.TryParse(dt.Rows[0]["venceti"].ToString(), out DateTime dataToxic))
+                    {
+                        txtExameToxic.Text = dataToxic.ToString("dd/MM/yyyy");
+                    }
+                    else
+                    {
+                        txtExameToxic.Text = ""; // Ou uma mensagem de "Data Inválida"
+                    }
                 }
                 else
                 {
                     txtExameToxic.Text = "";
                 }
 
+                // Validação para a CNH
                 if (dt.Rows[0]["venccnh"] != DBNull.Value)
                 {
-                    txtValCNH.Text = Convert.ToDateTime(dt.Rows[0]["venccnh"])
-                                     .ToString("dd/MM/yyyy");
+                    if (DateTime.TryParse(dt.Rows[0]["venccnh"].ToString(), out DateTime dataCNHe))
+                    {
+                        txtValCNH.Text = dataCNHe.ToString("dd/MM/yyyy");
+                    }
+                    else
+                    {
+                        txtValCNH.Text = "";
+                    }
                 }
                 else
                 {

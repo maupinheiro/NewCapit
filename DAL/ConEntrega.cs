@@ -33,28 +33,36 @@ namespace DAL
             }
         }
 
-        public static DataTable FetchDataTableEntregasMatriz(
-    DateTime? dataInicio,
-    DateTime? dataFim)
+        public static DataTable FetchDataTableEntregasMatriz(DateTime? dataInicio, DateTime? dataFim, string busca = "")
         {
             var sql = @"
-        SELECT 
-            c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
-            '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
-            c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
-            c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
-            c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
-            c.num_carregamento, c.emissao, c.situacao, c.status, c.carga
-        FROM tbcarregamentos c
-        INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
-        WHERE empresa = '1111' AND c.situacao <> 'VIAGEM CONCLUIDA'
-    ";
+                        SELECT 
+                            c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
+                            '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
+                            c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
+                            c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
+                            c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
+                            c.num_carregamento, c.emissao, c.situacao, c.status, c.carga
+                        FROM tbcarregamentos c
+                        INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
+                        WHERE empresa = '1111' AND c.situacao <> 'VIAGEM CONCLUIDA' ";
 
-            if (dataInicio.HasValue)
-                sql += " AND c.emissao >= @DataInicio";
+            if (dataInicio.HasValue) sql += " AND c.emissao >= @DataInicio";
+            if (dataFim.HasValue) sql += " AND c.emissao <= @DataFim";
 
-            if (dataFim.HasValue)
-                sql += " AND c.emissao <= @DataFim";
+            // NOVO: Filtro de busca global no SQL
+            sql += @"
+                            AND (
+                                @Busca IS NULL
+
+                                OR c.veiculo LIKE @Busca
+                                OR c.nomemotorista LIKE @Busca
+                                OR c.placa LIKE @Busca
+                                OR c.transportadora LIKE @Busca
+                                OR c.num_carregamento LIKE @Busca
+
+                                OR (@CodMotorista IS NOT NULL AND c.codmotorista = @CodMotorista)
+                            )";
 
             sql += " ORDER BY c.veiculo, c.emissao ASC";
 
@@ -62,15 +70,22 @@ namespace DAL
             using (var cmd = con.CreateCommand())
             {
                 cmd.CommandText = sql;
+                if (dataInicio.HasValue) cmd.Parameters.AddWithValue("@DataInicio", dataInicio.Value.Date);
+                if (dataFim.HasValue) cmd.Parameters.AddWithValue("@DataFim", dataFim.Value.Date.AddDays(1).AddSeconds(-1));
+                if (!string.IsNullOrWhiteSpace(busca))
+                {
+                    cmd.Parameters.AddWithValue("@Busca", "%" + busca + "%");
 
-                if (dataInicio.HasValue)
-                    cmd.Parameters.AddWithValue("@DataInicio", dataInicio.Value.Date);
-
-                if (dataFim.HasValue)
-                    cmd.Parameters.AddWithValue(
-                        "@DataFim",
-                        dataFim.Value.Date.AddDays(1).AddSeconds(-1)
-                    );
+                    if (int.TryParse(busca, out int cod))
+                        cmd.Parameters.AddWithValue("@CodMotorista", cod);
+                    else
+                        cmd.Parameters.AddWithValue("@CodMotorista", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Busca", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CodMotorista", DBNull.Value);
+                }
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -84,28 +99,122 @@ namespace DAL
 
         public static DataTable FetchDataTableEntregasMatrizConcluida(
     DateTime? dataInicio,
-    DateTime? dataFim)
+    DateTime? dataFim,
+    int pagina = 0,
+    int registrosPorPagina = 75,
+    string busca = "")
+        {
+            int inicio = (pagina * registrosPorPagina) + 1;
+            int fim = (pagina + 1) * registrosPorPagina;
+
+            string sql = @"
+                        WITH ResultadoPaginado AS (
+                            SELECT 
+                                c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
+                                '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
+                                c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
+                                c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
+                                c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
+                                c.num_carregamento, c.emissao, c.situacao, c.status, c.carga,
+                                ROW_NUMBER() OVER (ORDER BY c.emissao DESC, c.veiculo ASC) AS RowNum
+                            FROM tbcarregamentos c
+                            INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
+                            WHERE c.empresa = '1111' 
+                              AND c.situacao = 'VIAGEM CONCLUIDA'
+                        ";
+
+                                    if (dataInicio.HasValue)
+                                        sql += " AND c.emissao >= @DataInicio";
+
+                                    if (dataFim.HasValue)
+                                        sql += " AND c.emissao <= @DataFim";
+
+                                    // 🔥 Inteligência na busca
+                                    sql += @"
+                            AND (
+                                @Busca IS NULL
+
+                                OR c.veiculo LIKE @Busca
+                                OR c.nomemotorista LIKE @Busca
+                                OR c.placa LIKE @Busca
+                                OR c.transportadora LIKE @Busca
+                                OR c.num_carregamento LIKE @Busca
+
+                                OR (@CodMotorista IS NOT NULL AND c.codmotorista = @CodMotorista)
+                            )";
+
+                                    sql += @")
+                        SELECT * FROM ResultadoPaginado
+                        WHERE RowNum BETWEEN @Inicio AND @Fim";
+
+            using (var con = ConnectionUtil.GetConnection())
+            using (var cmd = con.CreateCommand())
+            {
+                cmd.CommandText = sql;
+
+                cmd.Parameters.AddWithValue("@Inicio", inicio);
+                cmd.Parameters.AddWithValue("@Fim", fim);
+
+                if (dataInicio.HasValue)
+                    cmd.Parameters.AddWithValue("@DataInicio", dataInicio.Value.Date);
+
+                if (dataFim.HasValue)
+                    cmd.Parameters.AddWithValue("@DataFim", dataFim.Value.Date.AddDays(1).AddSeconds(-1));
+
+                // 🎯 Processamento inteligente da busca
+                if (!string.IsNullOrWhiteSpace(busca))
+                {
+                    cmd.Parameters.AddWithValue("@Busca", "%" + busca + "%");
+
+                    if (int.TryParse(busca, out int cod))
+                        cmd.Parameters.AddWithValue("@CodMotorista", cod);
+                    else
+                        cmd.Parameters.AddWithValue("@CodMotorista", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Busca", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CodMotorista", DBNull.Value);
+                }
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    return dt;
+                }
+            }
+        }
+        public static int GetTotalRegistrosConcluidos(
+    DateTime? dataInicio,
+    DateTime? dataFim,
+    string busca = "")
         {
             string sql = @"
-        SELECT 
-            c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
-            '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
-            c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
-            c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
-            c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
-            c.num_carregamento, c.emissao, c.situacao, c.status, c.carga
-        FROM tbcarregamentos c
-        INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
-        WHERE empresa = '1111'
-          
-    ";
+                            SELECT COUNT(*) 
+                            FROM tbcarregamentos c
+                            WHERE c.empresa = '1111'
+                              AND c.situacao = 'VIAGEM CONCLUIDA'
+                            ";
 
-           
+                                        if (dataInicio.HasValue)
+                                            sql += " AND c.emissao >= @DataInicio";
 
-            if (dataFim.HasValue)
-                sql += " AND c.emissao <= @DataFim";
+                                        if (dataFim.HasValue)
+                                            sql += " AND c.emissao <= @DataFim";
 
-            sql += " ORDER BY c.veiculo, c.emissao ASC";
+                                        sql += @"
+                            AND (
+                                @Busca IS NULL
+
+                                OR c.veiculo LIKE @Busca
+                                OR c.nomemotorista LIKE @Busca
+                                OR c.placa LIKE @Busca
+                                OR c.transportadora LIKE @Busca
+                                OR c.num_carregamento LIKE @Busca
+
+                                OR (@CodMotorista IS NOT NULL AND c.codmotorista = @CodMotorista)
+                            )";
 
             using (var con = ConnectionUtil.GetConnection())
             using (var cmd = con.CreateCommand())
@@ -116,17 +225,195 @@ namespace DAL
                     cmd.Parameters.AddWithValue("@DataInicio", dataInicio.Value.Date);
 
                 if (dataFim.HasValue)
-                    cmd.Parameters.AddWithValue(
-                        "@DataFim",
-                        dataFim.Value.Date.AddDays(1).AddSeconds(-1)
-                    );
+                    cmd.Parameters.AddWithValue("@DataFim", dataFim.Value.Date.AddDays(1).AddSeconds(-1));
+
+                if (!string.IsNullOrWhiteSpace(busca))
+                {
+                    cmd.Parameters.AddWithValue("@Busca", "%" + busca + "%");
+
+                    if (int.TryParse(busca, out int cod))
+                        cmd.Parameters.AddWithValue("@CodMotorista", cod);
+                    else
+                        cmd.Parameters.AddWithValue("@CodMotorista", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Busca", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CodMotorista", DBNull.Value);
+                }
+
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
+        public static DataTable FetchDataTableEntregasMatrizUnificado(
+     DateTime? dataInicio,
+     DateTime? dataFim,
+     int pagina,
+     int registrosPorPagina,
+     string busca,
+     bool somenteConcluidas)
+        {
+            int inicio = (pagina * registrosPorPagina) + 1;
+            int fim = (pagina + 1) * registrosPorPagina;
+
+            string sql = @"
+                                WITH ResultadoPaginado AS (
+                                    SELECT 
+                                        c.veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
+                                        '../../fotos/' + REPLACE(m.caminhofoto, '/fotos/', '') AS fotos,
+                                        c.codmotorista, c.nomemotorista, c.codtra, c.transportadora,
+                                        c.cod_expedidor, c.expedidor, c.cid_expedidor, c.uf_expedidor,
+                                        c.cod_recebedor, c.recebedor, c.cid_recebedor, c.uf_recebedor,
+                                        c.num_carregamento, c.emissao, c.situacao, c.status, c.carga,
+
+                                        ROW_NUMBER() OVER (ORDER BY c.emissao DESC, c.veiculo ASC) AS RowNum
+
+                                    FROM tbcarregamentos c
+                                    INNER JOIN tbmotoristas m ON c.codmotorista = m.codmot
+
+                                    WHERE c.empresa = '1111'
+
+                                    AND (
+                                        @SomenteConcluidas = 0
+                                        OR c.situacao = 'VIAGEM CONCLUIDA'
+                                    )
+                                ";
+
+                                            if (dataInicio.HasValue)
+                                                sql += " AND c.emissao >= @DataInicio";
+
+                                            if (dataFim.HasValue)
+                                                sql += " AND c.emissao <= @DataFim";
+
+                                            sql += @"
+                                    AND (
+                                        @Busca IS NULL
+
+                                        OR c.veiculo LIKE @Busca
+                                        OR c.nomemotorista LIKE @Busca
+                                        OR c.placa LIKE @Busca
+                                        OR c.transportadora LIKE @Busca
+
+                                        -- 👇 BLINDAGEM PARA CAMPOS NUMÉRICOS
+                                        OR CAST(c.num_carregamento AS VARCHAR(50)) LIKE @Busca
+
+                                        -- 👇 AGORA STRING COM STRING (SEM ERRO)
+                                        OR c.codmotorista LIKE @Busca
+                                    )
+                                )
+                                SELECT * FROM ResultadoPaginado
+                                WHERE RowNum BETWEEN @Inicio AND @Fim
+                                ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            using (var cmd = con.CreateCommand())
+            {
+                cmd.CommandText = sql;
+
+                // 📄 Paginação
+                cmd.Parameters.Add("@Inicio", SqlDbType.Int).Value = inicio;
+                cmd.Parameters.Add("@Fim", SqlDbType.Int).Value = fim;
+
+                // 🔘 Filtro
+                cmd.Parameters.Add("@SomenteConcluidas", SqlDbType.Bit).Value = somenteConcluidas;
+
+                // 📅 Datas
+                if (dataInicio.HasValue)
+                    cmd.Parameters.Add("@DataInicio", SqlDbType.DateTime).Value = dataInicio.Value.Date;
+
+                if (dataFim.HasValue)
+                    cmd.Parameters.Add("@DataFim", SqlDbType.DateTime).Value = dataFim.Value.Date.AddDays(1).AddSeconds(-1);
+
+                // 🔍 Busca (SEM risco de conversão)
+                if (!string.IsNullOrWhiteSpace(busca))
+                {
+                    busca = busca.Trim();
+                    cmd.Parameters.Add("@Busca", SqlDbType.NVarChar).Value = "%" + busca + "%";
+                }
+                else
+                {
+                    cmd.Parameters.Add("@Busca", SqlDbType.NVarChar).Value = DBNull.Value;
+                }
 
                 using (var reader = cmd.ExecuteReader())
                 {
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(reader);
-                    return dataTable;
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    return dt;
                 }
+            }
+        }
+        public static int GetTotalRegistrosUnificado(
+    DateTime? dataInicio,
+    DateTime? dataFim,
+    string busca,
+    bool somenteConcluidas)
+        {
+            string sql = @"
+                            SELECT COUNT(*)
+                            FROM tbcarregamentos c
+                            WHERE c.empresa = '1111'
+
+                            AND (
+                                @SomenteConcluidas = 0
+                                OR c.situacao = 'VIAGEM CONCLUIDA'
+                            )
+                            ";
+
+                                    if (dataInicio.HasValue)
+                                        sql += " AND c.emissao >= @DataInicio";
+
+                                    if (dataFim.HasValue)
+                                        sql += " AND c.emissao <= @DataFim";
+
+                                    sql += @"
+                            AND (
+                                @Busca IS NULL
+
+                                OR c.veiculo LIKE @Busca
+                                OR c.nomemotorista LIKE @Busca
+                                OR c.placa LIKE @Busca
+                                OR c.transportadora LIKE @Busca
+
+                                -- 🔥 CAMPOS NUMÉRICOS PROTEGIDOS
+                                OR CAST(c.num_carregamento AS VARCHAR(50)) LIKE @Busca
+                                OR CAST(c.codtra AS VARCHAR(50)) LIKE @Busca
+                                OR CAST(c.cod_expedidor AS VARCHAR(50)) LIKE @Busca
+                                OR CAST(c.cod_recebedor AS VARCHAR(50)) LIKE @Busca
+
+                                -- 🔥 VARCHAR NORMAL
+                                OR c.codmotorista LIKE @Busca
+                            )
+                            ";
+
+            using (var con = ConnectionUtil.GetConnection())
+            using (var cmd = con.CreateCommand())
+            {
+                cmd.CommandText = sql;
+
+                // 🔘 Filtro
+                cmd.Parameters.Add("@SomenteConcluidas", SqlDbType.Bit).Value = somenteConcluidas;
+
+                // 📅 Datas
+                if (dataInicio.HasValue)
+                    cmd.Parameters.Add("@DataInicio", SqlDbType.DateTime).Value = dataInicio.Value.Date;
+
+                if (dataFim.HasValue)
+                    cmd.Parameters.Add("@DataFim", SqlDbType.DateTime).Value = dataFim.Value.Date.AddDays(1).AddSeconds(-1);
+
+                // 🔍 Busca
+                if (!string.IsNullOrWhiteSpace(busca))
+                {
+                    busca = busca.Trim();
+                    cmd.Parameters.Add("@Busca", SqlDbType.NVarChar).Value = "%" + busca + "%";
+                }
+                else
+                {
+                    cmd.Parameters.Add("@Busca", SqlDbType.NVarChar).Value = DBNull.Value;
+                }
+
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 

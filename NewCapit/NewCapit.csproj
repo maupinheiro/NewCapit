@@ -5399,6 +5399,7 @@
     <Compile Include="dist\pages\ControleAcesso.aspx.designer.cs">
       <DependentUpon>ControleAcesso.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\XmlExportService.cs" />
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />
     <Compile Include="Startup.cs" />

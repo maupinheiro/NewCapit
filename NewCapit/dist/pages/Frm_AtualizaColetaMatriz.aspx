@@ -1516,11 +1516,16 @@
                                                                                                                 </Columns>
                                                                                                             </asp:GridView>
                                                                                                         </div>
+                                                                                                          <%-- <div class="col-md-2">
+                                                                                                               <asp:Button ID="btnGeraDoc" CssClass="btn btn-outline-warning w-100" CommandName="GeraDoc" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e TXT" />
+                                                                                                            </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                                <asp:Button ID="btnGerarXml" CssClass="btn btn-outline-warning w-100" CommandName="GeraXml" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e XML" />
+                                                                                                             </div>--%>
                                                                                                     </div>
-                                                                                                    <%-- <div class="row g-3">  <div class="col-md-2">
-                                                                                                         <asp:Button ID="btnGeraDoc" CssClass="btn btn-outline-warning w-100" CommandName="GeraDoc" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e" />
-                                                                                                      </div>
-                                                                                                         </div>--%>
+                                                                                                     <div class="row g-3">  
+                                                                                                        
+                                                                                                         </div>
 
 
 
@@ -1735,6 +1740,8 @@
                                                                                     <Triggers>
                                                                                         <asp:AsyncPostBackTrigger ControlID="gvNF" />
                                                                                         <asp:AsyncPostBackTrigger ControlID="btnBuscarNfe" />
+                                                                                       <%-- <asp:PostBackTrigger ControlID="btnGeraDoc" />
+                                                                                        <asp:PostBackTrigger ControlID="btnGerarXml" />--%>
                                                                                     </Triggers>
 
                                                                                 </asp:UpdatePanel>

@@ -25,33 +25,24 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-                // CarregarGrid();
-
                 if (Session["UsuarioLogado"] != null)
                 {
-
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    var lblUsuario = nomeUsuario;
                 }
                 else
                 {
-                    var lblUsuario = "<Usuário>";
-
                     Response.Redirect("Login.aspx");
+                    return;
                 }
 
-                bool ocultar = false;
-                if (bool.TryParse(hfOcultarViagens.Value, out ocultar))
-                {
-                    // Chame sua função de filtrar ou carregar dados aqui
-                    FiltrarViagens(ocultar);
-                }
+                // 🔥 DEFINE estado inicial
+                bool somenteConcluidas = false;
 
-                CarregarColetas();
+                // 🔥 PRIMEIRA CARGA CORRETA (SEM DUPLICAÇÃO)
+                CarregarColetas(somenteConcluidas, 0);
+
                 CarregarGridBarraPesquisa();
             }
-
-
         }
         protected void btnPostbackOcultar_Click(object sender, EventArgs e)
         {
@@ -103,26 +94,33 @@ namespace NewCapit.dist.pages
                 Session["Cargas"] = dt;
             }
         }
+        //protected void btnFiltrar_Click(object sender, EventArgs e)
+        //{
+        //    bool ocultar = false;
+
+        //    if (bool.TryParse(hfOcultarViagens.Value, out ocultar))
+        //    {
+        //        FiltrarViagens(ocultar);
+        //    }
+        //    else
+        //    {
+        //        // fallback de segurança
+        //        CarregarColetas();
+        //    }
+        //}
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
-            bool ocultar = false;
+            bool somenteConcluidas = false;
+            bool.TryParse(hfOcultarViagens.Value, out somenteConcluidas);
 
-            if (bool.TryParse(hfOcultarViagens.Value, out ocultar))
-            {
-                FiltrarViagens(ocultar);
-            }
-            else
-            {
-                // fallback de segurança
-                CarregarColetas();
-            }
+            CarregarColetas(somenteConcluidas, 0);
         }
 
 
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
             // Corrigido para a chave que você realmente usa no ViewState
-            DataTable dt = ViewState["rptCarregamento"] as DataTable;
+            DataTable dt = Session["rptCarregamento"] as DataTable;
 
             if (dt == null || dt.Rows.Count == 0)
             {
@@ -214,74 +212,140 @@ namespace NewCapit.dist.pages
             //CarregarPedidos();
         }
 
-        public void FiltrarViagens(bool ocultar)
+        //public void FiltrarViagens(bool ocultar)
+        //{
+        //    if (ocultar == false)
+        //    {
+
+        //        CarregarColetas();
+        //    }
+        //    else
+        //    {
+        //        CarregarColetasConcluidas();
+
+
+        //    }
+        //}
+        public void FiltrarViagens(bool somenteConcluidas)
         {
-            if (ocultar == false)
-            {
-
-                CarregarColetas();
-            }
-            else
-            {
-                CarregarColetasConcluidas();
-
-
-            }
+            CarregarColetas(somenteConcluidas, 0);
         }
+        //private void CarregarColetas()
+        //{
+        //    string busca = txtPesquisar.Text;
+        //    var dados = DAL.ConEntrega.FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim(), busca);
+        //    Session["rptCarregamento"] = dados;
 
-        private void CarregarColetas()
+        //    // AJUSTE: Passa os dados, página 0 e o total de linhas (3 argumentos)
+        //    BindRepeaterComPaginacao(dados, 0, dados.Rows.Count);
+        //}
+        private void CarregarColetas(bool somenteConcluidas, int pagina = 0)
         {
-            var dados = DAL.ConEntrega.FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
+            int tamanhoPagina = 75;
+            string busca = txtPesquisar.Text;
 
-            rptCarregamento.DataSource = dados;
-            rptCarregamento.DataBind();
+            DataTable dados = DAL.ConEntrega.FetchDataTableEntregasMatrizUnificado(
+                GetDataInicio(),
+                GetDataFim(),
+                pagina,
+                tamanhoPagina,
+                busca,
+                somenteConcluidas
+            );
 
-            ViewState["rptCarregamento"] = dados;
-            lblMensagem.Text = string.Empty;
+            int totalRegistros = DAL.ConEntrega.GetTotalRegistrosUnificado(
+                GetDataInicio(),
+                GetDataFim(),
+                busca,
+                somenteConcluidas
+            );
+
+            Session["PaginaAtual"] = pagina;
+            ViewState["PaginaAtual"] = pagina; // 👈 ADICIONE ISSO
+
+            BindRepeaterComPaginacao(dados, pagina, totalRegistros);
         }
         private void CarregarGridBarraPesquisa()
         {
-            DataTable dados = DAL.ConEntrega
-        .FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
-
+            DataTable dados = DAL.ConEntrega.FetchDataTableEntregasMatriz(GetDataInicio(), GetDataFim());
             Session["rptCarregamento"] = dados;
 
+            // AJUSTE: Passa os dados, página 0 e o total de linhas (3 argumentos)
+            BindRepeaterComPaginacao(dados, 0, dados.Rows.Count);
+        }
+        private void BindRepeaterComPaginacao(DataTable dados, int paginaAtual, int totalRegistros)
+        {
+            int tamanhoPagina = 75;
+            // Calcula o total de páginas baseado no COUNT que veio do banco
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / tamanhoPagina);
+
+            Session["PaginaAtual"] = paginaAtual;
+
+            // Vincula as 75 linhas que vieram do SQL ao Repeater principal
             rptCarregamento.DataSource = dados;
             rptCarregamento.DataBind();
 
-            lblMensagem.Text = string.Empty;
+            // Monta a lista de números para o rptPaginacao
+            var listaPaginas = new List<object>();
+            for (int i = 0; i < totalPaginas; i++)
+            {
+                listaPaginas.Add(new { PageText = (i + 1), PageIndex = i });
+            }
+
+            rptPaginacao.DataSource = listaPaginas;
+            rptPaginacao.DataBind();
+
+            // Ativa/Desativa botões de navegação
+            btnAnterior.Enabled = (paginaAtual > 0);
+            btnProximo.Enabled = (paginaAtual < totalPaginas - 1);
         }
-        protected void txtPesquisar_TextChanged(object sender, EventArgs e)
+        //protected void Pagina_Click(object sender, EventArgs e)
+        //{
+        //    LinkButton btn = (LinkButton)sender;
+        //    string arg = btn.CommandArgument;
+        //    int paginaAtual = (int)(ViewState["PaginaAtual"] ?? 0);
+
+        //    // Lógica para Anterior/Próximo
+        //    if (arg == "Prev") paginaAtual--;
+        //    else if (arg == "Next") paginaAtual++;
+        //    else paginaAtual = int.Parse(arg);
+
+        //    // Chama o carregamento que por sua vez chama o Bind
+        //    CarregarColetasConcluidas(paginaAtual);
+        //}
+
+        protected void Pagina_Click(object sender, EventArgs e)
         {
-            DataTable dt = ViewState["rptCarregamento"] as DataTable;
-            if (dt == null) return;
+            LinkButton btn = (LinkButton)sender;
+            string comando = btn.CommandArgument;
 
-            string filtro = txtPesquisar.Text.Trim().Replace("'", "''");
+            int paginaAtual = Convert.ToInt32(Session["PaginaAtual"] ?? 0);
 
-            if (string.IsNullOrWhiteSpace(filtro))
+            switch (comando)
             {
-                rptCarregamento.DataSource = dt;
-                rptCarregamento.DataBind();
-                return;
+                case "Prev":
+                    paginaAtual--;
+                    break;
+
+                case "Next":
+                    paginaAtual++;
+                    break;
+
+                default:
+                    paginaAtual = Convert.ToInt32(comando);
+                    break;
             }
 
-            List<string> filtros = new List<string>();
+            if (paginaAtual < 0)
+                paginaAtual = 0;
 
-            foreach (DataColumn col in dt.Columns)
-            {
-                filtros.Add(
-                    $"CONVERT([{col.ColumnName}], 'System.String') LIKE '%{filtro}%'"
-                );
-            }
+            // 🔥 Recupera estado atual corretamente
+            bool somenteConcluidas = false;
+            bool.TryParse(hfOcultarViagens.Value, out somenteConcluidas);
 
-            DataView dv = new DataView(dt);
-            dv.RowFilter = string.Join(" OR ", filtros);
-
-            rptCarregamento.DataSource = dv;
-            rptCarregamento.DataBind();
-            lblMensagem.Text = "Pesquisa retornou (" + dv.Count + ") registro(s).";
+            // 🔥 ESSA LINHA É A CHAVE
+            CarregarColetas(somenteConcluidas, paginaAtual);
         }
-
 
         private DateTime? GetDataInicio()
         {
@@ -291,19 +355,46 @@ namespace NewCapit.dist.pages
         {
             return DateTime.TryParse(DataFim.Text, out var d) ? d : (DateTime?)null;
         }
-        private void CarregarColetasConcluidas()
+        private void CarregarColetasConcluidas(int pagina = 0, string busca = "")
         {
-            var dados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida(
-                GetDataInicio(),
-                GetDataFim()
+            int tamanhoPagina = 75;
 
+            // 1. Chama a DAL passando os 5 parâmetros agora necessários
+            DataTable dados = DAL.ConEntrega.FetchDataTableEntregasMatrizConcluida(
+                GetDataInicio(),
+                GetDataFim(),
+                pagina,
+                tamanhoPagina,
+                busca
             );
 
-            rptCarregamento.DataSource = dados;
-            rptCarregamento.DataBind();
+            // 2. Importante: O seu método de contagem também precisa da busca para a paginação bater
+            // Dentro do CarregarColetasConcluidas:
+            int totalRegistros = DAL.ConEntrega.GetTotalRegistrosConcluidos(GetDataInicio(), GetDataFim(), busca);
 
+            // 3. Salva na Session para que outros métodos (como exportar ou filtros extras) tenham o dado
             Session["rptCarregamento"] = dados;
-            lblMensagem.Text = string.Empty;
+
+            // 4. Vincula ao Repeater e desenha a paginação
+            BindRepeaterComPaginacao(dados, pagina, totalRegistros);
+
+            lblMensagem.Text = string.IsNullOrEmpty(busca) ? "" : $"Busca por '{busca}' retornou {totalRegistros} registro(s).";
+        }
+        private void MontarPaginacaoNumerica(int total, int atual, int tamanho)
+        {
+            int totalPaginas = (int)Math.Ceiling((double)total / tamanho);
+            List<dynamic> paginas = new List<dynamic>();
+
+            for (int i = 0; i < totalPaginas; i++)
+            {
+                paginas.Add(new { PageText = (i + 1), PageIndex = i });
+            }
+
+            rptPaginacao.DataSource = paginas;
+            rptPaginacao.DataBind();
+
+            btnAnterior.Enabled = (atual > 0);
+            btnProximo.Enabled = (atual < totalPaginas - 1);
         }
 
 
