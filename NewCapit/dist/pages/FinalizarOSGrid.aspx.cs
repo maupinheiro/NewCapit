@@ -20,6 +20,9 @@ namespace NewCapit.dist.pages
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = null;
         string numero_os;
+        string tipoServico;
+        string situacao_;
+        string numero;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -38,12 +41,15 @@ namespace NewCapit.dist.pages
                 }
 
                 CarregaDados();
-                AtualizarNumeroPneu();
-                PreencherDestino();
-                PreencherPosicao();
+                //AtualizarNumeroPneu();
+                //PreencherDestino();
+                //PreencherPosicao();
                 CarregarPecas();
                 CarregarMecanicos();
-                CalcularTotais();                
+                CalcularTotais();
+                 tipoServico = ddlTipoServico.SelectedValue;
+                 situacao_ = ddlSituacao.SelectedValue;
+                 //numero = ddlNumeroPneu.SelectedValue;
             }
         }
         public void CarregaDados()
@@ -1883,9 +1889,7 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
         //   }
         protected void ddlNumeroPneu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string tipoServico = ddlTipoServico.SelectedValue;
-            string situacao = ddlSituacao.SelectedValue;
-            string numero = ddlNumeroPneu.SelectedValue;
+            numero = ddlNumeroPneu.SelectedValue;
 
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
@@ -1904,13 +1908,14 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                     string status = reader["status"].ToString();
                     string km = reader["kmatual"].ToString();
                     string posicao = reader["posicao"].ToString();
+                    txtStatus.Text = status;
 
                     // 🔥 PRIMEIRO carrega os dropdowns
                     PreencherDestino();
                     PreencherPosicao();
                     //CarregarPecas(); // se necessário
 
-                    if (tipoServico == "Pneu" && situacao == "Retirada")
+                    if (tipoServico == "Pneu" && situacao_ == "Retirada")
                     {
                         if (ddlParteBorracharia.Items.FindByValue(descricao) != null)
                             ddlParteBorracharia.SelectedValue = descricao;
@@ -1925,7 +1930,7 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                         if (ddlPosicao.Items.FindByValue(posicao) != null)
                             ddlPosicao.SelectedValue = posicao;
                     }
-                    else if (tipoServico == "Pneu" && situacao == "Instalação")
+                    else if (tipoServico == "Pneu" && situacao_ == "Instalação")
                     {
                         if (ddlParteBorracharia.Items.FindByValue(descricao) != null)
                             ddlParteBorracharia.SelectedValue = descricao;

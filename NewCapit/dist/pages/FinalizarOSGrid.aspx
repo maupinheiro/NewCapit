@@ -3,188 +3,185 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>     
-    <script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        function calcularTempo(inicio, termino) {
-            var i = inicio.split(":");
-            var t = termino.split(":");
+<!-- SELECT2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-            var data1 = new Date(0, 0, 0, i[0], i[1]);
-            var data2 = new Date(0, 0, 0, t[0], t[1]);
+<style>
+/* ===== SELECT2 BASE ===== */
 
-            var diff = (data2 - data1) / 60000;
+.select2-container {
+    width: 100% !important;
+}
 
-            return diff;
-        }
+.select2-selection--single {
+    height: 34px !important;
+    padding: 4px 6px;
+}
 
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function aplicarMascara(input, mascara) {
-                input.addEventListener("input", function () {
-                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
-                    let resultado = "";
-                    let posicao = 0;
+.select2-selection__rendered {
+    line-height: 24px !important;
+}
 
-                    for (let i = 0; i < mascara.length; i++) {
-                        if (mascara[i] === "0") {
-                            if (valor[posicao]) {
-                                resultado += valor[posicao];
-                                posicao++;
-                            } else {
-                                break;
-                            }
-                        } else {
-                            resultado += mascara[i];
-                        }
-                    }
+.select2-selection__arrow {
+    height: 34px !important;
+}
 
-                    input.value = resultado;
-                });
-            }
+/* 🔥 CONTROLE DO DROPDOWN */
+.select2-dropdown {
+    max-width: 90vw !important; /* nunca passa da tela */
+    box-sizing: border-box;
+}
 
-            // Pegando os elementos no ASP.NET
-            let txtInicio = document.getElementById("<%= txtInicio.ClientID %>");
-            let txtTerm = document.getElementById("<%= txtTerm.ClientID %>");
+/* 🔥 evita estourar horizontalmente */
+.select2-results {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+</style>
 
-            if (txtInicio) aplicarMascara(txtInicio, "00/00/0000 00:00");
-            if (txtTerm) aplicarMascara(txtTerm, "00/00/0000 00:00");
+<script>
+    // =======================
+    // TEMPO
+    // =======================
+    function calcularTempo(inicio, termino) {
+        var i = inicio.split(":");
+        var t = termino.split(":");
 
-            let txtInicioEletrica = document.getElementById("<%= txtInicioEletrica.ClientID %>");
-            let txtFimEletrica = document.getElementById("<%= txtFimEletrica.ClientID %>");
+        var data1 = new Date(0, 0, 0, i[0], i[1]);
+        var data2 = new Date(0, 0, 0, t[0], t[1]);
 
-            if (txtInicioEletrica) aplicarMascara(txtInicioEletrica, "00/00/0000 00:00");
-            if (txtFimEletrica) aplicarMascara(txtFimEletrica, "00/00/0000 00:00");
+        return (data2 - data1) / 60000;
+    }
+</script>
 
-            let txtInicioBorracharia = document.getElementById("<%= txtInicioBorracharia.ClientID %>");
-            let txtFimBorracharia = document.getElementById("<%= txtFimBorracharia.ClientID %>");
+<script>
+    // =======================
+    // MÁSCARA
+    // =======================
+    function aplicarMascara(input, mascara) {
+        if (!input) return;
 
-            if (txtInicioBorracharia) aplicarMascara(txtInicioBorracharia, "00/00/0000 00:00");
-            if (txtFimBorracharia) aplicarMascara(txtFimBorracharia, "00/00/0000 00:00");
+        input.oninput = function () {
+            let valor = input.value.replace(/\D/g, "");
+            let resultado = "";
+            let posicao = 0;
 
-            let txtInicioFunilaria = document.getElementById("<%= txtInicioFunilaria.ClientID %>");
-            let txtFimFunilaria = document.getElementById("<%= txtFimFunilaria.ClientID %>");
-
-            if (txtInicioFunilaria) aplicarMascara(txtInicioFunilaria, "00/00/0000 00:00");
-            if (txtFimFunilaria) aplicarMascara(txtFimFunilaria, "00/00/0000 00:00");
-
-
-        });
-    </script>
-    <script>
-        function mostrarDivs() {
-            var ddl = document.getElementById('<%= ddlTipoServico.ClientID %>');
-            var numero = document.getElementById('<%= divNumeroPneu.ClientID %>');
-            var status = document.getElementById('<%= divStatusPneu.ClientID %>');
-            var situacao = document.getElementById('<%= divSituacaoPneu.ClientID %>');
-            var destino = document.getElementById('<%= divDestinoPneu.ClientID %>');
-            var posicao = document.getElementById('<%= divPosicaoPneu.ClientID %>');
-            var kmInicial = document.getElementById('<%= divKMInicialPneu.ClientID %>');
-            var kmFinal = document.getElementById('<%= divKMFinalPneu.ClientID %>');
-
-            if (ddl.value == 'Pneu') {
-                numero.style.display = 'block';
-                status.style.display = 'block';
-                situacao.style.display = 'block';
-                destino.style.display = 'block';
-                posicao.style.display = 'block';
-                kmInicial.style.display = 'block';
-                kmFinal.style.display = 'block';
-                atualizarDestino();
-            } else {
-                numero.style.display = 'none';
-                status.style.display = 'none';
-                situacao.style.display = 'none';
-                destino.style.display = 'none';
-                posicao.style.display = 'none';
-                kmInicial.style.display = 'none';
-                kmFinal.style.display = 'none';
-            }
-
-        }
-        function iniciarSelect2() {
-            $('.select2').each(function () {
-                if ($(this).hasClass("select2-hidden-accessible")) {
-                    $(this).select2('destroy');
+            for (let i = 0; i < mascara.length; i++) {
+                if (mascara[i] === "0") {
+                    if (valor[posicao]) {
+                        resultado += valor[posicao++];
+                    } else break;
+                } else {
+                    resultado += mascara[i];
                 }
-            });
+            }
 
-            $('.select2').select2();
-        }
+            input.value = resultado;
+        };
+    }
+</script>
 
-        function iniciarSelect2() {
-            $('.select2').select2();
-        }
+<script>
+    // =======================
+    // SELECT2 FINAL
+    // =======================
+    function iniciarSelect2Visivel() {
 
-        Sys.Application.add_load(function () {
-            mostrarDivs();
-            iniciarSelect2();
-        });
-    </script>
-    <%--<script>
-        function atualizarDestino() {
-            var situacao = document.getElementById('<%= ddlSituacao.ClientID %>').value;
-            var destino = document.getElementById('<%= ddlDestino.ClientID %>');
+        $('.select2').each(function () {
 
-            // Limpa opções existentes
-            destino.options.length = 0;
+            var $this = $(this);
 
-            // Sempre adicionar a primeira opção
-            var placeholder = document.createElement("option");
-            placeholder.text = "Selecione...";
-            placeholder.value = "";
-            destino.add(placeholder);
+            if ($this.is(':visible')) {
 
-            if (situacao === "Instalação") {
-                var opt = document.createElement("option");
-                opt.text = "Em Uso";
-                opt.value = "Em Uso";
-                destino.add(opt);
-            } else if (situacao === "Retirada") {
-                var opcoes = ["Estoque", "Conserto", "Reforma", "Descarte"];
-                opcoes.forEach(function (item) {
-                    var opt = document.createElement("option");
-                    opt.text = item;
-                    opt.value = item;
-                    destino.add(opt);
+                if ($this.hasClass("select2-hidden-accessible")) {
+                    $this.select2('destroy');
+                }
+
+                $this.select2({
+                    width: '100%',
+                    dropdownAutoWidth: false,
+                    dropdownParent: $('body') // continua no body
                 });
             }
-        }
-    </script>--%>
-    <%--<script>
-        function preencherDadosPneu() {
-            var ddl = document.getElementById('<%= ddlNumeroPneu.ClientID %>');
-            var selected = ddl.options[ddl.selectedIndex];
-
-            if (!selected.value) return;
-
-            var parte = selected.getAttribute("data-parte");
-            var status = selected.getAttribute("data-status");
-            var km = selected.getAttribute("data-km");
-
-            // 👉 DropDownList correto
-            var ddlParte = document.getElementById('<%= ddlParteBorracharia.ClientID %>');
-            ddlParte.value = parte;
-
-            // 👉 Se estiver usando Select2
-            $('#<%= ddlParteBorracharia.ClientID %>').val(parte).trigger('change');
-
-            // 👉 TextBox normal
-            document.getElementById('<%= txtStatusPneu.ClientID %>').value = status;
-            document.getElementById('<%= txtKmInicial.ClientID %>').value = km;
-        }
-    </script>--%>
-    <%--<script>
-        $(document).ready(function () {
-            $('#<%= ddlNumeroPneu.ClientID %>').on('change', function () {
-                preencherDadosPneu();
-            });
         });
-    </script>--%>
-    <%--<script>
-        $('#<%= ddlNumeroPneu.ClientID %>').prepend('<option value="">Selecione...</option>').val('').trigger('change');
-    </script>--%>
+    }
+</script>
+
+<script>
+    // =======================
+    // MOSTRAR DIVS
+    // =======================
+    function mostrarDivs() {
+
+        var ddl = document.getElementById("<%= ddlTipoServico.ClientID %>");
+    if (!ddl) return;
+
+    var mostrar = ddl.value === 'Pneu';
+
+    function toggle(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = mostrar ? 'block' : 'none';
+    }
+
+    toggle("<%= divNumeroPneu.ClientID %>");
+    toggle("<%= divStatusPneu.ClientID %>");
+    toggle("<%= divSituacaoPneu.ClientID %>");
+    toggle("<%= divDestinoPneu.ClientID %>");
+    toggle("<%= divPosicaoPneu.ClientID %>");
+    toggle("<%= divKMInicialPneu.ClientID %>");
+    toggle("<%= divKMFinalPneu.ClientID %>");
+
+        if (mostrar) {
+            setTimeout(function () {
+                iniciarSelect2Visivel();
+            }, 150);
+        }
+
+        if (mostrar && typeof atualizarDestino === "function") {
+            atualizarDestino();
+        }
+    }
+</script>
+
+<script>
+    // =======================
+    // INIT
+    // =======================
+    function inicializarTudo() {
+
+        aplicarMascara(document.getElementById("<%= txtInicio.ClientID %>"), "00/00/0000 00:00");
+    aplicarMascara(document.getElementById("<%= txtTerm.ClientID %>"), "00/00/0000 00:00");
+
+    aplicarMascara(document.getElementById("<%= txtInicioEletrica.ClientID %>"), "00/00/0000 00:00");
+    aplicarMascara(document.getElementById("<%= txtFimEletrica.ClientID %>"), "00/00/0000 00:00");
+
+    aplicarMascara(document.getElementById("<%= txtInicioBorracharia.ClientID %>"), "00/00/0000 00:00");
+    aplicarMascara(document.getElementById("<%= txtFimBorracharia.ClientID %>"), "00/00/0000 00:00");
+
+    aplicarMascara(document.getElementById("<%= txtInicioFunilaria.ClientID %>"), "00/00/0000 00:00");
+    aplicarMascara(document.getElementById("<%= txtFimFunilaria.ClientID %>"), "00/00/0000 00:00");
+
+    mostrarDivs();
+}
+</script>
+
+<script>
+    // =======================
+    // UPDATEPANEL
+    // =======================
+    document.addEventListener("DOMContentLoaded", function () {
+        inicializarTudo();
+    });
+
+    if (typeof Sys !== 'undefined') {
+        Sys.Application.add_load(function () {
+            inicializarTudo();
+        });
+    }
+</script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -802,7 +799,7 @@ Excluir
                                                                 ID="ddlNumeroPneu"
                                                                 runat="server"
                                                                 AutoPostBack="true"                                OnSelectedIndexChanged="ddlNumeroPneu_SelectedIndexChanged"
-                                                                CssClass="form-control select2" >
+                                                                CssClass="form-control select2"  >
                                                             </asp:DropDownList>
                                                         </div>
                                                         <div class="col-md-3">
@@ -858,8 +855,8 @@ Excluir
                                                 </ContentTemplate>
                                                 <Triggers>
 
-                                                    <asp:AsyncPostBackTrigger ControlID="ddlTipoServico" EventName="SelectedIndexChanged" />
-                                                    <asp:AsyncPostBackTrigger ControlID="ddlSituacao" EventName="SelectedIndexChanged" />
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlTipoServico"  />
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlSituacao"  />
 
 
                                                 </Triggers>
