@@ -24,6 +24,7 @@ namespace NewCapit.dist.pages
         string id;
         string abastecimentoFrotaAgregado;
         string tipoDocumento;
+        string filial;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -75,42 +76,7 @@ namespace NewCapit.dist.pages
 
                 reader.Close();
             }
-        }
-        //private void PreencherComboFiliais()
-        //{
-        //    // Consulta SQL que retorna os dados desejados
-        //    string query = "SELECT codigo, descricao FROM tbempresa";
-
-        //    // Crie uma conexão com o banco de dados
-        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-        //    {
-        //        try
-        //        {
-        //            // Abra a conexão com o banco de dados
-        //            conn.Open();
-
-        //            // Crie o comando SQL
-        //            SqlCommand cmd = new SqlCommand(query, conn);
-
-        //            // Execute o comando e obtenha os dados em um DataReader
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            // Preencher o ComboBox com os dados do DataReader
-        //            cbFiliais.DataSource = reader;
-        //            cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
-        //            cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
-        //            cbFiliais.DataBind();  // Realiza o binding dos dados                   
-        //            cbFiliais.Items.Insert(0, new ListItem("-- Origem do documento --", "0"));
-        //            // Feche o reader
-        //            reader.Close();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Trate exceções
-        //            Response.Write("Erro: " + ex.Message);
-        //        }
-        //    }
-        //}
+        }        
         public void CarregaDadosFornecedor()
         {
             string id = HttpContext.Current.Request.QueryString["codfor"];
@@ -327,13 +293,14 @@ namespace NewCapit.dist.pages
             txtModelo.Text = "";
             txtCodProp.Text = "";
             txtTransp.Text = "";
+            txtFilialVeic.Text = "";
             txtCNPJ.Text = "";
             if (string.IsNullOrEmpty(txtCodVei.Text))
                 return;
 
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string sql = @"SELECT codvei, plavei, tipvei, modelo, ativo_inativo, tipoveiculo
+                string sql = @"SELECT *
                        FROM tbveiculos
                        WHERE codvei = @codvei";
 
@@ -352,7 +319,9 @@ namespace NewCapit.dist.pages
                             {
                                 txtCodVei.Text = dr["codvei"].ToString();
                                 txtPlaca.Text = dr["plavei"].ToString();
-                                txtModelo.Text = dr["tipvei"].ToString() + " - " + dr["modelo"].ToString();
+                                //txtModelo.Text = dr["tipvei"].ToString() + " - " + dr["modelo"].ToString();
+                                txtModelo.Text = dr["tipvei"].ToString() + " - " + dr["modelo"].ToString() + " - " + dr["ano"].ToString() + " - " + dr["tipoveiculo"].ToString();
+                                txtFilialVeic.Text = dr["nucleo"].ToString();
                                 txtCodProp.Text = "1111";
                                 txtTransp.Text = "TRANSNOVAG TRANSPORTES S/A";
                                 txtCNPJ.Text = "55.890.016/0001-09";
@@ -399,7 +368,7 @@ namespace NewCapit.dist.pages
                         cte.num_documento, cte.emissao_documento, cte.ordem_abastecimento, cte.id_viagem, cte.empresa_emissora,
                         cg.carga,
                         mot.codmot, mot.nommot, mot.cpf,
-                        vei.codvei, vei.plavei, vei.codtra, vei.tipvei, vei.tipoveiculo, vei.modelo, vei.ano, 
+                        vei.codvei, vei.plavei, vei.codtra, vei.tipvei, vei.tipoveiculo, vei.modelo, vei.ano, vei.nucleo, 
                         pr.codtra, pr.fantra, pr.cnpj, pr.limitecreditoabastecimento
                     FROM tbcte cte
                     LEFT JOIN tbcargas cg ON cg.carga = cte.id_viagem
@@ -426,6 +395,7 @@ namespace NewCapit.dist.pages
                             txtCodVei.Text = dr["codvei"].ToString();
                             txtPlaca.Text = dr["plavei"].ToString();
                             txtModelo.Text = dr["tipvei"].ToString() + " - " + dr["modelo"].ToString() + " - " + dr["ano"].ToString() + " - " + dr["tipoveiculo"].ToString();
+                            txtFilialVeic.Text = dr["nucleo"].ToString();
                             txtCodProp.Text = dr["codtra"].ToString();
                             txtTransp.Text = dr["fantra"].ToString();
                             txtCNPJ.Text = dr["cnpj"].ToString();
@@ -479,7 +449,6 @@ namespace NewCapit.dist.pages
                 return;
             }
         }
-
         private void LimparCamposMotorista()
         {
             txtCodMot.Text = "";
@@ -500,7 +469,6 @@ namespace NewCapit.dist.pages
 
             lblMsgGeral.Text = texto;
         }
-
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
             // Tipos
@@ -511,13 +479,10 @@ namespace NewCapit.dist.pages
             decimal litros = 0, valorUnitario = 0, valorTotal = 0;
             decimal.TryParse(txtLitros.Text.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out litros);            
            
-            //decimal.TryParse((valorUnitario * litros).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out valorTotal);
-
             decimal.TryParse(txtPreco.Text, NumberStyles.Number, new CultureInfo("pt-BR"), out valorUnitario);
 
             // Se quiser calcular o total
             valorTotal = litros * valorUnitario;
-
 
             // Usuário
             string usuario = Session["UsuarioLogado"].ToString();
@@ -530,6 +495,12 @@ namespace NewCapit.dist.pages
                 dataEmissao = DateTime.Now;
             }
 
+            if (abastecimentoFrotaAgregado == "FROTA")
+            {
+               txtFilial.Text = txtFilialVeic.Text;
+            }
+
+
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 conn.Open();
@@ -537,7 +508,6 @@ namespace NewCapit.dist.pages
 
                 try
                 {
-                    // INSERT com OUTPUT para ordem_abastecimento
                     string insertSql = @"
                         INSERT INTO tbsaida_combustivel
                         (cod_posto, nome_posto, tipo_abastecimento, frota_agregado, filial, cod_combustivel, combustivel,

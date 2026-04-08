@@ -33,7 +33,7 @@
 
                                 <div class="col-md-4">
                                     <label>Buscar</label>
-                                    <asp:TextBox ID="txtBusca" runat="server" CssClass="form-control" placeholder="Motorista, placa, ordem..." />
+                                    <asp:TextBox ID="txtBusca" runat="server" CssClass="form-control" placeholder="Motorista, placa, ordem, forta..." />
                                 </div>
 
                                 <div class="col-md-2 d-flex align-items-end">

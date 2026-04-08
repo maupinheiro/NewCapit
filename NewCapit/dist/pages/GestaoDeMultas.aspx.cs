@@ -131,8 +131,11 @@ namespace NewCapit.dist.pages
                 if (dr.Read())
                 {
                     colunaID.Visible = true;
-                    string fotoPadrao = "/fotos/motoristasemfoto.jpg";
-                    txtData.Text = Convert.ToDateTime(dr["dthoranot"]).ToString("dd/MM/yyyy HH:mm");
+                    string fotoPadrao = "/fotos/motoristasemfoto.jpg";                    
+                    if (dr["dthoranot"] != DBNull.Value)
+                    {
+                        txtData.Text = Convert.ToDateTime(dr["dthoranot"]).ToString("dd/MM/yyyy HH:mm");
+                    }
                     txtAIT.Text = dr["ait"].ToString();
                     if (dr["dia"].ToString() == "domingo")
                     {
@@ -353,157 +356,307 @@ namespace NewCapit.dist.pages
             txtAIT.Enabled = habilitar;
 
         }
+        //     protected void btnSalvar_Click(object sender, EventArgs e)
+        //     {
+        //         //string erro;
+        //         //if (!ValidarCampos(out erro))
+        //         //{
+        //         //    MostrarMsg(erro, false,  "danger");
+        //         //    ReabrirModal();
+        //         //    return;
+        //         //}
+
+        //         if (hfStatus.Value == "Baixado")
+        //             return;
+
+        //         using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         {
+        //             SqlCommand cmd;
+
+        //             if (hfStatus.Value == "NOVO")
+        //             {
+        //                 cmd = new SqlCommand(
+        //                     "INSERT INTO tbmultas_veiculos (processo, ait, dthoranot, dia, codigo_infracao, frota, placa, codmot, nome, nucleo, artigo, pontos, valorsd, valorcd, vencimento, desc_multa, localmulta, providencia, envio_transp, envio_dcp, recebido_por, baixado_por, lancamento, gravidade, infrator, competencia, equipamento, transportadora, foto, data_pesquisa, status) " +
+        //                     "VALUES (@processo, @ait, @dthoranot, @dia, @codigo_infracao, @frota, @placa, @codmot, @nome, @nucleo, @artigo, @pontos, @valorsd, @valorcd, @vencimento, @desc_multa, @localmulta, @providencia, @envio_transp, @envio_dcp, @recebido_por, @baixado_por, @lancamento, @gravidade, @infrator, @competencia, @equipamento, @transportadora, @foto, @data_pesquisa, @status)", con);
+        //             }
+        //             else
+        //             {
+        //                 cmd = new SqlCommand(
+        //                     "UPDATE tbmultas_veiculos SET processo=@processo, ait=@ait, dthoranot=@dthoranot, dia=@dia, codigo_infracao=@codigo_infracao, frota=@frota, placa=@placa, codmot=@codmot, nome=@nome, nucleo=@nucleo, artigo=@artigo, pontos=@pontos, valorsd=@valorsd, valorcd=@valorcd, vencimento=@vencimento, desc_multa=@desc_multa, localmulta=@localmulta, providencia=@providencia, envio_transp=@envio_transp, envio_dcp=@envio_dcp, recebido_por=@recebido_por, baixado_por=@baixado_por, lancamento=@lancamento, gravidade=@gravidade, infrator=@infrator, competencia=@competencia, equipamento=@equipamento, transportadora=@transportadora, foto=@foto, data_pesquisa=@data_pesquisa, status=@status WHERE processo=@processo", con);
+        //             }
+
+        //             cmd.Parameters.AddWithValue("@processo", txtProcessoModal.Text.Trim());
+
+        //             cmd.Parameters.AddWithValue("@ait", txtAIT.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@dia", txtDia.Text.Trim());
+
+
+        //             cmd.Parameters.AddWithValue("@artigo", ddlArtigo.SelectedItem.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@pontos", txtPontos.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@gravidade", txtGravidade.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@infrator", txtInfrator.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@competencia", txtCompetencia.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@desc_multa", txtdesc_multa.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@localmulta", txtLocalMulta.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@providencia", txtProvidencia.Text.Trim());
+        //             cmd.Parameters.Add("@valorsd", SqlDbType.Decimal).Value =
+        // decimal.TryParse(txtValorsd.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal v1)
+        // ? v1 : 0;
+
+        //             cmd.Parameters.Add("@valorcd", SqlDbType.Decimal).Value =
+        //                 decimal.TryParse(txtValorcd.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal v2)
+        //                 ? v2 : 0;
+        //             cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@nucleo", txtNucleo.Text.Trim());                
+        //             cmd.Parameters.AddWithValue("@frota", txtFrota.Text.Trim());
+
+        //             cmd.Parameters.AddWithValue("@equipamento", txtEquipamento.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@transportadora", txtTransportadora.Text.Trim()); 
+        //             //cmd.Parameters.AddWithValue("@recebido_por", Session["UsuarioLogado"].ToString().ToUpper());
+
+        //             cmd.Parameters.AddWithValue("@data_pesquisa", dataHoraAtual);
+        //             cmd.Parameters.Add("@dthoranot", SqlDbType.DateTime).Value = SafeDateTimeDb(txtData.Text);
+        //             cmd.Parameters.Add("@lancamento", SqlDbType.DateTime).Value =
+        //                 SafeDateTimeDb(txtLancamento.Text);
+        //             //cmd.Parameters.AddWithValue("@envio_transp",dataHoraAtual);
+        //             //DateTime? envioTransp = null;
+
+        //             // === ENVIO TRANSP ===
+        //             DateTime? envioTransp = null;
+        //             if (!string.IsNullOrWhiteSpace(txtEnvio_transp.Text))
+        //                 envioTransp = SafeDateTimeValue(txtEnvio_transp.Text);
+
+        //             cmd.Parameters.Add("@envio_transp", SqlDbType.DateTime)
+        //.Value = envioTransp.HasValue
+        //     ? envioTransp.Value
+        //     : (object)DBNull.Value;
+
+
+        //             // === CODIGO INFRAÇÃO ===
+        //             cmd.Parameters.Add("@codigo_infracao", SqlDbType.VarChar, 20)
+        //                .Value = string.IsNullOrWhiteSpace(txtCodigo_Infracao.Text)
+        //                     ? (object)DBNull.Value
+        //                     : txtCodigo_Infracao.Text.Trim();
+
+        //             //// cmd.Parameters.Add("@envio_dcp", SqlDbType.DateTime).Value =
+        //             //     SafeDateTimeDb(txtEnvio_dcp.Text);
+        //             cmd.Parameters.AddWithValue("@nome", txtNome.Text.Trim());
+        //             //.Parameters.AddWithValue("@codigo_infracao", txtCodigo_Infracao.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@recebido_por", txtRecebido_Por.Text.Trim());
+        //             cmd.Parameters.Add("@vencimento", SqlDbType.Date).Value =
+        //                 SafeDateDb(txtVencimento.Text);
+        //             //            cmd.Parameters.Add("@status", SqlDbType.VarChar).Value =
+        //             //string.IsNullOrWhiteSpace(txtEnvio_dcp.Text) ? "Pendente" : "Baixado";
+
+        //             //            cmd.Parameters.Add("@baixado_por", SqlDbType.VarChar).Value =
+        //             //                string.IsNullOrWhiteSpace(txtEnvio_dcp.Text) ? "" : txtBaixado_por.Text.Trim();
+
+        //             //if (chkBaixado.Checked)
+        //             //{
+        //             //    cmd.Parameters.AddWithValue("@status", "Baixado");
+        //             //    cmd.Parameters.AddWithValue("@baixado_por", Session["UsuarioLogado"].ToString());
+        //             //    cmd.Parameters.AddWithValue("@envio_dcp", DateTime.Now);
+        //             //}
+        //             //else
+        //             //{
+        //             //    cmd.Parameters.AddWithValue("@status", "Pendente");
+        //             //    cmd.Parameters.AddWithValue("@baixado_por", DBNull.Value);
+        //             //    cmd.Parameters.AddWithValue("@envio_dcp", DBNull.Value);
+        //             //}
+        //             //cmd.Parameters.AddWithValue("@foto", imgFoto.ImageUrl);
+        //             //             cmd.Parameters.Add("@foto", SqlDbType.VarChar)
+        //             //.Value = string.IsNullOrEmpty(imgFoto.ImageUrl)
+        //             //         ? "/fotos/motoristasemfoto.jpg"
+        //             //         : imgFoto.ImageUrl;
+
+        //             string status;
+        //             string baixadoPor;
+        //             DateTime? envioDcp = null;
+
+        //             if (!string.IsNullOrWhiteSpace(txtEnvio_dcp.Text))
+        //             {
+        //                 envioDcp = SafeDateTimeValue(txtEnvio_dcp.Text);
+        //             }
+
+
+        //             if (string.IsNullOrWhiteSpace(txtEnvio_dcp.Text))
+        //             {
+        //                 status = "Pendente";
+        //                 baixadoPor = "";
+        //             }
+        //             else
+        //             {
+        //                 status = "Baixado";
+        //                 baixadoPor = txtBaixado_por.Text.Trim();
+        //                 //envioDcp = txtEnvio_transp.Text();
+        //             }
+
+        //             cmd.Parameters.Add("@status", SqlDbType.VarChar, 20).Value = status;
+        //             cmd.Parameters.Add("@baixado_por", SqlDbType.VarChar, 100).Value = baixadoPor;
+        //             cmd.Parameters.Add("@envio_dcp", SqlDbType.DateTime)
+        //                    .Value = envioDcp.HasValue ? envioDcp.Value : (object)DBNull.Value;
+
+        //             cmd.Parameters.Add("@foto", SqlDbType.VarChar, 255)
+        //                .Value = imgFoto.ImageUrl ?? "/fotos/motoristasemfoto.jpg";
+
+
+        //             con.Open();
+        //             cmd.ExecuteNonQuery();
+        //             MostrarMsg("Multa do processo " + txtProcessoModal.Text + " salva com sucesso!", "success");
+        //             LimparCampos();
+        //             txtProcessoModal.Focus();
+        //         }
+        //     }
+
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            //string erro;
-            //if (!ValidarCampos(out erro))
-            //{
-            //    MostrarMsg(erro, false,  "danger");
-            //    ReabrirModal();
-            //    return;
-            //}
+            // =========================================
+            // VALIDAÇÃO BÁSICA DOS CAMPOS OBRIGATÓRIOS
+            // =========================================
+            if (string.IsNullOrWhiteSpace(txtProcessoModal.Text))
+            {
+                MostrarMsg("Informe o Processo!", "danger");
+                ReabrirModal(); // força o modal a abrir novamente
+                return;
+            }
 
+            if (string.IsNullOrWhiteSpace(txtPlaca.Text))
+            {                
+                ReabrirModal();
+                MostrarMsg("Informe a Placa!", "danger");
+                return;
+            }
+
+            // =========================================
+            // BLOQUEIA ALTERAÇÃO DE MULTAS JÁ BAIXADAS
+            // =========================================
             if (hfStatus.Value == "Baixado")
                 return;
 
+            // =========================================
+            // FUNÇÃO DE AJUDA
+            // =========================================
+            object DbNullIfEmpty(string valor) => string.IsNullOrWhiteSpace(valor) ? (object)DBNull.Value : valor.Trim();
+
+            DateTime? SafeDateTimeValue(string valor)
+            {
+                if (DateTime.TryParse(valor, new System.Globalization.CultureInfo("pt-BR"), System.Globalization.DateTimeStyles.None, out DateTime data))
+                    return data;
+                return null;
+            }
+
+            DateTime? SafeDateValue(string valor)
+            {
+                if (DateTime.TryParse(valor, new System.Globalization.CultureInfo("pt-BR"), System.Globalization.DateTimeStyles.None, out DateTime data))
+                    return data;
+                return null;
+            }
+
+            // =========================================
+            // CONEXÃO E COMANDO SQL
+            // =========================================
             using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 SqlCommand cmd;
 
                 if (hfStatus.Value == "NOVO")
                 {
-                    cmd = new SqlCommand(
-                        "INSERT INTO tbmultas_veiculos (processo, ait, dthoranot, dia, codigo_infracao, frota, placa, codmot, nome, nucleo, artigo, pontos, valorsd, valorcd, vencimento, desc_multa, localmulta, providencia, envio_transp, envio_dcp, recebido_por, baixado_por, lancamento, gravidade, infrator, competencia, equipamento, transportadora, foto, data_pesquisa, status) " +
-                        "VALUES (@processo, @ait, @dthoranot, @dia, @codigo_infracao, @frota, @placa, @codmot, @nome, @nucleo, @artigo, @pontos, @valorsd, @valorcd, @vencimento, @desc_multa, @localmulta, @providencia, @envio_transp, @envio_dcp, @recebido_por, @baixado_por, @lancamento, @gravidade, @infrator, @competencia, @equipamento, @transportadora, @foto, @data_pesquisa, @status)", con);
+                    cmd = new SqlCommand(@"
+            INSERT INTO tbmultas_veiculos 
+            (processo, ait, dthoranot, dia, codigo_infracao, frota, placa, codmot, nome, nucleo, artigo, pontos, valorsd, valorcd, vencimento, desc_multa, localmulta, providencia, envio_transp, envio_dcp, recebido_por, baixado_por, lancamento, gravidade, infrator, competencia, equipamento, transportadora, foto, data_pesquisa, status) 
+            VALUES 
+            (@processo, @ait, @dthoranot, @dia, @codigo_infracao, @frota, @placa, @codmot, @nome, @nucleo, @artigo, @pontos, @valorsd, @valorcd, @vencimento, @desc_multa, @localmulta, @providencia, @envio_transp, @envio_dcp, @recebido_por, @baixado_por, @lancamento, @gravidade, @infrator, @competencia, @equipamento, @transportadora, @foto, @data_pesquisa, @status)", con);
                 }
                 else
                 {
-                    cmd = new SqlCommand(
-                        "UPDATE tbmultas_veiculos SET processo=@processo, ait=@ait, dthoranot=@dthoranot, dia=@dia, codigo_infracao=@codigo_infracao, frota=@frota, placa=@placa, codmot=@codmot, nome=@nome, nucleo=@nucleo, artigo=@artigo, pontos=@pontos, valorsd=@valorsd, valorcd=@valorcd, vencimento=@vencimento, desc_multa=@desc_multa, localmulta=@localmulta, providencia=@providencia, envio_transp=@envio_transp, envio_dcp=@envio_dcp, recebido_por=@recebido_por, baixado_por=@baixado_por, lancamento=@lancamento, gravidade=@gravidade, infrator=@infrator, competencia=@competencia, equipamento=@equipamento, transportadora=@transportadora, foto=@foto, data_pesquisa=@data_pesquisa, status=@status WHERE processo=@processo", con);
+                    cmd = new SqlCommand(@"
+            UPDATE tbmultas_veiculos SET 
+                ait=@ait, dthoranot=@dthoranot, dia=@dia, codigo_infracao=@codigo_infracao,
+                frota=@frota, placa=@placa, codmot=@codmot, nome=@nome, nucleo=@nucleo,
+                artigo=@artigo, pontos=@pontos, valorsd=@valorsd, valorcd=@valorcd,
+                vencimento=@vencimento, desc_multa=@desc_multa, localmulta=@localmulta,
+                providencia=@providencia, envio_transp=@envio_transp, envio_dcp=@envio_dcp,
+                recebido_por=@recebido_por, baixado_por=@baixado_por, lancamento=@lancamento,
+                gravidade=@gravidade, infrator=@infrator, competencia=@competencia,
+                equipamento=@equipamento, transportadora=@transportadora, foto=@foto,
+                data_pesquisa=@data_pesquisa, status=@status
+            WHERE processo=@processo", con);
                 }
-                
+
+                // =========================================
+                // VALORES DE CAMPOS
+                // =========================================
+                // Decimais
+                decimal.TryParse(txtValorsd.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal valorsd);
+                decimal.TryParse(txtValorcd.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal valorcd);
+
+                // Inteiro
+                int.TryParse(txtPontos.Text, out int pontos);
+
+                // Datas
+                DateTime? dthoranot = SafeDateTimeValue(txtData.Text);
+                DateTime? lancamento = SafeDateTimeValue(txtLancamento.Text);
+                DateTime? envioTransp = SafeDateTimeValue(txtEnvio_transp.Text);
+                DateTime? envioDcp = SafeDateTimeValue(txtEnvio_dcp.Text);
+                DateTime? vencimento = SafeDateValue(txtVencimento.Text);
+
+                // Status
+                string status = envioDcp.HasValue ? "Baixado" : "Pendente";
+                string baixadoPor = envioDcp.HasValue ? txtBaixado_por.Text.Trim() : "";
+
+                // =========================================
+                // ADICIONANDO PARÂMETROS
+                // =========================================
                 cmd.Parameters.AddWithValue("@processo", txtProcessoModal.Text.Trim());
-                
-                cmd.Parameters.AddWithValue("@ait", txtAIT.Text.Trim());
-                cmd.Parameters.AddWithValue("@dia", txtDia.Text.Trim());
-                
-                
-                cmd.Parameters.AddWithValue("@artigo", ddlArtigo.SelectedItem.Text.Trim());
-                cmd.Parameters.AddWithValue("@pontos", txtPontos.Text.Trim());
-                cmd.Parameters.AddWithValue("@gravidade", txtGravidade.Text.Trim());
-                cmd.Parameters.AddWithValue("@infrator", txtInfrator.Text.Trim());
-                cmd.Parameters.AddWithValue("@competencia", txtCompetencia.Text.Trim());
-                cmd.Parameters.AddWithValue("@desc_multa", txtdesc_multa.Text.Trim());
-                cmd.Parameters.AddWithValue("@localmulta", txtLocalMulta.Text.Trim());
-                cmd.Parameters.AddWithValue("@providencia", txtProvidencia.Text.Trim());
-                cmd.Parameters.Add("@valorsd", SqlDbType.Decimal).Value =
-    decimal.TryParse(txtValorsd.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal v1)
-    ? v1 : 0;
-
-                cmd.Parameters.Add("@valorcd", SqlDbType.Decimal).Value =
-                    decimal.TryParse(txtValorcd.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal v2)
-                    ? v2 : 0;
-                cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.Trim());
-                cmd.Parameters.AddWithValue("@nucleo", txtNucleo.Text.Trim());                
-                cmd.Parameters.AddWithValue("@frota", txtFrota.Text.Trim());
-                
-                cmd.Parameters.AddWithValue("@equipamento", txtEquipamento.Text.Trim());
-                cmd.Parameters.AddWithValue("@transportadora", txtTransportadora.Text.Trim()); 
-                //cmd.Parameters.AddWithValue("@recebido_por", Session["UsuarioLogado"].ToString().ToUpper());
-                
-                cmd.Parameters.AddWithValue("@data_pesquisa", dataHoraAtual);
-                cmd.Parameters.Add("@dthoranot", SqlDbType.DateTime).Value = SafeDateTimeDb(txtData.Text);
-                cmd.Parameters.Add("@lancamento", SqlDbType.DateTime).Value =
-                    SafeDateTimeDb(txtLancamento.Text);
-                //cmd.Parameters.AddWithValue("@envio_transp",dataHoraAtual);
-                //DateTime? envioTransp = null;
-
-                // === ENVIO TRANSP ===
-                DateTime? envioTransp = null;
-                if (!string.IsNullOrWhiteSpace(txtEnvio_transp.Text))
-                    envioTransp = SafeDateTimeValue(txtEnvio_transp.Text);
-
-                cmd.Parameters.Add("@envio_transp", SqlDbType.DateTime)
-   .Value = envioTransp.HasValue
-        ? envioTransp.Value
-        : (object)DBNull.Value;
-
-
-                // === CODIGO INFRAÇÃO ===
-                cmd.Parameters.Add("@codigo_infracao", SqlDbType.VarChar, 20)
-                   .Value = string.IsNullOrWhiteSpace(txtCodigo_Infracao.Text)
-                        ? (object)DBNull.Value
-                        : txtCodigo_Infracao.Text.Trim();
-
-                //// cmd.Parameters.Add("@envio_dcp", SqlDbType.DateTime).Value =
-                //     SafeDateTimeDb(txtEnvio_dcp.Text);
-                cmd.Parameters.AddWithValue("@nome", txtNome.Text.Trim());
-                //.Parameters.AddWithValue("@codigo_infracao", txtCodigo_Infracao.Text.Trim());
+                cmd.Parameters.AddWithValue("@ait", DbNullIfEmpty(txtAIT.Text));
+                cmd.Parameters.AddWithValue("@dia", DbNullIfEmpty(txtDia.Text));
+                cmd.Parameters.AddWithValue("@codigo_infracao", DbNullIfEmpty(txtCodigo_Infracao.Text));
+                cmd.Parameters.AddWithValue("@frota", DbNullIfEmpty(txtFrota.Text));
                 cmd.Parameters.AddWithValue("@placa", txtPlaca.Text.Trim());
-                cmd.Parameters.AddWithValue("@recebido_por", txtRecebido_Por.Text.Trim());
-                cmd.Parameters.Add("@vencimento", SqlDbType.Date).Value =
-                    SafeDateDb(txtVencimento.Text);
-                //            cmd.Parameters.Add("@status", SqlDbType.VarChar).Value =
-                //string.IsNullOrWhiteSpace(txtEnvio_dcp.Text) ? "Pendente" : "Baixado";
+                cmd.Parameters.AddWithValue("@codmot", DbNullIfEmpty(txtCodMot.Text));
+                cmd.Parameters.AddWithValue("@nome", DbNullIfEmpty(txtNome.Text));
+                cmd.Parameters.AddWithValue("@nucleo", DbNullIfEmpty(txtNucleo.Text));
+                cmd.Parameters.AddWithValue("@artigo", DbNullIfEmpty(ddlArtigo.SelectedItem.Text));
+                cmd.Parameters.AddWithValue("@pontos", pontos);
+                cmd.Parameters.AddWithValue("@valorsd", valorsd);
+                cmd.Parameters.AddWithValue("@valorcd", valorcd);
+                cmd.Parameters.Add("@vencimento", SqlDbType.Date).Value = (object)vencimento ?? DBNull.Value;
+                cmd.Parameters.AddWithValue("@desc_multa", DbNullIfEmpty(txtdesc_multa.Text));
+                cmd.Parameters.AddWithValue("@localmulta", DbNullIfEmpty(txtLocalMulta.Text));
+                cmd.Parameters.AddWithValue("@providencia", DbNullIfEmpty(txtProvidencia.Text));
+                cmd.Parameters.Add("@envio_transp", SqlDbType.DateTime).Value = (object)envioTransp ?? DBNull.Value;
+                cmd.Parameters.Add("@envio_dcp", SqlDbType.DateTime).Value = (object)envioDcp ?? DBNull.Value;
+                cmd.Parameters.AddWithValue("@recebido_por", DbNullIfEmpty(txtRecebido_Por.Text));
+                cmd.Parameters.AddWithValue("@baixado_por", DbNullIfEmpty(baixadoPor));
+                cmd.Parameters.Add("@lancamento", SqlDbType.DateTime).Value = (object)lancamento ?? DBNull.Value;
+                cmd.Parameters.AddWithValue("@gravidade", DbNullIfEmpty(txtGravidade.Text));
+                cmd.Parameters.AddWithValue("@infrator", DbNullIfEmpty(txtInfrator.Text));
+                cmd.Parameters.AddWithValue("@competencia", DbNullIfEmpty(txtCompetencia.Text));
+                cmd.Parameters.AddWithValue("@equipamento", DbNullIfEmpty(txtEquipamento.Text));
+                cmd.Parameters.AddWithValue("@transportadora", DbNullIfEmpty(txtTransportadora.Text));
+                cmd.Parameters.Add("@foto", SqlDbType.VarChar, 255).Value =
+                    string.IsNullOrEmpty(imgFoto.ImageUrl) ? "/fotos/motoristasemfoto.jpg" : imgFoto.ImageUrl;
+                cmd.Parameters.AddWithValue("@dthoranot", (object)dthoranot ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@data_pesquisa", DateTime.Now);
+                cmd.Parameters.AddWithValue("@status", status);
 
-                //            cmd.Parameters.Add("@baixado_por", SqlDbType.VarChar).Value =
-                //                string.IsNullOrWhiteSpace(txtEnvio_dcp.Text) ? "" : txtBaixado_por.Text.Trim();
-
-                //if (chkBaixado.Checked)
-                //{
-                //    cmd.Parameters.AddWithValue("@status", "Baixado");
-                //    cmd.Parameters.AddWithValue("@baixado_por", Session["UsuarioLogado"].ToString());
-                //    cmd.Parameters.AddWithValue("@envio_dcp", DateTime.Now);
-                //}
-                //else
-                //{
-                //    cmd.Parameters.AddWithValue("@status", "Pendente");
-                //    cmd.Parameters.AddWithValue("@baixado_por", DBNull.Value);
-                //    cmd.Parameters.AddWithValue("@envio_dcp", DBNull.Value);
-                //}
-                //cmd.Parameters.AddWithValue("@foto", imgFoto.ImageUrl);
-                //             cmd.Parameters.Add("@foto", SqlDbType.VarChar)
-                //.Value = string.IsNullOrEmpty(imgFoto.ImageUrl)
-                //         ? "/fotos/motoristasemfoto.jpg"
-                //         : imgFoto.ImageUrl;
-
-                string status;
-                string baixadoPor;
-                DateTime? envioDcp = null;
-
-                if (!string.IsNullOrWhiteSpace(txtEnvio_dcp.Text))
-                {
-                    envioDcp = SafeDateTimeValue(txtEnvio_dcp.Text);
-                }
-
-
-                if (string.IsNullOrWhiteSpace(txtEnvio_dcp.Text))
-                {
-                    status = "Pendente";
-                    baixadoPor = "";
-                }
-                else
-                {
-                    status = "Baixado";
-                    baixadoPor = txtBaixado_por.Text.Trim();
-                    //envioDcp = txtEnvio_transp.Text();
-                }
-
-                cmd.Parameters.Add("@status", SqlDbType.VarChar, 20).Value = status;
-                cmd.Parameters.Add("@baixado_por", SqlDbType.VarChar, 100).Value = baixadoPor;
-                cmd.Parameters.Add("@envio_dcp", SqlDbType.DateTime)
-                       .Value = envioDcp.HasValue ? envioDcp.Value : (object)DBNull.Value;
-
-                cmd.Parameters.Add("@foto", SqlDbType.VarChar, 255)
-                   .Value = imgFoto.ImageUrl ?? "/fotos/motoristasemfoto.jpg";
-
-
+                // =========================================
+                // EXECUTANDO
+                // =========================================
                 con.Open();
                 cmd.ExecuteNonQuery();
+
                 MostrarMsg("Multa do processo " + txtProcessoModal.Text + " salva com sucesso!", "success");
+
                 LimparCampos();
                 txtProcessoModal.Focus();
             }
+
+            // =========================================
+            // REABRIR MODAL (caso queira mostrar mensagem)
+            // =========================================
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalMulta').modal('show');", true);
         }
         protected void txtData_TextChanged(object sender, EventArgs e)
         {
@@ -723,15 +876,7 @@ namespace NewCapit.dist.pages
                 return dt.ToString("yyyy-MM-dd");
             else
                 return DBNull.Value;
-        }
-        //private object SafeDateTimeValue(string input)
-        //{
-        //    DateTime dt;
-        //    if (DateTime.TryParse(input, out dt))
-        //        return dt.ToString("yyyy-MM-dd HH:mm:ss");
-        //    else
-        //        return DBNull.Value;
-        //}
+        }        
         public DateTime? SafeDateTimeValue(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
