@@ -853,12 +853,10 @@ Excluir
                                                         </div>
                                                     </div>
                                                 </ContentTemplate>
-                                                <Triggers>
-
-                                                    <asp:AsyncPostBackTrigger ControlID="ddlTipoServico"  />
-                                                    <asp:AsyncPostBackTrigger ControlID="ddlSituacao"  />
-
-
+                                               <Triggers>
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlTipoServico" EventName="SelectedIndexChanged" />
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlSituacao" EventName="SelectedIndexChanged" />
+                                                    <asp:AsyncPostBackTrigger ControlID="ddlNumeroPneu" EventName="SelectedIndexChanged" />
                                                 </Triggers>
 
                                             </asp:UpdatePanel>

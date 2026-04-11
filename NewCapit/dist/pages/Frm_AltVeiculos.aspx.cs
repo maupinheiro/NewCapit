@@ -1311,6 +1311,7 @@ namespace NewCapit
                                 reboque2 = @reboque2,
                                 tipocarreta = @tipocarreta,
                                 tiporeboque = @tiporeboque,
+                                terminal=@terminal,
                                 rastreamento = @rastreamento,
                                 codrastreador = @codrastreador,
                                 eixos = @eixos,
@@ -1347,8 +1348,8 @@ namespace NewCapit
                                 controlepatrimonio = @controlepatrimonio,
                                 chassi = @chassi
                             WHERE id = @id";
-            //try
-            //{
+            try
+            {
                 using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
@@ -1367,6 +1368,7 @@ namespace NewCapit
                     {
                         cmd.Parameters.AddWithValue("@tipocarreta", ddlComposicao.SelectedItem.Text.ToUpper());
                     }
+                    cmd.Parameters.AddWithValue("@terminal", txtId.Text);
                     cmd.Parameters.AddWithValue("@rastreamento", ddlMonitoramento.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@codrastreador", txtCodRastreador.Text);
                     cmd.Parameters.AddWithValue("@eixos", txtEixos.Text);
@@ -1429,87 +1431,87 @@ namespace NewCapit
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Nenhum registro foi atualizado.');", true);
                     }
                 }
-            //}
-            //catch (SqlException ex)
-            //{
-            //    //string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-            //    //string script = $"alert('{mensagemErro}');";
-            //    //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+            }
+            catch (SqlException ex)
+            {
+                //string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                //string script = $"alert('{mensagemErro}');";
+                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
 
-            //    string erroDetalhado = "Erro ao salvar registro no banco de dados: " + ex.Message;
+                string erroDetalhado = "Erro ao salvar registro no banco de dados: " + ex.Message;
 
-            //    // Tentar identificar qual parâmetro pode ter causado o erro
-            //    erroDetalhado += "\nValores enviados:";
-            //    erroDetalhado += $"\ntipvei = {cboTipo.SelectedValue.ToUpper()}";
-            //    erroDetalhado += $"\ntipoveiculo = {ddlTipo.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nmodelo = {txtModelo.Text.ToUpper()}";
-            //    erroDetalhado += $"\nano = {txtAno.Text}";
-            //    erroDetalhado += $"\nnucleo = {cbFiliais.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nativo_inativo = {ddlSituacao.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nplavei = {txtPlaca.Text.ToUpper()}";
-            //    erroDetalhado += $"\nreboque1 = {txtReb1.Text.ToUpper()}";
-            //    erroDetalhado += $"\nreboque2 = {txtReb2.Text.ToUpper()}";
-            //    erroDetalhado += $"\ntipocarreta = {ddlCarreta.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\ntiporeboque = {ddlComposicao.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nrastreamento = {ddlMonitoramento.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\ncodrastreador = {txtCodRastreador.Text}";
-            //    erroDetalhado += $"\neixos = {txtEixos.Text.Trim()}";
-            //    erroDetalhado += $"\ncap = {txtLotacao.Text}";
-            //    erroDetalhado += $"\ntara = {txtTara.Text}";
-            //    erroDetalhado += $"\ntolerancia = {txtTolerancia.Text}";
-            //    erroDetalhado += $"\npbt = {txtPBT.Text}";
-            //    erroDetalhado += $"\ncodmot = {txtCodMot.Text.ToUpper()}";
-            //    erroDetalhado += $"\nmotorista = {ddlMotorista.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\ncodtra = {txtCodTra.Text.ToUpper()}";
-            //    erroDetalhado += $"\ntransp = {ddlAgregados.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nvencimentolaudofumaca = {txtOpacidade.Text}";
-            //    erroDetalhado += $"\nusualt = {txtAlteradoPor.Text.Trim().ToUpper()}"; // Usuário atual
-            //    erroDetalhado += $"\ndtcalt = {txtDtAlteracao.Text}"; // Corrigido para DateTime
-            //    erroDetalhado += $"\nprotocolocet = {txtProtocoloCET.Text}";
-            //    erroDetalhado += $"\nvenclicencacet = {txtVencCET.Text}";
-            //    erroDetalhado += $"\nvenclicenciamento = {txtLicenciamento.Text}";
-            //    erroDetalhado += $"\nvenccronotacografo = {txtCronotacografo.Text}";
-            //    erroDetalhado += $"\nmarca = {ddlMarca.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nrenavan = {txtRenavam.Text}";
-            //    erroDetalhado += $"\ncor = {ddlCor.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\ncomunicacao = {ddlComunicacao.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nantt = {txtAntt.Text}";
+                // Tentar identificar qual parâmetro pode ter causado o erro
+                erroDetalhado += "\nValores enviados:";
+                erroDetalhado += $"\ntipvei = {cboTipo.SelectedValue.ToUpper()}";
+                erroDetalhado += $"\ntipoveiculo = {ddlTipo.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nmodelo = {txtModelo.Text.ToUpper()}";
+                erroDetalhado += $"\nano = {txtAno.Text}";
+                erroDetalhado += $"\nnucleo = {cbFiliais.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nativo_inativo = {ddlSituacao.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nplavei = {txtPlaca.Text.ToUpper()}";
+                erroDetalhado += $"\nreboque1 = {txtReb1.Text.ToUpper()}";
+                erroDetalhado += $"\nreboque2 = {txtReb2.Text.ToUpper()}";
+                erroDetalhado += $"\ntipocarreta = {ddlCarreta.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ntiporeboque = {ddlComposicao.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nrastreamento = {ddlMonitoramento.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ncodrastreador = {txtCodRastreador.Text}";
+                erroDetalhado += $"\neixos = {txtEixos.Text.Trim()}";
+                erroDetalhado += $"\ncap = {txtLotacao.Text}";
+                erroDetalhado += $"\ntara = {txtTara.Text}";
+                erroDetalhado += $"\ntolerancia = {txtTolerancia.Text}";
+                erroDetalhado += $"\npbt = {txtPBT.Text}";
+                erroDetalhado += $"\ncodmot = {txtCodMot.Text.ToUpper()}";
+                erroDetalhado += $"\nmotorista = {ddlMotorista.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ncodtra = {txtCodTra.Text.ToUpper()}";
+                erroDetalhado += $"\ntransp = {ddlAgregados.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nvencimentolaudofumaca = {txtOpacidade.Text}";
+                erroDetalhado += $"\nusualt = {txtAlteradoPor.Text.Trim().ToUpper()}"; // Usuário atual
+                erroDetalhado += $"\ndtcalt = {txtDtAlteracao.Text}"; // Corrigido para DateTime
+                erroDetalhado += $"\nprotocolocet = {txtProtocoloCET.Text}";
+                erroDetalhado += $"\nvenclicencacet = {txtVencCET.Text}";
+                erroDetalhado += $"\nvenclicenciamento = {txtLicenciamento.Text}";
+                erroDetalhado += $"\nvenccronotacografo = {txtCronotacografo.Text}";
+                erroDetalhado += $"\nmarca = {ddlMarca.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nrenavan = {txtRenavam.Text}";
+                erroDetalhado += $"\ncor = {ddlCor.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ncomunicacao = {ddlComunicacao.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nantt = {txtAntt.Text}";
 
-            //    erroDetalhado += $"\nufplaca = {ddlEstados.SelectedItem.Text}";
-            //    erroDetalhado += $"\ncidplaca = {ddlCidades.SelectedItem.Text}";
-            //    erroDetalhado += $"\nlotacao = {txtLotacao.Text}";
-            //    erroDetalhado += $"\ncomprimento = {txtComprimento.Text}";
-            //    erroDetalhado += $"\nlargura = {txtLargura.Text}";
-            //    erroDetalhado += $"\naltura = {txtAltura.Text}";
-            //    erroDetalhado += $"\nplacaant = {txtPlacaAnt.Text}";
-            //    erroDetalhado += $"\ntacografo = {ddlTacografo.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\nmodelotacografo = {ddlModeloTacografo.SelectedItem.Text.ToUpper()}";
-            //    erroDetalhado += $"\ndataaquisicao = {txtDataAquisicao.Text}";
-            //    erroDetalhado += $"\ncontrolepatrimonio = {txtControlePatrimonio.Text}";
-            //    erroDetalhado += $"\nchassi = {txtChassi.Text}";
-            //    erroDetalhado += $"\nid = {idConvertido}";
+                erroDetalhado += $"\nufplaca = {ddlEstados.SelectedItem.Text}";
+                erroDetalhado += $"\ncidplaca = {ddlCidades.SelectedItem.Text}";
+                erroDetalhado += $"\nlotacao = {txtLotacao.Text}";
+                erroDetalhado += $"\ncomprimento = {txtComprimento.Text}";
+                erroDetalhado += $"\nlargura = {txtLargura.Text}";
+                erroDetalhado += $"\naltura = {txtAltura.Text}";
+                erroDetalhado += $"\nplacaant = {txtPlacaAnt.Text}";
+                erroDetalhado += $"\ntacografo = {ddlTacografo.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\nmodelotacografo = {ddlModeloTacografo.SelectedItem.Text.ToUpper()}";
+                erroDetalhado += $"\ndataaquisicao = {txtDataAquisicao.Text}";
+                erroDetalhado += $"\ncontrolepatrimonio = {txtControlePatrimonio.Text}";
+                erroDetalhado += $"\nchassi = {txtChassi.Text}";
+                erroDetalhado += $"\nid = {idConvertido}";
 
-            //    //// Aciona o Toast via JavaScript
-            //    //ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
-
-
-            //    //string script = $"alert('{erroDetalhado}');";
-            //    //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
+                //// Aciona o Toast via JavaScript
+                //ScriptManager.RegisterStartupScript(this, GetType(), "toastNaoEncontrado", "mostrarToastNaoEncontrado();", true);
 
 
+                //string script = $"alert('{erroDetalhado}');";
+                //ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
 
 
-            //    // Exibir no log ou em uma Label (por exemplo)
 
-            //    //if (ex.Number == 8152)
-            //    //{
-            //    //    lblErro.Text = "Erro: Valor duplicado em campo único.";
-            //    //    lblErro.Text = erroDetalhado;
-            //    //}
-            //    miDiv.Visible = true;
-            //    lblErro.Text = erroDetalhado;
 
-            //}
+                // Exibir no log ou em uma Label (por exemplo)
+
+                //if (ex.Number == 8152)
+                //{
+                //    lblErro.Text = "Erro: Valor duplicado em campo único.";
+                //    lblErro.Text = erroDetalhado;
+                //}
+                miDiv.Visible = true;
+                lblErro.Text = erroDetalhado;
+
+            }
         }
         private object SafeValue(string input)
         {

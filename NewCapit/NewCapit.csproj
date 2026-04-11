@@ -623,6 +623,7 @@
     <Content Include="dist\pages\HistoricoPeca.aspx" />
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
+    <Content Include="dist\pages\ImprimirOrdem.aspx" />
     <Content Include="dist\pages\ListaOS.aspx" />
     <Content Include="dist\pages\MapaVeiculoConsulta.aspx" />
     <Content Include="dist\pages\MapaClientePesquisa.aspx" />
@@ -637,6 +638,7 @@
     <Content Include="dist\pages\reajustefretes.aspx" />
     <Content Include="dist\pages\SimuladorFrete.aspx" />
     <Content Include="dist\pages\TrocaSenha.aspx" />
+    <Content Include="dist\pages\UploadNF.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
     <Content Include="dist\pages\Frm_Rotas.aspx" />
     <Content Include="dist\pages\Frm_Alt_TabelaPrecoMatriz.aspx" />
@@ -5299,6 +5301,13 @@
     <Compile Include="dist\pages\Frm_CadClientes.aspx.designer.cs">
       <DependentUpon>Frm_CadClientes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ImprimirOrdem.aspx.cs">
+      <DependentUpon>ImprimirOrdem.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ImprimirOrdem.aspx.designer.cs">
+      <DependentUpon>ImprimirOrdem.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\ListaOS.aspx.cs">
       <DependentUpon>ListaOS.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5422,6 +5431,13 @@
     </Compile>
     <Compile Include="dist\pages\ControleAcesso.aspx.designer.cs">
       <DependentUpon>ControleAcesso.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\UploadNF.aspx.cs">
+      <DependentUpon>UploadNF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\UploadNF.aspx.designer.cs">
+      <DependentUpon>UploadNF.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\XmlExportService.cs" />
     <Compile Include="KronaModels.cs" />
@@ -5597,6 +5613,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="docnf\" />
     <Folder Include="EnviaSM\" />
     <Folder Include="ImportacaoTemp\" />
     <Folder Include="Models\" />

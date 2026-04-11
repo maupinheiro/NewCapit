@@ -131,7 +131,22 @@ namespace NewCapit.dist.pages
 
             if (e.CommandName == "Imprimir")
             {
-                // lógica de impressão
+                
+
+                // 1. Verificar se a ordem já possui arquivo de nota fiscal
+                if (OrdemJaConcluida(ordem))
+                {
+                    // Se o campo arquivonf não estiver vazio, exibe o alerta e bloqueia a impressão
+                    string msg = "alert('Ordem de Abastecimento já concluída! Não é permitido imprimir após o envio da Nota Fiscal.');";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "AlertaConcluido", msg, true);
+                }
+                else
+                {
+                    // 2. Se estiver vazio, segue com o processo normal de impressão
+                    string url = "ImprimirOrdem.aspx?id=" + ordem;
+                    string script = "window.open('" + url + "', '_blank', 'width=800,height=600');";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "PrintWindow", script, true);
+                }
             }
             else if (e.CommandName == "Confirmar")
             {
@@ -145,6 +160,26 @@ namespace NewCapit.dist.pages
             {
                 // abrir modal ou redirecionar
             }
+        }
+        private bool OrdemJaConcluida(string ordem)
+        {
+            bool concluida = false;
+            string connStr = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            // Consulta para verificar se arquivonf está preenchido (não nulo e não vazio)
+            string sql = "SELECT COUNT(1) FROM tbsaida_combustivel WHERE ordem_abastecimento = @id AND arquivonf IS NOT NULL AND arquivonf <> ''";
+
+            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connStr))
+            {
+                using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", ordem);
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    concluida = (count > 0);
+                }
+            }
+            return concluida;
         }
         protected void gvAbastecimento_RowDataBound(object sender, GridViewRowEventArgs e)
         {

@@ -42,9 +42,9 @@ namespace NewCapit.dist.pages
 
                 CarregaDados();
                 //AtualizarNumeroPneu();
-                //PreencherDestino();
-                //PreencherPosicao();
-                CarregarPecas();
+                 PreencherDestino();
+                 PreencherPosicao();
+                //CarregarPecas();
                 CarregarMecanicos();
                 CalcularTotais();
                  tipoServico = ddlTipoServico.SelectedValue;
@@ -358,14 +358,18 @@ namespace NewCapit.dist.pages
             caminhaoParado.Visible = false;
 
         }
-        void CarregarPecas()
+        void CarregarPecas( string idpecas)
         {
             using (SqlConnection conn = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas";
+                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas WHERE id_peca = @id_peca";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+
+                // Adicionando o valor ao parâmetro
+                da.SelectCommand.Parameters.AddWithValue("@id_peca", idpecas);
+
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
@@ -1780,26 +1784,35 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
         }
         protected void ddlSituacao_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            // 1. Atualiza a lista de pneus disponíveis para aquela situação
             AtualizarNumeroPneu();
+
+            // 2. Preenche o destino (Estoque, Reforma, etc)
             PreencherDestino();
+
+            // 3. Se houver lógica de posição (ex: carregar eixos do caminhão), chame aqui
+            PreencherPosicao();
         }
         public void PreencherDestino()
         {
+            // Limpa o ddlDestino para não acumular itens de seleções anteriores
             ddlDestino.Items.Clear();
             ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Selecione...", ""));
-            
+
             string situacao = ddlSituacao.SelectedValue;
+
             if (situacao == "Instalação")
             {
-                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Em Uso"));   
+                // Se é instalação, o destino lógico geralmente é "Em Uso"
+                ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Em Uso", "Em Uso"));
             }
-            else
+            else if (situacao == "Retirada")
             {
-                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Estoque"));
-                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Conserto"));
-                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Reforma"));
-                ddlPosicao.Items.Add(new System.Web.UI.WebControls.ListItem("Descarte"));  
+                // Se é retirada, o pneu vai para um destes estados
+                ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Estoque", "Estoque"));
+                ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Conserto", "Conserto"));
+                ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Reforma", "Reforma"));
+                ddlDestino.Items.Add(new System.Web.UI.WebControls.ListItem("Descarte", "Descarte"));
             }
         }
         public void PreencherPosicao()
@@ -1889,13 +1902,16 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
         //   }
         protected void ddlNumeroPneu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            numero = ddlNumeroPneu.SelectedValue;
+            // Captura os valores diretamente dos combos para garantir que não estão vazios
+            string numero = ddlNumeroPneu.SelectedValue;
+            string tipoServico = ddlTipoServico.SelectedValue; // Captura do ddlTipoServico
+            string situacao_ = ddlSituacao.SelectedValue;    // Captura do ddlSituacao
 
-            using (SqlConnection conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            if (string.IsNullOrEmpty(numero)) return;
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 string query = "SELECT * FROM tbpneus WHERE numero = @numero";
-
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@numero", numero);
 
@@ -1904,41 +1920,47 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
 
                 if (reader.Read())
                 {
+                    // Atribuição de variáveis do banco
                     string descricao = reader["descricao"].ToString();
                     string status = reader["status"].ToString();
                     string km = reader["kmatual"].ToString();
                     string posicao = reader["posicao"].ToString();
-                    txtStatus.Text = status;
+                    string idpecas = reader["id_peca"].ToString();
 
-                    // 🔥 PRIMEIRO carrega os dropdowns
+                    // 1. Preenche os DropDowns primeiro
                     PreencherDestino();
                     PreencherPosicao();
-                    //CarregarPecas(); // se necessário
+                    CarregarPecas(idpecas); 
 
-                    if (tipoServico == "Pneu" && situacao_ == "Retirada")
+                    // 2. Atualiza os campos de texto (verifique se o ID é txtStatus ou txtStatusPneu)
+                    txtStatusPneu.Text = status;
+
+                    // 3. Lógica de seleção baseada no Tipo e Situação
+                    if (tipoServico == "Pneu")
                     {
+                        // Tenta selecionar a descrição na Peça/Serviço
                         if (ddlParteBorracharia.Items.FindByValue(descricao) != null)
                             ddlParteBorracharia.SelectedValue = descricao;
 
-                        txtStatus.Text = status;
+                        if (situacao_ == "Retirada")
+                        {
+                            if (ddlDestino.Items.FindByValue(status) != null)
+                                ddlDestino.SelectedValue = status;
 
-                        if (ddlDestino.Items.FindByValue(status) != null)
-                            ddlDestino.SelectedValue = status;
+                            txtKmInicial.Text = km;
 
-                        txtKmInicial.Text = km;
-
-                        if (ddlPosicao.Items.FindByValue(posicao) != null)
-                            ddlPosicao.SelectedValue = posicao;
-                    }
-                    else if (tipoServico == "Pneu" && situacao_ == "Instalação")
-                    {
-                        if (ddlParteBorracharia.Items.FindByValue(descricao) != null)
-                            ddlParteBorracharia.SelectedValue = descricao;
-
-                        txtStatus.Text = status;
+                            if (ddlPosicao.Items.FindByValue(posicao) != null)
+                                ddlPosicao.SelectedValue = posicao;
+                        }
+                        else if (situacao_ == "Instalação")
+                        {
+                            // Lógica específica para instalação se houver
+                        }
                     }
                 }
             }
+
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "RestartSelect2", "mostrarDivs();", true);
         }
     }
 }
