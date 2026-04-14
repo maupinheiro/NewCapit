@@ -80,19 +80,40 @@ namespace NewCapit.dist.pages
             //string linkAprovacao = $"{baseUrl}/clientes/VerificaOrcamento.aspx?id={nr}&tk={tokenUsuario}";
             sb.Append("<div class='wrapper'>");
 
-             // Cabeçalho [cite: 1, 9, 11, 26, 30, 51, 72]
-            sb.Append("<table class='header-table'><tr>");
-            sb.Append("<td style='width:70%'><b>TRANSNOVAG TRANSPORTES S/A.</b><br />");
-            sb.Append("RUA CADIRIRI, 851 - MOOCA - SP | CNPJ: 55.890.016/0001-09</td>");
-            sb.Append("<td style='text-align:right;'>FONE: (11) 2126-3555</td>"); // [cite: 2, 27, 50, 80]
-            sb.Append("</tr></table>");
+            // COLUNA DO LOGO
+            sb.Append("<table class='header-table' style='width:100%;'>");
+            sb.Append("<tr>");
 
-            sb.Append("<div class='title'>ORDEM DE ABASTECIMENTO</div>"); // [cite: 8, 28, 61, 88]
+            // COLUNA DO LOGO
+            sb.Append("<td style='width:25%;'>");
+            sb.Append("<img src='" + ResolveUrl("~/img/logo_transnovag.png") + "' style='max-width:120px;' />");
+            sb.Append("</td>");
 
-            sb.Append("<div style='display:flex; justify-content:space-between;'>");
-            sb.Append("<span>" + identificacaoVia + "</span>"); // [cite: 52, 53, 81, 82]
-            sb.Append("<span><b>Nº Ordem: " + r["ordem_abastecimento"] + "</b></span>"); // [cite: 3, 4, 33, 34, 77, 101]
-            sb.Append("</div>");
+            // COLUNA DOS DADOS
+            sb.Append("<td style='font-size:14px; text-align:center;'>");
+            sb.Append("<span style='font-size:20px; font-weight:bold;'>TRANSNOVAG TRANSPORTES S/A.</span><br />");
+            sb.Append("<span style='font-size:14px;'>RUA CADIRIRI, 851 - MOOCA - SP<br />");
+            sb.Append("CNPJ: 55.890.016/0001-09<br />");
+            sb.Append("FONE: (11) 2126-3555</span>");
+            sb.Append("<br />");
+            sb.Append("<span style='font-size:20px; font-weight:bold;'>Nº: "+ r["ordem_abastecimento"] + "</span><br />");
+            sb.Append("</td>");
+
+            //QRCODE
+            sb.Append("<td style='width:25%;'>");
+            // QR Code [cite: 78, 102]
+            string qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={HttpUtility.UrlEncode(linkQr)}";
+            sb.Append("<div class='qrcode-container'>");
+            sb.Append($"<div class='qrcode-box'><img src='{qrUrl}' /></div>");
+            sb.Append("</div>");  
+            sb.Append("</td>");
+            sb.Append("</tr>");
+            sb.Append("</table>");
+
+            //sb.Append("<div style='display:flex; justify-content:space-between;'>");
+            //sb.Append("<span>" + identificacaoVia + "</span>"); // [cite: 52, 53, 81, 82]
+            //sb.Append("<span><b>Nº Ordem: " + r["ordem_abastecimento"] + "</b></span>"); // [cite: 3, 4, 33, 34, 77, 101]
+            //sb.Append("</div>");
 
              // Tabela de Dados [cite: 7, 37]
             sb.Append("<table class='content-table'>");
@@ -103,7 +124,9 @@ namespace NewCapit.dist.pages
             sb.Append("<td><b>Frota:</b> Proprio</td></tr>"); // [cite: 63, 89]
 
             sb.Append("<tr><td colspan='2'><b>Produto:</b> " + r["combustivel"] + "</td>"); // [cite: 56, 85]
+            
             sb.Append("<td><b>Descrição:</b> " + r["descricao_veiculo"] + "</td></tr>"); // [cite: 64, 73, 90, 98]
+            sb.Append("<td><b>" + r["descricao_veiculo"] + "</td></tr>"); // [cite: 64, 73, 90, 98]
 
             sb.Append("<tr><td><b>Preço:</b> " + string.Format("{0:N2}", r["valor_unitario"]) + "</td>"); // [cite: 57, 86]
             sb.Append("<td><b>Doc:</b> " + r["numero_documento"] + "</td>"); // [cite: 57, 86]
@@ -135,11 +158,11 @@ namespace NewCapit.dist.pages
             sb.Append("</div>");
 
             // QR Code [cite: 78, 102]
-            string qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={HttpUtility.UrlEncode(linkQr)}";
+            //string qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={HttpUtility.UrlEncode(linkQr)}";
 
-            sb.Append("<div class='qrcode-container'>");
-            sb.Append($"<div class='qrcode-box'><img src='{qrUrl}' /></div>");
-            sb.Append("</div>");
+            //sb.Append("<div class='qrcode-container'>");
+            //sb.Append($"<div class='qrcode-box'><img src='{qrUrl}' /></div>");
+            //sb.Append("</div>");
 
             sb.Append("</div>");
             return sb.ToString();

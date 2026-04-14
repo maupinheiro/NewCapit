@@ -196,16 +196,16 @@ namespace NewCapit.dist.pages
                 customRadioNFSe.Enabled = false;                
                 txtLitros.Enabled = false;
 
-            }
+            }           
         }
         protected void customRadioAgregado_CheckedChanged(object sender, EventArgs e)
         {     
-            if (customRadioFrota.Checked)
-            {
+            //if (customRadioAgregado.Checked)
+            //{
                 customRadioCTe.Enabled = true;
                 customRadioNFSe.Enabled = true;
 
-            }
+            //}           
         }
         protected void customRadioCTe_CheckedChanged(object sender, EventArgs e)
         {
@@ -215,6 +215,7 @@ namespace NewCapit.dist.pages
             if (customRadioCTe.Checked)
             {
                 txtDocumento.ReadOnly = false;
+                divFilial.Visible = true;
             }
         }
         protected void customRadioNFSe_CheckedChanged(object sender, EventArgs e)
@@ -224,6 +225,7 @@ namespace NewCapit.dist.pages
             if (customRadioNFSe.Checked)
             {
                 txtDocumento.ReadOnly = false;
+                divFilial.Visible = false;
             }
         }
         protected void txtCodMot_TextChanged(object sender, EventArgs e)
@@ -426,6 +428,74 @@ namespace NewCapit.dist.pages
                     dr.Close();
                 }
             }
+            else if (customRadioNFSe.Checked)
+            {
+                // Lógica para NFSe, se necessário
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    conn.Open();
+                    string query = @"SELECT 
+                        cte.num_documento, cte.emissao_documento, cte.ordem_abastecimento, cte.idviagem, 
+                        cg.carga,
+                        mot.codmot, mot.nommot, mot.cpf,
+                        vei.codvei, vei.plavei, vei.codtra, vei.tipvei, vei.tipoveiculo, vei.modelo, vei.ano, vei.nucleo, 
+                        pr.codtra, pr.fantra, pr.cnpj, pr.limitecreditoabastecimento
+                    FROM tbnfse cte
+                    LEFT JOIN tbcargas cg ON cg.carga = cte.idviagem
+                    LEFT JOIN tbmotoristas mot ON mot.codmot = cg.codmot
+                    LEFT JOIN tbveiculos vei ON vei.codvei = cg.frota
+                    LEFT JOIN tbtransportadoras pr ON pr.codtra = vei.codtra
+                    WHERE cte.num_documento = @num";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@num", txtDocumento.Text);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        if (dr["ordem_abastecimento"].ToString() == "")
+                        {
+                            txtEmissao.Text = dr["emissao_documento"] != DBNull.Value
+                                ? Convert.ToDateTime(dr["emissao_documento"]).ToString("dd/MM/yyyy HH:mm")
+                                : "";                            
+                            txtCodMot.Text = dr["codmot"].ToString();
+                            txtNomMot.Text = dr["nommot"].ToString();
+                            txtCPF.Text = dr["cpf"].ToString();
+                            txtCodVei.Text = dr["codvei"].ToString();
+                            txtPlaca.Text = dr["plavei"].ToString();
+                            txtModelo.Text = dr["tipvei"].ToString() + " - " + dr["modelo"].ToString() + " - " + dr["ano"].ToString() + " - " + dr["tipoveiculo"].ToString();
+                            txtFilialVeic.Text = dr["nucleo"].ToString();
+                            txtCodProp.Text = dr["codtra"].ToString();
+                            txtTransp.Text = dr["fantra"].ToString();
+                            txtCNPJ.Text = dr["cnpj"].ToString();
+                            txtLimiteCredito.Text = dr["limitecreditoabastecimento"].ToString();
+                            txtLitros.Focus();
+                        }
+                        else
+                        {
+                            Mensagem("info", "Documento: " + txtDocumento.Text.Trim() + " - já tem a Ordem de Abastecimento: " + dr["ordem_abastecimento"].ToString() + " gerada.");
+                            LimparCamposMotorista();
+                            txtDocumento.Text = "";
+                            txtDocumento.Focus();
+                            return;
+
+                        }
+
+                    }
+                    else
+                    {
+                        // Limpa se não encontrou
+                        Mensagem("danger", txtDocumento.Text.Trim() + " - Documento não encontrado.Verifique o número digitado!");
+                        LimparCamposMotorista();
+                        txtDocumento.Text = "";
+                        txtDocumento.Focus();
+                        return;
+                    }
+
+                    dr.Close();
+                }
+
+            }
         }
         protected void txtLitros_TextChanged(object sender, EventArgs e)
         {
@@ -495,7 +565,7 @@ namespace NewCapit.dist.pages
                 dataEmissao = DateTime.Now;
             }
 
-            if (abastecimentoFrotaAgregado == "FROTA")
+            if (abastecimentoFrotaAgregado == "FROTA" || txtFilial.Text == "")
             {
                txtFilial.Text = txtFilialVeic.Text;
             }
@@ -547,12 +617,24 @@ namespace NewCapit.dist.pages
                     // Captura a ordem gerada
                     string ordemAbastecimento = cmdInsert.ExecuteScalar().ToString();
 
-                    // UPDATE tbcte
-                    string updateSql = "UPDATE tbcte SET ordem_abastecimento=@ordem WHERE num_documento=@numero_documento";
-                    SqlCommand cmdUpdate = new SqlCommand(updateSql, conn, trans);
-                    cmdUpdate.Parameters.AddWithValue("@ordem", ordemAbastecimento);
-                    cmdUpdate.Parameters.AddWithValue("@numero_documento", txtDocumento.Text.Trim());
-                    cmdUpdate.ExecuteNonQuery();
+                    // UPDATE tbcte/tbnfse
+                    if (tipoDocumento == "CTe")
+                    {
+                        string updateSql = "UPDATE tbcte SET ordem_abastecimento=@ordem WHERE num_documento=@numero_documento";
+                        SqlCommand cmdUpdate = new SqlCommand(updateSql, conn, trans);
+                        cmdUpdate.Parameters.AddWithValue("@ordem", ordemAbastecimento);
+                        cmdUpdate.Parameters.AddWithValue("@numero_documento", txtDocumento.Text.Trim());
+                        cmdUpdate.ExecuteNonQuery();
+
+                    }
+                    else if (tipoDocumento == "NFSe")
+                    {
+                        string updateSql = "UPDATE tbnfse SET ordem_abastecimento=@ordem WHERE num_documento=@numero_documento";
+                        SqlCommand cmdUpdate = new SqlCommand(updateSql, conn, trans);
+                        cmdUpdate.Parameters.AddWithValue("@ordem", ordemAbastecimento);
+                        cmdUpdate.Parameters.AddWithValue("@numero_documento", txtDocumento.Text.Trim());
+                        cmdUpdate.ExecuteNonQuery();
+                    }                    
 
                     trans.Commit();
 

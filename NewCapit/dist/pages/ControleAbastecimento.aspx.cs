@@ -203,6 +203,9 @@ namespace NewCapit.dist.pages
                         case "CANCELADA":
                             lbl.CssClass += " bg-danger";
                             break;
+                        case "UTILIZADA":
+                            lbl.CssClass += " bg-secondary";
+                            break;
                     }
                 }
             }

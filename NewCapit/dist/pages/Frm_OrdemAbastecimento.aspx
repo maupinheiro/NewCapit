@@ -252,7 +252,7 @@
                                     <asp:TextBox ID="txtEmissao" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" id="divFilial" runat="server" visible="true">
                                 <div class="form_group">
                                     <span class="details">FILIAL:</span>
                                     <asp:TextBox ID="txtFilial" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
