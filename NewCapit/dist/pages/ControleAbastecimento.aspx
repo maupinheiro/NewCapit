@@ -88,6 +88,20 @@
                     <i class="fa fa-print"></i>
                                             </asp:LinkButton>
 
+                                            <asp:LinkButton ID="btnWhatsapp" runat="server"
+                                                CommandName="WhatsApp"
+                                                CommandArgument='<%# Eval("ordem_abastecimento") %>'
+                                                CssClass="btn btn-sm btn-success">
+                    <i class="fas fa-comments"></i>
+                                            </asp:LinkButton>
+
+                                            <asp:LinkButton ID="btnEmail" runat="server"
+                                                CommandName="Email"
+                                                CommandArgument='<%# Eval("ordem_abastecimento") %>'
+                                                CssClass="btn btn-sm btn-secondary">
+                    <i class="fas fa-paper-plane"></i>
+                                            </asp:LinkButton>
+
                                             <asp:LinkButton ID="btnConfirmar" runat="server"
                                                 CommandName="Confirmar"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
@@ -114,7 +128,7 @@
 
                                 </Columns>
 
-                                
+
                                 <PagerTemplate>
 
                                     <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">

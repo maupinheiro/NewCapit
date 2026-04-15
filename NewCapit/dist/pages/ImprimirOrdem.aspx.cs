@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.Extensions.Primitives;
 
 namespace NewCapit.dist.pages
 {
@@ -17,6 +18,16 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;                   
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";                    
+                }
+
                 string id = Request.QueryString["id"];
                 if (id != null)
                 {
@@ -102,7 +113,7 @@ namespace NewCapit.dist.pages
             //QRCODE
             sb.Append("<td style='width:25%;'>");
             // QR Code [cite: 78, 102]
-            string qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={HttpUtility.UrlEncode(linkQr)}";
+            string qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={HttpUtility.UrlEncode(linkQr)}";
             sb.Append("<div class='qrcode-container'>");
             sb.Append($"<div class='qrcode-box'><img src='{qrUrl}' /></div>");
             sb.Append("</div>");  
@@ -110,61 +121,105 @@ namespace NewCapit.dist.pages
             sb.Append("</tr>");
             sb.Append("</table>");
 
-            //sb.Append("<div style='display:flex; justify-content:space-between;'>");
-            //sb.Append("<span>" + identificacaoVia + "</span>"); // [cite: 52, 53, 81, 82]
-            //sb.Append("<span><b>Nº Ordem: " + r["ordem_abastecimento"] + "</b></span>"); // [cite: 3, 4, 33, 34, 77, 101]
-            //sb.Append("</div>");
 
-             // Tabela de Dados [cite: 7, 37]
-            sb.Append("<table class='content-table'>");
-            sb.Append("<tr><td colspan='2'><b>Tipo:</b> " + r["tipo_abastecimento"] + "</td>"); // [cite: 54, 83]
-            sb.Append("<td><b>Veículo:</b> " + r["plavei"] + "</td></tr>"); // [cite: 5, 6, 35, 36, 62, 89]
+            // tabela 
+            sb.Append("<table border='1' style='width:100%; border-collapse:collapse; border:2px solid #000;'>");
 
-            sb.Append("<tr><td colspan='2'><b>Fornecedor:</b> " + r["nome_posto"] + "</td>"); // [cite: 55, 84]
-            sb.Append("<td><b>Frota:</b> Proprio</td></tr>"); // [cite: 63, 89]
+            // CABEÇALHO (TÍTULO)
+            sb.Append("<tr>");
+            sb.Append("<th style='text-align:center; font-size:14px; padding:5px;'>Nº Ordem</th>");
+            sb.Append("<th style='text-align:center; font-size:14px; padding:5px;'>Veiculo</th>");
+            sb.Append("<th style='text-align:center; font-size:14px; padding:5px;'>Qt. Lts. Autorizados</th>");
+            sb.Append("<th style='text-align:center; font-size:14px; padding:5px;'>Valor Total</th>");
+            sb.Append("</tr>");
 
-            sb.Append("<tr><td colspan='2'><b>Produto:</b> " + r["combustivel"] + "</td>"); // [cite: 56, 85]
-            
-            sb.Append("<td><b>Descrição:</b> " + r["descricao_veiculo"] + "</td></tr>"); // [cite: 64, 73, 90, 98]
-            sb.Append("<td><b>" + r["descricao_veiculo"] + "</td></tr>"); // [cite: 64, 73, 90, 98]
+            // LINHA DE CONTEÚDO
+            sb.Append("<tr>");
+            sb.Append("<td style='text-align:center; font-size:20px; padding:8px;'><b>" + r["ordem_abastecimento"] + "</b></td>");
+            sb.Append("<td style='text-align:center; font-size:20px; padding:8px;'><b>" + r["plavei"] + "</b></td>");            
+            decimal litros = 0;
+            decimal.TryParse(r["litros"].ToString(), out litros);
+            if (litros == 0)
+            {
+                sb.Append("<td style='text-align:center; font-size:20px; padding:8px;'><b></b></td>");
+            }
+            else
+            {
+                sb.Append("<td style='text-align:center; font-size:20px; padding:8px;'><b>" + litros + "</b></td>");
+            }
 
-            sb.Append("<tr><td><b>Preço:</b> " + string.Format("{0:N2}", r["valor_unitario"]) + "</td>"); // [cite: 57, 86]
-            sb.Append("<td><b>Doc:</b> " + r["numero_documento"] + "</td>"); // [cite: 57, 86]
-            sb.Append("<td><b>Motorista:</b> " + r["nommot"] + "</td></tr>"); // [cite: 66, 92]
+            decimal valorTotal = 0;
+            decimal.TryParse(r["valor_total"].ToString(), out valorTotal);
+            if (valorTotal == 0)
+            {
+                sb.Append("<td style='text-align:center; font-size:20px; padding:8px;'><b></b></td>");
+            }
+            else
+            {
+                sb.Append("<td style='text-align:center; font-size:20px; padding:8px;'><b>" +
+                          valorTotal.ToString("C2") +
+                          "</b></td>");
+            }
 
-            sb.Append("<tr><td colspan='2'><b>Proprietário:</b> TRANSNOVAG S/A</td>"); // [cite: 57, 86]
-            sb.Append("<td><b>CPF:</b> " + r["cpf"] + "</td></tr>"); // [cite: 67, 93]
+            sb.Append("</tr>");           
 
-            sb.Append("<tr><td colspan='2'><b>Lts Autorizada:</b> COMPLETAR</td>"); // [cite: 13, 38, 58, 87]
-            sb.Append("<td><b>KM Atual:</b> ________________</td></tr>"); // [cite: 68, 94]
             sb.Append("</table>");
+            sb.Append("<table class='header-table' style='width:100%;'>");
+            sb.Append("<tr>");
+            sb.Append("<br/>");
+            sb.Append("<td style='width:100%;'><b>Tipo......:</b>" + r["tipo_abastecimento"] + "</td>");
+            sb.Append("<tr><td style='width:100%;'><b>Fornecedor:</b> " + r["cod_posto"] + " - " + r["nome_posto"] + "</td></tr>");
+            sb.Append("<tr><td style='width:100%;'><b>Endereço..:</b></td></tr>");
+            sb.Append("<tr><td style='width:100%;'><b>Produto...:</b>" + r["cod_combustivel"] + " - " + r["combustivel"] + "            Informe KM Atual: ______________</td></tr>");            
+            sb.Append("<tr><td style='width:100%;'><b>Preço Unit:</b>" + string.Format("{0:N2}", r["valor_unitario"]) + " - Tipo Doc.:" + r["tipo_documento"] + " - Nº.:" + r["numero_documento"] + "</td></tr>");
+            sb.Append("<tr><td style='width:100%;'><b>Veiculo...:</b>" + r["plavei"] + " - " + r["descricao_veiculo"] + "</td></tr>");
+            sb.Append("<tr><td style='width:100%;'><b>Prop......:</b>" + r["codtra"] + " - " + r["nomtra"] + " - CNPJ/CPF:" + r["cnpj_cpf"] + "</td></tr>");
+            sb.Append("<tr><td style='width:100%;'><b>Motorista.:</b>" + r["codmot"] + " - " + r["nommot"] + " - CPF:" + r["cpf"] + "</td></tr>");
+            
+            sb.Append("<tr><td style='width:100%; text-align:center; font-size:10px;'><b>ATENÇÃO:</b></td></tr>");
+            sb.Append("<tr><td style='width:100%; text-align:center; font-size:8px;'><b>VERIFIQUE A VALIDADE DA ORDEM DE ABASTECIMENTO, ANTES DE INICIAR O ABASTECIMENTO LEIA O QRCODE PARA VALIDAR E LANÇAR A NOTA FISCAL DE ABASTECIMENTO FIQUE ATENTO, NÃO SERÁ PAGO, PRODUTO FORA DA AUTORIZAÇÃO, NEM VALORES SUPERIORES AOS ESTIPULADOS.</b></td></tr>");              
+            //sb.Append("</tr>");
+            sb.Append("</table>");  
 
-            // Rodapé ajustado para não encavalar
-            sb.Append("<div class='info-footer'>");
+            // Rodapé ajustado para não encavalar           
+             // Assinaturas [cite: 17, 20, 24, 41, 44, 48, 71, 74, 75, 97, 99, 100]
+            sb.Append("<div class='footer-sigs'>");           
+            string usuario = Session["UsuarioLogado"].ToString();
+
+            if (string.IsNullOrEmpty(usuario))
+                usuario = "DESCONHECIDO";
+            string data = DateTime.Now.ToString("dd/MM/yyyy HH:mm");            
+            sb.Append("<div class='sig-box'>Autorizado<br/>" +
+                      usuario + "<br/> " +
+                      data +
+                      "</div>");
+            sb.Append("<div class='sig-box'>Motorista<br/>" +
+                r["nommot"] + "</div>");  
+            
+            sb.Append("<div class='sig-box'>Resp. Posto</div>");
+
+            sb.Append("</div>");
+            sb.Append("<table style='width:100%;'>");
+            sb.Append("<tr>");
+
+            // coluna 1
+            sb.Append("<td style='text-align:left; font-size:8px;'>Gerada em: " + r["lancado_por"] + "</td>");
+
+            // coluna 2
+            sb.Append("<td style='text-align:right; font-size:8px;'>");
+
             if (Convert.ToInt32(r["num_impressao"]) > 0)
             {
-                sb.Append("<div class='reimpressao-texto'>** REIMPRESSÃO **</div>"); // [cite: 23, 47, 69, 95]
+                sb.Append("<b>REIMPRESSÃO (" + r["num_impressao"] + ")</b>");
             }
-            sb.Append("<div class='emissao-dados'>");
-            sb.Append("Emissão: " + string.Format("{0:dd/MM/yyyy HH:mm}", r["data_geracao"]) + " por " + r["lancado_por"]); // [cite: 12, 31, 59, 87]
-            sb.Append("</div>");
-            sb.Append("</div>");
 
-             // Assinaturas [cite: 17, 20, 24, 41, 44, 48, 71, 74, 75, 97, 99, 100]
-            sb.Append("<div class='footer-sigs'>");
-            sb.Append("<div class='sig-box'>Autorizado</div>");
-            sb.Append("<div class='sig-box'>Motorista</div>");
-            sb.Append("<div class='sig-box'>Resp. Posto</div>");
-            sb.Append("</div>");
+            sb.Append("</td>");
 
-            // QR Code [cite: 78, 102]
-            //string qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={HttpUtility.UrlEncode(linkQr)}";
+            sb.Append("</tr>");
+            sb.Append("</table>");
 
-            //sb.Append("<div class='qrcode-container'>");
-            //sb.Append($"<div class='qrcode-box'><img src='{qrUrl}' /></div>");
+
             //sb.Append("</div>");
-
-            sb.Append("</div>");
             return sb.ToString();
         }
         private DataTable BuscarDadosOrdem(string ordem)
@@ -175,12 +230,13 @@ namespace NewCapit.dist.pages
             string strConexao = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
             // O SELECT baseado nos campos da sua tabela 
-            string sql = @"SELECT [ordem_abastecimento], [data_geracao], [cod_posto], [nome_posto], 
+            string sql = @"SELECT
+                          [ordem_abastecimento], [data_geracao], [cod_posto], [nome_posto], 
                           [tipo_abastecimento], [frota_agregado], [filial], [cod_combustivel], 
                           [combustivel], [litros], [valor_unitario], [valor_total], 
                           [numero_documento], [tipo_documento], [data_emissao], [codmot], 
                           [nommot], [cpf], [codvei], [plavei], [descricao_veiculo], 
-                          [codtra], [nomtra], [cnpj_cpf],[lancado_por],[num_impressao],[impressa],[token_acesso],[cpf],[plavei]
+                          [codtra], [nomtra], [cnpj_cpf],[lancado_por],[num_impressao],[impressa],  [token_acesso],[cpf],[plavei]
                    FROM [dbo].[tbsaida_combustivel] 
                    WHERE [ordem_abastecimento] = @ordem";
 
