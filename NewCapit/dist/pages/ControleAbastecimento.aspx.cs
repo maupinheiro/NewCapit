@@ -7,6 +7,12 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
+using System.Text.RegularExpressions;
+using iText.Html2pdf;
+using System.IO;
+using System.Text;
+using System.Net.Mail;
+using System.Net;
 
 namespace NewCapit.dist.pages
 {
@@ -148,6 +154,36 @@ namespace NewCapit.dist.pages
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "PrintWindow", script, true);
                 }
             }
+            else if (e.CommandName == "WhatsApp")
+            {
+                if (e.CommandName == "WhatsApp")
+                {
+                    string ordemAtual = hdOrdem.Value;                    
+
+                    ScriptManager.RegisterStartupScript(this, GetType(),
+                        "modal", "abrirModal('" + ordemAtual + "');", true);
+                }
+
+                if (e.CommandName == "EnviarWhats")
+                {
+                    EnviarWhatsApp();
+                }
+            }
+            else if (e.CommandName == "Email")
+            {                
+                if (e.CommandName == "Email")
+                {
+                    string ordemAtual = hdOrdem.Value;                    
+
+                    ScriptManager.RegisterStartupScript(this, GetType(),
+                        "modal", "abrirModalEmail('" + ordemAtual + "');", true);
+                }
+
+                if (e.CommandName == "EnviarEmail")
+                {
+                    EnviarEmailComPdf();
+                }
+            }
             else if (e.CommandName == "Confirmar")
             {
                 ConfirmarAbastecimento(ordem);
@@ -276,6 +312,178 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+        }
+        private bool TelefoneValido(string telefone)
+        {
+            telefone = Regex.Replace(telefone, @"\D", ""); // só números
+
+            // 10 ou 11 dígitos (com DDD)
+            return telefone.Length == 10 || telefone.Length == 11;
+        }
+        private void EnviarWhatsApp()
+        {
+            string ordem = hdOrdem.Value;
+
+            string telefone = Request.Form["txtTelefone"];
+            telefone = telefone.Replace("(", "")
+                               .Replace(")", "")
+                               .Replace("-", "")
+                               .Replace(" ", "");
+
+            // 1. BUSCAR DADOS
+            var r = BuscarOrdem(ordem); // seu método já existente
+
+            // 2. GERAR HTML
+            string html = GerarHtml(r); // seu StringBuilder atual
+
+            // 3. GERAR PDF
+            string nomeArquivo = "Ordem_" + ordem + ".pdf";
+            string pasta = Server.MapPath("~/pdf/");
+            string caminho = Path.Combine(pasta, nomeArquivo);
+
+            if (!Directory.Exists(pasta))
+                Directory.CreateDirectory(pasta);
+
+            using (FileStream fs = new FileStream(caminho, FileMode.Create))
+            {
+                HtmlConverter.ConvertToPdf(html, fs);
+            }
+
+            // 4. LINK PÚBLICO
+            string urlPdf = "https://SEU_DOMINIO.com/pdf/" + nomeArquivo;
+
+            // 5. MENSAGEM WHATSAPP
+            string msg = "Segue a Ordem de Abastecimento: " + urlPdf;
+
+            string urlWhats =
+                "https://wa.me/" + telefone +
+                "?text=" + HttpUtility.UrlEncode(msg);
+
+            // 6. ABRIR WHATSAPP
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "wa", "window.open('" + urlWhats + "','_blank');", true);
+        }
+        private DataRow BuscarOrdem(string ordem)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"SELECT TOP 1 *
+                       FROM tbsaida_combustivel
+                       WHERE ordem_abastecimento = @ordem";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ordem", ordem);
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        if (dt.Rows.Count > 0)
+                            return dt.Rows[0];
+                        else
+                            return null;
+                    }
+                }
+            }
+        }
+        private string GerarHtml(DataRow r)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("<html><head>");
+            sb.Append("<meta charset='UTF-8'>");
+
+            sb.Append("<style>");
+            sb.Append("body { font-family: Arial; font-size:11px; }");
+            sb.Append(".page { width:750px; margin:0 auto; }");
+            sb.Append(".border { border:1px solid #000; }");
+            sb.Append(".center { text-align:center; }");
+            sb.Append(".title { font-size:14px; font-weight:bold; }");
+            sb.Append("</style>");
+
+            sb.Append("</head><body>");
+            sb.Append("<div class='page'>");
+
+            // ===== CABEÇALHO =====
+            sb.Append("<div class='center title'>TRANSNOVAG TRANSPORTES S/A</div>");
+            sb.Append("<div class='center'>Ordem de Abastecimento</div>");
+            sb.Append("<br/>");
+
+            // ===== DADOS =====
+            sb.Append("<table class='border' width='100%'>");
+
+            sb.Append("<tr><td><b>Ordem:</b> " + r["ordem_abastecimento"] + "</td></tr>");
+            sb.Append("<tr><td><b>Veículo:</b> " + r["plavei"] + "</td></tr>");
+            sb.Append("<tr><td><b>Motorista:</b> " + r["nommot"] + "</td></tr>");
+            sb.Append("<tr><td><b>Litros:</b> " + r["litros"] + "</td></tr>");
+            sb.Append("<tr><td><b>Valor Total:</b> " + r["valor_total"] + "</td></tr>");
+
+            sb.Append("</table>");
+
+            sb.Append("</div>");
+            sb.Append("</body></html>");
+
+            return sb.ToString();
+        }
+        private byte[] GerarPdf(string html)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                HtmlConverter.ConvertToPdf(html, ms);
+                return ms.ToArray();
+            }
+        }
+        private void EnviarEmailComPdf()
+        {
+            string ordem = hdOrdem.Value;
+
+            string emails = Request.Form["txtEmails"];
+
+            if (string.IsNullOrEmpty(emails))
+                return;
+
+            var r = BuscarOrdem(ordem);
+
+            if (r == null)
+                return;
+
+            string html = GerarHtml(r);
+
+            byte[] pdf = GerarPdf(html);
+
+            MailMessage mail = new MailMessage();
+
+            mail.From = new MailAddress("seuemail@empresa.com");
+
+            // múltiplos e-mails
+            foreach (string email in emails.Split(';'))
+            {
+                if (!string.IsNullOrWhiteSpace(email))
+                    mail.To.Add(email.Trim());
+            }
+
+            mail.Subject = "Ordem de Abastecimento - " + ordem;
+            mail.Body = "Segue em anexo a ordem de abastecimento.";
+            mail.IsBodyHtml = true;
+
+            mail.Attachments.Add(new Attachment(
+                new MemoryStream(pdf),
+                "Ordem_" + ordem + ".pdf"
+            ));
+
+            SmtpClient smtp = new SmtpClient("smtp.office365.com", 587);
+
+            smtp.EnableSsl = true;
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential(
+                "progtrans2@transnovag.com.br",
+                "Sascar@2007"
+            );
+
+            smtp.Send(mail);
         }
 
     }

@@ -4,6 +4,33 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <script>
+        function abrirModal(ordem) {
+            document.getElementById("modalWhats").style.display = "block";
+            document.getElementById("hdOrdem").value = ordem;
+        }
+
+        function fecharModal() {
+            document.getElementById("modalWhats").style.display = "none";
+        }
+
+        function enviarWhats() {
+            __doPostBack('EnviarWhats', '');
+        }
+
+        function abrirModalEmail(ordem) {
+            document.getElementById("modalEmail").style.display = "block";
+            document.getElementById("<%= hdOrdem.ClientID %>").value = ordem;
+        }
+
+        function fecharModal() {
+            document.getElementById("modalEmail").style.display = "none";
+        }
+
+        function enviarEmail() {
+            __doPostBack('EnviarEmail', '');
+        }
+    </script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -128,7 +155,6 @@
 
                                 </Columns>
 
-
                                 <PagerTemplate>
 
                                     <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
@@ -176,6 +202,39 @@
                                 </PagerTemplate>
 
                             </asp:GridView>
+                            <asp:HiddenField ID="hdOrdem" runat="server" />
+                            <!-- MODAL WHATSAPP -->
+                            <div id="modalWhats" style="display: none; position: fixed; top: 30%; left: 40%; background: #fff; padding: 20px; border: 1px solid #000; z-index: 9999;">
+
+                                <h3>Enviar WhatsApp</h3>
+
+                                <asp:TextBox ID="txtTelefone" runat="server" />
+
+                                <br />
+                                <br />
+
+                                <button type="button" onclick="enviarWhats()">Enviar</button>
+                                <button type="button" onclick="fecharModal()">Cancelar</button>
+
+                            </div>
+                            <!-- MODAL EMAIL -->
+                            <div id="modalEmail" style="display: none; position: fixed; top: 25%; left: 35%; background: #fff; padding: 20px; border: 1px solid #000; z-index: 9999; width: 500px;">
+
+                                <h3>Enviar Ordem por E-mail</h3>
+
+                                <label>Destinatários (separar por ; )</label>
+
+                                <input type="text" id="txtEmails"
+                                    style="width: 100%; padding: 5px;"
+                                    placeholder="ex: teste@empresa.com;adm@empresa.com" />
+
+                                <br />
+                                <br />
+
+                                <button type="button" onclick="enviarEmail()">Enviar</button>
+                                <button type="button" onclick="fecharModal()">Cancelar</button>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -220,5 +279,7 @@
                 </div>
             </div>
         </div>
+        
+
     </div>
 </asp:Content>
