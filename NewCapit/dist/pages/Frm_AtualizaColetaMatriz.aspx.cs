@@ -950,8 +950,8 @@ namespace NewCapit.dist.pages
                     if (chegada != null && saida != null && saidaPlanta != null)
                     {
                         statusOC = "Concluido";
-                        situacaoOC = "EM ANDAMENTO";
-                        andamentoCarga = "Em Andamento";
+                        situacaoOC = "Pronto";
+                        andamentoCarga = "Entregue";
                     }
                     else if (chegada != null && saida != null)
                     {

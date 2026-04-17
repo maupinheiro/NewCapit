@@ -103,7 +103,7 @@ namespace NewCapit.dist.pages
                 
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
-            DataTable dt = ViewState["Cargas"] as DataTable;
+            DataTable dt = Session["Cargas"] as DataTable;
             if (dt == null) return;
 
             using (XLWorkbook wb = new XLWorkbook())
