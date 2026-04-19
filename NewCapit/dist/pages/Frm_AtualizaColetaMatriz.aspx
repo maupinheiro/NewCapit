@@ -15,10 +15,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <!-- Script para fechar modal -->
     <script type="text/javascript">
+
 
         /* =========================
            FUNÇÕES GLOBAIS (MODAIS)
@@ -481,7 +482,6 @@
             campo.value = inteiro + "." + decimal;
         }
     </script>
-
     <script>
         function validarCampos() {
 
@@ -1017,6 +1017,7 @@
 
                                                                     <thead>
                                                                         <tr>
+                                                                            <th>AÇÃO</th>
                                                                             <th>CARGA</th>
                                                                             <th>LOCAL DE COLETA</th>
                                                                             <th>LOCAL DE ENTREGA</th>
@@ -1035,6 +1036,17 @@
                                                                     Value='<%# Eval("carga") %>' />
 
                                                                 <tr data-widget="expandable-table" aria-expanded="false">
+                                                                    <td>
+                                                                        <asp:LinkButton
+                                                                            ID="btnCancelar"
+                                                                            runat="server"
+                                                                            Text="Cancelar"
+                                                                            CssClass="btn btn-danger btn-sm"
+                                                                            CommandName="CancelarCarga"
+                                                                            CommandArgument='<%# Eval("carga") %>'
+                                                                            OnClientClick='<%# "return confirm(\"Deseja realmente cancelar a carga Nº " + Eval("carga") + "?\");" %>'>
+                                                                        </asp:LinkButton>
+                                                                    </td>
                                                                     <td><%# Eval("carga") %></td>
                                                                     <td><%# Eval("cod_expedidor") + " - " + Eval("expedidor") %></td>
                                                                     <td><%# Eval("cod_recebedor") + " - " + Eval("recebedor") %></td>
@@ -1047,6 +1059,8 @@
                                                                     <td runat="server" id="tdAtendimento">
                                                                         <asp:Label ID="lblAtendimento" runat="server" Text=""></asp:Label>
                                                                     </td>
+
+
                                                                 </tr>
                                                                 <tr class="expandable-body">
 
@@ -1516,16 +1530,15 @@
                                                                                                                 </Columns>
                                                                                                             </asp:GridView>
                                                                                                         </div>
-                                                                                                          <%-- <div class="col-md-2">
+                                                                                                        <%-- <div class="col-md-2">
                                                                                                                <asp:Button ID="btnGeraDoc" CssClass="btn btn-outline-warning w-100" CommandName="GeraDoc" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e TXT" />
                                                                                                             </div>
                                                                                                         <div class="col-md-2">
                                                                                                                 <asp:Button ID="btnGerarXml" CssClass="btn btn-outline-warning w-100" CommandName="GeraXml" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e XML" />
                                                                                                              </div>--%>
                                                                                                     </div>
-                                                                                                     <div class="row g-3">  
-                                                                                                        
-                                                                                                         </div>
+                                                                                                    <div class="row g-3">
+                                                                                                    </div>
 
 
 
@@ -1740,7 +1753,7 @@
                                                                                     <Triggers>
                                                                                         <asp:AsyncPostBackTrigger ControlID="gvNF" />
                                                                                         <asp:AsyncPostBackTrigger ControlID="btnBuscarNfe" />
-                                                                                       <%-- <asp:PostBackTrigger ControlID="btnGeraDoc" />
+                                                                                        <%-- <asp:PostBackTrigger ControlID="btnGeraDoc" />
                                                                                         <asp:PostBackTrigger ControlID="btnGerarXml" />--%>
                                                                                     </Triggers>
 
@@ -2150,23 +2163,33 @@
                                             <div class="row g-3">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <span class="details">Código:</span>
-                                                        <asp:TextBox ID="codCliInicial" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliInicial_TextChanged"></asp:TextBox>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <div class="form-group">
-                                                        <span class="details">Origem:</span><br />
-                                                        <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" class="form-select select2" Width="80%"></asp:DropDownList>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
                                                         <span class="details">Carga:</span>
                                                         <asp:TextBox ID="novaCargaVazia" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
                                                         <asp:HiddenField ID="hdNovaCarga" runat="server" />
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">PEDAGIADA:</span>
+                                                        <asp:TextBox ID="txtPedagio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true" placeholder=""></asp:TextBox>
+                                                        <asp:HiddenField ID="HiddenField1" runat="server" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <span class="details">Código:</span>
+                                                        <asp:TextBox ID="codCliInicial" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliInicial_TextChanged"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <div class="form-group">
+                                                        <span class="details">Origem:</span><br />
+                                                        <asp:DropDownList ID="ddlCliInicial" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCliInicial_TextChanged" class="form-select select2" Width="80%"></asp:DropDownList>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <!-- colunas ocultas -->
                                             <div class="row g-3">
@@ -2189,20 +2212,13 @@
                                                         <asp:TextBox ID="codCliFinal" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="codCliFinal_TextChanged"></asp:TextBox>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-8">
+                                                <div class="col-md-10">
                                                     <div class="form-group">
                                                         <span class="details">Destino:</span>
                                                         <asp:DropDownList ID="ddlCliFinal" runat="server" AutoPostBack="True" class="form-select select2" OnSelectedIndexChanged="ddlCliFinal_TextChanged" Width="80%"></asp:DropDownList>
                                                         <asp:Label ID="lblDistancia" runat="server" Text="" ForeColor="Red" Font-Size="XX-Small"></asp:Label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <span class="details">Percurso:</span>
-                                                        <asp:TextBox ID="txtDistancia" runat="server" ReadOnly="true" Style="text-align: center" class="form-control font-weight-bold" placeholder=""></asp:TextBox>
-                                                    </div>
-                                                </div>
-
                                             </div>
                                             <!-- colunas ocultas -->
                                             <div class="row g-3">
@@ -2218,6 +2234,28 @@
                                                 </div>
                                             </div>
                                             <!-- fim das colunas ocultas -->
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="txtRotaVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="txtTrajeto" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="txtDistancia" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="txtDuracaoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row g-3">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -2236,19 +2274,13 @@
                                                         <asp:TextBox ID="txtPesoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-1">
-                                                    <div class="form-group">
-                                                        <span class="details">TT:</span>
-                                                        <asp:TextBox ID="txtDuracaoVazio" runat="server" Style="text-align: center" class="form-control font-weight-bold"></asp:TextBox>
-                                                    </div>
-                                                </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <span class="details">Código:</span>
                                                         <asp:TextBox ID="txtCod_PagadorVazio" runat="server" class="form-control" AutoPostBack="true" OnTextChanged="txtCod_PagadorVazio_TextChanged"></asp:TextBox>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-7">
                                                     <div class="form-group">
                                                         <span class="details">Pagador:</span>
                                                         <asp:TextBox ID="txtPagadorVazio" runat="server" CssClass="form-control"></asp:TextBox>
@@ -2256,6 +2288,10 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <asp:HiddenField ID="hdnDistancia" runat="server" />
+                                            <asp:HiddenField ID="hdnDeslocamento" runat="server" />
+                                            <asp:HiddenField ID="hdnPedagio" runat="server" />
+                                            <asp:HiddenField ID="hdnTempo" runat="server" />
                                             <!-- colunas ocultas -->
                                             <div class="row g-3" id="linhaPagadorCidadeUF" runat="server" visible="false">
                                                 <div class="col-md-10">

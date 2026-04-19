@@ -51,6 +51,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml;
+using static NewCapit.dist.pages.Frm_TabelaPrecoMatriz;
 using static NPOI.HSSF.Util.HSSFColor;
 
 
@@ -4135,9 +4136,63 @@ namespace NewCapit.dist.pages
                     }
 
                 }
+                if (txtPagadorVazio.Text != "")
+                {
+                    string descricaoRota = txtMunicipioOrigem.Text.Trim() + "/" + txtUfOrigem.Text.Trim() + " X " + txtMunicipioDestino.Text.Trim() + "/" + txtUfDestino.Text.Trim();                    
+
+                    DataTable dt = BuscarRota(descricaoRota);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        DataRow r = dt.Rows[0];
+
+                        // Preenche a rota encontrada
+                        txtRotaVazio.Text = r["rota"].ToString() + " - " + r["desc_rota"].ToString();
+                        txtTrajeto.Text = r["deslocamento"].ToString();
+                        txtDistancia.Text = r["distancia"].ToString();
+                        txtDuracaoVazio.Text = Convert.ToDateTime(r["tempo"]).ToString("HH:mm");
+                        txtPedagio.Text = r["pedagio"].ToString();
+                        // Guarda dados para salvar depois
+                        ViewState["distancia"] = r["distancia"];
+                        ViewState["deslocamento"] = r["deslocamento"];
+                        ViewState["pedagio"] = r["pedagio"];
+                        ViewState["tempo"] = r["tempo"];
+                    }
+                    else
+                    {
+                        txtRotaVazio.Text = "";
+
+                        ViewState["distancia"] = null;
+                        ViewState["deslocamento"] = null;
+                        ViewState["pedagio"] = null;
+                        ViewState["tempo"] = null;
+                    }
+                }
+
 
             }
 
+        }
+        private DataTable BuscarRota(string descricaoRota)
+        {
+            string strConexao = System.Web.Configuration.WebConfigurationManager
+                .ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(strConexao))
+            {   
+                string sql = @"SELECT rota, desc_rota, distancia, deslocamento, pedagio, tempo
+               FROM tbrotasdeentregas
+               WHERE desc_rota COLLATE Latin1_General_CI_AI LIKE @desc";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@desc", "%" + descricaoRota + "%");
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                return dt;
+            }
         }
         private void AtualizarColetasVisiveis()
         {
@@ -4183,8 +4238,7 @@ namespace NewCapit.dist.pages
             string municipioOrigem = txtMunicipioOrigem.Text.Trim().ToUpper();
             string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
-            string ufDestino = txtUfDestino.Text.Trim().ToUpper();
-            //double distancia = double.Parse(txtDistancia.Text.Trim());
+            string ufDestino = txtUfDestino.Text.Trim().ToUpper();            
             string codigoPagadorVazio = txtCod_PagadorVazio.Text.Trim();
             string nomePagadorVazio = txtPagadorVazio.Text.Trim().ToUpper();
             string materialVazio = ddlTipoMaterial.SelectedItem.Text;
@@ -4193,14 +4247,18 @@ namespace NewCapit.dist.pages
             string nomeCompleto = nomePagadorVazio;
             string DuracaoVazio = txtDuracaoVazio.Text.Trim();
             string primeiroNome = nomeCompleto.Split(' ')[0];
+            string rotaVazio = txtRotaVazio.Text.Trim();
+            decimal distancia = Convert.ToDecimal(txtDistancia.Text);
+            string pedagio = txtPedagio.Text.Trim();            
+
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
             if (codCliInicial.Text != string.Empty || codCliFinal.Text != string.Empty || txtPesoVazio.Text != string.Empty || txtCod_PagadorVazio.Text != string.Empty)
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro,  tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao)" +
-                      "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao)";
+                    string query = "INSERT INTO tbcargas (carga, emissao, status, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, ufcliorigem, ufclidestino, cidorigem, ciddestino, empresa, cadastro,  tomador, andamento, cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, cod_pagador, pagador, cid_pagador, uf_pagador, duracao, deslocamento, rota_entrega, distancia, emitepedagio)" +
+                      "VALUES (@Carga, GETDATE(), @status, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @ufcliorigem, @ufclidestino, @cidorigem, @ciddestino, @empresa, @cadastro,  @tomador, @andamento, @cod_expedidor, @expedidor, @cid_expedidor, @uf_expedidor, @cod_recebedor, @recebedor, @cid_recebedor, @uf_recebedor, @cod_pagador, @pagador, @cid_pagador, @uf_pagador, @duracao, @deslocamento, @rota_entrega, @distancia, @emitepedagio)";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", numCarga);
                     cmd.Parameters.AddWithValue("@status", "Pendente");
@@ -4209,7 +4267,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@material", materialVazio); // ou valor padrão
                     cmd.Parameters.AddWithValue("@portao", codigoDestino); // ou valor padrão
                     cmd.Parameters.AddWithValue("@situacao", "Pronto");
-                    cmd.Parameters.AddWithValue("@tomador", nomeCompleto);
+                    cmd.Parameters.AddWithValue("@tomador", primeiroNome);
                     cmd.Parameters.AddWithValue("@previsao", DateTime.Now.ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@codorigem", codigoOrigem);
                     cmd.Parameters.AddWithValue("@cliorigem", nomeOrigem);
@@ -4228,15 +4286,17 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
                     cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
                     cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
-                    cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
-                    //cmd.Parameters.AddWithValue("@distancia", distancia);
+                    cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());                   
                     cmd.Parameters.AddWithValue("@andamento", "Pendente");
                     cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
-                    cmd.Parameters.AddWithValue("@pagador", primeiroNome);
+                    cmd.Parameters.AddWithValue("@pagador", nomeCompleto);
                     cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
                     cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
-                    cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
-
+                    cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);                   
+                    cmd.Parameters.AddWithValue("@deslocamento", txtTrajeto.Text.Trim());
+                    cmd.Parameters.AddWithValue("@rota_entrega", rotaVazio);
+                    cmd.Parameters.AddWithValue("@distancia", distancia);
+                    cmd.Parameters.AddWithValue("@emitepedagio", pedagio);
                     // Abrindo a conexão e executando a query
                     conn.Open();
                     int rowsInserted = cmd.ExecuteNonQuery();
@@ -6554,7 +6614,34 @@ namespace NewCapit.dist.pages
                 txtPagadorVazio.Text = "TRANSNOVAG TRANSPORTES SA";
             }
         }
+        private void CancelarCarga(string carga)
+        {
+            string strConexao = System.Web.Configuration.WebConfigurationManager
+                .ConnectionStrings["conexao"].ConnectionString;
 
+            using (SqlConnection conn = new SqlConnection(strConexao))
+            {
+                string sql = "UPDATE tbcargas SET status = 'Cancelada', fl_exclusao = 'S' WHERE carga = @carga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@carga", carga);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            // Recarregar grid
+           // CarregarDados();
+        }
+        protected void gridCargas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "CancelarCarga")
+            {
+                string carga = e.CommandArgument.ToString();
+
+                CancelarCarga(carga);
+            }
+        }
 
 
 

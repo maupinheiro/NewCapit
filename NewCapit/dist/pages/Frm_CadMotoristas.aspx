@@ -115,10 +115,12 @@
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
                     Alertas
-                </div>               
-                <div class="card card-info">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-address-card"></i>&nbsp;MOTORISTAS - NOVO CADASTRO</h3>
+                </div>
+                <div class="card card-info">                    
+                    <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
+                        <h3 class="card-title"><i class="fas fa-address-card"></i>&nbsp;Gestão de Motoristas
+        <br />
+                            <small>Cadastrar Novo Motorista</small></h3>
                     </div>
                 </div>
                 <!-- Linha 1 do formulario -->
@@ -423,7 +425,7 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <span class="details">CÓDIGO:</span>
-                            <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" AutoPostBack="true"></asp:TextBox>
+                            <asp:TextBox ID="txtCodTra" runat="server" Style="text-align: center" CssClass="form-control" placeholder="" AutoPostBack="true" OnTextChanged="txtCodTra_TextChanged"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator27" runat="server" ControlToValidate="txtCodTra" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                         </div>
                     </div>

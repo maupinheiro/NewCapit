@@ -92,13 +92,13 @@
                                         <div class="col-md-1">
                                             <asp:Button ID="btnPesquisar" runat="server"
                                                 Text="Pesquisar"
-                                                CssClass="btn btn-primary"
+                                                CssClass="btn btn-primary w-100"
                                                 OnClick="PesquisarOS" />
                                         </div>
                                         <div class="col-md-1">
                                             <asp:Button ID="btnAbrirOs" runat="server"
                                                 Text="Abrir O.S."
-                                                CssClass="btn btn-success"
+                                                CssClass="btn btn-success w-100"
                                                  OnClick="btnAbrirOs_Click"
                                                  />
                                         </div>
