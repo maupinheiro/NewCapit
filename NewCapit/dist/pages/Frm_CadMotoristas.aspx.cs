@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -180,6 +181,67 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar1_Click(object sender, EventArgs e)
         {
+            // Validação
+            if (string.IsNullOrWhiteSpace(txtCodMot?.Text))
+            {
+                ExibirToastErro("Informe o código do motorista.");
+                txtCodMot.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtNomMot?.Text))
+            {
+                ExibirToastErro("Informe o nome do motorista.");
+                txtNomMot.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtDtEmissao?.Text))
+            {
+                ExibirToastErro("Informe a data de emissão do RG.");
+                txtDtEmissao.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(txtValCNH?.Text))
+            {
+                ExibirToastErro("Informe a data de emissão da CNH.");
+                txtValCNH.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(txtDtNasc?.Text))
+            {
+                ExibirToastErro("Informe a data de nascimento.");
+                txtDtNasc.Focus();
+                return;
+            }
+
+
+
+
+
+            // Validação de data
+            DateTime dataEmissaoRG;
+            if (!DateTime.TryParse(txtDtEmissao.Text, out dataEmissaoRG))
+            {
+                ExibirToastErro("Data de emissão inválida.");
+                txtDtEmissao.Focus();
+                return;
+            }
+            DateTime dataVencCNH;
+            if (!DateTime.TryParse(txtValCNH.Text, out dataVencCNH))
+            {
+                ExibirToastErro("Data de emissão inválida.");
+                txtValCNH.Focus();
+                return;
+            }
+            DateTime dataNasc;
+            if (!DateTime.TryParse(txtDtNasc.Text, out dataNasc))
+            {
+                ExibirToastErro("Data de emissão inválida.");
+                txtDtNasc.Focus();
+                return;
+            }
+
             string sql = @"INSERT INTO tbmotoristas (codmot, nommot, status, emissaorg, numrg, cargo, nucleo, orgaorg, cpf, numregcnh, codsegurancacnh, catcnh, venccnh, codliberacao, numpis, endmot, baimot, cidmot, ufmot, cepmot, fone3, fone2, validade, dtnasc, estcivil, sexo, nomepai, nomemae, codtra, transp, cadmot, cartaomot, naturalmot, numero, complemento, tipomot, venccartao, horario, funcao, frota, usucad, dtccad, venceti, caminhofoto, ufnascimento, formulariocnh, ufcnh, municipiocnh, vencmoop, cracha, regiao, numinss)
               VALUES
               (@codmot, @nommot, @status, @emissaorg, @numrg, @cargo, @nucleo, @orgaorg, @cpf, @numregcnh, @codsegurancacnh, @catcnh,@venccnh, @codliberacao, @numpis, @endmot, @baimot, @cidmot, @ufmot, @cepmot, @fone3, @fone2, @validade, @dtnasc, @estcivil, @sexo, @nomepai, @nomemae, @codtra, @transp, @cadmot, @cartaomot, @naturalmot, @numero, @complemento, @tipomot, @venccartao, @horario, @funcao, @frota, @usucad, @dtccad, @venceti, @caminhofoto, @ufnascimento, @formulariocnh, @ufcnh, @municipiocnh, @vencmoop, @cracha, @regiao, @numinss)";
@@ -195,7 +257,58 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@codmot", txtCodMot.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@nommot", txtNomMot.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@status", "ATIVO");
-                    cmd.Parameters.AddWithValue("@emissaorg", DateTime.Parse(txtDtEmissao.Text).ToString("yyyy-MM-dd"));
+                    
+                    if (DateTime.TryParseExact(
+                            txtDtEmissao.Text,
+                            "dd/MM/yyyy",
+                            CultureInfo.GetCultureInfo("pt-BR"),
+                            DateTimeStyles.None,
+                            out dataEmissaoRG))
+                    {
+                        cmd.Parameters.Add("@emissaorg", SqlDbType.DateTime).Value = dataEmissaoRG;
+                    }
+                    else
+                    {
+                        //throw new Exception("Data de emissão do RG inválida.");
+                        ExibirToastErro("Data de emissão do RG inválida.");
+                        Thread.Sleep(5000);
+                        txtDtEmissao.Text = "";
+                        txtDtEmissao.Focus();
+                    }
+                    if (DateTime.TryParseExact(
+                            txtValCNH.Text,
+                            "dd/MM/yyyy",
+                            CultureInfo.GetCultureInfo("pt-BR"),
+                            DateTimeStyles.None,
+                            out dataVencCNH))
+                    {
+                        cmd.Parameters.Add("@venccnh", SqlDbType.DateTime).Value = dataVencCNH;
+                    }
+                    else
+                    {
+                        //throw new Exception("Data de vencimento CNH inválida.");
+                        ExibirToastErro("Data de vencimento CNH inválida.");
+                        Thread.Sleep(5000);
+                        txtValCNH.Text = "";
+                        txtValCNH.Focus();
+                    }
+                    if (DateTime.TryParseExact(
+                            txtDtNasc.Text,
+                            "dd/MM/yyyy",
+                            CultureInfo.GetCultureInfo("pt-BR"),
+                            DateTimeStyles.None,
+                            out dataNasc))
+                    {
+                        cmd.Parameters.Add("@dtnasc", SqlDbType.DateTime).Value = dataNasc;
+                    }
+                    else
+                    {
+                        //throw new Exception("Data de nascimento inválida.");
+                        ExibirToastErro("Data de nascimento inválida.");
+                        Thread.Sleep(5000);
+                        txtDtNasc.Text = "";
+                        txtDtNasc.Focus();
+                    }
                     cmd.Parameters.AddWithValue("@numrg", txtRG.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@cargo", ddlCargo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@nucleo", cbFiliais.SelectedItem.ToString().Trim().ToUpper());
@@ -203,8 +316,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@cpf", txtCPF.Text);
                     cmd.Parameters.AddWithValue("@numregcnh", txtRegCNH.Text.ToUpper().Trim());
                     cmd.Parameters.AddWithValue("@codsegurancacnh", txtCodSeguranca.Text.ToUpper().Trim());
-                    cmd.Parameters.AddWithValue("@catcnh", ddlCat.SelectedItem.ToString().Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@venccnh", DateTime.Parse(txtValCNH.Text.ToUpper()).ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@catcnh", ddlCat.SelectedItem.ToString().Trim().ToUpper());                   
                     cmd.Parameters.AddWithValue("@codliberacao", txtCodLibRisco.Text.Trim());
                     cmd.Parameters.AddWithValue("@numpis", txtPIS.Text);
                     cmd.Parameters.AddWithValue("@endmot", txtEndCli.Text.ToUpper().Trim());
@@ -215,7 +327,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@fone3", txtFixo.Text);
                     cmd.Parameters.AddWithValue("@fone2", txtCelular.Text);
                     cmd.Parameters.AddWithValue("@validade", txtValLibRisco.Text);
-                    cmd.Parameters.AddWithValue("@dtnasc", DateTime.Parse(txtDtNasc.Text).ToString("yyyy-MM-dd"));
+                    
                     cmd.Parameters.AddWithValue("@estcivil", ddlEstCivil.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@sexo", ddlSexo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@nomepai", txtNomePai.Text.Trim().ToUpper());
@@ -277,20 +389,59 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@caminhofoto", "/fotos/" + txtCodMot.Text.Trim().ToUpper() + ".jpg");
                     cmd.Parameters.AddWithValue("@ufnascimento", ddlEstNasc.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@formulariocnh", txtFormCNH.Text.Trim());
-                    cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@municipiocnh", ddlMunicCnh.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@ufcnh", ddlCNH.SelectedItem.Text.ToUpper()); 
+                    if (ddlMunicCnh != null && ddlMunicCnh.SelectedItem != null)
+                    {
+                        cmd.Parameters.AddWithValue("@municipiocnh", ddlMunicCnh.SelectedItem.Text);
+                    }
+                    else
+                    {
+                        if (ddlMunicCnh.SelectedIndex == -1)
+                        {
+                            ExibirToastErro("Selecione o município da CNH.");
+                            Thread.Sleep(5000);                            
+                            ddlMunicCnh.Focus();
+                        }
+                    }
                     cmd.Parameters.AddWithValue("@vencmoop", txtVAlMoop.Text);
                     cmd.Parameters.AddWithValue("@cracha", txtCracha.Text.Trim());
                     cmd.Parameters.AddWithValue("@regiao", ddlRegioes.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@numinss", txtINSS.Text.Trim());
-
-
-
-
                     try
                     {
                         conn.Open();
                         cmd.ExecuteNonQuery();
+
+                        // Salvando o contato na tabela tbfoneveiculos
+                        if (txtCelular.Text != "" && ddlTipoMot.SelectedItem.Text != "FUNCIONÁRIO")
+                        {
+                            string connFone = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                            using (SqlConnection connContato = new SqlConnection(connFone))
+                            {
+                                string queryFone = "INSERT INTO tbfoneveiculos (veiculo, numero)" +
+                                  "VALUES (@veiculo,  @numero)";
+                                SqlCommand cmdFone = new SqlCommand(queryFone, connContato);
+
+                                cmdFone.Parameters.AddWithValue("@veiculo", txtCodMot.Text.ToUpper());
+                                cmdFone.Parameters.AddWithValue("@numero", txtCelular.Text.Trim());
+
+                                try
+                                {
+                                    connContato.Open();
+                                    cmdFone.ExecuteNonQuery();
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Logar ou exibir erro
+                                    Response.Write("<script>alert('Erro: " + ex.Message + "');</script>");
+                                }
+                            }
+
+                        }
+
+
+
                         string nomeUsuario = txtUsuCadastro.Text;
                         string mensagem = $"Olá, {nomeUsuario}!\nMotorista com código {txtCodMot.Text} cadastrado com sucesso.";
                         string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
@@ -302,28 +453,7 @@ namespace NewCapit.dist.pages
                     catch (Exception ex)
                     {
                         Response.Write("Erro ao salvar: " + ex.Message);
-                    }
-
-                    // Abrindo a conexão e executando a query
-                    //conn.Open();
-                    //int rowsInserted = cmd.ExecuteNonQuery();
-
-                    //if (rowsInserted > 0)
-                    //{
-                    //    string nomeUsuario = txtUsuCadastro.Text;
-                    //    string mensagem = $"Olá, {nomeUsuario}!\nMotorista com código {txtCodMot.Text} cadastrado com sucesso.";
-                    //    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                    //    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-
-                    //    // Redirecionar para a página de consulta
-                    //    Response.Redirect("/dist/pages/ConsultaMotoristas.aspx");
-                    //}
-                    //else
-                    //{
-                    //    string mensagem = "Falha ao cadastrar o veículo. Tente novamente.";
-                    //    string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                    //    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeErro", script, true);
-                    //}
+                    }                    
                 }
             }
             catch (Exception ex)
@@ -647,6 +777,49 @@ namespace NewCapit.dist.pages
 
                     txtCodSeguranca.Text = "";
                     txtCodSeguranca.Focus();
+
+                }
+
+            }
+        }
+        protected void txtCodTra_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodTra.Text != "")
+            {
+
+                string codigoRemetente = txtCodTra.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT codtra, fantra, antt FROM tbtransportadoras WHERE codtra = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoRemetente);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                ddlAgregados.SelectedItem.Text = reader["fantra"].ToString();
+                                txtCodMot.Focus();
+                            }
+                            else
+                            {
+                                ddlAgregados.ClearSelection();
+                                txtCodTra.Text = string.Empty;
+                                // Aciona o Toast via JavaScript
+
+                                // Acione o toast quando a página for carregada
+                                string script = "<script>showToast('Código do proprietário, não encontrado.');</script>";
+                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
+
+                                txtCodTra.Focus();
+                                // Opcional: exibir mensagem ao usuário
+                            }
+                        }
+                    }
 
                 }
 

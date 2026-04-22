@@ -675,6 +675,7 @@
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressao.aspx" />
     <Content Include="dist\pages\reajustefretes.aspx" />
+    <Content Include="dist\pages\RequisicaoCompra.aspx" />
     <Content Include="dist\pages\SimuladorFrete.aspx" />
     <Content Include="dist\pages\TrocaSenha.aspx" />
     <Content Include="dist\pages\UploadNF.aspx" />
@@ -5432,6 +5433,13 @@
     </Compile>
     <Compile Include="dist\pages\reajustefretes.aspx.designer.cs">
       <DependentUpon>reajustefretes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\RequisicaoCompra.aspx.cs">
+      <DependentUpon>RequisicaoCompra.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\RequisicaoCompra.aspx.designer.cs">
+      <DependentUpon>RequisicaoCompra.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\SapiensIntegrationService.cs" />
     <Compile Include="dist\pages\SimuladorFrete.aspx.cs">

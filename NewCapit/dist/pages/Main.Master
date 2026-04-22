@@ -756,6 +756,12 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
+                                        <a href="/dist/pages/RequisicaoCompra.aspx" class="nav-link">
+                                            <i class="fas fa-comments-dollar nav-icon"></i>
+                                            <p>Compras</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="/dist/pages/ColaboradoresManutencao.aspx" class="nav-link">
                                             <i class="fas fa-hard-hat nav-icon"></i>
                                             <p>Colaboradores</p>

@@ -123,7 +123,7 @@ namespace NewCapit.dist.pages
                     if (diasAberta == 1)
                     {
                         txtTempoParado.Text = "Veículo/Carreta na Oficina a " + diasAberta + " dia(s)";
-                        txtTempoParado.BackColor = System.Drawing.Color.Khaki;
+                        txtTempoParado.BackColor = System.Drawing.Color.Black;
                         txtTempoParado.ForeColor = System.Drawing.Color.OrangeRed;
                     }
 
@@ -924,7 +924,7 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 return;
             }
 
-            DateTime dataAbertura, dataInicio, dataFim;
+            DateTime dataAbertura;
 
             // 🔹 Validar Data de Abertura
             if (!DateTime.TryParseExact(txtAbertura.Text,
@@ -938,24 +938,27 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             }
 
             // 🔹 Validar Data de Início
+            DateTime dataInicio;
             if (!DateTime.TryParseExact(txtInicio.Text,
                 "dd/MM/yyyy HH:mm",
                 new CultureInfo("pt-BR"),
                 DateTimeStyles.None,
                 out dataInicio))
             {
-                Mensagem("info", "Informe uma data de início do serviço válida!");                
+                Mensagem("info", "Informe uma data de início do serviço válida!");
+                txtInicio.Focus();
                 return;
             }
 
             // 🔹 Validar Data Fim
+            DateTime dataFim;
             if (!DateTime.TryParseExact(txtTerm.Text,
                  "dd/MM/yyyy HH:mm",
                 new CultureInfo("pt-BR"),
                 DateTimeStyles.None,
                 out dataFim))
             {
-                Mensagem("info", "Informe uma data de termino do serviço válida!");                
+                Mensagem("info", "Informe uma data de termino do serviço válida!");
                 return;
             }
 
