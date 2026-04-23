@@ -10,11 +10,9 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-
-
 namespace NewCapit.dist.pages
 {
-    public partial class ControleDePedagio : System.Web.UI.Page
+    public partial class ControleDePedagioPernambuco : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario;
@@ -36,9 +34,9 @@ namespace NewCapit.dist.pages
                 }
                 CarregarGrid();
             }
-                
-            
-           
+
+
+
 
         }
         void CarregarGrid()
@@ -57,28 +55,20 @@ namespace NewCapit.dist.pages
                     FROM tbcarregamentos
                     WHERE pedagio = 'SIM'
                       
-                      AND (
-                            tomadorservico NOT LIKE 'VOLKS%'
-                            OR (
-                                tomadorservico LIKE 'VOLKS%'
-                                AND cva IS NOT NULL
-                                AND LTRIM(RTRIM(cva)) <> ''
-                               )
-                          )
-              
+                      AND  nucleo='PERNAMBUCO'
         ");
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
 
-                if (ddlPedagioFeito.SelectedItem.Text == "Pendente" )
+                if (ddlPedagioFeito.SelectedItem.Text == "Pendente")
                 {
                     sql.Append(@"AND pedagiofeito = 'Pendente'");
-                    
+
                 }
                 else if (ddlPedagioFeito.SelectedItem.Text == "Todos")
                 {
-                    
+
 
                 }
                 else
@@ -137,7 +127,7 @@ namespace NewCapit.dist.pages
         {
             if (e.CommandName == "Editar")
             {
-               // hdIdCarregamento.Value = e.CommandArgument.ToString();
+                // hdIdCarregamento.Value = e.CommandArgument.ToString();
 
                 int id = Convert.ToInt32(e.CommandArgument);
                 hdIdCarregamento.Value = id.ToString();
@@ -186,7 +176,7 @@ namespace NewCapit.dist.pages
                 SqlCommand check = new SqlCommand(@"
             SELECT pedagiofeito, idpedagio, valorpedagio, historicopedagio, creditopedagio, pagadorpedagioida, pagadorpedagiovolta, dtemissaopedagio, doc_pedagio 
             FROM tbcarregamentos 
-            WHERE id = @id", conn);
+            WHERE id = @id  AND  nucleo='PERNAMBUCO'", conn);
 
                 check.Parameters.AddWithValue("@id", hdIdCarregamento.Value);
 
@@ -210,7 +200,7 @@ namespace NewCapit.dist.pages
                 pagadorpedagiovolta = @pagadorpedagiovolta,
                 doc_pedagio = @doc_pedagio,
                 pedagiofeito = @pedagiofeito
-            WHERE id = @id", conn);
+            WHERE id = @id  AND  nucleo='PERNAMBUCO'", conn);
 
                 cmd.Parameters.AddWithValue("@id", hdIdCarregamento.Value);
                 cmd.Parameters.AddWithValue("@idpedagio", txtComprovantePedagio.Text.Trim());
@@ -303,7 +293,7 @@ namespace NewCapit.dist.pages
                 eixos,
                 tomadorservico, pedagio, pedagiofeito, valorpedagio, idpedagio,historicopedagio,creditopedagio,dtemissaopedagio, pagadorpedagioida, pagadorpedagiovolta, tipomot,cva
             FROM tbcarregamentos
-            WHERE id = @id";
+            WHERE id = @id  AND  nucleo='PERNAMBUCO'";
 
                 SqlCommand cmd = new SqlCommand(sql, con);
                 cmd.Parameters.AddWithValue("@id", idCarregamento);
@@ -334,14 +324,9 @@ namespace NewCapit.dist.pages
                     {
                         txtPagadorPedagioVolta.Text = "TRANSNOVAG - SEM PARAR";
                     }
-                    if (dr["tomadorservico"]?.ToString() == "VOLKSWAGEN")
-                    {
-                        txtDocumentoPedagio.Text = "CVA" + dr["cva"]?.ToString();
-                    }
-                    else
-                    {
-                        txtDocumentoPedagio.Text = "OC" + dr["num_carregamento"]?.ToString();
-                    }
+                  
+                    txtDocumentoPedagio.Text = "OC" + dr["num_carregamento"]?.ToString();
+                   
                     txtComprovantePedagio.Text = dr["idpedagio"]?.ToString();
                     txtValorPedagio.Text = dr["valorpedagio"] != DBNull.Value
                         ? Convert.ToDecimal(dr["valorpedagio"]).ToString("N2")
@@ -358,12 +343,5 @@ namespace NewCapit.dist.pages
         {
             CarregarGrid();
         }
-       
-
-        
-        
-
-
     }
-
 }

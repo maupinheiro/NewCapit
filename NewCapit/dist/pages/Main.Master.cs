@@ -40,6 +40,41 @@ namespace NewCapit
                 {
                     string nomeEmpresa = Session["EmpresaTrabalho"].ToString();
                     lblNucleo.Text = nomeEmpresa;
+
+                    // 1. Esconde todos primeiro
+                    MenuMatriz.Visible = false;
+                    MenuIpiranga.Visible = false;
+                    MenuMinas.Visible = false;
+                    MenuPernambuco.Visible = false;
+                    MenuDiadema.Visible = false;
+
+                    // 2. Mostra apenas o correspondente (ajuste conforme o nome que vem do banco)
+                    switch (nomeEmpresa.Trim())
+                    {
+                        case "MATRIZ":
+                            MenuMatriz.Visible = true;
+                            break;
+                        case "IPIRANGA":
+                            MenuIpiranga.Visible = true;
+                            break;
+                        case "MINAS GERAIS":
+                            MenuMinas.Visible = true;
+                            break;
+                        case "PERNAMBUCO":
+                            MenuPernambuco.Visible = true;
+                            break;
+                        case "CNT (CC)":
+                            MenuDiadema.Visible = true;
+                            break;
+                        case "Capit Logística":
+                            MenuMatriz.Visible = true;
+                            MenuIpiranga.Visible = true;
+                            MenuMinas.Visible = true;
+                            MenuPernambuco.Visible = true;
+                            MenuDiadema.Visible = true;
+                            break;
+                            // Adicione outros casos se necessário
+                    }
                 }
                 else
                 {

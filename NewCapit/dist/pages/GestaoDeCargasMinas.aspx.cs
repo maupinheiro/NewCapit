@@ -1,0 +1,194 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Web.Script.Serialization;
+using System.IO;
+using System.Collections;
+using OfficeOpenXml; // Namespace da EPPlus
+using OfficeOpenXml.Style;
+using ClosedXML.Excel;
+
+namespace NewCapit.dist.pages
+{
+    public partial class GestaoDeCargasMinas : System.Web.UI.Page
+    {
+        string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                CarregarGrid();
+
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+
+
+
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+
+                    Response.Redirect("Login.aspx");
+                }
+            }
+        }
+        protected void CarregarGrid()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // 1. Base da query
+                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao,cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, andamento, idviagem, saidaorigem, chegadadestino, saidaplanta , ot, codmot, frota FROM tbcargas WHERE nucleo='MINAS GERAIS' ";
+
+                // 2. Montagem dinâmica da string
+                if (!string.IsNullOrEmpty(DataInicio.Text))
+                    query += " AND previsao >= @DataInicio";
+
+                if (!string.IsNullOrEmpty(DataFim.Text))
+                    query += " AND previsao <= @DataFim";
+
+                if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
+                    query += " AND andamento = @Status";
+
+                if (!string.IsNullOrEmpty(txtPesquisa.Text))
+                    // Note os parênteses para proteger o OR e a remoção das aspas no @Pesquisa
+                    query += " AND (carga = @Pesquisa OR clidestino LIKE @PesquisaPerc)";
+
+                query += " ORDER BY emissao DESC";
+
+                // 3. Criação do comando APÓS a string estar completa
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                // 4. Adição dos parâmetros
+                if (!string.IsNullOrEmpty(DataInicio.Text))
+                    cmd.Parameters.AddWithValue("@DataInicio", DateTime.Parse(DataInicio.Text));
+
+                if (!string.IsNullOrEmpty(DataFim.Text))
+                    cmd.Parameters.AddWithValue("@DataFim", DateTime.Parse(DataFim.Text));
+
+                if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
+                    cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedValue);
+
+                if (!string.IsNullOrEmpty(txtPesquisa.Text))
+                {
+                    cmd.Parameters.AddWithValue("@Pesquisa", txtPesquisa.Text);
+                    // Passamos o valor com o % direto no parâmetro
+                    cmd.Parameters.AddWithValue("@PesquisaPerc", txtPesquisa.Text + "%");
+                }
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvCargas.DataSource = dt;
+                gvCargas.DataBind();
+                Session["Cargas"] = dt;
+            }
+        }
+        protected void btnFiltrar_Click(object sender, EventArgs e)
+        {
+            CarregarGrid();
+        }
+
+        protected void btnExportarExcel_Click(object sender, EventArgs e)
+        {
+            DataTable dt = Session["Cargas"] as DataTable;
+            if (dt == null) return;
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Cargas");
+                ws.Cell(1, 1).InsertTable(dt);
+                ws.Columns().AdjustToContents();
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename=Relatorio.xlsx");
+                    ms.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+            }
+        }
+
+        protected void Editar(object sender, EventArgs e)
+        {
+            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
+            {
+                string id = gvCargas.DataKeys[row.RowIndex].Value.ToString();
+
+                Response.Redirect("/dist/pages/Frm_AltCarga.aspx?id=" + id);
+            }
+        }
+
+        protected void gvCargas_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
+        {
+            gvCargas.PageIndex = e.NewPageIndex;
+            CarregarGrid();
+        }
+
+        protected void gvCargas_RowEditing(object sender, System.Web.UI.WebControls.GridViewEditEventArgs e)
+        {
+            gvCargas.EditIndex = e.NewEditIndex;
+            CarregarGrid();
+        }
+
+        protected void gvCargas_RowCancelingEdit(object sender, System.Web.UI.WebControls.GridViewCancelEditEventArgs e)
+        {
+            gvCargas.EditIndex = -1;
+            CarregarGrid();
+        }
+
+        protected void gvCargas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Oc")
+            {
+                string numCarregamento = e.CommandArgument.ToString();
+                string url = $"Frm_AtualizaColetaMatriz.aspx?carregamento={numCarregamento}";
+                Response.Redirect(url);
+
+            }
+        }
+
+
+
+        //protected void gvCargas_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
+        //{
+        //    //GridViewRow row = gvPedidos.Rows[e.RowIndex];
+        //    //int id = Convert.ToInt32(gvPedidos.DataKeys[e.RowIndex].Value);
+        //    //string cliente = ((TextBox)row.Cells[1].Controls[0]).Text;
+        //    //string data = ((TextBox)row.Cells[2].Controls[0]).Text;
+        //    //string valor = ((TextBox)row.Cells[3].Controls[0]).Text;
+
+        //    //using (SqlConnection conn = new SqlConnection(connStr))
+        //    //{
+        //    //    string sql = "UPDATE Pedidos SET Cliente=@Cliente, DataPedido=@DataPedido, Valor=@Valor WHERE Id=@Id";
+        //    //    SqlCommand cmd = new SqlCommand(sql, conn);
+        //    //    cmd.Parameters.AddWithValue("@Cliente", cliente);
+        //    //    cmd.Parameters.AddWithValue("@DataPedido", DateTime.Parse(data));
+        //    //    cmd.Parameters.AddWithValue("@Valor", decimal.Parse(valor));
+        //    //    cmd.Parameters.AddWithValue("@Id", id);
+
+        //    //    conn.Open();
+        //    //    cmd.ExecuteNonQuery();
+        //    //}
+
+        //    //gvPedidos.EditIndex = -1;
+        //    //CarregarPedidos();
+        //}
+    }
+}

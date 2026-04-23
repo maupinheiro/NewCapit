@@ -16,7 +16,7 @@ using System.Web.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class GestaoDeEntregasMatriz : System.Web.UI.Page
+    public partial class GestaoDeEntregasPernambuco : System.Web.UI.Page
     {
         string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
         string idViagem;
@@ -710,7 +710,7 @@ namespace NewCapit.dist.pages
             }
 
 
-            
+
         }
 
         public void Limpar()
@@ -885,7 +885,7 @@ namespace NewCapit.dist.pages
                     dr2.Close();
                 }
             }
-               
+
         }
 
         protected void btnAbrirMdfe_Click(object sender, EventArgs e)
@@ -902,8 +902,8 @@ namespace NewCapit.dist.pages
             ScriptManager.RegisterStartupScript(this, GetType(),
                 "openModal", "$('#modalMdfe').modal('show');", true);
         }
-        
-        
+
+
         void CarregarMdfeFiltro()
         {
             string sql = @"
@@ -945,7 +945,7 @@ namespace NewCapit.dist.pages
         }
         protected void btnBaixarMDFe_Click(object sender, EventArgs e)
         {
-            
+
             string usuario = Session["UsuarioLogado"].ToString() ?? "Sistema";
             bool selecionouAlgum = false;
 
@@ -1011,7 +1011,7 @@ namespace NewCapit.dist.pages
 
         protected void btnCancelarMDFe_Click(object sender, EventArgs e)
         {
-            
+
             ScriptManager.RegisterStartupScript(this, this.GetType(), "FecharModal",
                     "$('#modalMdfe').modal('hide');", true);
         }

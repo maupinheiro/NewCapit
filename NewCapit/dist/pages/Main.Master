@@ -332,7 +332,7 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item">
+                                    <li class="nav-item" id="MenuMatriz" runat="server">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Matriz</p>
@@ -373,27 +373,27 @@
                                         </ul>
                                     </li>
                                     <!-- Ipiranga -->
-                                    <li class="nav-item">
+                                    <li class="nav-item" id="MenuIpiranga" runat="server">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Ipiranga</p>
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
+                                                <a href="/dist/pages/GestaoDePedidosIpiranga.aspx" class="nav-link">
                                                     <i class="fas fa-pallet nav-icon"></i>
                                                     <p>Pedidos</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
+                                                <a href="/dist/pages/GestaoDeCargasIpiranga.aspx" class="nav-link">
                                                     <i class="fas fa-boxes nav-icon"></i>
                                                     <p>Cargas</p>
                                                 </a>
                                             </li>
                                            
                                             <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link">
+                                                <a href="/dist/pages/GestaoDeEntregasIpiranga.aspx" class="nav-link">
                                                     <i class="nav-icon fas fa-shipping-fast"></i>
                                                     <p>
                                                         Coletas/Entregas 
@@ -401,7 +401,7 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="/dist/pages/ControleDePedagio.aspx" class="nav-link">
+                                                <a href="/dist/pages/ControleDePedagioIpiranga.aspx" class="nav-link">
                                                     <i class="fas fa-map-marker-alt nav-icon"></i>
                                                     <p>Controle de Pedágio</p>
                                                 </a>
@@ -409,27 +409,27 @@
                                         </ul>
                                     </li>
                                     <!-- Minas -->
-                                    <li class="nav-item">
+                                    <li class="nav-item" id="MenuMinas" runat="server">
                                             <a href="#" class="nav-link">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Minas</p>
                                             </a>
                                             <ul class="nav nav-treeview">
                                                 <li class="nav-item">
-                                                    <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
+                                                    <a href="/dist/pages/GestaoDePedidosMinas.aspx" class="nav-link">
                                                         <i class="fas fa-pallet nav-icon"></i>
                                                         <p>Pedidos</p>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
+                                                    <a href="/dist/pages/GestaoDeCargasMinas.aspx" class="nav-link">
                                                         <i class="fas fa-boxes nav-icon"></i>
                                                         <p>Cargas</p>
                                                     </a>
                                                 </li>
                                                
                                                 <li class="nav-item">
-                                                    <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link">
+                                                    <a href="/dist/pages/GestaoDeEntregasMinas.aspx" class="nav-link">
                                                         <i class="nav-icon fas fa-shipping-fast"></i>
                                                         <p>
                                                             Coletas/Entregas 
@@ -437,7 +437,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="/dist/pages/ControleDePedagio.aspx" class="nav-link">
+                                                    <a href="/dist/pages/ControleDePedagioMinas.aspx" class="nav-link">
                                                         <i class="fas fa-map-marker-alt nav-icon"></i>
                                                         <p>Controle de Pedágio</p>
                                                     </a>
@@ -445,27 +445,27 @@
                                             </ul>
                                         </li>
                                     <!-- Pernambuco -->
-                                    <li class="nav-item">
+                                    <li class="nav-item" id="MenuPernambuco" runat="server">
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Pernambuco</p>
                                                 </a>
                                                 <ul class="nav nav-treeview">
                                                     <li class="nav-item">
-                                                        <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
+                                                        <a href="/dist/pages/GestaoDePedidosPernambuco.aspx" class="nav-link">
                                                             <i class="fas fa-pallet nav-icon"></i>
                                                             <p>Pedidos</p>
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
+                                                        <a href="/dist/pages/GestaoDeCargasPernambuco.aspx" class="nav-link">
                                                             <i class="fas fa-boxes nav-icon"></i>
                                                             <p>Cargas</p>
                                                         </a>
                                                     </li>
                                                   
                                                     <li class="nav-item">
-                                                        <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link">
+                                                        <a href="/dist/pages/GestaoDeEntregasPernambuco.aspx" class="nav-link">
                                                             <i class="nav-icon fas fa-shipping-fast"></i>
                                                             <p>
                                                                 Coletas/Entregas 
@@ -473,14 +473,14 @@
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="/dist/pages/ControleDePedagio.aspx" class="nav-link">
+                                                        <a href="/dist/pages/ControleDePedagioPernambuco.aspx" class="nav-link">
                                                             <i class="fas fa-map-marker-alt nav-icon"></i>
                                                             <p>Controle de Pedágio</p>
                                                         </a>
                                                     </li>
                                                 </ul>
                                             </li>
-                                    <li class="nav-item">
+                                    <li class="nav-item" id="MenuDiadema" runat="server">
                                         <a href="#" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>CC - Diadema</p>

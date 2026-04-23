@@ -686,6 +686,18 @@
     <Content Include="dist\pages\Frm_RotaKrona.aspx" />
     <Content Include="dist\pages\ControleAcesso.aspx" />
     <Content Include="dist\pages\Indicadores.aspx" />
+    <Content Include="dist\pages\GestaoDePedidosIpiranga.aspx" />
+    <Content Include="dist\pages\GestaoDeCargasIpiranga.aspx" />
+    <Content Include="dist\pages\GestaoDeEntregasIpiranga.aspx" />
+    <Content Include="dist\pages\ControleDePedagioIpiranga.aspx" />
+    <Content Include="dist\pages\GestaoDePedidosMinas.aspx" />
+    <Content Include="dist\pages\GestaoDeCargasMinas.aspx" />
+    <Content Include="dist\pages\GestaoDeEntregasMinas.aspx" />
+    <Content Include="dist\pages\ControleDePedagioMinas.aspx" />
+    <Content Include="dist\pages\GestaoDePedidosPernambuco.aspx" />
+    <Content Include="dist\pages\GestaoDeCargasPernambuco.aspx" />
+    <Content Include="dist\pages\GestaoDeEntregasPernambuco.aspx" />
+    <Content Include="dist\pages\ControleDePedagioPernambuco.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -5493,6 +5505,90 @@
     </Compile>
     <Compile Include="dist\pages\Indicadores.aspx.designer.cs">
       <DependentUpon>Indicadores.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidosIpiranga.aspx.cs">
+      <DependentUpon>GestaoDePedidosIpiranga.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidosIpiranga.aspx.designer.cs">
+      <DependentUpon>GestaoDePedidosIpiranga.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasIpiranga.aspx.cs">
+      <DependentUpon>GestaoDeCargasIpiranga.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasIpiranga.aspx.designer.cs">
+      <DependentUpon>GestaoDeCargasIpiranga.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasIpiranga.aspx.cs">
+      <DependentUpon>GestaoDeEntregasIpiranga.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasIpiranga.aspx.designer.cs">
+      <DependentUpon>GestaoDeEntregasIpiranga.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ControleDePedagioIpiranga.aspx.cs">
+      <DependentUpon>ControleDePedagioIpiranga.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleDePedagioIpiranga.aspx.designer.cs">
+      <DependentUpon>ControleDePedagioIpiranga.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidosMinas.aspx.cs">
+      <DependentUpon>GestaoDePedidosMinas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidosMinas.aspx.designer.cs">
+      <DependentUpon>GestaoDePedidosMinas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasMinas.aspx.cs">
+      <DependentUpon>GestaoDeCargasMinas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasMinas.aspx.designer.cs">
+      <DependentUpon>GestaoDeCargasMinas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasMinas.aspx.cs">
+      <DependentUpon>GestaoDeEntregasMinas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasMinas.aspx.designer.cs">
+      <DependentUpon>GestaoDeEntregasMinas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ControleDePedagioMinas.aspx.cs">
+      <DependentUpon>ControleDePedagioMinas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleDePedagioMinas.aspx.designer.cs">
+      <DependentUpon>ControleDePedagioMinas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidosPernambuco.aspx.cs">
+      <DependentUpon>GestaoDePedidosPernambuco.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDePedidosPernambuco.aspx.designer.cs">
+      <DependentUpon>GestaoDePedidosPernambuco.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasPernambuco.aspx.cs">
+      <DependentUpon>GestaoDeCargasPernambuco.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasPernambuco.aspx.designer.cs">
+      <DependentUpon>GestaoDeCargasPernambuco.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasPernambuco.aspx.cs">
+      <DependentUpon>GestaoDeEntregasPernambuco.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeEntregasPernambuco.aspx.designer.cs">
+      <DependentUpon>GestaoDeEntregasPernambuco.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ControleDePedagioPernambuco.aspx.cs">
+      <DependentUpon>ControleDePedagioPernambuco.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleDePedagioPernambuco.aspx.designer.cs">
+      <DependentUpon>ControleDePedagioPernambuco.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\XmlExportService.cs" />
     <Compile Include="KronaModels.cs" />
