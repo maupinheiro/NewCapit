@@ -254,83 +254,182 @@ namespace NewCapit.dist.pages
             if (e.CommandName == "pdf")
             {
 
+                string id = e.CommandArgument.ToString();
+                CarregarOrdem(id);
+
+                // abre modal
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "modal", "abrirModal();", true);
+
                 // 2. Busca os dados que acabaram de ser gravados na tabela
-                string sqlBusca = "SELECT * FROM tbordem_servico WHERE id_os = @id"; // Ajuste 'id_os' para o nome da sua PK
+                // string sqlBusca = "SELECT * FROM tbordem_servico WHERE id_os = @id"; // Ajuste 'id_os' para o nome da sua PK
 
                 // Garante que a conexão está aberta para o segundo comando
-                if (con.State == ConnectionState.Closed) con.Open();
+                //if (con.State == ConnectionState.Closed) con.Open();
 
-                using (SqlCommand cmdBusca = new SqlCommand(sqlBusca, con))
+                //using (SqlCommand cmdBusca = new SqlCommand(sqlBusca, con))
+                //{
+                //    cmdBusca.Parameters.AddWithValue("@id", numeroOS);
+
+                //    using (SqlDataReader dr = cmdBusca.ExecuteReader())
+                //    {
+                //        OrdemServico os = new OrdemServico();
+
+                //        if (dr.Read())
+                //        {
+                //            // --- Populando o objeto PDF com os campos da TABELA ---
+                //            os.numero_os = numeroOS;
+                //            os.data_abertura = Convert.ToDateTime(dr["data_abertura"]);
+                //            os.resp_abertura = dr["resp_abertura"].ToString();
+
+                //            // Veículo
+                //            os.id_veiculo = dr["id_veiculo"].ToString();
+
+                //            os.placa = dr["placa"].ToString();
+                //            os.tipo_veiculo = dr["tipo_veiculo"].ToString();
+                //            os.marca = dr["marca"].ToString();
+                //            os.modelo = dr["modelo"].ToString();
+                //            os.ano_modelo = dr["ano_modelo"].ToString();
+                //            os.nucleo_veiculo = dr["nucleo_veiculo"].ToString();
+                //            os.km_abertura = dr["km_abertura"].ToString();
+
+                //            // Motorista
+                //            os.id_motorista = dr["id_motorista"].ToString();
+                //            os.nome_motorista = dr["nome_motorista"].ToString();
+                //            os.transp_motorista = dr["transp_motorista"].ToString();
+                //            os.nucleo_motorista = dr["nucleo_motorista"].ToString();
+
+                //            // Serviço
+                //            os.tipo_os = dr["tipo_os"].ToString();
+                //            os.tipo_servico = dr["interno_externo"].ToString();
+
+                //            // Fornecedor (Lógica: se nulo no banco, assume Interno)
+                //            if (dr["id_fornecedor"] == DBNull.Value)
+                //            {
+                //                os.id_fornecedor = "6424";
+                //                os.nome_fornecedor = "MANUTENÇÃO - INTERNA";
+                //            }
+                //            else
+                //            {
+                //                os.id_fornecedor = dr["id_fornecedor"].ToString();
+                //                os.nome_fornecedor = dr["nome_fornecedor"].ToString();
+                //            }
+
+                //            // Descrições
+                //            os.parte_mecanica = dr["parte_mecanica"].ToString();
+                //            os.parte_eletrica = dr["parte_eletrica"].ToString();
+                //            os.parte_borracharia = dr["parte_borracharia"].ToString();
+                //            os.parte_funilaria = dr["parte_funilaria"].ToString();
+
+                //            // 3. Gera o PDF após fechar o Reader (dentro do if para garantir que achou a OS)
+                //            dr.Close(); // Fechar o Reader antes de gerar o PDF para liberar a conexão
+
+                //            byte[] pdf = GeradorPDFOS.GerarPDF(os);
+
+                //            Response.Clear();
+                //            Response.ContentType = "application/pdf";
+                //            Response.AddHeader("content-disposition", "attachment;filename=OS_" + numeroOS + ".pdf");
+                //            Response.BinaryWrite(pdf);
+                //            Response.Flush();
+                //            HttpContext.Current.ApplicationInstance.CompleteRequest();
+                //        }
+                //    }
+                //}
+            }
+        }
+        private void CarregarOrdem(string id)
+        {
+            string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(strConn))
+            {
+                string sql = @"SELECT status, id_os, tipo_os, data_abertura, interno_externo, tipo_os, id_fornecedor, nome_fornecedor, id_motorista, nome_motorista,transp_motorista, nucleo_motorista, tipo_veiculo, id_veiculo, placa, tipo_veiculo, marca, modelo, ano_modelo, id_carreta
+                       FROM tbordem_servico
+                       WHERE id_os = @id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
                 {
-                    cmdBusca.Parameters.AddWithValue("@id", numeroOS);
-
-                    using (SqlDataReader dr = cmdBusca.ExecuteReader())
+                    if (dr["status"].ToString() == "1")
                     {
-                        OrdemServico os = new OrdemServico();
-
-                        if (dr.Read())
-                        {
-                            // --- Populando o objeto PDF com os campos da TABELA ---
-                            os.numero_os = numeroOS;
-                            os.data_abertura = Convert.ToDateTime(dr["data_abertura"]);
-                            os.resp_abertura = dr["resp_abertura"].ToString();
-
-                            // Veículo
-                            os.id_veiculo = dr["id_veiculo"].ToString();
-                           
-                            os.placa = dr["placa"].ToString();
-                            os.tipo_veiculo = dr["tipo_veiculo"].ToString();
-                            os.marca = dr["marca"].ToString();
-                            os.modelo = dr["modelo"].ToString();
-                            os.ano_modelo = dr["ano_modelo"].ToString();
-                            os.nucleo_veiculo = dr["nucleo_veiculo"].ToString();
-                            os.km_abertura = dr["km_abertura"].ToString();
-
-                            // Motorista
-                            os.id_motorista = dr["id_motorista"].ToString();
-                            os.nome_motorista = dr["nome_motorista"].ToString();
-                            os.transp_motorista = dr["transp_motorista"].ToString();
-                            os.nucleo_motorista = dr["nucleo_motorista"].ToString();
-
-                            // Serviço
-                            os.tipo_os = dr["tipo_os"].ToString();
-                            os.tipo_servico = dr["interno_externo"].ToString();
-
-                            // Fornecedor (Lógica: se nulo no banco, assume Interno)
-                            if (dr["id_fornecedor"] == DBNull.Value)
-                            {
-                                os.id_fornecedor = "6424";
-                                os.nome_fornecedor = "MANUTENÇÃO - INTERNA";
-                            }
-                            else
-                            {
-                                os.id_fornecedor = dr["id_fornecedor"].ToString();
-                                os.nome_fornecedor = dr["nome_fornecedor"].ToString();
-                            }
-
-                            // Descrições
-                            os.parte_mecanica = dr["parte_mecanica"].ToString();
-                            os.parte_eletrica = dr["parte_eletrica"].ToString();
-                            os.parte_borracharia = dr["parte_borracharia"].ToString();
-                            os.parte_funilaria = dr["parte_funilaria"].ToString();
-
-                            // 3. Gera o PDF após fechar o Reader (dentro do if para garantir que achou a OS)
-                            dr.Close(); // Fechar o Reader antes de gerar o PDF para liberar a conexão
-
-                            byte[] pdf = GeradorPDFOS.GerarPDF(os);
-
-                            Response.Clear();
-                            Response.ContentType = "application/pdf";
-                            Response.AddHeader("content-disposition", "attachment;filename=OS_" + numeroOS + ".pdf");
-                            Response.BinaryWrite(pdf);
-                            Response.Flush();
-                            HttpContext.Current.ApplicationInstance.CompleteRequest();
-                        }
+                        txtStatus.BackColor = System.Drawing.Color.Yellow;
+                        txtStatus.ForeColor = System.Drawing.Color.Black;
+                        txtStatus.Text = "Aberta";
+                       
                     }
+                    else if (dr["status"].ToString() == "2")
+                    {
+                        txtStatus.BackColor = System.Drawing.Color.Green;
+                        txtStatus.ForeColor = System.Drawing.Color.White;
+                        txtStatus.Text = "Finalizada";                       
+                    }
+                    else if (dr["status"].ToString() == "3")
+                    {
+                        txtStatus.BackColor = System.Drawing.Color.Red;
+                        txtStatus.ForeColor = System.Drawing.Color.White;
+                        txtStatus.Text = "Cancelada";                        
+                    }
+                    else
+                    {
+                        txtStatus.Text = "N/I";
+                    }
+                    lblOS.Text = "<b>Nº O.S.:</b></br> " + dr["id_os"].ToString();                    
+                    if (dr["tipo_os"].ToString() == "P")
+                    {
+                        lblTipo_Os.Text = "<b>Tipo O.S.:</b></br> Preventiva";
+                    }
+                    else if (dr["tipo_os"].ToString() == "C")
+                    {
+                        lblTipo_Os.Text = "<b>Tipo O.S.:</b></br> Corretiva";
+                    }
+                    else
+                    {
+                        lblTipo_Os.Text = "<b>Tipo O.S.:</b></br> N/I";
+                    }
+                    lblEmissao.Text = "<b>Emissão:</b></br> " + Convert.ToDateTime(dr["data_abertura"]).ToString("dd/MM/yyyy HH:mm");                   
+                    if (dr["interno_externo"].ToString() == "I")
+                    {                        
+                        lblInternoExterno.Text = "<b>Tipo O.S.:</b></br> Interno";
+                    }
+                    else if (dr["interno_externo"].ToString() == "E")
+                    {                        
+                        lblInternoExterno.Text = "<b>Tipo O.S.:</b></br> Externo";
+                    }
+                    else                    {
+                        
+                        lblInternoExterno.Text = "<b>Tipo O.S.:</b></br> N/I";
+                    }
+                    lblPrestador.Text = "<b>Prestador:</b></br> " + dr["id_fornecedor"].ToString() + " - " + dr["nome_fornecedor"].ToString();
+                    lblMotorista.Text = "<b>Motorista:</b></br> " + dr["id_motorista"].ToString().Trim() + " - " + dr["nome_motorista"].ToString().Trim() + "  <b>Transp.:</b> " + dr["transp_motorista"].ToString().Trim() + "  <b>Núcleo:</b> " + dr["nucleo_motorista"].ToString().Trim();
+                    if (dr["tipo_veiculo"].ToString() == "CARRETA")
+                    {
+                        lblVeiculo.Text = "<b>Veículo:</b></br> " + dr["id_carreta"].ToString().Trim() + " - " + dr["placa"].ToString().Trim() + "  <b>Tipo:</b> " + dr["tipo_veiculo"].ToString().Trim() + "  <b>Marca/Modelo:</b> " + dr["marca"].ToString().Trim() + "/" + dr["modelo"].ToString().Trim() + "  <b>Fab/Mod:</b> " + dr["ano_modelo"].ToString().Trim();
+                    }                    
+                    else
+                    {
+                        lblVeiculo.Text = "<b>Veículo:</b></br> " + dr["id_veiculo"].ToString().Trim() + " - " + dr["placa"].ToString().Trim() + "  <b>Tipo:</b> " + dr["tipo_veiculo"].ToString().Trim() + "  <b>Marca/Modelo:</b> " + dr["marca"].ToString().Trim() + "/" + dr["modelo"].ToString().Trim() + "  <b>Fab/Mod:</b> " + dr["ano_modelo"].ToString().Trim();
+                    }
+
+
+                   
+
                 }
             }
         }
-        
+        protected void btnImprimir_Click(object sender, EventArgs e)
+        {
+            // Aqui você pode:
+            // 1. Gerar PDF com iText7
+            // 2. Ou abrir página de impressão
+
+           // Response.Redirect("ImprimirOrdem.aspx?id=" + lblOrdem.Text.Replace("<b>Ordem:</b> ", ""));
+        }
+
         protected void gvOS_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)

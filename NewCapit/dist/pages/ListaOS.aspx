@@ -3,6 +3,18 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <script>
+        function abrirModal() {
+            var myModal = new bootstrap.Modal(document.getElementById('modalOrdem'));
+            myModal.show();
+        }
+
+        function fecharModal() {
+            var modalEl = document.getElementById('modalOrdem');
+            var modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+        }
+    </script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -99,8 +111,7 @@
                                             <asp:Button ID="btnAbrirOs" runat="server"
                                                 Text="Abrir O.S."
                                                 CssClass="btn btn-success w-100"
-                                                 OnClick="btnAbrirOs_Click"
-                                                 />
+                                                OnClick="btnAbrirOs_Click" />
                                         </div>
 
                                     </div>
@@ -141,7 +152,7 @@
                                                 DataFormatString="{0:dd/MM/yyyy HH:mm}" />
                                             <%--<asp:BoundField DataField="status_texto" HeaderText="Status" />--%>
 
-                                           <%-- <asp:TemplateField HeaderText="Status">
+                                            <%-- <asp:TemplateField HeaderText="Status">
                                                 <ItemTemplate>
 
                                                     <asp:Label ID="lblStatus" runat="server"
@@ -149,12 +160,12 @@
 
                                                 </ItemTemplate>
                                             </asp:TemplateField>--%>
-                                            
+
                                             <asp:TemplateField HeaderText="Status">
                                                 <ItemTemplate>
                                                     <asp:Image ID="imgStatus" runat="server" Width="20px" Height="20px" ToolTip='<%# Eval("status_texto") %>' />
                                                     <asp:Label ID="lblStatus" runat="server" Text='<%# Eval("status_texto") %>'></asp:Label>
-                                                   <%-- <asp:Image ID="imgStatus" runat="server" ToolTip='<%# Eval("status_texto") %>' />--%>
+                                                    <%-- <asp:Image ID="imgStatus" runat="server" ToolTip='<%# Eval("status_texto") %>' />--%>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
 
@@ -194,6 +205,66 @@
                 </div>
             </div>
         </section>
+        <!-- modal visualizar OS -->
+        <div class="modal fade" id="modalOrdem" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ordem de Serviço</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-10"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span class="details"></span>
+                                    <asp:TextBox ID="txtStatus" Style="text-align: center" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-1">
+                                <asp:Label ID="lblOS" runat="server" />
+                            </div>
+                            <div class="col-md-1">
+                                <asp:Label ID="lblTipo_Os" runat="server" />
+                            </div>
+                            <div class="col-md-2">
+                                <asp:Label ID="lblEmissao" runat="server" />
+                            </div>
+                            <div class="col-md-1">
+                                <asp:Label ID="lblInternoExterno" runat="server" />
+                            </div>
+                            <div class="col-md-7">
+                                <asp:Label ID="lblPrestador" runat="server" />
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <asp:Label ID="lblMotorista" runat="server" />
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <asp:Label ID="lblVeiculo" runat="server" /><br />
+                            </div>                            
+                        </div>
+                        
+                    </div>
+
+                    <div class="modal-footer">
+                        <asp:Button ID="btnFechar" runat="server" Text="Fechar" CssClass="btn btn-secondary" OnClientClick="fecharModal(); return false;" />
+                        <asp:Button ID="btnImprimir" runat="server" Text="Imprimir Ordem" CssClass="btn btn-primary" OnClick="btnImprimir_Click" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
 

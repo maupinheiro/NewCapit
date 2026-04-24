@@ -22,10 +22,132 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
+                if (Session["UsuarioLogado"] != null)
+                {
+                    string nomeUsuario = Session["UsuarioLogado"].ToString();
+                    var lblUsuario = nomeUsuario;
+                }
+                else
+                {
+                    var lblUsuario = "<Usuário>";
+                    Response.Redirect("Login.aspx");
+                }
+
                 Session["itens"] = new DataTable();
                 CriarTabela();
+                CarregarDescricao();
+            } 
+            txtData.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+        }
+        private void CarregarDescricao()
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT id_peca, descricao_peca FROM tbestoque_pecas WHERE fl_exclusao is null AND status = 'ATIVO' ORDER BY descricao_peca";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                ddlDescricao.DataSource = reader;
+                ddlDescricao.DataTextField = "descricao_peca";  // Campo a ser exibido
+                ddlDescricao.DataValueField = "id_peca";  // Valor associado ao item
+                ddlDescricao.DataBind();
+
+                // Adicionar o item padrão
+                ddlDescricao.Items.Insert(0, new ListItem("", "0"));
             }
         }
+        private void PreencherDescricao(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+                string query = "SELECT id_peca, descricao_peca, unidade, estoque_peca FROM tbestoque_pecas WHERE id_peca = @ID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtCodigo.Text = reader["id_peca"].ToString();
+                    ddlDescricao.SelectedItem.Text = reader["descricao_peca"].ToString();
+                    txtUnidade.Text = reader["unidade"].ToString();
+                    txtEstoque.Text = reader["estoque_peca"].ToString();
+                    txtQtd.Focus();
+                }
+            }
+        }
+        protected void txtCodigo_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodigo.Text != "")
+            {
+                string codigoDescricao = txtCodigo.Text.Trim();
+                string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    string query = "SELECT id_peca, descricao_peca, unidade, estoque_peca FROM tbestoque_pecas WHERE id_peca = @Codigo";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Codigo", codigoDescricao);
+                        conn.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                txtCodigo.Text = reader["id_peca"].ToString();
+                                ddlDescricao.SelectedItem.Text = reader["descricao_peca"].ToString();
+                                txtUnidade.Text = reader["unidade"].ToString();
+                                txtEstoque.Text = reader["estoque_peca"].ToString();
+                                txtQtd.Focus();
+                            }
+                            else
+                            {
+                                Mensagem("danger", "Código do produto, não encontrado. Verifique o código " + txtCodigo.Text.Trim() + " digitado.");
+                                ddlDescricao.ClearSelection();
+                                txtCodigo.Text = string.Empty;                                
+                                txtCodigo.Focus();                                
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+        protected void Mensagem(string tipo, string texto)
+        {
+            divMsg.Visible = true;
+
+            divMsg.Attributes["class"] =
+                "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+
+            lblMsgGeral.Text = texto;
+        }
+        protected void ddlDescricao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSelecionado = int.Parse(ddlDescricao.SelectedValue);
+
+            // Preencher os campos com base no valor selecionado
+            if (idSelecionado > 0)
+            {
+                PreencherDescricao(idSelecionado);
+            }
+            else
+            {
+                LimparCampos();
+            }
+        }
+        private void LimparCampos()
+        {
+            txtCodigo.Text = string.Empty;
+            txtUnidade.Text = string.Empty;
+            txtEstoque.Text = string.Empty;
+            ddlDescricao.SelectedItem.Text = string.Empty;
+        }
+
+
 
         private void CriarTabela()
         {
@@ -36,20 +158,20 @@ namespace NewCapit.dist.pages
 
             Session["itens"] = dt;
         }
-        //protected void btnSalvarItem_Click(object sender, EventArgs e)
-        //{
-        //    DataTable dt = (DataTable)Session["itens"];
+        protected void btnSalvarItem_Click(object sender, EventArgs e)
+        {
+            DataTable dt = (DataTable)Session["itens"];
 
-        //    DataRow dr = dt.NewRow();
-        //    //dr["Produto"] = ddlProduto.SelectedIndex;
-        //    //dr["Quantidade"] = txtQuantidade.Text;
-        //    //dr["Estoque"] = BuscarEstoque(ddlProduto.SelectedItem.Text);
+            DataRow dr = dt.NewRow();
+            dr["Produto"] = ddlDescricao.SelectedItem.Text;
+            dr["Quantidade"] = txtQuantidade.Text;
+            dr["Estoque"] = BuscarEstoque(ddlDescricao.SelectedItem.Text);
 
-        //    dt.Rows.Add(dr);
+            dt.Rows.Add(dr);
 
-        //    gvItens.DataSource = dt;
-        //    gvItens.DataBind();
-        //}
+            gvItens.DataSource = dt;
+            gvItens.DataBind();
+        }
         private string BuscarEstoque(string produto)
         {
             string estoque = "0";
@@ -169,57 +291,59 @@ namespace NewCapit.dist.pages
                 cmd.ExecuteNonQuery();
             }
         }
-        public class ProdutoERP
-        {
-            public string id_peca { get; set; }
-            public string text { get; set; } // Select2 usa isso            
-            public string descricao_peca { get; set; }
-            public string unidade { get; set; }
-        }
+        //public class ProdutoERP
+        //{
+        //    public string id_peca { get; set; }
+        //    public string text { get; set; } // Select2 usa isso            
+        //    public string descricao_peca { get; set; }
+        //    public string unidade { get; set; }
+        //}
         
-        [WebMethod]
-        private static DataTable BuscarNoBanco(string termo)
-        {
-            DataTable dt = new DataTable();
+        //[WebMethod]
+        //private static DataTable BuscarNoBanco(string termo)
+        //{
+        //    DataTable dt = new DataTable();
 
-            string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+        //    string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string sql = @"
-            SELECT TOP 20 id_peca, descricao_peca
-            FROM tbestoque_pecas
-            WHERE descricao_peca LIKE @termo
-            ORDER BY descricao_peca";
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+        //    {
+        //        string sql = @"
+        //    SELECT TOP 20 id_peca, descricao_peca
+        //    FROM tbestoque_pecas
+        //    WHERE descricao_peca LIKE @termo
+        //    ORDER BY descricao_peca";
 
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
-                }
-            }
+        //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+        //            da.Fill(dt);
+        //        }
+        //    }
 
-            return dt;
-        }
-        public static List<object> BuscarProdutos(string termo)
-        {
-            var lista = new List<object>();
+        //    return dt;
+        //}
+        //public static List<object> BuscarProdutos(string termo)
+        //{
+        //    var lista = new List<object>();
 
-            DataTable dt = BuscarNoBanco(termo);
+        //    DataTable dt = BuscarNoBanco(termo);
 
-            foreach (DataRow r in dt.Rows)
-            {
-                lista.Add(new
-                {
-                    id = r["id_peca"].ToString(),
-                    text = r["descricao_peca"].ToString()
-                });
-            }
+        //    foreach (DataRow r in dt.Rows)
+        //    {
+        //        lista.Add(new
+        //        {
+        //            id = r["id_peca"].ToString(),
+        //            text = r["descricao_peca"].ToString()
+        //        });
+        //    }
 
-            return lista;
-        }
+        //    return lista;
+        //}
+
+
         //public static object BuscarProdutosERP(string termo, int pagina)
         //{
         //    int pageSize = 20;
@@ -259,7 +383,7 @@ namespace NewCapit.dist.pages
         //            lista.Add(new ProdutoERP
         //            {
         //                id_peca = dr["id_peca"].ToString(),
-        //                text = dr["id_peca"] + " - " + dr["descricao_peca"], 
+        //                text = dr["id_peca"] + " - " + dr["descricao_peca"],
         //                descricao_peca = dr["descricao_peca"].ToString(),
         //                unidade = dr["unidade"].ToString()
         //            });
