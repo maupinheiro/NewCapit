@@ -539,6 +539,7 @@
                                                         <asp:ListItem Value="Tabela A" Text="Tabela A"></asp:ListItem>
                                                         <asp:ListItem Value="Tabela B" Text="Tabela B"></asp:ListItem>
                                                         <asp:ListItem Value="Tabela C" Text="Tabela C"></asp:ListItem>
+                                                        <asp:ListItem Value="Tabela D" Text="Tabela D"></asp:ListItem>
                                                     </asp:DropDownList>
                                                 </div>
                                             </div>
