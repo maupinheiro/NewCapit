@@ -45,7 +45,6 @@ namespace NewCapit.dist.pages
                 PreencherComboSolicitantes();                
                 PreencherComboMateriais();
                 PreencherComboDeposito();
-
                 CarregaDados();
             }
         }

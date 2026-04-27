@@ -33,22 +33,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox DataFim;
 
         /// <summary>
-        /// Controle btnFiltrar.
+        /// Controle btnExcel.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnFiltrar;
-
-        /// <summary>
-        /// Controle btnExportarExcel.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnExportarExcel;
+        protected global::System.Web.UI.WebControls.Button btnExcel;
 
         /// <summary>
         /// Controle btnBaixar.
@@ -69,49 +60,112 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.Button btnAbrirMdfe;
 
         /// <summary>
-        /// Controle txtPesquisar.
+        /// Controle txtFrota.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPesquisar;
+        protected global::System.Web.UI.WebControls.TextBox txtFrota;
 
         /// <summary>
-        /// Controle hfOcultarViagens.
+        /// Controle txtPlaca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfOcultarViagens;
+        protected global::System.Web.UI.WebControls.TextBox txtPlaca;
 
         /// <summary>
-        /// Controle btnPostbackOcultar.
+        /// Controle txtMotorista.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPostbackOcultar;
+        protected global::System.Web.UI.WebControls.TextBox txtMotorista;
 
         /// <summary>
-        /// Controle lblMensagem.
+        /// Controle txtExpedidor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMensagem;
+        protected global::System.Web.UI.WebControls.TextBox txtExpedidor;
 
         /// <summary>
-        /// Controle rptCarregamento.
+        /// Controle txtRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptCarregamento;
+        protected global::System.Web.UI.WebControls.TextBox txtRecebedor;
+
+        /// <summary>
+        /// Controle txtStatus.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStatus;
+
+        /// <summary>
+        /// Controle chkOcultarConcluidos.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkOcultarConcluidos;
+
+        /// <summary>
+        /// Controle lblTotalGeral.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTotalGeral;
+
+        /// <summary>
+        /// Controle up1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel up1;
+
+        /// <summary>
+        /// Controle gvOrdens.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvOrdens;
+
+        /// <summary>
+        /// Controle Timer1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.Timer Timer1;
+
+        /// <summary>
+        /// Controle btnPrimeiro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnPrimeiro;
 
         /// <summary>
         /// Controle btnAnterior.
@@ -123,13 +177,22 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.LinkButton btnAnterior;
 
         /// <summary>
-        /// Controle rptPaginacao.
+        /// Controle lblPaginaAtual.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPaginacao;
+        protected global::System.Web.UI.WebControls.Label lblPaginaAtual;
+
+        /// <summary>
+        /// Controle lblTotalPaginas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalPaginas;
 
         /// <summary>
         /// Controle btnProximo.
@@ -139,6 +202,33 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton btnProximo;
+
+        /// <summary>
+        /// Controle btnUltimo.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnUltimo;
+
+        /// <summary>
+        /// Controle txtIrPagina.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtIrPagina;
+
+        /// <summary>
+        /// Controle btnIrPagina.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnIrPagina;
 
         /// <summary>
         /// Controle UpdatePanel1.

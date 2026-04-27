@@ -456,7 +456,7 @@ namespace NewCapit.dist.pages
 
             MailMessage mail = new MailMessage();
 
-            mail.From = new MailAddress("seuemail@empresa.com");
+            mail.From = new MailAddress("gsaprevi@gmail.com");
 
             // múltiplos e-mails
             foreach (string email in emails.Split(';'))

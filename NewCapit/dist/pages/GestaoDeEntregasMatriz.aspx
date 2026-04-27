@@ -11,10 +11,63 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-   
+
     <link href="bootstrap.min.css" rel="stylesheet" />
     <script src="bootstrap.bundle.min.js"></script>
-       
+
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        function renderKPI(labels, valores) {
+
+            const container = document.getElementById("kpiContainer");
+            container.innerHTML = "";
+
+            const max = Math.max(...valores);
+
+            labels.forEach((label, i) => {
+
+                let valor = valores[i];
+
+                // 🎨 cores por status
+                let cor = "#6c757d";
+
+                let s = label.toUpperCase();
+
+                if (s.includes("PRONTO")) cor = "#ffc107";
+                else if (s.includes("EM TRANSITO")) cor = "#8B008B";
+                else if (s.includes("AG. DESCARGA")) cor = "#198754";
+                else if (s.includes("AG. CARREGAMENTO")) cor = "#dc3545";
+                else if (s.includes("AG. DOCUMENTOS")) cor = "#FFC0CB";
+                else if (s.includes("CARREGANDO")) cor = "#FFFF00";
+                else if (s.includes("PENDENTE")) cor = "#B0C4DE";
+                else if (s.includes("PERNOITE")) cor = "#00FFFF";
+                else if (s.includes("CONCLUIDO")) cor = "#20B2AA";
+                else if (s.includes("LIBERADO VAZIO")) cor = "#7FFFD4";
+                else if (s.includes("VEIC. QUEBRADO")) cor = "#A0522D";
+                else if (s.includes("CANCELADA")) cor = "#7B68EE";
+
+                let porcentagem = (valor / max) * 100;
+
+                container.innerHTML += `
+            <div class="kpi-item">
+                <div class="kpi-label">${label}</div>
+                <div class="kpi-bar">
+                    <div class="kpi-fill" style="width:${porcentagem}%; background:${cor};"></div>
+                </div>
+                <div class="kpi-value">${valor}</div>
+            </div>
+        `;
+            });
+        }
+    </script>
     <script>
         function buscarDocumento() {
 
@@ -48,13 +101,6 @@
                 });
         }
     </script>
-
-   <%-- <script>
-        function SelecionarTodos(source) {
-            let checkboxes = document.querySelectorAll('[id*="chkSelecionar"]');
-            checkboxes.forEach(cb => cb.checked = source.checked);
-        }
-    </script>--%>
     <script type="text/javascript">
         // Esta função roda sempre que o UpdatePanel termina de carregar
         var prm = Sys.WebForms.PageRequestManager.getInstance();
@@ -72,11 +118,264 @@
             checkboxes.forEach(chk => chk.checked = headerCheckBox.checked);
         }
     </script>
+    <style>
+        .table-sap {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 13px;
+        }
 
+            /* Cabeçalho SAP */
+            .table-sap thead {
+                background-color: #0A6ED1;
+                color: #fff;
+            }
 
+                .table-sap thead th {
+                    padding: 10px;
+                    text-align: center;
+                    border: 1px solid #d9d9d9;
+                }
+
+            /* Corpo */
+            .table-sap tbody td {
+                padding: 8px;
+                border: 1px solid #e5e5e5;
+            }
+
+            /* Zebra */
+            .table-sap tbody tr:nth-child(even) {
+                background-color: #f5f7fa;
+            }
+
+            /* Hover */
+            .table-sap tbody tr:hover {
+                background-color: #e8f3ff;
+            }
+
+        /* Controles DataTable */
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 1px solid #ccc;
+            padding: 4px;
+        }
+
+        /* Paginação estilo SAP */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: #f5f5f5;
+            border: 1px solid #d9d9d9 !important;
+            padding: 5px 10px;
+            margin: 2px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: #0A6ED1 !important;
+                color: #fff !important;
+                border: 1px solid #0A6ED1 !important;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background: #e8f3ff !important;
+            }
+        /* Info */
+        .dataTables_info {
+            margin-top: 10px;
+        }
+
+        .sub-info {
+            font-size: 11px;
+            color: #6a6d70;
+        }
+
+        .table-sap td div {
+            line-height: 16px;
+        }
+
+        .grid-sap-container {
+            max-height: 450px; /* 👈 altura da grade */
+            overflow-y: auto; /* 👈 scroll vertical */
+            border: 1px solid #d9d9d9;
+        }
+
+        /* mantém header fixo estilo ERP */
+        .gv-header-custom {
+            position: sticky;
+            top: 0;
+            background-color: #0A6ED1;
+            color: #fff;
+            z-index: 10;
+        }
+
+            .gv-header-custom th {
+                height: 45px; /* 👈 altura do cabeçalho */
+                padding: 10px 8px; /* 👈 controle do “respiro” interno */
+                line-height: 20px; /* 👈 alinhamento vertical */
+                font-size: 13px;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+        .grid-sap-container {
+            max-height: 500px; /* altura da grid */
+            overflow-y: auto; /* scroll vertical */
+            border: 1px solid #d9d9d9;
+        }
+
+        /* Cabeçalho fixo estilo SAP */
+        .gv-header-custom th {
+            position: sticky;
+            top: 0; /* fixa no topo */
+            z-index: 100;
+            background-color: #0A6ED1;
+            color: #fff;
+            height: 45px;
+            padding: 10px 8px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 2px solid #084c9e;
+        }
+
+        /* Garante que o body não sobrepõe o header */
+        .table-sap {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: "Segoe UI", Arial;
+            font-size: 13px;
+        }
+
+            .table-sap td {
+                padding: 8px;
+                border: 1px solid #e5e5e5;
+            }
+
+        .kpi-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .kpi-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kpi-label {
+            width: 130px;
+        }
+
+        .kpi-bar {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .kpi-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .kpi-value {
+            width: 35px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .form-switch .form-check-input {
+        appearance: checkbox !important;
+        width: 1em;
+        height: 1em;
+        border-radius: 0;
+    }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const chk = document.getElementById("chkOcultarConcluidos");
+            const lblOcultos = document.getElementById("lblOcultos");
+            const lblVisiveis = document.getElementById("lblVisiveis");
+            const lblTotal = document.getElementById("lblTotal");
+
+            if (!chk) return;
+
+            // 🔄 carregar estado salvo
+            chk.checked = localStorage.getItem("ocultarConcluidos") === "true";
+
+            function aplicarFiltro() {
+
+                let linhas = document.querySelectorAll("#<%= gvOrdens.ClientID %> tr");
+
+                let ocultos = 0;
+                let visiveis = 0;
+                let total = 0;
+
+                linhas.forEach((linha, index) => {
+
+                    // ignora header
+                    if (index === 0) return;
+
+                    total++;
+
+                    let situacao = (linha.getAttribute("data-situacao") || "").toUpperCase();
+
+                    if (chk.checked) {
+                        if (situacao.includes("VIAGEM CONCLUIDA")) {
+                            linha.style.display = "none";
+                            ocultos++;
+                        } else {
+                            linha.style.display = "";
+                            visiveis++;
+                        }
+                    } else {
+                        linha.style.display = "";
+                        visiveis++;
+                    }
+                });
+
+                // 📊 atualiza contadores
+                lblVisiveis.innerText = "Mostrando: " + visiveis + " de " + visiveis + " registro(s).";
+                lblTotal.innerText = "Total de Coletas: " + total;
+
+                if (chk.checked && ocultos > 0) {
+                    lblOcultos.innerText = ocultos + " ocultos";
+                    //lblOcultos.style.fontSize = "9px";
+                } else {
+                    lblOcultos.innerText = "";
+                }
+            }
+
+            chk.addEventListener("change", function () {
+                localStorage.setItem("ocultarConcluidos", chk.checked);
+                aplicarFiltro();
+            });
+
+            aplicarFiltro();
+        });
+    </script>
+    <script>
+        const chk = document.getElementById("chkOcultarConcluidos");
+
+        // carregar estado
+        chk.checked = localStorage.getItem("ocultarConcluidos") === "true";
+
+        chk.addEventListener("change", function () {
+            localStorage.setItem("ocultarConcluidos", chk.checked);
+        });
+    </script>
     <div class="container-fluid">
-    <section class="content-wrapper">        
-        <section class="content">           
+        <section class="content-wrapper">
+            <section class="content">
                 <br />
                 <div id="toastContainerVermelho" class="alert alert-danger alert-dismissible" style="display: none;">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -85,48 +384,38 @@
                 </div>
                 <div class="col-md-12">
                     <div class="card card-info">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;GESTÃO DE COLETAS E ENTREGAS</h3>
-                            </h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
-                                    <i class="fas fa-expand"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
+                        <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
+                            <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Gestão de Coletas e Entregas
+                                <br />
+                                <small>Coletas e Entregas</small></h3>
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-2">
                                     <label>Data Inicial:</label>
-                                    <asp:TextBox ID="DataInicio" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    <asp:TextBox ID="DataInicio" runat="server" TextMode="Date" CssClass="form-control"
+                                        AutoPostBack="true" OnTextChanged="FiltroPeriodo_TextChanged" />
                                 </div>
                                 <div class="col-md-2">
                                     <label>Data Final:</label>
-                                    <asp:TextBox ID="DataFim" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                                </div>                               
-                                <div class="col-md-1">
-                                    <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnFiltrar" runat="server" CssClass="btn btn-warning w-100" Text="Filtrar" OnClick="btnFiltrar_Click" />
+                                    <asp:TextBox ID="DataFim" runat="server" TextMode="Date" CssClass="form-control"
+                                        AutoPostBack="true" OnTextChanged="FiltroPeriodo_TextChanged" />
                                 </div>
                                 <div class="col-md-2">
-                                    <label>&nbsp;</label><br />
-                                    <asp:Button ID="btnExportarExcel" runat="server" CssClass="btn btn-success w-100" Text="Exportar para Excel" OnClick="btnExportarExcel_Click" />
-                                </div>                              
+                                    <label>&nbsp;</label><br />                                    
+                                    <asp:Button ID="btnExcel"
+                                            runat="server"
+                                            Text="Exportar Excel"
+                                            CssClass="btn btn-success w-100"
+                                            OnClick="btnExcel_Click" />
+                                </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <a href="/dist/pages/ColetasMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm w-100"><i
                                         class="fas fa-boxes"></i>&nbsp;Abrir Carregamento
                                     </a>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <label>&nbsp;</label><br />
                                     <asp:Button ID="btnBaixar" runat="server" CssClass="btn btn-info w-100" Text="Baixar DOC" OnClick="btnBaixar_Click" />
                                 </div>
@@ -135,200 +424,253 @@
                                     <asp:Button ID="btnAbrirMdfe" runat="server"
                                         CssClass="btn btn-secondary w-100"
                                         Text="Gerenciar MDF-e"
-                                        OnClick="btnAbrirMdfe_Click" 
-                                        PostBack="true"/>
+                                        OnClick="btnAbrirMdfe_Click"
+                                        PostBack="true" />
                                 </div>
-
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-10">
-                                        <asp:TextBox 
-                                            ID="txtPesquisar"
-                                            runat="server"
-                                          
-                                            
-                                            CssClass="form-control"
-                                            placeholder="Pesquisar..." />
+                                <div class="col-md-1">
+                                    <asp:TextBox
+                                        ID="txtFrota"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        AutoPostBack="true"
+                                        OnTextChanged="FiltroPeriodo_TextChanged"
+                                        placeholder="Frota" />
+                                </div>
+                                <div class="col-md-1">
+                                    <asp:TextBox
+                                        ID="txtPlaca"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        AutoPostBack="true"
+                                        OnTextChanged="FiltroPeriodo_TextChanged"
+                                        placeholder="Placa" />
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="form-group">
-                                      <div class="custom-control custom-switch custom-switch-off-primary custom-switch-on-success">
-                                        <input type="checkbox" class="custom-control-input" id="chkOcultarViagens" 
-                                               <%= hfOcultarViagens.Value.ToLower() == "true" ? "checked" : "" %>
-                                               onchange="document.getElementById('<%= hfOcultarViagens.ClientID %>').value = this.checked; document.getElementById('<%= btnPostbackOcultar.ClientID %>').click();">
-    
-                                        <label class="custom-control-label" for="chkOcultarViagens">Visualizar Todas as Viagens</label>
+                                    <asp:TextBox
+                                        ID="txtMotorista"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        AutoPostBack="true"
+                                        OnTextChanged="FiltroPeriodo_TextChanged"
+                                        placeholder="Crachá/Nome do Motorista" />
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:TextBox
+                                        ID="txtExpedidor"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        AutoPostBack="true"
+                                        OnTextChanged="FiltroPeriodo_TextChanged"
+                                        placeholder="Expedidor" />
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:TextBox
+                                        ID="txtRecebedor"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        AutoPostBack="true"
+                                        OnTextChanged="FiltroPeriodo_TextChanged"
+                                        placeholder="Recebedor" />
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:TextBox
+                                        ID="txtStatus"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        AutoPostBack="true"
+                                        OnTextChanged="FiltroPeriodo_TextChanged"
+                                        placeholder="Status " />
+                                </div>
+                                <div class="col-md-2">
+                                    <%--<div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="chkOcultarConcluidos" runat="server" checked>
+                                        <label class="form-check-label" for="chkOcultarConcluidos">
+                                            Ocultar concluídas 
+                                        </label>
+                                    </div>
+                                    <span id="lblOcultos" style="font-size: 20px; color: #666;"></span>--%>
 
-                                        <asp:HiddenField ID="hfOcultarViagens" runat="server" Value="false" />
-    
-                                        <%-- Botão invisível para processar o evento no servidor --%>
-                                        <asp:Button ID="btnPostbackOcultar" runat="server" style="display:none;" OnClick="btnPostbackOcultar_Click" />
+                                    <div class="form-check form-switch">
+                                        <asp:CheckBox
+                                            ID="chkOcultarConcluidos"
+                                            runat="server"
+                                            CssClass="form-check-input"
+                                            Checked="true"
+                                            AutoPostBack="true"
+                                            OnCheckedChanged="chkOcultarConcluidos_CheckedChanged" />
+                                        <label class="form-check-label">Ocultar concluídas</label>
                                     </div>
 
-                                    </div>
+
                                 </div>
                             </div>
-                            <div class="container-fluid">                                
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <span id="lblVisiveis"></span>
+                                </div>
+                                <div class="col-6">
+                                    <span id="lblTotalGeral" runat="server" style="float: right;"></span>
+                                </div>
+                            </div>
+                            <div class="table-container">
                                 <div class="row">
                                     <div class="col-12">
                                         <!-- /.col -->
                                         <div class="card">
                                             <!-- /.card-header -->
                                             <div class="card-body">
-                                                <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
-                                                <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
-                                                    <HeaderTemplate>
-                                                        <table class="table table-bordered dataTable1 table-hover" AutoGenerateColumns="false">
-                                                            <thead>
-                                                                <tr text-align: center;>
-                                                                    <th>#</th>
-                                                                    <th>Veículo</th>
-                                                                    <th>Placa</th>   
-                                                                    <th>Motorista</th>
-                                                                    <th>Expedidor/Recebedor</th>
-                                                                    <th>Inicio/Termino da Prestação</th>
-                                                                    <th>Ordem Coleta</th>
-                                                                    <th>Atendimento</th> 
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                    </HeaderTemplate>
-                                                    <ItemTemplate> 
-                                                        <tr onclick="toggleDetalhes(this)">
-                                                            <td style="text-align: center; vertical-align: middle;">
-                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("fotos") %>' style="width: 60px; height:60px;" runat="server" CssClass="rounded-circle"
-                                                                     CommandName="Editar"
-                                                                     CommandArgument='<%# Eval("num_carregamento") %>'
-                                                                     OnCommand="lnkEditar_Command"
-                                                                     OnClientClick="event.stopPropagation();"/>  
-                                                            </td>
-                                                            <td>
-                                                                <%# Eval("veiculo") %>
-                                                                <br />
-                                                                <%# Eval("tipoveiculo") %>
-                                                            </td>
-                                                            <td>
-                                                                <%# Eval("placa") %>
-                                                                <br />
-                                                                <%# Eval("reboque1")  + " - " +  Eval("reboque2") %>
+                                                <div id="kpiContainer" class="kpi-container"></div>
+                                                <br />
+                                                <asp:UpdatePanel ID="up1" runat="server">
+                                                <ContentTemplate>
+                                                <asp:GridView
+                                                    ID="gvOrdens"
+                                                    runat="server"
+                                                    AutoGenerateColumns="False"
+                                                    CssClass="table-sap"
+                                                    HeaderStyle-CssClass="gv-header-custom"
+                                                    AllowPaging="false"
+                                                    OnPageIndexChanging="gvOrdens_PageIndexChanging"
+                                                    OnRowCreated="gvOrdens_RowCreated"
+                                                    OnRowDataBound="gvOrdens_RowDataBound">
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="#">
+                                                            <ItemTemplate>
+                                                                <div>
+                                                                                                                <%--<asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("foto") %>' style="width: 60px; height:60px;" runat="server" CssClass="rounded-circle"
+                                                 CommandName="Editar"
+                                                 CommandArgument='<%# Eval("num_carregamento") %>'
+                                                 OnCommand="lnkEditar_Command"
+                                                 OnClientClick="event.stopPropagation();"/> --%> 
 
-                                                            </td>   
-                                                            <td>
-                                                                <%# Eval("codmotorista") + " - " + Eval("nomemotorista") %>
-                                                                <br />
-                                                                <%# Eval("codtra") + " - " + Eval("transportadora")%>  
-                                                            </td>
-                                                            <td>
-                                                                <%# Eval("cod_expedidor") + " - " + Eval("expedidor") %>
-                                                                <br />
-                                                                <%# Eval("cod_recebedor") + " - " + Eval("recebedor")%>  
-                                                            </td>
-                                                            <td>
-                                                                <%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %>
-                                                                <br />
-                                                                <%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor")%>  
-                                                            </td>
-                                                            <td style="text-align: center; vertical-align: middle;">
-                                                                <%# Eval("num_carregamento") + " ("
- + Eval("carga") + ")"  %>                                                                <br />
-                                                                <%# Eval("emissao", "{0:dd/MM/yyyy HH:mm}") %>
-                                                            </td>
-                                                            <td>
-                                                                <%--<%# Eval("situacao") %>
-                                                                <br />
-                                                                <%# Eval("status")%>  --%>
-                                                                <%# Eval("situacao") %>
-                                                                <br />
-                                                                <asp:Label 
-                                                                    ID="lblStatus"
-                                                                    runat="server"
-                                                                    Text='<%# Eval("status") %>'
-                                                                    CssClass="badge" />
-                                                            </td>                                                           
-                                                        </tr>
-                                                        <tr class="detalhes d-none">
-                                                            <td colspan="11">
-                                                                <asp:Repeater ID="rptColeta" OnItemDataBound="rptColeta_ItemDataBound" runat="server">
-                                                                    <HeaderTemplate>
-                                                                        <table class="table table-striped table-bordered table-hover" AutoGenerateColumns="false">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Carga</th>
-                                                                                    <th>Status</th>
-                                                                                    <th>Remetente/Expedidor</th>
-                                                                                    <th>Destinatário/Recebedor</th>
-                                                                                    <th>Saída</th>
-                                                                                    <th>Prev.Chegada</th>
-                                                                                    <th>Chegada</th>
-                                                                                    <th>Conclusão</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                    </HeaderTemplate>
-                                                                    <ItemTemplate>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <%# Eval("carga") %>
-                                                                                <br />
-                                                                                <%# Eval("emissao", "{0:dd/MM/yyyy HH:mm}") %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%# Eval("status") %>
-                                                                                <br />
-                                                                                02h30min
-                                                                            </td>
-                                                                            <td>
-                                                                                <%# Eval("codorigem") %> + " - " + <%# Eval("cliorigem") %>
-                                                                                <br />
-                                                                                <%# Eval("cod_expedidor") %> + " - " + <%# Eval("expedidor") %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%# Eval("coddestino") %> + " - " + <%# Eval("clidestino") %>
-                                                                                <br />
-                                                                                <%# Eval("cod_recebedor") %> + " - " + <%# Eval("recebedor") %>
-                                                                            </td>
-                                                                            <td><%# Eval("inicio_viagem", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                                            <td><%# Eval("prev_chegada", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                                            <td><%# Eval("cheg_cliente", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                                            <td><%# Eval("fim_viagem", "{0:dd/MM/yyyy HH:mm}") %></td>
-                                                                        </tr>
-                                                                    </ItemTemplate>
-                                                                    <FooterTemplate>
-                                                                        </tbody>
-                                        </table>
-                                                                    </FooterTemplate>
-                                                                </asp:Repeater>
-                                                            </td>
-                                                        </tr>
-                                                    </ItemTemplate>
-                                                    <FooterTemplate>
-                                                        </tbody>
-                        </table>
-                                                    </FooterTemplate>
-                                                </asp:Repeater>
+<asp:ImageButton ID="lnkEditar"
+    ImageUrl='<%# Eval("foto") %>'
+    runat="server"
+    style="width:60px; height:60px; border-radius:8px; object-fit:cover;"
+    CommandName="Editar"
+    CommandArgument='<%# Eval("num_carregamento") %>' />
+                                                                </div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Veículo">
+                                                            <ItemTemplate>
+                                                                <div><%# Eval("veiculo") %></div>
+                                                                <div class="sub-info"><%# Eval("tipoveiculo") %></div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Placa">
+                                                            <ItemTemplate>
+                                                                <div><%# Eval("placa") %></div>
+                                                                <div class="sub-info"><%# Eval("reboque1")  + " - " +  Eval("reboque2") %></div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Motorista">
+                                                            <ItemTemplate>
+                                                                <div><%# Eval("codmotorista") + " - " + Eval("nomemotorista") %></div>
+                                                                <div class="sub-info"><%# Eval("codtra") + " - " + Eval("transportadora")%></div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Expedidor/Recebedor">
+                                                            <ItemTemplate>
+                                                                <div><%# Eval("cod_expedidor") + " - " + Eval("expedidor") %></div>
+                                                                <div class="sub-info"><%# Eval("cod_recebedor") + " - " + Eval("recebedor")%> </div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Inicio/Termino da Prestação">
+                                                            <ItemTemplate>
+                                                                <div><%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %></div>
+                                                                <div class="sub-info"><%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor")%></div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Ordem Coleta">
+                                                            <ItemTemplate>
+                                                                <div><%# Eval("num_carregamento") + " ("+ Eval("carga") + ")"%></div>
+                                                                <div class="sub-info"><%# Eval("emissao", "{0:dd/MM/yyyy HH:mm}") %></div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField HeaderText="Atendimento">
+                                                            <ItemTemplate>
+                                                                <div class="sub-info"><%# Eval("situacao") %></div>
+                                                                <div>
+                                                                    <asp:Label
+                                                                        ID="lblStatus"
+                                                                        runat="server"
+                                                                        CssClass="badge" />
+                                                                </div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                    </Columns>
 
 
+                                                </asp:GridView>
+                                                <asp:Timer ID="Timer1" runat="server" Interval="1200000" OnTick="Timer1_Tick"></asp:Timer>
 
-                                            </div>
-                                           <div class="pagination-container" style="margin-top: 20px; text-align: center;">
-                                            <div class="btn-group">
-                                                <asp:LinkButton ID="btnAnterior" runat="server" CssClass="btn btn-outline-primary" OnClick="Pagina_Click" CommandArgument="Prev"><i class="fa fa-chevron-left"></i> Anterior</asp:LinkButton>
-        
-                                                <asp:Repeater ID="rptPaginacao" runat="server">
-                                                    <ItemTemplate>
-                                                        <asp:LinkButton ID="btnPagina" runat="server" 
-                                                            CssClass='<%# Convert.ToInt32(Eval("PageIndex")) == Convert.ToInt32(ViewState["PaginaAtual"]) ? "btn btn-primary active" : "btn btn-outline-primary" %>' 
-                                                            Text='<%# Eval("PageText") %>' 
-                                                            CommandArgument='<%# Eval("PageIndex") %>' 
-                                                            OnClick="Pagina_Click">
+    </ContentTemplate>
+                                                </asp:UpdatePanel>
+                                                <pagertemplate>                                                    <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
+
+
+                                                        <asp:LinkButton ID="btnPrimeiro" runat="server"
+                                                            OnClick="btnPrimeiro_Click"
+                                                            CssClass="btn btn-light btn-sm">
+            <i class="fas fa-angle-double-left"></i>
                                                         </asp:LinkButton>
-                                                    </ItemTemplate>
-                                                </asp:Repeater>
 
-                                                <asp:LinkButton ID="btnProximo" runat="server" CssClass="btn btn-outline-primary" OnClick="Pagina_Click" CommandArgument="Next">Próximo <i class="fa fa-chevron-right"></i></asp:LinkButton>
-    </div>
-</div>
-                                            <!-- /.card-body -->
+
+                                                        <asp:LinkButton ID="btnAnterior" runat="server"
+                                                            OnClick="btnAnterior_Click"
+                                                            CssClass="btn btn-light btn-sm">
+            <i class="fa fa-angle-left"></i>
+                                                        </asp:LinkButton>
+
+
+                                                        <span class="fw-bold">Página
+            <asp:Label ID="lblPaginaAtual" runat="server" />
+                                                            de
+            <asp:Label ID="lblTotalPaginas" runat="server" />
+                                                        </span>
+
+
+                                                        <asp:LinkButton ID="btnProximo" runat="server"
+                                                            OnClick="btnProximo_Click"
+                                                            CssClass="btn btn-light btn-sm">
+            <i class="fa fa-angle-right"></i>
+                                                        </asp:LinkButton>
+
+
+                                                        <asp:LinkButton ID="btnUltimo" runat="server"
+                                                            OnClick="btnUltimo_Click"
+                                                            CssClass="btn btn-light btn-sm">
+            <i class="fas fa-angle-double-right"></i>
+                                                        </asp:LinkButton>
+
+
+                                                        <span>Página:</span>
+
+                                                        <asp:TextBox ID="txtIrPagina" runat="server"
+                                                            CssClass="form-control form-control-sm"
+                                                            Style="width: 70px;" />
+
+                                                        <asp:LinkButton ID="btnIrPagina" runat="server"
+                                                            CssClass="btn btn-primary btn-sm"
+                                                            OnClick="btnIrPagina_Click">
+            Buscar
+                                                        </asp:LinkButton>
+
+                                                    </div>
+                                                </pagertemplate>
+                                            </div>
+
                                         </div>
                                         <!-- /.card -->
                                     </div>
@@ -337,139 +679,160 @@
                         </div>
                     </div>
                 </div>
-         </section>
-    </section>
-         <!-- Modal -->
-         <div class="modal fade" role="dialog" id="modalCTE" tabindex="-1">
-    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-        <ContentTemplate>
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content border-0 shadow">
+            </section>
+        </section>
+        <!-- Modal -->
+        <div class="modal fade" role="dialog" id="modalCTE" tabindex="-1">
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                <ContentTemplate>
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content border-0 shadow">
 
-                    <div class="modal-header bg-light">
-                        <h5 class="modal-title">Baixar Documentos CT-e / NFS-e</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="row mb-3">
-                            <div class="col-md-12 d-flex gap-4">
-                                <div class="form-check">
-                                    <asp:RadioButton ID="gridRadiosCTe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" Checked="true" />
-                                    <label class="form-check-label" for="<%= gridRadiosCTe.ClientID %>">CT-e</label>
-                                </div>
-                                <div class="form-check">
-                                    <asp:RadioButton ID="gridRadiosNFSe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" />
-                                    <label class="form-check-label" for="<%= gridRadiosNFSe.ClientID %>">NFS-e</label>
-                                </div>
+                            <div class="modal-header bg-light">
+                                <h5 class="modal-title">Baixar Documentos CT-e / NFS-e</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                        </div>
 
-                        <div class="row g-2 align-items-end mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Número do Documento</label>
-                                <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server" placeholder="Digite o número..."></asp:TextBox> 
-                            </div>
-                            <div class="col-md-3">
-                                <asp:LinkButton ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" CssClass="btn btn-warning w-100">
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-12 d-flex gap-4">
+                                        <div class="form-check">
+                                            <asp:RadioButton ID="gridRadiosCTe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" Checked="true" />
+                                            <label class="form-check-label" for="<%= gridRadiosCTe.ClientID %>">CT-e</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <asp:RadioButton ID="gridRadiosNFSe" runat="server" GroupName="TipoDoc" CssClass="form-check-input" />
+                                            <label class="form-check-label" for="<%= gridRadiosNFSe.ClientID %>">NFS-e</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2 align-items-end mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Número do Documento</label>
+                                        <asp:TextBox ID="txtNumeroDocumento" CssClass="form-control" runat="server" placeholder="Digite o número..."></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <asp:LinkButton ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" CssClass="btn btn-warning w-100">
                                     <i class="bi bi-search"></i> Pesquisar
-                                </asp:LinkButton>
-                            </div>
-                        </div>
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
 
-                        <hr />
+                                <hr />
 
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <p><strong>Chave:</strong> <asp:Label ID="lblChave" runat="server" CssClass="text-muted"></asp:Label></p>
-                                <p><strong>Emissão:</strong> <asp:Label ID="lblEmissao" runat="server"></asp:Label></p>
-                                <p><strong>Empresa:</strong> <asp:Label ID="lblEmpresa" runat="server"></asp:Label></p>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <p>
+                                            <strong>Chave:</strong>
+                                            <asp:Label ID="lblChave" runat="server" CssClass="text-muted"></asp:Label>
+                                        </p>
+                                        <p>
+                                            <strong>Emissão:</strong>
+                                            <asp:Label ID="lblEmissao" runat="server"></asp:Label>
+                                        </p>
+                                        <p>
+                                            <strong>Empresa:</strong>
+                                            <asp:Label ID="lblEmpresa" runat="server"></asp:Label>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 border-start">
+                                        <p>
+                                            <strong>Motorista:</strong>
+                                            <asp:Label ID="lblMotorista" runat="server"></asp:Label>
+                                        </p>
+                                        <p>
+                                            <strong>Destino:</strong>
+                                            <asp:Label ID="lblDestino" runat="server"></asp:Label>
+                                        </p>
+                                        <p>
+                                            <strong>Cidade/UF:</strong>
+                                            <asp:Label ID="lblCidade" runat="server"></asp:Label>
+                                        </p>
+                                        <p>
+                                            <strong>Data Saída:</strong>
+                                            <asp:Label ID="lblDataSaida" runat="server"></asp:Label>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6 border-start">
-                                <p><strong>Motorista:</strong> <asp:Label ID="lblMotorista" runat="server"></asp:Label></p>
-                                <p><strong>Destino:</strong> <asp:Label ID="lblDestino" runat="server"></asp:Label></p>
-                                <p><strong>Cidade/UF:</strong> <asp:Label ID="lblCidade" runat="server"></asp:Label></p>
-                                <p><strong>Data Saída:</strong> <asp:Label ID="lblDataSaida" runat="server"></asp:Label></p>
+
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                <asp:Button ID="btnSalvarBaixa" runat="server"
+                                    CssClass="btn btn-success px-5"
+                                    Text="Baixar Documento"
+                                    OnClick="btnSalvarBaixa_Click" />
                             </div>
+
                         </div>
                     </div>
-
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <asp:Button ID="btnSalvarBaixa" runat="server"
-                            CssClass="btn btn-success px-5"
-                            Text="Baixar Documento"
-                            OnClick="btnSalvarBaixa_Click" />
-                    </div>
-
-                </div>
-            </div>
-        </ContentTemplate>
-        <Triggers>
-            <asp:AsyncPostBackTrigger ControlID="btnSalvarBaixa" />
-            <asp:AsyncPostBackTrigger ControlID="btnBuscar" />
-        </Triggers>
-    </asp:UpdatePanel>
-</div>
+                </ContentTemplate>
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="btnSalvarBaixa" />
+                    <asp:AsyncPostBackTrigger ControlID="btnBuscar" />
+                </Triggers>
+            </asp:UpdatePanel>
+        </div>
         <asp:UpdatePanel ID="UpdatePanel2" runat="server">
             <ContentTemplate>
-                 <div class="modal fade" id="modalMdfe" tabindex="-1">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
+                <div class="modal fade" id="modalMdfe" tabindex="-1">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Gerenciar MDF-e</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Gerenciar MDF-e</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
 
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-md-6">
-                        <asp:TextBox ID="txtPesquisarMDFe" runat="server"
-                            CssClass="form-control"
-                            Placeholder="Pesquisar MDF-e..."
-                            AutoPostBack="true"
-                            OnTextChanged="FiltroChanged" />
-                    </div>
+                            <div class="modal-body">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <asp:TextBox ID="txtPesquisarMDFe" runat="server"
+                                            CssClass="form-control"
+                                            Placeholder="Pesquisar MDF-e..."
+                                            AutoPostBack="true"
+                                            OnTextChanged="FiltroChanged" />
+                                    </div>
 
-                    <div class="col-md-3">
-                        <asp:DropDownList ID="ddlFiltroStatus" runat="server"
-                            CssClass="form-control"
-                            AutoPostBack="true"
-                            OnSelectedIndexChanged="FiltroChanged">
-                            <asp:ListItem Text="Todos" Value="" />
-                            <asp:ListItem Text="Baixados" Value="Baixado" />
-                            <asp:ListItem Text="Pendentes" Value="Pendente" />
-                            
-                        </asp:DropDownList>
-                    </div>
-                </div>
+                                    <div class="col-md-3">
+                                        <asp:DropDownList ID="ddlFiltroStatus" runat="server"
+                                            CssClass="form-control"
+                                            AutoPostBack="true"
+                                            OnSelectedIndexChanged="FiltroChanged">
+                                            <asp:ListItem Text="Todos" Value="" />
+                                            <asp:ListItem Text="Baixados" Value="Baixado" />
+                                            <asp:ListItem Text="Pendentes" Value="Pendente" />
 
-                <asp:GridView ID="gvMdfe" runat="server" OnRowCommand="gvMdfe_RowCommand"
-                    CssClass="table table-bordered table-sm"
-                    AutoGenerateColumns="false"
-                    HtmlEncode="false"
-                    DataKeyNames="id">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
 
-                    <Columns>
-                        <asp:BoundField DataField="mdfe_uf" HeaderText="UF" />
-                        <asp:BoundField DataField="mdfe_empresa" HeaderText="Empresa" />
+                                <asp:GridView ID="gvMdfe" runat="server" OnRowCommand="gvMdfe_RowCommand"
+                                    CssClass="table table-bordered table-sm"
+                                    AutoGenerateColumns="false"
+                                    HtmlEncode="false"
+                                    DataKeyNames="id">
 
-                        <asp:TemplateField HeaderText="">
-                            <HeaderTemplate>
-                                <input type="checkbox" onclick="SelecionarTodos(this)" />
-                            </HeaderTemplate>
-                            <ItemTemplate>
-                                <asp:CheckBox ID="chkSelecionar" runat="server" />
-                            </ItemTemplate>
-                        </asp:TemplateField>    
+                                    <Columns>
+                                        <asp:BoundField DataField="mdfe_uf" HeaderText="UF" />
+                                        <asp:BoundField DataField="mdfe_empresa" HeaderText="Empresa" />
 
-                        <asp:BoundField DataField="mdfe_numero" HeaderText="Número" />
-                        <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />                       
-                     
-                        <asp:TemplateField HeaderText="Situação MDF-e">
-                            <ItemTemplate>
-                                <span class='badge <%# 
+                                        <asp:TemplateField HeaderText="">
+                                            <HeaderTemplate>
+                                                <input type="checkbox" onclick="SelecionarTodos(this)" />
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                                <asp:CheckBox ID="chkSelecionar" runat="server" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+
+                                        <asp:BoundField DataField="mdfe_numero" HeaderText="Número" />
+                                        <asp:BoundField DataField="mdfe_serie" HeaderText="Série" />
+
+                                        <asp:TemplateField HeaderText="Situação MDF-e">
+                                            <ItemTemplate>
+                                                <span class='badge <%# 
                             (Eval("mdfe_situacao") == null || Eval("mdfe_situacao") == DBNull.Value)
                                 ? "bg-warning text-dark"
                                 : Eval("mdfe_situacao").ToString().Trim().ToUpper() == "BAIXADO"
@@ -477,61 +840,61 @@
                                     : "bg-warning text-dark"
                         %>'>
 
-                            <%# Eval("mdfe_situacao") == null || Eval("mdfe_situacao") == DBNull.Value
+                                                    <%# Eval("mdfe_situacao") == null || Eval("mdfe_situacao") == DBNull.Value
                                 ? "Pendente"
                                 : Eval("mdfe_situacao") %>
 
-                        </span>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                                                </span>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
-                        <asp:BoundField DataField="status" HeaderText="Status" />
+                                        <asp:BoundField DataField="status" HeaderText="Status" />
 
-                        <asp:TemplateField HeaderText="Local da Coleta">
-                            <ItemTemplate>
-                                <%# Eval("cid_expedidor") %>/<%# Eval("uf_expedidor") %>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Local da Entrega">
-                            <ItemTemplate>
-                                <%# Eval("cid_recebedor") %>/<%# Eval("uf_recebedor") %>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        
-                        <asp:BoundField DataField="mdfe_baixado" HeaderText="Baixado Por" />
-                        <asp:BoundField DataField="mdfe_data_baixa" HeaderText="Data Baixa" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
-                         <asp:TemplateField HeaderText="Ações">
-                         <ItemTemplate>
-                             <asp:LinkButton ID="btnCancelarLinha" runat="server" 
-                                 CommandName="CancelarMDF" 
-                                 CommandArgument='<%# Eval("id") %>' 
-                                 CssClass="btn btn-outline-danger btn-sm"
-                                 OnClientClick="return confirm('Deseja realmente cancelar este MDF-e?');">
+                                        <asp:TemplateField HeaderText="Local da Coleta">
+                                            <ItemTemplate>
+                                                <%# Eval("cid_expedidor") %>/<%# Eval("uf_expedidor") %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Local da Entrega">
+                                            <ItemTemplate>
+                                                <%# Eval("cid_recebedor") %>/<%# Eval("uf_recebedor") %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+
+                                        <asp:BoundField DataField="mdfe_baixado" HeaderText="Baixado Por" />
+                                        <asp:BoundField DataField="mdfe_data_baixa" HeaderText="Data Baixa" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                                        <asp:TemplateField HeaderText="Ações">
+                                            <ItemTemplate>
+                                                <asp:LinkButton ID="btnCancelarLinha" runat="server"
+                                                    CommandName="CancelarMDF"
+                                                    CommandArgument='<%# Eval("id") %>'
+                                                    CssClass="btn btn-outline-danger btn-sm"
+                                                    OnClientClick="return confirm('Deseja realmente cancelar este MDF-e?');">
                                  <i class="fas fa-trash"></i> Cancelar
-                             </asp:LinkButton>
-                         </ItemTemplate>
-                     </asp:TemplateField>
-                    </Columns>
-                   
+                                                </asp:LinkButton>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
 
-                </asp:GridView>
-            </div>
 
-            <div class="modal-footer">
-                <asp:Button ID="btnBaixarMDFe" runat="server"
-                    CssClass="btn btn-success"
-                    Text="Baixar"
-                    OnClick="btnBaixarMDFe_Click" />
+                                </asp:GridView>
+                            </div>
 
-                <asp:Button ID="btnCancelarMDFe" runat="server"  data-bs-dismiss="modal"
-                    CssClass="btn btn-danger"
-                    Text="Fechar"
-                    OnClick="btnCancelarMDFe_Click" />
-            </div>
+                            <div class="modal-footer">
+                                <asp:Button ID="btnBaixarMDFe" runat="server"
+                                    CssClass="btn btn-success"
+                                    Text="Baixar"
+                                    OnClick="btnBaixarMDFe_Click" />
 
-        </div>
-    </div>
-</div>
+                                <asp:Button ID="btnCancelarMDFe" runat="server" data-bs-dismiss="modal"
+                                    CssClass="btn btn-danger"
+                                    Text="Fechar"
+                                    OnClick="btnCancelarMDFe_Click" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </ContentTemplate>
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="txtPesquisarMDFe" EventName="TextChanged" />
@@ -540,8 +903,8 @@
                 <asp:AsyncPostBackTrigger ControlID="btnCancelarMDFe" EventName="Click" />
             </Triggers>
         </asp:UpdatePanel>
-         <!-- modal Gerenciar MDFe -->
-         
+        <!-- modal Gerenciar MDFe -->
+
     </div>
     <script type="text/javascript">
         // Captura o fim de qualquer atualização do UpdatePanel
@@ -558,5 +921,10 @@
             // 3. Simula o clique falso que você pediu em uma área neutra
             $('body').trigger('click');
         });
-</script>
+    </script>
+    <script>
+        setInterval(function () {
+            location.reload();
+        }, 600000);
+    </script>
 </asp:Content>

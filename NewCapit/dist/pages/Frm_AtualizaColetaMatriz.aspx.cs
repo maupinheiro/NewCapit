@@ -97,7 +97,15 @@ namespace NewCapit.dist.pages
                 DateTime dataHoraAtual = DateTime.Now;
                 //lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
+                
                 PreencherComboMotoristas();
+                //if (Request.QueryString["num_carregamento"] != null)
+                //{
+                //    int id = Convert.ToInt32(Request.QueryString["num_carregamento"]);
+                //    CarregaDados(id);
+                //}
+
+
                 CarregaDados();
                 CarregaMap(txtPlaca.Text);
 

@@ -48,12 +48,6 @@
         }
     </script>
 
-   <%-- <script>
-        function SelecionarTodos(source) {
-            let checkboxes = document.querySelectorAll('[id*="chkSelecionar"]');
-            checkboxes.forEach(cb => cb.checked = source.checked);
-        }
-    </script>--%>
     <script type="text/javascript">
         // Esta função roda sempre que o UpdatePanel termina de carregar
         var prm = Sys.WebForms.PageRequestManager.getInstance();
@@ -72,6 +66,66 @@
         }
     </script>
 
+    <style>
+        .table-sap {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 13px;
+            background: #ffffff;
+        }
+
+            /* Cabeçalho */
+            .table-sap thead {
+                background-color: #0A6ED1;
+                color: #ffffff;
+            }
+
+                .table-sap thead th {
+                    padding: 10px;
+                    text-align: center;
+                    font-weight: 600;
+                    border: 1px solid #d9d9d9;
+                }
+
+            /* Corpo */
+            .table-sap tbody td {
+                padding: 8px;
+                border: 1px solid #e5e5e5;
+            }
+
+            /* Zebra */
+            .table-sap tbody tr:nth-child(even) {
+                background-color: #f5f7fa;
+            }
+
+            /* Hover estilo SAP */
+            .table-sap tbody tr:hover {
+                background-color: #e8f3ff;
+                transition: 0.2s;
+            }
+
+        /* Borda externa */
+        .table-sap {
+            border: 1px solid #d9d9d9;
+        }
+
+        /* Responsivo */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        /* Destaque tipo status */
+        .status-aberto {
+            color: #107e3e;
+            font-weight: bold;
+        }
+
+        .status-fechado {
+            color: #bb0000;
+            font-weight: bold;
+        }
+    </style>
 
     <div class="container-fluid">
     <section class="content-wrapper">        
@@ -85,9 +139,16 @@
                 <div class="col-md-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">
+                            <%--<h3 class="card-title">
                                 <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;GESTÃO DE COLETAS E ENTREGAS</h3>
-                            </h3>
+                            </h3>--%>
+
+                            <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
+                                <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Coletas e Entregas
+                                    <br />
+                                    <small>Controle de Coletas e Entregas</small></h3>
+                            </div>
+
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
                                     <i class="fas fa-expand"></i>
@@ -167,7 +228,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="container-fluid">                                
+                            <div class="table-container">                               
                                 <div class="row">
                                     <div class="col-12">
                                         <!-- /.col -->
@@ -177,7 +238,7 @@
                                                 <asp:Label ID="lblMensagem" runat="server" Text=""></asp:Label>
                                                 <asp:Repeater ID="rptCarregamento" runat="server" OnItemDataBound="rptCarregamento_ItemDataBound">
                                                     <HeaderTemplate>
-                                                        <table class="table table-bordered dataTable1 table-hover" AutoGenerateColumns="false">
+                                                        <table class="table-sap" AutoGenerateColumns="false">
                                                             <thead>
                                                                 <tr text-align: center;>
                                                                     <th>#</th>

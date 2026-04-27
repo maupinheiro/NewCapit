@@ -352,7 +352,7 @@
                                     <asp:TextBox ID="txtValorTotal" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="direct-chat-name float-left">LIMITE DE CRÉDITO:</span>
                                     <asp:TextBox ID="txtLimiteCredito" runat="server" CssClass="form-control direct-chat-name float-left font-weight-bold" ReadOnly="true"></asp:TextBox>
