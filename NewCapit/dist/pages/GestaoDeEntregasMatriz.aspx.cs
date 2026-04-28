@@ -105,7 +105,7 @@ namespace NewCapit.dist.pages
             // ✅ INTERRUPTOR (OCULTAR CONCLUÍDAS)
             if (chkOcultarConcluidos.Checked)
             {
-                sqlFiltro += " AND situacao <> 'VIAGEM CONCLUIDA'";
+                sqlFiltro += " AND situacao <> 'VIAGEM CONCLUIDA' AND fl_exclusao IS NULL";
             }
 
             // 🔎 FILTROS

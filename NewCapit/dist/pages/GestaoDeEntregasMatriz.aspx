@@ -539,18 +539,18 @@
                                                         <asp:TemplateField HeaderText="#">
                                                             <ItemTemplate>
                                                                 <div>
-                                                                                                                <%--<asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("foto") %>' style="width: 60px; height:60px;" runat="server" CssClass="rounded-circle"
+                                                                                                                <asp:ImageButton ID="lnkEditar" ImageUrl='<%# Eval("foto") %>' style="width: 60px; height:60px;" runat="server" CssClass="rounded-circle"
                                                  CommandName="Editar"
                                                  CommandArgument='<%# Eval("num_carregamento") %>'
                                                  OnCommand="lnkEditar_Command"
-                                                 OnClientClick="event.stopPropagation();"/> --%> 
+                                                 OnClientClick="event.stopPropagation();"/>  
 
-<asp:ImageButton ID="lnkEditar"
+<%--<asp:ImageButton ID="lnkEditar"
     ImageUrl='<%# Eval("foto") %>'
     runat="server"
     style="width:60px; height:60px; border-radius:8px; object-fit:cover;"
     CommandName="Editar"
-    CommandArgument='<%# Eval("num_carregamento") %>' />
+    CommandArgument='<%# Eval("num_carregamento") %>' />--%>
                                                                 </div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>

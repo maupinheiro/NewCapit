@@ -1017,7 +1017,7 @@
 
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>AÇÃO</th>
+                                                                            <th>--</th>
                                                                             <th>CARGA</th>
                                                                             <th>LOCAL DE COLETA</th>
                                                                             <th>LOCAL DE ENTREGA</th>
@@ -1032,20 +1032,40 @@
                                                                     <tbody>
                                                             </HeaderTemplate>
                                                             <ItemTemplate>
+                                                                <td>
+    <asp:HiddenField ID="hdOC" runat="server" Value='<%# Eval("idviagem") %>' />
+</td>
+
                                                                 <asp:HiddenField ID="hdIdCarga" runat="server"
                                                                     Value='<%# Eval("carga") %>' />
 
                                                                 <tr data-widget="expandable-table" aria-expanded="false">
                                                                     <td>
-                                                                        <asp:LinkButton
+                                                                        <%--<asp:LinkButton
                                                                             ID="btnCancelar"
                                                                             runat="server"
                                                                             Text="Cancelar"
                                                                             CssClass="btn btn-danger btn-sm"
                                                                             CommandName="CancelarCarga"
                                                                             CommandArgument='<%# Eval("carga") %>'
-                                                                            OnClientClick='<%# "return confirm(\"Deseja realmente cancelar a carga Nº " + Eval("carga") + "?\");" %>'>
-                                                                        </asp:LinkButton>
+                                                                            OnClientClick='<%# "return confirm(\"Deseja realmente cancelar a carga Nº " + Eval("carga") + "\n Da Ordem de Coleta Nº: " + Eval("num_carregamento") + "?");" %>'>
+                                                                        </asp:LinkButton>--%>
+
+                                                                        <asp:LinkButton
+    ID="btnCancelar"
+    runat="server"
+    CssClass="btn btn-danger btn-sm"
+    CommandName="CancelarCarga"
+    CommandArgument='<%# Eval("carga") %>'
+    OnClientClick='<%# "return confirm(\"Deseja realmente cancelar a carga Nº " 
+        + Eval("carga") 
+        + "\\nDa Ordem de Coleta Nº: " 
+        + Eval("idviagem") 
+        + "?\");" %>'>
+        
+    <i class="fa fa-trash"></i>
+</asp:LinkButton>
+
                                                                     </td>
                                                                     <td><%# Eval("carga") %></td>
                                                                     <td><%# Eval("cod_expedidor") + " - " + Eval("expedidor") %></td>

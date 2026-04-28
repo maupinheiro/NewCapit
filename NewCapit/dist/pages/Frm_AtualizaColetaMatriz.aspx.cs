@@ -16,6 +16,7 @@ using NPOI.SS.UserModel;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Utils;
 using Org.BouncyCastle.Asn1.Cmp;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Subgurim;
 using Subgurim.Controles;
 using Subgurim.Controls;
@@ -71,7 +72,7 @@ namespace NewCapit.dist.pages
         string andamentoCarga;
         public string Data { get; set; } // errado se não mapear
 
-
+        DateTime dataHoraAtual = DateTime.Now;
         BigInteger idveiculo;
         string cidade, empresa, lat, lon, ignicao, bairro, rua, uf, id, placa, hora, velocidade, preferencia, bloqueio;
 
@@ -599,7 +600,8 @@ namespace NewCapit.dist.pages
             //GetPedidos();
 
 
-        }
+        }           
+
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem)
@@ -1183,7 +1185,6 @@ namespace NewCapit.dist.pages
                 //BuscarCteSalvos(idViagem);
                 CarregarPedidos(int.Parse(carga), gv);
             }
-
             if (e.CommandName == "AtualizarAbas")
             {
                 //Atualiza CT-e
@@ -1509,7 +1510,6 @@ namespace NewCapit.dist.pages
                 BuscarCteSalvos(idViagem);
                 CarregarPedidos(int.Parse(carga), gv);
             }
-
             if (e.CommandName == "Coletas")
             {
                 int id = Convert.ToInt32(e.CommandArgument);
@@ -1562,7 +1562,6 @@ namespace NewCapit.dist.pages
                 ViewState["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
-
             if (e.CommandName == "PedagioManual")
             {
                 using (SqlConnection conn = new SqlConnection(
@@ -1600,8 +1599,6 @@ namespace NewCapit.dist.pages
                 //ViewState["Coletas"] = null;
                 //CarregarColetas(novaColeta.Text);
             }
-
-
             if (e.CommandName == "EnviarSM")
             {
                 // 1. Captura os dados da interface ANTES do processo assíncrono
@@ -1649,7 +1646,6 @@ namespace NewCapit.dist.pages
                     MostrarMsg2("Erro: " + ex.Message);
                 }
             }
-
             if (e.CommandName == "BuscarNfe")
             {
                 string idCarga = e.CommandArgument.ToString();
@@ -1769,7 +1765,6 @@ namespace NewCapit.dist.pages
                     MostrarMsg2("Erro ao gerar arquivo: " + ex.Message);
                 }
             }
-
             if (e.CommandName == "GeraXml")
             {
                 try
@@ -1807,7 +1802,108 @@ namespace NewCapit.dist.pages
                     MostrarMsg2("Erro ao processar documento: " + ex.Message);
                 }
             }
+            if (e.CommandName == "CancelarCarga")
+            {
+                string carga = e.CommandArgument.ToString();
 
+                string usuario = dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString();
+                string usuario2 = Session["UsuarioLogado"].ToString();
+
+                using (SqlConnection conn = new SqlConnection(
+                    WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    conn.Open();
+
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            int idViagem;
+
+                            // 🔹 1. Buscar idviagem da carga
+                            string sqlBusca = "SELECT idviagem FROM tbcargas WHERE carga = @carga";
+
+                            using (SqlCommand cmd = new SqlCommand(sqlBusca, conn, trans))
+                            {
+                                cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+                                idViagem = Convert.ToInt32(cmd.ExecuteScalar());
+                            }
+
+                            // 🔹 2. Cancelar a carga
+                            string sqlUpdate = @"UPDATE tbcargas 
+                                         SET status = 'Cancelada',
+                                         andamento = 'CANCELADA',
+                                         atualizacao = @usuario, 
+                                         fl_exclusao = 'S' 
+                                         WHERE carga = @carga";
+
+                            using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
+                            {
+                                cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+                                cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuario;
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 🔹 3. Verificar se ainda existem cargas ativas
+                            string sqlVerifica = @"SELECT COUNT(*) 
+                                       FROM tbcargas 
+                                       WHERE idviagem = @idviagem 
+                                       AND fl_exclusao IS NULL";
+
+                            int totalAtivas = 0;
+
+                            using (SqlCommand cmd = new SqlCommand(sqlVerifica, conn, trans))
+                            {
+                                cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
+                                totalAtivas = Convert.ToInt32(cmd.ExecuteScalar());
+                            }
+
+                            // 🔹 4. Se não existir nenhuma ativa → cancelar OC
+                            if (totalAtivas == 0)
+                            {
+                                string sqlOC = @"UPDATE tbcarregamentos
+                                     SET status = 'Cancelada',
+                                         situacao = 'O. C. CANCELADA',
+                                         fl_exclusao = 'S',
+                                         usualt = @usuario,
+                                         dtalt = GETDATE()
+                                     WHERE num_carregamento = @idviagem";
+
+                                using (SqlCommand cmd = new SqlCommand(sqlOC, conn, trans))
+                                {
+                                    cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
+                                    cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuario2;
+
+                                    cmd.ExecuteNonQuery();
+                                    
+                                }
+                            }
+
+                            // 🔥 commit
+                            trans.Commit();
+                            if (totalAtivas == 0)
+                            {
+                                
+                                Response.Redirect("GestaoDeEntregasMatriz.aspx");
+                            }
+                            else
+                            {
+                               
+                                Session["Coletas"] = null;
+                                CarregarColetas(novaColeta.Text);
+                            }
+                            
+                        }
+                        catch (Exception)
+                        {
+                            //trans.Rollback();
+                            throw;
+                        }
+                    }
+                }
+
+                // 🔄 Recarrega o grid
+            }
         }
         private string GerarEObterProximoCte()
         {
@@ -2075,10 +2171,6 @@ namespace NewCapit.dist.pages
                         MostrarMsg2("Carga não encontrada na tbcargas.");
                         return;
                     }
-
-
-
-
                     cnpjRemCarga = dr["cnpj_remetente"].ToString().Trim();
                     cnpjDestCarga = dr["cnpj_destinatario"].ToString().Trim();
                 }
@@ -3744,7 +3836,7 @@ namespace NewCapit.dist.pages
             var novosDados = DAL.ConCargas.FetchDataTableColetasMatriz4(idviagem);
 
             // Verifica se há dados anteriores no ViewState
-            DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
+            DataTable dadosAtuais = Session["Coletas"] as DataTable;
 
             if (dadosAtuais == null)
             {
@@ -3759,7 +3851,7 @@ namespace NewCapit.dist.pages
             }
 
             // Atualiza o ViewState
-            ViewState["Coletas"] = dadosAtuais;
+            Session["Coletas"] = dadosAtuais;
 
             // Alimenta o Repeater com todos os dados acumulados
             rptColetas.DataSource = dadosAtuais;
@@ -6624,38 +6716,94 @@ namespace NewCapit.dist.pages
         }
         private void CancelarCarga(string carga)
         {
-            string strConexao = System.Web.Configuration.WebConfigurationManager
-                .ConnectionStrings["conexao"].ConnectionString;
+            string usuario = dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString();
+            string usuario2 = Session["UsuarioLogado"].ToString();
 
-            using (SqlConnection conn = new SqlConnection(strConexao))
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string sql = "UPDATE tbcargas SET status = 'Cancelada', fl_exclusao = 'S' WHERE carga = @carga";
-
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@carga", carga);
-
                 conn.Open();
-                cmd.ExecuteNonQuery();
+
+                using (SqlTransaction trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        int idViagem;
+
+                        // 🔹 1. Buscar idviagem da carga
+                        string sqlBusca = "SELECT idviagem FROM tbcargas WHERE carga = @carga";
+
+                        using (SqlCommand cmd = new SqlCommand(sqlBusca, conn, trans))
+                        {
+                            cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+                            idViagem = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
+
+                        // 🔹 2. Cancelar a carga
+                        string sqlUpdate = @"UPDATE tbcargas 
+                                         SET status = 'Cancelada',
+                                         andamento = 'CANCELADA',
+                                         atualizacao = @usuario, 
+                                         fl_exclusao = 'S' 
+                                         WHERE carga = @carga";
+
+                        using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
+                        {
+                            cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+                            cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuario;
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 3. Verificar se ainda existem cargas ativas
+                        string sqlVerifica = @"SELECT COUNT(*) 
+                                       FROM tbcargas 
+                                       WHERE idviagem = @idviagem 
+                                       AND fl_exclusao IS NULL";
+
+                        int totalAtivas = 0;
+
+                        using (SqlCommand cmd = new SqlCommand(sqlVerifica, conn, trans))
+                        {
+                            cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
+                            totalAtivas = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
+
+                        // 🔹 4. Se não existir nenhuma ativa → cancelar OC
+                        if (totalAtivas == 0)
+                        {
+                            string sqlOC = @"UPDATE tbcarregamentos
+                                     SET status = 'Cancelada',
+                                         situacao = 'O. C. CANCELADA',
+                                         fl_exclusao = 'S',
+                                         usualt = @usuario,
+                                         dtalt = GETDATE()
+                                     WHERE num_carregamento = @idviagem";
+
+                            using (SqlCommand cmd = new SqlCommand(sqlOC, conn, trans))
+                            {
+                                cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
+                                cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuario2;
+
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        // 🔥 commit
+                        trans.Commit();
+                        CarregarColetas(novaColeta.Text);
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
             }
 
-            // Recarregar grid
-           // CarregarDados();
+            // 🔄 Recarrega o grid
+            
+
         }
-        protected void gridCargas_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "CancelarCarga")
-            {
-                string carga = e.CommandArgument.ToString();
-
-                CancelarCarga(carga);
-            }
-        }
-
-
-
-
-
-
 
         void GravarHistorico(
         string tabela,
