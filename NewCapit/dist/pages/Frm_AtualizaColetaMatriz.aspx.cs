@@ -592,7 +592,7 @@ namespace NewCapit.dist.pages
             }
             string dataAlteracao = data?.ToString("dd/MM/yyyy HH:mm");
             lblAtualizadoEm.Text = dataAlteracao;
-
+            Session["Coletas"] = null;
             string idviagem;
             idviagem = num_coleta;
             CarregarColetas(idviagem);
@@ -1180,7 +1180,7 @@ namespace NewCapit.dist.pages
 
 
                 // Após atualizar, recarregar os dados no Repeater
-                ViewState["Coletas"] = null;
+                Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
                 //BuscarCteSalvos(idViagem);
                 CarregarPedidos(int.Parse(carga), gv);
@@ -1505,7 +1505,7 @@ namespace NewCapit.dist.pages
                     }
                 }
 
-                ViewState["Coletas"] = null;
+                Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
                 BuscarCteSalvos(idViagem);
                 CarregarPedidos(int.Parse(carga), gv);
@@ -1559,7 +1559,7 @@ namespace NewCapit.dist.pages
 
                 // Após atualizar, recarregar os dados no Repeater
                 MostrarMsg2("Dados Salvos!");
-                ViewState["Coletas"] = null;
+                Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
             if (e.CommandName == "PedagioManual")
@@ -1596,7 +1596,7 @@ namespace NewCapit.dist.pages
 
                 // Após atualizar, recarregar os dados no Repeater
                 // MostrarMsg2("Pedágio enviado com sucesso!");
-                //ViewState["Coletas"] = null;
+                //Session["Coletas"] = null;
                 //CarregarColetas(novaColeta.Text);
             }
             if (e.CommandName == "EnviarSM")
@@ -1804,16 +1804,23 @@ namespace NewCapit.dist.pages
             }
             if (e.CommandName == "CancelarCarga")
             {
-                string carga = e.CommandArgument.ToString();
+                // 1. Verificação de permissão por usuário
+                string usuarioLogado = Session["UsuarioLogado"]?.ToString();
+                if (usuarioLogado != "TNG30976")
+                {
+                    // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
+                        "alert('Essa opção não está disponível para o seu usuário.');", true);
+                    return;
+                }
 
-                string usuario = dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString();
-                string usuario2 = Session["UsuarioLogado"].ToString();
+                string carga = e.CommandArgument.ToString();
+                string usuarioFormatado = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + usuarioLogado;
 
                 using (SqlConnection conn = new SqlConnection(
                     WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 {
                     conn.Open();
-
                     using (SqlTransaction trans = conn.BeginTransaction())
                     {
                         try
@@ -1822,43 +1829,49 @@ namespace NewCapit.dist.pages
 
                             // 🔹 1. Buscar idviagem da carga
                             string sqlBusca = "SELECT idviagem FROM tbcargas WHERE carga = @carga";
-
                             using (SqlCommand cmd = new SqlCommand(sqlBusca, conn, trans))
                             {
                                 cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
                                 idViagem = Convert.ToInt32(cmd.ExecuteScalar());
                             }
 
-                            // 🔹 2. Cancelar a carga
-                            string sqlUpdate = @"UPDATE tbcargas 
+                            // 🔹 2. Cancelar a carga na tbcargas
+                            string sqlUpdateCarga = @"UPDATE tbcargas 
                                          SET status = 'Cancelada',
-                                         andamento = 'CANCELADA',
-                                         atualizacao = @usuario, 
-                                         fl_exclusao = 'S' 
+                                             andamento = 'CANCELADA',
+                                             atualizacao = @usuario, 
+                                             fl_exclusao = 'S' 
                                          WHERE carga = @carga";
 
-                            using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
+                            using (SqlCommand cmd = new SqlCommand(sqlUpdateCarga, conn, trans))
                             {
                                 cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
-                                cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuario;
+                                cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuarioFormatado;
                                 cmd.ExecuteNonQuery();
                             }
 
-                            // 🔹 3. Verificar se ainda existem cargas ativas
+                            // 🔹 NOVO: 3. Cancelar na tbpedidos usando a carga como parâmetro
+                            string sqlUpdatePedidos = "UPDATE tbpedidos SET fl_exclusao = 'S' WHERE carga = @carga";
+                            using (SqlCommand cmd = new SqlCommand(sqlUpdatePedidos, conn, trans))
+                            {
+                                cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 🔹 4. Verificar se ainda existem cargas ativas
                             string sqlVerifica = @"SELECT COUNT(*) 
                                        FROM tbcargas 
                                        WHERE idviagem = @idviagem 
                                        AND fl_exclusao IS NULL";
 
                             int totalAtivas = 0;
-
                             using (SqlCommand cmd = new SqlCommand(sqlVerifica, conn, trans))
                             {
                                 cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
                                 totalAtivas = Convert.ToInt32(cmd.ExecuteScalar());
                             }
 
-                            // 🔹 4. Se não existir nenhuma ativa → cancelar OC
+                            // 🔹 5. Se não existir nenhuma ativa → cancelar OC
                             if (totalAtivas == 0)
                             {
                                 string sqlOC = @"UPDATE tbcarregamentos
@@ -1872,37 +1885,30 @@ namespace NewCapit.dist.pages
                                 using (SqlCommand cmd = new SqlCommand(sqlOC, conn, trans))
                                 {
                                     cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
-                                    cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuario2;
-
+                                    cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuarioLogado;
                                     cmd.ExecuteNonQuery();
-                                    
                                 }
                             }
 
-                            // 🔥 commit
                             trans.Commit();
+
                             if (totalAtivas == 0)
                             {
-                                
                                 Response.Redirect("GestaoDeEntregasMatriz.aspx");
                             }
                             else
                             {
-                               
                                 Session["Coletas"] = null;
                                 CarregarColetas(novaColeta.Text);
                             }
-                            
                         }
                         catch (Exception)
                         {
-                            //trans.Rollback();
+                            trans.Rollback();
                             throw;
                         }
                     }
                 }
-
-                // 🔄 Recarrega o grid
             }
         }
         private string GerarEObterProximoCte()
@@ -2817,7 +2823,7 @@ namespace NewCapit.dist.pages
                 }
 
                 MostrarMsg2("Sucesso! SM Gerada: " + numeroSM);
-                ViewState["Coletas"] = null;
+                Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
             catch (Exception ex)
@@ -3835,7 +3841,7 @@ namespace NewCapit.dist.pages
             // Obtem os dados atuais (novos dados)
             var novosDados = DAL.ConCargas.FetchDataTableColetasMatriz4(idviagem);
 
-            // Verifica se há dados anteriores no ViewState
+            // Verifica se há dados anteriores no Session
             DataTable dadosAtuais = Session["Coletas"] as DataTable;
 
             if (dadosAtuais == null)
@@ -3850,7 +3856,7 @@ namespace NewCapit.dist.pages
                 dadosAtuais.ImportRow(row);
             }
 
-            // Atualiza o ViewState
+            // Atualiza o Session
             Session["Coletas"] = dadosAtuais;
 
             // Alimenta o Repeater com todos os dados acumulados
@@ -3964,7 +3970,7 @@ namespace NewCapit.dist.pages
 
 
                     //ScriptManager.RegisterStartupScript(this, this.GetType(), "Mensagem", "alert('Coletas salvas com sucesso!');", true);
-                    ViewState["Coletas"] = null;
+                    Session["Coletas"] = null;
                     CarregarColetas(novaColeta.Text);
 
 
@@ -4131,7 +4137,7 @@ namespace NewCapit.dist.pages
                                     cmds.ExecuteNonQuery();
                                 }
 
-                                ViewState["Coletas"] = null;
+                                Session["Coletas"] = null;
                                 CarregarColetas(novaColeta.Text);
 
                                 txtCarga.Text = "";
@@ -4253,19 +4259,19 @@ namespace NewCapit.dist.pages
                         txtDuracaoVazio.Text = Convert.ToDateTime(r["tempo"]).ToString("HH:mm");
                         txtPedagio.Text = r["pedagio"].ToString();
                         // Guarda dados para salvar depois
-                        ViewState["distancia"] = r["distancia"];
-                        ViewState["deslocamento"] = r["deslocamento"];
-                        ViewState["pedagio"] = r["pedagio"];
-                        ViewState["tempo"] = r["tempo"];
+                        Session["distancia"] = r["distancia"];
+                        Session["deslocamento"] = r["deslocamento"];
+                        Session["pedagio"] = r["pedagio"];
+                        Session["tempo"] = r["tempo"];
                     }
                     else
                     {
                         txtRotaVazio.Text = "";
 
-                        ViewState["distancia"] = null;
-                        ViewState["deslocamento"] = null;
-                        ViewState["pedagio"] = null;
-                        ViewState["tempo"] = null;
+                        Session["distancia"] = null;
+                        Session["deslocamento"] = null;
+                        Session["pedagio"] = null;
+                        Session["tempo"] = null;
                     }
                 }
 
@@ -4296,7 +4302,7 @@ namespace NewCapit.dist.pages
         }
         private void AtualizarColetasVisiveis()
         {
-            DataTable dadosAtuais = ViewState["Coletas"] as DataTable;
+            DataTable dadosAtuais = Session["Coletas"] as DataTable;
 
             if (dadosAtuais != null && dadosAtuais.Rows.Count > 0)
             {
@@ -4309,8 +4315,8 @@ namespace NewCapit.dist.pages
                 // Consulta novamente apenas essas coletas no banco
                 var dadosAtualizados = DAL.ConCargas.FetchDataTableColetasPorCargas(cargasVisiveis);
 
-                // Atualiza o ViewState com os novos dados
-                ViewState["Coletas"] = dadosAtualizados;
+                // Atualiza o Session com os novos dados
+                Session["Coletas"] = dadosAtualizados;
 
                 // Atualiza o Repeater
                 rptColetas.DataSource = dadosAtualizados;
@@ -6139,7 +6145,7 @@ namespace NewCapit.dist.pages
         //    lblPesoTotalNF.Text = "";
         //    lblValorTotalNF.Text = "";
 
-        //    ViewState["NFE"] = null;
+        //    Session["NFE"] = null;
         //}
 
         // fim da nota fiscal
@@ -6416,9 +6422,9 @@ namespace NewCapit.dist.pages
 
         protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
         {
-            if (ViewState["placaAtual"] != null)
+            if (Session["placaAtual"] != null)
             {
-                string ds_placa = ViewState["placaAtual"].ToString();
+                string ds_placa = Session["placaAtual"].ToString();
                 CarregaMap(ds_placa);
             }
         }
