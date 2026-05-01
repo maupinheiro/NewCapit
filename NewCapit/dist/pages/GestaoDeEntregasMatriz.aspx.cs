@@ -287,7 +287,13 @@ namespace NewCapit.dist.pages
         }
         protected void btnProximo_Click(object sender, EventArgs e)
         {
-            int pagina = (int)ViewState["Pagina"];
+            int pagina = 1;
+
+            if (ViewState["Pagina"] != null &&
+                int.TryParse(ViewState["Pagina"].ToString(), out int p))
+            {
+                pagina = p;
+            }
             int total = (int)ViewState["TotalPaginas"];
 
             if (pagina < total)

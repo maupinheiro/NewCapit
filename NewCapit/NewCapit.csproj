@@ -5764,6 +5764,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="dist\Anexos\" />
     <Folder Include="docnf\" />
     <Folder Include="EnviaSM\" />
     <Folder Include="ImportacaoTemp\" />
