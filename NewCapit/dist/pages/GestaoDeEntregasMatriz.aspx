@@ -192,7 +192,7 @@
 
         .sub-info {
             font-size: 11px;
-            color: #6a6d70;
+            color: #00050a;
         }
 
         .table-sap td div {
@@ -557,49 +557,49 @@
 
                                                         <asp:TemplateField HeaderText="Veículo">
                                                             <ItemTemplate>
-                                                                <div><%# Eval("veiculo") %></div>
+                                                                <div style="font-weight:bold"><%# Eval("veiculo") %></div>
                                                                 <div class="sub-info"><%# Eval("tipoveiculo") %></div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Placa">
                                                             <ItemTemplate>
-                                                                <div><%# Eval("placa") %></div>
+                                                                <div style="font-weight:bold"><%# Eval("placa") %></div>
                                                                 <div class="sub-info"><%# Eval("reboque1")  + " - " +  Eval("reboque2") %></div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Motorista">
                                                             <ItemTemplate>
-                                                                <div><%# Eval("codmotorista") + " - " + Eval("nomemotorista") %></div>
+                                                                <div style="font-weight:bold"><%# Eval("codmotorista") + " - " + Eval("nomemotorista") %></div>
                                                                 <div class="sub-info"><%# Eval("codtra") + " - " + Eval("transportadora")%></div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Expedidor/Recebedor">
                                                             <ItemTemplate>
-                                                                <div><%# Eval("cod_expedidor") + " - " + Eval("expedidor") %></div>
+                                                                <div style="font-weight:bold"><%# Eval("cod_expedidor") + " - " + Eval("expedidor") %></div>
                                                                 <div class="sub-info"><%# Eval("cod_recebedor") + " - " + Eval("recebedor")%> </div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Inicio/Termino da Prestação">
                                                             <ItemTemplate>
-                                                                <div><%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %></div>
+                                                                <div style="font-weight:bold"><%# Eval("cid_expedidor") + "/" + Eval("uf_expedidor") %></div>
                                                                 <div class="sub-info"><%# Eval("cid_recebedor") + "/" + Eval("uf_recebedor")%></div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Ordem Coleta">
                                                             <ItemTemplate>
-                                                                <div><%# Eval("num_carregamento") + " ("+ Eval("carga") + ")"%></div>
+                                                                <div style="font-weight:bold"><%# Eval("num_carregamento") + " ("+ Eval("carga") + ")"%></div>
                                                                 <div class="sub-info"><%# Eval("emissao", "{0:dd/MM/yyyy HH:mm}") %></div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
 
                                                         <asp:TemplateField HeaderText="Atendimento">
                                                             <ItemTemplate>
-                                                                <div class="sub-info"><%# Eval("situacao") %></div>
+                                                                <div style="font-weight:bold"><%# Eval("situacao") %></div>
                                                                 <div>
                                                                     <asp:Label
                                                                         ID="lblStatus"

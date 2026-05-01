@@ -887,7 +887,7 @@ namespace NewCapit.dist.pages
                         }
                         else 
                         {                            
-                            //string sEmitePedagio = ViewState["emitepedagio"]?.ToString();
+                            //string sEmitePedagio = Session["emitepedagio"]?.ToString();
                             txtPedagio.Text = dt.Rows[0]["emitepedagio"].ToString();
                             txtCod_Expedidor.Text = dt.Rows[0]["cod_expedidor"].ToString();
                             txtExpedidor.Text = dt.Rows[0]["expedidor"].ToString();
@@ -1490,19 +1490,19 @@ namespace NewCapit.dist.pages
                         txtDuracaoVazio.Text = Convert.ToDateTime(r["tempo"]).ToString("HH:mm");
                         txtPedagio.Text = r["pedagio"].ToString();
                         // Guarda dados para salvar depois
-                        ViewState["distancia"] = r["distancia"];
-                        ViewState["deslocamento"] = r["deslocamento"];
-                        ViewState["pedagio"] = r["pedagio"];
-                        ViewState["tempo"] = r["tempo"];
+                        Session["distancia"] = r["distancia"];
+                        Session["deslocamento"] = r["deslocamento"];
+                        Session["pedagio"] = r["pedagio"];
+                        Session["tempo"] = r["tempo"];
                     }
                     else
                     {
                         txtRotaVazio.Text = "";
 
-                        ViewState["distancia"] = null;
-                        ViewState["deslocamento"] = null;
-                        ViewState["pedagio"] = null;
-                        ViewState["tempo"] = null;
+                        Session["distancia"] = null;
+                        Session["deslocamento"] = null;
+                        Session["pedagio"] = null;
+                        Session["tempo"] = null;
                     }
                 }
 

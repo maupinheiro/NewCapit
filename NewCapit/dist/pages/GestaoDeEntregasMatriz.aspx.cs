@@ -61,13 +61,13 @@ namespace NewCapit.dist.pages
         }
         protected void chkOcultarConcluidos_CheckedChanged(object sender, EventArgs e)
         {
-            ViewState["Pagina"] = 1; // opcional (volta pra primeira página)
+            Session["Pagina"] = 1; // opcional (volta pra primeira página)
             CarregarGrid();
         }
         private void CarregarGrid()
         {
             int pageSize = 35;
-            int paginaAtual = ViewState["Pagina"] != null ? (int)ViewState["Pagina"] : 1;
+            int paginaAtual = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
 
             string frota = txtFrota.Text?.Trim();
             string placa = txtPlaca.Text?.Trim();
@@ -166,7 +166,7 @@ namespace NewCapit.dist.pages
                 lblTotalGeral.InnerText = $"Página {paginaAtual} de {totalPaginas} | Total: {totalRegistros}";
                 lblPaginaAtual.Text = paginaAtual.ToString().Trim();
                 lblTotalPaginas.Text = totalPaginas.ToString().Trim();                    
-                ViewState["TotalPaginas"] = totalPaginas;
+                Session["TotalPaginas"] = totalPaginas;
 
                 // 📋 GRID
                 string sql = $@"
@@ -235,7 +235,7 @@ namespace NewCapit.dist.pages
 
             if (int.TryParse(txtIrPagina.Text, out paginaDigitada))
             {
-                int totalPaginas = ViewState["TotalPaginas"] != null ? (int)ViewState["TotalPaginas"] : 1;
+                int totalPaginas = Session["TotalPaginas"] != null ? (int)Session["TotalPaginas"] : 1;
 
                 // 🔒 limita entre 1 e totalPaginas
                 if (paginaDigitada < 1)
@@ -244,7 +244,7 @@ namespace NewCapit.dist.pages
                 if (paginaDigitada > totalPaginas)
                     paginaDigitada = totalPaginas;
 
-                ViewState["Pagina"] = paginaDigitada;
+                Session["Pagina"] = paginaDigitada;
                 CarregarGrid();
             }
         }
@@ -274,44 +274,38 @@ namespace NewCapit.dist.pages
         }
         protected void btnPrimeiro_Click(object sender, EventArgs e)
         {
-            ViewState["Pagina"] = 1;
+            Session["Pagina"] = 1;
             CarregarGrid();
         }
         protected void btnAnterior_Click(object sender, EventArgs e)
         {
-            int pagina = (int)ViewState["Pagina"];
+            int pagina = (int)Session["Pagina"];
             if (pagina > 1)
-                ViewState["Pagina"] = pagina - 1;
+                Session["Pagina"] = pagina - 1;
 
             CarregarGrid();
         }
         protected void btnProximo_Click(object sender, EventArgs e)
         {
-            int pagina = 1;
-
-            if (ViewState["Pagina"] != null &&
-                int.TryParse(ViewState["Pagina"].ToString(), out int p))
-            {
-                pagina = p;
-            }
-            int total = (int)ViewState["TotalPaginas"];
+            int pagina = (int)Session["Pagina"];
+            int total = (int)Session["TotalPaginas"];
 
             if (pagina < total)
-                ViewState["Pagina"] = pagina + 1;
+                Session["Pagina"] = pagina + 1;
 
             CarregarGrid();
         }
         protected void btnUltimo_Click(object sender, EventArgs e)
         {
-            ViewState["Pagina"] = (int)ViewState["TotalPaginas"];
+            Session["Pagina"] = (int)Session["TotalPaginas"];
             CarregarGrid();
         }
         protected void gvOrdens_RowCreated(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.Pager)
             {
-                int paginaAtual = ViewState["Pagina"] != null ? (int)ViewState["Pagina"] : 1;
-                int totalPaginas = ViewState["TotalPaginas"] != null ? (int)ViewState["TotalPaginas"] : 1;
+                int paginaAtual = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
+                int totalPaginas = Session["TotalPaginas"] != null ? (int)Session["TotalPaginas"] : 1;
 
                 // 🔢 LABELS
                 Label lblPaginaAtual = (Label)e.Row.FindControl("lblPaginaAtual");
