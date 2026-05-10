@@ -38,10 +38,60 @@ namespace NewCapit.dist.pages
         }
         private void CarregarGrid()
         {
+            //        using (SqlConnection conn = new SqlConnection(
+            //WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            //        {
+            //            string query = @"SELECT * FROM tbsaida_combustivel WHERE 1=1";
+
+            //            SqlCommand cmd = new SqlCommand();
+            //            cmd.Connection = conn;
+
+            //            // 📅 Data inicial
+            //            if (!string.IsNullOrEmpty(txtDataInicial.Text))
+            //            {
+            //                DateTime dataInicial = Convert.ToDateTime(txtDataInicial.Text);
+            //                query += " AND data_geracao >= @dataInicial";
+            //                cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = dataInicial;
+            //            }
+
+            //            // 📅 Data final (ajuste para pegar o dia todo)
+            //            if (!string.IsNullOrEmpty(txtDataFinal.Text))
+            //            {
+            //                DateTime dataFinal = Convert.ToDateTime(txtDataFinal.Text).AddDays(1).AddSeconds(-1);
+            //                query += " AND data_geracao <= @dataFinal";
+            //                cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = dataFinal;
+            //            }
+
+            //            // 🔍 Busca
+            //            if (!string.IsNullOrEmpty(txtBusca.Text))
+            //            {
+            //                query += @" AND (
+            //        nommot LIKE @busca 
+            //        OR plavei LIKE @busca 
+            //        OR CAST(codvei AS VARCHAR) LIKE @busca 
+            //        OR CAST(ordem_abastecimento AS VARCHAR) LIKE @busca
+            //    )";
+
+            //                cmd.Parameters.Add("@busca", SqlDbType.VarChar).Value = "%" + txtBusca.Text + "%";
+            //            }
+
+            //            cmd.CommandText = query;
+
+            //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            //            DataTable dt = new DataTable();
+            //            da.Fill(dt);
+
+            //            gvAbastecimento.DataSource = dt;
+            //            gvAbastecimento.DataBind();
+            //        }
+
+
             using (SqlConnection conn = new SqlConnection(
-    WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string query = @"SELECT * FROM tbsaida_combustivel WHERE 1=1";
+                string query = @"SELECT * 
+                     FROM tbsaida_combustivel 
+                     WHERE 1=1";
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = conn;
@@ -50,15 +100,21 @@ namespace NewCapit.dist.pages
                 if (!string.IsNullOrEmpty(txtDataInicial.Text))
                 {
                     DateTime dataInicial = Convert.ToDateTime(txtDataInicial.Text);
+
                     query += " AND data_geracao >= @dataInicial";
+
                     cmd.Parameters.Add("@dataInicial", SqlDbType.DateTime).Value = dataInicial;
                 }
 
-                // 📅 Data final (ajuste para pegar o dia todo)
+                // 📅 Data final
                 if (!string.IsNullOrEmpty(txtDataFinal.Text))
                 {
-                    DateTime dataFinal = Convert.ToDateTime(txtDataFinal.Text).AddDays(1).AddSeconds(-1);
+                    DateTime dataFinal = Convert.ToDateTime(txtDataFinal.Text)
+                        .AddDays(1)
+                        .AddSeconds(-1);
+
                     query += " AND data_geracao <= @dataFinal";
+
                     cmd.Parameters.Add("@dataFinal", SqlDbType.DateTime).Value = dataFinal;
                 }
 
@@ -72,19 +128,24 @@ namespace NewCapit.dist.pages
             OR CAST(ordem_abastecimento AS VARCHAR) LIKE @busca
         )";
 
-                    cmd.Parameters.Add("@busca", SqlDbType.VarChar).Value = "%" + txtBusca.Text + "%";
+                    cmd.Parameters.Add("@busca", SqlDbType.VarChar).Value =
+                        "%" + txtBusca.Text.Trim() + "%";
                 }
+
+                // 🔽 ORDENAÇÃO
+                query += " ORDER BY emissao DESC";
 
                 cmd.CommandText = query;
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
+
                 DataTable dt = new DataTable();
+
                 da.Fill(dt);
 
                 gvAbastecimento.DataSource = dt;
                 gvAbastecimento.DataBind();
             }
-
 
             //using (SqlConnection conn = new SqlConnection(
             //    WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))

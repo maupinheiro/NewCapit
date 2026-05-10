@@ -1,4 +1,4 @@
-﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="Frm_DiarioDeBordo.aspx.cs" Inherits="NewCapit.dist.pages.Frm_DiarioDeBordo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -180,78 +180,78 @@
             campo.value = campo.value.replace(/\D/g, ''); // remove tudo que não for número
         }
     </script>
-     <script>
-         $(function () {
-             $("#txtAlmoco").inputmask("currency", {
-                 prefix: "R$ ",
-                 groupSeparator: ".",
-                 radixPoint: ",",
-                 digits: 2,
-                 autoGroup: true,
-                 rightAlign: false
-             });
-         });
-     </script>
-  <script>
-      $(function () {
-          $("#txtCafe").inputmask("currency", {
-              prefix: "R$ ",
-              groupSeparator: ".",
-              radixPoint: ",",
-              digits: 2,
-              autoGroup: true,
-              rightAlign: false
-          });
-      });
-  </script>
-  <script>
-      $(function () {
-          $("#txtJantar").inputmask("currency", {
-              prefix: "R$ ",
-              groupSeparator: ".",
-              radixPoint: ",",
-              digits: 2,
-              autoGroup: true,
-              rightAlign: false
-          });
-      });
-  </script>
-  <script>
-      $(function () {
-          $("#txtPernoite").inputmask("currency", {
-              prefix: "R$ ",
-              groupSeparator: ".",
-              radixPoint: ",",
-              digits: 2,
-              autoGroup: true,
-              rightAlign: false
-          });
-      });
-  </script>
-  <script>
-      $(function () {
-          $("#txtComissao").inputmask("currency", {
-              prefix: "R$ ",
-              groupSeparator: ".",
-              radixPoint: ",",
-              digits: 2,
-              autoGroup: true,
-              rightAlign: false
-          });
-      });
-  </script>
-     <script>
-         $(function () {
-             $("#txtEngDesen").inputmask("currency", {
-                 prefix: "R$ ",
-                 groupSeparator: ".",
-                 radixPoint: ",",
-                 digits: 2,
-                 autoGroup: true,
-                 rightAlign: false
-             });
-         });
-     </script>
+    <script>
+        $(function () {
+            $("#txtAlmoco").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtCafe").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtJantar").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtPernoite").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtComissao").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#txtEngDesen").inputmask("currency", {
+                prefix: "R$ ",
+                groupSeparator: ".",
+                radixPoint: ",",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false
+            });
+        });
+    </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -313,7 +313,7 @@
                         </div>
 
                     </div>
-                    <div class="row g-3">
+                    <div class="row g-3" id="divCustos" runat="server" visible="false">
                         <div class="col-md-1">
                             <div class="form-group">
                                 <span class="details">CAFÉ:</span>
@@ -382,29 +382,207 @@
                     </div>
                     <div class="row g-3">
                         <div class="card-body">
-                            <%--<table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                <asp:GridView ID="grdCusto" runat="server" AutoGenerateColumns="false" Width="970px" Font-Size="12px" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">--%>
-                            <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                <asp:GridView ID="grdCusto" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_custo" OnRowCommand="grdCusto_RowCommand">
-                                    <Columns>
-                                        <asp:BoundField DataField="cafe" HeaderText="CAFÉ DA MANHÃ" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="almoco" HeaderText="ALMOÇO" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="jantar" HeaderText="JANTAR" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="pernoite" HeaderText="PERNOITE" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="premio" HeaderText="PRÊMIO" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="engatedes" HeaderText="ENGATE/DES" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="ds_rel1" HeaderText="RELAT.[1]" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="ds_rel2" HeaderText="RELAT.[2]" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="ds_rel3" HeaderText="RELAT.[3]" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="ds_rel4" HeaderText="RELAT.[4]" ItemStyle-HorizontalAlign="Center" />
-                                        <asp:BoundField DataField="total" HeaderText="TOTAL" ItemStyle-HorizontalAlign="Center" />
+                            <asp:GridView ID="grdCusto"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                CssClass="table table-bordered table-striped table-hover"
+                                Width="100%"
+                                DataKeyNames="cod_custo"
+                                OnRowEditing="grdCusto_RowEditing"
+                                OnRowCancelingEdit="grdCusto_RowCancelingEdit"
+                                OnRowUpdating="grdCusto_RowUpdating"
+                                OnRowDeleting="grdCusto_RowDeleting">
 
-                                        <asp:ButtonField ButtonType="Link" CommandName="Select" HeaderText="AÇÃO" Text="Remover" />
+                                <Columns>
 
-                                        <%--<asp:LinkButton ID="lnkEditar" runat="server" CommandName="Select" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>--%>
-                                    </Columns>
-                                </asp:GridView>
-                            </table>
+                                    <asp:TemplateField HeaderText="CAFÉ">
+                                        <ItemTemplate>
+                                            <%# Eval("vl_cafe") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtCafe"
+                                                runat="server"
+                                                Text='<%# Eval("vl_cafe") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="ALMOÇO">
+                                        <ItemTemplate>
+                                            <%# Eval("vl_almoco") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtAlmoco"
+                                                runat="server"
+                                                Text='<%# Eval("vl_almoco") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="JANTA">
+                                        <ItemTemplate>
+                                            <%# Eval("vl_jantar") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtJanta"
+                                                runat="server"
+                                                Text='<%# Eval("vl_jantar") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="PERNOITE">
+                                        <ItemTemplate>
+                                            <%# Eval("vl_pernoite") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtPernoite"
+                                                runat="server"
+                                                Text='<%# Eval("vl_pernoite") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="COMISSÕES">
+                                        <ItemTemplate>
+                                            <%# Eval("vl_premio") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtPremio"
+                                                runat="server"
+                                                Text='<%# Eval("vl_premio") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="ENG./DES.">
+                                        <ItemTemplate>
+                                            <%# Eval("vl_engate_des") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEngate"
+                                                runat="server"
+                                                Text='<%# Eval("vl_engate_des") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="REL1">
+                                        <ItemTemplate>
+                                            <%# Eval("ds_rel1") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtRel1"
+                                                runat="server"
+                                                Text='<%# Eval("ds_rel1") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="REL2">
+                                        <ItemTemplate>
+                                            <%# Eval("ds_rel2") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtRel2"
+                                                runat="server"
+                                                Text='<%# Eval("ds_rel2") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="REL3">
+                                        <ItemTemplate>
+                                            <%# Eval("ds_rel3") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtRel3"
+                                                runat="server"
+                                                Text='<%# Eval("ds_rel3") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="REL4">
+                                        <ItemTemplate>
+                                            <%# Eval("ds_rel4") %>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtRel4"
+                                                runat="server"
+                                                Text='<%# Eval("ds_rel4") %>'
+                                                CssClass="form-control">
+                                            </asp:TextBox>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="AÇÕES">
+
+                                        <ItemTemplate>
+
+                                            <asp:LinkButton ID="btnEditar"
+                                                runat="server"
+                                                CommandName="Edit"
+                                                CssClass="btn btn-primary btn-sm"
+                                                ToolTip="Editar">
+
+            <i class="fa fa-edit"></i>
+
+                                            </asp:LinkButton>
+
+                                            <asp:LinkButton ID="btnExcluir"
+                                                runat="server"
+                                                CommandName="Delete"
+                                                CssClass="btn btn-danger btn-sm"
+                                                ToolTip="Excluir"
+                                                OnClientClick="return confirm('Deseja excluir este registro?');">
+
+            <i class="fa fa-trash"></i>
+
+                                            </asp:LinkButton>
+
+                                        </ItemTemplate>
+
+                                        <EditItemTemplate>
+
+                                            <asp:LinkButton ID="btnAtualizar"
+                                                runat="server"
+                                                CommandName="Update"
+                                                CssClass="btn btn-success btn-sm"
+                                                ToolTip="Atualizar">
+
+            <i class="fa fa-save"></i>
+
+                                            </asp:LinkButton>
+
+                                            <asp:LinkButton ID="btnCancelar"
+                                                runat="server"
+                                                CommandName="Cancel"
+                                                CssClass="btn btn-secondary btn-sm"
+                                                ToolTip="Cancelar">
+
+            <i class="fa fa-times"></i>
+
+                                            </asp:LinkButton>
+
+                                        </EditItemTemplate>
+
+                                        <ItemStyle HorizontalAlign="Center" Width="120px" />
+
+                                    </asp:TemplateField>
+
+                                </Columns>
+
+                            </asp:GridView>
                         </div>
 
                     </div>
@@ -413,8 +591,6 @@
                             <div class="form-group">
                                 <span class="details">MACRO:</span>
                                 <asp:DropDownList ID="ddlMacros" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlMacros_SelectedIndexChanged" AutoPostBack="true">
-                                    
-                                 
                                 </asp:DropDownList><br />
                             </div>
                         </div>
@@ -428,8 +604,8 @@
                             <div class="form-group">
                                 <span class="">PARADA:</span>
                                 <asp:DropDownList ID="ddlNumero" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlNumero_SelectedIndexChanged" AutoPostBack="true">
-                                   <asp:ListItem Value="0" Text="Selecione..."></asp:ListItem>
-                                  
+                                    <asp:ListItem Value="0" Text="Selecione..."></asp:ListItem>
+
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -437,7 +613,7 @@
                             <div class="form-group">
                                 <span class="details">DESCRIÇÃO:</span>
                                 <asp:HiddenField ID="txtconformmessageValue1" runat="server" />
-                                <asp:TextBox ID="txtTipoMarcacao" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true" ></asp:TextBox>
+                                <asp:TextBox ID="txtTipoMarcacao" runat="server" CssClass="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">

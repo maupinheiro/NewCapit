@@ -591,7 +591,7 @@ namespace NewCapit.dist.pages
 
                     if (drCarreta.Read())
                     {
-                        if (dr["ativo_inativo"].ToString() == "INATIVO")
+                        if (drCarreta["ativo_inativo"].ToString() == "INATIVO")
                         {
                             Mensagem("warning", "Veículo / Carreta: " + txtPlaca.Text.Trim() + ", está inativo no sistema. Verifique!");
                             LimparCampos();
@@ -983,8 +983,168 @@ namespace NewCapit.dist.pages
 
             public string status { get; set; }
         }
+        protected void txtKm_TextChanged(object sender, EventArgs e)
+        {
+            // VALIDAR PLACA
+            if (string.IsNullOrWhiteSpace(txtPlaca.Text.Trim()))
+            {
+                //ScriptManager.RegisterStartupScript(this, GetType(),
+                //    "msg",
+                //    "alert('Preencha a placa antes de informar o KM.');",
+                //    true);
+
+                Mensagem("warning", "Preencha a placa antes de informar o KM.");
+                txtKm.Text = "";
+                txtPlaca.Focus();
+                return;
+            }
+
+            // VALIDAR KM
+            int kmInformado;
+
+            if (!int.TryParse(txtKm.Text.Trim(), out kmInformado))
+            {
+                //ScriptManager.RegisterStartupScript(this, GetType(),
+                //    "msg",
+                //    "alert('KM inválido.');",
+                //    true);
+                Mensagem("warning", "KM inválido.");
+                txtKm.Focus();
+                return;
+            }
+
+            string placa = txtPlaca.Text
+            .Trim()
+            .Replace("-", "")
+            .Replace(" ", "")
+            .ToUpper();
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                int kmAtual = 0;
+                bool encontrou = false;
+                bool ehVeiculo = false;
+
+                // =========================================
+                // PROCURA NA TBVEICULOS
+                // =========================================
+                string sqlVeiculo = @"
+                SELECT TOP 1 ISNULL(km_atual,0)
+                FROM tbveiculos
+                WHERE REPLACE(RTRIM(LTRIM(UPPER(plavei))),'-','')
+                    = @placa";
+
+                using (SqlCommand cmd = new SqlCommand(sqlVeiculo, conn))
+                {
+                    cmd.Parameters.AddWithValue("@placa", placa);
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        kmAtual = Convert.ToInt32(result);
+                        encontrou = true;
+                        ehVeiculo = true;
+                    }
+                }
+
+                // =========================================
+                // PROCURA NA TBCARRETAS
+                // =========================================
+                if (!encontrou)
+                {
+                    string sqlCarreta = @"
+                    SELECT TOP 1 ISNULL(kilometragem,0)
+                    FROM tbcarretas
+                    WHERE REPLACE(RTRIM(LTRIM(UPPER(placacarreta))),'-','')
+                        = @placa";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlCarreta, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@placa", placa);
+
+                        object result = cmd.ExecuteScalar();
+
+                        if (result != null)
+                        {
+                            kmAtual = Convert.ToInt32(result);
+                            encontrou = true;
+                        }
+                    }
+                }
+
+                // =========================================
+                // NÃO ENCONTROU
+                // =========================================
+                if (!encontrou)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(),
+                        "msg",
+                        "alert('Placa não encontrada.');",
+                        true);
+
+                    return;
+                }
+
+                // =========================================
+                // VALIDAR KM
+                // =========================================
+                kmInformado = Convert.ToInt32(txtKm.Text);
+
+                if (kmInformado < kmAtual)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(),
+                        "msg",
+                        "alert('O KM informado não pode ser menor que o KM atual.');",
+                        true);
+
+                    txtKm.Text = "";
+                    txtKm.Focus();
+                    return;
+                }
+
+                // =========================================
+                // ATUALIZAR
+                // =========================================
+                if (ehVeiculo)
+                {
+                    string update = @"
+            UPDATE tbveiculos
+            SET km_atual = @km
+            WHERE REPLACE(RTRIM(LTRIM(UPPER(plavei))),'-','')
+                = @placa";
+
+                    using (SqlCommand cmd = new SqlCommand(update, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@km", kmInformado);
+                        cmd.Parameters.AddWithValue("@placa", placa);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string update = @"
+            UPDATE tbcarretas
+            SET kilometragem = @km
+            WHERE REPLACE(RTRIM(LTRIM(UPPER(placacarreta))),'-','')
+                = @placa";
+
+                    using (SqlCommand cmd = new SqlCommand(update, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@km", kmInformado);
+                        cmd.Parameters.AddWithValue("@placa", placa);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+        }
 
 
-       
     }
 }

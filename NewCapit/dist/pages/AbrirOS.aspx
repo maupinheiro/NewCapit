@@ -135,6 +135,8 @@
                                                 CssClass="form-control"
                                                 onkeypress="return somenteNumeros(event)"
                                                 MaxLength="6"
+                                                AutoPostBack="true"
+                                                OnTextChanged="txtKm_TextChanged"
                                                 >
                                             </asp:TextBox>
                                         </div>

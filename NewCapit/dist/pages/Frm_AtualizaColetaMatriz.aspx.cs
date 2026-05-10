@@ -98,7 +98,7 @@ namespace NewCapit.dist.pages
                 DateTime dataHoraAtual = DateTime.Now;
                 //lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
-                
+
                 PreencherComboMotoristas();
                 //if (Request.QueryString["num_carregamento"] != null)
                 //{
@@ -600,7 +600,7 @@ namespace NewCapit.dist.pages
             //GetPedidos();
 
 
-        }           
+        }
 
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -926,6 +926,7 @@ namespace NewCapit.dist.pages
                 TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
                 TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
                 Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
+                TextBox txtMaterial = (TextBox)e.Item.FindControl("txtMaterial");
 
                 TextBox txtCodExpedidor = (TextBox)e.Item.FindControl("txtCodExpedidor");
                 TextBox cboExpedidor = (TextBox)e.Item.FindControl("cboExpedidor");
@@ -937,6 +938,7 @@ namespace NewCapit.dist.pages
                 TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
                 TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
 
+                DateTime agora = DateTime.Now;
 
                 // Exemplo: atualizando no banco
                 using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
@@ -1042,6 +1044,406 @@ namespace NewCapit.dist.pages
                     // Chama método que verifica no banco
                     conn.Open();
                     cmd.ExecuteNonQuery();
+
+                    // TRATANDO O PREMIO AUTOMATICO DO MOTORISTA
+                    if (ddlStatus.SelectedItem.Text == "Concluido" && txtMaterial.Text != "Vazio" && txtMaterial.Text != "Embalagem")
+                    {
+                        // SOMENTE FUNCIONÁRIO
+                        if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+                        {
+                            using (SqlConnection conn2 = new SqlConnection(
+                                WebConfigurationManager
+                                .ConnectionStrings["conexao"].ConnectionString))
+                            {
+                                conn2.Open();
+
+                                SqlTransaction trans = conn2.BeginTransaction();
+
+                                try
+                                {
+                                    // ============================================
+                                    // FUNÇÃO
+                                    // ============================================
+                                    string funcao = "";
+
+                                    if (!string.IsNullOrWhiteSpace(txtFuncao.Text))
+                                    {
+                                        funcao = txtFuncao.Text
+                                            .Trim()
+                                            .Split(' ')[0]
+                                            .ToUpper();
+                                    }
+
+                                    decimal distancia = 0;
+                                    decimal valorPremio = 0;
+
+                                    // ============================================
+                                    // BUSCA DISTÂNCIA
+                                    // ============================================
+                                    using (SqlCommand cmdDist = new SqlCommand(@"
+                                    SELECT TOP 1 distancia
+                                    FROM tbcargas
+                                    WHERE carga = @carga",
+                                        conn2, trans))
+                                    {
+                                        cmdDist.Parameters.AddWithValue("@carga", carga);
+
+                                        object result = cmdDist.ExecuteScalar();
+
+                                        if (result != null &&
+                                            result != DBNull.Value)
+                                        {
+                                            distancia =
+                                                Convert.ToDecimal(result);
+                                        }
+                                        else
+                                        {
+                                            trans.Rollback();
+                                            return;
+                                        }
+                                    }
+
+                                    // ============================================
+                                    // BUSCA VALOR PRÊMIO
+                                    // ============================================
+                                    using (SqlCommand cmdPremio = new SqlCommand(@"
+                                    SELECT TOP 1
+                                        motorista,
+                                        carreteiro,
+                                        bitrem
+                                    FROM tbvalorpremiomotoristas
+                                    WHERE @distancia
+                                    BETWEEN distancia1 AND distancia2 AND status = 'ATIVO'",
+                                        conn2, trans))
+                                    {
+                                        cmdPremio.Parameters.AddWithValue(
+                                            "@distancia",
+                                            distancia);
+
+                                        using (SqlDataReader dr =
+                                            cmdPremio.ExecuteReader())
+                                        {
+                                            if (dr.Read())
+                                            {
+                                                switch (funcao)
+                                                {
+                                                    case "MOTORISTA":
+
+                                                        valorPremio =
+                                                            dr["motorista"] != DBNull.Value
+                                                            ? Convert.ToDecimal(dr["motorista"])
+                                                            : 0;
+
+                                                        break;
+
+                                                    case "CARRETEIRO":
+
+                                                        valorPremio =
+                                                            dr["carreteiro"] != DBNull.Value
+                                                            ? Convert.ToDecimal(dr["carreteiro"])
+                                                            : 0;
+
+                                                        break;
+
+                                                    case "BITREM":
+
+                                                        valorPremio =
+                                                            dr["bitrem"] != DBNull.Value
+                                                            ? Convert.ToDecimal(dr["bitrem"])
+                                                            : 0;
+
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    // ============================================
+                                    // VERIFICA EXISTÊNCIA
+                                    // ============================================
+                                    using (SqlCommand cmdExiste = new SqlCommand(@"
+                                    SELECT COUNT(*)
+                                    FROM tb_custo_motorista
+                                    WHERE cod_cracha = @cod
+                                    AND dt_custo = @data",
+                                        conn2, trans))
+                                    {
+                                        cmdExiste.Parameters.AddWithValue(
+                                            "@cod",
+                                            txtCodMotorista.Text.Trim());
+
+                                        cmdExiste.Parameters.AddWithValue(
+                                            "@data",
+                                            SafeDateValue(txtSaidaPlanta.Text.Trim()));
+
+                                        int existe =
+                                            Convert.ToInt32(
+                                                cmdExiste.ExecuteScalar());
+
+                                        // ============================================
+                                        // UPDATE
+                                        // ============================================
+                                        if (existe > 0)
+                                        {
+                                            using (SqlCommand cmdUpdate =
+                                                new SqlCommand(@"
+                                            UPDATE tb_custo_motorista
+                                            SET vl_premio =
+                                                ISNULL(vl_premio,0) + @valor
+                                            WHERE cod_cracha = @cod
+                                            AND dt_custo = @data",
+                                                conn2, trans))
+                                            {
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPremio);
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@data",
+                                                    SafeDateValue(
+                                                        txtSaidaPlanta.Text.Trim()));
+
+                                                cmdUpdate.ExecuteNonQuery();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // ============================================
+                                            // INSERT
+                                            // ============================================
+                                            using (SqlCommand cmdInsert =
+                                                new SqlCommand(@"
+                                                INSERT INTO tb_custo_motorista
+                                                (
+                                                    cod_cracha,
+                                                    dt_custo,
+                                                    vl_premio
+                                                )
+                                                VALUES
+                                                (
+                                                    @cod,
+                                                    @data,
+                                                    @valor
+                                                )",
+                                                conn2, trans))
+                                            {
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@data",
+                                                    SafeDateValue(
+                                                        txtSaidaPlanta.Text.Trim()));
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPremio);
+
+                                                cmdInsert.ExecuteNonQuery();
+                                            }
+                                        }
+                                    }
+
+                                    trans.Commit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    trans.Rollback();
+
+                                    MostrarMsg2(
+                                        "Erro prêmio motorista: "
+                                        + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                    
+                    // TRATANDO A PERNOITE AUTOMATICA DO MOTORISTA
+                    DateTime dataPernoite;                                        
+                    if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
+                        agora.TimeOfDay <= new TimeSpan(23, 59, 59))
+                    {
+                        dataPernoite = agora.Date;
+                        if (ddlStatus.SelectedItem.Text.Trim() == "Pernoite")
+                        {
+                            // SOMENTE FUNCIONÁRIO
+                            if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+                            {
+                                using (SqlConnection conn2 = new SqlConnection(
+                                    WebConfigurationManager
+                                    .ConnectionStrings["conexao"].ConnectionString))
+                                {
+                                    conn2.Open();
+
+                                    SqlTransaction trans = conn2.BeginTransaction();
+
+                                    try
+                                    {
+                                        // ============================================
+                                        // VALOR PERNOITE
+                                        // ============================================
+                                        decimal valorPernoite = 0;
+                                        decimal valorCafe = 0;
+
+                                        using (SqlCommand cmdPernoite =
+                                            new SqlCommand(@"
+                                        SELECT TOP 1 pernoite
+                                        FROM tbvalorpremiomotoristas WHERE status = 'ATIVO'",
+                                            conn2, trans))
+                                        {
+                                            object result =
+                                                cmdPernoite.ExecuteScalar();
+
+                                            if (result != null &&
+                                                result != DBNull.Value)
+                                            {
+                                                valorPernoite =
+                                                    Convert.ToDecimal(result);
+                                            }
+                                        }
+
+                                        // ============================================
+                                        // DATA
+                                        // ============================================
+                                        object dataCusto = dataPernoite;
+
+                                        if (dataCusto == null ||
+                                            dataCusto == DBNull.Value)
+                                        {
+                                            trans.Rollback();
+
+                                            MostrarMsg2(
+                                                "Data Pernoite inválida.");
+
+                                            return;
+                                        }
+
+                                        // ============================================
+                                        // VERIFICA EXISTÊNCIA
+                                        // ============================================
+                                        int existe = 0;
+
+                                        using (SqlCommand cmdExiste =
+                                            new SqlCommand(@"
+                                        SELECT COUNT(*)
+                                        FROM tb_custo_motorista
+                                        WHERE cod_cracha = @cod
+                                        AND dt_custo = @data",
+                                            conn2, trans))
+                                        {
+                                            cmdExiste.Parameters.AddWithValue(
+                                                "@cod",
+                                                txtCodMotorista.Text.Trim());
+
+                                            cmdExiste.Parameters.AddWithValue(
+                                                "@data",
+                                                dataCusto);
+
+                                            existe =
+                                                Convert.ToInt32(
+                                                    cmdExiste.ExecuteScalar());
+                                        }
+
+                                        // ============================================
+                                        // UPDATE
+                                        // ============================================
+                                        if (existe > 0)
+                                        {
+                                            using (SqlCommand cmdUpdate =
+                                                new SqlCommand(@"
+                                            UPDATE tb_custo_motorista
+                                            SET vl_pernoite = @valor, vl_cafe = @cafe
+                                            WHERE cod_cracha = @cod
+                                            AND dt_custo = @data",
+                                                conn2, trans))
+                                            {
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPernoite);
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@cafe",
+                                                    valorCafe);
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@data",
+                                                    dataCusto);
+
+                                                cmdUpdate.ExecuteNonQuery();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // ============================================
+                                            // INSERT
+                                            // ============================================
+                                            using (SqlCommand cmdInsert =
+                                                new SqlCommand(@"
+                                            INSERT INTO tb_custo_motorista
+                                            (
+                                                cod_cracha,
+                                                dt_custo,
+                                                vl_pernoite,
+                                                vl_cafe
+                                            )
+                                            VALUES
+                                            (
+                                                @cod,
+                                                @data,
+                                                @valor,
+                                                @cafe
+                                            )",
+                                                conn2, trans))
+                                            {
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@data",
+                                                    dataCusto);
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPernoite);
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@cafe",
+                                                    valorCafe);
+
+                                                cmdInsert.ExecuteNonQuery();
+                                            }
+                                        }
+
+                                        trans.Commit();
+
+                                        //MostrarMsg2(
+                                        //    "Pernoite salvo com sucesso.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        trans.Rollback();
+
+                                        MostrarMsg2(
+                                            "Erro pernoite: "
+                                            + ex.Message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // TRATANDO O ALMOÇO AUTOMATICO DO MOTORISTA
+                    
                 }
 
                 // Atualizando a ordem de coleta 
@@ -1051,26 +1453,26 @@ namespace NewCapit.dist.pages
                     var cvaOC = txtCVA.Text.Trim();
 
                     string queryCarregamento = @"
-        UPDATE tbcarregamentos SET 
-            situacao = @situacao,
-            cva = @cva,
-            status = @status,                        
-            cod_expedidor = @cod_expedidor,
-            expedidor = @expedidor,
-            cid_expedidor = @cid_expedidor,
-            uf_expedidor = @uf_expedidor,
-            cod_recebedor = @cod_recebedor,
-            recebedor = @recebedor,
-            cid_recebedor = @cid_recebedor,
-            carga = @carga,
-            dtsaida=@dtsaida,
-            dtchegada=@dtchegada,
-            dtconclusao=@dtconclusao,
-            uf_recebedor = @uf_recebedor,
-            dtalt = @dtalt,
-            usualt = @usualt
+                    UPDATE tbcarregamentos SET 
+                        situacao = @situacao,
+                        cva = @cva,
+                        status = @status,                        
+                        cod_expedidor = @cod_expedidor,
+                        expedidor = @expedidor,
+                        cid_expedidor = @cid_expedidor,
+                        uf_expedidor = @uf_expedidor,
+                        cod_recebedor = @cod_recebedor,
+                        recebedor = @recebedor,
+                        cid_recebedor = @cid_recebedor,
+                        carga = @carga,
+                        dtsaida=@dtsaida,
+                        dtchegada=@dtchegada,
+                        dtconclusao=@dtconclusao,
+                        uf_recebedor = @uf_recebedor,
+                        dtalt = @dtalt,
+                        usualt = @usualt
 
-        WHERE num_carregamento = @num_carregamento";
+                    WHERE num_carregamento = @num_carregamento";
 
                     using (SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn))
                     {
@@ -2419,7 +2821,8 @@ namespace NewCapit.dist.pages
             // --- 7. ORIGEM (dto), DESTINO (dtd) E EXPEDIDOR (dte) ---
 
             // Função auxiliar interna para evitar repetição de código e erro de colunas faltando
-            Action<DataTable> AdicionarColunasVazias = (tabela) => {
+            Action<DataTable> AdicionarColunasVazias = (tabela) =>
+            {
                 if (tabela.Rows.Count == 0)
                 {
                     // Garante que a tabela tenha 12 colunas para não dar erro de índice no JSON
@@ -4244,7 +4647,7 @@ namespace NewCapit.dist.pages
                 }
                 if (txtPagadorVazio.Text != "")
                 {
-                    string descricaoRota = txtMunicipioOrigem.Text.Trim() + "/" + txtUfOrigem.Text.Trim() + " X " + txtMunicipioDestino.Text.Trim() + "/" + txtUfDestino.Text.Trim();                    
+                    string descricaoRota = txtMunicipioOrigem.Text.Trim() + "/" + txtUfOrigem.Text.Trim() + " X " + txtMunicipioDestino.Text.Trim() + "/" + txtUfDestino.Text.Trim();
 
                     DataTable dt = BuscarRota(descricaoRota);
 
@@ -4285,7 +4688,7 @@ namespace NewCapit.dist.pages
                 .ConnectionStrings["conexao"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(strConexao))
-            {   
+            {
                 string sql = @"SELECT rota, desc_rota, distancia, deslocamento, pedagio, tempo
                FROM tbrotasdeentregas
                WHERE desc_rota COLLATE Latin1_General_CI_AI LIKE @desc";
@@ -4344,7 +4747,7 @@ namespace NewCapit.dist.pages
             string municipioOrigem = txtMunicipioOrigem.Text.Trim().ToUpper();
             string municipioDestino = txtMunicipioDestino.Text.Trim().ToUpper();
             string ufOrigem = txtUfOrigem.Text.Trim().ToUpper();
-            string ufDestino = txtUfDestino.Text.Trim().ToUpper();            
+            string ufDestino = txtUfDestino.Text.Trim().ToUpper();
             string codigoPagadorVazio = txtCod_PagadorVazio.Text.Trim();
             string nomePagadorVazio = txtPagadorVazio.Text.Trim().ToUpper();
             string materialVazio = ddlTipoMaterial.SelectedItem.Text;
@@ -4355,7 +4758,7 @@ namespace NewCapit.dist.pages
             string primeiroNome = nomeCompleto.Split(' ')[0];
             string rotaVazio = txtRotaVazio.Text.Trim();
             decimal distancia = Convert.ToDecimal(txtDistancia.Text);
-            string pedagio = txtPedagio.Text.Trim();            
+            string pedagio = txtPedagio.Text.Trim();
 
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
@@ -4392,13 +4795,13 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
                     cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
                     cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
-                    cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());                   
+                    cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                     cmd.Parameters.AddWithValue("@andamento", "Pendente");
                     cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
                     cmd.Parameters.AddWithValue("@pagador", nomeCompleto);
                     cmd.Parameters.AddWithValue("@cid_pagador", municipioPagadorVazio);
                     cmd.Parameters.AddWithValue("@uf_pagador", ufPagadorVazio);
-                    cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);                   
+                    cmd.Parameters.AddWithValue("@duracao", DuracaoVazio);
                     cmd.Parameters.AddWithValue("@deslocamento", txtTrajeto.Text.Trim());
                     cmd.Parameters.AddWithValue("@rota_entrega", rotaVazio);
                     cmd.Parameters.AddWithValue("@distancia", distancia);
@@ -6807,7 +7210,7 @@ namespace NewCapit.dist.pages
             }
 
             // 🔄 Recarrega o grid
-            
+
 
         }
 
@@ -6836,6 +7239,210 @@ namespace NewCapit.dist.pages
             cmd.Parameters.AddWithValue("@usuario", usuario);
 
             cmd.ExecuteNonQuery();
+        }
+
+        private void AtualizarPremioMotorista()
+        {
+            // SOMENTE FUNCIONÁRIO
+            if (txtTipoMot.Text.Trim().ToUpper() != "FUNCIONÁRIO")
+                return;
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                SqlTransaction trans = conn.BeginTransaction();
+
+                try
+                {
+                    // FUNÇÃO
+                    string funcao = "";
+
+                    if (!string.IsNullOrWhiteSpace(txtFuncao.Text))
+                    {
+                        funcao = txtFuncao.Text
+                            .Trim()
+                            .Split(' ')[0]
+                            .ToUpper();
+                    }
+
+                    // ============================================
+                    // PERCORRE O REPEATER
+                    // ============================================
+                    foreach (RepeaterItem item in rptColetas.Items)
+                    {
+                        // ============================================
+                        // CARGA
+                        // ============================================
+                        Label lblCarga = (Label)item.FindControl("lblCarga");
+
+                        if (lblCarga == null)
+                            continue;
+
+                        string carga = lblCarga.Text.Trim();
+
+                        // ============================================
+                        // DATA SAÍDA
+                        // ============================================
+                        TextBox txtSaidaPlanta = (TextBox)item.FindControl("txtSaidaPlanta");
+
+                        if (txtSaidaPlanta == null)
+                            continue;
+
+                        DateTime dataSaida;
+
+                        if (!DateTime.TryParse(txtSaidaPlanta.Text, out dataSaida))
+                            continue;
+
+                        decimal distancia = 0;
+                        decimal valorPremio = 0;
+
+                        // ============================================
+                        // BUSCA DISTÂNCIA
+                        // ============================================
+                        using (SqlCommand cmdDist = new SqlCommand(@"
+                    SELECT TOP 1 distancia
+                    FROM tbcargas
+                    WHERE carga = @carga", conn, trans))
+                        {
+                            cmdDist.Parameters.AddWithValue("@carga", carga);
+
+                            object result = cmdDist.ExecuteScalar();
+
+                            if (result == null || result == DBNull.Value)
+                                continue;
+
+                            distancia = Convert.ToDecimal(result);
+                        }
+
+                        // ============================================
+                        // BUSCA VALOR DO PRÊMIO
+                        // ============================================
+                        using (SqlCommand cmdPremio = new SqlCommand(@"
+                    SELECT TOP 1
+                        motorista,
+                        carreteiro,
+                        bitrem,
+                        desengate,
+                        cafe,
+                        refeicao,
+                        pernoite
+                    FROM tbvalorpremiomotoristas
+                    WHERE @distancia BETWEEN distancia1 AND distancia2",
+                            conn, trans))
+                        {
+                            cmdPremio.Parameters.AddWithValue("@distancia", distancia);
+
+                            using (SqlDataReader dr = cmdPremio.ExecuteReader())
+                            {
+                                if (dr.Read())
+                                {
+                                    switch (funcao)
+                                    {
+                                        case "MOTORISTA":
+                                            valorPremio =
+                                                dr["motorista"] != DBNull.Value
+                                                ? Convert.ToDecimal(dr["motorista"])
+                                                : 0;
+                                            break;
+
+                                        case "CARRETEIRO":
+                                            valorPremio =
+                                                dr["carreteiro"] != DBNull.Value
+                                                ? Convert.ToDecimal(dr["carreteiro"])
+                                                : 0;
+                                            break;
+
+                                        case "BITREM":
+                                            valorPremio =
+                                                dr["bitrem"] != DBNull.Value
+                                                ? Convert.ToDecimal(dr["bitrem"])
+                                                : 0;
+                                            break;
+
+                                        default:
+                                            valorPremio = 0;
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // ============================================
+                        // VERIFICA SE EXISTE
+                        // ============================================
+                        using (SqlCommand cmdExiste = new SqlCommand(@"
+                    SELECT COUNT(*)
+                    FROM tb_custo_motorista
+                    WHERE cod_cracha = @cod
+                    AND dt_custo = @data",
+                            conn, trans))
+                        {
+                            cmdExiste.Parameters.AddWithValue("@cod", txtCodMotorista.Text);
+                            cmdExiste.Parameters.AddWithValue("@data", dataSaida);
+
+                            int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
+
+                            // ============================================
+                            // UPDATE
+                            // ============================================
+                            if (existe > 0)
+                            {
+                                using (SqlCommand cmdUpdate = new SqlCommand(@"
+                            UPDATE tb_custo_motorista
+                            SET vl_premio = ISNULL(vl_premio,0) + @valor
+                            WHERE cod_cracha = @cod
+                            AND dt_custo = @data",
+                                    conn, trans))
+                                {
+                                    cmdUpdate.Parameters.AddWithValue("@valor", valorPremio);
+                                    cmdUpdate.Parameters.AddWithValue("@cod", txtCodMotorista.Text);
+                                    cmdUpdate.Parameters.AddWithValue("@data", dataSaida);
+
+                                    cmdUpdate.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                // ============================================
+                                // INSERT
+                                // ============================================
+                                using (SqlCommand cmdInsert = new SqlCommand(@"
+                            INSERT INTO tb_custo_motorista
+                            (
+                                cod_cracha,
+                                dt_custo,
+                                vl_premio
+                            )
+                            VALUES
+                            (
+                                @cod,
+                                @data,
+                                @valor
+                            )",
+                                    conn, trans))
+                                {
+                                    cmdInsert.Parameters.AddWithValue("@cod", txtCodMotorista.Text);
+                                    cmdInsert.Parameters.AddWithValue("@data", dataSaida);
+                                    cmdInsert.Parameters.AddWithValue("@valor", valorPremio);
+
+                                    cmdInsert.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+
+                    throw new Exception(
+                        "Erro ao atualizar prêmio do motorista: " + ex.Message);
+                }
+            }
         }
 
     }

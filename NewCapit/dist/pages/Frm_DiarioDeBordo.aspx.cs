@@ -40,9 +40,6 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-
-
-
                 }
                 else
                 {
@@ -50,8 +47,6 @@ namespace NewCapit.dist.pages
 
                     Response.Redirect("Login.aspx");
                 }
-
-
             }
             if (txtMotorista.Text.Trim() == string.Empty)
             {
@@ -63,6 +58,49 @@ namespace NewCapit.dist.pages
             }
 
         }
+        //private void CarregarGrid()
+        //{
+        //    if (txtMotorista.Text != string.Empty && txtData.Text != string.Empty)
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(
+        //        WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //        {
+        //            string sql = @"SELECT *
+        //               FROM tbcusto
+        //               WHERE cod_cracha = @cod_cracha
+        //               AND CAST(dt_custo AS DATE) = @dt_custo";
+
+        //            SqlCommand cmd = new SqlCommand(sql, conn);
+
+        //            cmd.Parameters.AddWithValue("@cod_cracha",
+        //                txtMotorista.Text.Trim());
+
+        //            DateTime dataFiltro;
+
+        //            if (!DateTime.TryParse(txtData.Text, out dataFiltro))
+        //            {
+        //                return;
+        //            }
+
+        //            cmd.Parameters.AddWithValue("@dt_custo",
+        //                dataFiltro.Date);
+
+        //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+        //            DataTable dt = new DataTable();
+
+        //            da.Fill(dt);
+
+        //            grdCusto.DataSource = dt;
+
+        //            grdCusto.DataBind();
+        //        }
+
+        //    }
+            
+        //}
+
+
         public void CarregaFoto()
         {
             // Verifica se o controle txtMotorista existe
@@ -113,58 +151,58 @@ namespace NewCapit.dist.pages
             }
         }
 
-        protected void grdCusto_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Select")
-            {
+        //protected void grdCusto_RowCommand(object sender, GridViewCommandEventArgs e)
+        //{
+        //    if (e.CommandName == "Select")
+        //    {
 
-                int index = Convert.ToInt32(e.CommandArgument.ToString());
-                string id = grdCusto.DataKeys[Convert.ToInt32(e.CommandArgument)].Value.ToString();
+        //        int index = Convert.ToInt32(e.CommandArgument.ToString());
+        //        string id = grdCusto.DataKeys[Convert.ToInt32(e.CommandArgument)].Value.ToString();
 
-                string sql = "delete tb_custo_motorista where cod_custo=" + id;
-                SqlCommand cmd6 = new SqlCommand(sql, con);
-                try
-                {
-                    con.Open();
-                    cmd6.ExecuteNonQuery();
-                    con.Close();
-                }
-                catch
-                {
-                    string message2 = "Erro ao Excluir Custo!";
-                    System.Text.StringBuilder sb2 = new System.Text.StringBuilder();
-                    sb2.Append("<script type = 'text/javascript'>");
-                    sb2.Append("window.onload=function(){");
-                    sb2.Append("alert('");
-                    sb2.Append(message2);
-                    sb2.Append("')};");
-                    sb2.Append("</script>");
-                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb2.ToString());
+        //        string sql = "delete tb_custo_motorista where cod_custo=" + id;
+        //        SqlCommand cmd6 = new SqlCommand(sql, con);
+        //        try
+        //        {
+        //            con.Open();
+        //            cmd6.ExecuteNonQuery();
+        //            con.Close();
+        //        }
+        //        catch
+        //        {
+        //            string message2 = "Erro ao Excluir Custo!";
+        //            System.Text.StringBuilder sb2 = new System.Text.StringBuilder();
+        //            sb2.Append("<script type = 'text/javascript'>");
+        //            sb2.Append("window.onload=function(){");
+        //            sb2.Append("alert('");
+        //            sb2.Append(message2);
+        //            sb2.Append("')};");
+        //            sb2.Append("</script>");
+        //            ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb2.ToString());
 
-                }
-                finally
-                {
-                    con.Close();
+        //        }
+        //        finally
+        //        {
+        //            con.Close();
 
-                }
+        //        }
 
 
 
-                string message = "Custo excluído com sucesso!";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(message);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                Limpar2();
-                CarregaCusto();
+        //        string message = "Custo excluído com sucesso!";
+        //        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        //        sb.Append("<script type = 'text/javascript'>");
+        //        sb.Append("window.onload=function(){");
+        //        sb.Append("alert('");
+        //        sb.Append(message);
+        //        sb.Append("')};");
+        //        sb.Append("</script>");
+        //        ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+        //        Limpar2();
+        //        CarregaCusto();
 
-            }
+        //    }
 
-        }
+        //}
         protected void grdMotoristas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Select")
@@ -795,17 +833,9 @@ namespace NewCapit.dist.pages
                 grdMotoristas.DataBind();
                 lblBloco.Text = "";
 
-                
-                
-
-
-
                 data = DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd");
 
-
-
                 login = txtMotorista.Text;
-
 
                 string sql1 = "exec sp_tempo_total '" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "','" + DateTime.Parse(data).ToString("yyyy-MM-dd") + "'," + login + "";
                 SqlDataAdapter adtp1 = new SqlDataAdapter(sql1, con);
@@ -1857,8 +1887,177 @@ namespace NewCapit.dist.pages
 
                                     }
                                 }
+                                // Aqui calculamos a refeicao
+                                //DateTime agora = DateTime.Now;
+                                //DateTime dataAlmoco;
+                                //if (agora.TimeOfDay >= new TimeSpan(10, 0, 0) &&
+                                //    agora.TimeOfDay <= new TimeSpan(14, 0, 0))
+                                //{
+                                //    dataAlmoco = agora.Date;
+                                //    // SOMENTE FUNCIONÁRIO
+                                //    using (SqlConnection conn2 = new SqlConnection(
+                                //                WebConfigurationManager
+                                //                .ConnectionStrings["conexao"].ConnectionString))
+                                //    {
+                                //        conn2.Open();
+                                //        SqlTransaction trans = conn2.BeginTransaction();
 
+                                //        try
+                                //        {
+                                //            // ============================================
+                                //            // VALOR ALMOÇO
+                                //            // ============================================
+                                //            decimal valorAlmoco = 0;                                           
 
+                                //            using (SqlCommand cmdAlmoco =
+                                //                new SqlCommand(@"
+                                //        SELECT TOP 1 almoco
+                                //        FROM tbvalorpremiomotoristas WHERE status = 'ATIVO'",
+                                //                conn2, trans))
+                                //            {
+                                //                object result =
+                                //                    cmdAlmoco.ExecuteScalar();
+
+                                //                if (result != null &&
+                                //                    result != DBNull.Value)
+                                //                {
+                                //                    valorAlmoco =
+                                //                        Convert.ToDecimal(result);
+                                //                }
+                                //            }
+
+                                //            // ============================================
+                                //            // DATA
+                                //            // ============================================
+                                //            object dataCusto = dataAlmoco;
+
+                                //            if (dataCusto == null ||
+                                //                dataCusto == DBNull.Value)
+                                //            {
+                                //                trans.Rollback();
+
+                                //                MostrarMsg2(
+                                //                    "Data Pernoite inválida.");
+
+                                //                return;
+                                //            }
+
+                                //            // ============================================
+                                //            // VERIFICA EXISTÊNCIA
+                                //            // ============================================
+                                //            int existe = 0;
+
+                                //            using (SqlCommand cmdExiste =
+                                //                new SqlCommand(@"
+                                //        SELECT COUNT(*)
+                                //        FROM tb_custo_motorista
+                                //        WHERE cod_cracha = @cod
+                                //        AND dt_custo = @data",
+                                //                conn2, trans))
+                                //            {
+                                //                cmdExiste.Parameters.AddWithValue(
+                                //                    "@cod",
+                                //                    txtCodMotorista.Text.Trim());
+
+                                //                cmdExiste.Parameters.AddWithValue(
+                                //                    "@data",
+                                //                    dataCusto);
+
+                                //                existe =
+                                //                    Convert.ToInt32(
+                                //                        cmdExiste.ExecuteScalar());
+                                //            }
+
+                                //            // ============================================
+                                //            // UPDATE
+                                //            // ============================================
+                                //            if (existe > 0)
+                                //            {
+                                //                using (SqlCommand cmdUpdate =
+                                //                    new SqlCommand(@"
+                                //            UPDATE tb_custo_motorista
+                                //            SET vl_pernoite = @valor, vl_cafe = @cafe
+                                //            WHERE cod_cracha = @cod
+                                //            AND dt_custo = @data",
+                                //                    conn2, trans))
+                                //                {
+                                //                    cmdUpdate.Parameters.AddWithValue(
+                                //                        "@valor",
+                                //                        valorPernoite);
+
+                                //                    cmdUpdate.Parameters.AddWithValue(
+                                //                        "@cafe",
+                                //                        valorCafe);
+
+                                //                    cmdUpdate.Parameters.AddWithValue(
+                                //                        "@cod",
+                                //                        txtCodMotorista.Text.Trim());
+
+                                //                    cmdUpdate.Parameters.AddWithValue(
+                                //                        "@data",
+                                //                        dataCusto);
+
+                                //                    cmdUpdate.ExecuteNonQuery();
+                                //                }
+                                //            }
+                                //            else
+                                //            {
+                                //                // ============================================
+                                //                // INSERT
+                                //                // ============================================
+                                //                using (SqlCommand cmdInsert =
+                                //                    new SqlCommand(@"
+                                //            INSERT INTO tb_custo_motorista
+                                //            (
+                                //                cod_cracha,
+                                //                dt_custo,
+                                //                vl_pernoite,
+                                //                vl_cafe
+                                //            )
+                                //            VALUES
+                                //            (
+                                //                @cod,
+                                //                @data,
+                                //                @valor,
+                                //                @cafe
+                                //            )",
+                                //                    conn2, trans))
+                                //                {
+                                //                    cmdInsert.Parameters.AddWithValue(
+                                //                        "@cod",
+                                //                        txtCodMotorista.Text.Trim());
+
+                                //                    cmdInsert.Parameters.AddWithValue(
+                                //                        "@data",
+                                //                        dataCusto);
+
+                                //                    cmdInsert.Parameters.AddWithValue(
+                                //                        "@valor",
+                                //                        valorPernoite);
+
+                                //                    cmdInsert.Parameters.AddWithValue(
+                                //                        "@cafe",
+                                //                        valorCafe);
+
+                                //                    cmdInsert.ExecuteNonQuery();
+                                //                }
+                                //            }
+
+                                //            trans.Commit();
+
+                                //            //MostrarMsg2(
+                                //            //    "Pernoite salvo com sucesso.");
+                                //        }
+                                //        catch (Exception ex)
+                                //        {
+                                //            trans.Rollback();
+
+                                //            MostrarMsg2(
+                                //                "Erro pernoite: "
+                                //                + ex.Message);
+                                //        }
+                                //    }
+                                //}
                             }
                             else
                             {
@@ -2429,6 +2628,22 @@ namespace NewCapit.dist.pages
 
             }
         }
+        public void MostrarMsg2(string mensagem)
+        {
+            // Limpa a string para evitar quebras no JS
+            string mensagemLimpa = mensagem.Replace("'", "").Replace("\n", "\\n").Replace("\r", "");
+            string script = $"alert('{mensagemLimpa}');";
+
+            // O segredo está em usar o ScriptManager.RegisterStartupScript 
+            // referenciando o controle específico ou a página de forma global para AJAX
+            ScriptManager.RegisterStartupScript(
+                this.Page,
+                typeof(Page),
+                Guid.NewGuid().ToString(), // Chave única para evitar conflitos
+                script,
+                true
+            );
+        }
 
         protected void btnValor_Click(object sender, EventArgs e)
         {
@@ -2551,17 +2766,18 @@ namespace NewCapit.dist.pages
                         con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
-                    string message = "Informações cadastradas com sucesso!";
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    sb.Append("<script type = 'text/javascript'>");
-                    sb.Append("window.onload=function(){");
-                    sb.Append("alert('");
-                    sb.Append(message);
-                    sb.Append("')};");
-                    sb.Append("</script>");
-                    ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                    //string message = "Informações cadastradas com sucesso!";
+                    //System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    //sb.Append("<script type = 'text/javascript'>");
+                    //sb.Append("window.onload=function(){");
+                    //sb.Append("alert('");
+                    //sb.Append(message);
+                    //sb.Append("')};");
+                    //sb.Append("</script>");
+                    //ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
                     Limpar2();
-                    CarregaCusto();
+                        //CarregaCusto();
+                        CarregarGrid();
 
 
                     }
@@ -2717,38 +2933,35 @@ namespace NewCapit.dist.pages
             }
         }
 
-        public void CarregaCusto()
-        {
-            //txtAlmoco.Text = "0,00";
-            //txtCafe.Text = "0,00";
-            //txtJantar.Text = "0,00";
-            //txtPernoite.Text = "0,00";
-            //txtComissao.Text = "0,00";
+        //public void CarregaCusto()
+        //{
+        //    //txtAlmoco.Text = "0,00";
+        //    //txtCafe.Text = "0,00";
+        //    //txtJantar.Text = "0,00";
+        //    //txtPernoite.Text = "0,00";
+        //    //txtComissao.Text = "0,00";
 
-            string sql = "select  cod_custo, ISNULL(vl_cafe, 0) AS cafe,ISNULL(vl_almoco, 0) AS almoco,ISNULL(vl_jantar, 0) AS jantar,ISNULL(vl_pernoite, 0) AS pernoite,ISNULL(vl_premio, 0) AS premio,ISNULL(vl_engate_des, 0) AS engatedes,";
-            sql += " SUM(ISNULL(vl_cafe, 0) + ISNULL(vl_almoco, 0) + ISNULL(vl_jantar, 0) + ISNULL(vl_pernoite, 0) + ISNULL(vl_premio, 0) + ISNULL(vl_engate_des, 0)) AS total,ds_rel1, ds_rel2, ds_rel3, ds_rel4 from tb_custo_motorista ";
-            sql += " where cod_cracha=" + txtMotorista.Text + " and dt_custo='" + DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd") + "' group by cod_custo, cod_cracha, dt_custo,vl_cafe,vl_almoco,vl_jantar,vl_pernoite,vl_premio,vl_engate_des,ds_rel1,ds_rel2,ds_rel3,ds_rel4";
-            SqlDataAdapter adtp1 = new SqlDataAdapter(sql, con);
-            DataTable dt = new DataTable();
-            con.Open();
-            adtp1.Fill(dt);
-            con.Close();
-            grdCusto.DataSource = dt;
-            grdCusto.DataBind();
+        //    string sql = "select  cod_custo, ISNULL(vl_cafe, 0) AS cafe,ISNULL(vl_almoco, 0) AS almoco,ISNULL(vl_jantar, 0) AS jantar,ISNULL(vl_pernoite, 0) AS pernoite,ISNULL(vl_premio, 0) AS premio,ISNULL(vl_engate_des, 0) AS engatedes,";
+        //    sql += " SUM(ISNULL(vl_cafe, 0) + ISNULL(vl_almoco, 0) + ISNULL(vl_jantar, 0) + ISNULL(vl_pernoite, 0) + ISNULL(vl_premio, 0) + ISNULL(vl_engate_des, 0)) AS total,ds_rel1, ds_rel2, ds_rel3, ds_rel4 from tb_custo_motorista ";
+        //    sql += " where cod_cracha=" + txtMotorista.Text + " and dt_custo='" + DateTime.Parse(txtData.Text).ToString("yyyy-MM-dd") + "' group by cod_custo, cod_cracha, dt_custo,vl_cafe,vl_almoco,vl_jantar,vl_pernoite,vl_premio,vl_engate_des,ds_rel1,ds_rel2,ds_rel3,ds_rel4";
+        //    SqlDataAdapter adtp1 = new SqlDataAdapter(sql, con);
+        //    DataTable dt = new DataTable();
+        //    con.Open();
+        //    adtp1.Fill(dt);
+        //    con.Close();
+        //    grdCusto.DataSource = dt;
+        //    grdCusto.DataBind();
 
-        }
+        //}
         
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             if (txtMotorista.Text != string.Empty && txtData.Text != string.Empty)
             {
-
                 CarregaGrid2();
-
-
                 CarregaTodas();
-
-                CarregaCusto();
+                //CarregaCusto();
+                CarregarGrid();
             }
             else
             {
@@ -2765,6 +2978,213 @@ namespace NewCapit.dist.pages
 
         }
 
+        protected void grdCusto_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            int codigo = Convert.ToInt32(
+                grdCusto.DataKeys[e.RowIndex].Value);
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+                DELETE FROM tb_custo_motorista
+                WHERE cod_custo = @codigo";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@codigo", codigo);
+
+                conn.Open();
+
+                cmd.ExecuteNonQuery();
+            }
+
+            CarregarGrid();
+        }
+        protected void grdCusto_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int codigo = Convert.ToInt32(
+                grdCusto.DataKeys[e.RowIndex].Value);
+
+            GridViewRow row = grdCusto.Rows[e.RowIndex];
+
+            decimal cafe = 0;
+            decimal almoco = 0;
+            decimal janta = 0;
+            decimal pernoite = 0;
+            decimal premio = 0;
+            decimal engate = 0;
+
+            decimal.TryParse(
+                ((TextBox)row.FindControl("txtCafe")).Text.Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out cafe);
+
+            decimal.TryParse(
+                ((TextBox)row.FindControl("txtAlmoco")).Text.Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out almoco);
+
+            decimal.TryParse(
+                ((TextBox)row.FindControl("txtJanta")).Text.Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out janta);
+
+            decimal.TryParse(
+                ((TextBox)row.FindControl("txtPernoite")).Text.Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out pernoite);
+
+            decimal.TryParse(
+                ((TextBox)row.FindControl("txtPremio")).Text.Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out premio);
+
+            decimal.TryParse(
+                ((TextBox)row.FindControl("txtEngate")).Text.Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out engate);
+
+            string rel1 = ((TextBox)row.FindControl("txtRel1")).Text;
+            string rel2 = ((TextBox)row.FindControl("txtRel2")).Text;
+            string rel3 = ((TextBox)row.FindControl("txtRel3")).Text;
+            string rel4 = ((TextBox)row.FindControl("txtRel4")).Text;
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+        UPDATE tb_custo_motorista
+        SET
+            vl_cafe = @vl_cafe,
+            vl_almoco = @vl_almoco,
+            vl_jantar = @vl_jantar,
+            vl_pernoite = @vl_pernoite,
+            vl_premio = @vl_premio,
+            vl_engate_des = @vl_engate_des,
+            ds_rel1 = @ds_rel1,
+            ds_rel2 = @ds_rel2,
+            ds_rel3 = @ds_rel3,
+            ds_rel4 = @ds_rel4
+        WHERE cod_custo = @codigo";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@vl_cafe", cafe);
+                cmd.Parameters.AddWithValue("@vl_almoco", almoco);
+                cmd.Parameters.AddWithValue("@vl_jantar", janta);
+                cmd.Parameters.AddWithValue("@vl_pernoite", pernoite);
+                cmd.Parameters.AddWithValue("@vl_premio", premio);
+                cmd.Parameters.AddWithValue("@vl_engate_des", engate);
+
+                cmd.Parameters.AddWithValue("@ds_rel1", rel1);
+                cmd.Parameters.AddWithValue("@ds_rel2", rel2);
+                cmd.Parameters.AddWithValue("@ds_rel3", rel3);
+                cmd.Parameters.AddWithValue("@ds_rel4", rel4);
+
+                cmd.Parameters.AddWithValue("@codigo", codigo);
+
+                conn.Open();
+
+                cmd.ExecuteNonQuery();
+            }
+
+            grdCusto.EditIndex = -1;
+
+            CarregarGrid();
+        }
+        protected void grdCusto_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            grdCusto.EditIndex = -1;
+
+            CarregarGrid();
+        }
+        protected void grdCusto_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            grdCusto.EditIndex = e.NewEditIndex;
+
+            CarregarGrid();
+        }
+        //private void CarregarGrid()
+        //{
+        //    using (SqlConnection conn = new SqlConnection(
+        //        WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //    {
+        //        string sql = @"
+        //        SELECT *
+        //        FROM tb_custo_motorista
+        //        WHERE cod_cracha = @cod_cracha
+        //        AND CAST(dt_custo AS DATE) = @dt_custo";
+
+        //        SqlCommand cmd = new SqlCommand(sql, conn);
+
+        //        cmd.Parameters.AddWithValue("@cod_cracha",
+        //            txtMotorista.Text.Trim());
+
+        //        cmd.Parameters.AddWithValue("@dt_custo",
+        //            Convert.ToDateTime(txtData.Text).Date);
+
+        //        SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+        //        DataTable dt = new DataTable();
+
+        //        da.Fill(dt);
+
+        //        grdCusto.DataSource = dt;
+        //        grdCusto.DataBind();
+        //    }
+        //}
+        private void CarregarGrid()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+        SELECT *
+        FROM tb_custo_motorista
+        WHERE cod_cracha = @cod_cracha
+        AND CAST(dt_custo AS DATE) = @dt_custo";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@cod_cracha",
+                    txtMotorista.Text.Trim());
+
+                cmd.Parameters.AddWithValue("@dt_custo",
+                    Convert.ToDateTime(txtData.Text).Date);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+                DataTable dt = new DataTable();
+
+                da.Fill(dt);
+
+                // SE ENCONTRAR REGISTRO
+                if (dt.Rows.Count > 0)
+                {
+                    grdCusto.DataSource = dt;
+                    grdCusto.DataBind();
+
+                    grdCusto.Visible = true;
+                    divCustos.Visible = false; // painel de cadastro
+                }
+                else
+                {
+                    // NÃO ENCONTROU
+                    grdCusto.DataSource = null;
+                    grdCusto.DataBind();
+
+                    grdCusto.Visible = false;
+                    divCustos.Visible = true; // mostra a tela de custos
+                }
+            }
+        }
         private void CarregaMacros()
         {
             // Consulta SQL que retorna os dados desejados
