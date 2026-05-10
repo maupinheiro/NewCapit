@@ -604,7 +604,7 @@
                                     <div class="row g-3">
                                         <div class="col-md-1">
                                             <div class="form-group">
-                                                <span class="details">MOTORISTA:</span>
+                                                <span class="details">MOT.:</span>
                                                 <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                                                 <asp:TextBox ID="txtCodMotorista" runat="server" Style="text-align: center" class="form-control font-weight-bold" OnTextChanged="txtCodMotorista_TextChanged" AutoPostBack="true"></asp:TextBox>
                                             </div>
@@ -620,7 +620,7 @@
 
                                         <div class="col-md-1">
                                             <div class="form-group">
-                                                <span class="details">CÓD./FROTA:</span>
+                                                <span class="details">FROTA:</span>
                                                 <asp:TextBox ID="txtCodVeiculo" runat="server" Style="text-align: center" class="form-control font-weight-bold" AutoPostBack="true" OnTextChanged="btnPesquisarVeiculo_Click"></asp:TextBox>
                                             </div>
                                         </div>
@@ -1286,7 +1286,7 @@
                                                                                         <div class="form-group">
                                                                                             <span class="details">Material:</span>
                                                                                             <div class="input-group">
-                                                                                                <asp:TextBox ID="lblEstRota" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("material") %>'></asp:TextBox>
+                                                                                                <asp:TextBox ID="txtMaterial" runat="server" class="form-control" ReadOnly="true" Style="text-align: center" Text='<%# Eval("material") %>'></asp:TextBox>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>

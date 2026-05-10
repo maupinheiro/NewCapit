@@ -60,7 +60,7 @@
 
                                 <div class="col-md-4">
                                     <label>Buscar</label>
-                                    <asp:TextBox ID="txtBusca" runat="server" CssClass="form-control" placeholder="Motorista, placa, ordem, forta..." />
+                                    <asp:TextBox ID="txtBusca" runat="server" CssClass="form-control" placeholder="Motorista, placa, ordem, frota..." />
                                 </div>
 
                                 <div class="col-md-2 d-flex align-items-end">
@@ -111,42 +111,42 @@
                                             <asp:LinkButton ID="btnImprimir" runat="server"
                                                 CommandName="Imprimir"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
-                                                CssClass="btn btn-sm btn-primary">
+                                                CssClass="btn btn-sm btn-primary" ToolTip="Imprimir">
                     <i class="fa fa-print"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton ID="btnWhatsapp" runat="server"
                                                 CommandName="WhatsApp"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
-                                                CssClass="btn btn-sm btn-success">
+                                                CssClass="btn btn-sm btn-success" ToolTip="Enviar por WhatsApp">
                     <i class="fas fa-comments"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton ID="btnEmail" runat="server"
                                                 CommandName="Email"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
-                                                CssClass="btn btn-sm btn-secondary">
+                                                CssClass="btn btn-sm btn-secondary" ToolTip="Enviar por E-mail">
                     <i class="fas fa-paper-plane"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton ID="btnConfirmar" runat="server"
                                                 CommandName="Confirmar"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
-                                                CssClass="btn btn-sm btn-success">
+                                                CssClass="btn btn-sm btn-success" ToolTip="Validar">
                     <i class="fa fa-check"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton ID="btnCancelar" runat="server"
                                                 CommandName="Cancelar"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
-                                                CssClass="btn btn-sm btn-danger">
+                                                CssClass="btn btn-sm btn-danger" ToolTip="Cancelar" >
                     <i class="fa fa-times"></i>
                                             </asp:LinkButton>
 
                                             <asp:LinkButton ID="btnVisualizar" runat="server"
                                                 CommandName="Visualizar"
                                                 CommandArgument='<%# Eval("ordem_abastecimento") %>'
-                                                CssClass="btn btn-sm btn-info">
+                                                CssClass="btn btn-sm btn-info" ToolTip="Visualizar">
                     <i class="fa fa-eye"></i>
                                             </asp:LinkButton>
 
