@@ -11,6 +11,7 @@ using System.Net;
 using System.Web.Configuration;
 using System.Configuration;
 using System.Web.Services;
+using System.IO;
 
 namespace NewCapit.dist.pages
 {
@@ -22,22 +23,18 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
-                if (Session["UsuarioLogado"] != null)
+                if (Session["UsuarioLogado"] == null)
                 {
-                    string nomeUsuario = Session["UsuarioLogado"].ToString();
-                    var lblUsuario = nomeUsuario;
-                }
-                else
-                {
-                    var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
+                    return;
                 }
 
-                Session["itens"] = new DataTable();
-                CriarTabela();
-                CarregarDescricao();
-            } 
-            txtData.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                CarregarDescricao();                
+                Session["ItensReq"] = CriarTabelaItens();
+
+            }            
+            CarregarGrid();
+            txtData.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
         }
         private void CarregarDescricao()
         {
@@ -145,19 +142,371 @@ namespace NewCapit.dist.pages
             txtUnidade.Text = string.Empty;
             txtEstoque.Text = string.Empty;
             ddlDescricao.SelectedItem.Text = string.Empty;
+            txtAplicacao.Text = string.Empty;
         }
+        protected void btnAddItem_Click(object sender, EventArgs e)
+        {
+            string codigo = txtCodigo.Text.Trim();
+            string descricao = ddlDescricao.SelectedItem.Text;
+            string unidade = txtUnidade.Text.Trim();
+            string quantidade = txtQtd.Text.Trim();
+            string aplicacao = txtAplicacao.Text.Trim();
 
+            if (string.IsNullOrEmpty(codigo))
+                return;
 
+            DataTable dt = Session["ItensReq"] as DataTable;
 
-        private void CriarTabela()
+            // 🔴 VERIFICAR DUPLICIDADE
+            bool existe = dt.AsEnumerable()
+                            .Any(row => row["Codigo"].ToString() == codigo);
+
+            if (existe)
+            {                      
+                Mensagem("warning", "Produto já inserido na requisição " + txtCodigo.Text.Trim() + ".");
+                txtCodigo.Text = "";
+                txtCodigo.Focus();
+                return;
+            }
+
+            // ✔️ ADICIONAR ITEM
+            DataRow dr = dt.NewRow();
+            dr["Codigo"] = codigo;
+            dr["Descricao"] = descricao;
+            dr["Unidade"] = unidade;
+            dr["Quantidade"] = quantidade;
+            dr["Aplicacao"] = aplicacao;
+            dt.Rows.Add(dr);
+
+            // Atualiza Session
+            Session["ItensReq"] = dt;
+
+            // Atualiza Grid
+            gvItens.DataSource = dt;
+            gvItens.DataBind();
+
+            txtCodigo.Text = "";
+            ddlDescricao.SelectedItem.Text = "";
+            txtUnidade.Text = "";
+            txtQtd.Text = "";
+            txtAplicacao.Text = "";
+        }
+        //protected void btnExcel_Click(object sender, EventArgs e)
+        //{
+        //    AtualizarItensGrid();
+
+        //    Response.Clear();
+        //    Response.Buffer = true;
+        //    Response.AddHeader("content-disposition", "attachment;filename=Requisicao.xls");
+        //    Response.ContentType = "application/vnd.ms-excel";
+
+        //    StringWriter sw = new StringWriter();
+
+        //    sw.Write("<html><head>");
+        //    sw.Write("<style>");
+        //    sw.Write("table {border-collapse: collapse;}");
+        //    sw.Write("td, th {border: 1px solid black; padding: 5px;}");
+        //    sw.Write("th {background-color: #eeeeee;}");
+        //    sw.Write("</style>");
+        //    sw.Write("</head><body>");
+
+        //    // CABEÇALHO
+        //    sw.Write("<h2>REQUISIÇÃO DE COMPRA</h2>");
+        //    sw.Write("<b>Número:</b> " + txtNumero.Text + "<br/>");
+        //    sw.Write("<b>Usuário:</b> " + Session["UsuarioLogado"] + "<br/>");
+        //    sw.Write("<b>Data:</b> " + DateTime.Now.ToString("dd/MM/yyyy") + "<br/><br/>");
+
+        //    // TABELA
+        //    sw.Write("<table>");
+        //    sw.Write("<tr><th>Produto</th><th>Quantidade</th><th>Observação</th></tr>");
+
+        //    foreach (DataRow row in Itens.Rows)
+        //    {
+        //        sw.Write("<tr>");
+        //        sw.Write("<td>" + row["produto"] + "</td>");
+        //        sw.Write("<td>" + row["quantidade"] + "</td>");
+        //        sw.Write("<td>" + row["observacao"] + "</td>");
+        //        sw.Write("</tr>");
+        //    }
+
+        //    sw.Write("</table>");
+
+        //    sw.Write("</body></html>");
+
+        //    Response.Write(sw.ToString());
+        //    Response.End();
+        //}        
+        protected void btnSalvar_Click(object sender, EventArgs e)
+        {
+            //AtualizarItensGrid();
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+                SqlTransaction trans = conn.BeginTransaction();
+
+                try
+                {
+                    // GERAR NÚMERO
+                    string sql = @"
+                    DECLARE @ano VARCHAR(4) = YEAR(GETDATE());
+                    DECLARE @seq INT;
+
+                    SELECT @seq = ISNULL(MAX(CAST(RIGHT(numero,5) AS INT)), 0) + 1
+                    FROM tbRequisicaoCompra WITH (UPDLOCK, HOLDLOCK)
+                    WHERE numero LIKE 'REQ-' + @ano + '-%';
+
+                    INSERT INTO tbRequisicaoCompra 
+                    (numero, data_criacao, usuario)
+                    OUTPUT INSERTED.id_requisicao, INSERTED.numero
+                    VALUES (
+                        'REQ-' + @ano + '-' + RIGHT('00000' + CAST(@seq AS VARCHAR), 5),
+                        GETDATE(),
+                        @usuario
+                    );
+                    ";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn, trans);
+                    cmd.Parameters.AddWithValue("@usuario", Session["UsuarioLogado"]);
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    int idReq = 0;
+                    string numero = "";
+
+                    if (dr.Read())
+                    {
+                        idReq = Convert.ToInt32(dr["id_requisicao"]);
+                        numero = dr["numero"].ToString();
+                    }
+                    dr.Close();
+
+                    // SALVAR ITENS
+                    //foreach (DataRow row in Itens.Rows)
+                    //{
+                    //    if (!string.IsNullOrWhiteSpace(row["produto"].ToString()))
+                    //    {
+                    //        string sqlItem = @"
+                    //INSERT INTO tbRequisicaoCompraItem
+                    //(id_requisicao, produto, quantidade, observacao)
+                    //VALUES (@id, @produto, @qtd, @obs)
+                    //";
+
+                    //        SqlCommand cmdItem = new SqlCommand(sqlItem, conn, trans);
+
+                    //        cmdItem.Parameters.AddWithValue("@id", idReq);
+                    //        cmdItem.Parameters.AddWithValue("@produto", row["produto"]);
+                    //        cmdItem.Parameters.AddWithValue("@qtd", Convert.ToDecimal(row["quantidade"]));
+                    //        cmdItem.Parameters.AddWithValue("@obs", row["observacao"]);
+
+                    //        cmdItem.ExecuteNonQuery();
+                    //    }
+                    //}
+
+                    trans.Commit();
+
+                    txtNumero.Text = numero;
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ok",
+                        "alert('Requisição salva: " + numero + "');", true);
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "erro",
+                        "alert('Erro: " + ex.Message.Replace("'", "") + "');", true);
+                }
+            }
+        }        
+        private DataTable CriarTabelaItens()
         {
             DataTable dt = new DataTable();
-            dt.Columns.Add("Produto");
+            dt.Columns.Add("Codigo");
+            dt.Columns.Add("Descricao");
+            dt.Columns.Add("Unidade");
             dt.Columns.Add("Quantidade");
-            dt.Columns.Add("Estoque");
+            dt.Columns.Add("Aplicacao");
 
-            Session["itens"] = dt;
+            return dt;
         }
+        protected void gvItens_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Excluir")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+
+                DataTable dt = Session["ItensReq"] as DataTable;
+
+                if (dt.Rows.Count > index)
+                {
+                    dt.Rows.RemoveAt(index);
+                }
+
+                Session["ItensReq"] = dt;
+
+                CarregarGrid();
+            }
+        }
+        private void CarregarGrid()
+        {
+            DataTable dt = Session["ItensReq"] as DataTable;
+
+            gvItens.DataSource = dt;
+            gvItens.DataBind();
+        }                        
+        private void ExcluirAnexo(int id)
+        {
+            string caminhoArquivo = "";
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                // Buscar caminho do arquivo
+                SqlCommand cmdSelect = new SqlCommand(
+                    "SELECT CaminhoArquivo FROM tbAnexosRequisicaoCompras WHERE Id = @Id", conn);
+                cmdSelect.Parameters.AddWithValue("@Id", id);
+
+                object result = cmdSelect.ExecuteScalar();
+                if (result != null)
+                {
+                    caminhoArquivo = Server.MapPath(result.ToString());
+                }
+
+                // Excluir do banco
+                SqlCommand cmdDelete = new SqlCommand(
+                    "DELETE FROM tbAnexosRequisicaoCompras WHERE Id = @Id", conn);
+                cmdDelete.Parameters.AddWithValue("@Id", id);
+                cmdDelete.ExecuteNonQuery();
+            }
+
+            // Excluir arquivo físico
+            if (!string.IsNullOrEmpty(caminhoArquivo) && File.Exists(caminhoArquivo))
+            {
+                File.Delete(caminhoArquivo);
+            }
+        }        
+        protected void btnUpload_Click(object sender, EventArgs e)
+        {
+            List<string> ok = new List<string>();
+            List<string> erro = new List<string>();
+
+            if (fileUploadAnexo.HasFiles)
+            {
+                foreach (HttpPostedFile arquivo in fileUploadAnexo.PostedFiles)
+                {
+                    string nomeOriginal = Path.GetFileName(arquivo.FileName);
+
+                    // tamanho
+                    if (arquivo.ContentLength > 5 * 1024 * 1024)
+                    {
+                        erro.Add(nomeOriginal + " grande");
+                        continue;
+                    }
+
+                    string extensao = Path.GetExtension(nomeOriginal).ToLower();
+
+                    if (!new[] { ".pdf", ".jpg", ".png", ".jpeg" }.Contains(extensao))
+                    {
+                        erro.Add(nomeOriginal + " inválido");
+                        continue;
+                    }
+
+                    string nomeArquivo = Guid.NewGuid() + "_" + nomeOriginal;
+
+                    string pasta = Server.MapPath("~/Anexos/");
+                    if (!Directory.Exists(pasta))
+                        Directory.CreateDirectory(pasta);
+
+                    string caminho = Path.Combine(pasta, nomeArquivo);
+                    arquivo.SaveAs(caminho);
+
+                    using (SqlConnection conn = new SqlConnection(
+                        WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                    {
+                        string sql = @"INSERT INTO tbAnexosRequisicaoCompras
+                (NumeroRequisicao, NomeArquivo, NomeOriginal, CaminhoArquivo, DataUpload, Usuario)
+                VALUES (@Numero, @Nome, @NomeOriginal, @Caminho, GETDATE(), @Usuario)";
+
+                        SqlCommand cmd = new SqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@Numero", txtNumero.Text);
+                        cmd.Parameters.AddWithValue("@Nome", nomeArquivo);
+                        cmd.Parameters.AddWithValue("@NomeOriginal", nomeOriginal);
+                        cmd.Parameters.AddWithValue("@Caminho", "~/Anexos/" + nomeArquivo);
+                        cmd.Parameters.AddWithValue("@Usuario", Session["UsuarioLogado"].ToString());
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    ok.Add(nomeOriginal);
+                }
+
+                if (ok.Count > 0)
+                    Mensagem("success", "OK: " + string.Join(", ", ok));
+
+                if (erro.Count > 0)
+                    Mensagem("warning", "Erro: " + string.Join(", ", erro));
+
+                CarregarAnexos();
+            }
+        }
+        protected void gvAnexos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Excluir")
+            {
+                int id = Convert.ToInt32(e.CommandArgument);
+
+                using (SqlConnection conn = new SqlConnection(
+                    WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT CaminhoArquivo FROM tbAnexosRequisicaoCompras WHERE Id=@Id", conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    string caminho = Server.MapPath(cmd.ExecuteScalar().ToString());
+
+                    SqlCommand del = new SqlCommand("DELETE FROM tbAnexosRequisicaoCompras WHERE Id=@Id", conn);
+                    del.Parameters.AddWithValue("@Id", id);
+                    del.ExecuteNonQuery();
+
+                    if (File.Exists(caminho))
+                        File.Delete(caminho);
+                }
+
+                CarregarAnexos();
+            }
+        }
+        private void CarregarAnexos()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = "SELECT * FROM tbAnexosRequisicaoCompras WHERE NumeroRequisicao=@Numero";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Numero", txtNumero.Text);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvAnexos.DataSource = dt;
+                gvAnexos.DataBind();
+            }
+        }
+
+
+
+
+
+
+
+
         protected void btnSalvarItem_Click(object sender, EventArgs e)
         {
             DataTable dt = (DataTable)Session["itens"];
@@ -188,26 +537,7 @@ namespace NewCapit.dist.pages
             }
 
             return estoque;
-        }
-        protected void btnUpload_Click(object sender, EventArgs e)
-        {
-            if (fileOrcamento.HasFile)
-            {
-                byte[] arquivo = fileOrcamento.FileBytes;
-
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO tbRequisicaoAnexos (id_requisicao, nome_arquivo, arquivo) VALUES (@id, @nome, @arquivo)", conn);
-
-                    cmd.Parameters.AddWithValue("@id", Session["idReq"]);
-                    cmd.Parameters.AddWithValue("@nome", fileOrcamento.FileName);
-                    cmd.Parameters.AddWithValue("@arquivo", arquivo);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
+        }        
         protected void btnEnviar_Click(object sender, EventArgs e)
         {
             //PENDENTE, APROVADO, REJEITADO, LIBERADO
@@ -291,110 +621,7 @@ namespace NewCapit.dist.pages
                 cmd.ExecuteNonQuery();
             }
         }
-        //public class ProdutoERP
-        //{
-        //    public string id_peca { get; set; }
-        //    public string text { get; set; } // Select2 usa isso            
-        //    public string descricao_peca { get; set; }
-        //    public string unidade { get; set; }
-        //}
+
         
-        //[WebMethod]
-        //private static DataTable BuscarNoBanco(string termo)
-        //{
-        //    DataTable dt = new DataTable();
-
-        //    string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
-        //    using (SqlConnection conn = new SqlConnection(connStr))
-        //    {
-        //        string sql = @"
-        //    SELECT TOP 20 id_peca, descricao_peca
-        //    FROM tbestoque_pecas
-        //    WHERE descricao_peca LIKE @termo
-        //    ORDER BY descricao_peca";
-
-        //        using (SqlCommand cmd = new SqlCommand(sql, conn))
-        //        {
-        //            cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-
-        //            SqlDataAdapter da = new SqlDataAdapter(cmd);
-        //            da.Fill(dt);
-        //        }
-        //    }
-
-        //    return dt;
-        //}
-        //public static List<object> BuscarProdutos(string termo)
-        //{
-        //    var lista = new List<object>();
-
-        //    DataTable dt = BuscarNoBanco(termo);
-
-        //    foreach (DataRow r in dt.Rows)
-        //    {
-        //        lista.Add(new
-        //        {
-        //            id = r["id_peca"].ToString(),
-        //            text = r["descricao_peca"].ToString()
-        //        });
-        //    }
-
-        //    return lista;
-        //}
-
-
-        //public static object BuscarProdutosERP(string termo, int pagina)
-        //{
-        //    int pageSize = 20;
-        //    int offset = (pagina - 1) * pageSize;
-
-        //    List<ProdutoERP> lista = new List<ProdutoERP>();
-
-        //    string cs = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-
-        //    using (SqlConnection conn = new SqlConnection(cs))
-        //    {
-        //        string sql = @"
-        //        SELECT 
-        //            id_peca,                    
-        //            descricao_peca,
-        //            unidade
-        //        FROM tbestoque_pecas
-        //        WHERE 
-        //            id_peca LIKE @termo
-        //            OR descricao_peca LIKE @termo
-        //        ORDER BY descricao_peca
-        //        OFFSET @offset ROWS
-        //        FETCH NEXT @pageSize ROWS ONLY;
-        //         ";
-
-        //        SqlCommand cmd = new SqlCommand(sql, conn);
-        //        cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
-        //        cmd.Parameters.AddWithValue("@offset", offset);
-        //        cmd.Parameters.AddWithValue("@pageSize", pageSize);
-
-        //        conn.Open();
-
-        //        SqlDataReader dr = cmd.ExecuteReader();
-
-        //        while (dr.Read())
-        //        {
-        //            lista.Add(new ProdutoERP
-        //            {
-        //                id_peca = dr["id_peca"].ToString(),
-        //                text = dr["id_peca"] + " - " + dr["descricao_peca"],
-        //                descricao_peca = dr["descricao_peca"].ToString(),
-        //                unidade = dr["unidade"].ToString()
-        //            });
-        //        }
-        //    }
-
-        //    return new
-        //    {
-        //        itens = lista,
-        //        mais = lista.Count == pageSize
-        //    };
-        //}
     }
 }
