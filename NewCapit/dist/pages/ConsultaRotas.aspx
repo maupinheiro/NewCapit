@@ -54,7 +54,7 @@
                         <asp:BoundField DataField="desc_rota" HeaderText="ROTA"/>                         
                         <asp:BoundField DataField="deslocamento" HeaderText="DESLOCAMENTO" />
                         <asp:BoundField DataField="distancia" HeaderText="DISTÂNCIA" /> 
-                        <asp:BoundField DataField="tempo" HeaderText="DURAÇÃO" />
+                        <asp:BoundField DataField="tempo" HeaderText="DURAÇÃO" DataFormatString="{0:hh\\:mm}"  HtmlEncode="false" />
                         <asp:BoundField DataField="situacao" HeaderText="STATUS" /> 
                         <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
                             <ItemTemplate>

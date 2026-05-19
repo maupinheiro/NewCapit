@@ -52,7 +52,7 @@
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
                         </button>
-                      
+
                     </div>
                     <!-- /.card-tools -->
                 </div>
@@ -62,15 +62,14 @@
                 <br />
 
                 <div class="container-fluid mt-4">
-                    <div id="divMsg" runat="server"
-                        class="alert alert-info alert-dismissible fade show mt-3"
-                        role="alert" style="display: none;">
-                        <span id="lblMsgGeral" runat="server"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
                     <div class="row justify-content-center">
                         <div class="col-12 col-xxl-10">
-
+                            <div id="divMsg" runat="server"
+                                class="alert alert-info alert-dismissible fade show mt-3"
+                                role="alert" style="display: none;">
+                                <span id="lblMsgGeral" runat="server"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
                             <div class="card shadow-lg border-0">
                                 <div class="card-header text-white py-3" style="background-color: #A020F0; font-weight: bold;">
                                     <h5 class="mb-0 fw-bold">Atualizar Rota
@@ -95,15 +94,13 @@
                                         </div>
 
                                         <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">STATUS:</label>
-                                        <div class="col-sm-1">
+                                        <div class="col-md-1">
                                             <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
-                                                <asp:ListItem Value="ATIVA" Text="ATIVO"></asp:ListItem>
-                                                <asp:ListItem Value="INATIVA" Text="INATIVO"></asp:ListItem>
+                                                <asp:ListItem Value="" Text=""></asp:ListItem>
+                                                <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
+                                                <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
                                             </asp:DropDownList>
                                         </div>
-
-
-
                                     </div>
 
                                     <hr />
@@ -134,8 +131,8 @@
                                         <div class="form-group row">
                                             <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Transit Time:</label>
                                             <div class="col-md-2">
-                                                <asp:TextBox ID="txtDuracao" 
-                                                    CssClass="form-control" 
+                                                <asp:TextBox ID="txtDuracao"
+                                                    CssClass="form-control"
                                                     Style="text-align: center"
                                                     runat="server"
                                                     onkeyup="mascaraDuracao(this)"
@@ -156,7 +153,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                
+
                                     <div class="row g-3">
                                         <div class="col-md-2">
                                             <div class="form-group">
@@ -186,21 +183,21 @@
                                     </div>
                                     <hr />
                                     <div class="row g-3">
-                                    <div class="col-md-2">
-                                        <asp:Button ID="btnAlterar" runat="server" OnClick="btnAlterar_Click" CssClass="btn btn-outline-success btn-lg w-100" Text="Atualizar" />
+                                        <div class="col-md-2">
+                                            <asp:Button ID="btnAlterar" runat="server" OnClick="btnAlterar_Click" CssClass="btn btn-outline-success btn-lg w-100" Text="Atualizar" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="ConsultaRotas.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <a href="ConsultaRotas.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
-                                        </a>
-                                    </div>
-                                </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>       
-    </div>   
+        </div>
+    </div>
 </asp:Content>
