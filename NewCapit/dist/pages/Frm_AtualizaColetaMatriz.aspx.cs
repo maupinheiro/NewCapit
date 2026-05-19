@@ -105,11 +105,9 @@ namespace NewCapit.dist.pages
                 //    int id = Convert.ToInt32(Request.QueryString["num_carregamento"]);
                 //    CarregaDados(id);
                 //}
-
-
+                
                 CarregaDados();
                 CarregaMap(txtPlaca.Text);
-
                 PreencherClienteInicial();
                 PreencherClienteFinal();
 
@@ -120,7 +118,41 @@ namespace NewCapit.dist.pages
             //VerificaCargasFechadas();
 
         }
+        //private void PreencherComboFiliais()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT codigo, descricao FROM tbempresa";
 
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        try
+        //        {
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
+
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
+
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            cbFiliais.DataSource = reader;
+        //            cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+        //            cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+        //            cbFiliais.DataBind();  // Realiza o binding dos dados                   
+        //            cbFiliais.Items.Insert(0, new ListItem("", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
+        //        }
+        //    }
+        //}
         public void CarregaFoto()
         {
             var codigo = txtCodMotorista.Text.Trim();
@@ -638,6 +670,37 @@ namespace NewCapit.dist.pages
                 }
             }
 
+            // Filiais no CVA
+            var cbFiliais = (DropDownList)e.Item.FindControl("cbFiliais");
+            if (cbFiliais == null) return;
+            const string sqlFiliais = "SELECT codigo, descricao FROM tbempresa";
+            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                using (var cmd = new SqlCommand(sqlFiliais, conn))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        cbFiliais.DataSource = rdr;
+                        cbFiliais.DataTextField = "descricao";
+                        cbFiliais.DataValueField = "codigo";
+                        cbFiliais.DataBind();
+                    }
+                    //var drv = (HiddenField)e.Item.FindControl("hdfCVA"); ;
+                    //string filialDaColeta = drv.Value;  // o nome da coluna do seu DataTable
+                                                        // opcional: insere item em branco no topo
+                    //cbFiliais.Items.Insert(0, new System.Web.UI.WebControls.ListItem(filialDaColeta, "0"));
+                }
+                catch (Exception ex)
+                {
+                    // trate o erro como preferir
+                    Response.Write("Erro ao carregar filiais: " + ex.Message);
+                }
+            }
+
+
+
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 // ... (suas declarações de variáveis iniciais) ...
@@ -938,6 +1001,13 @@ namespace NewCapit.dist.pages
                 TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
                 TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
 
+                TextBox txtLocalPernoite = (TextBox)e.Item.FindControl("txtLocalPernoite");
+                TextBox txtInicioPernoite = (TextBox)e.Item.FindControl("txtInicioPernoite");
+                TextBox txtFimPernoite = (TextBox)e.Item.FindControl("txtFimPernoite");
+                TextBox txtDuracaoP = (TextBox)e.Item.FindControl("txtDuracaoP");
+
+
+
                 DateTime agora = DateTime.Now;
 
                 // Exemplo: atualizando no banco
@@ -959,6 +1029,12 @@ namespace NewCapit.dist.pages
                     var Recebedor = SafeDateValue2(cboRecebedor.Text.Trim());
                     var CidRecebedor = SafeDateValue2(txtCidRecebedor.Text.Trim());
                     var UFRecebedor = SafeDateValue2(txtUFRecebedor.Text.Trim());
+
+                    var localPernoite = SafeDateValue2(txtLocalPernoite.Text.Trim());
+                    var inicioPernoite = SafeDateValue2(txtInicioPernoite.Text.Trim());
+                    var fimPernoite = SafeDateValue2(txtFimPernoite.Text.Trim());
+                    var duracaoP = txtDuracaoP.Text.Trim();
+
 
                     if (chegada != null && saida != null && saidaPlanta != null)
                     {
@@ -1005,6 +1081,25 @@ namespace NewCapit.dist.pages
 
                     }
 
+                    string duracao = txtDuracaoP.Text.Trim();
+
+                    string statusPernoite = "";
+
+                    if (!string.IsNullOrEmpty(duracao))
+                    {
+                        TimeSpan tsDuracao = TimeSpan.Parse(duracao);
+                        TimeSpan tsLimite = new TimeSpan(11, 0, 0);
+
+                        if (tsDuracao < tsLimite)
+                        {
+                            statusPernoite = "Não Cumpriu a Jornada de 11h";
+                        }
+                        else
+                        {
+                            statusPernoite = "Cumpriu Jornada de 11h";
+                        }
+                    }
+
                     string query = @"UPDATE tbcargas SET                                  
                                 gate_origem = @gate_origem,
                                 gate_destino = @gate_destino,
@@ -1020,6 +1115,11 @@ namespace NewCapit.dist.pages
                                 duracao_transp=@duracao_transp,
                                 disponivel_solicitacao = @disponivel_solicitacao,
                                 codmot=@codmot, 
+                                local_pernoite=@local_pernoite,
+                                inicio_pernoite=@inicio_pernoite,
+                                fim_pernoite=@fim_pernoite,
+                                duracao_pernoite=@duracao_pernoite,
+                                status_pernoite=@status_pernoite,
                                 frota=@frota
                                 WHERE carga = @carga";
 
@@ -1041,6 +1141,11 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
 
+                    cmd.Parameters.AddWithValue("@local_pernoite", txtLocalPernoite.Text.Trim().ToUpper());
+                    cmd.Parameters.AddWithValue("@inicio_pernoite", SafeDateValue(txtInicioPernoite.Text.Trim()));
+                    cmd.Parameters.AddWithValue("@fim_pernoite", SafeDateValue(txtFimPernoite.Text.Trim())); 
+                    cmd.Parameters.AddWithValue("@duracao_pernoite", txtDuracaoP.Text.Trim());
+                    cmd.Parameters.AddWithValue("@status_pernoite", statusPernoite);
                     // Chama método que verifica no banco
                     conn.Open();
                     cmd.ExecuteNonQuery();
