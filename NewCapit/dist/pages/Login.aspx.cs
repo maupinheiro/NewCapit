@@ -46,14 +46,14 @@ namespace NewCapit
                     //O cod do funcionario é passado para a página master para carregar a foto na pagina//
                     string codFuncionario = user.cod_usuario.ToString();
                     string fotoFuncionario = user.foto_usuario;
-                 
+                    string usuarioSistema = user.nm_usuario;
                     Session["UsuarioLogado"] = nomeUsuario;
                     Session["EmpresaTrabalho"] = nomeEmpresa;
                     Session["FuncaoUsuario"] = funcaoUsuario;
                     Session["CodUsuario"] = codFuncionario;
                     Session["PermissaoUsuario"] = permissaoUsuario;
                     Session["FotoUsuario"] = fotoFuncionario;
-
+                    Session["UsuarioSistema"] = usuarioSistema;
                     int idLog = UsersDAL.RegistrarLogin(user.cod_usuario);
                     Session["IdSessaoLog"] = idLog; // Importante para o logout saber quem atualizar
                     Response.Redirect("/dist/pages/Home.aspx");

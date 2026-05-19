@@ -2208,7 +2208,8 @@ namespace NewCapit.dist.pages
             {
                 // 1. Verificação de permissão por usuário
                 string usuarioLogado = Session["UsuarioLogado"]?.ToString();
-                if (usuarioLogado != "TNG30976")
+                string usuarioSistema = Session["UsuarioSistema"]?.ToString();
+                if (usuarioSistema != "TNG30976")
                 {
                     // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
                     ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
