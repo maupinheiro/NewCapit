@@ -105,7 +105,7 @@ namespace NewCapit.dist.pages
             // ✅ INTERRUPTOR (OCULTAR CONCLUÍDAS)
             if (chkOcultarConcluidos.Checked)
             {
-                sqlFiltro += " AND situacao <> 'VIAGEM CONCLUIDA' AND fl_exclusao IS NULL";
+                sqlFiltro += " AND c.situacao <> 'VIAGEM CONCLUIDA' AND c.fl_exclusao IS NULL";
             }
 
             // 🔎 FILTROS
@@ -151,12 +151,35 @@ namespace NewCapit.dist.pages
             {
                 con.Open();
 
-            // 🔢 TOTAL
-            SqlCommand cmdTotal = new SqlCommand($@"
-            SELECT COUNT(*) 
-            FROM tbcarregamentos
-            {sqlFiltro}", con);
-
+                // 🔢 TOTAL (Substitua a query cmdTotal por esta)
+                SqlCommand cmdTotal = new SqlCommand($@"
+                SELECT COUNT(*) 
+                FROM tbcarregamentos c
+                LEFT JOIN tbveiculos v ON c.placa = v.plavei AND v.fl_exclusao IS NULL
+                LEFT JOIN (
+                    SELECT *, 
+                           ROW_NUMBER() OVER(PARTITION BY nr_idveiculo ORDER BY dt_posicao DESC) as EvNum
+                    FROM tb_evento
+                    WHERE ISNULL(fl_tratado, 0) = 0
+                      AND nr_evento IS NOT NULL AND nr_evento <> '' AND CHARINDEX('-', nr_evento) = 0
+                      AND (
+                           ',' + nr_evento + ',' LIKE '%,251,%' OR
+                           ',' + nr_evento + ',' LIKE '%,246,%' OR
+                           ',' + nr_evento + ',' LIKE '%,249,%' OR
+                           ',' + nr_evento + ',' LIKE '%,241,%' OR
+                           ',' + nr_evento + ',' LIKE '%,215,%' OR
+                           ',' + nr_evento + ',' LIKE '%,229,%' OR
+                           ',' + nr_evento + ',' LIKE '%,517,%' OR
+                           ',' + nr_evento + ',' LIKE '%,248,%' OR
+                           ',' + nr_evento + ',' LIKE '%,231,%' OR
+                           ',' + nr_evento + ',' LIKE '%,509,%' OR
+                           ',' + nr_evento + ',' LIKE '%,563,%' OR
+                           ',' + nr_evento + ',' LIKE '%,555,%' OR
+                           ',' + nr_evento + ',' LIKE '%,553,%' OR
+                           ',' + nr_evento + ',' LIKE '%,234,%'
+                      )
+                ) e ON v.terminal = e.nr_idveiculo AND e.EvNum = 1
+                {sqlFiltro.Replace("WHERE empresa", "WHERE c.empresa")}", con);
                 foreach (var p in parametros)
                     cmdTotal.Parameters.AddWithValue(p.ParameterName, p.Value);
 
@@ -168,18 +191,50 @@ namespace NewCapit.dist.pages
                 lblTotalPaginas.Text = totalPaginas.ToString().Trim();                    
                 Session["TotalPaginas"] = totalPaginas;
 
-                // 📋 GRID
+                // 📋 GRID (Substitua a string sql por esta)
                 string sql = $@"
                 WITH Dados AS(
-                    SELECT *,
-                    ROW_NUMBER() OVER(ORDER BY veiculo ASC) AS RowNum
-                    FROM tbcarregamentos
-                    {sqlFiltro}
+                    SELECT c.*,
+                           e.cod_evento,
+                           e.nr_evento,
+                           e.ds_cidade,
+                           e.ds_uf,
+                           e.dt_posicao,
+                           ROW_NUMBER() OVER(ORDER BY c.veiculo ASC) AS RowNum
+                    FROM tbcarregamentos c
+                    LEFT JOIN tbveiculos v ON c.placa = v.plavei AND v.fl_exclusao IS NULL
+                    -- Busca o evento mais recente NÃO tratado do veículo
+                    LEFT JOIN (
+                        SELECT *, 
+                               ROW_NUMBER() OVER(PARTITION BY nr_idveiculo ORDER BY dt_posicao DESC) as EvNum
+                        FROM tb_evento
+                        WHERE ISNULL(fl_tratado, 0) = 0
+                          -- Garante que o campo não está vazio e evita falsos positivos de números negativos
+                          AND nr_evento IS NOT NULL AND nr_evento <> '' AND CHARINDEX('-', nr_evento) = 0
+                          -- Truque da vírgula: envolvemos o campo com vírgulas para buscar o código exato
+                          AND (
+                               ',' + nr_evento + ',' LIKE '%,251,%' OR
+                               ',' + nr_evento + ',' LIKE '%,246,%' OR
+                               ',' + nr_evento + ',' LIKE '%,249,%' OR
+                               ',' + nr_evento + ',' LIKE '%,241,%' OR
+                               ',' + nr_evento + ',' LIKE '%,215,%' OR
+                               ',' + nr_evento + ',' LIKE '%,229,%' OR
+                               ',' + nr_evento + ',' LIKE '%,517,%' OR
+                               ',' + nr_evento + ',' LIKE '%,248,%' OR
+                               ',' + nr_evento + ',' LIKE '%,231,%' OR
+                               ',' + nr_evento + ',' LIKE '%,509,%' OR
+                               ',' + nr_evento + ',' LIKE '%,563,%' OR
+                               ',' + nr_evento + ',' LIKE '%,555,%' OR
+                               ',' + nr_evento + ',' LIKE '%,553,%' OR
+                               ',' + nr_evento + ',' LIKE '%,234,%'
+                          )
+                    ) e ON v.terminal = e.nr_idveiculo AND e.EvNum = 1
+                    {sqlFiltro.Replace("WHERE empresa", "WHERE c.empresa")}
                 )
                 SELECT *
                 FROM Dados
                 WHERE RowNum BETWEEN ((@pagina - 1) * @pageSize + 1)
-                         AND (@pagina * @pageSize)";
+                             AND (@pagina * @pageSize)";
 
                 SqlCommand cmd = new SqlCommand(sql, con);
 
@@ -193,13 +248,70 @@ namespace NewCapit.dist.pages
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
+                // 📝 CONVERSÃO: Transformando números em Descrições dos Eventos
+                if (dt.Rows.Count > 0)
+                {
+                    // Criamos uma coluna nova no DataTable para guardar a descrição traduzida
+                    dt.Columns.Add("ds_evento", typeof(string));
+
+                    // Buscamos o dicionário completo de eventos para tradução direta na memória (Performance rápida)
+                    Dictionary<string, string> dicionarioEventos = new Dictionary<string, string>();
+                    using (SqlCommand cmdLista = new SqlCommand("SELECT CAST(cod_evento AS VARCHAR) cod, ds_evento FROM tb_lista_evento", con))
+                    {
+                        using (SqlDataReader readerLista = cmdLista.ExecuteReader())
+                        {
+                            while (readerLista.Read())
+                            {
+                                dicionarioEventos[readerLista["cod"].ToString().Trim()] = readerLista["ds_evento"].ToString().Trim();
+                            }
+                        }
+                    }
+
+                    // Mapeamos linha por linha traduzindo a lista de números (ex: "247,509")
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["nr_evento"] != DBNull.Value && !string.IsNullOrEmpty(row["nr_evento"].ToString()))
+                        {
+                            string nrEventoOriginal = row["nr_evento"].ToString();
+
+                            // Separa os códigos caso venha mais de um (ex: "247,509" vira ["247", "509"])
+                            string[] codigos = nrEventoOriginal.Split(',');
+                            List<string> descricoesEncontradas = new List<string>();
+
+                            foreach (string cod in codigos)
+                            {
+                                string codLimpo = cod.Trim();
+                                if (dicionarioEventos.ContainsKey(codLimpo))
+                                {
+                                    descricoesEncontradas.Add(dicionarioEventos[codLimpo]);
+                                }
+                            }
+
+                            // Junta as descrições gerando um texto amigável (ex: "Alerta de Pânico / Excesso de Velocidade")
+                            if (descricoesEncontradas.Count > 0)
+                            {
+                                row["ds_evento"] = string.Join(" / ", descricoesEncontradas);
+                            }
+                            else
+                            {
+                                row["ds_evento"] = "Evento Desconhecido (" + nrEventoOriginal + ")";
+                            }
+                        }
+                        else
+                        {
+                            row["ds_evento"] = "";
+                        }
+                    }
+                }
+
+                // Agora ligamos o DataTable atualizado com a coluna 'ds_evento' na Grid
                 gvOrdens.DataSource = dt;
                 gvOrdens.DataBind();
 
                 // 📊 KPI
                 SqlCommand cmdStatus = new SqlCommand($@"
                 SELECT status, COUNT(*) total
-                FROM tbcarregamentos
+                FROM tbcarregamentos as c
                 {sqlFiltro}
                 GROUP BY status", con);
 
@@ -269,7 +381,8 @@ namespace NewCapit.dist.pages
         //}
         protected void gvOrdens_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            gvOrdens.PageIndex = e.NewPageIndex;
+            // O ASP.NET usa índice 0 para a primeira página, por isso somamos 1
+            Session["Pagina"] = e.NewPageIndex + 1;
             CarregarGrid();
         }
         protected void btnPrimeiro_Click(object sender, EventArgs e)
@@ -279,19 +392,28 @@ namespace NewCapit.dist.pages
         }
         protected void btnAnterior_Click(object sender, EventArgs e)
         {
-            int pagina = (int)Session["Pagina"];
+            // Proteção idêntica contra valores nulos
+            int pagina = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
+
             if (pagina > 1)
+            {
                 Session["Pagina"] = pagina - 1;
+            }
 
             CarregarGrid();
         }
         protected void btnProximo_Click(object sender, EventArgs e)
         {
-            int pagina = (int)Session["Pagina"];
-            int total = (int)Session["TotalPaginas"];
+            // Proteção: Se a Session["Pagina"] estiver nula, assume que está na página 1
+            int pagina = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
+
+            // Proteção: Se a Session["TotalPaginas"] estiver nula, assume 1 para não quebrar
+            int total = Session["TotalPaginas"] != null ? (int)Session["TotalPaginas"] : 1;
 
             if (pagina < total)
+            {
                 Session["Pagina"] = pagina + 1;
+            }
 
             CarregarGrid();
         }
@@ -1079,6 +1201,46 @@ namespace NewCapit.dist.pages
             }
 
             return $"<span class='badge {classe}'>{situacao}</span>";
+        }
+
+        protected void btnTratarEvento_Click(object sender, EventArgs e)
+        {
+            string codEvento = hfCodEvento.Value;
+            // Pega o usuário logado (ajuste conforme seu sistema de login)
+            string usuario = Session["Usuario"] != null ? Session["Usuario"].ToString() : "Sistema";
+
+            if (!string.IsNullOrEmpty(codEvento))
+            {
+                string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                using (SqlConnection con = new SqlConnection(conn))
+                {
+                    string sqlUpdate = @"
+                UPDATE tb_evento 
+                SET fl_tratado = 1, 
+                    dt_tratamento = GETDATE(),
+                    usuario_tratado = @usuario
+                WHERE cod_evento = @cod_evento";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlUpdate, con))
+                    {
+                        cmd.Parameters.AddWithValue("@usuario", usuario);
+                        cmd.Parameters.AddWithValue("@cod_evento", codEvento);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Limpa o campo oculto
+                hfCodEvento.Value = "";
+
+                // Fecha o modal via Javascript e recarrega a Grid
+                ScriptManager.RegisterStartupScript(this, GetType(), "fecharModal", "fecharModalAlerta();", true);
+
+                // Atualiza a listagem sumindo com a sirene que foi tratada
+                CarregarGrid();
+            }
         }
     }
 }

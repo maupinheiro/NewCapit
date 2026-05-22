@@ -1299,7 +1299,8 @@ namespace NewCapit
             }
 
 
-            string sql = @"UPDATE tbveiculos SET         
+            string sql = @"UPDATE tbveiculos SET 
+                                codvei=@codvei,
                                 tipvei = @tipvei,
                                 tipoveiculo = @tipoveiculo,
                                 modelo = @modelo,
@@ -1355,6 +1356,7 @@ namespace NewCapit
                 {
                     // Adiciona os parâmetros                    
                     cmd.Parameters.AddWithValue("@tipvei", cboTipo.SelectedItem.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@codvei", txtCodVei.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@tipoveiculo", ddlTipo.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@modelo", txtModelo.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@ano", txtAno.Text);

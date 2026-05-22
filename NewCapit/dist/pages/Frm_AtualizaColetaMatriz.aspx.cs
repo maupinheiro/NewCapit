@@ -2347,7 +2347,8 @@ namespace NewCapit.dist.pages
                             string sqlUpdateCarga = @"UPDATE tbcargas 
                                          SET status = 'Cancelada',
                                              andamento = 'CANCELADA',
-                                             atualizacao = @usuario, 
+                                             atualizacao = @usuario,
+                                             material = 'Vazio'
                                              fl_exclusao = 'S' 
                                          WHERE carga = @carga";
 
@@ -4546,7 +4547,7 @@ namespace NewCapit.dist.pages
             DECLARE @PossuiMaterial INT;
             SELECT @PossuiMaterial = COUNT(*) 
             FROM tbcargas 
-            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> 'Vazio' ;
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> 'Vazio';
 
             SELECT @NaoConcluidas AS NaoConcluidas, 
                    (@TotalCTe + @TotalNFSe) AS TotalDocumentos, 

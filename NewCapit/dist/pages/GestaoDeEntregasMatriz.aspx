@@ -297,7 +297,24 @@
         width: 1em;
         height: 1em;
         border-radius: 0;
+
+
     }
+        @keyframes flickerAnimation {
+          0%   { opacity: 1; transform: scale(1); }
+          50%  { opacity: 0.3; transform: scale(1.1); color: #ff0000; }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-flicker {
+          animation: flickerAnimation 1.2s infinite;
+          display: inline-block;
+        }
+        .btn-alerta-sirene {
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -608,7 +625,17 @@
                                                                 </div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-
+                                                        <asp:TemplateField HeaderText="Alerta">
+                                                    <ItemTemplate>
+                                                        <!-- Só exibe o botão se existir um código de evento não tratado -->
+                                                        <asp:LinkButton ID="btnAlerta" runat="server" 
+                                                            Visible='<%# Eval("cod_evento") != DBNull.Value %>'
+                                                            CssClass="btn-alerta-sirene"
+                                                            OnClientClick='<%# String.Format("abrirModalAlerta(\"{0}\", \"{1}\", \"{2}\", \"{3}/{4}\", \"{5:dd/MM HH:mm}\"); return false;", Eval("cod_evento"), Eval("placa"), Eval("ds_evento"), Eval("ds_cidade"), Eval("ds_uf"), Eval("dt_posicao")) %>'>
+                                                           <i class="fas fa-exclamation-triangle text-danger animate-flicker" style="font-size: 22px;"></i>                                                   
+                                                        </asp:LinkButton>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
                                                     </Columns>
 
 
@@ -904,7 +931,33 @@
             </Triggers>
         </asp:UpdatePanel>
         <!-- modal Gerenciar MDFe -->
+        <!-- Modal de Alertas -->
+      <!-- Modal de Alertas -->
+<div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalAlertaLabel"><i class="fas fa-exclamation-triangle"></i> Alerta do Rastreador</h5>
+        <!-- Alterado: onclick manual para garantir o fechamento -->
+        <button type="button" class="btn-close btn-close-white" onclick="fecharModalAlerta();" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Placa:</strong> <span id="mdPlaca"></span></p>
+        <!-- Agora exibirá a Descrição ao invés do Número -->
+        <p><strong>Alerta:</strong> <span id="mdNrEvento" class="text-danger fw-bold"></span></p>
+        <p><strong>Localização:</strong> <span id="mdLocal"></span></p>
+        <p><strong>Data/Hora:</strong> <span id="mdData"></span></p>
+      </div>
+      <div class="modal-footer">
+        <!-- Alterado: onclick manual -->
+        <button type="button" class="btn btn-secondary" onclick="fecharModalAlerta();">Fechar</button>
+        <asp:Button ID="btnTratarEvento" runat="server" Text="Tratar Evento" CssClass="btn btn-success" OnClick="btnTratarEvento_Click" />
+      </div>
+    </div>
+  </div>
+</div>
 
+<asp:HiddenField ID="hfCodEvento" runat="server" />
     </div>
     <script type="text/javascript">
         // Captura o fim de qualquer atualização do UpdatePanel
@@ -921,6 +974,53 @@
             // 3. Simula o clique falso que você pediu em uma área neutra
             $('body').trigger('click');
         });
+        var modalInstancia = null;
+
+        function abrirModalAlerta(codEvento, placa, dsEvento, local, data) {
+            document.getElementById('mdPlaca').innerText = placa;
+            document.getElementById('mdNrEvento').innerText = dsEvento; // Insere a descrição do evento
+            document.getElementById('mdLocal').innerText = local;
+            document.getElementById('mdData').innerText = data;
+
+            document.getElementById('<%= hfCodEvento.ClientID %>').value = codEvento;
+
+            var modalEl = document.getElementById('modalAlerta');
+
+            // Tenta abrir pelo Bootstrap moderno
+            if (typeof bootstrap !== 'undefined') {
+                modalInstancia = new bootstrap.Modal(modalEl);
+                modalInstancia.show();
+            } else {
+                // Fallback caso o script do Bootstrap falhe no PostBack
+                modalEl.classList.add('show');
+                modalEl.style.display = 'block';
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'modalBackdropID';
+                document.body.appendChild(backdrop);
+            }
+        }
+
+        function fecharModalAlerta() {
+            var modalEl = document.getElementById('modalAlerta');
+
+            if (modalInstancia) {
+                modalInstancia.hide();
+            }
+
+            // Fecha manualmente limpando as classes e estilos residuais
+            modalEl.classList.remove('show');
+            modalEl.style.display = 'none';
+
+            var backdrop = document.getElementById('modalBackdropID');
+            if (backdrop) { backdrop.remove(); }
+
+            // Remove backdrops órfãos gerados pelo Bootstrap
+            var openBackdrops = document.querySelectorAll('.modal-backdrop');
+            openBackdrops.forEach(function (b) { b.remove(); });
+            document.body.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
+        }
     </script>
     <script>
         setInterval(function () {
