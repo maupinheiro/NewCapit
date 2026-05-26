@@ -2314,7 +2314,7 @@ namespace NewCapit.dist.pages
                 // 1. Verificação de permissão por usuário
                 string usuarioLogado = Session["UsuarioLogado"]?.ToString();
                 string usuarioSistema = Session["UsuarioSistema"]?.ToString();
-                if (usuarioSistema != "TNG30976")
+                if (usuarioSistema != "TNG30976" && usuarioSistema !="admin")
                 {
                     // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
                     ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
@@ -2348,7 +2348,7 @@ namespace NewCapit.dist.pages
                                          SET status = 'Cancelada',
                                              andamento = 'CANCELADA',
                                              atualizacao = @usuario,
-                                             material = 'Vazio'
+                                             material = 'Vazio',
                                              fl_exclusao = 'S' 
                                          WHERE carga = @carga";
 
@@ -2413,7 +2413,7 @@ namespace NewCapit.dist.pages
                         }
                         catch (Exception)
                         {
-                            trans.Rollback();
+                            //trans.Rollback();
                             throw;
                         }
                     }

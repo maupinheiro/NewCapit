@@ -631,7 +631,7 @@
                                                         <asp:LinkButton ID="btnAlerta" runat="server" 
                                                             Visible='<%# Eval("cod_evento") != DBNull.Value %>'
                                                             CssClass="btn-alerta-sirene"
-                                                            OnClientClick='<%# String.Format("abrirModalAlerta(\"{0}\", \"{1}\", \"{2}\", \"{3}/{4}\", \"{5:dd/MM HH:mm}\"); return false;", Eval("cod_evento"), Eval("placa"), Eval("ds_evento"), Eval("ds_cidade"), Eval("ds_uf"), Eval("dt_posicao")) %>'>
+                                                            OnClientClick='<%# String.Format("abrirModalAlerta(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}/{5}\", \"{6:dd/MM HH:mm}\"); return false;", Eval("cod_evento"), Eval("codvei"),Eval("placa"), Eval("ds_evento"), Eval("ds_cidade"), Eval("ds_uf"), Eval("dt_posicao")) %>'>
                                                            <i class="fas fa-exclamation-triangle text-danger animate-flicker" style="font-size: 22px;"></i>                                                   
                                                         </asp:LinkButton>
                                                     </ItemTemplate>
@@ -942,7 +942,7 @@
         <button type="button" class="btn-close btn-close-white" onclick="fecharModalAlerta();" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p><strong>Placa:</strong> <span id="mdPlaca"></span></p>
+        <p><strong>Frota - Placa: </strong><span id="mdFrota"></span> - <span id="mdPlaca"></span></p>
         <!-- Agora exibirá a Descrição ao invés do Número -->
         <p><strong>Alerta:</strong> <span id="mdNrEvento" class="text-danger fw-bold"></span></p>
         <p><strong>Localização:</strong> <span id="mdLocal"></span></p>
@@ -976,7 +976,8 @@
         });
         var modalInstancia = null;
 
-        function abrirModalAlerta(codEvento, placa, dsEvento, local, data) {
+        function abrirModalAlerta(codEvento, frota, placa, dsEvento, local, data) {
+            document.getElementById('mdFrota').innerText = frota;
             document.getElementById('mdPlaca').innerText = placa;
             document.getElementById('mdNrEvento').innerText = dsEvento; // Insere a descrição do evento
             document.getElementById('mdLocal').innerText = local;

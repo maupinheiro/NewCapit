@@ -175,8 +175,8 @@ namespace NewCapit.dist.pages
                            ',' + nr_evento + ',' LIKE '%,509,%' OR
                            ',' + nr_evento + ',' LIKE '%,563,%' OR
                            ',' + nr_evento + ',' LIKE '%,555,%' OR
-                           ',' + nr_evento + ',' LIKE '%,553,%' OR
-                           ',' + nr_evento + ',' LIKE '%,234,%'
+                           ',' + nr_evento + ',' LIKE '%,553,%' 
+                          
                       )
                 ) e ON v.terminal = e.nr_idveiculo AND e.EvNum = 1
                 {sqlFiltro.Replace("WHERE empresa", "WHERE c.empresa")}", con);
@@ -195,6 +195,7 @@ namespace NewCapit.dist.pages
                 string sql = $@"
                 WITH Dados AS(
                     SELECT c.*,
+                           v.codvei,
                            e.cod_evento,
                            e.nr_evento,
                            e.ds_cidade,

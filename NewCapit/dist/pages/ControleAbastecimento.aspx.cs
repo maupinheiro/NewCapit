@@ -133,7 +133,7 @@ WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 }
 
                 // 🔽 ORDENAÇÃO
-                query += " ORDER BY emissao DESC";
+                query += " ORDER BY data_emissao DESC";
 
                 cmd.CommandText = query;
 
