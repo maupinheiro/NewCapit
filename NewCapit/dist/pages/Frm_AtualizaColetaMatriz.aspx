@@ -2128,6 +2128,7 @@
 
                                     <div class="col-md-1">
                                         <br />
+                                        <%--<asp:Button ID="btnVoltar" OnClick="btnVoltar_Click" CssClass="btn btn-outline-danger w-100" runat="server" Text="Fechar" />--%>
                                         <a href="GestaoDeEntregasMatriz.aspx" class="btn btn-outline-danger w-100">Fechar               
                                         </a>
                                     </div>

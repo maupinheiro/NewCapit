@@ -111,31 +111,31 @@ namespace NewCapit.dist.pages
             // 🔎 FILTROS
             if (!string.IsNullOrEmpty(frota))
             {
-                sqlFiltro += " AND (tipoveiculo COLLATE Latin1_General_CI_AI LIKE @veiculo OR veiculo COLLATE Latin1_General_CI_AI LIKE @veiculo)";
+                sqlFiltro += " AND (c.tipoveiculo LIKE @veiculo OR veiculo  LIKE @veiculo)";
                 parametros.Add(new SqlParameter("@veiculo", "%" + frota + "%"));
             }
 
             if (!string.IsNullOrEmpty(placa))
             {
-                sqlFiltro += " AND (placa LIKE @placa OR reboque1 LIKE @placa OR reboque2 LIKE @placa)";
+                sqlFiltro += " AND (placa LIKE @placa OR c.reboque1 LIKE @placa OR c.reboque2 LIKE @placa)";
                 parametros.Add(new SqlParameter("@placa", "%" + placa + "%"));
             }
 
             if (!string.IsNullOrEmpty(motorista))
             {
-                sqlFiltro += " AND (codmotorista LIKE @motorista OR nomemotorista COLLATE Latin1_General_CI_AI LIKE @motorista)";
+                sqlFiltro += " AND (codmotorista LIKE @motorista OR nomemotorista  LIKE @motorista)";
                 parametros.Add(new SqlParameter("@motorista", "%" + motorista + "%"));
             }
 
             if (!string.IsNullOrEmpty(expedidor))
             {
-                sqlFiltro += " AND (cod_expedidor LIKE @expedidor OR expedidor COLLATE Latin1_General_CI_AI LIKE @expedidor)";
+                sqlFiltro += " AND (cod_expedidor LIKE @expedidor OR expedidor LIKE @expedidor)";
                 parametros.Add(new SqlParameter("@expedidor", "%" + expedidor + "%"));
             }
 
             if (!string.IsNullOrEmpty(recebedor))
             {
-                sqlFiltro += " AND (cod_recebedor LIKE @recebedor OR recebedor COLLATE Latin1_General_CI_AI LIKE @recebedor)";
+                sqlFiltro += " AND (cod_recebedor LIKE @recebedor OR recebedor  LIKE @recebedor)";
                 parametros.Add(new SqlParameter("@recebedor", "%" + recebedor + "%"));
             }
 
@@ -256,16 +256,23 @@ namespace NewCapit.dist.pages
                     dt.Columns.Add("ds_evento", typeof(string));
 
                     // Buscamos o dicionário completo de eventos para tradução direta na memória (Performance rápida)
-                    Dictionary<string, string> dicionarioEventos = new Dictionary<string, string>();
-                    using (SqlCommand cmdLista = new SqlCommand("SELECT CAST(cod_evento AS VARCHAR) cod, ds_evento FROM tb_lista_evento", con))
+                    Dictionary<string, string> dicionarioEventos = Cache["ListaEventos"] as Dictionary<string, string>;
+
+                    if (dicionarioEventos == null)
                     {
-                        using (SqlDataReader readerLista = cmdLista.ExecuteReader())
+                        dicionarioEventos = new Dictionary<string, string>();
+                        using (SqlCommand cmdLista = new SqlCommand("SELECT CAST(cod_evento AS VARCHAR) cod, ds_evento FROM tb_lista_evento", con))
                         {
-                            while (readerLista.Read())
+                            using (SqlDataReader readerLista = cmdLista.ExecuteReader())
                             {
-                                dicionarioEventos[readerLista["cod"].ToString().Trim()] = readerLista["ds_evento"].ToString().Trim();
+                                while (readerLista.Read())
+                                {
+                                    dicionarioEventos[readerLista["cod"].ToString().Trim()] = readerLista["ds_evento"].ToString().Trim();
+                                }
                             }
                         }
+                        // Armazena no Cache por 1 hora para não ir ao banco toda hora
+                        Cache.Insert("ListaEventos", dicionarioEventos, null, DateTime.Now.AddHours(1), TimeSpan.Zero);
                     }
 
                     // Mapeamos linha por linha traduzindo a lista de números (ex: "247,509")
@@ -464,6 +471,7 @@ namespace NewCapit.dist.pages
         protected void Timer1_Tick(object sender, EventArgs e)
         {
             CarregarGrid(); // seu método
+            //up1.Update();
         }
         private DataTable BuscarDados()
         {
@@ -490,15 +498,15 @@ namespace NewCapit.dist.pages
 
                 string sql = @" 
                 SELECT 
-                    veiculo, tipoveiculo, placa, reboque1, reboque2,
+                    veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
                     codmotorista, nomemotorista,
-                    codtra, transportadora,
+                    c.codtra, transportadora,
                     cod_expedidor, expedidor,
                     cod_recebedor, recebedor,
                     cid_expedidor, uf_expedidor,
                     cid_recebedor, uf_recebedor,
                     num_carregamento, carga, emissao, situacao, status
-                FROM tbcarregamentos
+                FROM tbcarregamentos as c
                 WHERE empresa = '1111'
                 AND emissao >= @ini
                 AND emissao < DATEADD(DAY,1,@fim)";
@@ -514,13 +522,13 @@ namespace NewCapit.dist.pages
 
                 if (!string.IsNullOrEmpty(frota))
                 {
-                    sql += " AND (tipoveiculo LIKE @veiculo OR veiculo LIKE @veiculo)";
+                    sql += " AND (c.tipoveiculo LIKE @veiculo OR veiculo LIKE @veiculo)";
                     parametros.Add(new SqlParameter("@veiculo", "%" + frota + "%"));
                 }
 
                 if (!string.IsNullOrEmpty(placa))
                 {
-                    sql += " AND (placa LIKE @placa OR reboque1 LIKE @placa OR reboque2 LIKE @placa)";
+                    sql += " AND (placa LIKE @placa OR c.reboque1 LIKE @placa OR c.reboque2 LIKE @placa)";
                     parametros.Add(new SqlParameter("@placa", "%" + placa + "%"));
                 }
 

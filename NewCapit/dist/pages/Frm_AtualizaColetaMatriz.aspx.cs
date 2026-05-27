@@ -111,10 +111,10 @@ namespace NewCapit.dist.pages
                 PreencherClienteInicial();
                 PreencherClienteFinal();
 
-
+                CarregaFoto();
             }
             //CarregarFotoMotorista(fotoMotorista);
-            CarregaFoto();
+            
             //VerificaCargasFechadas();
 
         }
@@ -6951,6 +6951,14 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+
+        
+
+        //protected void btnVoltar_Click(object sender, EventArgs e)
+        //{
+        //    Response.Redirect("GestaoDeEntregasMatriz.aspx");
+        //}
+
         protected void MostrarMsgCNH(string mensagem, string tipo = "warning")
         {
             divMsgCNH.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";

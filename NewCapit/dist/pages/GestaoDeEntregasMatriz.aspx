@@ -4,25 +4,16 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <link href="bootstrap.min.css" rel="stylesheet" />
-    <script src="bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
         function renderKPI(labels, valores) {
@@ -317,68 +308,63 @@
         }
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        // Esta função substitui o DOMContentLoaded e roda no Load inicial E após cada Tick do Timer
+        function pageLoad(sender, args) {
+            const chk = document.getElementById("<%= chkOcultarConcluidos.ClientID %>");
+    const lblOcultos = document.getElementById("lblOcultos");
+    const lblVisiveis = document.getElementById("lblVisiveis");
+    const lblTotal = document.getElementById("lblTotal");
 
-            const chk = document.getElementById("chkOcultarConcluidos");
-            const lblOcultos = document.getElementById("lblOcultos");
-            const lblVisiveis = document.getElementById("lblVisiveis");
-            const lblTotal = document.getElementById("lblTotal");
+    if (!chk) return;
 
-            if (!chk) return;
+    // Carrega o estado salvo no LocalStorage
+    chk.checked = localStorage.getItem("ocultarConcluidos") !== "false"; // define true como padrão caso seja nulo
 
-            // 🔄 carregar estado salvo
-            chk.checked = localStorage.getItem("ocultarConcluidos") === "true";
+    function aplicarFiltro() {
+        // Busca as linhas da grid renderizada pelo UpdatePanel
+        let linhas = document.querySelectorAll("#<%= gvOrdens.ClientID %> tr");
+        if (linhas.length === 0) return;
 
-            function aplicarFiltro() {
+        let ocultos = 0;
+        let visiveis = 0;
+        let total = 0;
 
-                let linhas = document.querySelectorAll("#<%= gvOrdens.ClientID %> tr");
+        linhas.forEach((linha, index) => {
+            // ignora o cabeçalho da tabela
+            if (index === 0 || linha.classList.contains("gv-header-custom")) return;
 
-                let ocultos = 0;
-                let visiveis = 0;
-                let total = 0;
+            total++;
+            // Verifica o conteúdo do status ou atributo de dados
+            let situacao = (linha.getAttribute("data-situacao") || linha.innerText || "").toUpperCase();
 
-                linhas.forEach((linha, index) => {
-
-                    // ignora header
-                    if (index === 0) return;
-
-                    total++;
-
-                    let situacao = (linha.getAttribute("data-situacao") || "").toUpperCase();
-
-                    if (chk.checked) {
-                        if (situacao.includes("VIAGEM CONCLUIDA")) {
-                            linha.style.display = "none";
-                            ocultos++;
-                        } else {
-                            linha.style.display = "";
-                            visiveis++;
-                        }
-                    } else {
-                        linha.style.display = "";
-                        visiveis++;
-                    }
-                });
-
-                // 📊 atualiza contadores
-                lblVisiveis.innerText = "Mostrando: " + visiveis + " de " + visiveis + " registro(s).";
-                lblTotal.innerText = "Total de Coletas: " + total;
-
-                if (chk.checked && ocultos > 0) {
-                    lblOcultos.innerText = ocultos + " ocultos";
-                    //lblOcultos.style.fontSize = "9px";
+            if (chk.checked) {
+                if (situacao.includes("VIAGEM CONCLUIDA") || situacao.includes("CONCLUIDO")) {
+                    linha.style.display = "none";
+                    ocultos++;
                 } else {
-                    lblOcultos.innerText = "";
+                    linha.style.display = "";
+                    visiveis++;
                 }
+            } else {
+                linha.style.display = "";
+                visiveis++;
             }
-
-            chk.addEventListener("change", function () {
-                localStorage.setItem("ocultarConcluidos", chk.checked);
-                aplicarFiltro();
-            });
-
-            aplicarFiltro();
         });
+
+        // Atualiza os elementos de tela de forma segura
+        if (lblVisiveis) lblVisiveis.innerText = "Mostrando: " + visiveis + " registro(s).";
+        if (lblOcultos) lblOcultos.innerText = (chk.checked && ocultos > 0) ? ocultos + " ocultos" : "";
+    }
+
+    // Vincula o evento de alteração ao checkbox de forma que não duplique
+    chk.onchange = function () {
+        localStorage.setItem("ocultarConcluidos", chk.checked);
+        aplicarFiltro();
+    };
+
+    // Executa a aplicação do filtro imediatamente ao renderizar/atualizar a parcial
+    aplicarFiltro();
+}
     </script>
     <script>
         const chk = document.getElementById("chkOcultarConcluidos");
@@ -540,7 +526,7 @@
                                             <div class="card-body">
                                                 <div id="kpiContainer" class="kpi-container"></div>
                                                 <br />
-                                                <asp:UpdatePanel ID="up1" runat="server">
+                                                <asp:UpdatePanel ID="up1" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
                                                 <ContentTemplate>
                                                 <asp:GridView
                                                     ID="gvOrdens"
@@ -642,7 +628,7 @@
                                                 </asp:GridView>
                                                 <asp:Timer ID="Timer1" runat="server" Interval="1200000" OnTick="Timer1_Tick"></asp:Timer>
 
-    </ContentTemplate>
+                                                </ContentTemplate>
                                                 </asp:UpdatePanel>
                                                 <pagertemplate>                                                    <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
 
