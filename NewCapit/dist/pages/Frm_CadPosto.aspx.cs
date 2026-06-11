@@ -10,10 +10,11 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Globalization;
+using System.Windows.Documents;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_CadPosto : System.Web.UI.Page
+    public partial class Frm_CadPosto : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());       
         string id;
@@ -36,6 +37,7 @@ namespace NewCapit.dist.pages
                     //txtUsuCadastro.Text = lblUsuario;
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvar);
                 CarregaDadosFornecedor();
             }
             //DateTime dataHoraAtual = DateTime.Now;

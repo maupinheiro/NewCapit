@@ -384,7 +384,7 @@
                         <div class="card-body">
                             <asp:GridView ID="grdCusto"
                                 runat="server"
-                                AutoGenerateColumns="False"
+                                AutoGenerateColumns="False" OnRowDataBound="grdCusto_RowDataBound"
                                 CssClass="table table-bordered table-striped table-hover"
                                 Width="100%"
                                 DataKeyNames="cod_custo"
@@ -392,7 +392,7 @@
                                 OnRowCancelingEdit="grdCusto_RowCancelingEdit"
                                 OnRowUpdating="grdCusto_RowUpdating"
                                 OnRowDeleting="grdCusto_RowDeleting">
-
+                                 
                                 <Columns>
 
                                     <asp:TemplateField HeaderText="CAFÉ">
@@ -647,7 +647,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                        <asp:GridView ID="grdMotoristas" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_parada" OnRowCommand="grdMotoristas_RowCommand">
+                                        <asp:GridView ID="grdMotoristas" OnRowDataBound="grdMotoristas_RowDataBound" runat="server" CssClass="table table-bordered table-striped table-hover" AutoGenerateColumns="false" Width="100%" DataKeyNames="cod_parada" OnRowCommand="grdMotoristas_RowCommand">
                                             <Columns>
                                                 <%--<asp:TemplateField>
                                                 <ItemTemplate>

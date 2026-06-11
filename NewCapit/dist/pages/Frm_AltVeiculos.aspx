@@ -580,7 +580,8 @@
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-outline-info  btn-lg w-100">Mapa </button>
+                            <asp:LinkButton ID="lnkMapa" OnClick="Mapa" CssClass="btn btn-outline-info  btn-lg w-100" runat="server">Mapa</asp:LinkButton>
+                           
                         </div>
                     </div>
                 </div>

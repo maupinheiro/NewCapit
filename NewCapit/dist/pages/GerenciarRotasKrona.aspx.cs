@@ -12,13 +12,14 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace NewCapit.dist.pages
 {
-    public partial class GerenciarRotasKrona : System.Web.UI.Page
+    public partial class GerenciarRotasKrona : PaginaBase
     {
         string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: lnkNovaRota);
                 CarregarGrid();
             }
         }
@@ -123,6 +124,17 @@ namespace NewCapit.dist.pages
             }
 
             return null;
+        }
+
+        protected void lnkNovaRota_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Frm_RotaKrona.aspx");
+        }
+
+        protected void gvRotas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            // A sua PaginaBase vai processar a linha 'e' perfeitamente aqui
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "lnkRemover");
         }
     }
 }

@@ -16,7 +16,7 @@ using System.Web.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class GestaoDeEntregasIpiranga : System.Web.UI.Page
+    public partial class GestaoDeEntregasIpiranga : PaginaBase
     {
         string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
         string idViagem;

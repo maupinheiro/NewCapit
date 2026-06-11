@@ -13,7 +13,7 @@ using NPOI.HPSF;
 
 namespace NewCapit.dist.pages
 {
-    public partial class EntradaCombustivel : System.Web.UI.Page
+    public partial class EntradaCombustivel : PaginaBase
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string idPeca;
@@ -32,6 +32,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvarEntrada);
                 CarregarCombustivel();
                 CarregarTanqueCombustivel();
             }

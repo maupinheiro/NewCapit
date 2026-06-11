@@ -31,9 +31,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">
                     <i class="fas fa-building"></i>&nbsp;Gestão de Fornecedores</h1>
-                <a href="Frm_CadFornecedores.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-building"></i>&nbsp;Novo Cadastro            
-                </a>
+                <asp:LinkButton ID="lnkNovoCadastro" runat="server" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" OnClick="lnkNovoCadastro_Click"><i class="fas fa-building"></i>&nbsp;Novo Cadastro</asp:LinkButton>
+                
             </div>
             <!-- Content Graficos -->
         </div>
@@ -45,7 +44,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <asp:GridView ID="gvListFornecedores" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="15" OnPageIndexChanging="gvListFornecedores_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                            <asp:GridView ID="gvListFornecedores" CssClass="table table-bordered dataTable1 table-hover" Width="100%" OnRowDataBound="gvListFornecedores_RowDataBound" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="15" OnPageIndexChanging="gvListFornecedores_PageIndexChanging" ShowHeaderWhenEmpty="True">
                                 <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                 <Columns>
                                     <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />

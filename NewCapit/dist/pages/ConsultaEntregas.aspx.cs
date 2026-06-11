@@ -12,7 +12,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ConsultaEntregas : System.Web.UI.Page
+    public partial class ConsultaEntregas : PaginaBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -21,6 +21,7 @@ namespace NewCapit.dist.pages
             {
                 //PreencherComboStatus();
                 //PreencherVeiculosCNT();
+                VerificarBotoesPagina(btnInserir: lnkNovaOrdem);
                 CarregarColetas();
             }
             if (Session["UsuarioLogado"] != null)
@@ -221,6 +222,8 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+
+            VerificarBotoesRepeater(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirHist");
         }
 
         protected void lnkPesquisar_Click(object sender, EventArgs e)
@@ -237,5 +240,9 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void lnkNovaOrdem_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/dist/pages/Frm_OrdemColetaCNT.aspx");
+        }
     }
 }

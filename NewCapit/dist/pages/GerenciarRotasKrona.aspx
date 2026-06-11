@@ -92,9 +92,8 @@
                                         OnClick="btnPesquisar_Click" />
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="Frm_RotaKrona.aspx"
-                                                class="btn btn-primary">Nova Rota
-                                            </a>
+                                    <asp:LinkButton ID="lnkNovaRota" OnClick="lnkNovaRota_Click" CssClass="btn btn-primary" runat="server">Nova Rota</asp:LinkButton>
+                                  
                                     
                                 </div>
                                 <div class="col-md-3">
@@ -104,6 +103,7 @@
 </div>
                             </div>
                             <asp:GridView ID="gvRotas"
+                                OnRowDataBound="gvRotas_RowDataBound"
                                 runat="server"
                                 CssClass="table table-bordered table-hover dataTable1"
                                 Width="100%"

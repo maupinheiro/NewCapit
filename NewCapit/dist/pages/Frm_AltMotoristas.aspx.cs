@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
@@ -17,7 +16,7 @@ using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_AltMotoristas : System.Web.UI.Page
+    public partial class Frm_AltMotoristas : PaginaBase
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
@@ -43,7 +42,7 @@ namespace NewCapit.dist.pages
                     Response.Redirect("Login.aspx");
 
                 }
-
+                VerificarBotoesPagina(btnInserir: btnSalvar1);
                 PreencherComboCargo();
                 PreencherComboFiliais();              
                 PreencherComboJornada();

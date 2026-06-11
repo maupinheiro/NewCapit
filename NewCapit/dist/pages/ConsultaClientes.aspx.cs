@@ -17,7 +17,7 @@ using System.Web.Script.Serialization;
 
 namespace NewCapit
 {
-    public partial class ConsultaClientes : System.Web.UI.Page
+    public partial class ConsultaClientes : PaginaBase
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
 
@@ -25,6 +25,7 @@ namespace NewCapit
         {
             if (!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: lnkNovoCadastro);
                 AllData();
                 CarregaRegioes();
             }
@@ -245,6 +246,16 @@ namespace NewCapit
         {
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
+        }
+
+        protected void lnkNovoCadastro_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/dist/pages/Frm_CadClientes.aspx");
+        }
+
+        protected void gvList_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "lnkRemover");
         }
     }
     

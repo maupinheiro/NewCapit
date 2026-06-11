@@ -1,28 +1,29 @@
-﻿using System;
+﻿using DAL;
+using DocumentFormat.OpenXml.Wordprocessing;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using DocumentFormat.OpenXml.Wordprocessing;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using System.IO;
 using PDFDocument = iTextSharp.text.Document;
-using PDFPageSize = iTextSharp.text.PageSize;
 using PDFFont = iTextSharp.text.Font;
 using PDFFontFactory = iTextSharp.text.FontFactory;
-using PDFTable = iTextSharp.text.pdf.PdfPTable;
-using PDFParagraph = iTextSharp.text.Paragraph;
 using PDFImage = iTextSharp.text.Image;
+using PDFPageSize = iTextSharp.text.PageSize;
+using PDFParagraph = iTextSharp.text.Paragraph;
+using PDFTable = iTextSharp.text.pdf.PdfPTable;
 
 namespace NewCapit.dist.pages
 {
-    public partial class AbrirOS : System.Web.UI.Page
+    public partial class AbrirOS : PaginaBase
     {
         public string sReboque;
         public string nomeUsuario;
@@ -43,6 +44,10 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+
+                VerificarBotoesPagina(btnInserir: btnSalvar);
+
+
                 PreencherComboMotoristas();
                 CarregarFornecedores();
 

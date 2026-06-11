@@ -11,7 +11,7 @@ using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ControlePneus : System.Web.UI.Page
+    public partial class ControlePneus : PaginaBase
     {
         string conexao = WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
         DateTime dataHoraAtual = DateTime.Now;
@@ -30,6 +30,8 @@ namespace NewCapit.dist.pages
                     Response.Redirect("Login.aspx");
                 }
                 //txtAdmissao.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                
+
                 CarregarGrid();
 
             }
@@ -151,5 +153,11 @@ namespace NewCapit.dist.pages
             }
         }
 
+        protected void gvPneus_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "lnkExcluir");
+
+
+        }
     }
 }

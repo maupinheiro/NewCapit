@@ -12,7 +12,7 @@ using Org.BouncyCastle.Asn1.Cmp;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ControleCreditoAbastecimento : System.Web.UI.Page
+    public partial class ControleCreditoAbastecimento : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         private SqlCommand cmd;
@@ -164,6 +164,11 @@ namespace NewCapit.dist.pages
 
 
             }
+        }
+
+        protected void gvListLimiteCredito_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirLinha");
         }
     }
 }

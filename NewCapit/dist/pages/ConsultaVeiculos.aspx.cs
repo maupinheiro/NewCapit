@@ -14,7 +14,7 @@ using System.Web.Script.Serialization;
 
 namespace NewCapit
 {
-    public partial class ConsultaVeiculos : System.Web.UI.Page
+    public partial class ConsultaVeiculos : PaginaBase
     {
        SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -22,6 +22,7 @@ namespace NewCapit
 
             if (!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: lnkNovoCadastro);
                 ContagemVeiculo();
 
                 AllDataVeiculos();
@@ -428,6 +429,16 @@ namespace NewCapit
 
 
             }
+        }
+
+        protected void lnkNovoCadastro_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/dist/pages/Frm_CadVeiculos.aspx");
+        }
+
+        protected void gvVeiculos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirLinha");
         }
     }
 }

@@ -14,7 +14,7 @@ using static NewCapit.dist.pages.AbrirOS;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ListaOS : System.Web.UI.Page
+    public partial class ListaOS : PaginaBase
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -31,6 +31,8 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: btnAbrirOs);
+
                 ListarOS();
             }
 
@@ -507,6 +509,8 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+
+            VerificarBotoesGrid(e, idBtnEditar: "btnFinalizar", idBtnExcluir: "btnExcluirLinha");
         }
 
         public string CorDias(int dias)

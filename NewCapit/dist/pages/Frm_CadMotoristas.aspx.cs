@@ -14,7 +14,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_CadMotoristas : System.Web.UI.Page
+    public partial class Frm_CadMotoristas : PaginaBase
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;
@@ -39,6 +39,7 @@ namespace NewCapit.dist.pages
                     Response.Redirect("Login.aspx");
 
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvar1);
                 PreencherComboFiliais();
                 PreencherComboCargo();
                 PreencherComboJornada();

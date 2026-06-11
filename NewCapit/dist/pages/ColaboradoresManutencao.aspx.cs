@@ -1,27 +1,34 @@
-﻿using System;
+﻿using DAL;
+using DocumentFormat.OpenXml.Wordprocessing;
+using FluentEmail.Core;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.IO;
-using System.Net.Mail;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using FluentEmail.Core;
 
 
 namespace NewCapit.dist.pages
 {
-    public partial class ColaboradoresManutencao : System.Web.UI.Page
+    public partial class ColaboradoresManutencao : PaginaBase
     {
         string conexao = WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
         DateTime dataHoraAtual = DateTime.Now;
+
+        public List<int> AcoesPermitidasTela
+        {
+            get { return (List<int>)(ViewState["AcoesPermitidasTela"] ?? new List<int>()); }
+            set { ViewState["AcoesPermitidasTela"] = value; }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -37,6 +44,8 @@ namespace NewCapit.dist.pages
                     Response.Redirect("Login.aspx");
                 }
                 txtAdmissao.Text = dataHoraAtual.ToString("dd/MM/yyyy");
+                VerificarBotoesPagina(btnInserir: btnSalvar);
+
                 PreencherComboFiliais();
                 CarregarCargos();
                 PreencherComboJornada();
@@ -131,7 +140,8 @@ namespace NewCapit.dist.pages
                     Response.Write("Erro: " + ex.Message);
                 }
             }
-        }                
+        }
+      
         private void CarregarProfissionais()
         {
             using (SqlConnection conn = new SqlConnection(conexao))
@@ -524,5 +534,13 @@ namespace NewCapit.dist.pages
                 txtMotivo.Text = "";
             }
         }
+
+        protected void gvProfissionais_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "btnEditarLinha", idBtnExcluir: "btnExcluirLinha");
+
+        }
+
+
     }
 }

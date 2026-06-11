@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace NewCapit.dist.pages
 {
-    public partial class controlaestoque : System.Web.UI.Page
+    public partial class controlaestoque : PaginaBase
     {
         string conexao = WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
@@ -31,6 +31,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvarPecaModal);
                 ListarPecas();
 
             }
@@ -101,6 +102,9 @@ namespace NewCapit.dist.pages
                     e.Row.BackColor = System.Drawing.Color.LightYellow;
                 }
             }
+
+            VerificarBotoesGrid(e, idBtnEditar: "btnEntrada", idBtnExcluir: "btnExcluirLinha");
+
         }
         protected void gvEstoque_RowCommand(object sender, GridViewCommandEventArgs e)
         {

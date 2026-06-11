@@ -28,9 +28,8 @@
                 <div class="col-md-5">
                 </div>
                 <div class="col-md-2">
-                    <a href="Frm_TabelaPrecoMatriz.aspx" class="d-none d-lg-inline-block btn btn-primary shadow-lg w-100"><i
-                        class="fas fa-file-invoice-dollar"></i>&nbsp;Novo Cadastro            
-                    </a>
+                    <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" runat="server" CssClass="d-none d-lg-inline-block btn btn-primary shadow-lg w-100"><i class="fas fa-file-invoice-dollar"></i>&nbsp;Novo Cadastro</asp:LinkButton>
+                   
                 </div>
                 <div class="col-md-2">
                     <a href="reajustefretes.aspx" class="d-none d-lg-inline-block btn btn-success shadow-lg  w-100"><i
@@ -50,7 +49,7 @@
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <asp:GridView runat="server" ID="gvListFretes" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="cod_frete" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListFretes_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                            <asp:GridView runat="server" ID="gvListFretes" OnRowDataBound="gvListFretes_RowDataBound" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="cod_frete" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListFretes_PageIndexChanging" ShowHeaderWhenEmpty="True">
                                 <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                 <Columns>
                                     <asp:TemplateField HeaderText="#">

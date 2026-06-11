@@ -16,7 +16,7 @@ using ClosedXML.Excel;
 
 namespace NewCapit.dist.pages
 {
-    public partial class GestaoDeCargas : System.Web.UI.Page
+    public partial class GestaoDeCargas : PaginaBase
     {
         string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
@@ -24,6 +24,8 @@ namespace NewCapit.dist.pages
         {
             if (!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: lnkNovaCarga);
+
                 CarregarGrid();
 
                 if (Session["UsuarioLogado"] != null)
@@ -162,6 +164,16 @@ namespace NewCapit.dist.pages
                 Response.Redirect(url);
 
             }
+        }
+
+        protected void lnkNovaCarga_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/dist/pages/Frm_CadPedidosMatriz.aspx");
+        }
+
+        protected void gvCargas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "lnkOc");
         }
 
 

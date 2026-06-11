@@ -33,9 +33,8 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-2 text-gray-800">
                             <i class="fas fa-shipping-fast"></i>&nbsp;Controle de Solicitações</h1>
-                        <a href="/dist/pages/Frm_OrdemColetaCNT.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                            <i class="fas fa-shipping-fast"></i>&nbsp; Nova Ordem de Coleta
-                        </a>
+                        <asp:LinkButton ID="lnkNovaOrdem" runat="server" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" OnClick="lnkNovaOrdem_Click"><i class="fas fa-shipping-fast"></i>&nbsp; Nova Ordem de Coleta</asp:LinkButton>
+                        
                     </div>
                 </div>
                 <div class="row g-3">

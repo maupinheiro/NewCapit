@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
+﻿using DAL;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Domain;
 using ICSharpCode.SharpZipLib.Zip;
@@ -82,6 +83,26 @@ namespace NewCapit.dist.pages
                 }
 
                 // lblDtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
+                int idUsuarioLogado = Convert.ToInt32(Session["CodUsuario"]);
+
+                // 2. Pega o nome do arquivo atual dinamicamente (ex: "ConsultaClientes.aspx")
+                string telaAtual = System.IO.Path.GetFileName(Request.Url.AbsolutePath);
+
+                // 3. Busca a lista de ações que ele pode fazer nesta tela (Traz ex: [4, 1, 2])
+                List<int> acoesPermitidas = UsersDAL.ObterPermissoesUsuario(idUsuarioLogado, telaAtual);
+
+                // 4. Se ele não tiver nem a permissão de Visualizar (Ação 4), barra o acesso à página
+                if (!acoesPermitidas.Contains(4))
+                {
+                    // Redireciona para uma página de erro ou Home informando a falta de acesso
+                    Response.Redirect("~/dist/pages/Home.aspx?erro=sem_permissao");
+                    return;
+                }
+
+                // 5. Controla a visibilidade dos botões operacionais na tela
+                //btnInserir.Visible = acoesPermitidas.Contains(1); // 1 = Inserir (Novo)
+                btnSalvar.Visible = acoesPermitidas.Contains(2); // 2 = Alterar (Salvar/Editar)
+                //btnExcluir.Visible = acoesPermitidas.Contains(3); // 3 = Excluir (Deletar)
                 txtCadastro.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");                
 
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";                

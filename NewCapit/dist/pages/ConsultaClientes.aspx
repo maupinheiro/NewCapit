@@ -31,9 +31,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">
                     <i class="fas fa-warehouse"></i>&nbsp;Consulta Clientes</h1>
-                <a href="/dist/pages/Frm_CadClientes.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-warehouse"></i>&nbsp;Novo Cadastro
-                </a>
+                <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server"><i class="fas fa-warehouse"></i>&nbsp;Novo Cadastro</asp:LinkButton>
+               
             </div>
             <div class="row">
                 <!-- Total de Clientes -->
@@ -172,7 +171,7 @@
             </div>
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                    <asp:GridView runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                    <asp:GridView OnRowDataBound="gvList_RowDataBound" runat="server" ID="gvList" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvList_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                         <Columns>
                             <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />

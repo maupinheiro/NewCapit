@@ -15,7 +15,7 @@ using Microsoft.SqlServer.Server;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_AltTransportadoras : System.Web.UI.Page
+    public partial class Frm_AltTransportadoras : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
@@ -36,7 +36,7 @@ namespace NewCapit.dist.pages
 
                 }
 
-
+                VerificarBotoesPagina(btnAlterar: btnSalvar);
                 PreencherComboFiliais();                
                 DateTime dataHoraAtual = DateTime.Now;                
                 txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");               

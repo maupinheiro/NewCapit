@@ -111,10 +111,11 @@ namespace NewCapit.dist.pages
                 PreencherClienteInicial();
                 PreencherClienteFinal();
 
-                CarregaFoto();
+               
             }
+            CarregaFoto();
             //CarregarFotoMotorista(fotoMotorista);
-            
+
             //VerificaCargasFechadas();
 
         }

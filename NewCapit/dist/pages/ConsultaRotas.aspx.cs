@@ -10,7 +10,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ConsultaRotas : System.Web.UI.Page
+    public partial class ConsultaRotas : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -31,6 +31,7 @@ namespace NewCapit.dist.pages
 
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: lnkNovaRota);
                 AllDataRotas();
             }
         }       
@@ -82,6 +83,16 @@ namespace NewCapit.dist.pages
         {
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
+        }
+
+        protected void lnkNovaRota_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("NovaRota.aspx");
+        }
+
+        protected void gvListRotas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "lnkRemover");
         }
     }
 }

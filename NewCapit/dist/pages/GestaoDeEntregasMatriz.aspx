@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="GestaoDeEntregasMatriz.aspx.cs" Inherits="NewCapit.dist.pages.GestaoDeEntregasMatriz" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="GestaoDeEntregasMatriz.aspx.cs" Inherits="NewCapit.dist.pages.GestaoDeEntregasMatriz" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -307,66 +307,64 @@
           cursor: pointer;
         }
     </style>
-    <script>
-        // Esta função substitui o DOMContentLoaded e roda no Load inicial E após cada Tick do Timer
+    <script type="text/javascript">
+        // Esta função substitui o DOMContentLoaded e roda no Load inicial E após cada Postback/Tick do Timer
         function pageLoad(sender, args) {
             const chk = document.getElementById("<%= chkOcultarConcluidos.ClientID %>");
-    const lblOcultos = document.getElementById("lblOcultos");
-    const lblVisiveis = document.getElementById("lblVisiveis");
-    const lblTotal = document.getElementById("lblTotal");
+        const lblOcultos = document.getElementById("lblOcultos");
+        const lblVisiveis = document.getElementById("lblVisiveis");
 
-    if (!chk) return;
+        if (!chk) return;
 
-    // Carrega o estado salvo no LocalStorage
-    chk.checked = localStorage.getItem("ocultarConcluidos") !== "false"; // define true como padrão caso seja nulo
+        // Recupera o estado salvo no LocalStorage (se existir)
+        // Nota: Como o AutoPostBack está ativo, o servidor ditará o estado no primeiro load, 
+        // mas garantimos a persistência visual aqui.
+        if(localStorage.getItem("ocultarConcluidos") !== null) {
+            // Se quiser que o JS force o estado do LocalStorage:
+            // chk.checked = localStorage.getItem("ocultarConcluidos") === "true";
+        }
 
-    function aplicarFiltro() {
-        // Busca as linhas da grid renderizada pelo UpdatePanel
-        let linhas = document.querySelectorAll("#<%= gvOrdens.ClientID %> tr");
-        if (linhas.length === 0) return;
+        function aplicarFiltro() {
+            let linhas = document.querySelectorAll("#<%= gvOrdens.ClientID %> tr");
+                if (linhas.length === 0) return;
 
-        let ocultos = 0;
-        let visiveis = 0;
-        let total = 0;
+                let ocultos = 0;
+                let visiveis = 0;
 
-        linhas.forEach((linha, index) => {
-            // ignora o cabeçalho da tabela
-            if (index === 0 || linha.classList.contains("gv-header-custom")) return;
+                linhas.forEach((linha, index) => {
+                    if (index === 0 || linha.classList.contains("gv-header-custom")) return;
 
-            total++;
-            // Verifica o conteúdo do status ou atributo de dados
-            let situacao = (linha.getAttribute("data-situacao") || linha.innerText || "").toUpperCase();
+                    let situacao = (linha.getAttribute("data-situacao") || linha.innerText || "").toUpperCase();
 
-            if (chk.checked) {
-                if (situacao.includes("VIAGEM CONCLUIDA") || situacao.includes("CONCLUIDO")) {
-                    linha.style.display = "none";
-                    ocultos++;
-                } else {
-                    linha.style.display = "";
-                    visiveis++;
-                }
-            } else {
-                linha.style.display = "";
-                visiveis++;
+                    if (chk.checked) {
+                        if (situacao.includes("VIAGEM CONCLUIDA") || situacao.includes("CONCLUIDO")) {
+                            linha.style.display = "none";
+                            ocultos++;
+                        } else {
+                            linha.style.display = "";
+                            visiveis++;
+                        }
+                    } else {
+                        linha.style.display = "";
+                        visiveis++;
+                    }
+                });
+
+                if (lblVisiveis) lblVisiveis.innerText = "Mostrando: " + visiveis + " registro(s).";
+                if (lblOcultos) lblOcultos.innerText = (chk.checked && ocultos > 0) ? ocultos + " ocultos" : "";
             }
-        });
 
-        // Atualiza os elementos de tela de forma segura
-        if (lblVisiveis) lblVisiveis.innerText = "Mostrando: " + visiveis + " registro(s).";
-        if (lblOcultos) lblOcultos.innerText = (chk.checked && ocultos > 0) ? ocultos + " ocultos" : "";
-    }
+            // Em vez de substituir o onchange que o ASP.NET usa para o AutoPostBack, 
+            // apenas interceptamos o clique para salvar no localStorage de forma limpa.
+            chk.addEventListener('click', function () {
+                localStorage.setItem("ocultarConcluidos", chk.checked);
+            });
 
-    // Vincula o evento de alteração ao checkbox de forma que não duplique
-    chk.onchange = function () {
-        localStorage.setItem("ocultarConcluidos", chk.checked);
-        aplicarFiltro();
-    };
-
-    // Executa a aplicação do filtro imediatamente ao renderizar/atualizar a parcial
-    aplicarFiltro();
-}
+            // Executa a aplicação do filtro imediatamente ao renderizar/atualizar a parcial
+            aplicarFiltro();
+        }
     </script>
-    <script>
+   <%-- <script>
         const chk = document.getElementById("chkOcultarConcluidos");
 
         // carregar estado
@@ -375,7 +373,7 @@
         chk.addEventListener("change", function () {
             localStorage.setItem("ocultarConcluidos", chk.checked);
         });
-    </script>
+    </script>--%>
     <div class="container-fluid">
         <section class="content-wrapper">
             <section class="content">
@@ -397,7 +395,7 @@
                                 <div class="col-md-2">
                                     <label>Data Inicial:</label>
                                     <asp:TextBox ID="DataInicio" runat="server" TextMode="Date" CssClass="form-control"
-                                        AutoPostBack="true" OnTextChanged="FiltroPeriodo_TextChanged" />
+                                        />
                                 </div>
                                 <div class="col-md-2">
                                     <label>Data Final:</label>
@@ -547,16 +545,21 @@
                                                  CommandArgument='<%# Eval("num_carregamento") %>'
                                                  OnCommand="lnkEditar_Command"
                                                  OnClientClick="event.stopPropagation();"/>  
-
-<%--<asp:ImageButton ID="lnkEditar"
-    ImageUrl='<%# Eval("foto") %>'
-    runat="server"
-    style="width:60px; height:60px; border-radius:8px; object-fit:cover;"
-    CommandName="Editar"
-    CommandArgument='<%# Eval("num_carregamento") %>' />--%>
                                                                 </div>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
+                                                     <%--  <asp:TemplateField HeaderText="#">
+                                                            <ItemTemplate>
+                                                                <div>
+                                                                    <asp:ImageButton ID="lnkEditar" 
+                                                                        ImageUrl='<%# Eval("foto") %>' 
+                                                                        style="width: 60px; height:60px;" 
+                                                                        runat="server" 
+                                                                        CssClass="rounded-circle"
+                                                                        OnClientClick='<%# "event.stopPropagation(); window.open(\"Frm_AtualizaColetaMatriz.aspx?carregamento=" + Eval("num_carregamento") + "\", \"_blank\", \"width=900,height=650,scrollbars=yes,resizable=yes\"); return false;" %>' />  
+                                                                </div>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>--%>
 
                                                         <asp:TemplateField HeaderText="Veículo">
                                                             <ItemTemplate>
@@ -626,7 +629,7 @@
 
 
                                                 </asp:GridView>
-                                                <asp:Timer ID="Timer1" runat="server" Interval="1200000" OnTick="Timer1_Tick"></asp:Timer>
+                                                <asp:Timer ID="Timer1" runat="server" Interval="120000" OnTick="Timer1_Tick"></asp:Timer>
 
                                                 </ContentTemplate>
                                                 </asp:UpdatePanel>

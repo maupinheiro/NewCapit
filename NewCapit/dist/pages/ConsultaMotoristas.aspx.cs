@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit
 {
-    public partial class ConsultaMotoristas : System.Web.UI.Page
+    public partial class ConsultaMotoristas : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         private SqlCommand cmd;
@@ -35,7 +35,7 @@ namespace NewCapit
 
                     Response.Redirect("Login.aspx");
                 }
-
+                VerificarBotoesPagina(btnInserir: lnkNovoCadastro);
                 listarMotoristas();
 
             }
@@ -370,6 +370,16 @@ namespace NewCapit
 
                 Response.Redirect("Frm_AltMotoristas.aspx?id=" + id);
             }
+        }
+
+        protected void lnkNovoCadastro_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/dist/pages/Frm_CadMotoristas.aspx");
+        }
+
+        protected void gvListMotoristas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirLinha");
         }
     }
 }

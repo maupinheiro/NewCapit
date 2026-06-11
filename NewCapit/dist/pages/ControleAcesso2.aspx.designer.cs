@@ -7,101 +7,92 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace NewCapit
+namespace NewCapit.dist.pages
 {
 
 
-    public partial class ConsultaClientes
+    public partial class ControleAcesso2
     {
 
         /// <summary>
-        /// Controle lnkNovoCadastro.
+        /// Controle divMsg.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkNovoCadastro;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsg;
 
         /// <summary>
-        /// Controle TotalClientes.
+        /// Controle lblMsg.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TotalClientes;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsg;
 
         /// <summary>
-        /// Controle Norte.
+        /// Controle lblNome.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Norte;
+        protected global::System.Web.UI.WebControls.Label lblNome;
 
         /// <summary>
-        /// Controle Nordeste.
+        /// Controle lblUsuario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Nordeste;
+        protected global::System.Web.UI.WebControls.Label lblUsuario;
 
         /// <summary>
-        /// Controle Sul.
+        /// Controle ddlStatusAcesso.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Sul;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatusAcesso;
 
         /// <summary>
-        /// Controle Sudeste.
+        /// Controle ddlNivelAcesso.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Sudeste;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNivelAcesso;
 
         /// <summary>
-        /// Controle CentroOeste.
+        /// Controle btnSalvarPermissoes.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label CentroOeste;
+        protected global::System.Web.UI.WebControls.Button btnSalvarPermissoes;
 
         /// <summary>
-        /// Controle myInput.
+        /// Controle pnlPermissoes.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox myInput;
+        protected global::System.Web.UI.WebControls.Panel pnlPermissoes;
 
         /// <summary>
-        /// Controle gvList.
+        /// Controle rptModulos.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvList;
-
-        /// <summary>
-        /// Controle txtconformmessageValue.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField txtconformmessageValue;
+        protected global::System.Web.UI.WebControls.Repeater rptModulos;
     }
 }

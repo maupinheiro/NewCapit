@@ -13,7 +13,7 @@ using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class GestaoDeMultas : System.Web.UI.Page
+    public partial class GestaoDeMultas : PaginaBase
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         DateTime dataHoraAtual = DateTime.Now;
@@ -36,6 +36,8 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvar);
+
                 ddlStatus.SelectedValue = "Pendente"; // padrão
                 CarregarGrid("Pendente");
                 CarregarArtigosCTB();

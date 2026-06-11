@@ -15,7 +15,7 @@ using Microsoft.SqlServer.Server;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_CadTransportadoras : System.Web.UI.Page
+    public partial class Frm_CadTransportadoras : PaginaBase
     {
         int sequencia;
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
@@ -29,7 +29,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = nomeUsuario;
 
                     txtUsuCadastro.Text = nomeUsuario;
-
+                    VerificarBotoesPagina(btnInserir: btnSalvar);
                 }
                 else
                 {
@@ -37,6 +37,8 @@ namespace NewCapit.dist.pages
                     txtUsuCadastro.Text = lblUsuario;
                     Response.Redirect("Login.aspx");
                 }
+
+             
 
 
             }

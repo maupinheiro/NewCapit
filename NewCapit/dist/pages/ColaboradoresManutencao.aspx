@@ -246,9 +246,12 @@
                                 </div>
                             </div>
 
-                            <asp:GridView ID="gvProfissionais" runat="server" AutoGenerateColumns="false" CssClass="table table-bordered table-striped table-hover"
-                                HeaderStyle-CssClass="gv-header-custom"
-                                OnRowCommand="gvProfissionais_RowCommand">
+                           <asp:GridView ID="gvProfissionais" runat="server" 
+                              OnRowDataBound="gvProfissionais_RowDataBound" 
+                              AutoGenerateColumns="false" 
+                              CssClass="table table-bordered table-striped table-hover"
+                              HeaderStyle-CssClass="gv-header-custom"
+                              OnRowCommand="gvProfissionais_RowCommand">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Foto">
                                         <ItemStyle VerticalAlign="Middle" HorizontalAlign="Center" />
@@ -287,14 +290,18 @@
                                         <ItemStyle VerticalAlign="Middle" HorizontalAlign="Center" />
                                         <HeaderStyle HorizontalAlign="Center" />
                                     </asp:BoundField>
-                                    <asp:TemplateField HeaderText="Ações">
-                                        <ItemStyle VerticalAlign="Middle" HorizontalAlign="Center" />
-                                        <HeaderStyle HorizontalAlign="Center" />
+                                    <asp:TemplateField HeaderText="Ações" HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center">
                                         <ItemTemplate>
-                                            <asp:LinkButton runat="server" CommandName="Editar" CommandArgument='<%# Eval("id") %>' CssClass="btn btn-sm btn-primary">Editar</asp:LinkButton>
-                                            <asp:LinkButton runat="server" CommandName="Excluir" CommandArgument='<%# Eval("id") %>' CssClass="btn btn-sm btn-danger"
-                                                OnClientClick="return confirm('Deseja excluir?');">
-                                                Excluir</asp:LinkButton>
+                                            <asp:LinkButton ID="btnEditarLinha" runat="server" CommandName="Editar" 
+                                                            CommandArgument='<%# Eval("id") %>' CssClass="btn btn-sm btn-primary">
+                                                Editar
+                                            </asp:LinkButton>
+                
+                                            <asp:LinkButton ID="btnExcluirLinha" runat="server" CommandName="Excluir" 
+                                                            CommandArgument='<%# Eval("id") %>' CssClass="btn btn-sm btn-danger"
+                                                            OnClientClick="return confirm('Deseja realmente excluir?');">
+                                                Excluir
+                                            </asp:LinkButton>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>

@@ -15,7 +15,7 @@ using System.IO;
 
 namespace NewCapit.dist.pages
 {
-    public partial class RequisicaoCompra : System.Web.UI.Page
+    public partial class RequisicaoCompra : PaginaBase
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         DateTime dataHoraAtual = DateTime.Now;
@@ -32,7 +32,9 @@ namespace NewCapit.dist.pages
                 CarregarDescricao();                
                 Session["ItensReq"] = CriarTabelaItens();
 
-            }            
+            }
+            VerificarBotoesPagina(btnInserir: btnSalvar);
+
             CarregarGrid();
             txtData.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
         }
@@ -622,6 +624,9 @@ namespace NewCapit.dist.pages
             }
         }
 
-        
+        protected void gvItens_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "btnEditarLinha", idBtnExcluir: "btnExcluir");
+        }
     }
 }

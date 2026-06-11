@@ -3,184 +3,231 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <style>
+        /* Centralização e estilização da paginação nativa do GridView */
         .pagination-centered {
             text-align: center;
+            padding-top: 15px;
         }
-
-            .pagination-centered table {
-                margin: 0 auto; /* Isso centraliza a tabela da paginação */
-            }
+        .pagination-centered table {
+            margin: 0 auto;
+        }
+        .pagination-centered table table td {
+            border: none;
+            padding: 0 4px;
+        }
+        .pagination-centered a, .pagination-centered span {
+            display: inline-block;
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #0d6efd;
+            background-color: #fff;
+        }
+        .pagination-centered span {
+            color: #fff;
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            font-weight: bold;
+        }
+        .pagination-centered a:hover {
+            background-color: #e9ecef;
+        }
+        
+        /* Ajustes finos de design para o GridView */
+        .table-usuarios th {
+            background-color: #f8f9fa !important;
+            color: #495057 !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #dee2e6 !important;
+        }
+        .table-usuarios td {
+            font-size: 0.9rem;
+            vertical-align: middle !important;
+        }
+        .text-sub-info {
+            font-size: 0.78rem;
+            color: #6c757d;
+            display: block;
+            margin-top: 2px;
+        }
+        .details-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+        }
     </style>
-    <!-- Page Heading -->
+
     <div class="content-wrapper">
-        <div class="content-header">
-            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800">
-                    <i class="fas fa-address-card"></i>Controle de Usuários</h1>
-                <%--<a href="$('#modalCadastro').modal('show'); return false;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-user-plus"></i>Novo Cadastro
-                </a>--%>
-                <asp:Button ID="btnAbrirModal" runat="server" Text="Novo Usuário" CssClass="btn btn-primary mb-3"
-                    OnClientClick="$('#modalCadastro').modal('show'); return false;" />
-            </div>
-        </div>
-
-        <!-- Corpo da grid -->
-        <div class="card shadow mb-4">
-            <div class="card-header">
-                <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <asp:GridView runat="server" ID="gvListUsuarios" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="cod_usuario" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListUsuarios_PageIndexChanging" ShowHeaderWhenEmpty="True">
-                        <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
-                        <Columns>
-                            <asp:ImageField DataImageUrlField="foto_usuario" HeaderText="#" ControlStyle-Width="45" ItemStyle-Width="45" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
-                            <asp:TemplateField HeaderText="NOME COMPLETO/EMPRESA">
-                                <ItemTemplate>
-                                    <%# Eval("nm_nome") %>
-                                    <br>
-                                        <%# Eval("emp_usuario") %>
-                                    </br>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="CARGO/DEPARTAMENTO">
-                                <ItemTemplate>
-                                    <%# Eval("fun_usuario") %>
-                                    <br>
-                                        <%# Eval("dep_usuario") %>
-                                    </br>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="TIPO/STATUS">
-                                <ItemTemplate>
-                                    <%# Eval("fl_tipo") %>
-                                    <br>
-                                        <%# Eval("fl_status") %>
-                                    </br>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="LOGIN/ÚLTIMO ACESSO">
-                                <ItemTemplate>
-                                    <%# Eval("nm_usuario") %>
-                                    <br>
-                                        <%# Eval("dt_ultimo_acesso")%>                                
-                                    </br>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="AÇÕES" ShowHeader="True">
-                                <ItemTemplate>
-                                    <br>
-                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CssClass="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Editar</asp:LinkButton>
-                                    <%--  <a class="btn btn-danger btn-sm" href="#">
-                                <i class="fa fa-trash"></i>
-                                
-                            </a>--%>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
+        <div class="content-header px-3">
+            <div class="container-fluid">
+                <div class="d-sm-flex align-items-center justify-content-between my-4">
+                    <h1 class="h4 mb-0 text-gray-800 fw-bold">
+                        <i class="fas fa-address-card text-primary me-2"></i>Controle de Usuários
+                    </h1>
+                    <asp:Button ID="btnAbrirModal" runat="server" Text="Novo Usuário" CssClass="btn btn-primary shadow-sm px-4"
+                        OnClientClick="$('#modalCadastro').modal('show'); return false;" />
                 </div>
             </div>
         </div>
-        <!-- Modal -->
-        <div class="modal fade" id="modalCadastro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Cadastrar Usuário</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <asp:Label runat="server" ID="lblMensagem" CssClass="text-success"></asp:Label>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <span class="details">NOME COMPLETO:</span>
-                                    <asp:TextBox ID="txtNm_Nome" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <span class="details">USUÁRIO:</span>
-                                    <asp:TextBox ID="txtNm_Usuario" runat="server" CssClass="form-control" placeholder="" MaxLength="60"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <span class="details">SENHA:</span>
-                                    <asp:TextBox ID="txtDs_Senha" runat="server" CssClass="form-control" placeholder="" MaxLength="16"></asp:TextBox>
+
+        <div class="content px-3">
+            <div class="container-fluid">
+                
+                <div class="card shadow-sm border-0 rounded-3 mb-4">
+                    <div class="card-header bg-white py-3 border-bottom-0">
+                        <div class="row">
+                            <div class="col-md-4 ms-auto">
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                    <asp:TextBox ID="myInput" CssClass="form-control bg-light border-start-0 myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar..." AutoPostBack="true" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
-                        <div class="row g-3">
+                    </div>
+                    
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <asp:GridView runat="server" ID="gvListUsuarios" CssClass="table table-striped table-hover table-usuarios mb-0" Width="100%" AutoGenerateColumns="False" DataKeyNames="cod_usuario" AllowPaging="True" PageSize="10" OnPageIndexChanging="gvListUsuarios_PageIndexChanging" ShowHeaderWhenEmpty="True" GridLines="None">
+                                <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
+                                <Columns>
+                                    
+                                    <asp:ImageField DataImageUrlField="foto_usuario" HeaderText="#" ControlStyle-Width="38" ItemStyle-Width="50" ControlStyle-CssClass="rounded-circle border shadow-sm" ItemStyle-HorizontalAlign="Center" />
+                                    
+                                    <asp:TemplateField HeaderText="Nome Completo / Empresa">
+                                        <ItemTemplate>
+                                            <span class="fw-bold text-dark"><%# Eval("nm_nome") %></span>
+                                            <span class="text-sub-info"><i class="fas fa-building me-1"></i><%# Eval("emp_usuario") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Cargo / Departamento">
+                                        <ItemTemplate>
+                                            <span class="text-secondary"><%# Eval("fun_usuario") %></span>
+                                            <span class="text-sub-info"><i class="fas fa-folder me-1"></i><%# Eval("dep_usuario") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                                                       <asp:TemplateField HeaderText="Nível / Status">
+                                        <ItemTemplate>
+                                            <span class="d-block mb-1">
+                                                <%# Eval("fl_tipo").ToString().ToUpper() == "A" ? "<span class='badge bg-primary-subtle text-primary border border-primary-subtle'>ADMINISTRADOR</span>" : "<span class='badge bg-secondary-subtle text-secondary border border-secondary-subtle'>OPERADOR</span>" %>
+                                            </span>
+        
+                                            <span class="d-block">
+                                                <%# Eval("fl_status").ToString().ToUpper().Contains("ATIVO") || Eval("fl_status").ToString().ToUpper() == "A" ? "<span class='badge bg-success-subtle text-success border border-success-subtle'>ATIVO</span>" : "<span class='badge bg-danger-subtle text-danger border border-danger-subtle'>INATIVO</span>" %>
+                                            </span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Login / Último Acesso">
+                                        <ItemTemplate>
+                                            <span class="text-dark fw-semibold"><%# Eval("nm_usuario") %></span>
+                                            <span class="text-sub-info"><i class="far fa-clock me-1"></i><%# Eval("dt_ultimo_acesso") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Ações" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CausesValidation="false" CssClass="btn btn-outline-primary btn-sm rounded-2 px-3">
+                                                <i class="fa fa-edit me-1"></i>Editar
+                                            </asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalCadastro" tabindex="-1" role="dialog" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content border-0 shadow-lg rounded-3">
+                    <div class="modal-header bg-primary text-white py-3">
+                        <h5 class="modal-title fw-bold" id="modalCadastroLabel">
+                            <i class="fas fa-user-plus me-2"></i>Cadastrar Usuário
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <asp:Label runat="server" ID="lblMensagem" CssClass="d-block text-success mb-3 fw-semibold"></asp:Label>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="details-label">Nome Completo:</label>
+                                <asp:TextBox ID="txtNm_Nome" runat="server" CssClass="form-control shadow-sm" placeholder="Ex: Maurício Silva" MaxLength="60"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="details-label">Usuário:</label>
+                                <asp:TextBox ID="txtNm_Usuario" runat="server" CssClass="form-control shadow-sm" placeholder="Ex: mauricio.silva" MaxLength="60"></asp:TextBox>
+                            </div>
                             <div class="col-md-2">
-                                <div class="form-group">
-                                    <span class="details">STATUS:</span>
-                                    <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
-                                        <asp:ListItem Value="">Selecione..</asp:ListItem>
-                                        <asp:ListItem Value="A">ATIVO</asp:ListItem>
-                                        <asp:ListItem Value="I">INATIVO</asp:ListItem>
-                                    </asp:DropDownList>
-                                </div>
+                                <label class="details-label">Senha:</label>
+                                <asp:TextBox ID="txtDs_Senha" runat="server" CssClass="form-control shadow-sm" placeholder="••••••••" MaxLength="16"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-2">
+                                <label class="details-label">Status:</label>
+                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-select shadow-sm">
+                                    <asp:ListItem Value="">Selecione..</asp:ListItem>
+                                    <asp:ListItem Value="A">ATIVO</asp:ListItem>
+                                    <asp:ListItem Value="I">INATIVO</asp:ListItem>
+                                </asp:DropDownList>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <span class="details">NÍVEL:</span>
-                                    <asp:DropDownList ID="ddlNivel" runat="server" CssClass="form-control">
-                                        <asp:ListItem Value="">Selecione...</asp:ListItem>
-                                        <asp:ListItem Value="A">ADMINISTRADOR</asp:ListItem>
-                                        <asp:ListItem Value="O">OPERADOR</asp:ListItem>
-                                    </asp:DropDownList>
-                                </div>
+                                <label class="details-label">Nível:</label>
+                                <asp:DropDownList ID="ddlNivel" runat="server" CssClass="form-select shadow-sm">
+                                    <asp:ListItem Value="">Selecione...</asp:ListItem>
+                                    <asp:ListItem Value="A">ADMINISTRADOR</asp:ListItem>
+                                    <asp:ListItem Value="O">OPERADOR</asp:ListItem>
+                                </asp:DropDownList>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group">
-                                    <span class="details">E-MAIL:</span>
-                                    <asp:TextBox ID="txtDs_Email" runat="server" CssClass="form-control" placeholder="" MaxLength="40"></asp:TextBox>
-                                </div>
+                                <label class="details-label">E-mail:</label>
+                                <asp:TextBox ID="txtDs_Email" runat="server" CssClass="form-control shadow-sm" placeholder="nome@empresa.com.br" MaxLength="40"></asp:TextBox>
                             </div>
-
                         </div>
+
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <span class="details">FUNÇÃO:</span>
-                                    <asp:DropDownList ID="ddlFun_Usuario" runat="server" class="form-control" ReadOnly="true" placeholder=""></asp:DropDownList>
-                                </div>
+                                <label class="details-label">Função:</label>
+                                <asp:DropDownList ID="ddlFun_Usuario" runat="server" CssClass="form-select shadow-sm" ReadOnly="true"></asp:DropDownList>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <span class="details">DEPARTAMENTO:</span>
-                                    <asp:DropDownList ID="ddlDep_Usuario" runat="server" class="form-control" ReadOnly="true" placeholder=""></asp:DropDownList>
-                                </div>
+                                <label class="details-label">Departamento:</label>
+                                <asp:DropDownList ID="ddlDep_Usuario" runat="server" CssClass="form-select shadow-sm" ReadOnly="true"></asp:DropDownList>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <span class="details">FILIAL:</span>
-                                    <asp:DropDownList ID="ddlEmp_Usuario" runat="server" class="form-control" ReadOnly="true"></asp:DropDownList>
-                                </div>
+                                <label class="details-label">Filial:</label>
+                                <asp:DropDownList ID="ddlEmp_Usuario" runat="server" CssClass="form-select shadow-sm" ReadOnly="true"></asp:DropDownList>
                             </div>
                         </div>
 
-
                     </div>
-                    <div class="modal-footer">
-                        <asp:Button ID="btnSalvar" runat="server" Text="Salvar" CssClass="btn btn-success" OnClick="btnSalvar_Click" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sair</button>
+                    <div class="modal-footer bg-light py-3">
+                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Sair</button>
+                        <asp:Button ID="btnSalvar" runat="server" Text="Salvar" CssClass="btn btn-success px-4" OnClick="btnSalvar_Click" />
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-    <!-- Scripts Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </asp:Content>

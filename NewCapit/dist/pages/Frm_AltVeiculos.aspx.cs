@@ -16,7 +16,7 @@ using static NPOI.HSSF.Util.HSSFColor;
 
 namespace NewCapit
 {
-    public partial class Frm_AltVeiculos : System.Web.UI.Page
+    public partial class Frm_AltVeiculos : PaginaBase
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
@@ -42,6 +42,7 @@ namespace NewCapit
                     Response.Redirect("Login.aspx");
 
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvar1);
                 PreencherComboEstados();                
                 PreencherComboComposicao();
                 CarregarDDLAgregados();
@@ -2315,7 +2316,49 @@ namespace NewCapit
 
             
         }
-       
+
+        protected void Mapa(object sender, EventArgs e)
+        {
+            if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
+            {
+                id = HttpContext.Current.Request.QueryString["id"].ToString();
+            }
+
+
+            string sql = "select plavei from tbveiculos where id=" + id;
+
+                SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                con.Open();
+                adpt.Fill(dt);
+                con.Close();
+
+                if (dt.Rows.Count > 0)
+                {
+                    string url = "MapaVeiculoConsulta.aspx?placa=" + dt.Rows[0][0].ToString();
+                    string script = $"window.open('{url}', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');";
+                    ClientScript.RegisterStartupScript(this.GetType(), "openWindow", script, true);
+                }
+                else
+                {
+                    string linha1 = "Cliente não possui coordenadas cadastradas.";
+
+
+                    // Concatenando as linhas com '\n' para criar a mensagem
+                    string mensagem = $"{linha1}";
+
+                    string mensagemCodificada = HttpUtility.JavaScriptStringEncode(mensagem);
+                    // Gerando o script JavaScript para exibir o alerta
+                    string script = $"alert('{mensagemCodificada}');";
+
+                    // Registrando o script para execução no lado do cliente
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
+                }
+
+
+            
+        }
+
     }
 }
 

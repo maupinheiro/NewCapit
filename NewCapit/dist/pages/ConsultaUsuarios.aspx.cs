@@ -160,12 +160,17 @@ namespace NewCapit.dist.pages
         }
         protected void Editar(object sender, EventArgs e)
         {
-            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-            {
-                string id = gvListUsuarios.DataKeys[row.RowIndex].Value.ToString();
+            // 1. Captura o LinkButton que foi clicado
+            LinkButton lnk = (LinkButton)sender;
 
-                // Response.Redirect("Frm_AltMotoristas.aspx?id=" + id);
-            }
+            // 2. Encontra com segurança a linha do GridView (GridViewRow) onde ele está instalado
+            GridViewRow row = (GridViewRow)lnk.NamingContainer;
+
+            // 3. Recupera o ID mapeado no DataKeyNames do GridView
+            string id = gvListUsuarios.DataKeys[row.RowIndex].Value.ToString();
+
+            // 4. Executa o redirecionamento para a tela de permissões
+            Response.Redirect("ControleAcesso2.aspx?id=" + id);
         }
 
         protected void btnSalvar_Click(object sender, EventArgs e)

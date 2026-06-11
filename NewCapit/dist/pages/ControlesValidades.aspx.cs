@@ -11,7 +11,7 @@ using System.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ControlesValidades : System.Web.UI.Page
+    public partial class ControlesValidades : PaginaBase
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -271,6 +271,8 @@ namespace NewCapit.dist.pages
                     }
                 }
             }
+
+            VerificarBotoesGrid(e, idBtnEditar: "btnEditar", idBtnExcluir: "btnCancelar");
         }
        
         private bool EstaVencendo(DateTime? data, DateTime hoje)

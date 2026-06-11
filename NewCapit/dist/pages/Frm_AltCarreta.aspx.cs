@@ -16,7 +16,7 @@ using NPOI.POIFS.Crypt.Dsig;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_AltCarreta : System.Web.UI.Page
+    public partial class Frm_AltCarreta : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string idCarreta;
@@ -41,7 +41,7 @@ namespace NewCapit.dist.pages
                     Response.Redirect("Login.aspx");
 
                 }
-
+                VerificarBotoesPagina(btnInserir: btnAltualizaCarreta);
                 CarregarDDLAgregados();
                 PreencherComboRastreadores();
                 PreencherComboFiliais();
