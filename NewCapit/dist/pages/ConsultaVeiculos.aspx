@@ -29,6 +29,7 @@
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-2 text-gray-800">
                 <i class="fas fa-shipping-fast"></i> &nbsp;Controle de Veículos</h1>
+             <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server"><i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro</asp:LinkButton>
             <a href="/dist/pages/Frm_CadVeiculos.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro
             </a>
@@ -311,7 +312,7 @@
         </div>
         <div class="card-body">
             <div class="card-body table-responsive p-0" style="height: 590px;font-size:smaller;">              
-                <asp:GridView runat="server" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                <asp:GridView runat="server" OnRowDataBound="gvVeiculos_RowDataBound" ID="gvVeiculos" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvVeiculos_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>   
                         <asp:BoundField DataField="codvei" HeaderText="FROTA" />

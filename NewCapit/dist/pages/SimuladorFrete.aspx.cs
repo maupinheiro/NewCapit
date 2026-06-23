@@ -14,7 +14,7 @@ using System.Web.Configuration;
 
 namespace NewCapit.dist.pages
 {
-    public partial class SimuladorFrete : System.Web.UI.Page
+    public partial class SimuladorFrete : PaginaBase
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -252,6 +252,7 @@ namespace NewCapit.dist.pages
                         button.CssClass = "btn btn-secondary btn-sm";
                 }
             }
+            VerificarCommandFieldGrid(e, indiceColuna: 8);
         }
 
     }

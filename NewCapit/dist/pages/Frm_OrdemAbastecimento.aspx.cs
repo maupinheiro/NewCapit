@@ -18,7 +18,7 @@ using System.Globalization;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_OrdemAbastecimento : System.Web.UI.Page
+    public partial class Frm_OrdemAbastecimento : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string id;
@@ -39,6 +39,7 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
+                VerificarBotoesPagina(btnInserir: btnSalvar);
                 CarregaDadosFornecedor();
                 CarregaCombustivel();
             }

@@ -237,7 +237,7 @@
 
                                 <div class="row mb-3">
                                     <br />
-                                    <asp:GridView ID="gvItens" runat="server" AutoGenerateColumns="false" CssClass="table table-bordered table-striped table-hover"
+                                    <asp:GridView ID="gvItens" runat="server" AutoGenerateColumns="false" CssClass="table table-bordered table-striped table-hover" OnRowDataBound="gvItens_RowDataBound"
                                         HeaderStyle-CssClass="gv-header-custom"
                                         OnRowCommand="gvItens_RowCommand">
                                         <Columns>

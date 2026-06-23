@@ -57,13 +57,32 @@ namespace NewCapit.dist.pages
         }
         private void CarregarUsuarios()
         {
-            string sqlUsuarios = "SELECT foto_usuario, cod_usuario, nm_nome, nm_usuario, emp_usuario, fun_usuario, dep_usuario, CONVERT(varchar, dt_ultimo_acesso, 103) AS  dt_ultimo_acesso, fl_tipo, fl_status FROM tb_usuario ORDER BY nm_nome";
+            string sqlUsuarios = "SELECT foto_usuario, cod_usuario, nm_nome, nm_usuario, emp_usuario, fun_usuario, dep_usuario, CONVERT(varchar, dt_ultimo_acesso, 103) AS dt_ultimo_acesso, fl_tipo, fl_status FROM tb_usuario ORDER BY nm_nome";
             SqlDataAdapter adptUsuarios = new SqlDataAdapter(sqlUsuarios, con);
             DataTable dtUsuarios = new DataTable();
-            con.Open();
-            adptUsuarios.Fill(dtUsuarios);
-            gvListUsuarios.DataSource = adptUsuarios;
-            gvListUsuarios.DataBind();
+
+            try
+            {
+                con.Open();
+                adptUsuarios.Fill(dtUsuarios);
+
+                // CORREÇÃO: Passar a DataTable (dtUsuarios) e não o Adapter (adptUsuarios)
+                gvListUsuarios.DataSource = dtUsuarios;
+                gvListUsuarios.DataBind();
+            }
+            catch (Exception ex)
+            {
+                // Trate o erro aqui como preferir (ex: Console.WriteLine, MessageBox, etc)
+                throw ex;
+            }
+            finally
+            {
+                // Sempre feche a conexão após o uso
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+            }
         }
         private void CarregarCargos()
         {
@@ -160,27 +179,39 @@ namespace NewCapit.dist.pages
         }
         protected void Editar(object sender, EventArgs e)
         {
-            using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-            {
-                string id = gvListUsuarios.DataKeys[row.RowIndex].Value.ToString();
+            // 1. Captura o LinkButton que foi clicado
+            LinkButton lnk = (LinkButton)sender;
 
-                // Response.Redirect("Frm_AltMotoristas.aspx?id=" + id);
-            }
+            // 2. Encontra com segurança a linha do GridView (GridViewRow) onde ele está instalado
+            GridViewRow row = (GridViewRow)lnk.NamingContainer;
+
+            // 3. Recupera o ID mapeado no DataKeyNames do GridView
+            string id = gvListUsuarios.DataKeys[row.RowIndex].Value.ToString();
+
+            // 4. Executa o redirecionamento para a tela de permissões
+            Response.Redirect("ControleAcesso2.aspx?id=" + id);
         }
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-           // string nome = txtNome.Text.Trim();
-           // string email = txtEmail.Text.Trim();
-          //  string status = ddlStatus.SelectedValue;
-           
+            string nome = txtNm_Nome.Text;
+            string usuario = txtNm_Usuario.Text;
+            string senha = txtDs_Senha.Text.Trim();
+            string email = txtDs_Email.Text.Trim();
+            string status = ddlStatus.SelectedValue;
+            string tipo = ddlNivel.SelectedValue;
+
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                string insertQuery = "INSERT INTO Usuarios (Nome, Email, Status) VALUES (@Nome, @Email, @Status)";
+                string insertQuery = "insert tb_usuario (nm_nome, nm_usuario, ds_senha, ds_email, fl_tipo, fl_status)";
+                insertQuery += "values (@nm_nome, @nm_usuario, @ds_senha, @ds_email, @fl_tipo, @fl_status)";
                 SqlCommand cmd = new SqlCommand(insertQuery, conn);
-                //cmd.Parameters.AddWithValue("@Nome", nome);
-                //cmd.Parameters.AddWithValue("@Email", email);
-                //cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@nm_nome", nome);
+                cmd.Parameters.AddWithValue("@nm_usuario", usuario);
+                cmd.Parameters.AddWithValue("@ds_senha", senha);
+                cmd.Parameters.AddWithValue("@ds_email", email);
+                cmd.Parameters.AddWithValue("@fl_tipo", tipo);
+                cmd.Parameters.AddWithValue("@fl_status", status);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();

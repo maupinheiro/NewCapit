@@ -27,7 +27,7 @@ using PuppeteerSharp.Media;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_AvaliaDesempenho : System.Web.UI.Page
+    public partial class Frm_AvaliaDesempenho : PaginaBase
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
 
@@ -44,6 +44,7 @@ namespace NewCapit.dist.pages
                 this.nomeUsuario = this.Session["UsuarioLogado"].ToString();
                 string nomeUsuario = this.nomeUsuario;
             }
+            VerificarBotoesPagina(btnInserir: lnkSalvar);
             this.CarregaMotorista();
             this.CarregarAvaliacao();
             this.CarregaFoto();

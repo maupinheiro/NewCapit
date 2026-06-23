@@ -10,13 +10,15 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ConsultaFornecedores : System.Web.UI.Page
+    public partial class ConsultaFornecedores : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {            
             if (!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: lnkNovoCadastro);
+
                 AllDataFornecedores();
             }
             if (Session["UsuarioLogado"] != null)
@@ -79,6 +81,16 @@ namespace NewCapit.dist.pages
         {
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
+        }
+
+        protected void lnkNovoCadastro_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Frm_CadFornecedores.aspx");
+        }
+
+        protected void gvListFornecedores_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirLinha");
         }
     }
 }

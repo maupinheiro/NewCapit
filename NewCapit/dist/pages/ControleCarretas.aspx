@@ -27,8 +27,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-2 text-gray-800">
                         <i class="fa fa-truck"></i> &nbsp;Controle de Carretas</h1>
-                    <a href="/dist/pages/Frm_CadCarreta.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                        <i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro  </a>
+                <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server"><i class="fas fa-shipping-fast"></i> &nbsp;Novo Cadastro</asp:LinkButton>
+                   
             </div> 
             <!-- Content Row -->
             <div class="row">
@@ -295,7 +295,7 @@
                     </div>
             <div class="card-body">
             <div class="table-responsive" style="height: 590px;font-size:smaller;">            
-                <asp:GridView runat="server" ID="gvCarretas" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="idcarreta" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCarretas_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                <asp:GridView runat="server" ID="gvCarretas" OnRowDataBound="gvCarretas_RowDataBound" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="idcarreta" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCarretas_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                     <Columns>   
                         <asp:BoundField DataField="codcarreta" HeaderText="FROTA" />

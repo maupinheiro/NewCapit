@@ -31,9 +31,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">
                     <i class="fas fa-users"></i>&nbsp;Consulta Agregados / Terceiros</h1>
-                <a href="Frm_CadTransportadoras.aspx" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-user-plus"></i>&nbsp;Novo Cadastro            
-                </a>
+                <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server"><i class="fas fa-user-plus"></i>&nbsp;Novo Cadastro</asp:LinkButton>
+                
 
             </div>
             <!-- Content Graficos -->
@@ -141,7 +140,7 @@
         <div class="card shadow mb-4">              
               <div class="card-body">
                  <div class="table-responsive">
-                     <asp:GridView ID="gvListAgregados" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListAgregados_PageIndexChanging" ShowHeaderWhenEmpty="True">
+                     <asp:GridView ID="gvListAgregados" OnRowDataBound="gvListAgregados_RowDataBound" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" runat="server" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListAgregados_PageIndexChanging" ShowHeaderWhenEmpty="True">
                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                      <Columns>
                         <asp:BoundField DataField="id" HeaderText="#ID" Visible="false" />

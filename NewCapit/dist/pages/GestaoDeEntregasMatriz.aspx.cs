@@ -76,158 +76,191 @@ namespace NewCapit.dist.pages
             string recebedor = txtRecebedor.Text?.Trim();
             string status = txtStatus.Text?.Trim();
 
-            // ✅ DATAS
             string[] formatos = { "dd/MM/yyyy", "yyyy-MM-dd" };
-
             DateTime dataInicio, dataFim;
 
             if (!DateTime.TryParseExact(DataInicio.Text, formatos, CultureInfo.InvariantCulture, DateTimeStyles.None, out dataInicio))
-            {
                 dataInicio = DateTime.Now.AddDays(-7);
-            }
 
             if (!DateTime.TryParseExact(DataFim.Text, formatos, CultureInfo.InvariantCulture, DateTimeStyles.None, out dataFim))
-            {
                 dataFim = DateTime.Now;
-            }
 
             string sqlFiltro = @"
-            WHERE empresa = '1111'
-            AND emissao >= @ini
-            AND emissao < DATEADD(DAY,1,@fim)";
+    WHERE c.empresa = '1111'
+    AND c.emissao >= @ini
+    AND c.emissao < DATEADD(DAY, 1, @fim)";
 
-                    List<SqlParameter> parametros = new List<SqlParameter>
-            {
-                new SqlParameter("@ini", dataInicio),
-                new SqlParameter("@fim", dataFim)
-            };
+            List<SqlParameter> parametros = new List<SqlParameter>
+    {
+        new SqlParameter("@ini", dataInicio),
+        new SqlParameter("@fim", dataFim)
+    };
 
-            // ✅ INTERRUPTOR (OCULTAR CONCLUÍDAS)
             if (chkOcultarConcluidos.Checked)
             {
-                sqlFiltro += " AND situacao <> 'VIAGEM CONCLUIDA' AND fl_exclusao IS NULL";
+                sqlFiltro += " AND c.situacao <> 'VIAGEM CONCLUIDA' AND c.fl_exclusao IS NULL";
             }
 
-            // 🔎 FILTROS
-            if (!string.IsNullOrEmpty(frota))
-            {
-                sqlFiltro += " AND (tipoveiculo COLLATE Latin1_General_CI_AI LIKE @veiculo OR veiculo COLLATE Latin1_General_CI_AI LIKE @veiculo)";
-                parametros.Add(new SqlParameter("@veiculo", "%" + frota + "%"));
-            }
-
-            if (!string.IsNullOrEmpty(placa))
-            {
-                sqlFiltro += " AND (placa LIKE @placa OR reboque1 LIKE @placa OR reboque2 LIKE @placa)";
-                parametros.Add(new SqlParameter("@placa", "%" + placa + "%"));
-            }
-
-            if (!string.IsNullOrEmpty(motorista))
-            {
-                sqlFiltro += " AND (codmotorista LIKE @motorista OR nomemotorista COLLATE Latin1_General_CI_AI LIKE @motorista)";
-                parametros.Add(new SqlParameter("@motorista", "%" + motorista + "%"));
-            }
-
-            if (!string.IsNullOrEmpty(expedidor))
-            {
-                sqlFiltro += " AND (cod_expedidor LIKE @expedidor OR expedidor COLLATE Latin1_General_CI_AI LIKE @expedidor)";
-                parametros.Add(new SqlParameter("@expedidor", "%" + expedidor + "%"));
-            }
-
-            if (!string.IsNullOrEmpty(recebedor))
-            {
-                sqlFiltro += " AND (cod_recebedor LIKE @recebedor OR recebedor COLLATE Latin1_General_CI_AI LIKE @recebedor)";
-                parametros.Add(new SqlParameter("@recebedor", "%" + recebedor + "%"));
-            }
-
-            if (!string.IsNullOrEmpty(status))
-            {
-                sqlFiltro += " AND (status LIKE @status OR situacao LIKE @status)";
-                parametros.Add(new SqlParameter("@status", "%" + status + "%"));
-            }
+            ConfigurarFiltrosDinamicos(ref sqlFiltro, parametros, frota, placa, motorista, expedidor, recebedor, status);
 
             string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            DataTable dt = new DataTable();
+            int totalRegistros = 0;
+            Dictionary<string, int> dadosGrafico = new Dictionary<string, int>();
 
             using (SqlConnection con = new SqlConnection(conn))
             {
                 con.Open();
 
-            // 🔢 TOTAL
-            SqlCommand cmdTotal = new SqlCommand($@"
-            SELECT COUNT(*) 
-            FROM tbcarregamentos
-            {sqlFiltro}", con);
+                // 🚀 MELHORIA: Filtrando ev.dt_posicao para trazer apenas registros do dia de HOJE (meia-noite em diante)
+                string queryGridOtimizada = @"
+WITH CarregamentosBase AS (
+    SELECT c.*, v.codvei, v.terminal
+    FROM tbcarregamentos c
+    LEFT JOIN tbveiculos v ON c.placa = v.plavei AND v.fl_exclusao IS NULL
+    " + sqlFiltro + @"
+),
+DadosPaginados AS (
+    SELECT cb.*, 
+           e.cod_evento, e.nr_evento, e.ds_cidade, e.ds_uf, e.dt_posicao,
+           ROW_NUMBER() OVER(ORDER BY cb.veiculo ASC) AS RowNum,
+           COUNT(*) OVER() AS TotalGeral
+    FROM CarregamentosBase cb
+    OUTER APPLY (
+        SELECT TOP 1 ev.cod_evento, ev.nr_evento, ev.ds_cidade, ev.ds_uf, ev.dt_posicao
+        FROM tb_evento ev
+        WHERE ev.nr_idveiculo = cb.terminal
+          AND ev.dt_posicao >= CAST(GETDATE() AS DATE) -- 📅 Filtra a partir da meia-noite do dia atual
+          AND (ev.fl_tratado = 0 OR ev.fl_tratado IS NULL)
+          AND ev.nr_evento IS NOT NULL 
+          AND ev.nr_evento <> '' 
+          AND ev.nr_evento NOT LIKE '%-%'
+        ORDER BY ev.dt_posicao DESC
+    ) e
+)
+SELECT * FROM DadosPaginados 
+WHERE RowNum BETWEEN ((@pagina - 1) * @pageSize + 1) AND (@pagina * @pageSize)";
 
-                foreach (var p in parametros)
-                    cmdTotal.Parameters.AddWithValue(p.ParameterName, p.Value);
-
-                int totalRegistros = (int)cmdTotal.ExecuteScalar();
-                int totalPaginas = (int)Math.Ceiling((double)totalRegistros / pageSize);
-
-                lblTotalGeral.InnerText = $"Página {paginaAtual} de {totalPaginas} | Total: {totalRegistros}";
-                lblPaginaAtual.Text = paginaAtual.ToString().Trim();
-                lblTotalPaginas.Text = totalPaginas.ToString().Trim();                    
-                Session["TotalPaginas"] = totalPaginas;
-
-                // 📋 GRID
-                string sql = $@"
-                WITH Dados AS(
-                    SELECT *,
-                    ROW_NUMBER() OVER(ORDER BY veiculo ASC) AS RowNum
-                    FROM tbcarregamentos
-                    {sqlFiltro}
-                )
-                SELECT *
-                FROM Dados
-                WHERE RowNum BETWEEN ((@pagina - 1) * @pageSize + 1)
-                         AND (@pagina * @pageSize)";
-
-                SqlCommand cmd = new SqlCommand(sql, con);
-
-                foreach (var p in parametros)
-                    cmd.Parameters.AddWithValue(p.ParameterName, p.Value);
-
-                cmd.Parameters.AddWithValue("@pagina", paginaAtual);
-                cmd.Parameters.AddWithValue("@pageSize", pageSize);
-
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                gvOrdens.DataSource = dt;
-                gvOrdens.DataBind();
-
-                // 📊 KPI
-                SqlCommand cmdStatus = new SqlCommand($@"
-                SELECT status, COUNT(*) total
-                FROM tbcarregamentos
-                {sqlFiltro}
-                GROUP BY status", con);
-
-                foreach (var p in parametros)
-                    cmdStatus.Parameters.AddWithValue(p.ParameterName, p.Value);
-
-                SqlDataReader dr = cmdStatus.ExecuteReader();
-
-                string html = "";
-                Dictionary<string, int> dadosGrafico = new Dictionary<string, int>();
-
-                while (dr.Read())
+                using (SqlCommand cmd = new SqlCommand(queryGridOtimizada, con))
                 {
-                    string st = dr["status"].ToString();
-                    int total = Convert.ToInt32(dr["total"]);
+                    cmd.CommandTimeout = 90;
 
-                    html += $"<span class='badge bg-primary me-1'>{st}: {total}</span>";
-                    dadosGrafico[st] = total;
+                    cmd.Parameters.AddRange(parametros.Select(p => new SqlParameter(p.ParameterName, p.Value)).ToArray());
+                    cmd.Parameters.AddWithValue("@pagina", paginaAtual);
+                    cmd.Parameters.AddWithValue("@pageSize", pageSize);
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
                 }
-                dr.Close();
 
+                if (dt.Rows.Count > 0)
+                {
+                    totalRegistros = Convert.ToInt32(dt.Rows[0]["TotalGeral"]);
+                }
+
+                // QUERY DOS KPIS
+                string queryStatus = "SELECT status, COUNT(*) total FROM tbcarregamentos c " + sqlFiltro + " GROUP BY status";
+                using (SqlCommand cmdStatus = new SqlCommand(queryStatus, con))
+                {
+                    cmdStatus.CommandTimeout = 90;
+                    cmdStatus.Parameters.AddRange(parametros.Select(p => new SqlParameter(p.ParameterName, p.Value)).ToArray());
+
+                    using (SqlDataReader dr = cmdStatus.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            dadosGrafico[dr["status"].ToString()] = Convert.ToInt32(dr["total"]);
+                        }
+                    }
+                }
+
+                // TRADUÇÃO DE EVENTOS EM MEMÓRIA
+                if (dt.Rows.Count > 0)
+                {
+                    dt.Columns.Add("ds_evento", typeof(string));
+                    Dictionary<string, string> dicionarioEventos = ObterDicionarioEventos(con);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["nr_evento"] != DBNull.Value && !string.IsNullOrEmpty(row["nr_evento"].ToString()))
+                        {
+                            string nrEventoOriginal = row["nr_evento"].ToString();
+                            string[] codigos = nrEventoOriginal.Split(',');
+                            List<string> descricoesEncontradas = new List<string>();
+
+                            foreach (string cod in codigos)
+                            {
+                                string codLimpo = cod.Trim();
+                                if (dicionarioEventos.TryGetValue(codLimpo, out string descricao))
+                                {
+                                    descricoesEncontradas.Add(descricao);
+                                }
+                            }
+
+                            row["ds_evento"] = descricoesEncontradas.Count > 0
+                                ? string.Join(" / ", descricoesEncontradas)
+                                : "Evento Desconhecido (" + nrEventoOriginal + ")";
+                        }
+                        else
+                        {
+                            row["ds_evento"] = "";
+                        }
+                    }
+                }
+            }
+
+            // ATUALIZAÇÃO DA INTERFACE (UI)
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / pageSize);
+            if (totalPaginas < 1) totalPaginas = 1;
+
+            lblTotalGeral.InnerText = $"Página {paginaAtual} de {totalPaginas} | Total: {totalRegistros}";
+            lblPaginaAtual.Text = paginaAtual.ToString();
+            lblTotalPaginas.Text = totalPaginas.ToString();
+            Session["TotalPaginas"] = totalPaginas;
+
+            gvOrdens.DataSource = dt;
+            gvOrdens.DataBind();
+
+            if (dadosGrafico.Count > 0)
+            {
                 string labels = string.Join(",", dadosGrafico.Keys.Select(x => $"'{x}'"));
                 string valores = string.Join(",", dadosGrafico.Values);
 
-                ScriptManager.RegisterStartupScript(this, GetType(), "kpi", $@"
-                    renderKPI([{labels}], [{valores}]);
-                ", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "kpi", $"renderKPI([{labels}], [{valores}]);", true);
             }
+        }
+
+        // Método auxiliar para não poluir o código principal e garantir o Cache
+        private Dictionary<string, string> ObterDicionarioEventos(SqlConnection con)
+        {
+            var dicionario = Cache["ListaEventos"] as Dictionary<string, string>;
+            if (dicionario == null)
+            {
+                dicionario = new Dictionary<string, string>();
+                using (SqlCommand cmdLista = new SqlCommand("SELECT CAST(cod_evento AS VARCHAR) cod, ds_evento FROM tb_lista_evento", con))
+                using (SqlDataReader readerLista = cmdLista.ExecuteReader())
+                {
+                    while (readerLista.Read())
+                    {
+                        dicionario[readerLista["cod"].ToString().Trim()] = readerLista["ds_evento"].ToString().Trim();
+                    }
+                }
+                Cache.Insert("ListaEventos", dicionario, null, DateTime.Now.AddHours(2), TimeSpan.Zero);
+            }
+            return dicionario;
+        }
+
+        // Método auxiliar para organizar os filtros
+        private void ConfigurarFiltrosDinamicos(ref string sqlFiltro, List<SqlParameter> parametros, string frota, string placa, string motorista, string expedidor, string recebedor, string status)
+        {
+            if (!string.IsNullOrEmpty(frota)) { sqlFiltro += " AND (c.tipoveiculo LIKE @veiculo OR c.veiculo LIKE @veiculo)"; parametros.Add(new SqlParameter("@veiculo", "%" + frota + "%")); }
+            if (!string.IsNullOrEmpty(placa)) { sqlFiltro += " AND (c.placa LIKE @placa OR c.reboque1 LIKE @placa OR c.reboque2 LIKE @placa)"; parametros.Add(new SqlParameter("@placa", "%" + placa + "%")); }
+            if (!string.IsNullOrEmpty(motorista)) { sqlFiltro += " AND (c.codmotorista LIKE @motorista OR c.nomemotorista LIKE @motorista)"; parametros.Add(new SqlParameter("@motorista", "%" + motorista + "%")); }
+            if (!string.IsNullOrEmpty(expedidor)) { sqlFiltro += " AND (c.cod_expedidor LIKE @expedidor OR c.expedidor LIKE @expedidor)"; parametros.Add(new SqlParameter("@expedidor", "%" + expedidor + "%")); }
+            if (!string.IsNullOrEmpty(recebedor)) { sqlFiltro += " AND (c.cod_recebedor LIKE @recebedor OR c.recebedor LIKE @recebedor)"; parametros.Add(new SqlParameter("@recebedor", "%" + recebedor + "%")); }
+            if (!string.IsNullOrEmpty(status)) { sqlFiltro += " AND (c.status LIKE @status OR c.situacao LIKE @status)"; parametros.Add(new SqlParameter("@status", "%" + status + "%")); }
         }
         protected void btnIrPagina_Click(object sender, EventArgs e)
         {
@@ -250,7 +283,8 @@ namespace NewCapit.dist.pages
         }        
         protected void gvOrdens_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            gvOrdens.PageIndex = e.NewPageIndex;
+            // O ASP.NET usa índice 0 para a primeira página, por isso somamos 1
+            Session["Pagina"] = e.NewPageIndex + 1;
             CarregarGrid();
         }
         protected void btnPrimeiro_Click(object sender, EventArgs e)
@@ -260,19 +294,28 @@ namespace NewCapit.dist.pages
         }
         protected void btnAnterior_Click(object sender, EventArgs e)
         {
-            int pagina = (int)Session["Pagina"];
+            // Proteção idêntica contra valores nulos
+            int pagina = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
+
             if (pagina > 1)
+            {
                 Session["Pagina"] = pagina - 1;
+            }
 
             CarregarGrid();
         }
         protected void btnProximo_Click(object sender, EventArgs e)
         {
-            int pagina = (int)Session["Pagina"];
-            int total = (int)Session["TotalPaginas"];
+            // Proteção: Se a Session["Pagina"] estiver nula, assume que está na página 1
+            int pagina = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
+
+            // Proteção: Se a Session["TotalPaginas"] estiver nula, assume 1 para não quebrar
+            int total = Session["TotalPaginas"] != null ? (int)Session["TotalPaginas"] : 1;
 
             if (pagina < total)
+            {
                 Session["Pagina"] = pagina + 1;
+            }
 
             CarregarGrid();
         }
@@ -313,15 +356,34 @@ namespace NewCapit.dist.pages
         protected void lnkEditar_Command(object sender, CommandEventArgs e)
         {
             if (e.CommandName == "Editar")
+
             {
+
                 string numCarregamento = e.CommandArgument.ToString();
+
                 string url = $"Frm_AtualizaColetaMatriz.aspx?carregamento={numCarregamento}";
+
                 Response.Redirect(url);
+
             }
+
+        
+            //if (e.CommandName == "Editar")
+            //{
+            //    string numCarregamento = e.CommandArgument.ToString();
+            //    string url = $"Frm_AtualizaColetaMatriz.aspx?carregamento={numCarregamento}";
+
+            //    // Cria o script JavaScript para abrir em nova aba
+            //    string script = $"window.open('{url}', '_blank');";
+
+            //    // Injeta o script na página para ser executado no navegador
+            //    ScriptManager.RegisterStartupScript(this, this.GetType(), "AbrirNovaAba", script, true);
+            //}
         }
         protected void Timer1_Tick(object sender, EventArgs e)
         {
             CarregarGrid(); // seu método
+            //up1.Update();
         }
         private DataTable BuscarDados()
         {
@@ -348,15 +410,15 @@ namespace NewCapit.dist.pages
 
                 string sql = @" 
                 SELECT 
-                    veiculo, tipoveiculo, placa, reboque1, reboque2,
+                    veiculo, c.tipoveiculo, c.placa, c.reboque1, c.reboque2,
                     codmotorista, nomemotorista,
-                    codtra, transportadora,
+                    c.codtra, transportadora,
                     cod_expedidor, expedidor,
                     cod_recebedor, recebedor,
                     cid_expedidor, uf_expedidor,
                     cid_recebedor, uf_recebedor,
                     num_carregamento, carga, emissao, situacao, status
-                FROM tbcarregamentos
+                FROM tbcarregamentos as c
                 WHERE empresa = '1111'
                 AND emissao >= @ini
                 AND emissao < DATEADD(DAY,1,@fim)";
@@ -372,13 +434,13 @@ namespace NewCapit.dist.pages
 
                 if (!string.IsNullOrEmpty(frota))
                 {
-                    sql += " AND (tipoveiculo LIKE @veiculo OR veiculo LIKE @veiculo)";
+                    sql += " AND (c.tipoveiculo LIKE @veiculo OR veiculo LIKE @veiculo)";
                     parametros.Add(new SqlParameter("@veiculo", "%" + frota + "%"));
                 }
 
                 if (!string.IsNullOrEmpty(placa))
                 {
-                    sql += " AND (placa LIKE @placa OR reboque1 LIKE @placa OR reboque2 LIKE @placa)";
+                    sql += " AND (placa LIKE @placa OR c.reboque1 LIKE @placa OR c.reboque2 LIKE @placa)";
                     parametros.Add(new SqlParameter("@placa", "%" + placa + "%"));
                 }
 
@@ -1060,6 +1122,46 @@ namespace NewCapit.dist.pages
             }
 
             return $"<span class='badge {classe}'>{situacao}</span>";
+        }
+
+        protected void btnTratarEvento_Click(object sender, EventArgs e)
+        {
+            string codEvento = hfCodEvento.Value;
+            // Pega o usuário logado (ajuste conforme seu sistema de login)
+            string usuario = Session["Usuario"] != null ? Session["Usuario"].ToString() : "Sistema";
+
+            if (!string.IsNullOrEmpty(codEvento))
+            {
+                string conn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+                using (SqlConnection con = new SqlConnection(conn))
+                {
+                    string sqlUpdate = @"
+                UPDATE tb_evento 
+                SET fl_tratado = 1, 
+                    dt_tratamento = GETDATE(),
+                    usuario_tratado = @usuario
+                WHERE cod_evento = @cod_evento";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlUpdate, con))
+                    {
+                        cmd.Parameters.AddWithValue("@usuario", usuario);
+                        cmd.Parameters.AddWithValue("@cod_evento", codEvento);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Limpa o campo oculto
+                hfCodEvento.Value = "";
+
+                // Fecha o modal via Javascript e recarrega a Grid
+                ScriptManager.RegisterStartupScript(this, GetType(), "fecharModal", "fecharModalAlerta();", true);
+
+                // Atualiza a listagem sumindo com a sirene que foi tratada
+                CarregarGrid();
+            }
         }
     }
 }

@@ -101,9 +101,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label>&nbsp;</label><br />
-                                    <a href="/dist/pages/Frm_CadPedidosMatriz.aspx" class="d-none d-sm-inline-block btn btn-primary shadow-sm w-100"><i
-                                        class="fas fa-boxes"></i>&nbsp;Nova Carga
-                                    </a>
+                                    <asp:LinkButton ID="lnkNovaCarga" runat="server" OnClick="lnkNovaCarga_Click" CssClass="d-none d-sm-inline-block btn btn-primary shadow-sm w-100"><i class="fas fa-boxes"></i>&nbsp;Nova Carga</asp:LinkButton>
+                                    
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -115,7 +114,7 @@
                             </div>
                             <div class="container-fluid">
                                 <table id="example1" class="table table-bordered table-striped table-hover table-responsive">
-                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True" OnRowCommand="gvCargas_RowCommand">
+                                    <asp:GridView runat="server" ID="gvCargas" CssClass="table table-bordered table-striped table-hover" Width="100%" OnRowDataBound="gvCargas_RowDataBound" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvCargas_PageIndexChanging" ShowHeaderWhenEmpty="True" OnRowCommand="gvCargas_RowCommand">
                                         <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
                                         <Columns>
                                             <asp:TemplateField HeaderText="" ShowHeader="True" ItemStyle-Width="9">

@@ -19,7 +19,7 @@ using System.Globalization;
 using System.Configuration;
 namespace NewCapit.dist.pages
 {
-    public partial class Frm_DiarioDeBordo : System.Web.UI.Page
+    public partial class Frm_DiarioDeBordo : PaginaBase
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ToString());
         string cod_ref_parada;
@@ -34,6 +34,7 @@ namespace NewCapit.dist.pages
            
             if(!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: btnMacromanual, btnExcluir: btnExcluiTodas);
                 CarregaMacros();
 
                 if (Session["UsuarioLogado"] != null)
@@ -305,6 +306,8 @@ namespace NewCapit.dist.pages
                 }
 
             }
+
+
         }
         protected void grdTodas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -3105,6 +3108,19 @@ namespace NewCapit.dist.pages
 
             CarregarGrid();
         }
+
+        protected void grdMotoristas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarCommandFieldGrid(e, indiceColuna: 6);
+
+        }
+
+        protected void grdCusto_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "btnEditar", idBtnExcluir: "btnExcluir");
+
+        }
+
         protected void grdCusto_RowEditing(object sender, GridViewEditEventArgs e)
         {
             grdCusto.EditIndex = e.NewEditIndex;

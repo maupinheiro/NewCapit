@@ -111,10 +111,11 @@ namespace NewCapit.dist.pages
                 PreencherClienteInicial();
                 PreencherClienteFinal();
 
-
+               
             }
-            //CarregarFotoMotorista(fotoMotorista);
             CarregaFoto();
+            //CarregarFotoMotorista(fotoMotorista);
+
             //VerificaCargasFechadas();
 
         }
@@ -918,6 +919,18 @@ namespace NewCapit.dist.pages
                 gv.RowCommand += gvNF_RowCommand;
             }
 
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Como no HTML está <asp:Button>, fazemos o Cast para Button aqui
+                Button btnGeraDoc = (Button)e.Item.FindControl("btnGeraDoc");
+
+                if (btnGeraDoc != null)
+                {
+                    // Força o ScriptManager a tratar este Button específico como PostBack total (ignora o AJAX)
+                    ScriptManager.GetCurrent(this).RegisterPostBackControl(btnGeraDoc);
+                }
+            }
+
         }
         private void CarregarNF(string idCarga, GridView gvn)
         {
@@ -1218,7 +1231,7 @@ namespace NewCapit.dist.pages
                                         bitrem
                                     FROM tbvalorpremiomotoristas
                                     WHERE @distancia
-                                    BETWEEN distancia1 AND distancia2 AND status = 'ATIVO'",
+                                    BETWEEN distancia1 AND distancia2 AND status = 'ATIVO'AND empresa='MATRIZ'",
                                         conn2, trans))
                                     {
                                         cmdPremio.Parameters.AddWithValue(
@@ -1398,7 +1411,7 @@ namespace NewCapit.dist.pages
                                         using (SqlCommand cmdPernoite =
                                             new SqlCommand(@"
                                         SELECT TOP 1 pernoite
-                                        FROM tbvalorpremiomotoristas WHERE status = 'ATIVO'",
+                                        FROM tbvalorpremiomotoristas WHERE status = 'ATIVO' and empresa='MATRIZ'",
                                             conn2, trans))
                                         {
                                             object result =
@@ -2237,16 +2250,15 @@ namespace NewCapit.dist.pages
             {
                 int idCarga = int.Parse(e.CommandArgument.ToString());
 
+                // 1. Sua validação que você confirmou que funciona:
                 if (!PossuiNotasLancadas(idCarga))
                 {
                     MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
                     return;
                 }
 
-                // 3. Define se é Serviço e busca o próximo número sequencial
+                // 2. Define o tipo e gera o número no banco
                 bool ehServico = VerificarSeEhServico(idCarga);
-
-                // Chama o método específico e armazena o número retornado
                 string numeroDocumento = ehServico ? GerarEObterProximoNFse() : GerarEObterProximoCte();
 
                 if (string.IsNullOrEmpty(numeroDocumento))
@@ -2255,23 +2267,15 @@ namespace NewCapit.dist.pages
                     return;
                 }
 
-                try
-                {
-                    var srv = new SapiensIntegrationService();
-                    string conteudoArquivo = srv.GerarArquivoCompleto(idCarga, numeroDocumento, ehServico);
+                // 3. Em vez de chamar o DispararDownload aqui, chamamos a página dedicada via JavaScript.
+                // O window.open faz o navegador abrir o fluxo de download nativo sem sair da página atual.
+                string urlDownload = $"DownloadSapiens.aspx?idCarga={idCarga}&numDoc={numeroDocumento}&serv={ehServico.ToString().ToLower()}";
+                string script = $"window.open('{urlDownload}', '_blank');";
 
-                    if (!string.IsNullOrEmpty(conteudoArquivo))
-                    {
-                        string prefixo = ehServico ? "NFSe" : "CTe";
-                        string nomeFinal = $"Sapiens_{prefixo}_{numeroDocumento}.txt";
-                        DispararDownload(conteudoArquivo, nomeFinal);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MostrarMsg2("Erro ao gerar arquivo: " + ex.Message);
-                }
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "dispararDownloadSapiens", script, true);
             }
+
+
             if (e.CommandName == "GeraXml")
             {
                 try
@@ -2289,20 +2293,18 @@ namespace NewCapit.dist.pages
                     bool ehServico = VerificarSeEhServico(idCarga);
                     string numeroDoc = ehServico ? GerarEObterProximoNFse() : GerarEObterProximoCte();
 
-                    if (string.IsNullOrEmpty(numeroDoc)) return;
+                    if (string.IsNullOrEmpty(numeroDoc))
+                    {
+                        MostrarMsg2("Erro ao gerar a numeração do documento.");
+                        return;
+                    }
 
-                    // 3. Gerar o XML
-                    // Note que agora não precisamos buscar motorista/notas aqui fora, 
-                    // pois o srvXml.GerarXml vai fazer isso sozinho lá dentro usando o idCarga.
-                    var srvXml = new XmlExportService();
+                    // 3. Em vez de chamar o DispararDownload interno com problema de AJAX,
+                    // redireciona para a página dedicada passando o parâmetro &formato=xml
+                    string urlDownload = $"DownloadSapiens.aspx?idCarga={idCarga}&numDoc={numeroDoc}&serv={ehServico.ToString().ToLower()}&formato=xml";
+                    string script = $"window.open('{urlDownload}', '_blank');";
 
-                    string conteudoXml = ehServico ?
-                        srvXml.GerarXmlNfse(idCarga, numeroDoc) : // Passando apenas 2 argumentos
-                        srvXml.GerarXmlCte(idCarga, numeroDoc);  // Passando apenas 2 argumentos
-
-                    string nomeXml = $"{(ehServico ? "NFSe" : "CTe")}_{numeroDoc}.xml";
-                    DispararDownload(conteudoXml, nomeXml, "text/xml");
-
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "dispararDownloadXml", script, true);
                 }
                 catch (Exception ex)
                 {
@@ -2313,7 +2315,8 @@ namespace NewCapit.dist.pages
             {
                 // 1. Verificação de permissão por usuário
                 string usuarioLogado = Session["UsuarioLogado"]?.ToString();
-                if (usuarioLogado != "TNG30976")
+                string usuarioSistema = Session["UsuarioSistema"]?.ToString();
+                if (usuarioSistema != "TNG30976" && usuarioSistema !="admin")
                 {
                     // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
                     ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
@@ -2346,7 +2349,8 @@ namespace NewCapit.dist.pages
                             string sqlUpdateCarga = @"UPDATE tbcargas 
                                          SET status = 'Cancelada',
                                              andamento = 'CANCELADA',
-                                             atualizacao = @usuario, 
+                                             atualizacao = @usuario,
+                                             material = 'Vazio',
                                              fl_exclusao = 'S' 
                                          WHERE carga = @carga";
 
@@ -2411,7 +2415,7 @@ namespace NewCapit.dist.pages
                         }
                         catch (Exception)
                         {
-                            trans.Rollback();
+                            //trans.Rollback();
                             throw;
                         }
                     }
@@ -4527,7 +4531,7 @@ namespace NewCapit.dist.pages
                 string sql = @"
             -- 1. Verifica se há cargas não concluídas
             DECLARE @NaoConcluidas INT;
-            SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status NOT IN ('Concluido', 'Liberado Vazio') ;
+            SELECT @NaoConcluidas = COUNT(*) FROM tbcargas WHERE idviagem = @idviagem AND status NOT IN ('Concluido', 'Liberado Vazio','Cancelada') ;
 
             -- 2. Verifica se existe PELO MENOS UM CT-e para esta viagem
             DECLARE @TotalCTe INT;
@@ -4545,7 +4549,7 @@ namespace NewCapit.dist.pages
             DECLARE @PossuiMaterial INT;
             SELECT @PossuiMaterial = COUNT(*) 
             FROM tbcargas 
-            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> 'Vazio' ;
+            WHERE idviagem = @idviagem AND ISNULL(NULLIF(LTRIM(RTRIM(material)), ''), '') <> 'Vazio';
 
             SELECT @NaoConcluidas AS NaoConcluidas, 
                    (@TotalCTe + @TotalNFSe) AS TotalDocumentos, 
@@ -5658,7 +5662,7 @@ namespace NewCapit.dist.pages
                 string sql = @"SELECT distancia1, distancia2, motorista, carreteiro, bitrem, desengate 
                        FROM tbvalorpremiomotoristas 
                        WHERE distancia1 <= ROUND(@distancia, 0) 
-                         AND distancia2 >= ROUND(@distancia, 0)";
+                         AND distancia2 >= ROUND(@distancia, 0) and empresa='MATRIZ'";
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
@@ -6949,6 +6953,14 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+
+        
+
+        //protected void btnVoltar_Click(object sender, EventArgs e)
+        //{
+        //    Response.Redirect("GestaoDeEntregasMatriz.aspx");
+        //}
+
         protected void MostrarMsgCNH(string mensagem, string tipo = "warning")
         {
             divMsgCNH.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
@@ -7434,7 +7446,7 @@ namespace NewCapit.dist.pages
                         refeicao,
                         pernoite
                     FROM tbvalorpremiomotoristas
-                    WHERE @distancia BETWEEN distancia1 AND distancia2",
+                    WHERE @distancia BETWEEN distancia1 AND distancia2 and empresa='MATRIZ'",
                             conn, trans))
                         {
                             cmdPremio.Parameters.AddWithValue("@distancia", distancia);

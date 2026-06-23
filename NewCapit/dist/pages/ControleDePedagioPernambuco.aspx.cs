@@ -12,7 +12,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ControleDePedagioPernambuco : System.Web.UI.Page
+    public partial class ControleDePedagioPernambuco : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario;
@@ -342,6 +342,11 @@ namespace NewCapit.dist.pages
         protected void btnAtualizarGrid_Click(object sender, EventArgs e)
         {
             CarregarGrid();
+        }
+
+        protected void rpCarregamentos_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            VerificarBotoesRepeater(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirHist");
         }
     }
 }

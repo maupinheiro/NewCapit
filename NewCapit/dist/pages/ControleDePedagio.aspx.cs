@@ -14,7 +14,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ControleDePedagio : System.Web.UI.Page
+    public partial class ControleDePedagio : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario;
@@ -358,12 +358,11 @@ namespace NewCapit.dist.pages
         {
             CarregarGrid();
         }
-       
 
-        
-        
-
-
+        protected void rpCarregamentos_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            VerificarBotoesRepeater(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirHist");
+        }
     }
 
 }

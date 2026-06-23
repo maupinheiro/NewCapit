@@ -118,7 +118,18 @@ namespace DAL
         public static int RegistrarLogin(int codUsuario)
         {
             int idGerado = 0;
-            string sql = "INSERT INTO LogSessoes (cod_usuario, dt_login) VALUES (@cod, GETDATE()); SELECT SCOPE_IDENTITY();";
+
+            // 1. Insere o log na tabela de sessões
+            // 2. Atualiza a coluna dt_ultimo_login na tabela tb_usuario com a data/hora atual
+            // 3. Retorna o ID gerado da sessão
+            string sql = @"
+        INSERT INTO LogSessoes (cod_usuario, dt_login) VALUES (@cod, GETDATE());
+        
+        UPDATE tb_usuario 
+        SET dt_ultimo_acesso= GETDATE() 
+        WHERE cod_usuario = @cod;
+
+        SELECT SCOPE_IDENTITY();";
 
             using (var con = ConnectionUtil.GetConnection())
             {
@@ -161,6 +172,54 @@ namespace DAL
                 throw new Exception("Falha no Banco: " + ex.Message);
             }
         }
+
+        public static List<int> ObterPermissoesUsuario(int idUsuario, string arquivoPhysical)
+        {
+            List<int> acoes = new List<int>();
+
+            // Query que cruza a tabela de permissões com a tabela de cadastro de telas
+            string sql = @"SELECT up.IdAcao 
+                   FROM Usuario_permissao up
+                   INNER JOIN Cad_Telas t ON up.IdTela = t.IdTela
+                   WHERE up.IdUsuario = @IdUsuario 
+                     AND t.ArquivoPhysical = @ArquivoPhysical";
+
+            using (SqlConnection conn = ConnectionUtil.GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
+                    cmd.Parameters.Add("@ArquivoPhysical", SqlDbType.VarChar, 100).Value = arquivoPhysical;
+
+                    try
+                    {
+                        // CORREÇÃO CRÍTICA: Só abre se o estado atual for Fechado (Closed)
+                        if (conn.State == ConnectionState.Closed)
+                        {
+                            conn.Open();
+                        }
+
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                acoes.Add(Convert.ToInt32(rdr["IdAcao"]));
+                            }
+                        }
+
+                        // Nota: O método conn.Close() não é estritamente obrigatório aqui dentro 
+                        // porque o 'using' da SqlConnection vai descartar/fechar ela automaticamente ao sair.
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Erro ao obter permissões do usuário: " + ex.Message);
+                    }
+                }
+            }
+
+            return acoes;
+        }
     }
-   
 }
+   
+

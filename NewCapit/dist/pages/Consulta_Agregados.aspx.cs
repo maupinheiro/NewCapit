@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -13,14 +14,20 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class Consulta_Agregados : System.Web.UI.Page
+    public partial class Consulta_Agregados : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             ContagemAgregados();
             if (!IsPostBack)
             {
+                int idUsuarioLogado = Convert.ToInt32(Session["CodUsuario"]);
+                string telaAtual = System.IO.Path.GetFileName(Request.Url.AbsolutePath);
+
+                // 2. Busca no banco de dados (Apenas 1 vez no carregamento)
+                VerificarBotoesPagina(btnInserir: lnkNovoCadastro);
                 AllDataAgregados();
             }
             if (Session["UsuarioLogado"] != null)
@@ -125,60 +132,7 @@ namespace NewCapit.dist.pages
             gvListAgregados.PageIndex = e.NewPageIndex;
             AllDataAgregados();  // Método para recarregar os dados no GridView
         }
-        //protected void Excluir(object sender, EventArgs e)
-        //{
-        //    if (txtconformmessageValue.Value == "Yes")
-        //    {
-        //        using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
-        //        {
-        //            string id = gvListAgregados.DataKeys[row.RowIndex].Value.ToString();
-
-        //            string sql = "update tbtransportadoras set fl_exclusao='S' where id=@id";
-        //            SqlCommand comando = new SqlCommand(sql, con);
-        //            comando.Parameters.AddWithValue("@id", id);
-        //            try
-        //            {
-        //                con.Open();
-        //                comando.ExecuteNonQuery();
-        //                con.Close();
-        //                AllDataAgregados();
-        //                string retorno = "Registro excluído com sucesso!";
-        //                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //                sb.Append("<script type = 'text/javascript'>");
-        //                sb.Append("window.onload=function(){");
-        //                sb.Append("alert('");
-        //                sb.Append(retorno);
-        //                sb.Append("')};");
-        //                sb.Append("</script>");
-        //                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-        //                string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
-        //                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //                sb.Append("<script type = 'text/javascript'>");
-        //                sb.Append("window.onload=function(){");
-        //                sb.Append("alert('");
-        //                sb.Append(retorno);
-        //                sb.Append("')};");
-        //                sb.Append("</script>");
-        //                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-        //                //Chama a página de consulta clientes
-        //                Response.Redirect("ConsultaClientes.aspx");
-        //            }
-
-        //            finally
-        //            {
-        //                con.Close();
-        //            }
-        //        }
-        //    }
-
-
-        //}
-
+       
         protected void Editar(object sender, EventArgs e)
         {
             using (GridViewRow row = (GridViewRow)((LinkButton)sender).Parent.Parent)
@@ -206,6 +160,16 @@ namespace NewCapit.dist.pages
         {
             string searchTerm = myInput.Text.Trim();
             AllData(searchTerm);
+        }
+
+        protected void lnkNovoCadastro_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Frm_CadTransportadoras.aspx");
+        }
+
+        protected void gvListAgregados_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ", idBtnExcluir: "btnExcluirLinha");
         }
     }
 

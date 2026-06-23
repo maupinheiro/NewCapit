@@ -19,7 +19,7 @@ using System.Collections;
 
 namespace NewCapit.dist.pages
 {
-    public partial class GerarTabelaDeAvaliacaoMotoristas : System.Web.UI.Page
+    public partial class GerarTabelaDeAvaliacaoMotoristas : PaginaBase
     {
         SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         string nomeUsuario = string.Empty;
@@ -302,6 +302,11 @@ namespace NewCapit.dist.pages
             string scriptOpen = $"window.open('{url}', '_blank', 'width=900,height=780,scrollbars=yes,resizable=yes');";
 
             ClientScript.RegisterStartupScript(this.GetType(), "openWindow", scriptOpen, true);
+        }
+
+        protected void gvMotoristas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirLinha");
         }
     }
    

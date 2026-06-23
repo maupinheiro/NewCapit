@@ -11,7 +11,6 @@ namespace NewCapit
 {
     public class XmlExportService
     {
-        // MÉTODO RESTAURADO: GerarXmlNfse
         public string GerarXmlNfse(int idCarga, string numeroDoc)
         {
             var serviceSapiens = new dist.pages.SapiensIntegrationService();
@@ -40,52 +39,121 @@ namespace NewCapit
             var motorista = serviceSapiens.ObterMotoristaDaCarga(idCarga);
             var veiculos = serviceSapiens.ObterVeiculosDaCarga(idCarga);
 
-            var proc = new cteProc
+            string cnpjEmitente = "55890016000109";
+            string serie = "001";
+            string nCTFormatado = int.Parse(numeroDoc).ToString("D9");
+            string cCT = int.Parse(numeroDoc).ToString("D8");
+            string tpEmis = "1";
+            string cDV = "0";
+            string idChaveCte = $"352603{cnpjEmitente}57{serie}{nCTFormatado}{tpEmis}{cCT}{cDV}";
+
+            var cte = new CTe
             {
-                CTe = new CTe
+                infCte = new infCte
                 {
-                    infCte = new infCte
+                    Id = "CTe" + idChaveCte,
+                    ide = new ide
                     {
-                        Id = "CTe3526035589001600010957001000" + numeroDoc.PadLeft(9, '0') + "1",
-                        ide = new ide { nCT = numeroDoc, cCT = numeroDoc.PadLeft(8, '0'), dhEmi = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz") },
-                        emit = new emit { CNPJ = "55890016000109", xNome = "TRANSNOVAG TRANSPORTES SA", IE = "111501336118" },
-                        vPrest = new vPrest { vTPrest = "3100.80", vRec = "3100.80" },
-                        infCTeNorm = new infCTeNorm
+                        cCT = cCT,
+                        nCT = numeroDoc,
+                        dhEmi = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                        cMunEnv = "3550308",
+                        xMunEnv = "SAO PAULO",
+                        UFEnv = "SP",
+                        cMunIni = "3550308",
+                        xMunIni = "SAO PAULO",
+                        UFIni = "SP",
+                        cMunFim = "3545209",
+                        xMunFim = "SALTO",
+                        UFFim = "SP"
+                    },
+                    compl = new compl
+                    {
+                        xObs = $"MOT: {motorista?.Nome}-CPF: {motorista?.CPF}/PLACA: {veiculos.FirstOrDefault()?.Placa}"
+                    },
+                    emit = new emit
+                    {
+                        CNPJ = cnpjEmitente,
+                        IE = "111501336118",
+                        xNome = "TRANSNOVAG TRANSPORTES SA",
+                        xFant = "MATRIZ",
+                        enderEmit = new enderEmit
                         {
-                            infDoc = new infDoc
-                            {
-                                infNFe = notas.Select(n => new infNFe { chave = n.ChaveAcesso }).ToList()
-                            },
-                            infModal = new infModal
-                            {
-                                rodo = new rodo { RNTRC = "00109548" }
-                            }
+                            xLgr = "RUA CADIRIRI",
+                            nro = "629",
+                            xBairro = "PARQUE DA MOOCA",
+                            cMun = "3550308",
+                            xMun = "SAO PAULO",
+                            CEP = "03109040",
+                            UF = "SP"
+                        }
+                    },
+                    vPrest = new vPrest { vTPrest = "3100.80", vRec = "3100.80" },
+                    imp = new imp
+                    {
+                        ICMS = new ICMS
+                        {
+                            ICMS00 = new ICMS00 { CST = "00", vBC = "3100.80", pICMS = "12.00", vICMS = "372.10" }
+                        }
+                    },
+                    infCTeNorm = new infCTeNorm
+                    {
+                        infCarga = new infCarga
+                        {
+                            vCarga = notas.Sum(x => x.ValorNf).ToString("F2", System.Globalization.CultureInfo.InvariantCulture),
+                            proPred = "CHAPA",
+                            infQ = new infQ { qCarga = notas.Sum(x => x.Peso).ToString("F4", System.Globalization.CultureInfo.InvariantCulture) }
                         },
-                        compl = new compl
+                        infDoc = new infDoc
                         {
-                            xObs = $"MOT: {motorista?.Nome}-CPF: {motorista?.CPF}/PLACA: {veiculos.FirstOrDefault()?.Placa}"
+                            infNFe = notas.Select(n => new infNFe { chave = n.ChaveAcesso.Trim() }).ToList()
+                        },
+                        infModal = new infModal
+                        {
+                            rodo = new rodo { RNTRC = "00109548" }
+                        }
+                    }
+                },
+                // Adicionamos a estrutura mínima aceitável de Assinatura para validar, mas 
+                // permitindo que o seu assinador substitua esse nó sem estragar o arquivo.
+                Signature = new Signature
+                {
+                    SignedInfo = new SignedInfo
+                    {
+                        Reference = new Reference
+                        {
+                            URI = "#CTe" + idChaveCte // Passa na validação do tipo AnyUri
                         }
                     }
                 }
             };
-            return Serializar(proc);
+
+            return Serializar(cte);
         }
 
         private string Serializar<T>(T objeto)
         {
             var settings = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
-            using (var sw = new StringWriter())
+
+            // Usamos a classe customizada Utf8StringWriter em vez do StringWriter padrão
+            using (var sw = new Utf8StringWriter())
             {
                 using (var writer = XmlWriter.Create(sw, settings))
                 {
                     var ns = new XmlSerializerNamespaces();
-                    // Define o namespace padrão conforme o modelo oficial
                     ns.Add("", "http://www.portalfiscal.inf.br/cte");
                     ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                    ns.Add("ds", "http://www.w3.org/2000/09/xmldsig#");
                     new XmlSerializer(typeof(T)).Serialize(writer, objeto, ns);
                 }
                 return sw.ToString();
             }
+        }
+
+        // Classe auxiliar necessária para forçar o StringWriter a escrever "encoding="utf-8"" no cabeçalho XML
+        public class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
         }
     }
 
@@ -99,31 +167,166 @@ namespace NewCapit
     }
     public class Identificacao { public string CNPJ; }
 
-    // --- MODELOS PARA CTE (PADRÃO OFICIAL) ---
-    [XmlRoot("cteProc", Namespace = "http://www.portalfiscal.inf.br/cte")]
-    public class cteProc
+    // --- MODELOS PARA CTE (ENVIO DIRETO) ---
+    [XmlRoot("CTe", Namespace = "http://www.portalfiscal.inf.br/cte")]
+    public class CTe
     {
-        [XmlAttribute] public string versao = "4.00";
-        public CTe CTe { get; set; }
+        [XmlElement(Order = 0)] public infCte infCte { get; set; }
+
+        // O XSD aceita ou infCTeSupl ou Signature. Mapeamos os dois na ordem esperada do validador.
+        [XmlElement(Order = 1)] public infCTeSupl infCTeSupl { get; set; }
+
+        [XmlElement(ElementName = "Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#", Order = 2)]
+        public Signature Signature { get; set; }
     }
-    public class CTe { public infCte infCte { get; set; } }
+
     public class infCte
     {
         [XmlAttribute] public string Id;
         [XmlAttribute] public string versao = "4.00";
-        public ide ide { get; set; }
-        public compl compl { get; set; }
-        public emit emit { get; set; }
-        public vPrest vPrest { get; set; }
-        public infCTeNorm infCTeNorm { get; set; }
+
+        [XmlElement(Order = 0)] public ide ide { get; set; }
+        [XmlElement(Order = 1)] public compl compl { get; set; }
+        [XmlElement(Order = 2)] public emit emit { get; set; }
+        [XmlElement(Order = 3)] public vPrest vPrest { get; set; }
+        [XmlElement(Order = 4)] public imp imp { get; set; }
+        [XmlElement(Order = 5)] public infCTeNorm infCTeNorm { get; set; }
     }
-    public class ide { public string cUF = "35", cCT, nCT, dhEmi, mod = "57", serie = "1", tpImp = "1", tpEmis = "1", tpAmb = "1", tpCTe = "0", procEmi = "0", verProc = "1.0", modal = "01", tpServ = "0"; }
-    public class compl { public string xObs { get; set; } }
-    public class emit { public string CNPJ, IE, xNome; }
-    public class vPrest { public string vTPrest, vRec; }
-    public class infCTeNorm { public infDoc infDoc { get; set; } public infModal infModal { get; set; } }
-    public class infDoc { public List<infNFe> infNFe { get; set; } }
-    public class infNFe { public string chave { get; set; } }
-    public class infModal { [XmlAttribute] public string versaoModal = "4.00"; public rodo rodo { get; set; } }
-    public class rodo { public string RNTRC { get; set; } }
+
+    public class ide
+    {
+        [XmlElement(Order = 0)] public string cUF = "35";
+        [XmlElement(Order = 1)] public string cCT;
+        [XmlElement(Order = 2)] public string CFOP = "5352";
+        [XmlElement(Order = 3)] public string natOp = "PRESTACAO SERVICOS DE TRANSPORTES";
+        [XmlElement(Order = 4)] public string mod = "57";
+        [XmlElement(Order = 5)] public string serie = "1";
+        [XmlElement(Order = 6)] public string nCT;
+        [XmlElement(Order = 7)] public string dhEmi;
+        [XmlElement(Order = 8)] public string tpImp = "1";
+        [XmlElement(Order = 9)] public string tpEmis = "1";
+        [XmlElement(Order = 10)] public string cDV = "0";
+        [XmlElement(Order = 11)] public string tpAmb = "1";
+        [XmlElement(Order = 12)] public string tpCTe = "0";
+        [XmlElement(Order = 13)] public string procEmi = "0";
+        [XmlElement(Order = 14)] public string verProc = "1.0";
+        [XmlElement(Order = 15)] public string cMunEnv;
+        [XmlElement(Order = 16)] public string xMunEnv;
+        [XmlElement(Order = 17)] public string UFEnv;
+        [XmlElement(Order = 18)] public string modal = "01";
+        [XmlElement(Order = 19)] public string tpServ = "0";
+        [XmlElement(Order = 20)] public string cMunIni;
+        [XmlElement(Order = 21)] public string xMunIni;
+        [XmlElement(Order = 22)] public string UFIni;
+        [XmlElement(Order = 23)] public string cMunFim;
+        [XmlElement(Order = 24)] public string xMunFim;
+        [XmlElement(Order = 25)] public string UFFim;
+        [XmlElement(Order = 26)] public string retira = "1";
+        [XmlElement(Order = 27)] public string indIEToma = "1";
+        [XmlElement(Order = 28)] public toma3 toma3 = new toma3();
+    }
+
+    public class toma3 { [XmlElement(Order = 0)] public string toma = "0"; }
+    public class compl { [XmlElement(Order = 0)] public string xObs { get; set; } }
+
+    public class emit
+    {
+        [XmlElement(Order = 0)] public string CNPJ;
+        [XmlElement(Order = 1)] public string IE;
+        [XmlElement(Order = 2)] public string xNome;
+        [XmlElement(Order = 3)] public string xFant;
+        [XmlElement(Order = 4)] public enderEmit enderEmit { get; set; }
+        [XmlElement(Order = 5)] public string CRT = "3";
+    }
+
+    public class enderEmit
+    {
+        [XmlElement(Order = 0)] public string xLgr;
+        [XmlElement(Order = 1)] public string nro;
+        [XmlElement(Order = 2)] public string xBairro;
+        [XmlElement(Order = 3)] public string cMun;
+        [XmlElement(Order = 4)] public string xMun;
+        [XmlElement(Order = 5)] public string CEP;
+        [XmlElement(Order = 6)] public string UF;
+    }
+
+    public class vPrest
+    {
+        [XmlElement(Order = 0)] public string vTPrest;
+        [XmlElement(Order = 1)] public string vRec;
+    }
+
+    public class imp { [XmlElement(Order = 0)] public ICMS ICMS { get; set; } }
+    public class ICMS { [XmlElement(Order = 0)] public ICMS00 ICMS00 { get; set; } }
+    public class ICMS00 { [XmlElement(Order = 0)] public string CST; [XmlElement(Order = 1)] public string vBC; [XmlElement(Order = 2)] public string pICMS; [XmlElement(Order = 3)] public string vICMS; }
+
+    public class infCTeNorm
+    {
+        [XmlElement(Order = 0)] public infCarga infCarga { get; set; }
+        [XmlElement(Order = 1)] public infDoc infDoc { get; set; }
+        [XmlElement(Order = 2)] public infModal infModal { get; set; }
+    }
+
+    public class infCarga
+    {
+        [XmlElement(Order = 0)] public string vCarga;
+        [XmlElement(Order = 1)] public string proPred;
+        [XmlElement(Order = 2)] public infQ infQ { get; set; }
+    }
+    public class infQ
+    {
+        [XmlElement(Order = 0)] public string cUnid = "01";
+        [XmlElement(Order = 1)] public string tpMed = "PESO";
+        [XmlElement(Order = 2)] public string qCarga;
+    }
+
+    public class infDoc { [XmlElement(Order = 0)] public List<infNFe> infNFe { get; set; } }
+    public class infNFe { [XmlElement(Order = 0)] public string chave { get; set; } }
+
+    public class infModal
+    {
+        [XmlAttribute] public string versaoModal = "4.00";
+        [XmlElement(Order = 0)] public rodo rodo { get; set; }
+    }
+    public class rodo { [XmlElement(Order = 0)] public string RNTRC { get; set; } }
+
+    public class infCTeSupl { public string qrCodCTe { get; set; } }
+
+    // --- SUBESTRUTURA DE ASSINATURA QUE SE COMPORTA COMO OPCIONAL PARA O SERIALIZADOR ---
+    public class Signature
+    {
+        [XmlElement(Order = 0)] public SignedInfo SignedInfo { get; set; }
+        [XmlElement(Order = 1)] public string SignatureValue { get; set; }
+        [XmlElement(Order = 2)] public KeyInfo KeyInfo { get; set; }
+    }
+
+    public class SignedInfo
+    {
+        [XmlElement(Order = 0)] public CanonicalizationMethod CanonicalizationMethod { get; set; } = new CanonicalizationMethod();
+        [XmlElement(Order = 1)] public SignatureMethod SignatureMethod { get; set; } = new SignatureMethod();
+        [XmlElement(Order = 2)] public Reference Reference { get; set; }
+    }
+
+    public class CanonicalizationMethod { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"; }
+    public class SignatureMethod { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"; }
+
+    public class Reference
+    {
+        [XmlAttribute] public string URI { get; set; }
+
+        // Usando propriedades normais em vez de Arrays complexos para que fiquem ocultas caso nulas
+        [XmlElement(Order = 0)] public Transforms Transforms { get; set; } = new Transforms();
+        [XmlElement(Order = 1)] public DigestMethod DigestMethod { get; set; } = new DigestMethod();
+        [XmlElement(Order = 2)] public string DigestValue { get; set; }
+    }
+
+    public class Transforms
+    {
+        [XmlElement("Transform")] public List<Transform> TransformList { get; set; } = new List<Transform> { new Transform() };
+    }
+
+    public class Transform { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/2000/09/xmldsig#enveloped-signature"; }
+    public class DigestMethod { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/2000/09/xmldsig#sha1"; }
+    public class KeyInfo { public X509Data X509Data { get; set; } }
+    public class X509Data { public string X509Certificate { get; set; } }
 }

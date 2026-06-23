@@ -39,12 +39,13 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>                            
                             <asp:GridView 
-                                ID="gvPneus" 
+                                ID="gvPneus"  OnRowDataBound="gvPneus_RowDataBound"
                                 runat="server" 
                                 AutoGenerateColumns="false"
                                 HeaderStyle-CssClass="gv-header-custom"
                                 CssClass="table table-bordered table-hover"
                                 OnRowCommand="gvPneus_RowCommand">
+                                
                                 <Columns>
                                     <asp:BoundField DataField="Id" HeaderText="ID" />
                                     <asp:BoundField DataField="Numero" HeaderText="Número" />
@@ -60,10 +61,10 @@
 
                                     <asp:TemplateField>
                                         <ItemTemplate>
-                                            <asp:LinkButton runat="server" CommandName="Editar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-warning btn-sm">Numerar</asp:LinkButton>
+                                            <asp:LinkButton runat="server" CommandName="Editar" ID="lnkEditar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-warning btn-sm">Editar</asp:LinkButton>
                                             <asp:LinkButton
                                                 runat="server"
-                                                OnClientClick="return confirm('Confirma o Descarte do PNEU?');"
+                                                OnClientClick="return confirm('Confirma o Descarte do PNEU?');" ID="lnkExcluir"
                                                 CommandName="Excluir" 
                                                 CommandArgument='<%# Eval("Id") %>'
                                                 CssClass="btn btn-danger btn-sm">Descartar</asp:LinkButton>

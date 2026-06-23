@@ -10,7 +10,7 @@ using System.Web.UI.WebControls;
 
 namespace NewCapit.dist.pages
 {
-    public partial class ControleCarretas : System.Web.UI.Page
+    public partial class ControleCarretas : PaginaBase
     {
         SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
@@ -18,6 +18,7 @@ namespace NewCapit.dist.pages
 
             if (!IsPostBack)
             {
+                VerificarBotoesPagina(btnInserir: lnkNovoCadastro);
                 ContagemCarreta();
                 AllDataCarreta();
                 if (Session["UsuarioLogado"] != null)
@@ -442,6 +443,17 @@ namespace NewCapit.dist.pages
         {
             // Exemplo: abrir o modal ao carregar a página
             ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModalNovaCarreta", "abrirModalNovaCarreta();", true);
+        }
+
+        protected void lnkNovoCadastro_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/dist/pages/Frm_CadCarreta.aspx");
+        }
+
+        protected void gvCarretas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "btnExcluirLinha");
+
         }
     }
 }

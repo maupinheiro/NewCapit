@@ -94,7 +94,7 @@
                                             </thead>
 
                                             <tbody>
-                                                <asp:Repeater ID="rpCarregamentos"  runat="server"
+                                                <asp:Repeater ID="rpCarregamentos"  runat="server" OnItemDataBound="rpCarregamentos_ItemDataBound"
                                                     OnItemCommand="rpCarregamentos_ItemCommand">
 
                                                     <ItemTemplate>
@@ -137,7 +137,7 @@
                                                             </td>
 
                                                             <td>
-                                                                <asp:LinkButton runat="server"
+                                                                <asp:LinkButton runat="server" ID="lnkEditar"
                                                                     CommandName="Editar"
                                                                     CommandArgument='<%# Eval("id") %>'
                                                                     CssClass="btn btn btn-primary">

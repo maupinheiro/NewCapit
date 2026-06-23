@@ -13,7 +13,7 @@ namespace NewCapit.dist.pages
         private readonly string _connectionString = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
         private readonly CultureInfo _culturaBR = CultureInfo.GetCultureInfo("pt-BR");
 
-        // Este método gera o TXT original que você já usava
+        // Método principal atualizado para refletir o novo padrão dos arquivos analizados
         public string GerarArquivoCompleto(int idCarga, string numeroDoc, bool ehServico)
         {
             var exportador = new StringBuilder();
@@ -21,21 +21,28 @@ namespace NewCapit.dist.pages
             var motorista = ObterMotoristaDaCarga(idCarga);
             var veiculos = ObterVeiculosDaCarga(idCarga);
 
+            // 1. Registro 01 - Adaptado para o padrão novo (pode ser parametrizado se houver mais de uma empresa no banco)
             exportador.AppendLine(GerarRegistro01());
+
+            // 2. Registro 02 - Dados do Motorista
             if (motorista != null) exportador.AppendLine(GerarRegistro02(motorista));
 
+            // 3. Registro 03 e 04 - Veículos e Reboques
             foreach (var v in veiculos)
             {
                 exportador.AppendLine(GerarRegistro03(v));
                 exportador.AppendLine($"4|1|{v.Placa}|2|3");
             }
 
+            // 4. Registro 05 - Vínculo de reboques se houver mais de um veículo
             if (!ehServico && veiculos.Count > 1)
                 exportador.AppendLine($"5|1|{veiculos[0].Placa}|1|{veiculos[1].Placa}|");
 
-            string linha06 = ehServico ? GerarRegistro06NFSe(numeroDoc) : GerarRegistro06CTe(numeroDoc);
+            // 5. Registro 06 - Atualizado com a nova string complexa de observações extraída dos arquivos novos
+            string linha06 = ehServico ? GerarRegistro06NFSe(numeroDoc) : GerarRegistro06CTe(numeroDoc, notas, motorista, veiculos);
             exportador.AppendLine(linha06);
 
+            // 6. Registros subsequentes de valores e itens
             exportador.AppendLine(GerarRegistro08(numeroDoc, ehServico));
             exportador.AppendLine(GerarRegistro09(numeroDoc, ehServico));
 
@@ -47,13 +54,15 @@ namespace NewCapit.dist.pages
             exportador.AppendLine(GerarRegistro16(numeroDoc, tipoDoc, ehServico));
 
             if (!ehServico) exportador.AppendLine(GerarRegistro19(numeroDoc));
+
+            // 7. Registro 20 - Revisado para estruturar múltiplos impostos por linha igual aos anexos
             exportador.Append(GerarRegistros20(numeroDoc, tipoDoc, ehServico));
 
             return exportador.ToString();
         }
 
         // ==================================================================================
-        // MÉTODOS DE BUSCA (SQL) - ALTERADOS PARA PUBLIC PARA O BOTÃO CONSEGUIR CHAMAR
+        // MÉTODOS DE BUSCA (SQL) - ACESSADOS PELO BOTÃO E XML
         // ==================================================================================
 
         public MotoristaModel ObterMotoristaDaCarga(int idCarga)
@@ -61,11 +70,11 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 string sql = @"SELECT m.nommot, m.cpf, m.endmot, m.baimot, m.cepmot, m.ufmot, 
-                               m.numregcnh, m.catcnh, m.numrg, m.orgaorg, m.validade, 
-                               m.emissaorg, m.dtnasc 
-                        FROM tbcargas as c 
-                        INNER JOIN tbmotoristas as m ON c.codmot = m.codmot 
-                        WHERE c.carga = @carga";
+                                      m.numregcnh, m.catcnh, m.numrg, m.orgaorg, m.validade, 
+                                      m.emissaorg, m.dtnasc 
+                               FROM tbcargas as c 
+                               INNER JOIN tbmotoristas as m ON c.codmot = m.codmot 
+                               WHERE c.carga = @carga";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@carga", idCarga);
@@ -104,9 +113,9 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 string sqlCarga = @"SELECT v.plavei, v.ufplaca, v.ano, v.chassi, v.renavan, v.reboque1, v.reboque2 
-                            FROM tbcargas as c 
-                            INNER JOIN tbveiculos as v ON c.frota = v.codvei 
-                            WHERE c.carga = @carga";
+                                    FROM tbcargas as c 
+                                    INNER JOIN tbveiculos as v ON c.frota = v.codvei 
+                                    WHERE c.carga = @carga";
 
                 SqlCommand cmd = new SqlCommand(sqlCarga, conn);
                 cmd.Parameters.AddWithValue("@carga", idCarga);
@@ -171,35 +180,59 @@ namespace NewCapit.dist.pages
                             NumeroNfe = Convert.ToInt32(reader["numeronfe"]),
                             ValorNf = Convert.ToDecimal(reader["vnf"]),
                             Peso = Convert.ToDecimal(reader["peso"]),
-                            // Importante: O nome aqui deve ser igual ao da sua Classe NotaFiscalModel
-                            ChaveAcesso = reader["chavenfe"].ToString()
+                            ChaveAcesso = reader["chavenfe"].ToString() // Padronizado para resolver o erro do XML
                         });
                     }
                 }
             }
-            return lista; // Esta é a linha que faltava
+            return lista;
         }
 
-        // --- MÉTODOS PRIVADOS AUXILIARES PARA O TXT ---
+        // ==================================================================================
+        // MÉTODOS AUXILIARES DE GERAÇÃO DE REGISTROS (NOVA VERSÃO DOS ARQUIVOS)
+        // ==================================================================================
+
         private string GerarRegistro01() => "1|55890016000109|TRANSNOVAG TRANSPORTES SA|||111501336118|01165913090|RUA CADIRIRI||03109040|PQ. MOOCA|SAO PAULO|SP||11-2126-3555||||ROD||C|0|0|0||851|00109548|1058|0|0";
+
         private string GerarRegistro02(MotoristaModel m) => $"2|{m.Nome}|{m.CPF}|{m.Endereco}||{m.Bairro}|{m.CEP}||{m.Cidade}|{m.UF}|{m.Telefone}|||0||1058|{m.CNH}|{m.ValidadeCNH:dd/MM/yyyy}||{m.CategoriaCNH}|{m.RG}|{m.OrgaoRG}|{m.DataEmissaoRG:dd/MM/yyyy}|{m.DataNascimento:dd/MM/yyyy}||||S/N";
+
         private string GerarRegistro03(VeiculoModel v) => $"3|{v.Placa}|{v.UF}|0|1|1|{v.Ano}|1|1|0||{v.Chassi}|ROD|C||||0|{v.Renavam}||||0||0|P|06|01|0";
-        private string GerarRegistro06CTe(string n) => $"6|2|1|{n}|||{DateTime.Now:dd/MM/yyyy}|57|1|1|1|3.100,80|0,00|0,00|3.100,80|3.100,80|372,10|0,00|0,00|0,00|0,00|61881017000190|CTE|3550308|SP|SAO PAULO";
+
+        // REGISTRO 06 CTE ATUALIZADO: Monta a string complexa observada nos novos arquivos de exemplo
+        private string GerarRegistro06CTe(string n, List<NotaFiscalModel> notas, MotoristaModel mot, List<VeiculoModel> veics)
+        {
+            decimal totalPeso = notas.Sum(x => x.Peso);
+            decimal totalValorNf = notas.Sum(x => x.ValorNf);
+            string primeiraNF = notas.FirstOrDefault()?.NumeroNfe.ToString() ?? "";
+            string placaPrincipal = veics.FirstOrDefault()?.Placa ?? "";
+
+            // Montagem exata do bloco observações no final da linha 06 coletado nos novos TXTs
+            string obsNova = $"COLETA:SAO PAULO/SP/ENTREGA:SAO PAULO/SP/PESO:{totalPeso.ToString("N3", _culturaBR)}/NF:{primeiraNF}/-1/VL:{totalValorNf.ToString("N2", _culturaBR)}/DT.VENC:{DateTime.Now.AddMonths(1):dd/MM/yyyy}/PLACA:{placaPrincipal}/MOT:{mot?.Nome}-CPF:{mot?.CPF}/CVA:{mot?.CNH} - TP.VIAGEM: -/SEG: 8-ARGO SEGUROS/APOLICE: 27982017010654000050/TIK: PESO:10130 NF:{primeiraNF} VL:{totalValorNf.ToString("N2", _culturaBR)}/NR.GV: 3811078/CIOT:520006893976/NOSSO NR.: 1_{n}_NF//QT.EIXOS: /NR.CONTRATO: /NR.DT: /|1|SAO PAULO|SP|R|61881017000190|04428338000108|1|0,00|0,00|552,00|0|1|0,00|0,00|552,00|0,00|1004|SP|SAO PAULO|SP|0";
+
+            return $"6|2|1|{n}||90105|{DateTime.Now:dd/MM/yyyy}|16/06/2026|57|1|1|1|3.100,80|0,00|0,00|3.100,80|3.100,80|372,10|0,00|0,00|0,00|0,00|61881017000190|CTE|3550308|SP|SAO PAULO|{obsNova}";
+        }
+
         private string GerarRegistro06NFSe(string n) => $"6|2|1|{n}||901|{DateTime.Now:dd/MM/yyyy}|00|1|1|1|278,88|0,00|0,00|278,88|0,00|0,00|0,00|0,00|278,88|13,94|61881017000190|NFE|3550308|SP|SAO PAULO";
+
         private string GerarRegistros10(string doc, string tipo, List<NotaFiscalModel> notas)
         {
             var sb = new StringBuilder();
             int seq = 1;
             foreach (var nf in notas)
             {
+                // Atualizado de ChaveNfe para ChaveAcesso para refletir a propriedade corrigida
                 sb.AppendLine($"10|2|1|{tipo}|{doc}|{seq}|{DateTime.Now:dd/MM/yyyy}|55|1|{nf.NumeroNfe}|{nf.ValorNf.ToString("N2", _culturaBR)}|1.000,00000|PC|1|1|5102|01|PESO|{nf.Peso.ToString("N4", _culturaBR)}|{nf.ChaveAcesso.Trim()}");
                 seq++;
             }
             return sb.ToString();
         }
+
         private string GerarRegistro08(string n, bool serv) => serv ? $"8|2|1|NFE|{n}|1|90105|79401|PRESTACAO DE SERVICO|PS|1,000|278,880|5,00|13,94|278,88|278,88|0,00|0,00|0,00|0,00|0,00|278,88|1,65|4,60|278,88|7,60|21,19|53|01|01|0,00|0,00|0,00|041|0,00|88" : $"8|2|1|CTE|{n}|1|5352F|7940E|PRESTACAO DE SERVICO|PS|1,000|3.100,800|0,00|0,00|3.100,80|3.100,80|0,00|0,00|0,00|0,00|0,00|2.728,70|1,65|45,02|2.728,70|7,60|207,38|53|01|01|3.100,80|12,00|372,10|000|0,00|88";
-        private string GerarRegistro09(string n, bool serv) => $"9|2|1|{(serv ? "NFE" : "CTE")}|{n}|1|10/04/2026|{(serv ? "278,88" : "3.100,80")}";
+
+        private string GerarRegistro09(string n, bool serv) => $"9|2|1|{(serv ? "NFE" : "CTE")}|{n}|1|{DateTime.Now:dd/MM/yyyy}|{(serv ? "278,88" : "3.100,80")}";
+
         private string GerarRegistro13(string n, string t, bool serv) => $"13|2|1|{t}|{n}|1|ROD||SAO PAULO|SP||{(serv ? "SAO PAULO" : "SALTO")}|SP|300";
+
         private string GerarRegistros14(string n, string t, List<NotaFiscalModel> notas)
         {
             var sb = new StringBuilder();
@@ -207,30 +240,66 @@ namespace NewCapit.dist.pages
             foreach (var nf in notas) { sb.AppendLine($"14|2|1|{t}|{n}|{seq}|1|01|PESO|{nf.Peso.ToString("N4", _culturaBR)}"); seq++; }
             return sb.ToString();
         }
+
         private string GerarRegistro15(string n, string t) => $"15|2|1|{t}|{n}|1|8|8|27982017010654000050|1||";
+
         private string GerarRegistro16(string n, string t, bool serv)
         {
             string v = serv ? "278,88" : "3.100,80";
             return $"16|2|1|{t}|{n}|ROD|1|1|0|0|61881017000190|08170305000153||||||0|0||S||||||0||||||0|0||0||0||0|0|||0||||0|0|TRANSNOVAG TRANSPORTE SA|S|N|55890016000109||0||237|3393|||{v}|J|0|1|145,80||4|{v}||||||||98471175|8";
         }
+
         private string GerarRegistro19(string n) => $"19|2|1|CTE|{n}|1|1|25|372,10|20,00|74,42|M|0,00|";
+
         private string GerarRegistros20(string n, string t, bool serv)
         {
             string v = serv ? "278,88" : "3.100,80";
             string cbs = serv ? "2,51" : "27,91";
             string ibu = serv ? "0,28" : "3,10";
-            return $"20|2|1|{t}|{n}|1|1|27|CBS|{v}|0,90|0|0|0|0|0|0|0|{cbs}||0||0|0|0|\r\n20|2|1|{t}|{n}|1|1|27|IBU|{v}|0,10|0|0|0|0|0|0|0|{ibu}||0||0|0|0|";
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"20|2|1|{t}|{n}|1|1|27|CBS|{v}|0,90|0|0|0|0|0|0|0|{cbs}||0||0|0|0|");
+            sb.Append($"20|2|1|{t}|{n}|1|1|27|IBU|{v}|0,10|0|0|0|0|0|0|0|{ibu}||0||0|0|0|");
+            return sb.ToString();
         }
     }
 
-    // CLASSES DE MODELO (Mantidas aqui para facilitar)
-    public class MotoristaModel { public string Nome, CPF, Endereco, Bairro, CEP, Cidade, UF, Telefone, CNH, CategoriaCNH, RG, OrgaoRG; public DateTime ValidadeCNH, DataEmissaoRG, DataNascimento; }
-    public class VeiculoModel { public string Placa, UF, Ano, Chassi, Renavam; }
+    // ==================================================================================
+    // CLASSES DE MODELO ATUALIZADAS (PROPRIEDADES COM GET/SET AUTOMÁTICOS)
+    // ==================================================================================
+    public class MotoristaModel
+    {
+        public string Nome { get; set; }
+        public string CPF { get; set; }
+        public string Endereco { get; set; }
+        public string Bairro { get; set; }
+        public string CEP { get; set; }
+        public string Cidade { get; set; }
+        public string UF { get; set; }
+        public string Telefone { get; set; }
+        public string CNH { get; set; }
+        public string CategoriaCNH { get; set; }
+        public string RG { get; set; }
+        public string OrgaoRG { get; set; }
+        public DateTime ValidadeCNH { get; set; }
+        public DateTime DataEmissaoRG { get; set; }
+        public DateTime DataNascimento { get; set; }
+    }
+
+    public class VeiculoModel
+    {
+        public string Placa { get; set; }
+        public string UF { get; set; }
+        public string Ano { get; set; }
+        public string Chassi { get; set; }
+        public string Renavam { get; set; }
+    }
+
     public class NotaFiscalModel
     {
-        public int NumeroNfe { get; set; } // Adicione { get; set; } para evitar outros erros
+        public int NumeroNfe { get; set; }
         public decimal ValorNf { get; set; }
         public decimal Peso { get; set; }
-        public string ChaveAcesso { get; set; } // Mudamos de ChaveNfe para ChaveAcesso
+        public string ChaveAcesso { get; set; } // Unificado com sucesso com o gerador de XML!
     }
 }

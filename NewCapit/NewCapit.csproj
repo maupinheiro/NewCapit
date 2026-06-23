@@ -489,6 +489,7 @@
     <Content Include="dist\pages\ColaboradoresManutencao.aspx" />
     <Content Include="dist\pages\ControleAbastecimento.aspx" />
     <Content Include="dist\pages\ControlePneus.aspx" />
+    <Content Include="dist\pages\DownloadSapiens.aspx" />
     <Content Include="dist\pages\EntradaCombustivel.aspx" />
     <Content Include="dist\pages\EntradaPecas.aspx" />
     <Content Include="dist\pages\FinalizarOS.aspx" />
@@ -699,6 +700,7 @@
     <Content Include="dist\pages\GestaoDeCargasPernambuco.aspx" />
     <Content Include="dist\pages\GestaoDeEntregasPernambuco.aspx" />
     <Content Include="dist\pages\ControleDePedagioPernambuco.aspx" />
+    <Content Include="dist\pages\ControleAcesso2.aspx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4827,6 +4829,13 @@
     <Compile Include="dist\pages\ControlePneus.aspx.designer.cs">
       <DependentUpon>ControlePneus.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\DownloadSapiens.aspx.cs">
+      <DependentUpon>DownloadSapiens.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\DownloadSapiens.aspx.designer.cs">
+      <DependentUpon>DownloadSapiens.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\EntradaCombustivel.aspx.cs">
       <DependentUpon>EntradaCombustivel.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5598,9 +5607,19 @@
     <Compile Include="dist\pages\ControleDePedagioPernambuco.aspx.designer.cs">
       <DependentUpon>ControleDePedagioPernambuco.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ControleAcesso2.aspx.cs">
+      <DependentUpon>ControleAcesso2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleAcesso2.aspx.designer.cs">
+      <DependentUpon>ControleAcesso2.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\XmlExportService.cs" />
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />
+    <Compile Include="PaginaBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="dist\pages\Ver_txt.aspx.cs">
       <DependentUpon>Ver_txt.aspx</DependentUpon>
