@@ -489,6 +489,7 @@
     <Content Include="dist\pages\ColaboradoresManutencao.aspx" />
     <Content Include="dist\pages\ControleAbastecimento.aspx" />
     <Content Include="dist\pages\ControlePneus.aspx" />
+    <Content Include="dist\pages\DownloadSapiens.aspx" />
     <Content Include="dist\pages\EntradaCombustivel.aspx" />
     <Content Include="dist\pages\EntradaPecas.aspx" />
     <Content Include="dist\pages\FinalizarOS.aspx" />
@@ -4826,6 +4827,13 @@
     </Compile>
     <Compile Include="dist\pages\ControlePneus.aspx.designer.cs">
       <DependentUpon>ControlePneus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\DownloadSapiens.aspx.cs">
+      <DependentUpon>DownloadSapiens.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\DownloadSapiens.aspx.designer.cs">
+      <DependentUpon>DownloadSapiens.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\EntradaCombustivel.aspx.cs">
       <DependentUpon>EntradaCombustivel.aspx</DependentUpon>

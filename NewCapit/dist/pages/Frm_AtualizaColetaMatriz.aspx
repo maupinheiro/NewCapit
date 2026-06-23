@@ -1509,12 +1509,13 @@
                                                                                                             </asp:GridView>
                                                                                                         </div>
 </div>
-                                                                                                        <%-- <div class="col-md-2">
+                                                                                                        <div class="col-md-2">
                                                                                                                <asp:Button ID="btnGeraDoc" CssClass="btn btn-outline-warning w-100" CommandName="GeraDoc" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e TXT" />
                                                                                                             </div>
+                                                                                                             
                                                                                                         <div class="col-md-2">
                                                                                                                 <asp:Button ID="btnGerarXml" CssClass="btn btn-outline-warning w-100" CommandName="GeraXml" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e XML" />
-                                                                                                             </div>--%>
+                                                                                                             </div>
                                                                                                    <%-- </div>
                                                                                                    
                                                                                                 </div>--%>
