@@ -106,7 +106,7 @@
                                         <asp:BoundField DataField="unidade" HeaderText="UNIDADE" />
                                         <asp:BoundField DataField="estoque_peca" HeaderText="ESTOQUE ATUAL" />
                                         <asp:BoundField DataField="estoque_minimo" HeaderText="ESTOQUE MINIMO" />
-                                        <asp:BoundField DataField="tipo_peca" HeaderText="TIPO DE FORNECEDOR" />
+                                        <asp:BoundField DataField="aplicacao" HeaderText="APLICAÇÃO/USO" />
                                         <asp:BoundField
                                             DataField="valor_unitario"
                                             HeaderText="VALOR UNIT."
@@ -170,7 +170,8 @@
                                                 <asp:ListItem Text="Selecione..." Value="" />
                                                 <asp:ListItem Text="PNEU" Value="PNEU" />
                                                 <asp:ListItem Text="COMBUSTIVEL" Value="COMBUSTIVEL" />
-                                                <asp:ListItem Text="OUTRO" Value="OUTRO" /> 
+                                                <asp:ListItem Text="SERVIÇO" Value="SERVIÇO" />
+                                                <asp:ListItem Text="OUTRO" Value="OUTRO" />
                                             </asp:DropDownList>
                                         </div>
                                         <!-- Descrição da peça -->
@@ -198,6 +199,19 @@
                                             <label>Estoque Mínimo</label>
                                             <asp:TextBox ID="txtEstoqueMinimoModal" runat="server" CssClass="form-control" MaxLength="5"
                                                 onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                        </div>
+                                        <!-- Tipo -->
+                                        <div class="form-group">
+                                            <label>Aplicação:</label>
+                                            <asp:DropDownList ID="ddlAplicacao" runat="server" CssClass="form-control">
+                                                <asp:ListItem Text="Selecione..." Value="" />
+                                                <asp:ListItem Text="Mecânica" Value="Mecânica" />
+                                                <asp:ListItem Text="Eletrica" Value="Eletrica" />
+                                                <asp:ListItem Text="Borracharia" Value="Borracharia" />
+                                                <asp:ListItem Text="Funilaria" Value="Funilaria" />
+                                                <asp:ListItem Text="Outra" Value="Outra" />
+                                                <asp:ListItem Text="Diversas" Value="Diversas" />
+                                            </asp:DropDownList>
                                         </div>
 
                                     </div>

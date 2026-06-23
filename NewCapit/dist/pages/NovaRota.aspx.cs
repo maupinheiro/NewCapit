@@ -2,6 +2,7 @@
 //using DocumentFormat.OpenXml.Office2010.Excel;
 //using DocumentFormat.OpenXml.Presentation;
 //using DocumentFormat.OpenXml.Wordprocessing;
+using iText.Signatures.Validation.Report.Pades;
 using MathNet.Numerics;
 using Newtonsoft.Json;
 using System;
@@ -366,10 +367,10 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string sql = @"
-        INSERT INTO tbdistanciapremio
-        (UF_Origem, Origem, UF_Destino, Destino, Distancia, tempo_min)
-        VALUES
-        (@UF_Origem, @Origem, @UF_Destino, @Destino, @Distancia, @tempo_min)";
+                INSERT INTO tbdistanciapremio
+                (UF_Origem, Origem, UF_Destino, Destino, Distancia, tempo_min)
+                VALUES
+                (@UF_Origem, @Origem, @UF_Destino, @Destino, @Distancia, @tempo_min)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@UF_Origem", origem[1].ToUpper());
@@ -388,7 +389,7 @@ namespace NewCapit.dist.pages
             string ufdestino = destino[1].ToUpper();
             string cidadedestino = RemoverAcentos(destino[0].ToUpper());
 
-            InsertRotaPopup(distancia, tempo,uforigem,cidadeorigem, ufdestino,cidadedestino);
+            //InsertRotaPopup(distancia, tempo,uforigem,cidadeorigem, ufdestino,cidadedestino);
 
             //MostrarMsg("Distância cadastrada para essa rota.", "success");
         }
@@ -430,201 +431,206 @@ namespace NewCapit.dist.pages
         }
         public void InsertRota()
         {
-            
-            string query = "SELECT (rota + incremento) as ProximaRota FROM tbcontadores";
+            string usuario = Session["UsuarioLogado"].ToString();
+            string descr_rota =
+                RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
+                " X " +
+                RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "/" + ddlUfDestino.SelectedItem.Text;
+            bool rotaExiste = false;
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                string sqlExiste = @"
+                    IF EXISTS (
+                        SELECT 1
+                        FROM tbrotasdeentregas
+                        WHERE desc_rota = @desc_rota
+                    )
+                        SELECT 1
+                    ELSE
+                        SELECT 0";
+
+                SqlCommand cmdExiste = new SqlCommand(sqlExiste, conn);
+                cmdExiste.Parameters.AddWithValue("@desc_rota", descr_rota);
+
+                conn.Open();
+
+                rotaExiste = Convert.ToInt32(cmdExiste.ExecuteScalar()) == 1;
+            }
+           
 
             // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            if (!rotaExiste)
             {
-                try
+                string query = "SELECT (rota + incremento) as ProximaRota FROM tbcontadores";
+
+                using (SqlConnection conn = new SqlConnection(
+                    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     conn.Open();
+
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        // Crie o comando SQL
-                        //SqlCommand cmd = new SqlCommand(query, conn);
-
-                        // Execute o comando e obtenha os dados em um DataReader
                         SqlDataReader reader = cmd.ExecuteReader();
 
-                        if (reader.HasRows)
+                        if (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                // Preencher o TextBox com o nome encontrado 
-                                rota = reader["ProximaRota"].ToString();
-                            }
+                            rota = reader["ProximaRota"].ToString();
                         }
-
-                    }
-                    string id = "1";
-
-                    // Verifica se o ID foi fornecido e é um número válido
-                    if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idConvertido))
-                    {
-                        // Acione o toast quando a página for carregada
-                        string script = "<script>showToast('ID invalido ou não fornecido.');</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        return;
-                    }
-                    string sql = @"UPDATE tbcontadores SET rota = @rota WHERE id = @id";
-                    try
-                    {
-                        using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                        using (SqlCommand cmd = new SqlCommand(sql, con))
-                        {
-                            cmd.Parameters.AddWithValue("@rota", rota);
-                            cmd.Parameters.AddWithValue("@id", idConvertido);
-
-                            con.Open();
-                            int rowsAffected = cmd.ExecuteNonQuery();
-
-                            if (rowsAffected > 0)
-                            {
-                                // atualiza  
-
-                                
-                            }
-                            else
-                            {
-                                // Acione o toast quando a página for carregada
-                                string script = "<script>showToast('Erro ao atualizar o número da rota.');</script>";
-                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                            }
-
-                        }
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                        string script = $"alert('{mensagemErro}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
                     }
                 }
-                catch (Exception ex)
+
+                // Atualiza o contador somente para nova rota
+                string sqlContador = @"UPDATE tbcontadores SET rota = @rota WHERE id = 1";
+
+                using (SqlConnection con = new SqlConnection(
+                    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                using (SqlCommand cmd = new SqlCommand(sqlContador, con))
                 {
-                    //Tratar erro
-                    //txtResultado.Text = "Erro: " + ex.Message;
+                    cmd.Parameters.AddWithValue("@rota", rota);
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
                 }
 
-                InsertTbDistancia();
+                //InsertTbDistancia();
+            }
+            else
+            {
+                // Busca o código da rota existente
+                using (SqlConnection conn = new SqlConnection(
+                    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    string sql = @"SELECT rota
+                       FROM tbrotasdeentregas
+                       WHERE desc_rota = @desc_rota";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@desc_rota", descr_rota);
+
+                    conn.Open();
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null)
+                        rota = result.ToString();
+                }
             }
             int minutos = int.Parse(lblTempo.InnerHtml.Replace(" min", ""));
 
             TimeSpan tempo = TimeSpan.FromMinutes(minutos);
             string resultado = tempo.ToString(@"hh\:mm\:ss");
 
-            decimal distancia = decimal.Parse(
-                lblDistancia.InnerHtml.Replace(",", "."),
-                CultureInfo.InvariantCulture);
 
-            string descr_rota =
-                RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
-                " X " +
-                RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "/" + ddlUfDestino.SelectedItem.Text;
+            decimal distancia = 0;
+
+            string valor = lblDistancia.InnerHtml.Trim();
+
+            if (decimal.TryParse(
+                    valor.Replace(",", "."),
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture,
+                    out distancia))
+            {
+                // sucesso
+            }
+            else
+            {
+                // valor inválido
+                distancia = 0;
+            }
 
             using (SqlConnection conn = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
-                //string sql = @"
-                //        IF NOT EXISTS (
-                //            SELECT 1 
-                //            FROM tbrotasdeentregas 
-                //            WHERE desc_rota = @desc_rota
-                //        )
-                //        BEGIN
-                //            INSERT tbrotasdeentregas
-                //            (rota,desc_rota, cidade_expedidor, uf_expedidor,
-                //             cidade_recebedor, uf_recebedor,
-                //             distancia, tempo, deslocamento, pedagio)
-                //            VALUES
-                //            (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
-                //             @cidade_recebedor, @uf_recebedor,
-                //             @distancia, @tempo, @deslocamento, @pedagio)
-                //        END
-                //        ELSE
-                //        BEGIN
-                //            RAISERROR ('ROTA_DUPLICADA', 16, 1)
-                //        END";
-
-                //SqlCommand cmd = new SqlCommand(sql, conn);
-                //cmd.Parameters.AddWithValue("@rota", rota);
-                //cmd.Parameters.AddWithValue("@desc_rota", descr_rota);
-                //cmd.Parameters.AddWithValue("@cidade_expedidor",RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text));
-                //cmd.Parameters.AddWithValue("@uf_expedidor", ddlUfOrigem.SelectedItem.Text);
-                //cmd.Parameters.AddWithValue("@cidade_recebedor", RemoverAcentos(ddlCidadeDestino.SelectedItem.Text));
-                //cmd.Parameters.AddWithValue("@uf_recebedor", ddlUfDestino.SelectedItem.Text); // 👈 corrigido
-                //cmd.Parameters.AddWithValue("@distancia", distancia);
-                //cmd.Parameters.AddWithValue("@tempo", resultado);
-                //cmd.Parameters.AddWithValue("@deslocamento", lblDeslocamento.Text);
-                //cmd.Parameters.AddWithValue("@pedagio", ddlPedagio.SelectedItem.Text);
-
-                //conn.Open();
-
-                //try
-                //{
-                //    cmd.ExecuteNonQuery();
-                //    MostrarMsg("Rota cadastrada com sucesso!");
-                //}
-                //catch (SqlException ex)
-                //{
-                //    if (ex.Message.Contains("ROTA_DUPLICADA"))
-                //        MostrarMsg("Esta rota já está cadastrada. Verifique o código: " + rota);
-                //    else
-                //        throw;
-                //}
+                
                 string sql = @"
                 IF EXISTS (
                     SELECT 1
                     FROM tbrotasdeentregas
-                    WHERE rota = @rota
+                    WHERE desc_rota = @desc_rota
                 )
                 BEGIN
                     UPDATE tbrotasdeentregas
-                    SET
-                        desc_rota = @desc_rota,
-                        cidade_expedidor = @cidade_expedidor,
-                        uf_expedidor = @uf_expedidor,
-                        cidade_recebedor = @cidade_recebedor,
-                        uf_recebedor = @uf_recebedor,
-                        distancia = @distancia,
-                        tempo = @tempo,
-                        deslocamento = @deslocamento,
-                        pedagio = @pedagio
-                    WHERE rota = @rota
+                        SET
+                            desc_rota = @desc_rota,
+                            cidade_expedidor = @cidade_expedidor,
+                            uf_expedidor = @uf_expedidor,
+                            cidade_recebedor = @cidade_recebedor,
+                            uf_recebedor = @uf_recebedor,
+                            distancia = @distancia,
+                            tempo = @tempo,
+                            deslocamento = @deslocamento,
+                            valor_icms = @valor_icms,
+                            valor_pis = @valor_pis,
+                            valor_cofins = @valor_cofins,
+                            valor_irpj = @valor_irpj,
+                            valor_csll = @valor_csll,
+                            valor_ibs = @valor_ibs,
+                            valor_cbs = @valor_cbs,
+                            valor_iss = @valor_iss,
+                            valor_sestsenat = @valor_sestsenat,
+                            valor_inss = @valor_inss,
+                            data_alteracao = GETDATE(),
+                            usuario_alteracao = @usuario_alteracao,
+                            pedagio = @pedagio
+                        WHERE desc_rota = @desc_rota
                 END
                 ELSE
                 BEGIN
                     INSERT INTO tbrotasdeentregas
-                    (
-                        rota,
-                        desc_rota,
-                        cidade_expedidor,
-                        uf_expedidor,
-                        cidade_recebedor,
-                        uf_recebedor,
-                        distancia,
-                        tempo,
-                        deslocamento,
-                        situacao,
-                        pedagio
-                    )
-                    VALUES
-                    (
-                        @rota,
-                        @desc_rota,
-                        @cidade_expedidor,
-                        @uf_expedidor,
-                        @cidade_recebedor,
-                        @uf_recebedor,
-                        @distancia,
-                        @tempo,
-                        @deslocamento,
-                        'ATIVO',
-                        @pedagio
-                    )
+                        (
+                            rota,
+                            desc_rota,
+                            cidade_expedidor,
+                            uf_expedidor,
+                            cidade_recebedor,
+                            uf_recebedor,
+                            distancia,
+                            tempo,
+                            deslocamento,
+                            situacao,
+                            valor_icms,
+                            valor_pis,
+                            valor_cofins,
+                            valor_irpj,
+                            valor_csll,
+                            valor_ibs,
+                            valor_cbs,
+                            valor_iss,
+                            valor_sestsenat,
+                            valor_inss,
+                            data_cadastro,
+                            usuario_cadastro,
+                            pedagio
+                        )
+                        VALUES
+                        (
+                            @rota,
+                            @desc_rota,
+                            @cidade_expedidor,
+                            @uf_expedidor,
+                            @cidade_recebedor,
+                            @uf_recebedor,
+                            @distancia,
+                            @tempo,
+                            @deslocamento,
+                            'ATIVO',
+                            @valor_icms,
+                            @valor_pis,
+                            @valor_cofins,
+                            @valor_irpj,
+                            @valor_csll,
+                            @valor_ibs,
+                            @valor_cbs,
+                            @valor_iss,
+                            @valor_sestsenat,
+                            @valor_inss,
+                            CONVERT(VARCHAR(16), GETDATE(), 103) + ' ' + LEFT(CONVERT(VARCHAR(8), GETDATE(), 108), 5),
+                            @usuario_cadastro,
+                            @pedagio
+                        )
                 END";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -639,483 +645,267 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@tempo", resultado);
                 cmd.Parameters.AddWithValue("@deslocamento", lblDeslocamento.Text);
                 cmd.Parameters.AddWithValue("@pedagio", ddlPedagio.SelectedItem.Text);
-
+                cmd.Parameters.Add("@valor_icms", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtICMS_I.Text);
+                cmd.Parameters.Add("@valor_pis", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPIS_I.Text);
+                cmd.Parameters.Add("@valor_cofins", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtCOFINS_I.Text);
+                cmd.Parameters.Add("@valor_irpj", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtIRPJ_I.Text);
+                cmd.Parameters.Add("@valor_csll", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtCSLL_I.Text);
+                cmd.Parameters.Add("@valor_ibs", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtIBS_I.Text);
+                cmd.Parameters.Add("@valor_cbs", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtCBS_I.Text);
+                cmd.Parameters.Add("@valor_iss", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtISS_I.Text);
+                cmd.Parameters.Add("@valor_sestsenat", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtSestSenat_I.Text);
+                cmd.Parameters.Add("@valor_inss", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtINSS_I.Text);
+                cmd.Parameters.AddWithValue("@usuario_cadastro", usuario);
+                cmd.Parameters.AddWithValue("@usuario_alteracao", usuario);
                 conn.Open();
 
                 cmd.ExecuteNonQuery();
+                if (rotaExiste)
+                {
+                    MostrarMsg("Rota atualizada com sucesso!");
+                }
+                else
+                {
+                    MostrarMsg(rota + " - Rota salva com sucesso!");
+                }
 
-                MostrarMsg(rota + " - Rota salva com sucesso!");
+
+                btnCadastrarRota.Enabled = false;
             }
         }
-
-        public void InsertRotaPopup(decimal distancia_, int tempo_, string uforigem_, string cidadeorigem_, string ufdestino_, string cidadedestino_)
+        private decimal LimparMascaraMoeda(string valor)
         {
-
-            string query = "SELECT (rota + incremento) as ProximaRota FROM tbcontadores";
-
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            if (string.IsNullOrWhiteSpace(valor))
             {
-                try
-                {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        // Crie o comando SQL
-                        //SqlCommand cmd = new SqlCommand(query, conn);
-
-                        // Execute o comando e obtenha os dados em um DataReader
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                // Preencher o TextBox com o nome encontrado 
-                                rota = reader["ProximaRota"].ToString();
-                            }
-                        }
-
-                    }
-                    string id = "1";
-
-                    // Verifica se o ID foi fornecido e é um número válido
-                    if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idConvertido))
-                    {
-                        // Acione o toast quando a página for carregada
-                        string script = "<script>showToast('ID invalido ou não fornecido.');</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                        return;
-                    }
-                    string sql = @"UPDATE tbcontadores SET rota = @rota WHERE id = @id";
-                    try
-                    {
-                        using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                        using (SqlCommand cmd = new SqlCommand(sql, con))
-                        {
-                            cmd.Parameters.AddWithValue("@rota", rota);
-                            cmd.Parameters.AddWithValue("@id", idConvertido);
-
-                            con.Open();
-                            int rowsAffected = cmd.ExecuteNonQuery();
-
-                            if (rowsAffected > 0)
-                            {
-                                // atualiza  
-                            }
-                            else
-                            {
-                                // Acione o toast quando a página for carregada
-                                string script = "<script>showToast('Erro ao atualizar o número da rota.');</script>";
-                                ClientScript.RegisterStartupScript(this.GetType(), "ShowToast", script);
-                            }
-
-                        }
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                        string script = $"alert('{mensagemErro}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "Erro", script, true);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //Tratar erro
-                    //txtResultado.Text = "Erro: " + ex.Message;
-                }
+                return 0m;
             }
-            //int minutos = int.Parse(lblTempo.InnerHtml.Replace(" min", ""));
-
-            TimeSpan tempo = TimeSpan.FromMinutes(tempo_);
-            string resultado = tempo.ToString(@"hh\:mm\:ss");
-
-            //decimal distancia = decimal.Parse(
-            //    lblDistancia.InnerHtml.Replace(",", "."),
-            //    CultureInfo.InvariantCulture);
-
-            string descr_rota =
-                RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "/" + ddlUfOrigem.SelectedItem.Text.ToUpper() +
-                " X " +
-                RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "/" + ddlUfDestino.SelectedItem.Text.ToUpper();
-
-            //using (SqlConnection conn = new SqlConnection(
-            //    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            //{
-            //    string sql = @"
-            //            IF NOT EXISTS (
-            //                SELECT 1 
-            //                FROM tbrotasdeentregas 
-            //                WHERE desc_rota COLLATE Latin1_General_CI_AI = @desc_rota
-            //            )
-            //            BEGIN
-            //                INSERT tbrotasdeentregas
-            //                (rota,desc_rota, cidade_expedidor, uf_expedidor,
-            //                 cidade_recebedor, uf_recebedor,
-            //                 distancia, tempo, deslocamento, pedagio, situacao, data_cadastro, usuario_cadastro)
-            //                VALUES
-            //                (@rota,@desc_rota, @cidade_expedidor, @uf_expedidor,
-            //                 @cidade_recebedor, @uf_recebedor,
-            //                 @distancia, @tempo, @deslocamento, @pedagio, @situacao, @data_cadastro, @usuario_cadastro)
-            //            END
-            //            ELSE
-            //            BEGIN
-            //                RAISERROR ('ROTA_DUPLICADA', 16, 1)
-            //            END";
-
-            //    SqlCommand cmd = new SqlCommand(sql, conn);
-            //    cmd.Parameters.AddWithValue("@rota", rota);
-            //    cmd.Parameters.AddWithValue("@desc_rota", RemoverAcentos(descr_rota.ToUpper()));
-            //    cmd.Parameters.AddWithValue("@cidade_expedidor", RemoverAcentos(cidadeorigem_.ToUpper()));
-            //    cmd.Parameters.AddWithValue("@uf_expedidor", uforigem_.ToUpper());
-            //    cmd.Parameters.AddWithValue("@cidade_recebedor", RemoverAcentos(cidadedestino_.ToUpper()));
-            //    cmd.Parameters.AddWithValue("@uf_recebedor", ufdestino_.ToUpper()); // 👈 corrigido
-            //    cmd.Parameters.AddWithValue("@distancia", distancia_);
-            //    cmd.Parameters.AddWithValue("@tempo", resultado);
-            //    cmd.Parameters.AddWithValue("@deslocamento", lblDeslocamentoNovo.Text);
-            //    cmd.Parameters.AddWithValue("@pedagio", ddlPedagioNovo.SelectedItem.Text);
-            //    cmd.Parameters.AddWithValue("@situacao", "ATIVO");
-            //    cmd.Parameters.AddWithValue("@data_cadastro", DateTime.Now);
-            //    cmd.Parameters.AddWithValue("@usuario_cadastro", Session["UsuarioLogado"]);
-
-
-            //    conn.Open();
-
-            //    try
-            //    {
-            //        cmd.ExecuteNonQuery();
-            //        MostrarMsg("Rota cadastrada com sucesso!");
-            //    }
-            //    catch (SqlException ex)
-            //    {
-            //        if (ex.Message.Contains("ROTA_DUPLICADA"))
-            //            MostrarMsg("Esta rota já está cadastrada.");
-            //        else
-            //            throw;
-            //    }
-            //}
-
-            using (SqlConnection conn = new SqlConnection(
-    WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            // Remove pontos de milhar e substitui vírgula decimal por ponto
+            string valorLimpo = valor.Replace(".", "").Replace(",", ".");
+            if (decimal.TryParse(valorLimpo, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal resultado))
             {
-                string sql = @"
-    IF EXISTS (
-        SELECT 1
-        FROM tbrotasdeentregas
-        WHERE desc_rota COLLATE Latin1_General_CI_AI = @desc_rota
-    )
-    BEGIN
-        UPDATE tbrotasdeentregas
-        SET
-            rota = @rota,
-            cidade_expedidor = @cidade_expedidor,
-            uf_expedidor = @uf_expedidor,
-            cidade_recebedor = @cidade_recebedor,
-            uf_recebedor = @uf_recebedor,
-            distancia = @distancia,
-            tempo = @tempo,
-            deslocamento = @deslocamento,
-            pedagio = @pedagio,
-            situacao = @situacao
-        WHERE desc_rota COLLATE Latin1_General_CI_AI = @desc_rota
-    END
-    ELSE
-    BEGIN
-        INSERT INTO tbrotasdeentregas
-        (
-            rota,
-            desc_rota,
-            cidade_expedidor,
-            uf_expedidor,
-            cidade_recebedor,
-            uf_recebedor,
-            distancia,
-            tempo,
-            deslocamento,
-            pedagio,
-            situacao,
-            data_cadastro,
-            usuario_cadastro
-        )
-        VALUES
-        (
-            @rota,
-            @desc_rota,
-            @cidade_expedidor,
-            @uf_expedidor,
-            @cidade_recebedor,
-            @uf_recebedor,
-            @distancia,
-            @tempo,
-            @deslocamento,
-            @pedagio,
-            @situacao,
-            @data_cadastro,
-            @usuario_cadastro
-        )
-    END";
-
-                SqlCommand cmd = new SqlCommand(sql, conn);
-
-                cmd.Parameters.AddWithValue("@rota", rota);
-                cmd.Parameters.AddWithValue("@desc_rota", RemoverAcentos(descr_rota.ToUpper()));
-                cmd.Parameters.AddWithValue("@cidade_expedidor", RemoverAcentos(cidadeorigem_.ToUpper()));
-                cmd.Parameters.AddWithValue("@uf_expedidor", uforigem_.ToUpper());
-                cmd.Parameters.AddWithValue("@cidade_recebedor", RemoverAcentos(cidadedestino_.ToUpper()));
-                cmd.Parameters.AddWithValue("@uf_recebedor", ufdestino_.ToUpper());
-                cmd.Parameters.AddWithValue("@distancia", distancia_);
-                cmd.Parameters.AddWithValue("@tempo", resultado);
-                cmd.Parameters.AddWithValue("@deslocamento", lblDeslocamentoNovo.Text);
-                cmd.Parameters.AddWithValue("@pedagio", ddlPedagioNovo.SelectedItem.Text);
-                cmd.Parameters.AddWithValue("@situacao", "ATIVO");
-                cmd.Parameters.AddWithValue("@data_cadastro", DateTime.Now);
-                cmd.Parameters.AddWithValue("@usuario_cadastro", Session["UsuarioLogado"]);
-
-                conn.Open();
-
-                cmd.ExecuteNonQuery();
-
-                MostrarMsg(rota + " - Rota salva com sucesso!");
+                return resultado;
             }
-
+            return 0m;
         }
+
+       // public void InsertRotaPopup(decimal distancia_, int tempo_, string uforigem_, string cidadeorigem_, string ufdestino_, string cidadedestino_)
+       // {
+
+       //     decimal? distancia = null;
+       //     int? tempo = null;
+
+       //     // DISTÂNCIA
+       //     if (!string.IsNullOrWhiteSpace(txtDistancia.Text))
+       //     {
+       //         decimal d;
+
+       //         if (!decimal.TryParse(
+       //                 txtDistancia.Text.Replace(",", "."),
+       //                 NumberStyles.Any,
+       //                 CultureInfo.InvariantCulture,
+       //                 out d))
+       //         {
+       //             MostrarMsg("Distância inválida.", "warning");
+       //             return;
+       //         }
+
+       //         distancia = d;
+       //     }
+
+       //     // TEMPO
+       //     if (!string.IsNullOrWhiteSpace(txtTempo.Text))
+       //     {
+       //         int t;
+
+       //         if (!int.TryParse(
+       //                 txtTempo.Text.Replace(" min", "").Trim(),
+       //                 out t))
+       //         {
+       //             MostrarMsg("Tempo inválido.", "warning");
+       //             return;
+       //         }
+
+       //         tempo = t;
+       //     }
+
+       //     using (SqlConnection conn = new SqlConnection(
+       //         WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+       //     {
+       //         string sql = @"
+       // IF EXISTS (
+       //     SELECT 1
+       //     FROM tbdistanciapremio
+       //     WHERE
+       //         UF_Origem = @UF_Origem
+       //         AND Origem = @Origem
+       //         AND UF_Destino = @UF_Destino
+       //         AND Destino = @Destino
+       // )
+       // BEGIN
+       //     UPDATE tbdistanciapremio
+       //     SET
+       //         Distancia = @Distancia,
+       //         tempo_min = @tempo_min
+       //     WHERE
+       //         UF_Origem = @UF_Origem
+       //         AND Origem = @Origem
+       //         AND UF_Destino = @UF_Destino
+       //         AND Destino = @Destino
+       // END
+       //";
+
+       //         using (SqlCommand cmd = new SqlCommand(sql, conn))
+       //         {
+       //             cmd.Parameters.Add("@UF_Origem", SqlDbType.Char, 2)
+       //                 .Value = RemoverAcentos(ddlUfOrigem.SelectedItem.Text.ToUpper());
+
+       //             cmd.Parameters.Add("@Origem", SqlDbType.VarChar, 100)
+       //                 .Value = RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper());
+
+       //             cmd.Parameters.Add("@UF_Destino", SqlDbType.Char, 2)
+       //                 .Value = RemoverAcentos(ddlUfDestino.SelectedItem.Text.ToUpper());
+
+       //             cmd.Parameters.Add("@Destino", SqlDbType.VarChar, 100)
+       //                 .Value = RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper());
+
+       //             cmd.Parameters.Add("@Distancia", SqlDbType.Decimal)
+       //                 .Value = distancia.HasValue
+       //                     ? (object)distancia.Value
+       //                     : DBNull.Value;
+
+       //             cmd.Parameters.Add("@tempo_min", SqlDbType.Int)
+       //                 .Value = tempo.HasValue
+       //                     ? (object)tempo.Value
+       //                     : DBNull.Value;
+
+       //             conn.Open();
+
+       //             try
+       //             {
+       //                 cmd.ExecuteNonQuery();
+
+       //                 MostrarMsg(rota + " - Rota cadastrada com sucesso!");
+       //                 btnCadastrarRota.Enabled = false;
+       //             }
+       //             catch (Exception)
+       //             {
+       //                 MostrarMsg("Erro ao salvar os dados.", "danger");
+       //             }
+       //         }
+       //     }
+
+       // }
 
         protected void btnCadastrarRota_Click(object sender, EventArgs e)
         {
             InsertRota();
-            InsertTbDistancia();
+           
         }
+       // public void InsertTbDistancia()
+       // {
+       //     decimal? distancia = null;
+       //     int? tempo = null;
 
-        //public void InsertTbDistancia()
-        //{
+       //     // DISTÂNCIA
+       //     if (!string.IsNullOrWhiteSpace(txtDistancia.Text))
+       //     {
+       //         decimal d;
 
+       //         if (!decimal.TryParse(
+       //                 txtDistancia.Text.Replace(",", "."),
+       //                 NumberStyles.Any,
+       //                 CultureInfo.InvariantCulture,
+       //                 out d))
+       //         {
+       //             MostrarMsg("Distância inválida.", "warning");
+       //             return;
+       //         }
 
-        //    string sqld = "select Distancia, UF_Origem, Origem, UF_Destino, Destino from tbdistanciapremio where UF_Origem='"+ RemoverAcentos(ddlUfOrigem.SelectedItem.Text.ToUpper()) + "' and Origem='"+ RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper()) + "' and UF_Destino='"+ RemoverAcentos(ddlUfDestino.SelectedItem.Text.ToUpper()) + "' and Destino='"+ RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper()) + "'";
-        //    SqlDataAdapter adp = new SqlDataAdapter(sqld, conn);
-        //    DataTable dt = new DataTable();
-        //    conn.Open();
-        //    adp.Fill(dt);
-        //    conn.Close();
+       //         distancia = d;
+       //     }
 
-        //    if (dt.Rows.Count > 0)
-        //    {
-        //        MostrarMsg("Esta distância já está cadastrada.");
+       //     // TEMPO
+       //     if (!string.IsNullOrWhiteSpace(txtTempo.Text))
+       //     {
+       //         int t;
 
-        //    }
-        //    else
-        //    {
-        //        decimal? distancia = null;
-        //        int? tempo = null;
+       //         if (!int.TryParse(
+       //                 txtTempo.Text.Replace(" min", "").Trim(),
+       //                 out t))
+       //         {
+       //             MostrarMsg("Tempo inválido.", "warning");
+       //             return;
+       //         }
 
-        //        // DISTÂNCIA
-        //        if (!string.IsNullOrWhiteSpace(txtDistancia.Text))
-        //        {
-        //            decimal d;
-        //            if (!decimal.TryParse(
-        //                    txtDistancia.Text.Replace(",", "."),
-        //                    NumberStyles.Any,
-        //                    CultureInfo.InvariantCulture,
-        //                    out d))
-        //            {
-        //                MostrarMsg("Distância inválida.", "warning");
-        //                return;
-        //            }
-        //            distancia = d;
-        //        }
+       //         tempo = t;
+       //     }
 
-        //        // TEMPO
-        //        if (!string.IsNullOrWhiteSpace(txtTempo.Text))
-        //        {
-        //            int t;
-        //            if (!int.TryParse(
-        //                    txtTempo.Text.Replace(" min", "").Trim(),
-        //                    out t))
-        //            {
-        //                MostrarMsg("Tempo inválido.", "warning");
-        //                return;
-        //            }
-        //            tempo = t;
-        //        }
+       //     using (SqlConnection conn = new SqlConnection(
+       //         WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+       //     {
+       //         string sql = @"
+       // IF EXISTS (
+       //     SELECT 1
+       //     FROM tbdistanciapremio
+       //     WHERE
+       //         UF_Origem = @UF_Origem
+       //         AND Origem = @Origem
+       //         AND UF_Destino = @UF_Destino
+       //         AND Destino = @Destino
+       // )
+       // BEGIN
+       //     UPDATE tbdistanciapremio
+       //     SET
+       //         Distancia = @Distancia,
+       //         tempo_min = @tempo_min
+       //     WHERE
+       //         UF_Origem = @UF_Origem
+       //         AND Origem = @Origem
+       //         AND UF_Destino = @UF_Destino
+       //         AND Destino = @Destino
+       // END
+       //";
 
-        //        using (SqlConnection conn = new SqlConnection(
-        //            WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-        //        {
-        //            string sql = @"
-        //                    INSERT INTO tbdistanciapremio
-        //                    (UF_Origem, Origem, UF_Destino, Destino, Distancia, tempo_min)
-        //                    VALUES
-        //                    (@UF_Origem, @Origem, @UF_Destino, @Destino, @Distancia, @tempo_min)";
+       //         using (SqlCommand cmd = new SqlCommand(sql, conn))
+       //         {
+       //             cmd.Parameters.Add("@UF_Origem", SqlDbType.Char, 2)
+       //                 .Value = RemoverAcentos(ddlUfOrigem.SelectedItem.Text.ToUpper());
 
-        //            using (SqlCommand cmd = new SqlCommand(sql, conn))
-        //            {
-        //                cmd.Parameters.Add("@UF_Origem", SqlDbType.Char, 2)
-        //                    .Value = ddlUfOrigem.SelectedItem.Text.ToUpper();
+       //             cmd.Parameters.Add("@Origem", SqlDbType.VarChar, 100)
+       //                 .Value = RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper());
 
-        //                cmd.Parameters.Add("@Origem", SqlDbType.VarChar, 100)
-        //                    .Value = ddlCidadeOrigem.SelectedItem.Text.ToUpper();
+       //             cmd.Parameters.Add("@UF_Destino", SqlDbType.Char, 2)
+       //                 .Value = RemoverAcentos(ddlUfDestino.SelectedItem.Text.ToUpper());
 
-        //                cmd.Parameters.Add("@UF_Destino", SqlDbType.Char, 2)
-        //                    .Value = ddlUfDestino.SelectedItem.Text.ToUpper();
+       //             cmd.Parameters.Add("@Destino", SqlDbType.VarChar, 100)
+       //                 .Value = RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper());
 
-        //                cmd.Parameters.Add("@Destino", SqlDbType.VarChar, 100)
-        //                    .Value = ddlCidadeDestino.SelectedItem.Text.ToUpper();
+       //             cmd.Parameters.Add("@Distancia", SqlDbType.Decimal)
+       //                 .Value = distancia.HasValue
+       //                     ? (object)distancia.Value
+       //                     : DBNull.Value;
 
-        //                // Aqui está o ajuste importante 👇
-        //                cmd.Parameters.Add("@Distancia", SqlDbType.Decimal)
-        //                    .Value = distancia.HasValue ? (object)distancia.Value : DBNull.Value;
+       //             cmd.Parameters.Add("@tempo_min", SqlDbType.Int)
+       //                 .Value = tempo.HasValue
+       //                     ? (object)tempo.Value
+       //                     : DBNull.Value;
 
-        //                cmd.Parameters.Add("@tempo_min", SqlDbType.Int)
-        //                    .Value = tempo.HasValue ? (object)tempo.Value : DBNull.Value;
+       //             conn.Open();
 
-        //                conn.Open();
-        //                try
-        //                {
-        //                    cmd.ExecuteNonQuery();
-        //                    MostrarMsg("Distância cadastrada com sucesso!");
-        //                }
-        //                catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
-        //                {
-        //                    MostrarMsg("Esta rota já está cadastrada.");
-        //                }
-        //                catch (Exception)
-        //                {
-        //                    MostrarMsg("Erro ao salvar os dados.", "danger");
-        //                }
-        //            }
-        //        }
+       //             try
+       //             {
+       //                 cmd.ExecuteNonQuery();
 
-
-        //    }
-
-
-        //}
-
-        public void InsertTbDistancia()
-        {
-            decimal? distancia = null;
-            int? tempo = null;
-
-            // DISTÂNCIA
-            if (!string.IsNullOrWhiteSpace(txtDistancia.Text))
-            {
-                decimal d;
-
-                if (!decimal.TryParse(
-                        txtDistancia.Text.Replace(",", "."),
-                        NumberStyles.Any,
-                        CultureInfo.InvariantCulture,
-                        out d))
-                {
-                    MostrarMsg("Distância inválida.", "warning");
-                    return;
-                }
-
-                distancia = d;
-            }
-
-            // TEMPO
-            if (!string.IsNullOrWhiteSpace(txtTempo.Text))
-            {
-                int t;
-
-                if (!int.TryParse(
-                        txtTempo.Text.Replace(" min", "").Trim(),
-                        out t))
-                {
-                    MostrarMsg("Tempo inválido.", "warning");
-                    return;
-                }
-
-                tempo = t;
-            }
-
-            using (SqlConnection conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                string sql = @"
-        IF EXISTS (
-            SELECT 1
-            FROM tbdistanciapremio
-            WHERE
-                UF_Origem = @UF_Origem
-                AND Origem = @Origem
-                AND UF_Destino = @UF_Destino
-                AND Destino = @Destino
-        )
-        BEGIN
-            UPDATE tbdistanciapremio
-            SET
-                Distancia = @Distancia,
-                tempo_min = @tempo_min
-            WHERE
-                UF_Origem = @UF_Origem
-                AND Origem = @Origem
-                AND UF_Destino = @UF_Destino
-                AND Destino = @Destino
-        END
-        ELSE
-        BEGIN
-            INSERT INTO btnCadastrarRota
-            (
-                UF_Origem,
-                Origem,
-                UF_Destino,
-                Destino,
-                Distancia,
-                tempo_min
-            )
-            VALUES
-            (
-                @UF_Origem,
-                @Origem,
-                @UF_Destino,
-                @Destino,
-                @Distancia,
-                @tempo_min
-            )
-        END";
-
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.Add("@UF_Origem", SqlDbType.Char, 2)
-                        .Value = RemoverAcentos(ddlUfOrigem.SelectedItem.Text.ToUpper());
-
-                    cmd.Parameters.Add("@Origem", SqlDbType.VarChar, 100)
-                        .Value = RemoverAcentos(ddlCidadeOrigem.SelectedItem.Text.ToUpper());
-
-                    cmd.Parameters.Add("@UF_Destino", SqlDbType.Char, 2)
-                        .Value = RemoverAcentos(ddlUfDestino.SelectedItem.Text.ToUpper());
-
-                    cmd.Parameters.Add("@Destino", SqlDbType.VarChar, 100)
-                        .Value = RemoverAcentos(ddlCidadeDestino.SelectedItem.Text.ToUpper());
-
-                    cmd.Parameters.Add("@Distancia", SqlDbType.Decimal)
-                        .Value = distancia.HasValue
-                            ? (object)distancia.Value
-                            : DBNull.Value;
-
-                    cmd.Parameters.Add("@tempo_min", SqlDbType.Int)
-                        .Value = tempo.HasValue
-                            ? (object)tempo.Value
-                            : DBNull.Value;
-
-                    conn.Open();
-
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-
-                        MostrarMsg(rota + " - Rota salva com sucesso!");
-                    }
-                    catch (Exception)
-                    {
-                        MostrarMsg("Erro ao salvar os dados.", "danger");
-                    }
-                }
-            }
-        }
+       //                 MostrarMsg(rota + " - Rota cadastrada com sucesso!");
+       //                 btnCadastrarRota.Enabled = false;
+       //             }
+       //             catch (Exception)
+       //             {
+       //                 MostrarMsg("Erro ao salvar os dados.", "danger");
+       //             }
+       //         }
+       //     }
+       // }
         public static string RemoverAcentos(string texto)
         {
             if (string.IsNullOrEmpty(texto))

@@ -32,7 +32,23 @@
             }
         }
     </script>
+    <script>
+        function mascaraMoeda(campo) {
+            let valor = campo.value.replace(/\D/g, "");
+            valor = (valor / 100).toFixed(2) + "";
+            valor = valor.replace(".", ",");
+            valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            campo.value = valor;
+        }
 
+        function mascaraDistancia(campo) {
+            let valor = campo.value.replace(/\D/g, "");
+            valor = (valor / 100).toFixed(3) + "";
+            valor = valor.replace(".", ",");
+            valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            campo.value = valor;
+        }
+    </script>
 
     <div class="content-wrapper">
 
@@ -56,10 +72,6 @@
                     </div>
                     <!-- /.card-tools -->
                 </div>
-                <br />
-                <br />
-                <br />
-                <br />
 
                 <div class="container-fluid mt-4">
                     <div class="row justify-content-center">
@@ -71,6 +83,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                             <div class="card shadow-lg border-0">
+
                                 <div class="card-header text-white py-3" style="background-color: #A020F0; font-weight: bold;">
                                     <h5 class="mb-0 fw-bold">Atualizar Rota
                                     </h5>
@@ -82,18 +95,10 @@
                                         <div class="col-sm-1">
                                             <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                         </div>
-
-                                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">DESCRIÇÃO DA ROTA:</label>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-5">
                                             <asp:TextBox ID="txtDesc_Rota" runat="server" CssClass="form-control" Style="text-align: left" ReadOnly="true"></asp:TextBox>
                                         </div>
-
-                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CADASTRO:</label>
-                                        <div class="col-sm-2">
-                                            <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
-                                        </div>
-
-                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">STATUS:</label>
+                                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">STATUS/CAD.:</label>
                                         <div class="col-md-1">
                                             <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
                                                 <asp:ListItem Value="" Text=""></asp:ListItem>
@@ -101,12 +106,15 @@
                                                 <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
                                             </asp:DropDownList>
                                         </div>
-                                    </div>
+                                        <div class="col-sm-2">
+                                            <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
+                                        </div>
 
+                                    </div>
                                     <hr />
                                     <h6 class="fw-bold text-secondary mb-3">DADOS:</h6>
                                     <div class="row align-items-end mb-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Deslocamento:</label>
                                             <div class="col-md-2">
                                                 <asp:DropDownList ID="cboDeslocamento" runat="server" CssClass="form-control">
@@ -117,18 +125,14 @@
                                                     <asp:ListItem Value="INTERNACIONAL" Text="INTERNACIONAL"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row align-items-end mb-12">
-                                        <div class="form-group row">
                                             <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Distância(KM):</label>
                                             <div class="col-md-2">
-                                                <asp:TextBox ID="txtDistancia" class="form-control" Style="text-align: center" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtDistancia" class="form-control" Style="text-align: center" runat="server" ></asp:TextBox>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row align-items-end mb-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Transit Time:</label>
                                             <div class="col-md-2">
                                                 <asp:TextBox ID="txtDuracao"
@@ -140,10 +144,6 @@
                                                 </asp:TextBox>
 
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row align-items-end mb-12">
-                                        <div class="form-group row">
                                             <label for="inputExpedidor" class="col-sm-2 col-form-label" style="text-align: right">Pedagiada:</label>
                                             <div class="col-md-2">
                                                 <asp:DropDownList ID="ddlPedagio" runat="server" CssClass="form-control">
@@ -153,7 +153,54 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="row align-items-end mb-12">
+                                        <div class="row mb-3">
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ICMS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtICMS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ISS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtISS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">COFINS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtCOFINS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">PIS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtPIS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">IRPJ(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtIRPJ_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-end mb-12">
+                                        <div class="row mb-3">
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">IBS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtIBS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CBS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtCBS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">SEST SENAT(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtSestSenat_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">INSS(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtINSS_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CSLL(%):</label>
+                                            <div class="col-sm-1">
+                                                <asp:TextBox ID="txtCSLL_I" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row g-3">
                                         <div class="col-md-2">
                                             <div class="form-group">

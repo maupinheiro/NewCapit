@@ -60,7 +60,7 @@
 
                                     <asp:TemplateField>
                                         <ItemTemplate>
-                                            <asp:LinkButton runat="server" CommandName="Editar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-warning btn-sm">Editar</asp:LinkButton>
+                                            <asp:LinkButton runat="server" CommandName="Editar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-warning btn-sm">Numerar</asp:LinkButton>
                                             <asp:LinkButton
                                                 runat="server"
                                                 OnClientClick="return confirm('Confirma o Descarte do PNEU?');"

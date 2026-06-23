@@ -247,26 +247,7 @@ namespace NewCapit.dist.pages
                 Session["Pagina"] = paginaDigitada;
                 CarregarGrid();
             }
-        }
-        //protected void btnIrPagina_Click(object sender, EventArgs e)
-        //{
-        //    GridViewRow pagerRow = gvOrdens.BottomPagerRow;
-
-        //    if (pagerRow != null)
-        //    {
-        //        TextBox txtIr = (TextBox)pagerRow.FindControl("txtIrPagina");
-
-        //        int pagina;
-        //        if (int.TryParse(txtIr.Text, out pagina))
-        //        {
-        //            if (pagina > 0 && pagina <= gvOrdens.PageCount)
-        //            {
-        //                gvOrdens.PageIndex = pagina - 1;
-        //                CarregarGrid();
-        //            }
-        //        }
-        //    }
-        //}
+        }        
         protected void gvOrdens_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvOrdens.PageIndex = e.NewPageIndex;

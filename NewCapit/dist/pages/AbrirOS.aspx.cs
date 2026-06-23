@@ -948,6 +948,7 @@ namespace NewCapit.dist.pages
             HttpContext.Current.ApplicationInstance.CompleteRequest();
 
             return numeroOS;
+            btnSalvar.Enabled = false;
         }
         public class OrdemServico
         {
@@ -1098,7 +1099,7 @@ namespace NewCapit.dist.pages
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(),
                         "msg",
-                        "alert('O KM informado não pode ser menor que o KM atual.');",
+                        "alert('O KM informado não pode ser menor que o último KM lançado. ');",
                         true);
 
                     txtKm.Text = "";

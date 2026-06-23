@@ -1,187 +1,187 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="FinalizarOSGrid.aspx.cs"  Inherits="NewCapit.dist.pages.FinalizarOSGrid" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="FinalizarOSGrid.aspx.cs" Inherits="NewCapit.dist.pages.FinalizarOSGrid" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- SELECT2 -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- SELECT2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<style>
-/* ===== SELECT2 BASE ===== */
+    <style>
+        /* ===== SELECT2 BASE ===== */
 
-.select2-container {
-    width: 100% !important;
-}
-
-.select2-selection--single {
-    height: 34px !important;
-    padding: 4px 6px;
-}
-
-.select2-selection__rendered {
-    line-height: 24px !important;
-}
-
-.select2-selection__arrow {
-    height: 34px !important;
-}
-
-/* 🔥 CONTROLE DO DROPDOWN */
-.select2-dropdown {
-    max-width: 90vw !important; /* nunca passa da tela */
-    box-sizing: border-box;
-}
-
-/* 🔥 evita estourar horizontalmente */
-.select2-results {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-</style>
-
-<script>
-    // =======================
-    // TEMPO
-    // =======================
-    function calcularTempo(inicio, termino) {
-        var i = inicio.split(":");
-        var t = termino.split(":");
-
-        var data1 = new Date(0, 0, 0, i[0], i[1]);
-        var data2 = new Date(0, 0, 0, t[0], t[1]);
-
-        return (data2 - data1) / 60000;
-    }
-</script>
-
-<script>
-    // =======================
-    // MÁSCARA
-    // =======================
-    function aplicarMascara(input, mascara) {
-        if (!input) return;
-
-        input.oninput = function () {
-            let valor = input.value.replace(/\D/g, "");
-            let resultado = "";
-            let posicao = 0;
-
-            for (let i = 0; i < mascara.length; i++) {
-                if (mascara[i] === "0") {
-                    if (valor[posicao]) {
-                        resultado += valor[posicao++];
-                    } else break;
-                } else {
-                    resultado += mascara[i];
-                }
-            }
-
-            input.value = resultado;
-        };
-    }
-</script>
-
-<script>
-    // =======================
-    // SELECT2 FINAL
-    // =======================
-    function iniciarSelect2Visivel() {
-
-        $('.select2').each(function () {
-
-            var $this = $(this);
-
-            if ($this.is(':visible')) {
-
-                if ($this.hasClass("select2-hidden-accessible")) {
-                    $this.select2('destroy');
-                }
-
-                $this.select2({
-                    width: '100%',
-                    dropdownAutoWidth: false,
-                    dropdownParent: $('body') // continua no body
-                });
-            }
-        });
-    }
-</script>
-
-<script>
-    // =======================
-    // MOSTRAR DIVS
-    // =======================
-    function mostrarDivs() {
-
-        var ddl = document.getElementById("<%= ddlTipoServico.ClientID %>");
-    if (!ddl) return;
-
-    var mostrar = ddl.value === 'Pneu';
-
-    function toggle(id) {
-        var el = document.getElementById(id);
-        if (el) el.style.display = mostrar ? 'block' : 'none';
-    }
-
-    toggle("<%= divNumeroPneu.ClientID %>");
-    toggle("<%= divStatusPneu.ClientID %>");
-    toggle("<%= divSituacaoPneu.ClientID %>");
-    toggle("<%= divDestinoPneu.ClientID %>");
-    toggle("<%= divPosicaoPneu.ClientID %>");
-    toggle("<%= divKMInicialPneu.ClientID %>");
-    toggle("<%= divKMFinalPneu.ClientID %>");
-
-        if (mostrar) {
-            setTimeout(function () {
-                iniciarSelect2Visivel();
-            }, 150);
+        .select2-container {
+            width: 100% !important;
         }
 
-        if (mostrar && typeof atualizarDestino === "function") {
-            atualizarDestino();
+        .select2-selection--single {
+            height: 34px !important;
+            padding: 4px 6px;
         }
-    }
-</script>
 
-<script>
-    // =======================
-    // INIT
-    // =======================
-    function inicializarTudo() {
+        .select2-selection__rendered {
+            line-height: 24px !important;
+        }
 
-        aplicarMascara(document.getElementById("<%= txtInicio.ClientID %>"), "00/00/0000 00:00");
-    aplicarMascara(document.getElementById("<%= txtTerm.ClientID %>"), "00/00/0000 00:00");
+        .select2-selection__arrow {
+            height: 34px !important;
+        }
 
-    aplicarMascara(document.getElementById("<%= txtInicioEletrica.ClientID %>"), "00/00/0000 00:00");
-    aplicarMascara(document.getElementById("<%= txtFimEletrica.ClientID %>"), "00/00/0000 00:00");
+        /* 🔥 CONTROLE DO DROPDOWN */
+        .select2-dropdown {
+            max-width: 90vw !important; /* nunca passa da tela */
+            box-sizing: border-box;
+        }
 
-    aplicarMascara(document.getElementById("<%= txtInicioBorracharia.ClientID %>"), "00/00/0000 00:00");
-    aplicarMascara(document.getElementById("<%= txtFimBorracharia.ClientID %>"), "00/00/0000 00:00");
+        /* 🔥 evita estourar horizontalmente */
+        .select2-results {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+    </style>
 
-    aplicarMascara(document.getElementById("<%= txtInicioFunilaria.ClientID %>"), "00/00/0000 00:00");
-    aplicarMascara(document.getElementById("<%= txtFimFunilaria.ClientID %>"), "00/00/0000 00:00");
+    <script>
+        // =======================
+        // TEMPO
+        // =======================
+        function calcularTempo(inicio, termino) {
+            var i = inicio.split(":");
+            var t = termino.split(":");
 
-    mostrarDivs();
-}
-</script>
+            var data1 = new Date(0, 0, 0, i[0], i[1]);
+            var data2 = new Date(0, 0, 0, t[0], t[1]);
 
-<script>
-    // =======================
-    // UPDATEPANEL
-    // =======================
-    document.addEventListener("DOMContentLoaded", function () {
-        inicializarTudo();
-    });
+            return (data2 - data1) / 60000;
+        }
+    </script>
 
-    if (typeof Sys !== 'undefined') {
-        Sys.Application.add_load(function () {
+    <script>
+        // =======================
+        // MÁSCARA
+        // =======================
+        function aplicarMascara(input, mascara) {
+            if (!input) return;
+
+            input.oninput = function () {
+                let valor = input.value.replace(/\D/g, "");
+                let resultado = "";
+                let posicao = 0;
+
+                for (let i = 0; i < mascara.length; i++) {
+                    if (mascara[i] === "0") {
+                        if (valor[posicao]) {
+                            resultado += valor[posicao++];
+                        } else break;
+                    } else {
+                        resultado += mascara[i];
+                    }
+                }
+
+                input.value = resultado;
+            };
+        }
+    </script>
+
+    <script>
+        // =======================
+        // SELECT2 FINAL
+        // =======================
+        function iniciarSelect2Visivel() {
+
+            $('.select2').each(function () {
+
+                var $this = $(this);
+
+                if ($this.is(':visible')) {
+
+                    if ($this.hasClass("select2-hidden-accessible")) {
+                        $this.select2('destroy');
+                    }
+
+                    $this.select2({
+                        width: '100%',
+                        dropdownAutoWidth: false,
+                        dropdownParent: $('body') // continua no body
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // =======================
+        // MOSTRAR DIVS
+        // =======================
+        function mostrarDivs() {
+
+            var ddl = document.getElementById("<%= ddlTipoServico.ClientID %>");
+        if (!ddl) return;
+
+        var mostrar = ddl.value === 'Pneu';
+
+        function toggle(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = mostrar ? 'block' : 'none';
+        }
+
+        toggle("<%= divNumeroPneu.ClientID %>");
+        toggle("<%= divStatusPneu.ClientID %>");
+        toggle("<%= divSituacaoPneu.ClientID %>");
+        toggle("<%= divDestinoPneu.ClientID %>");
+        toggle("<%= divPosicaoPneu.ClientID %>");
+        toggle("<%= divKMInicialPneu.ClientID %>");
+        toggle("<%= divKMFinalPneu.ClientID %>");
+
+            if (mostrar) {
+                setTimeout(function () {
+                    iniciarSelect2Visivel();
+                }, 150);
+            }
+
+            if (mostrar && typeof atualizarDestino === "function") {
+                atualizarDestino();
+            }
+        }
+    </script>
+
+    <script>
+        // =======================
+        // INIT
+        // =======================
+        function inicializarTudo() {
+
+            aplicarMascara(document.getElementById("<%= txtInicio.ClientID %>"), "00/00/0000 00:00");
+        aplicarMascara(document.getElementById("<%= txtTerm.ClientID %>"), "00/00/0000 00:00");
+
+        aplicarMascara(document.getElementById("<%= txtInicioEletrica.ClientID %>"), "00/00/0000 00:00");
+        aplicarMascara(document.getElementById("<%= txtFimEletrica.ClientID %>"), "00/00/0000 00:00");
+
+        aplicarMascara(document.getElementById("<%= txtInicioBorracharia.ClientID %>"), "00/00/0000 00:00");
+        aplicarMascara(document.getElementById("<%= txtFimBorracharia.ClientID %>"), "00/00/0000 00:00");
+
+        aplicarMascara(document.getElementById("<%= txtInicioFunilaria.ClientID %>"), "00/00/0000 00:00");
+        aplicarMascara(document.getElementById("<%= txtFimFunilaria.ClientID %>"), "00/00/0000 00:00");
+
+            mostrarDivs();
+        }
+    </script>
+
+    <script>
+        // =======================
+        // UPDATEPANEL
+        // =======================
+        document.addEventListener("DOMContentLoaded", function () {
             inicializarTudo();
         });
-    }
-</script>
+
+        if (typeof Sys !== 'undefined') {
+            Sys.Application.add_load(function () {
+                inicializarTudo();
+            });
+        }
+    </script>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -357,7 +357,7 @@
 
                                         <div class="col-md-2">
                                             <label>Tipo:</label>
-                                            <asp:TextBox ID="txtTipVei" runat="server" CssClass="form-control" ReadOnly="true"/>
+                                            <asp:TextBox ID="txtTipVei" runat="server" CssClass="form-control" ReadOnly="true" />
                                         </div>
 
                                         <div class="col-md-2">
@@ -383,7 +383,7 @@
                                     </div>
 
                                     <hr />
-                                    <br />
+                                    <%--<br />--%>
                                     <div class="card card-outline card-info collapsed-card">
                                         <div class="card-header">
                                             <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Mecânica</h3>
@@ -446,7 +446,7 @@
                                                         runat="server"
                                                         CssClass="form-control"
                                                         Style="text-align: center"
-                                                        placeholder="dd/mm/aaaa hh:mm">
+                                                        placeholder="dd/MM/yyyy HH:mm">
                                                     </asp:TextBox>
                                                 </div>
 
@@ -456,7 +456,7 @@
                                                         runat="server"
                                                         CssClass="form-control"
                                                         Style="text-align: center"
-                                                        placeholder="dd/mm/aaaa hh:mm">
+                                                        placeholder="dd/MM/yyyy HH:mm">
                                                     </asp:TextBox>
                                                 </div>
 
@@ -472,7 +472,7 @@
                                                     <label>&nbsp;</label><br />
                                                     <asp:Button ID="btnFinalizarTroca"
                                                         runat="server"
-                                                        Text="Lançar Peça"
+                                                        Text="Lançar"
                                                         CssClass="btn btn-success w-100"
                                                         OnClick="btnFinalizarTroca_Click" />
                                                 </div>
@@ -552,7 +552,7 @@ Excluir
                                         </div>
 
                                     </div>
-                                    <br />
+                                    <%--<br />--%>
                                     <div class="card card-outline card-info collapsed-card">
                                         <div class="card-header">
                                             <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Eletrica</h3>
@@ -641,7 +641,7 @@ Excluir
                                                     <label>&nbsp;</label><br />
                                                     <asp:Button ID="btnTrocarEletrica"
                                                         runat="server"
-                                                        Text="Lançar Peça"
+                                                        Text="Lançar"
                                                         CssClass="btn btn-success w-100"
                                                         OnClick="btnTrocarEletrica_Click" />
                                                 </div>
@@ -721,7 +721,7 @@ Excluir
                                         </div>
 
                                     </div>
-                                    <br />
+                                    <%--<br />--%>
                                     <div class="card card-outline card-info collapsed-card">
                                         <div class="card-header">
                                             <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Borracharia</h3>
@@ -784,22 +784,22 @@ Excluir
                                                             <asp:DropDownList
                                                                 ID="ddlSituacao"
                                                                 runat="server"
-                                                                CssClass="form-control" 
+                                                                CssClass="form-control"
                                                                 OnSelectedIndexChanged="ddlSituacao_SelectedIndexChanged"
                                                                 AutoPostBack="true">
                                                                 <asp:ListItem></asp:ListItem>
                                                                 <asp:ListItem Text="Retirada" Value="Retirada"></asp:ListItem>
                                                                 <asp:ListItem Text="Instalação" Value="Instalação"></asp:ListItem>
                                                             </asp:DropDownList>
-                                                           
+
                                                         </div>
                                                         <div class="col-md-1" id="divNumeroPneu" runat="server" style="display: none;">
                                                             <label>Nº Pneu:</label>
                                                             <asp:DropDownList
                                                                 ID="ddlNumeroPneu"
-                                                                runat="server"
-                                                                AutoPostBack="true"                                OnSelectedIndexChanged="ddlNumeroPneu_SelectedIndexChanged"
-                                                                CssClass="form-control select2"  >
+                                                                runat="server" OnSelectedIndexChanged="ddlNumeroPneu_SelectedIndexChanged"
+                                                                AutoPostBack="true"
+                                                                CssClass="form-control select2">
                                                             </asp:DropDownList>
                                                         </div>
                                                         <div class="col-md-3">
@@ -822,7 +822,7 @@ Excluir
                                                             <label>Destino:</label>
                                                             <asp:DropDownList
                                                                 ID="ddlDestino"
-                                                                runat="server"  
+                                                                runat="server"
                                                                 CssClass="form-control">
                                                                 <asp:ListItem Value="">Selecione...</asp:ListItem>
                                                             </asp:DropDownList>
@@ -853,7 +853,7 @@ Excluir
                                                         </div>
                                                     </div>
                                                 </ContentTemplate>
-                                               <Triggers>
+                                                <Triggers>
                                                     <asp:AsyncPostBackTrigger ControlID="ddlTipoServico" EventName="SelectedIndexChanged" />
                                                     <asp:AsyncPostBackTrigger ControlID="ddlSituacao" EventName="SelectedIndexChanged" />
                                                     <asp:AsyncPostBackTrigger ControlID="ddlNumeroPneu" EventName="SelectedIndexChanged" />
@@ -981,7 +981,7 @@ Excluir
                                         </div>
 
                                     </div>
-                                    <br />
+                                    <%--<br />--%>
                                     <div class="card card-outline card-info collapsed-card">
                                         <div class="card-header">
                                             <h3 class="card-title"><i class="far fa-edit"></i>&nbsp;Funilaria/Carroceria/Sider/Total Sider</h3>
@@ -1070,7 +1070,7 @@ Excluir
                                                     <label>&nbsp;</label><br />
                                                     <asp:Button ID="btnTrocarFunilaria"
                                                         runat="server"
-                                                        Text="Lançar Peça"
+                                                        Text="Lançar"
                                                         CssClass="btn btn-success w-100"
                                                         OnClick="btnTrocarFunilaria_Click" />
                                                 </div>
@@ -1208,6 +1208,11 @@ Excluir
                                             <br />
                                             <a href="ListaOS.aspx" class="btn btn-outline-danger w-100">Fechar               
                                             </a>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <br />
+                                            <asp:Button ID="btnAtualizarOS" CssClass="btn btn-outline-warning w-100" runat="server" Text="Atualiza Ordem de Serviço" OnClick="btnAtualizarOS_Click" />
                                         </div>
                                     </div>
                                 </div>

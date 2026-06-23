@@ -663,6 +663,7 @@
     <Content Include="dist\pages\Home.aspx" />
     <Content Include="dist\pages\Frm_CadClientes.aspx" />
     <Content Include="dist\pages\ImprimirOrdem.aspx" />
+    <Content Include="dist\pages\ImprimirOS.aspx" />
     <Content Include="dist\pages\ListaOS.aspx" />
     <Content Include="dist\pages\MapaVeiculoConsulta.aspx" />
     <Content Include="dist\pages\MapaClientePesquisa.aspx" />
@@ -5360,6 +5361,13 @@
     </Compile>
     <Compile Include="dist\pages\ImprimirOrdem.aspx.designer.cs">
       <DependentUpon>ImprimirOrdem.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ImprimirOS.aspx.cs">
+      <DependentUpon>ImprimirOS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ImprimirOS.aspx.designer.cs">
+      <DependentUpon>ImprimirOS.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ListaOS.aspx.cs">
       <DependentUpon>ListaOS.aspx</DependentUpon>

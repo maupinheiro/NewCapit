@@ -3,72 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
 
-            $('#ddlBanco').select2({
-                placeholder: "Digite o nome ou código",
-                minimumInputLength: 1,
-                ajax: {
-                    url: 'SuaPagina.aspx/BuscarBancos',
-                    type: 'POST',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return JSON.stringify({ termo: params.term });
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.d
-                        };
-                    }
-                }
-            });
-
-            // Quando selecionar no Select2
-            $('#ddlBanco').on('select2:select', function (e) {
-                let codigo = e.params.data.id;
-                $('#<%= txtCodigoBanco.ClientID %>').val(codigo);
-        });
-
-    });
-    </script>
-    <script>
-        function buscarBancoPorCodigo() {
-
-            let codigo = $('#<%= txtCodigoBanco.ClientID %>').val();
-
-    if (codigo === "")
-        return;
-
-    $.ajax({
-        type: "POST",
-        url: "SuaPagina.aspx/BuscarBancos",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify({ termo: codigo }),
-        success: function (response) {
-
-            let dados = response.d;
-
-            if (dados.length > 0) {
-
-                let banco = dados[0];
-
-                let option = new Option(banco.text, banco.id, true, true);
-                $('#ddlBanco').append(option).trigger('change');
-            }
-            else {
-                alert("Código não encontrado");
-                $('#<%= txtCodigoBanco.ClientID %>').val("");
-            }
-        }
-    });
-        }
-    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -117,7 +53,7 @@
             valor = (valor / 100).toFixed(2) + "";
             valor = valor.replace(".", ",");
             valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-            campo.value = "R$ " + valor;
+            campo.value = valor;
         }
     </script>
     <script>
@@ -240,7 +176,20 @@
                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="ddlTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
+                                        <div class="form_group">
+                                            <span class="details">TIPO TRANSPORTADOR:</span>
+                                            <asp:DropDownList ID="tipoTAC" runat="server" CssClass="form-control">
+                                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                                <asp:ListItem Value="1" Text="TAC - INDEPENDENTE"></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="TAC - AGREGADO"></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="ETC"></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="CTC"></asp:ListItem>
+                                            </asp:DropDownList>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" ControlToValidate="ddlTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form_group">
@@ -387,16 +336,20 @@
                                 <hr />
                                 <br />
                                 <div class="form-group row">
-                                    <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Integração RUBI/SAPIENS:</label>
-                                    <div class="col-md-2">
-                                        <asp:TextBox ID="txtCodRubi_Sapiens" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Integração RUBI:</label>
+                                    <div class="col-md-1">
+                                        <asp:TextBox ID="txtCod_Rubi" runat="server" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                    <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">SAPIENS:</label>
+                                    <div class="col-md-1">
+                                        <asp:TextBox ID="txtCod_Sapiens" runat="server" CssClass="form-control"></asp:TextBox>
                                     </div>
                                     <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">Gera CIOT:</label>
                                     <div class="col-md-2">
                                         <asp:DropDownList ID="ddlGeraCIOT" runat="server" CssClass="form-control">
                                             <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                            <asp:ListItem Value="Sim" Text="Sim"></asp:ListItem>
-                                            <asp:ListItem Value="Não" Text="Não"></asp:ListItem>
+                                            <asp:ListItem Value="1" Text="SIM"></asp:ListItem>
+                                            <asp:ListItem Value="2" Text="NAO"></asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
                                     <label for="inputRemetente" class="col-sm-1 col-form-label" style="text-align: right">Valor CIOT:</label>
@@ -406,14 +359,15 @@
 
                                 </div>
                                 <div class="row g-3">
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <div class="form_group">
-                                            <span class="details">TIPO DE PAGAMENTO:</span>
+                                            <span class="details">PAGAMENTO:</span>
                                             <asp:DropDownList ID="ddlTipoPagamento" runat="server" CssClass="form-control">
                                                 <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                <asp:ListItem Value="Quinzenal" Text="Quinzenal"></asp:ListItem>
-                                                <asp:ListItem Value="Mensal" Text="Mensal"></asp:ListItem>
-                                                <asp:ListItem Value="A Vista" Text="A Vista"></asp:ListItem>
+                                                <asp:ListItem Value="1" Text="SEMANAL"></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="QUINZENAL"></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="MENSAL"></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="A VISTA"></asp:ListItem>
                                             </asp:DropDownList>
                                         </div>
                                     </div>
@@ -422,9 +376,9 @@
                                             <span class="details">FORMA DE PAGAMENTO:</span>
                                             <asp:DropDownList ID="ddlFormaPagamento" runat="server" CssClass="form-control">
                                                 <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                <asp:ListItem Value="Cartao" Text="Cartao"></asp:ListItem>
-                                                <asp:ListItem Value="Deposito em Conta" Text="Deposito em Conta"></asp:ListItem>
-                                                <asp:ListItem Value="PIX" Text="PIX"></asp:ListItem>
+                                                <asp:ListItem Value="1" Text="CARTÃO"></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="DEPOSITO EM CONTA"></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="PIX"></asp:ListItem>
                                             </asp:DropDownList>
                                         </div>
                                     </div>
@@ -435,6 +389,7 @@
                                                 <asp:TextBox
                                                     ID="txtCartao"
                                                     runat="server"
+                                                    Style="text-align:center;"
                                                     CssClass="form-control"
                                                     MaxLength="19"
                                                     onkeyup="validarCartao(this)"
@@ -446,73 +401,111 @@
                                             <small id="msgCartao" style="color: red;"></small>
                                         </div>
                                     </div>
-                                    <div class="row">
-
-                                        <div class="col-md-1">
-                                            <label>Código</label>
+                                    <div class="col-md-1">
+                                        <div class="form_group">
+                                            <span class="details">BANCO:</span>
                                             <asp:TextBox
                                                 ID="txtCodigoBanco"
                                                 runat="server"
                                                 CssClass="form-control"
-                                                onblur="buscarBancoPorCodigo()" />
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label>Banco</label>
-                                            <select id="ddlBanco" style="width: 100%"></select>
-                                        </div>
-
-                                    </div>
-
-                                    <br />
-                                    <h3>Dados Pessoa Física:</h3>
-                                    <hr />
-                                    <br />
-
-
-                                    <div class="row g-3">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <span class="details">CADASTRADO EM:</span>
-                                                <asp:TextBox ID="txtDtCad" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="16" ReadOnly="true"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <span class="details">CADASTRADO POR:</span>
-                                                <asp:TextBox ID="txtUsuCad" Style="text-align: left" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <span class="details">ÚLTIMA ATUALIZAÇÃO::</span>
-                                                <asp:TextBox ID="txtAltDtUsu" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="16" ReadOnly="true"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <span class="details">ATUALIZADO POR:</span>
-                                                <asp:TextBox ID="txtUsuAltCadastro" Style="text-align: left" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                            </div>
+                                                AutoPostBack="true"
+                                                OnTextChanged="txtCodigoBanco_TextChanged">
+                                            </asp:TextBox>
                                         </div>
                                     </div>
-
-                                    <div class="row g-3">
-                                        <br />
-                                        <div class="col-md-2">
-                                            <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg w-100" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Atualizar" />
+                                    <div class="col-md-4">
+                                        <div class="form_group">
+                                            <span class="details">DESCRIÇÃO:</span>
+                                            <asp:DropDownList ID="ddlBanco" runat="server" CssClass="form-control select2"
+                                                AutoPostBack="true"                                                OnSelectedIndexChanged="ddlBanco_SelectedIndexChanged">
+                                            </asp:DropDownList>
                                         </div>
-                                        <div class="col-md-2">
-                                            <a href="/dist/pages/Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
-                                            </a>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form_group">
+                                            <span class="details">AGÊNCIA.:</span>
+                                            <asp:TextBox
+                                                ID="txtAgencia"
+                                                runat="server"
+                                                CssClass="form-control"
+                                                Style="text-align:center;">
+                                            </asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form_group">
+                                            <span class="details">CONTA:</span>
+                                            <asp:TextBox
+                                                ID="txtConta"
+                                                runat="server"
+                                                CssClass="form-control"
+                                                Style="text-align:center;">
+                                            </asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <h3>Dados Pessoa Física:</h3>
+                                <hr />
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <div class="form_group">
+                                            <span class="details">E-MAIL:</span>
+                                            <asp:TextBox
+                                                ID="txtEmail"
+                                                runat="server"
+                                                CssClass="form-control"
+                                                TextMode="Email">
+                                            </asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+
+
+                                <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span class="details">CADASTRADO EM:</span>
+                                            <asp:TextBox ID="txtDtCad" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="16" ReadOnly="true"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <span class="details">CADASTRADO POR:</span>
+                                            <asp:TextBox ID="txtUsuCad" Style="text-align: left" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span class="details">ÚLTIMA ATUALIZAÇÃO::</span>
+                                            <asp:TextBox ID="txtAltDtUsu" Style="text-align: center" runat="server" CssClass="form-control" placeholder="" MaxLength="16" ReadOnly="true"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <span class="details">ATUALIZADO POR:</span>
+                                            <asp:TextBox ID="txtUsuAltCadastro" Style="text-align: left" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
 
+                                <div class="row g-3">
+                                    <br />
+                                    <div class="col-md-2">
+                                        <asp:Button ID="btnSalvar" CssClass="btn btn-outline-success btn-lg w-100" runat="server" ValidationGroup="Cadastro" OnClick="btnSalvar_Click" Text="Atualizar" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="/dist/pages/Consulta_Agregados.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar               
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
     </div>
 

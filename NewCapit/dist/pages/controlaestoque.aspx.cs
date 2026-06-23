@@ -46,12 +46,14 @@ namespace NewCapit.dist.pages
                 estoque_peca,
                 estoque_minimo,
                 valor_unitario,
-                tipo_peca       
+                aplicacao,
+                tipo_peca
                 FROM tbestoque_pecas
                 where (
                     @pesquisa IS NULL
                     OR id_peca LIKE '%' + @pesquisa + '%'
-                    OR descricao_peca LIKE '%' + @pesquisa + '%'    
+                    OR descricao_peca LIKE '%' + @pesquisa + '%'
+                    OR aplicacao LIKE '%' + @pesquisa + '%'
                     )
                     ORDER BY descricao_peca DESC";
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -153,6 +155,8 @@ namespace NewCapit.dist.pages
             string descricao = txtDescricaoPecaModal.Text.Trim();
             string unidade = ddlUnidadeModal.SelectedValue;
             string estoque = txtEstoqueMinimoModal.Text.Trim();
+            string aplicacao = ddlAplicacao.SelectedValue;
+            string tipoPeca = ddlTipo.SelectedValue;
 
             if (string.IsNullOrWhiteSpace(txtDescricaoPecaModal.Text) ||
         string.IsNullOrEmpty(ddlUnidadeModal.SelectedValue))
@@ -184,18 +188,21 @@ namespace NewCapit.dist.pages
                 }
 
                 // Inserir nova peça
-                string sqlInsert = @"INSERT INTO tbestoque_pecas (descricao_peca, unidade, estoque_minimo) 
-                             VALUES (@desc, @unidade, @estoqueMin)";
+                string sqlInsert = @"INSERT INTO tbestoque_pecas (descricao_peca, unidade, estoque_minimo, aplicacao, tipo_peca) 
+                             VALUES (@desc, @unidade, @estoqueMin, @aplicacao, @tipo)";
                 SqlCommand cmdInsert = new SqlCommand(sqlInsert, conn);
                 cmdInsert.Parameters.AddWithValue("@desc", descricao.ToUpper());
                 cmdInsert.Parameters.AddWithValue("@unidade", unidade);
                 cmdInsert.Parameters.AddWithValue("@estoqueMin", estoque);
+                cmdInsert.Parameters.AddWithValue("@aplicacao", aplicacao);
+                cmdInsert.Parameters.AddWithValue("@tipo", tipoPeca);
                 cmdInsert.ExecuteNonQuery();
 
                 // Limpa campos e mensagens
                 txtDescricaoPecaModal.Text = "";
                 ddlUnidadeModal.SelectedIndex = 0;
                 txtEstoqueMinimoModal.Text = "";
+                ddlAplicacao.SelectedIndex = 0;
                 lblMsgModal.Text = "";
                 Mensagem("success", "Peça cadastrada com sucesso.");
                 // Fecha o modal somente após salvar com sucesso

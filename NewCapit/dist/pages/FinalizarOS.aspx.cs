@@ -34,7 +34,8 @@ namespace NewCapit.dist.pages
                     var lblUsuario = "<Usuário>";
                     Response.Redirect("Login.aspx");
                 }
-                CarregarPecas();
+                //CarregarPecas();
+                CarregarPecasMecanica();
                 CarregarMecanicos();
                 CalcularTotais();
                 
@@ -208,12 +209,102 @@ namespace NewCapit.dist.pages
             caminhaoParado.Visible = false;
 
         }
-        void CarregarPecas()
+        void CarregarPecasMecanica()
         {
             using (SqlConnection conn = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas";
+                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas where fl_exclusao is null and aplicacao = 'Mecânica' or aplicacao = 'Outra'";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ddlPeca.DataSource = dt;
+                ddlPeca.DataTextField = "descricao_peca";
+                ddlPeca.DataValueField = "id_peca";
+                ddlPeca.DataBind();
+                ddlPeca.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione", ""));                
+            }
+        }
+        void CarregarPecasEletrica()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas where fl_exclusao is null and aplicacao = 'Mecânica'";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ddlPeca.DataSource = dt;
+                ddlPeca.DataTextField = "descricao_peca";
+                ddlPeca.DataValueField = "id_peca";
+                ddlPeca.DataBind();
+                ddlPeca.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione", ""));
+
+                ddlParteEletrica.DataSource = dt;
+                ddlParteEletrica.DataTextField = "descricao_peca";
+                ddlParteEletrica.DataValueField = "id_peca";
+                ddlParteEletrica.DataBind();
+                ddlParteEletrica.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+
+                ddlParteBorracharia.DataSource = dt;
+                ddlParteBorracharia.DataTextField = "descricao_peca";
+                ddlParteBorracharia.DataValueField = "id_peca";
+                ddlParteBorracharia.DataBind();
+                ddlParteBorracharia.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+
+                ddlParteFunilaria.DataSource = dt;
+                ddlParteFunilaria.DataTextField = "descricao_peca";
+                ddlParteFunilaria.DataValueField = "id_peca";
+                ddlParteFunilaria.DataBind();
+                ddlParteFunilaria.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+            }
+        }
+        void CarregarPecasBorracharia()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas where fl_exclusao is null and aplicacao = 'Mecânica'";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ddlPeca.DataSource = dt;
+                ddlPeca.DataTextField = "descricao_peca";
+                ddlPeca.DataValueField = "id_peca";
+                ddlPeca.DataBind();
+                ddlPeca.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione", ""));
+
+                ddlParteEletrica.DataSource = dt;
+                ddlParteEletrica.DataTextField = "descricao_peca";
+                ddlParteEletrica.DataValueField = "id_peca";
+                ddlParteEletrica.DataBind();
+                ddlParteEletrica.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+
+                ddlParteBorracharia.DataSource = dt;
+                ddlParteBorracharia.DataTextField = "descricao_peca";
+                ddlParteBorracharia.DataValueField = "id_peca";
+                ddlParteBorracharia.DataBind();
+                ddlParteBorracharia.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+
+                ddlParteFunilaria.DataSource = dt;
+                ddlParteFunilaria.DataTextField = "descricao_peca";
+                ddlParteFunilaria.DataValueField = "id_peca";
+                ddlParteFunilaria.DataBind();
+                ddlParteFunilaria.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
+            }
+        }
+        void CarregarPecasFunilaria()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = "SELECT id_peca, descricao_peca FROM tbestoque_pecas where fl_exclusao is null and aplicacao = 'Mecânica'";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();

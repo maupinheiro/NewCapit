@@ -54,7 +54,7 @@ namespace NewCapit.dist.pages
             string strConn = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(strConn))
             {
-                string queryRota = "SELECT rota,desc_rota,distancia,tempo,deslocamento,situacao,data_cadastro, pedagio, usuario_cadastro, data_alteracao, usuario_alteracao FROM tbrotasdeentregas where rota=@idrota";
+                string queryRota = "SELECT rota,desc_rota,distancia,tempo,deslocamento,situacao,data_cadastro, pedagio, usuario_cadastro, data_alteracao, usuario_alteracao, valor_icms, valor_pis, valor_cofins, valor_irpj, valor_csll, valor_ibs, valor_cbs, valor_iss, valor_sestsenat, valor_inss FROM tbrotasdeentregas where rota=@idrota";
 
                 using (SqlCommand cmdTNG = new SqlCommand(queryRota, conn))
                 {
@@ -73,6 +73,16 @@ namespace NewCapit.dist.pages
                             ddlStatus.SelectedItem.Text = reader["situacao"].ToString();
                             ddlPedagio.SelectedValue = reader["pedagio"].ToString();
                             txtCadastro.Text = reader["data_cadastro"].ToString();
+                            txtICMS_I.Text = reader["valor_icms"].ToString();
+                            txtISS_I.Text = reader["valor_iss"].ToString();
+                            txtCOFINS_I.Text = reader["valor_cofins"].ToString();
+                            txtPIS_I.Text = reader["valor_pis"].ToString();
+                            txtIRPJ_I.Text = reader["valor_irpj"].ToString();
+                            txtIBS_I.Text = reader["valor_ibs"].ToString();
+                            txtCBS_I.Text = reader["valor_cbs"].ToString();
+                            txtSestSenat_I.Text = reader["valor_sestsenat"].ToString();
+                            txtINSS_I.Text = reader["valor_inss"].ToString();
+                            txtCSLL_I.Text = reader["valor_csll"].ToString();
                             lblDtCadastro.Text = reader["data_cadastro"].ToString();
                             txtUsuCadastro.Text = reader["usuario_cadastro"].ToString();
                             lbDtAtualizacao.Text = reader["data_alteracao"].ToString();
@@ -100,6 +110,16 @@ namespace NewCapit.dist.pages
                    situacao            = @situacao,                   
                    pedagio             = @pedagio,
                    data_alteracao      = @data_alteracao,
+                   valor_icms          = @valor_icms, 
+                   valor_pis           = @valor_pis, 
+                   valor_cofins        = @valor_cofins,
+                   valor_irpj          = @valor_irpj,
+                   valor_csll          = @valor_csll,
+                   valor_ibs           = @valor_ibs,
+                   valor_cbs           = @valor_cbs,
+                   valor_iss           = @valor_iss,
+                   valor_sestsenat     = @valor_sestsenat,
+                   valor_inss          = @valor_inss,
                    usuario_alteracao   = @usuario_alteracao
                    WHERE rota = @rota";
 
@@ -130,6 +150,16 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@data_alteracao", SqlDbType.DateTime)
               .Value = DateTime.Now;
                         cmd.Parameters.AddWithValue("@usuario_alteracao", Session["UsuarioLogado"].ToString());
+                        cmd.Parameters.Add("@valor_icms", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtICMS_I.Text);
+                        cmd.Parameters.Add("@valor_pis", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtPIS_I.Text);
+                        cmd.Parameters.Add("@valor_cofins", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtCOFINS_I.Text);
+                        cmd.Parameters.Add("@valor_irpj", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtIRPJ_I.Text);
+                        cmd.Parameters.Add("@valor_csll", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtCSLL_I.Text);
+                        cmd.Parameters.Add("@valor_ibs", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtIBS_I.Text);
+                        cmd.Parameters.Add("@valor_cbs", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtCBS_I.Text);
+                        cmd.Parameters.Add("@valor_iss", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtISS_I.Text);
+                        cmd.Parameters.Add("@valor_sestsenat", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtSestSenat_I.Text);
+                        cmd.Parameters.Add("@valor_inss", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtINSS_I.Text);
                         cmd.Parameters.AddWithValue("@rota", id); // rota (chave)
 
                         conn.Open();
@@ -171,6 +201,20 @@ namespace NewCapit.dist.pages
             }
 
             return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+        private decimal LimparMascaraMoeda(string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                return 0m;
+            }
+            // Remove pontos de milhar e substitui vírgula decimal por ponto
+            string valorLimpo = valor.Replace(".", "").Replace(",", ".");
+            if (decimal.TryParse(valorLimpo, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal resultado))
+            {
+                return resultado;
+            }
+            return 0m;
         }
     }
 }

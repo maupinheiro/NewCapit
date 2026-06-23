@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,6 +13,7 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Domain;
+using FluentEmail.Core;
 using Microsoft.SqlServer.Server;
 
 namespace NewCapit.dist.pages
@@ -39,7 +42,8 @@ namespace NewCapit.dist.pages
 
                 PreencherComboFiliais();                
                 DateTime dataHoraAtual = DateTime.Now;                
-                txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");               
+                txtAltDtUsu.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm"); 
+                CarregarBancos();
                 CarregaDadosAgregado();
             }
         }
@@ -175,22 +179,24 @@ namespace NewCapit.dist.pages
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            // Obtém o ID da transportadora da QueryString
-            //if (!int.TryParse(HttpContext.Current.Request.QueryString["id"], out int id))
-           // {
-           //     ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('ID /inválido ou não fornecido.');", true);
-           //     return;
-           // }
+            // Obtém o ID da transportadora da QueryString           
 
             if (HttpContext.Current.Request.QueryString["id"].ToString() != "")
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo WHERE ID = @id";
+            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo, tac_etc_ctc=@tac_etc_ctc,banco=@banco,nome_banco=@nome_banco,agencia=@agencia,conta_corrente=@conta_corrente,email=@email,tipo_pagamento=@tipo_pagamento,forma_pagamento=@forma_pagamento,numero_cartao=@numero_cartao,cod_sapiens=@cod_sapiens,cod_rubi=@cod_rubi,gera_ciot=@gera_ciot,valor_ciot=@valor_ciot WHERE ID = @id";
 
             // Atualiza informações do usuário logado e data de alteração
             string usuarioLogado = Session["UsuarioLogado"]?.ToString() ?? "Usuário não identificado";
-            DateTime dataAlteracao = DateTime.Now;   
+            DateTime dataAlteracao = DateTime.Now;
+
+            //string codigoRubi = txtCodRubi_Sapiens.Text;
+            //if (codigoRubi.Contains("/"))
+            //{
+            //    codigoRubi = codigoRubi.Substring(0, codigoRubi.IndexOf("/"));
+            //}
+            //string codigoSapiens = txtCodRubi_Sapiens.Text.Split('/')[1];
 
             using (SqlConnection connection = new SqlConnection(con.ConnectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -218,6 +224,32 @@ namespace NewCapit.dist.pages
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text);
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
                     command.Parameters.AddWithValue("@Tipo", ddlTipo.SelectedItem.ToString());
+                    command.Parameters.AddWithValue("@tac_etc_ctc", tipoTAC.SelectedValue.ToString());
+                    command.Parameters.AddWithValue("@banco", txtCodigoBanco.Text.Trim());
+                    command.Parameters.AddWithValue("@nome_banco", ddlBanco.SelectedItem.Text.Trim());
+                    command.Parameters.AddWithValue("@agencia", txtAgencia.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@conta_corrente", txtConta.Text.Trim().ToUpper());
+                    command.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
+                    command.Parameters.AddWithValue("@tipo_pagamento", ddlTipoPagamento.SelectedValue.ToString());
+                    command.Parameters.AddWithValue("@forma_pagamento", ddlFormaPagamento.SelectedValue.ToString());
+                    command.Parameters.AddWithValue("@numero_cartao", txtCartao.Text.Trim());
+                    command.Parameters.AddWithValue("@cod_rubi", txtCod_Rubi.Text.Trim());
+                    command.Parameters.AddWithValue("@cod_sapiens", txtCod_Sapiens.Text.Trim());
+                    command.Parameters.AddWithValue("@gera_ciot", ddlGeraCIOT.SelectedValue.ToString());
+                    decimal valorCIOT;
+                    if (decimal.TryParse(txtValorCIOT.Text,
+                                         NumberStyles.Any,
+                                         new CultureInfo("pt-BR"),
+                                         out valorCIOT))
+                    {
+                        command.Parameters.AddWithValue("@valor_ciot", valorCIOT);
+                    }
+                    else
+                    {
+                        // Valor inválido
+                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Valor do CIOT inválido. Verifique, por favor!');", true);
+                        txtValorCIOT.Focus();
+                    }
                     command.Parameters.AddWithValue("@ID", id);
 
                     connection.Open();
@@ -259,7 +291,7 @@ namespace NewCapit.dist.pages
             if (dt.Rows.Count > 0)
             {
                 txtCodTra.Text = dt.Rows[0][1].ToString();
-                txtDtCadastro.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy");                
+                txtDtCadastro.Text = DateTime.Parse(dt.Rows[0][2].ToString()).ToString("dd/MM/yyyy");
                 txtRazCli.Text = dt.Rows[0][3].ToString();
                 txtContato.Text = dt.Rows[0][4].ToString();
                 txtFantasia.Text = dt.Rows[0][5].ToString();
@@ -272,7 +304,7 @@ namespace NewCapit.dist.pages
                 txtEstCli.Text = dt.Rows[0][12].ToString();
                 ddlSituacao.Items.Insert(0, dt.Rows[0][13].ToString());
                 cboPessoa.Items.Insert(0, dt.Rows[0][14].ToString());
-                txtCpf_Cnpj.Text = dt.Rows[0][15].ToString();                
+                txtCpf_Cnpj.Text = dt.Rows[0][15].ToString();
                 txtRg.Text = dt.Rows[0][16].ToString();
                 txtNumero.Text = dt.Rows[0][17].ToString();
                 txtComplemento.Text = dt.Rows[0][18].ToString();
@@ -282,123 +314,195 @@ namespace NewCapit.dist.pages
                 txtAltDtUsu.Text = dt.Rows[0][21].ToString();
                 txtUsuAltCadastro.Text = dt.Rows[0][22].ToString();
                 cbFiliais.Items.Insert(0, dt.Rows[0][24].ToString());
-                ddlTipo.Items.Insert(0, dt.Rows[0][25].ToString()); 
-            }
-            else
-            {
-                //lblMsg.Visible = true;
-                //pnlMot.Visible = false;
-            }
-        }
-
-        public void CarregaDadosAgregado3()
-        {
-            SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
-            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["id"]))
-            {
-                id = HttpContext.Current.Request.QueryString["id"].ToString();
-            }
-            string sql = "SELECT * FROM tbtransportadoras WHERE ID='" + id + "'";
-            SqlCommand command = new SqlCommand(sql, con);
-
-            try
-            {
-                con.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                ddlTipo.Items.Insert(0, dt.Rows[0][25].ToString());
+                if (dt.Rows[0][29].ToString() == "1")
                 {
-                    if (reader.Read())
-                    {
-                        // Popula os campos da tela com os dados retornados do banco
-                        txtCodTra.Text = reader["codtra"].ToString();
-                        txtDtCadastro.Text = reader["dtcad"].ToString();
-                        txtRazCli.Text = reader["nomtra"].ToString();
-                        txtContato.Text = reader["contra"].ToString();
-                        txtFantasia.Text = reader["fantra"].ToString();
-                        txtFixo.Text = reader["fone1"].ToString();
-                        txtCelular.Text = reader["fone2"].ToString();
-                        txtEndCli.Text = reader["endtra"].ToString();
-                        txtCepCli.Text = reader["ceptra"].ToString();
-                        txtBaiCli.Text = reader["baitra"].ToString();
-                        txtCidCli.Text = reader["cidtra"].ToString();
-                        txtEstCli.Text = reader["uftra"].ToString();
-                        ddlSituacao.SelectedValue = reader["ativa_inativa"].ToString();
-                        cboPessoa.SelectedValue = reader["pessoa"].ToString();
-                        txtCpf_Cnpj.Text = reader["cnpj"].ToString();
-                        txtRg.Text = reader["inscestadual"].ToString();
-                        txtNumero.Text = reader["numero"].ToString();
-                        txtComplemento.Text = reader["complemento"].ToString();
-                        txtDtCadastro.Text = reader["dtccad"].ToString();
-                        txtUsuCad.Text = reader["usucad"].ToString();
-                        txtAntt.Text = reader["antt"].ToString();
-                        string filial = reader["filial"].ToString();
-                        ddlTipo.SelectedValue = reader["tipo"].ToString();
-                        System.Diagnostics.Debug.WriteLine("Filial lida do banco: " + filial);
-                        cbFiliais.Items.Insert(0, filial);
-
-                    }
-                    else
-                    {
-                        // Exibe mensagem caso o registro não seja encontrado
-                        string mensagem = "Nenhum registro foi encontrado para o ID fornecido.";
-                        string script = $"alert('{HttpUtility.JavaScriptStringEncode(mensagem)}');";
-                        ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", script, true);
-                    }
+                    tipoTAC.SelectedValue = "1";                   
                 }
-                con.Close();
-            }
-            catch (Exception ex)
-            {
-                var message = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                string retorno = "Erro! Contate o administrador. Detalhes do erro: " + message;
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(retorno);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
-                Response.Redirect("ConsultaAgregados.aspx");
-            }
-            finally
-            {
-                con.Close();
+                else if (dt.Rows[0][29].ToString() == "2")
+                {
+                    tipoTAC.SelectedValue = "2";                   
+                }
+                else if (dt.Rows[0][29].ToString() == "3")
+                {
+                    tipoTAC.SelectedValue = "3";                    
+                }
+                else if (dt.Rows[0][29].ToString() == "4")
+                {
+                    tipoTAC.SelectedValue = "4";                   
+                }
+                else
+                {
+                    tipoTAC.SelectedItem.Text = "Selecione...";
+                }
+
+                txtCodigoBanco.Text = dt.Rows[0][30].ToString();
+                
+                if (dt.Rows[0][31].ToString() != string.Empty)
+                {
+                    ddlBanco.Items.Insert(0, dt.Rows[0][31].ToString());
+                }
+
+                txtAgencia.Text = dt.Rows[0][32].ToString();
+                txtConta.Text = dt.Rows[0][33].ToString();
+                txtEmail.Text = dt.Rows[0][34].ToString();
+                if (dt.Rows[0][35].ToString() == "1")
+                {
+                    ddlTipoPagamento.SelectedValue = "1";
+                }
+                else if (dt.Rows[0][35].ToString() == "2")
+                {
+                    ddlTipoPagamento.SelectedValue = "2";
+                }
+                else if (dt.Rows[0][35].ToString() == "3")
+                {
+                    ddlTipoPagamento.SelectedValue ="3";
+                }
+                else if (dt.Rows[0][35].ToString() == "4")
+                {
+                    ddlTipoPagamento.SelectedValue = "4";
+                }
+                else
+                {
+                    ddlTipoPagamento.SelectedItem.Text = "Selecione...";
+                }
+
+                if (dt.Rows[0][36].ToString() == "1")
+                {
+                    ddlFormaPagamento.SelectedValue = "1";
+                }
+                else if (dt.Rows[0][36].ToString() == "2")
+                {
+                    ddlFormaPagamento.SelectedValue ="2";
+                }
+                else if (dt.Rows[0][36].ToString() == "3")
+                {
+                    ddlFormaPagamento.SelectedValue ="3";
+                }
+                else
+                {
+                    ddlFormaPagamento.SelectedItem.Text = "Selecione...";
+                }
+
+                txtCartao.Text = dt.Rows[0][37].ToString();
+                txtCod_Sapiens.Text = dt.Rows[0][38].ToString();
+                txtCod_Rubi.Text = dt.Rows[0][39].ToString();
+
+                if (dt.Rows[0][40].ToString() == "1")
+                {
+                    ddlGeraCIOT.SelectedValue = "1";
+                }
+                else if (dt.Rows[0][40].ToString() == "2")
+                {
+                    ddlGeraCIOT.SelectedValue ="2";
+                }
+                else
+                {
+                    ddlGeraCIOT.SelectedItem.Text = "Selecione...";
+                }
+
+                decimal valorCIOT;
+                if (decimal.TryParse(dt.Rows[0][41].ToString(), out valorCIOT))
+                {
+                    txtValorCIOT.Text = valorCIOT.ToString("N2", new CultureInfo("pt-BR"));
+                }
             }
 
-
-
-        }
+        }        
 
         [System.Web.Services.WebMethod]
-        public static object BuscarBancos(string termo)
+        public static string BuscarBancos(string codigo)
         {
-            List<object> lista = new List<object>();
+            string descricao = null;
 
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            string conn = ConfigurationManager
+                .ConnectionStrings["conexao"]
+                .ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(conn))
             {
-                conn.Open();
+                string sql = @"SELECT nome
+                       FROM tbbancos
+                       WHERE codigo = @codigo";
 
-                SqlCommand cmd = new SqlCommand(@"
-            SELECT codigo, nome 
-            FROM tbbancos
-            WHERE nome LIKE @termo OR codigo LIKE @termo
-            ORDER BY nome", conn);
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@codigo", codigo);
 
-                cmd.Parameters.AddWithValue("@termo", "%" + termo + "%");
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+
+                if (result != null)
+                    descricao = result.ToString();
+                
+
+            }
+
+            return descricao;
+        }
+        private void CarregarBancos()
+        {
+            string conn = ConfigurationManager
+                .ConnectionStrings["conexao"]
+                .ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(conn))
+            {
+                string sql = @"SELECT codigo, nome
+                       FROM tbbancos
+                       ORDER BY nome";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ddlBanco.DataSource = dt;
+                ddlBanco.DataTextField = "nome";
+                ddlBanco.DataValueField = "codigo";
+                ddlBanco.DataBind();
+
+                ddlBanco.Items.Insert(0, new ListItem("Selecione...", ""));
+            }
+        }
+        protected void txtCodigoBanco_TextChanged(object sender, EventArgs e)
+        {
+            using (SqlConnection con = new SqlConnection(
+        WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = "SELECT codigo, nome FROM tbbancos WHERE codigo = @codigo";
+
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@codigo", txtCodigoBanco.Text.Trim());
+
+                con.Open();
 
                 SqlDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                if (dr.Read())
                 {
-                    lista.Add(new
+                    string codigo = dr["codigo"].ToString();
+
+                    ListItem item = ddlBanco.Items.FindByValue(codigo);
+
+                    if (item != null)
                     {
-                        id = dr["codigo"].ToString(),
-                        text = dr["codigo"] + " - " + dr["nome"]
-                    });
+                        ddlBanco.ClearSelection();
+                        item.Selected = true;
+                    }
+                }
+                else
+                {
+                    //ddlBanco.SelectedIndex = 0;
+                    ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Banco, não encontrado no sistema. Verifique, por favor!');", true);
+                    txtCodigoBanco.Focus();
                 }
             }
+        }
 
-            return lista;
+        protected void ddlBanco_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtCodigoBanco.Text = ddlBanco.SelectedValue.ToString();
         }
     }
 }
