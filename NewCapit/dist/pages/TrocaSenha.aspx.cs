@@ -28,15 +28,23 @@ namespace NewCapit.dist.pages
                 if (login == null)
                 {
                     Response.Redirect("/dist/pages/TrocaSenha.aspx");
+
+                    
+
                 }
+               
             }
-            
+            if (Session["SenhaAtual"].ToString() != string.Empty)
+            {
+                txtSenhaAtual.Text = Session["SenhaAtual"].ToString();
+            }
+
         }
 
         protected void btnSalvarSenha_Click(object sender, EventArgs e)
         {
             string codusuario = Session["CodUsuario"].ToString();
-
+            
 
             if (txtSenhaAtual.Text == "" || txtNovaSenha.Text == "" || txtConfirmarSenha.Text == "")
             {
@@ -108,17 +116,16 @@ namespace NewCapit.dist.pages
                             comand.Parameters.AddWithValue("@cod_usuario", codusuario);
                             con.Open();
                             comand.ExecuteNonQuery();
+                            comand.ExecuteNonQuery();
                             con.Close();
 
-                            string retorno = "Senha alterada com sucesso!";
+                            // Mude apenas a linha de redirecionamento para o Login.aspx
+                            string retorno = "Senha alterada com sucesso! Faça login novamente.";
                             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-
                             sb.Append("<script type = 'text/javascript'>");
                             sb.Append("window.onload=function(){");
-                            sb.Append("alert('");
-                            sb.Append(retorno);
-                            sb.Append("');"); // Fecha o comando do alert
-                            sb.Append("window.location.href = '/dist/pages/Home.aspx';"); // Redireciona após o OK
+                            sb.Append("alert('" + retorno + "');");
+                            sb.Append("window.location.href = '/dist/pages/Login.aspx';"); // Redireciona para o login
                             sb.Append("};");
                             sb.Append("</script>");
 

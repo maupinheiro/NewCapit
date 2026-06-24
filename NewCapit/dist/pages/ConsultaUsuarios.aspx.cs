@@ -198,7 +198,7 @@ namespace NewCapit.dist.pages
             string idUsuario = btn.CommandArgument;
 
             // Lógica de Update (Exemplo genérico usando SQL Client)
-            using (SqlConnection con = new SqlConnection("SUA_CONNECTION_STRING_AQUI"))
+            using (SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
                 string query = "UPDATE tb_usuario SET ds_senha = 'mudar123' WHERE cod_usuario = @id";
                 SqlCommand cmd = new SqlCommand(query, con);
