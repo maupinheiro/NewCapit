@@ -137,13 +137,22 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Ações" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CausesValidation="false" CssClass="btn btn-outline-primary btn-sm rounded-2 px-3">
-                                                <i class="fa fa-edit me-1"></i>Editar
-                                            </asp:LinkButton>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                                                                           <asp:TemplateField HeaderText="Ações" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="180">
+                                            <ItemTemplate>
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <asp:LinkButton ID="lnkEditar" runat="server" OnClick="Editar" CausesValidation="false" CssClass="btn btn-outline-primary btn-sm rounded-2">
+                                                        <i class="fa fa-edit"></i>
+                                                    </asp:LinkButton>
+            
+                                                    <asp:LinkButton ID="lnkResetar" runat="server" OnClick="ResetarSenha_Click" 
+                                                        CommandArgument='<%# Eval("cod_usuario") %>' 
+                                                        OnClientClick="return confirm('Tem certeza que deseja resetar a senha deste usuário para \'mudar123\'?');"
+                                                        CssClass="btn btn-outline-warning btn-sm rounded-2">
+                                                        <i class="fa fa-key"></i> Resetar
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
                         </div>

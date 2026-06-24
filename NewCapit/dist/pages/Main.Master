@@ -780,8 +780,8 @@
                                      <li class="nav-item" id="TelaColaboradoresManutencao" runat="server"><a href="/dist/pages/ColaboradoresManutencao.aspx" class="nav-link"><i class="fas fa-hard-hat nav-icon"></i><p>Colaboradores</p></a></li>
                                     <li class="nav-item" id="TelaControlaEstoque" runat="server"><a href="/dist/pages/controlaestoque.aspx" class="nav-link"><i class="fas fa-wrench nav-icon"></i><p>Estoque Peças</p></a></li>
                                     <li class="nav-item" id="TelaControlePneus" runat="server"><a href="/dist/pages/ControlePneus.aspx" class="nav-link"><i class="fas fa-road nav-icon"></i><p>Pneus</p></a></li>
-                                       <li class="nav-item" id="TelaListaOS" runat="server"><a href="/dist/pages/ListaOS.aspx" class="nav-link"><i class="far fa-file-alt nav-icon"></i><p>Listar O.S.</p></a></li>
-                                    <li class="nav-item" id="TelaAbrirOS" runat="server">><a href="/dist/pages/AbrirOS.aspx" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><p>Abrir O.S.</p></a></li>
+                                    <li class="nav-item" id="TelaListaOS" runat="server"><a href="/dist/pages/ListaOS.aspx" class="nav-link"><i class="far fa-file-alt nav-icon"></i><p>Listar O.S.</p></a></li>
+                                    <li class="nav-item" id="TelaAbrirOS" runat="server"><a href="/dist/pages/AbrirOS.aspx" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><p>Abrir O.S.</p></a></li>
                                     <li class="nav-item" id="TelaFinalizarOS" runat="server"><a href="/dist/pages/FinalizarOS.aspx" class="nav-link"><i class="fas fa-calendar-alt nav-icon"></i><p>Finalizar O.S.</p></a></li>
                                  
                                   

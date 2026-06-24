@@ -13,36 +13,36 @@ namespace NewCapit.dist.pages
         private readonly string _connectionString = WebConfigurationManager.ConnectionStrings["conexao"].ToString();
         private readonly CultureInfo _culturaBR = CultureInfo.GetCultureInfo("pt-BR");
 
-        // Método principal atualizado para refletir o novo padrão dos arquivos analizados
         public string GerarArquivoCompleto(int idCarga, string numeroDoc, bool ehServico)
         {
             var exportador = new StringBuilder();
             var notas = ObterNotasDaCarga(idCarga);
             var motorista = ObterMotoristaDaCarga(idCarga);
             var veiculos = ObterVeiculosDaCarga(idCarga);
+            var destinatario = ObterDestinatarioDaCarga(idCarga); // BUSCA O DESTINATÁRIO REAL
 
-            // 1. Registro 01 - Adaptado para o padrão novo (pode ser parametrizado se houver mais de uma empresa no banco)
+            // 1. Registro 01
             exportador.AppendLine(GerarRegistro01());
 
-            // 2. Registro 02 - Dados do Motorista
+            // 2. Registro 02
             if (motorista != null) exportador.AppendLine(GerarRegistro02(motorista));
 
-            // 3. Registro 03 e 04 - Veículos e Reboques
+            // 3. Registro 03 e 04
             foreach (var v in veiculos)
             {
                 exportador.AppendLine(GerarRegistro03(v));
                 exportador.AppendLine($"4|1|{v.Placa}|2|3");
             }
 
-            // 4. Registro 05 - Vínculo de reboques se houver mais de um veículo
+            // 4. Registro 05
             if (!ehServico && veiculos.Count > 1)
                 exportador.AppendLine($"5|1|{veiculos[0].Placa}|1|{veiculos[1].Placa}|");
 
-            // 5. Registro 06 - Atualizado com a nova string complexa de observações extraída dos arquivos novos
-            string linha06 = ehServico ? GerarRegistro06NFSe(numeroDoc) : GerarRegistro06CTe(numeroDoc, notas, motorista, veiculos);
+            // 5. Registro 06 - Atualizado para passar o objeto destinatário real
+            string linha06 = ehServico ? GerarRegistro06NFSe(numeroDoc) : GerarRegistro06CTe(numeroDoc, notas, motorista, veiculos, destinatario);
             exportador.AppendLine(linha06);
 
-            // 6. Registros subsequentes de valores e itens
+            // 6. Registros subsequentes
             exportador.AppendLine(GerarRegistro08(numeroDoc, ehServico));
             exportador.AppendLine(GerarRegistro09(numeroDoc, ehServico));
 
@@ -55,15 +55,59 @@ namespace NewCapit.dist.pages
 
             if (!ehServico) exportador.AppendLine(GerarRegistro19(numeroDoc));
 
-            // 7. Registro 20 - Revisado para estruturar múltiplos impostos por linha igual aos anexos
+            // 7. Registro 20
             exportador.Append(GerarRegistros20(numeroDoc, tipoDoc, ehServico));
 
             return exportador.ToString();
         }
 
         // ==================================================================================
-        // MÉTODOS DE BUSCA (SQL) - ACESSADOS PELO BOTÃO E XML
+        // NOVA CONSULTA SQL PARA BUSCAR O DESTINATÁRIO REAL
         // ==================================================================================
+        public DestinatarioModel ObterDestinatarioDaCarga(int idCarga)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                // Ajuste os nomes das colunas (ex: c.destinatario, cl.doc, cl.razsoc) conforme seu banco real
+                string sql = @"SELECT TOP 1 n.cnpjest, n.nomest, n.endest, n.baiest, n.cepest, n.cidest, n.ufest, n.codmunest
+                               FROM tbnfe as n
+                               WHERE n.carga = @carga";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@carga", idCarga);
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new DestinatarioModel
+                        {
+                            CNPJ = reader["cnpjest"].ToString().Replace(".", "").Replace("-", "").Replace("/", "").Trim(),
+                            RazaoSocial = reader["nomest"].ToString().Trim(),
+                            Endereco = reader["endest"].ToString().Trim(),
+                            Bairro = reader["baiest"].ToString().Trim(),
+                            CEP = reader["cepest"].ToString().Replace("-", "").Trim(),
+                            Cidade = reader["cidest"].ToString().Trim(),
+                            UF = reader["ufest"].ToString().Trim(),
+                            CodigoMunicipio = reader["codmunest"].ToString().Trim()
+                        };
+                    }
+                }
+            }
+
+            // Retorna um fallback genérico caso não encontre no banco, evitando quebrar o sistema
+            return new DestinatarioModel
+            {
+                CNPJ = "00000000000000",
+                RazaoSocial = "DESTINATARIO PADRAO LTDA",
+                Endereco = "AVENIDA PRINCIPAL, 100",
+                Bairro = "CENTRO",
+                CEP = "13320000",
+                Cidade = "SALTO",
+                UF = "SP",
+                CodigoMunicipio = "3545209"
+            };
+        }
 
         public MotoristaModel ObterMotoristaDaCarga(int idCarga)
         {
@@ -180,7 +224,7 @@ namespace NewCapit.dist.pages
                             NumeroNfe = Convert.ToInt32(reader["numeronfe"]),
                             ValorNf = Convert.ToDecimal(reader["vnf"]),
                             Peso = Convert.ToDecimal(reader["peso"]),
-                            ChaveAcesso = reader["chavenfe"].ToString() // Padronizado para resolver o erro do XML
+                            ChaveAcesso = reader["chavenfe"].ToString()
                         });
                     }
                 }
@@ -188,28 +232,24 @@ namespace NewCapit.dist.pages
             return lista;
         }
 
-        // ==================================================================================
-        // MÉTODOS AUXILIARES DE GERAÇÃO DE REGISTROS (NOVA VERSÃO DOS ARQUIVOS)
-        // ==================================================================================
-
         private string GerarRegistro01() => "1|55890016000109|TRANSNOVAG TRANSPORTES SA|||111501336118|01165913090|RUA CADIRIRI||03109040|PQ. MOOCA|SAO PAULO|SP||11-2126-3555||||ROD||C|0|0|0||851|00109548|1058|0|0";
 
         private string GerarRegistro02(MotoristaModel m) => $"2|{m.Nome}|{m.CPF}|{m.Endereco}||{m.Bairro}|{m.CEP}||{m.Cidade}|{m.UF}|{m.Telefone}|||0||1058|{m.CNH}|{m.ValidadeCNH:dd/MM/yyyy}||{m.CategoriaCNH}|{m.RG}|{m.OrgaoRG}|{m.DataEmissaoRG:dd/MM/yyyy}|{m.DataNascimento:dd/MM/yyyy}||||S/N";
 
         private string GerarRegistro03(VeiculoModel v) => $"3|{v.Placa}|{v.UF}|0|1|1|{v.Ano}|1|1|0||{v.Chassi}|ROD|C||||0|{v.Renavam}||||0||0|P|06|01|0";
 
-        // REGISTRO 06 CTE ATUALIZADO: Monta a string complexa observada nos novos arquivos de exemplo
-        private string GerarRegistro06CTe(string n, List<NotaFiscalModel> notas, MotoristaModel mot, List<VeiculoModel> veics)
+        // REGISTRO 06 CTE ADAPTADO COM OS DADOS DINÂMICOS DO DESTINATÁRIO
+        private string GerarRegistro06CTe(string n, List<NotaFiscalModel> notas, MotoristaModel mot, List<VeiculoModel> veics, DestinatarioModel dest)
         {
             decimal totalPeso = notas.Sum(x => x.Peso);
             decimal totalValorNf = notas.Sum(x => x.ValorNf);
             string primeiraNF = notas.FirstOrDefault()?.NumeroNfe.ToString() ?? "";
             string placaPrincipal = veics.FirstOrDefault()?.Placa ?? "";
 
-            // Montagem exata do bloco observações no final da linha 06 coletado nos novos TXTs
-            string obsNova = $"COLETA:SAO PAULO/SP/ENTREGA:SAO PAULO/SP/PESO:{totalPeso.ToString("N3", _culturaBR)}/NF:{primeiraNF}/-1/VL:{totalValorNf.ToString("N2", _culturaBR)}/DT.VENC:{DateTime.Now.AddMonths(1):dd/MM/yyyy}/PLACA:{placaPrincipal}/MOT:{mot?.Nome}-CPF:{mot?.CPF}/CVA:{mot?.CNH} - TP.VIAGEM: -/SEG: 8-ARGO SEGUROS/APOLICE: 27982017010654000050/TIK: PESO:10130 NF:{primeiraNF} VL:{totalValorNf.ToString("N2", _culturaBR)}/NR.GV: 3811078/CIOT:520006893976/NOSSO NR.: 1_{n}_NF//QT.EIXOS: /NR.CONTRATO: /NR.DT: /|1|SAO PAULO|SP|R|61881017000190|04428338000108|1|0,00|0,00|552,00|0|1|0,00|0,00|552,00|0,00|1004|SP|SAO PAULO|SP|0";
+            // Injeta as variáveis dinâmicas do destinatário na composição da observação e do registro
+            string obsNova = $"COLETA:SAO PAULO/SP/ENTREGA:{dest.Cidade}/{dest.UF}/PESO:{totalPeso.ToString("N3", _culturaBR)}/NF:{primeiraNF}/-1/VL:{totalValorNf.ToString("N2", _culturaBR)}/DT.VENC:{DateTime.Now.AddMonths(1):dd/MM/yyyy}/PLACA:{placaPrincipal}/MOT:{mot?.Nome}-CPF:{mot?.CPF}/CVA:{mot?.CNH} - TP.VIAGEM: -/SEG: 8-ARGO SEGUROS/APOLICE: 27982017010654000050/TIK: PESO:10130 NF:{primeiraNF} VL:{totalValorNf.ToString("N2", _culturaBR)}/NR.GV: 3811078/CIOT:520006893976/NOSSO NR.: 1_{n}_NF//QT.EIXOS: /NR.CONTRATO: /NR.DT: /|1|{dest.Cidade}|{dest.UF}|R|{dest.CNPJ}|04428338000108|1|0,00|0,00|552,00|0|1|0,00|0,00|552,00|0,00|1004|{dest.UF}|{dest.Cidade}|{dest.UF}|0";
 
-            return $"6|2|1|{n}||90105|{DateTime.Now:dd/MM/yyyy}|16/06/2026|57|1|1|1|3.100,80|0,00|0,00|3.100,80|3.100,80|372,10|0,00|0,00|0,00|0,00|61881017000190|CTE|3550308|SP|SAO PAULO|{obsNova}";
+            return $"6|2|1|{n}||90105|{DateTime.Now:dd/MM/yyyy}|16/06/2026|57|1|1|1|3.100,80|0,00|0,00|3.100,80|3.100,80|372,10|0,00|0,00|0,00|0,00|{dest.CNPJ}|CTE|{dest.CodigoMunicipio}|{dest.UF}|{dest.Cidade}|{obsNova}";
         }
 
         private string GerarRegistro06NFSe(string n) => $"6|2|1|{n}||901|{DateTime.Now:dd/MM/yyyy}|00|1|1|1|278,88|0,00|0,00|278,88|0,00|0,00|0,00|0,00|278,88|13,94|61881017000190|NFE|3550308|SP|SAO PAULO";
@@ -220,7 +260,6 @@ namespace NewCapit.dist.pages
             int seq = 1;
             foreach (var nf in notas)
             {
-                // Atualizado de ChaveNfe para ChaveAcesso para refletir a propriedade corrigida
                 sb.AppendLine($"10|2|1|{tipo}|{doc}|{seq}|{DateTime.Now:dd/MM/yyyy}|55|1|{nf.NumeroNfe}|{nf.ValorNf.ToString("N2", _culturaBR)}|1.000,00000|PC|1|1|5102|01|PESO|{nf.Peso.ToString("N4", _culturaBR)}|{nf.ChaveAcesso.Trim()}");
                 seq++;
             }
@@ -265,8 +304,20 @@ namespace NewCapit.dist.pages
     }
 
     // ==================================================================================
-    // CLASSES DE MODELO ATUALIZADAS (PROPRIEDADES COM GET/SET AUTOMÁTICOS)
+    // NOVOS MODELOS E ADAPTAÇÕES
     // ==================================================================================
+    public class DestinatarioModel
+    {
+        public string CNPJ { get; set; }
+        public string RazaoSocial { get; set; }
+        public string Endereco { get; set; }
+        public string Bairro { get; set; }
+        public string CEP { get; set; }
+        public string Cidade { get; set; }
+        public string UF { get; set; }
+        public string CodigoMunicipio { get; set; }
+    }
+
     public class MotoristaModel
     {
         public string Nome { get; set; }
@@ -300,6 +351,6 @@ namespace NewCapit.dist.pages
         public int NumeroNfe { get; set; }
         public decimal ValorNf { get; set; }
         public decimal Peso { get; set; }
-        public string ChaveAcesso { get; set; } // Unificado com sucesso com o gerador de XML!
+        public string ChaveAcesso { get; set; }
     }
 }

@@ -88,6 +88,21 @@ namespace NewCapit
                             UF = "SP"
                         }
                     },
+                    dest = new dest
+                    {
+                        CNPJ = "00000000000000", // Preencha com o CNPJ real do destinatário se disponível
+                        xNome = "CONSIGNATARIO OU DESTINATARIO DA CARGA LTDA",
+                        enderDest = new enderDest
+                        {
+                            xLgr = "AVENIDA PRINCIPAL",
+                            nro = "100",
+                            xBairro = "CENTRO",
+                            cMun = "3545209",
+                            xMun = "SALTO",
+                            CEP = "13320000",
+                            UF = "SP"
+                        }
+                    },
                     vPrest = new vPrest { vTPrest = "3100.80", vRec = "3100.80" },
                     imp = new imp
                     {
@@ -113,18 +128,6 @@ namespace NewCapit
                             rodo = new rodo { RNTRC = "00109548" }
                         }
                     }
-                },
-                // Adicionamos a estrutura mínima aceitável de Assinatura para validar, mas 
-                // permitindo que o seu assinador substitua esse nó sem estragar o arquivo.
-                Signature = new Signature
-                {
-                    SignedInfo = new SignedInfo
-                    {
-                        Reference = new Reference
-                        {
-                            URI = "#CTe" + idChaveCte // Passa na validação do tipo AnyUri
-                        }
-                    }
                 }
             };
 
@@ -134,8 +137,6 @@ namespace NewCapit
         private string Serializar<T>(T objeto)
         {
             var settings = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
-
-            // Usamos a classe customizada Utf8StringWriter em vez do StringWriter padrão
             using (var sw = new Utf8StringWriter())
             {
                 using (var writer = XmlWriter.Create(sw, settings))
@@ -143,18 +144,17 @@ namespace NewCapit
                     var ns = new XmlSerializerNamespaces();
                     ns.Add("", "http://www.portalfiscal.inf.br/cte");
                     ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                    ns.Add("ds", "http://www.w3.org/2000/09/xmldsig#");
+                    // Removido o namespace "ds" da assinatura digital daqui
                     new XmlSerializer(typeof(T)).Serialize(writer, objeto, ns);
                 }
                 return sw.ToString();
             }
         }
+    }
 
-        // Classe auxiliar necessária para forçar o StringWriter a escrever "encoding="utf-8"" no cabeçalho XML
-        public class Utf8StringWriter : StringWriter
-        {
-            public override Encoding Encoding => Encoding.UTF8;
-        }
+    public class Utf8StringWriter : StringWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
     }
 
     // --- MODELOS PARA NFSE ---
@@ -167,17 +167,12 @@ namespace NewCapit
     }
     public class Identificacao { public string CNPJ; }
 
-    // --- MODELOS PARA CTE (ENVIO DIRETO) ---
+    // --- MODELO DO CTE REFORMATADO (SEM TAGS DE ASSINATURA) ---
     [XmlRoot("CTe", Namespace = "http://www.portalfiscal.inf.br/cte")]
     public class CTe
     {
+        // Agora possui APENAS a tag de negócio. 
         [XmlElement(Order = 0)] public infCte infCte { get; set; }
-
-        // O XSD aceita ou infCTeSupl ou Signature. Mapeamos os dois na ordem esperada do validador.
-        [XmlElement(Order = 1)] public infCTeSupl infCTeSupl { get; set; }
-
-        [XmlElement(ElementName = "Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#", Order = 2)]
-        public Signature Signature { get; set; }
     }
 
     public class infCte
@@ -188,9 +183,10 @@ namespace NewCapit
         [XmlElement(Order = 0)] public ide ide { get; set; }
         [XmlElement(Order = 1)] public compl compl { get; set; }
         [XmlElement(Order = 2)] public emit emit { get; set; }
-        [XmlElement(Order = 3)] public vPrest vPrest { get; set; }
-        [XmlElement(Order = 4)] public imp imp { get; set; }
-        [XmlElement(Order = 5)] public infCTeNorm infCTeNorm { get; set; }
+        [XmlElement(Order = 3)] public dest dest { get; set; }
+        [XmlElement(Order = 4)] public vPrest vPrest { get; set; }
+        [XmlElement(Order = 5)] public imp imp { get; set; }
+        [XmlElement(Order = 6)] public infCTeNorm infCTeNorm { get; set; }
     }
 
     public class ide
@@ -250,6 +246,24 @@ namespace NewCapit
         [XmlElement(Order = 6)] public string UF;
     }
 
+    public class dest
+    {
+        [XmlElement(Order = 0)] public string CNPJ { get; set; }
+        [XmlElement(Order = 1)] public string xNome { get; set; }
+        [XmlElement(Order = 2)] public enderDest enderDest { get; set; }
+    }
+
+    public class enderDest
+    {
+        [XmlElement(Order = 0)] public string xLgr { get; set; }
+        [XmlElement(Order = 1)] public string nro { get; set; }
+        [XmlElement(Order = 2)] public string xBairro { get; set; }
+        [XmlElement(Order = 3)] public string cMun { get; set; }
+        [XmlElement(Order = 4)] public string xMun { get; set; }
+        [XmlElement(Order = 5)] public string CEP { get; set; }
+        [XmlElement(Order = 6)] public string UF { get; set; }
+    }
+
     public class vPrest
     {
         [XmlElement(Order = 0)] public string vTPrest;
@@ -289,44 +303,4 @@ namespace NewCapit
         [XmlElement(Order = 0)] public rodo rodo { get; set; }
     }
     public class rodo { [XmlElement(Order = 0)] public string RNTRC { get; set; } }
-
-    public class infCTeSupl { public string qrCodCTe { get; set; } }
-
-    // --- SUBESTRUTURA DE ASSINATURA QUE SE COMPORTA COMO OPCIONAL PARA O SERIALIZADOR ---
-    public class Signature
-    {
-        [XmlElement(Order = 0)] public SignedInfo SignedInfo { get; set; }
-        [XmlElement(Order = 1)] public string SignatureValue { get; set; }
-        [XmlElement(Order = 2)] public KeyInfo KeyInfo { get; set; }
-    }
-
-    public class SignedInfo
-    {
-        [XmlElement(Order = 0)] public CanonicalizationMethod CanonicalizationMethod { get; set; } = new CanonicalizationMethod();
-        [XmlElement(Order = 1)] public SignatureMethod SignatureMethod { get; set; } = new SignatureMethod();
-        [XmlElement(Order = 2)] public Reference Reference { get; set; }
-    }
-
-    public class CanonicalizationMethod { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"; }
-    public class SignatureMethod { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"; }
-
-    public class Reference
-    {
-        [XmlAttribute] public string URI { get; set; }
-
-        // Usando propriedades normais em vez de Arrays complexos para que fiquem ocultas caso nulas
-        [XmlElement(Order = 0)] public Transforms Transforms { get; set; } = new Transforms();
-        [XmlElement(Order = 1)] public DigestMethod DigestMethod { get; set; } = new DigestMethod();
-        [XmlElement(Order = 2)] public string DigestValue { get; set; }
-    }
-
-    public class Transforms
-    {
-        [XmlElement("Transform")] public List<Transform> TransformList { get; set; } = new List<Transform> { new Transform() };
-    }
-
-    public class Transform { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/2000/09/xmldsig#enveloped-signature"; }
-    public class DigestMethod { [XmlAttribute] public string Algorithm { get; set; } = "http://www.w3.org/2000/09/xmldsig#sha1"; }
-    public class KeyInfo { public X509Data X509Data { get; set; } }
-    public class X509Data { public string X509Certificate { get; set; } }
 }

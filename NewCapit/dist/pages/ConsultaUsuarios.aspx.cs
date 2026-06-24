@@ -191,6 +191,30 @@ namespace NewCapit.dist.pages
             // 4. Executa o redirecionamento para a tela de permissões
             Response.Redirect("ControleAcesso2.aspx?id=" + id);
         }
+        protected void ResetarSenha_Click(object sender, EventArgs e)
+        {
+            // Recupera o ID do usuário através do CommandArgument
+            LinkButton btn = (LinkButton)sender;
+            string idUsuario = btn.CommandArgument;
+
+            // Lógica de Update (Exemplo genérico usando SQL Client)
+            using (SqlConnection con = new SqlConnection("SUA_CONNECTION_STRING_AQUI"))
+            {
+                string query = "UPDATE tb_usuario SET ds_senha = 'mudar123' WHERE cod_usuario = @id";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@id", idUsuario);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
+            // Exibe o alerta (MessageBox) usando ScriptManager
+            ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Senha resetada com sucesso!');", true);
+
+            // Opcional: Rebind do grid para refletir qualquer mudança visual
+            CarregarUsuarios();
+        }
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
