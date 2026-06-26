@@ -23,25 +23,93 @@ namespace NewCapit.dist.pages
             {
                 listarUsuarios();
                 // CarregarUsuarios();
-                CarregarCargos();
+                //CarregarCargos();
                 PreencherComboFiliais();
                 if (Session["UsuarioLogado"] != null)
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-
-
-
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
-
                     Response.Redirect("Login.aspx");
                 }
-
+                CarregarSetores();
             }            
         }
+        private void CarregarSetores()
+        {
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+            SELECT DISTINCT setor
+            FROM tbsetorfuncao
+            WHERE setor IS NOT NULL
+            ORDER BY setor";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    conn.Open();
+
+                    ddlDep_Usuario.DataSource = cmd.ExecuteReader();
+                    ddlDep_Usuario.DataTextField = "setor";
+                    ddlDep_Usuario.DataValueField = "setor";
+                    ddlDep_Usuario.DataBind();
+                }
+            }
+
+            ddlDep_Usuario.Items.Insert(0, new ListItem("-- Selecione --", ""));
+        }
+        
+        protected void ddlDep_Usuario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CarregarFuncoes(ddlDep_Usuario.SelectedValue);
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "ShowModal",
+                "var modal = new bootstrap.Modal(document.getElementById('modalCadastro')); modal.show();",
+                true);
+        }
+
+
+        private void CarregarFuncoes(string setor)
+        {
+            ddlFun_Usuario.Items.Clear();
+
+            if (string.IsNullOrEmpty(setor))
+                return;
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+            SELECT DISTINCT funcao
+            FROM tbsetorfuncao
+            WHERE setor = @setor
+            ORDER BY funcao";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@setor", setor);
+
+                    conn.Open();
+
+                    ddlFun_Usuario.DataSource = cmd.ExecuteReader();
+                    ddlFun_Usuario.DataTextField = "funcao";
+                    ddlFun_Usuario.DataValueField = "funcao";
+                    ddlFun_Usuario.DataBind();
+                }
+            }
+
+            ddlFun_Usuario.Items.Insert(0, new ListItem("-- Selecione --", ""));
+        }
+
+
+
 
         private void listarUsuarios()
         {
@@ -84,24 +152,24 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-        private void CarregarCargos()
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                conn.Open();
-                string query = "SELECT cod_funcao, nm_funcao FROM tb_funcao ORDER BY nm_funcao";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
+        //private void CarregarCargos()
+        //{
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        conn.Open();
+        //        string query = "SELECT cod_funcao, nm_funcao FROM tb_funcao ORDER BY nm_funcao";
+        //        SqlCommand cmd = new SqlCommand(query, conn);
+        //        SqlDataReader reader = cmd.ExecuteReader();
 
-                ddlFun_Usuario.DataSource = reader;
-                ddlFun_Usuario.DataTextField = "nm_funcao";  // Campo a ser exibido
-                ddlFun_Usuario.DataValueField = "cod_funcao";  // Valor associado ao item
-                ddlFun_Usuario.DataBind();
+        //        ddlFun_Usuario.DataSource = reader;
+        //        ddlFun_Usuario.DataTextField = "nm_funcao";  // Campo a ser exibido
+        //        ddlFun_Usuario.DataValueField = "cod_funcao";  // Valor associado ao item
+        //        ddlFun_Usuario.DataBind();
 
-                // Adicionar o item padrão
-                ddlFun_Usuario.Items.Insert(0, new ListItem("Selecione...", "0"));
-            }
-        }
+        //        // Adicionar o item padrão
+        //        ddlFun_Usuario.Items.Insert(0, new ListItem("Selecione...", "0"));
+        //    }
+        //}
         private void PreencherComboFiliais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -223,7 +291,19 @@ namespace NewCapit.dist.pages
             CarregarUsuarios();
 
             // Reabrir modal com JS se quiser mostrar a mensagem
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalCadastro').modal('show');", true);
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "abrirModal", "$('#modalCadastro').modal('show');", true);
+
+            ScriptManager.RegisterStartupScript(
+                updSetorFuncao,
+                updSetorFuncao.GetType(),
+                "CloseModal",
+                @"
+                var modalEl = document.getElementById('modalCadastro');
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if(modal) modal.hide();
+                ",
+            true);
+
         }
 
        

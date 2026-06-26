@@ -9,7 +9,7 @@
     <!-- Bibliotecas necessárias -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-   
+
     <script>
         function mascaraMoeda(campo) {
             let valor = campo.value.replace(/\D/g, "");
@@ -17,6 +17,17 @@
             valor = valor.replace(".", ",");
             valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             campo.value = valor;
+        }
+
+        function formatar4Casas(campo) {
+            var valor = campo.value.replace(/\./g, '').replace(',', '.');
+
+            if (!isNaN(valor) && valor !== '') {
+                campo.value = parseFloat(valor).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4
+                });
+            }
         }
 
 
@@ -110,6 +121,7 @@
         }
 
     </script>
+
     <script>
         function verificarCampos() {
 
@@ -123,7 +135,46 @@
         }
     </script>
     <script>
+        function valorCampo(id) {
+            var valor = document.getElementById(id).value;
+
+            if (!valor) return 0;
+
+            // Remove pontos de milhar e troca vírgula por ponto
+            valor = valor.replace(/\./g, '').replace(',', '.');
+
+            return parseFloat(valor) || 0;
+        }
+
+        function calcularTotalFrete() {
+            var total =
+                valorCampo('<%= txtSecCat.ClientID %>') +
+                valorCampo('<%= txtDespacho.ClientID %>') +
+                valorCampo('<%= txtOutros.ClientID %>') +
+                valorCampo('<%= txtDespAdm.ClientID %>') +
+                valorCampo('<%= txtGRIS.ClientID %>') +
+                valorCampo('<%= txtColeta.ClientID %>') +
+                valorCampo('<%= txtEntrega.ClientID %>') +
+                valorCampo('<%= txtTDE.ClientID %>') +
+                valorCampo('<%= txtTDA.ClientID %>') +
+                valorCampo('<%= txtFreteReceber.ClientID %>');
+
+            document.getElementById('<%= txtTotalFrete.ClientID %>').value =
+                total.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+        }
+    </script>
+
+
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
 
             var rbCentro = document.getElementById('<%= rbCentro.ClientID %>');
             var rbCEP = document.getElementById('<%= rbCEP.ClientID %>');
@@ -171,7 +222,7 @@
             if (txtVigenciaFinal) aplicarMascara(txtVigenciaFinal, "00/00/0000");
 
         });
-    </script>   
+    </script>
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
@@ -487,36 +538,112 @@
                                             <form class="form-horizontal">
                                                 <div class="card-body">
                                                     <div class="form-group row">
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SEGURO(%):</label>
+                                                        <label for="inputFilial"
+                                                            class="col-sm-1 col-form-label"
+                                                            style="text-align: right"
+                                                            data-bs-toggle="tooltip"
+                                                            data-bs-placement="top"
+                                                            title="Aliquota sobre valor total da mercadoria.">
+                                                            SEGURO(%):
+                                                        </label>
                                                         <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtAdicional" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtAdicional"
+                                                                runat="server"
+                                                                CssClass="form-control"
+                                                                Style="text-align: center"
+                                                                onblur="formatar4Casas(this)">
+</asp:TextBox>
                                                         </div>
                                                         <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SEC-CAT:</label>
                                                         <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                            <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                         </div>
                                                         <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">DESPACHO:</label>
                                                         <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                            <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                         </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CARRETA(%):</label>
+                                                        <label for="inputFilial"
+                                                            class="col-sm-1 col-form-label"
+                                                            style="text-align: right"
+                                                            data-bs-toggle="tooltip"
+                                                            data-bs-placement="top"
+                                                            title="Taxa de Aluguel da Carreta.">
+                                                            CARRETA(%):
+                                                        </label>
                                                         <div class="col-sm-1">
                                                             <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                         </div>
                                                         <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">OUTROS:</label>
                                                         <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtOutros" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                            <asp:TextBox ID="txtOutros" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                         </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ADM.(%):</label>
+                                                        <label for="inputFilial"
+                                                            class="col-sm-1 col-form-label"
+                                                            style="text-align: right"
+                                                            data-bs-toggle="tooltip"
+                                                            data-bs-placement="top"
+                                                            title="Taxa Administrativa">
+                                                            ADM.:
+                                                        </label>
                                                         <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtDespAdm" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                            <asp:TextBox ID="txtDespAdm" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </form>
 
                                         </div>
-
+                                        <div class="row g-3">
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Gerenciamento de Risco">
+                                                        GRIS:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtGRIS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">
+                                                        COLETA:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtColeta" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">
+                                                        ENTREGA:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtEntrega" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Taxa por Dificuldade de Entrega">
+                                                        TDE:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtTDE" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Taxa de Difícil Acesso">
+                                                        TDA:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtTDA" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row g-3">
                                             <form class="form-horizontal">
                                                 <div class="card-body">
@@ -550,31 +677,27 @@
                                             </form>
 
                                         </div>
-
                                         <div class="row g-3">
-                                            <form class="form-horizontal">
-                                                <div class="card-body">
-                                                    <div class="form-group row">
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">IBS(%):</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtIBS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
-                                                        </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CBS(%):</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtCBS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
-                                                        </div>
-                                                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">SEST SENAT(%):</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtSestSenat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
-                                                        </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">INSS(%):</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtINSS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
-                                                        </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">IBS(%):</label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtIBS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CBS(%):</label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtCBS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">SEST SENAT(%):</label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtSestSenat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">INSS(%):</label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtINSS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
                                                     </div>
                                                 </div>
-                                            </form>
-
+                                            </div>
                                         </div>
 
                                         <!-- Tabela Geral de Fretes -->
@@ -607,7 +730,6 @@
                                                             <span class="details">FRETE POR:</span>
                                                             <asp:DropDownList ID="ddlTipoFrete" runat="server" CssClass="form-control">
                                                                 <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                                <asp:ListItem Value="QUILO" Text="QUILO"></asp:ListItem>
                                                                 <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
                                                                 <asp:ListItem Value="FTL" Text="FTL"></asp:ListItem>
 
@@ -646,7 +768,7 @@
 
                                                             </asp:DropDownList>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <span class="details">TIPO DE CARGA:</span>
@@ -673,30 +795,22 @@
 
                                                 </div>
                                                 <div class="row g-3">
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-2">
                                                         <div class="form-group">
                                                             <span class="details">MATERIAL:</span>
                                                             <asp:DropDownList ID="cboTipoMaterial" runat="server" CssClass="form-control select2">
                                                             </asp:DropDownList>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form_group">
-                                                            <span class="details">LOTAÇÃO MÍNIMA:</span>
-                                                            <asp:DropDownList ID="ddlLotacaoMinima" runat="server" CssClass="form-control">
-                                                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                                <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                                <asp:ListItem Value="NAO" Text="NAO"></asp:ListItem>
-
-                                                            </asp:DropDownList>
-
-
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="col-md-1">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <span class="details">LOTAÇÃO:</span>
+                                                            <span class="details">DETALHE DO MATERIAL:</span>
+                                                            <asp:TextBox ID="txtDetalheMaterial" runat="server" Style="text-align: left" CssClass="form-control" MaxLength="50"></asp:TextBox>
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">LOTAÇÃO MINIMA(KG):</span>
                                                             <asp:TextBox ID="txtPesoLotacao"
                                                                 runat="server"
                                                                 CssClass="form-control"
@@ -719,47 +833,54 @@
                                                 </div>
                                                 <br />
                                                 <div class="row g-3">
-                                                    <div class="form-group row">
-                                                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">TABELA ANTT:</label>
-                                                        <div class="col-sm-1">
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details"><strong>TABELA ANTT:</strong></span>
                                                             <asp:DropDownList ID="ddlTabela"
                                                                 runat="server" CssClass="form-control"
                                                                 AutoPostBack="true"
                                                                 OnSelectedIndexChanged="ddlTabela_SelectedIndexChanged">
                                                             </asp:DropDownList>
                                                         </div>
-                                                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">FRETE MINIMO ANTT:</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtFreteMinimo" runat="server" CssClass="form-control"
-                                                                oninput="mascaraMoeda(this);"></asp:TextBox>
-                                                        </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">A RECEBER:</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtFreteReceber"
-                                                                runat="server"
-                                                                CssClass="form-control"
-                                                                oninput="mascaraMoeda(this);"
-                                                                onblur="calcularFrete();">
-                                                            </asp:TextBox>
-                                                        </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">% MARGEM:</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtMargem"
-                                                                runat="server"
-                                                                CssClass="form-control"
-                                                                oninput="mascaraMoeda(this);"
-                                                                onblur="calcularFrete();">
-                                                            </asp:TextBox>
-                                                        </div>
-                                                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">A PAGAR:</label>
-                                                        <div class="col-sm-1">
-                                                            <asp:TextBox ID="txtFretePagar"
-                                                                runat="server"
-                                                                CssClass="form-control"
-                                                                oninput="mascaraMoeda(this);"
-                                                                onblur="calcularMargem();">
-                                                            </asp:TextBox>
-                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="details"><strong>FRETE MINIMO ANTT:</strong></span>
+                                                        <asp:TextBox ID="txtFreteMinimo" runat="server" CssClass="form-control"
+                                                            oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="details"><strong>FRETE A RECEBER</strong></span>
+                                                        <asp:TextBox ID="txtFreteReceber"
+                                                            runat="server"
+                                                            CssClass="form-control"
+                                                            oninput="mascaraMoeda(this); calcularTotalFrete();">
+                                                        </asp:TextBox>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="details"><strong>TOTAL DO FRETE</strong></span>
+                                                        <asp:TextBox ID="txtTotalFrete"
+                                                            runat="server"
+                                                            CssClass="form-control"
+                                                            ReadOnly="true">
+                                                        </asp:TextBox>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="details"><strong>MARGEM(%)</strong></span>
+                                                        <asp:TextBox ID="txtMargem"
+                                                            runat="server"
+                                                            CssClass="form-control"
+                                                            oninput="mascaraMoeda(this);"
+                                                            onblur="calcularFrete();">
+                                                        </asp:TextBox>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="details"><strong>FRETE A PAGAR:</strong></span>
+                                                        <asp:TextBox ID="txtFretePagar"
+                                                            runat="server"
+                                                            CssClass="form-control"
+                                                            oninput="mascaraMoeda(this);"
+                                                            onblur="calcularMargem();">
+                                                        </asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="row g-3">
@@ -798,7 +919,15 @@
                                                             <asp:BoundField DataField="medida" HeaderText="Medida" />
                                                             <asp:BoundField DataField="tipo_viagem" HeaderText="Tipo Viagem" />
                                                             <asp:BoundField DataField="tipo_veiculo" HeaderText="Veículo" />
-                                                            <asp:BoundField DataField="material" HeaderText="Material" />
+
+                                                            <asp:TemplateField HeaderText="Material">
+                                                                <ItemTemplate>
+                                                                    <asp:Literal ID="litMaterial" runat="server"
+                                                                        Text='<%# Eval("material") + " <b>(" + Eval("detalhe_material") + ")</b>" %>'>
+        </asp:Literal>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+
                                                             <asp:BoundField DataField="tabela_antt" HeaderText="Tabela ANTT" />
                                                             <asp:BoundField DataField="frete_antt"
                                                                 HeaderText="Frete ANTT"
@@ -808,6 +937,12 @@
 
                                                             <asp:BoundField DataField="frete_receber"
                                                                 HeaderText="A Receber"
+                                                                DataFormatString="{0:N2}">
+                                                                <ItemStyle HorizontalAlign="Right" />
+                                                            </asp:BoundField>
+
+                                                            <asp:BoundField DataField="total_frete"
+                                                                HeaderText="Total do Frete"
                                                                 DataFormatString="{0:N2}">
                                                                 <ItemStyle HorizontalAlign="Right" />
                                                             </asp:BoundField>

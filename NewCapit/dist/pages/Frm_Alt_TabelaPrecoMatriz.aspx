@@ -19,6 +19,16 @@
             campo.value = valor;
         }
 
+        function formatar4Casas(campo) {
+            var valor = campo.value.replace(/\./g, '').replace(',', '.');
+
+            if (!isNaN(valor) && valor !== '') {
+                campo.value = parseFloat(valor).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4
+                });
+            }
+        }
 
         function moedaParaNumero(valor) {
             if (!valor) return 0;
@@ -111,7 +121,45 @@
 
     </script>
     <script>
+        function valorCampo(id) {
+            var valor = document.getElementById(id).value;
+
+            if (!valor) return 0;
+
+            // Remove pontos de milhar e troca vírgula por ponto
+            valor = valor.replace(/\./g, '').replace(',', '.');
+
+            return parseFloat(valor) || 0;
+        }
+
+        function calcularTotalFrete() {
+            var total =
+                valorCampo('<%= txtSecCat.ClientID %>') +
+                valorCampo('<%= txtDespacho.ClientID %>') +
+                valorCampo('<%= txtOutros.ClientID %>') +
+                valorCampo('<%= txtDespAdm.ClientID %>') +
+                valorCampo('<%= txtGRIS.ClientID %>') +
+                valorCampo('<%= txtColeta.ClientID %>') +
+                valorCampo('<%= txtEntrega.ClientID %>') +
+                valorCampo('<%= txtTDE.ClientID %>') +
+                valorCampo('<%= txtTDA.ClientID %>') +
+                valorCampo('<%= txtFreteReceber.ClientID %>');
+
+            document.getElementById('<%= txtTotalFrete.ClientID %>').value =
+                total.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+        }
+    </script>
+
+
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
 
             function aplicarMascara(input, mascara) {
                 input.addEventListener("input", function () {
@@ -243,7 +291,7 @@
                                                 <asp:TextBox ID="txtCodRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-4">
-                                                <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true" ></asp:TextBox>
+                                                <asp:TextBox ID="cboRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                             </div>
                                             <div class="col-md-2">
                                                 <asp:TextBox ID="txtCNPJRemetente" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -429,38 +477,118 @@
 
                                         </div>
                                         <div class="row g-3">
-                                            <%-- <form class="form-horizontal">--%>
+
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SEGURO(%):</label>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Aliquota sobre valor total da mercadoria.">
+                                                        SEGURO(%):
+                                                    </label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtAdicional" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtAdicional"
+                                                            runat="server"
+                                                            CssClass="form-control"
+                                                            Style="text-align: center"
+                                                            onblur="formatar4Casas(this)">
+                                                        </asp:TextBox>
                                                     </div>
+
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">SEC-CAT:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                        <asp:TextBox ID="txtSecCat" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">DESPACHO:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                        <asp:TextBox ID="txtDespacho" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CARRETA(%):</label>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Taxa de Aluguel da Carreta.">
+                                                        CARRETA(%):
+                                                    </label>
                                                     <div class="col-sm-1">
                                                         <asp:TextBox ID="txtPercentualAluguelCarreta" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
                                                     </div>
                                                     <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">OUTROS:</label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtOutros" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                        <asp:TextBox ID="txtOutros" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                     </div>
-                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">ADM.(%):</label>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Taxa Administrativa">
+                                                        ADM.:
+                                                    </label>
                                                     <div class="col-sm-1">
-                                                        <asp:TextBox ID="txtDespAdm" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                                        <asp:TextBox ID="txtDespAdm" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
                                                     </div>
                                                 </div>
                                             </div>
-                                            </form>
+
 
                                         </div>
+
+                                        <div class="row g-3">
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Gerenciamento de Risco">
+                                                        GRIS:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtGRIS" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">
+                                                        COLETA:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtColeta" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">
+                                                        ENTREGA:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtEntrega" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Taxa por Dificuldade de Entrega">
+                                                        TDE:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtTDE" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                    <label for="inputFilial"
+                                                        class="col-sm-1 col-form-label"
+                                                        style="text-align: right"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Taxa de Difícil Acesso">
+                                                        TDA:
+                                                    </label>
+                                                    <div class="col-sm-1">
+                                                        <asp:TextBox ID="txtTDA" runat="server" CssClass="form-control" Style="text-align: center" oninput="mascaraMoeda(this); calcularTotalFrete();"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row g-3">
                                             <div class="card-body">
                                                 <div class="form-group row">
@@ -546,7 +674,6 @@
                                                 <span class="details">FRETE POR:</span>
                                                 <asp:DropDownList ID="ddlTipoFrete" runat="server" CssClass="form-control">
                                                     <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                    <asp:ListItem Value="QUILO" Text="QUILO"></asp:ListItem>
                                                     <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
                                                     <asp:ListItem Value="FTL" Text="FTL"></asp:ListItem>
 
@@ -582,7 +709,6 @@
                                                     <asp:ListItem Value="7" Text="7"></asp:ListItem>
                                                     <asp:ListItem Value="8" Text="8"></asp:ListItem>
                                                     <asp:ListItem Value="9" Text="9"></asp:ListItem>
-
                                                 </asp:DropDownList>
                                             </div>
                                         </div>
@@ -611,252 +737,264 @@
                                         </div>
                                     </div>
                                     <div class="row g-3">
-                                        <div class="col-md-5">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <span class="details">MATERIAL:</span>
                                                 <asp:DropDownList ID="cboTipoMaterial" runat="server" CssClass="form-control select2">
                                                 </asp:DropDownList>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <div class="form_group">
-                                                <span class="details">LOTAÇÃO MÍNIMA:</span>
-                                                <asp:DropDownList ID="ddlLotacaoMinima" runat="server" CssClass="form-control">
-                                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                    <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
-                                                    <asp:ListItem Value="NAO" Text="NAO"></asp:ListItem>
-
-                                                </asp:DropDownList>
-
-
-                                            </div>
-
-                                        </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-3">
                                             <div class="form-group">
-                                                <span class="details">LOTAÇÃO:</span>
+                                                <span class="details">DETALHE DO MATERIAL:</span>
+                                                <asp:TextBox ID="txtDetalheMaterial" runat="server" Style="text-align: left" CssClass="form-control" MaxLength="50"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">LOTAÇÃO MINIMA(KG):</span>
                                                 <asp:TextBox ID="txtPesoLotacao"
                                                     runat="server"
                                                     CssClass="form-control"
                                                     oninput="this.value=this.value.replace(/[^0-9]/g,'');">
-                    </asp:TextBox>
+                                                </asp:TextBox>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <div class="form-group">
-                                                <span class="details">VIGÊNCIA INICIAL:</span>
-                                                <asp:TextBox ID="txtVigenciaInicial" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10"></asp:TextBox>
+                                                <div class="form-group">
+                                                    <span class="details">VIGÊNCIA INICIAL:</span>
+                                                    <asp:TextBox ID="txtVigenciaInicial" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10"></asp:TextBox>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <span class="details">VIGÊNCIA FINAL:</span>
-                                                <asp:TextBox ID="txtVigenciaFinal" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10"></asp:TextBox>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <span class="details">VIGÊNCIA FINAL:</span>
+                                                    <asp:TextBox ID="txtVigenciaFinal" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10"></asp:TextBox>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="row g-3">
-                                        <div class="form-group row">
-                                            <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">TABELA ANTT:</label>
-                                            <div class="col-sm-1">
-                                                <asp:DropDownList ID="ddlTabela"
-                                                    runat="server" CssClass="form-control"
-                                                    AutoPostBack="true"
-                                                    OnSelectedIndexChanged="ddlTabela_SelectedIndexChanged">
-                                                </asp:DropDownList>
+                                        
+                                        <br />
+                                        <div class="row g-3">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <span class="details"><strong>TABELA ANTT:</strong></span>
+                                                    <asp:DropDownList ID="ddlTabela"
+                                                        runat="server" CssClass="form-control"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlTabela_SelectedIndexChanged">
+                                                    </asp:DropDownList>
+                                                </div>
                                             </div>
-                                            <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">FRETE MINIMO ANTT:</label>
-                                            <div class="col-sm-1">
+                                            <div class="col-sm-2">
+                                                <span class="details"><strong>FRETE MINIMO ANTT:</strong></span>
                                                 <asp:TextBox ID="txtFreteMinimo" runat="server" CssClass="form-control"
-                                                    oninput="mascaraMoeda(this);"></asp:TextBox>
+                                                    oninput="mascaraMoeda(this);" ReadOnly="true"></asp:TextBox>
                                             </div>
-                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">A RECEBER:</label>
-                                            <div class="col-sm-1">
+                                            <div class="col-sm-2">
+                                                <span class="details"><strong>FRETE A RECEBER:</strong></span>
                                                 <asp:TextBox ID="txtFreteReceber"
                                                     runat="server"
                                                     CssClass="form-control"
-                                                    oninput="mascaraMoeda(this);"
-                                                    onblur="calcularFrete();">
-                    </asp:TextBox>
+                                                    oninput="mascaraMoeda(this); calcularTotalFrete();">
+                                                </asp:TextBox>
                                             </div>
-                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">% MARGEM:</label>
-                                            <div class="col-sm-1">
+                                            <div class="col-sm-2">
+                                                <span class="details"><strong>TOTAL DO FRETE:</strong></span>
+                                                <asp:TextBox ID="txtTotalFrete"
+                                                    runat="server"
+                                                    CssClass="form-control"
+                                                    oninput="mascaraMoeda(this); calcularTotalFrete();"
+                                                    ReadOnly="true">
+                                                </asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <span class="details"><strong>MARGEM(%)</strong></span>
                                                 <asp:TextBox ID="txtMargem"
                                                     runat="server"
                                                     CssClass="form-control"
                                                     oninput="mascaraMoeda(this);"
                                                     onblur="calcularFrete();">
-                    </asp:TextBox>
+                                                </asp:TextBox>
                                             </div>
-                                            <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">A PAGAR:</label>
-                                            <div class="col-sm-1">
+                                            <div class="col-sm-2">
+                                                <span class="details"><strong>FRETE A PAGAR:</strong></span>
                                                 <asp:TextBox ID="txtFretePagar"
                                                     runat="server"
                                                     CssClass="form-control"
                                                     oninput="mascaraMoeda(this);"
                                                     onblur="calcularMargem();">
-                    </asp:TextBox>
+                                                </asp:TextBox>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="inputMensagem" class="col-sm-2 col-form-label">MENSAGEM NO CTE:</label>
-                                                <asp:TextBox ID="txtObservacao" class="form-control" runat="server" placeholder="Digite a mensagem que aparecerá no documento de transporte..."></asp:TextBox>
+                                        <div class="row g-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="inputMensagem" class="col-sm-2 col-form-label">MENSAGEM NO CTE:</label>
+                                                    <asp:TextBox ID="txtObservacao" class="form-control" runat="server" placeholder="Digite a mensagem que aparecerá no documento de transporte..."></asp:TextBox>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">RESPONSÁVEL:</label>
-                                        <div class="col-md-3">
-                                            <asp:TextBox ID="txtResponsavel" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                        <div class="row g-3">
+                                            <label for="inputRemetente" class="col-sm-2 col-form-label" style="text-align: right">RESPONSÁVEL:</label>
+                                            <div class="col-md-3">
+                                                <asp:TextBox ID="txtResponsavel" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <asp:TextBox ID="txtData_Alteracao" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                            </div>
+                                            <div class="col-md-3"></div>
+                                            <div class="col-md-2">
+                                                <asp:Button ID="btnLancarTabela" runat="server" CssClass="btn btn-outline-primary btn-lg w-100" OnClick="btnLancarTabela_Click"
+                                                    Text="Gravar Frete" />
+                                            </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <asp:TextBox ID="txtData_Alteracao" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                        </div>
-                                        <div class="col-md-3"></div>
-                                        <div class="col-md-2">
-                                            <asp:Button ID="btnLancarTabela" runat="server" CssClass="btn btn-outline-primary btn-lg w-100" OnClick="btnLancarTabela_Click"
-                                                Text="Gravar Frete" />
+                                        <br />
+                                        <!-- Grid com as tabelas de fretes -->
+                                        <div class="row g-3">
+                                            <asp:GridView ID="gvFretes"
+                                                runat="server"
+                                                AutoGenerateColumns="False"
+                                                CssClass="table-sap"
+                                                DataKeyNames="id_frete"
+                                                OnRowCommand="gvFretes_RowCommand">
+
+                                                <Columns>
+                                                    <asp:BoundField DataField="frete" HeaderText="Frete" />
+                                                    <asp:BoundField DataField="medida" HeaderText="Medida" />
+                                                    <asp:BoundField DataField="tipo_viagem" HeaderText="Tipo Viagem" />
+                                                    <asp:BoundField DataField="tipo_veiculo" HeaderText="Veículo" />
+                                                    <asp:TemplateField HeaderText="Material">
+                                                        <ItemTemplate>
+                                                            <asp:Literal ID="litMaterial" runat="server"
+                                                                Text='<%# Eval("material") + " <b>(" + Eval("detalhe_material") + ")</b>" %>'>
+                                                        </asp:Literal>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:BoundField DataField="tabela_antt" HeaderText="Tabela ANTT" />
+                                                    <asp:BoundField DataField="frete_antt"
+                                                        HeaderText="Frete ANTT"
+                                                        DataFormatString="{0:N2}">
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                    </asp:BoundField>
+
+                                                    <asp:BoundField DataField="total_frete"
+                                                        HeaderText="Total do Frete"
+                                                        DataFormatString="{0:N2}">
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                    </asp:BoundField>
+
+                                                    <asp:BoundField DataField="frete_receber"
+                                                        HeaderText="A Receber"
+                                                        DataFormatString="{0:N2}">
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                    </asp:BoundField>
+
+                                                    <asp:BoundField DataField="margem"
+                                                        HeaderText="Margem (%)"
+                                                        DataFormatString="{0:N2}">
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                    </asp:BoundField>
+
+                                                    <asp:BoundField DataField="frete_pagar"
+                                                        HeaderText="A Pagar"
+                                                        DataFormatString="{0:N2}">
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                    </asp:BoundField>
+                                                    <asp:TemplateField HeaderText="Início">
+                                                        <ItemTemplate>
+                                                            <%# Convert.ToDateTime(Eval("vigencia_inicial")).ToString("dd/MM/yyyy") %>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Fim">
+                                                        <ItemTemplate>
+                                                            <%# Eval("vigencia_final", "{0:dd/MM/yyyy}") %>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+
+
+                                                    <asp:TemplateField HeaderText="Status">
+                                                        <ItemTemplate>
+                                                            <asp:Button ID="btnStatus"
+                                                                runat="server"
+                                                                CssClass="btn btn-warning btn-sm"
+                                                                Text='<%# Eval("status") %>'
+                                                                CommandName="Status"
+                                                                CommandArgument='<%# Container.DataItemIndex %>'
+                                                                OnClientClick="return confirm('Deseja alterar status?');" />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+
+                                                    <asp:TemplateField HeaderText="Editar">
+                                                        <ItemTemplate>
+                                                            <asp:Button ID="btnEditar"
+                                                                runat="server"
+                                                                Text="Editar"
+                                                                CommandName="Editar"
+                                                                CommandArgument='<%# Eval("id_frete") %>'
+                                                                CssClass="btn btn-primary btn-sm" />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+
+                                                </Columns>
+
+                                            </asp:GridView>
                                         </div>
                                     </div>
-                                    <br />
-                                    <!-- Grid com as tabelas de fretes -->
-                                    <div class="row g-3">
-                                        <asp:GridView ID="gvFretes"
-                                            runat="server"
-                                            AutoGenerateColumns="False"
-                                            CssClass="table-sap"
-                                            DataKeyNames="id_frete"
-                                            OnRowCommand="gvFretes_RowCommand">
-
-                                            <Columns>
-                                                <asp:BoundField DataField="frete" HeaderText="Frete" />
-                                                <asp:BoundField DataField="medida" HeaderText="Medida" />
-                                                <asp:BoundField DataField="tipo_viagem" HeaderText="Tipo Viagem" />
-                                                <asp:BoundField DataField="tipo_veiculo" HeaderText="Veículo" />
-                                                <asp:BoundField DataField="material" HeaderText="Material" />
-                                                <asp:BoundField DataField="tabela_antt" HeaderText="Tabela ANTT" />
-                                                <asp:BoundField DataField="frete_antt"
-                                                    HeaderText="Frete ANTT"
-                                                    DataFormatString="{0:N2}">
-                                                    <ItemStyle HorizontalAlign="Right" />
-                                                </asp:BoundField>
-
-                                                <asp:BoundField DataField="frete_receber"
-                                                    HeaderText="A Receber"
-                                                    DataFormatString="{0:N2}">
-                                                    <ItemStyle HorizontalAlign="Right" />
-                                                </asp:BoundField>
-
-                                                <asp:BoundField DataField="margem"
-                                                    HeaderText="Margem (%)"
-                                                    DataFormatString="{0:N2}">
-                                                    <ItemStyle HorizontalAlign="Right" />
-                                                </asp:BoundField>
-
-                                                <asp:BoundField DataField="frete_pagar"
-                                                    HeaderText="A Pagar"
-                                                    DataFormatString="{0:N2}">
-                                                    <ItemStyle HorizontalAlign="Right" />
-                                                </asp:BoundField>
-                                                <asp:TemplateField HeaderText="Início">
-                                                    <ItemTemplate>
-                                                        <%# Convert.ToDateTime(Eval("vigencia_inicial")).ToString("dd/MM/yyyy") %>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Fim">
-                                                    <ItemTemplate>
-                                                        <%# Eval("vigencia_final", "{0:dd/MM/yyyy}") %>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-
-
-                                                <asp:TemplateField HeaderText="Status">
-                                                    <ItemTemplate>
-                                                        <asp:Button ID="btnStatus"
-                                                            runat="server"
-                                                            CssClass="btn btn-warning btn-sm"
-                                                            Text='<%# Eval("status") %>'
-                                                            CommandName="Status"
-                                                            CommandArgument='<%# Container.DataItemIndex %>'
-                                                            OnClientClick="return confirm('Deseja alterar status?');" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-
-                                                <asp:TemplateField HeaderText="Editar">
-                                                    <ItemTemplate>
-                                                        <asp:Button ID="btnEditar"
-                                                            runat="server"
-                                                            Text="Editar"
-                                                            CommandName="Editar"
-                                                            CommandArgument='<%# Eval("id_frete") %>'
-                                                            CssClass="btn btn-primary btn-sm" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-
-                                            </Columns>
-
-                                        </asp:GridView>
-                                    </div>
+                                    <!-- /.card-body -->
                                 </div>
-                                <!-- /.card-body -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-xl-12 col-md-12 mb-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-info">
-                        <%--tamanho da foto 39x39 60--%>
-                        <%--<img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />--%>
-                    </span>
-                    <div class="info-box-content">
+    <div class="col-xl-12 col-md-12 mb-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info">
+                <%--tamanho da foto 39x39 60--%>
+                <%--<img src="<%=fotoMotorista%>" class="rounded-circle float-center" width="60px" alt="" />--%>
+            </span>
+            <div class="info-box-content">
 
-                        <div class="row g-3">
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <span class="details">CADASTRADO EM:</span>
-                                    <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" readonly="true"></asp:Label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <span class="details">POR:</span>
-                                    <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <span class="details">ATUALIZADO EM:</span>
-                                    <asp:Label ID="lbDtAtualizacao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <span class="details">POR:</span>
-                                    <asp:TextBox ID="txtAltCad" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
-                                </div>
-                            </div>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">CADASTRADO EM:</span>
+                            <asp:Label ID="lblDtCadastro" runat="server" CssClass="form-control" readonly="true"></asp:Label>
                         </div>
-                        <div class="row g-3">
-                            <div class="col-md-2">
-                                <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnAlterar_Click"
-                                    Text="Atualizar" />
-                            </div>
-                            <div class="col-md-2">
-                                <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar             
-                                </a>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="details">POR:</span>
+                            <asp:TextBox ID="txtUsuCadastro" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <span class="details">ATUALIZADO EM:</span>
+                            <asp:Label ID="lbDtAtualizacao" runat="server" CssClass="form-control" placeholder="" readonly="true"></asp:Label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="details">POR:</span>
+                            <asp:TextBox ID="txtAltCad" runat="server" CssClass="form-control" placeholder="" ReadOnly="true"></asp:TextBox>
                         </div>
                     </div>
                 </div>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <asp:Button ID="btnAlterar" runat="server" CssClass="btn btn-outline-success btn-lg w-100" OnClick="btnAlterar_Click"
+                            Text="Atualizar" />
+                    </div>
+                    <div class="col-md-2">
+                        <a href="ConsultaFretes.aspx" class="btn btn-outline-danger btn-lg w-100">Fechar             
+                        </a>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+    </div>
+    </section>
     </div>
 </asp:Content>
 
