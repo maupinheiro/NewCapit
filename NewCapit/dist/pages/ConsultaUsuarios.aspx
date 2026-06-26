@@ -179,14 +179,11 @@
                                 <label class="details-label">Nome Completo:</label>
                                 <asp:TextBox ID="txtNm_Nome" runat="server" CssClass="form-control shadow-sm" placeholder="Ex: Maurício Silva" MaxLength="60"></asp:TextBox>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="details-label">Usuário:</label>
                                 <asp:TextBox ID="txtNm_Usuario" runat="server" CssClass="form-control shadow-sm" placeholder="Ex: mauricio.silva" MaxLength="60"></asp:TextBox>
                             </div>
-                            <div class="col-md-2">
-                                <label class="details-label">Senha:</label>
-                                <asp:TextBox ID="txtDs_Senha" runat="server" CssClass="form-control shadow-sm" placeholder="••••••••" MaxLength="16"></asp:TextBox>
-                            </div>
+                           
                         </div>
 
                         <div class="row g-3 mb-3">

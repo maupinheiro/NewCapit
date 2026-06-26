@@ -323,6 +323,8 @@ namespace NewCapit.dist.pages
                     // Se tudo correu bem, confirma as deleções, inserções e o update juntos
                     trans.Commit();
 
+                    AlterarUsuatio();
+
                     lblMsg.InnerText = "Permissões e módulos atualizados com sucesso!";
                     divMsg.Attributes["class"] = "alert alert-success alert-dismissible fade show mt-3";
                     divMsg.Style["display"] = "block";

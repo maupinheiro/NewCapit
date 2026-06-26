@@ -57,7 +57,7 @@ namespace NewCapit.dist.pages
         }
         private void CarregarUsuarios()
         {
-            string sqlUsuarios = "SELECT foto_usuario, cod_usuario, nm_nome, nm_usuario, emp_usuario, fun_usuario, dep_usuario, CONVERT(varchar, dt_ultimo_acesso, 103) AS dt_ultimo_acesso, fl_tipo, fl_status FROM tb_usuario ORDER BY nm_nome";
+            string sqlUsuarios = "SELECT foto_usuario, cod_usuario, nm_nome, nm_usuario, emp_usuario, fun_usuario, dep_usuario, CONVERT(varchar, dt_ultimo_acesso, 103) AS dt_ultimo_acesso, fl_tipo, fl_status FROM tb_usuario  ORDER BY nm_nome";
             SqlDataAdapter adptUsuarios = new SqlDataAdapter(sqlUsuarios, con);
             DataTable dtUsuarios = new DataTable();
 
@@ -220,7 +220,7 @@ namespace NewCapit.dist.pages
         {
             string nome = txtNm_Nome.Text;
             string usuario = txtNm_Usuario.Text;
-            string senha = txtDs_Senha.Text.Trim();
+            string senha = "mudar123";
             string email = txtDs_Email.Text.Trim();
             string status = ddlStatus.SelectedValue;
             string tipo = ddlNivel.SelectedValue;
