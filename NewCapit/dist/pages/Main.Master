@@ -208,10 +208,186 @@
     </script>
 
     <style>
-    body {
+    .table-sap {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 13px;
+    }
+
+    /* Cabeçalho SAP */
+    .table-sap thead {
+        background-color: #0A6ED1;
+        color: #fff;
+    }
+
+    .table-sap thead th {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #d9d9d9;
+    }
+
+    /* Corpo */
+    .table-sap tbody td {
+        padding: 8px;
+        border: 1px solid #e5e5e5;
+    }
+
+    /* Zebra */
+    .table-sap tbody tr:nth-child(even) {
+        background-color: #f5f7fa;
+    }
+
+    /* Hover */
+    .table-sap tbody tr:hover {
+        background-color: #e8f3ff;
+    }
+
+    /* Controles DataTable */
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        border: 1px solid #ccc;
+        padding: 4px;
+    }
+
+    /* Paginação estilo SAP */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        background: #f5f5f5;
+        border: 1px solid #d9d9d9 !important;
+        padding: 5px 10px;
+        margin: 2px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #0A6ED1 !important;
+        color: #fff !important;
+        border: 1px solid #0A6ED1 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #e8f3ff !important;
+    }
+    /* Info */
+    .dataTables_info {
+        margin-top: 10px;
+    }
+
+    .sub-info {
+        font-size: 11px;
+        color: #00050a;
+    }
+
+    .table-sap td div {
+        line-height: 16px;
+    }
+
+    .grid-sap-container {
+        max-height: 450px; /* 👈 altura da grade */
+        overflow-y: auto; /* 👈 scroll vertical */
+        border: 1px solid #d9d9d9;
+    }
+
+    /* mantém header fixo estilo ERP */
+    .gv-header-custom {
+        position: sticky;
+        top: 0;
+        background-color: #0A6ED1;
+        color: #fff;
+        z-index: 10;
+    }
+
+    .gv-header-custom th {
+        height: 45px; /* 👈 altura do cabeçalho */
+        padding: 10px 8px; /* 👈 controle do “respiro” interno */
+        line-height: 20px; /* 👈 alinhamento vertical */
+        font-size: 13px;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .grid-sap-container {
+        max-height: 500px; /* altura da grid */
+        overflow-y: auto; /* scroll vertical */
+        border: 1px solid #d9d9d9;
+    }
+
+    /* Cabeçalho fixo estilo SAP */
+    .gv-header-custom th {
+        position: sticky;
+        top: 0; /* fixa no topo */
+        z-index: 100;
+        background-color: #0A6ED1;
+        color: #fff;
+        height: 45px;
+        padding: 10px 8px;
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: 2px solid #084c9e;
+    }
+
+    /* Garante que o body não sobrepõe o header */
+    .table-sap {
+        border-collapse: collapse;
+        width: 100%;
+        font-family: "Segoe UI", Arial;
+        font-size: 13px;
+    }
+
+    .table-sap td {
+        padding: 8px;
+        border: 1px solid #e5e5e5;
+    }
+
+    .kpi-container {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
         font-size: 12px;
     }
-    </style>
+
+    .kpi-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .kpi-label {
+        width: 130px;
+    }
+
+    .kpi-bar {
+        flex: 1;
+        height: 8px;
+        background: #eee;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .kpi-fill {
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    .kpi-value {
+        width: 35px;
+        text-align: right;
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .form-switch .form-check-input {
+    appearance: checkbox !important;
+    width: 1em;
+    height: 1em;
+    border-radius: 0;
+    }
+</style>
 </head>
 
 <!-- layout-fixed -->

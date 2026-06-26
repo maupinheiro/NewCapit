@@ -96,13 +96,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDs_Email;
 
         /// <summary>
-        /// Controle ddlFun_Usuario.
+        /// Controle updSetorFuncao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlFun_Usuario;
+        protected global::System.Web.UI.UpdatePanel updSetorFuncao;
 
         /// <summary>
         /// Controle ddlDep_Usuario.
@@ -112,6 +112,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlDep_Usuario;
+
+        /// <summary>
+        /// Controle ddlFun_Usuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFun_Usuario;
 
         /// <summary>
         /// Controle ddlEmp_Usuario.

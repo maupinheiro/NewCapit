@@ -4808,6 +4808,12 @@
     <Compile Include="CadUsuario.aspx.designer.cs">
       <DependentUpon>CadUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\InterfacesCte\ICfopService.cs" />
+    <Compile Include="dist\InterfacesCte\IFreteService.cs" />
+    <Compile Include="dist\InterfacesCte\IImpostoService.cs" />
+    <Compile Include="dist\ModelsCte\ComponenteFrete.cs" />
+    <Compile Include="dist\ModelsCte\ImpostoCte.cs" />
+    <Compile Include="dist\ModelsCte\ResultadoCte.cs" />
     <Compile Include="dist\pages\ColaboradoresManutencao.aspx.cs">
       <DependentUpon>ColaboradoresManutencao.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5615,6 +5621,10 @@
       <DependentUpon>ControleAcesso2.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\XmlExportService.cs" />
+    <Compile Include="dist\ServicesCte\CfopService.cs" />
+    <Compile Include="dist\ServicesCte\CteService.cs" />
+    <Compile Include="dist\ServicesCte\FreteService.cs" />
+    <Compile Include="dist\ServicesCte\ImpostoService.cs" />
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />
     <Compile Include="PaginaBase.cs">

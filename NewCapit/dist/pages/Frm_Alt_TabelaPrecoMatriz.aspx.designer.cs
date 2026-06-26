@@ -492,6 +492,51 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtDespAdm;
 
         /// <summary>
+        /// Controle txtGRIS.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGRIS;
+
+        /// <summary>
+        /// Controle txtColeta.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtColeta;
+
+        /// <summary>
+        /// Controle txtEntrega.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEntrega;
+
+        /// <summary>
+        /// Controle txtTDE.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTDE;
+
+        /// <summary>
+        /// Controle txtTDA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTDA;
+
+        /// <summary>
         /// Controle txtICMS.
         /// </summary>
         /// <remarks>
@@ -645,13 +690,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList cboTipoMaterial;
 
         /// <summary>
-        /// Controle ddlLotacaoMinima.
+        /// Controle txtDetalheMaterial.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlLotacaoMinima;
+        protected global::System.Web.UI.WebControls.TextBox txtDetalheMaterial;
 
         /// <summary>
         /// Controle txtPesoLotacao.
@@ -706,6 +751,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFreteReceber;
+
+        /// <summary>
+        /// Controle txtTotalFrete.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTotalFrete;
 
         /// <summary>
         /// Controle txtMargem.

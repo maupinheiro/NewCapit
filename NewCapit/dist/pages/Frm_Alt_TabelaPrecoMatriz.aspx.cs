@@ -11,9 +11,7 @@ using System.Configuration;
 using System.Globalization;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DAL;
-
-
-
+using DocumentFormat.OpenXml.Office.Word;
 namespace NewCapit.dist.pages
 {
     public partial class Frm_Alt_TabelaPrecoMatriz : System.Web.UI.Page
@@ -56,7 +54,30 @@ namespace NewCapit.dist.pages
             //txtAltCad.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             lbDtAtualizacao.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
             //txtStatusRota.Text = "ATIVO";
-        }        
+            decimal total =
+            Converter(txtSecCat.Text) +
+            Converter(txtDespacho.Text) +
+            Converter(txtOutros.Text) +
+            Converter(txtDespAdm.Text) +
+            Converter(txtGRIS.Text) +
+            Converter(txtColeta.Text) +
+            Converter(txtEntrega.Text) +
+            Converter(txtTDE.Text) +
+            Converter(txtTDA.Text) +
+            Converter(txtFreteReceber.Text);
+            
+            txtTotalFrete.Text = total.ToString("N2");
+        }
+        private decimal Converter(string valor)
+        {
+            decimal resultado;
+            decimal.TryParse(valor,
+                System.Globalization.NumberStyles.Any,
+                new System.Globalization.CultureInfo("pt-BR"),
+                out resultado);
+
+            return resultado;
+        }
         private void PreencherComboMateriais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -296,7 +317,7 @@ namespace NewCapit.dist.pages
 
                     // 🔹 Campos numéricos / decimais
                     txtDistancia.Text = Convert.ToDecimal(dr["distancia"]).ToString("N2"); 
-                    txtAdicional.Text = Convert.ToDecimal(dr["adicional_sobrenf"]).ToString("N2");
+                    txtAdicional.Text = Convert.ToDecimal(dr["adicional_sobrenf"]).ToString("N4");
                     txtSecCat.Text = Convert.ToDecimal(dr["sec_cat"]).ToString("N2");
                     txtDespacho.Text = Convert.ToDecimal(dr["despacho"]).ToString("N2"); 
                     txtOutros.Text = Convert.ToDecimal(dr["outros"]).ToString("N2");
@@ -304,7 +325,12 @@ namespace NewCapit.dist.pages
                     txtDespAdm.Text = Convert.ToDecimal(dr["despesa_adm"]).ToString("N2");  
                     lnkUrl.Text = dr["resolucao_vigente"].ToString();
                     lnkUrl.NavigateUrl = dr["endereco_resolucao"].ToString();
-                                                          
+                    txtGRIS.Text = Convert.ToDecimal(dr["gris"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtColeta.Text = Convert.ToDecimal(dr["coleta"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtEntrega.Text = Convert.ToDecimal(dr["entrega"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtTDE.Text = Convert.ToDecimal(dr["tde"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtTDA.Text = Convert.ToDecimal(dr["tda"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtTotalFrete.Text = Convert.ToDecimal(dr["total_frete"]).ToString("N2", new CultureInfo("pt-BR"));
                     txtCodConsignatario.Text = dr["cod_consignatario"].ToString();
                     cboConsignatario.SelectedItem.Text = dr["consignatario"].ToString();
                     txtCidConsignatario.Text = dr["cid_consignatario"].ToString();
@@ -537,57 +563,6 @@ namespace NewCapit.dist.pages
             txtCidPagador.Text = string.Empty;
             txtUFPagador.Text = string.Empty;
         }
-     //   protected void txtRota_TextChanged(object sender, EventArgs e)
-     //   {
-     //       if (txtRota.Text != "")
-     //       {
-     //           using (SqlConnection conn = new SqlConnection(
-     //WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-     //           {
-     //               string cod = txtRota.Text;
-     //               string sql = "SELECT * FROM tbrotasdeentregas where rota = '" + cod + "' and situacao = 'ATIVO' and fl_exclusao is null";
-
-     //               SqlCommand cmd = new SqlCommand(sql, conn);
-     //               cmd.Parameters.AddWithValue("@id", cod);
-
-     //               conn.Open();
-
-     //               SqlDataReader dr = cmd.ExecuteReader();
-
-     //               if (dr.Read())
-     //               {
-     //                   txtRota.Text = dr["rota"].ToString();
-     //                   cboRotas.Text = dr["desc_rota"].ToString();
-     //                   txtCodRemetente.Text = dr["codigo_remetente"].ToString();
-     //                   cboRemetente.Text = dr["nome_remetente"].ToString();
-     //                   txtMunicipioRemetente.Text = dr["cidade_remetente,"].ToString();
-     //                   txtUFRemetente.Text = dr["uf_remetente"].ToString();
-
-     //                   txtCodExpedidor.Text = dr["codigo_expedidor"].ToString();
-     //                   cboExpedidor.Text = dr["nome_expedidor"].ToString();
-     //                   txtCidExpedidor.Text = dr["cidade_expedidor"].ToString();
-     //                   txtUFExpedidor.Text = dr["uf_expedidor"].ToString();
-
-     //                   txtCodDestinatario.Text = dr["codigo_destinatario"].ToString();
-     //                   cboDestinatario.Text = dr["nome_destinatario"].ToString();
-     //                   txtMunicipioDestinatario.Text = dr["cidade_destinatario"].ToString();
-     //                   txtUFDestinatario.Text = dr["uf_destinatario"].ToString();
-     //                   txtCodRecebedor.Text = dr["codigo_recebedor"].ToString();
-     //                   cboRecebedor.Text = dr["nome_recebedor"].ToString();
-
-     //                   txtCidRecebedor.Text = dr["cidade_recebedor"].ToString();
-     //                   txtUFRecebedor.Text = dr["uf_recebedor"].ToString();
-     //                   txtDistancia.Text = dr["distancia"].ToString();
-     //                   txtDuracao.Text = dr["tempo"].ToString();
-     //                   txtDeslocamento.Text = dr["deslocamento"].ToString();
-
-     //                   ViewState["id_frete"] = id;
-     //               }
-     //           }
-
-     //       }
-
-     //   }
         public void CarregaRotas(string rota)
         {
             if (txtRota.Text != "")
@@ -631,13 +606,12 @@ namespace NewCapit.dist.pages
                         txtDistancia.Text = dr["distancia"].ToString();
                         txtDuracao.Text = dr["tempo"].ToString();
                         txtDeslocamento.Text = dr["deslocamento"].ToString();
-
                         ViewState["id_frete"] = id;
                     }
                 }
 
             }
-        }                
+        }
         protected void btnAlterar_Click(object sender, EventArgs e)
         {
             // 🔹 Verifica se campos obrigatórios (que compõem descr_frete) estão preenchidos
@@ -668,13 +642,7 @@ namespace NewCapit.dist.pages
             string[] expedidor = cboExpedidor.Text.Split(' ');
             string[] recebedor = cboRecebedor.Text.Split(' ');
 
-            string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Inicio Prestação: {txtCidExpedidor.Text}/{txtUFExpedidor.Text} - Term. Prestação: {txtCidRecebedor.Text}/{txtUFRecebedor.Text} - Tipo de Material: {cboTipoMaterial.SelectedItem.Text} - Tipo de Veículo: {cboTipoVeiculo.SelectedItem.Text}";
-
-            //cod_frete = @cod_frete,
-            //        desc_frete = @desc_frete,
-            //        rota = @rota,
-            //        desc_rota = @desc_rota,
-
+            string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Inicio Prestação: {txtCidExpedidor.Text}/{txtUFExpedidor.Text} - Term. Prestação: {txtCidRecebedor.Text}/{txtUFRecebedor.Text}";
 
             string connectionString = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
@@ -725,7 +693,8 @@ namespace NewCapit.dist.pages
                       cnpj_destinatario=@destinatario,
                       cnpj_recebedor=@recebedor,
                       cnpj_consignatario=@consignatario,
-                      cnpj_pagador=@pagador
+                      cnpj_pagador=@pagador,
+                      gris=@gris, coleta=@coleta, entrega=@entrega, tde=@tde, tda=@tda, total_frete=@total_frete 
                 WHERE cod_frete = @cod_frete";
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
@@ -735,10 +704,7 @@ namespace NewCapit.dist.pages
                         id = HttpContext.Current.Request.QueryString["id"].ToString();
                     }
                     // Mesmo mapeamento de parâmetros do seu UPDATE
-                    cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(id);
-                    //cmd.Parameters.Add("@desc_frete", SqlDbType.NVarChar).Value = descr_frete;
-                    //cmd.Parameters.Add("@rota", SqlDbType.Int).Value = Convert.ToInt32(txtRota.Text);
-                    //cmd.Parameters.Add("@desc_rota", SqlDbType.NVarChar).Value = cboRotas.Text;
+                    cmd.Parameters.Add("@cod_frete", SqlDbType.Int).Value = Convert.ToInt32(id);                    
                     cmd.Parameters.Add("@cod_remetente", SqlDbType.Int).Value = Convert.ToInt32(txtCodRemetente.Text);
                     cmd.Parameters.Add("@remetente", SqlDbType.NVarChar).Value = cboRemetente.Text;
                     cmd.Parameters.Add("@cid_remetente", SqlDbType.NVarChar).Value = txtMunicipioRemetente.Text;
@@ -810,6 +776,18 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.Add("@cnpj_recebedor", SqlDbType.NVarChar).Value = txtCNPJRecebedor.Text.Trim();
                     cmd.Parameters.Add("@cnpj_consignatario", SqlDbType.NVarChar).Value = txtCNPJConsignatario.Text.Trim();
                     cmd.Parameters.Add("@cnpj_pagador", SqlDbType.NVarChar).Value = txtCNPJPagador.Text.Trim();
+                    cmd.Parameters.Add("@gris", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtGRIS.Text);
+                    cmd.Parameters.Add("@coleta", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtColeta.Text);
+                    cmd.Parameters.Add("@entrega", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtEntrega.Text);
+                    cmd.Parameters.Add("@tde", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtTDE.Text);
+                    cmd.Parameters.Add("@tda", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtTDA.Text);
+                    cmd.Parameters.Add("@total_frete", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtTotalFrete.Text);
 
                     try
                     {
@@ -957,9 +935,402 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
+        //protected void btnLancarTabela_Click(object sender, EventArgs e)
+        //{
+        //    if (string.IsNullOrEmpty(ddlFrete.SelectedValue))
+        //    {
+        //        MostrarMsg("Escolha o Frete: Frota/Agregado/Terceiro.", "warning");
+        //        ddlFrete.Focus();
+        //        return;
+        //    }
+
+        //    if (ddlTipoFrete.SelectedIndex == 0)
+        //    {
+        //        MostrarMsg("Escolha o Tipo de frete por Tonelada/Quilo ou FTL.", "warning");
+        //        ddlTipoFrete.Focus();
+        //        return;
+        //    }
+        //    if (string.IsNullOrEmpty(cboTipoViagem.SelectedValue))
+        //    {
+        //        MostrarMsg("Escolha o tipo de viagem.", "warning");
+        //        cboTipoViagem.Focus();
+        //        return;
+        //    }
+        //    if (string.IsNullOrEmpty(cboTipoVeiculo.SelectedValue))
+        //    {
+        //        MostrarMsg("Escolha o tipo de veículo.", "warning");
+        //        cboTipoViagem.Focus();
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(ddlEixos.SelectedItem.Text))
+        //    {
+        //        MostrarMsg("Escolha a quantidade de eixos.", "warning");
+        //        ddlEixos.Focus();
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(ddlTabela.SelectedValue))
+        //    {
+        //        MostrarMsg("Escolha a tabela ANTT.", "warning");
+        //        ddlTabela.Focus();
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(ddlTipoCargaANTT.SelectedItem.Text))
+        //    {
+        //        MostrarMsg("Escolha o tipo de carga ANTT.", "warning");
+        //        ddlTipoCargaANTT.Focus();
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(cboTipoMaterial.SelectedValue))
+        //    {
+        //        MostrarMsg("Escolha o tipo de material.", "warning");
+        //        cboTipoMaterial.Focus();
+        //        return;
+        //    }            
+
+        //    // CONVERSÕES SEGURAS            
+        //    DateTime vigenciaInicial;
+        //    DateTime vigenciaFinal;
+
+        //    CultureInfo cultura = new CultureInfo("pt-BR");
+        //    decimal freteANTT;
+        //    decimal freteReceber;
+        //    decimal fretePagar;
+        //    decimal freteMargem;
+        //    decimal freteTotal;
+
+
+        //    if (string.IsNullOrWhiteSpace(txtVigenciaInicial.Text) ||
+        //        string.IsNullOrWhiteSpace(txtVigenciaFinal.Text))
+        //    {
+        //        MostrarMsg("As datas de vigência não podem estar vazias. Verifique.", "danger");
+        //        return;
+        //    }
+
+        //    // tenta converter inicial
+        //    if (!DateTime.TryParse(txtVigenciaInicial.Text, new CultureInfo("pt-BR"), DateTimeStyles.None, out vigenciaInicial))
+        //    {
+        //        MostrarMsg("Data inicial vazia ou inválida.", "danger");
+        //        txtVigenciaInicial.Focus();
+        //        return;
+        //    }
+
+        //    //tenta converter final
+        //    if (!DateTime.TryParse(txtVigenciaFinal.Text, new CultureInfo("pt-BR"), DateTimeStyles.None, out vigenciaFinal))
+        //    {
+        //        MostrarMsg("Data final vazia ou inválida.", "danger");
+        //        txtVigenciaFinal.Focus();
+        //        return;
+        //    }
+
+        //    // valida regra de negócio
+        //    if (vigenciaInicial > vigenciaFinal)
+        //    {
+        //        MostrarMsg("A vigência inicial não pode ser maior que a vigência final.", "warning");
+        //        txtVigenciaFinal.Focus();
+        //        return;
+        //    }
+
+        //    // converte inicial
+        //    if (!DateTime.TryParse(txtVigenciaInicial.Text, new CultureInfo("pt-BR"), DateTimeStyles.None, out vigenciaInicial))
+        //    {
+        //        MostrarMsg("Data inicial inválida.", "danger");
+        //        txtVigenciaInicial.Focus();
+        //        return;
+        //    }
+
+        //    // converte final
+        //    if (!DateTime.TryParse(txtVigenciaFinal.Text, new CultureInfo("pt-BR"), DateTimeStyles.None, out vigenciaFinal))
+        //    {
+        //        MostrarMsg("Data final inválida.", "danger");
+        //        txtVigenciaFinal.Focus();
+        //        return;
+        //    }
+
+        //    // regra de negócio
+        //    if (vigenciaFinal < vigenciaInicial)
+        //    {
+        //        MostrarMsg("A data final não pode ser menor que a data inicial.", "warning");
+        //        txtVigenciaFinal.Focus();
+        //        return;
+        //    }
+        //    // valida vazio
+        //    if (string.IsNullOrWhiteSpace(txtFreteMinimo.Text) ||
+        //        string.IsNullOrWhiteSpace(txtFreteReceber.Text) ||
+        //        string.IsNullOrWhiteSpace(txtFretePagar.Text) ||
+        //        string.IsNullOrWhiteSpace(txtMargem.Text))
+        //    {
+        //        MostrarMsg("Todos os campos de frete devem ser preenchidos.", "warning");
+        //        return;
+        //    }
+
+        //    // conversão segura
+        //    if (!decimal.TryParse(txtFreteMinimo.Text, NumberStyles.Any, cultura, out freteANTT))
+        //    {
+        //        MostrarMsg("Frete ANTT inválido.", "danger");
+        //        txtFreteMinimo.Focus();
+        //        return;
+        //    }
+
+
+        //    if (!decimal.TryParse(txtFreteReceber.Text, NumberStyles.Any, cultura, out freteReceber))
+        //    {
+        //        MostrarMsg("Frete a receber inválido.", "danger");
+        //        txtFreteReceber.Focus();
+        //        return;
+        //    }
+
+
+        //    if (!decimal.TryParse(txtFretePagar.Text, NumberStyles.Any, cultura, out fretePagar))
+        //    {
+        //        MostrarMsg("Frete a pagar inválido.", "danger");
+        //        txtFretePagar.Focus();
+        //        return;
+        //    }
+
+        //    if (!decimal.TryParse(txtTotalFrete.Text, NumberStyles.Any, cultura, out freteTotal))
+        //    {
+        //        MostrarMsg("Frete a pagar inválido.", "danger");
+        //        txtTotalFrete.Focus();
+        //        return;
+        //    }
+
+        //    if (!decimal.TryParse(txtMargem.Text, NumberStyles.Any, cultura, out freteMargem))
+        //    {
+        //        MostrarMsg("Margem inválida.", "danger");
+        //        txtMargem.Focus();
+        //        return;
+        //    }
+
+        //    string usuario = Session["UsuarioLogado"] != null
+        //        ? Session["UsuarioLogado"].ToString()
+        //        : "SISTEMA";
+
+        //    int idRota;
+        //    if (!int.TryParse(txtRota.Text, out idRota))
+        //    {
+        //        MostrarMsg("ID da rota inválido!", "danger");
+        //        return;
+        //    }
+
+        //    int idTabela;
+        //    if (!int.TryParse(novaTabelaDeFrete.Text, out idTabela))
+        //    {
+        //        MostrarMsg("ID da tabela inválido!", "danger");
+        //        return;
+        //    }
+
+        //    //int pesoLotacao;
+        //    //if (!int.TryParse(txtPesoLotacao.Text, out pesoLotacao))
+        //    //{
+        //    //    MostrarMsg("Verifique o peso digistado!", "warning");
+        //    //    txtPesoLotacao.Focus();
+        //    //    return;
+        //    //}
+
+        //    if (!int.TryParse(txtPesoLotacao.Text, out int pesoLotacao))
+        //    {
+        //        MostrarMsg("Peso de lotação inválido.", "danger");
+        //        txtPesoLotacao.Focus();
+        //        return;
+        //    }
+
+
+        //    // Frete Receber não pode ser menor que o mínimo ANTT
+        //    if (freteReceber < freteANTT)
+        //    {
+        //        MostrarMsg("O frete a Receber não pode ser menor que o Frete Mínimo ANTT!", "warning");
+        //        txtFreteReceber.Focus();
+        //        return;
+        //    }
+
+        //    // Frete Pagar não pode ser menor que o mínimo ANTT
+        //    if (fretePagar < freteANTT && ddlFrete.SelectedValue == "Terceiro")
+        //    {
+        //        MostrarMsg("O Frete a Pagar não pode ser menor que o Frete Minimo!", "warning");
+        //        txtFretePagar.Focus();
+        //        return;
+        //    }
+
+        //    // Frete Pagar não pode ser maior que o Frete a Receber
+        //    if (fretePagar > freteReceber)
+        //    {
+        //        MostrarMsg("Frete a Pagar não pode ser maior que o Frete a Receber!", "warning");
+        //        txtFretePagar.Focus();
+        //        return;
+        //    }
+        //    using (SqlConnection conn = new SqlConnection(
+        //        WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //    {
+        //        conn.Open();
+        //        string sql = @"
+        //        IF EXISTS (
+        //            SELECT 1
+        //            FROM tbfretes
+        //            WHERE cod_frete = @cod_frete
+        //              AND frete = @frete
+        //              AND tipo_veiculo = @tipo_veiculo
+        //              AND fl_exclusao IS NULL
+        //        )
+        //        BEGIN
+        //        UPDATE tbfretes
+        //        SET
+        //            medida = @medida,
+        //            tipo_viagem = @tipo_viagem,
+        //            eixos = @eixos,
+        //            tabela_antt = @tabela_antt,
+        //            tipo_carga = @tipo_carga,
+        //            material = @material,
+        //            detalhe_material = @detalhe_material,                    
+        //            lotacao_peso = @lotacao_peso,
+        //            vigencia_inicial = @vigencia_inicial,
+        //            vigencia_final = @vigencia_final,
+        //            frete_antt = @frete_antt,
+        //            frete_receber = @frete_receber,
+        //            frete_pagar = @frete_pagar,
+        //            margem = @margem,
+        //            mensagem = @mensagem,
+        //            status = @status,
+        //            gris=@gris,
+        //            coleta=@coleta,
+        //            entrega=@entrega,
+        //            tde=@tde,
+        //            tda=@tda,
+        //            total_frete=@totalfrete,
+        //            despesa_adm=@despesa_adm,
+        //            sec_cat=@sec_cat,
+        //            despacho=@despacho,
+        //            outros=@outros,
+        //            responsavel = @responsavel,
+        //            data_alteracao = GETDATE()
+        //        WHERE cod_frete = @cod_frete
+        //          AND frete = @frete
+        //          AND tipo_veiculo = @tipo_veiculo
+        //          AND fl_exclusao IS NULL
+        //        END
+        //        ELSE
+        //        BEGIN
+        //            INSERT INTO tbfretes
+        //            (
+        //                cod_frete,
+        //                id_rota,
+        //                frete,
+        //                medida,
+        //                tipo_viagem,
+        //                tipo_veiculo,
+        //                eixos,
+        //                tabela_antt,
+        //                tipo_carga,
+        //                material,
+        //                detalhe_material,
+        //                lotacao_peso,
+        //                vigencia_inicial,
+        //                vigencia_final,
+        //                frete_antt,
+        //                frete_receber,
+        //                frete_pagar,
+        //                margem,
+        //                mensagem,
+        //                gris,
+        //                coleta,
+        //                entrega,
+        //                tde,
+        //                tda,
+        //                total_frete,
+        //                despesa_adm,
+        //                sec_cat,
+        //                despacho,
+        //                outros,
+        //                status,
+        //                responsavel,
+        //                data_alteracao
+        //            )
+        //            VALUES
+        //            (
+        //                @cod_frete,
+        //                @id_rota,
+        //                @frete,
+        //                @medida,
+        //                @tipo_viagem,
+        //                @tipo_veiculo,
+        //                @eixos,
+        //                @tabela_antt,
+        //                @tipo_carga,
+        //                @material,
+        //                @detalhe_material,                        
+        //                @lotacao_peso,
+        //                @vigencia_inicial,
+        //                @vigencia_final,
+        //                @frete_antt,
+        //                @frete_receber,
+        //                @frete_pagar,
+        //                @margem,
+        //                @mensagem,
+        //                @status,
+        //                @gris,
+        //                @coleta,
+        //                @entrega,
+        //                @tde,
+        //                @tda,
+        //                @totalfrete,
+        //                @despesa_adm,
+        //                @sec_cat,
+        //                @despacho,
+        //                @outros,
+        //                @responsavel,
+        //                GETDATE()
+        //            )
+        //        END";
+
+        //        SqlCommand cmd2 = new SqlCommand(sql, conn);
+
+        //        // PARÂMETROS
+        //        cmd2.Parameters.AddWithValue("@cod_frete", idTabela);
+        //        cmd2.Parameters.AddWithValue("@id_rota", idRota);
+        //        cmd2.Parameters.AddWithValue("@frete", ddlFrete.SelectedValue);
+        //        cmd2.Parameters.AddWithValue("@medida", ddlTipoFrete.SelectedValue);
+        //        cmd2.Parameters.AddWithValue("@tipo_viagem", cboTipoViagem.SelectedItem.Text.Trim());
+        //        cmd2.Parameters.AddWithValue("@tipo_veiculo", cboTipoVeiculo.SelectedItem.Text.Trim());
+        //        cmd2.Parameters.AddWithValue("@eixos", ddlEixos.SelectedValue);
+        //        cmd2.Parameters.AddWithValue("@tabela_antt", ddlTabela.SelectedItem.Text.Trim());
+        //        cmd2.Parameters.AddWithValue("@tipo_carga", ddlTipoCargaANTT.SelectedItem.Text.Trim());
+        //        cmd2.Parameters.AddWithValue("@material", cboTipoMaterial.SelectedItem.Text.Trim());
+        //        cmd2.Parameters.AddWithValue("@detalhe_material", txtDetalheMaterial.Text.Trim().ToUpper()); 
+        //        cmd2.Parameters.AddWithValue("@lotacao_peso", pesoLotacao);
+        //        cmd2.Parameters.AddWithValue("@vigencia_inicial", vigenciaInicial);
+        //        cmd2.Parameters.AddWithValue("@vigencia_final", vigenciaFinal);
+        //        cmd2.Parameters.Add("@frete_antt", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteMinimo.Text);
+        //        cmd2.Parameters.Add("@frete_receber", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFreteReceber.Text);
+        //        cmd2.Parameters.Add("@frete_pagar", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtFretePagar.Text);
+        //        cmd2.Parameters.Add("@margem", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtMargem.Text);
+        //        cmd2.Parameters.Add("@gris", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtGRIS.Text);
+        //        cmd2.Parameters.Add("@coleta", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtColeta.Text);
+        //        cmd2.Parameters.Add("@entrega", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtEntrega.Text);
+        //        cmd2.Parameters.Add("@tde", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtTDE.Text);
+        //        cmd2.Parameters.Add("@tda", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtTDA.Text);
+        //        cmd2.Parameters.Add("@totalfrete", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtTotalFrete.Text);
+        //        cmd2.Parameters.Add("@despesa_adm", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespAdm.Text);
+        //        cmd2.Parameters.Add("@sec_cat", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtSecCat.Text);
+        //        cmd2.Parameters.Add("@despacho", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespacho.Text);
+        //        cmd2.Parameters.Add("@outros", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtOutros.Text);
+        //        cmd2.Parameters.AddWithValue("@status", "ATIVO");
+        //        cmd2.Parameters.AddWithValue("@mensagem", txtObservacao.Text.Trim().ToUpper());
+        //        cmd2.Parameters.AddWithValue("@responsavel", usuario);
+
+        //        cmd2.ExecuteNonQuery();
+
+        //    }
+        //    CarregarFretes(idTabela);
+        //    MostrarMsg("Frete atualizado com sucesso!", "success");
+        //    return;
+        //}
+
         protected void btnLancarTabela_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ddlFrete.SelectedValue))
+            if (ddlFrete.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha o Frete: Frota/Agregado/Terceiro.", "warning");
                 ddlFrete.Focus();
@@ -972,53 +1343,49 @@ namespace NewCapit.dist.pages
                 ddlTipoFrete.Focus();
                 return;
             }
-            if (string.IsNullOrEmpty(cboTipoViagem.SelectedValue))
+
+            if (cboTipoViagem.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha o tipo de viagem.", "warning");
                 cboTipoViagem.Focus();
                 return;
             }
-            if (string.IsNullOrEmpty(cboTipoVeiculo.SelectedValue))
+
+            if (cboTipoVeiculo.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha o tipo de veículo.", "warning");
-                cboTipoViagem.Focus();
+                cboTipoVeiculo.Focus();
                 return;
             }
 
-            if (string.IsNullOrEmpty(ddlEixos.SelectedItem.Text))
+            if (ddlEixos.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha a quantidade de eixos.", "warning");
                 ddlEixos.Focus();
                 return;
             }
 
-            if (string.IsNullOrEmpty(ddlTabela.SelectedValue))
+            if (ddlTabela.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha a tabela ANTT.", "warning");
                 ddlTabela.Focus();
                 return;
             }
 
-            if (string.IsNullOrEmpty(ddlTipoCargaANTT.SelectedItem.Text))
+            if (ddlTipoCargaANTT.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha o tipo de carga ANTT.", "warning");
                 ddlTipoCargaANTT.Focus();
                 return;
             }
 
-            if (string.IsNullOrEmpty(cboTipoMaterial.SelectedValue))
+            if (cboTipoMaterial.SelectedIndex == 0)
             {
                 MostrarMsg("Escolha o tipo de material.", "warning");
                 cboTipoMaterial.Focus();
                 return;
             }
 
-            if (string.IsNullOrEmpty(ddlLotacaoMinima.SelectedItem.Text))
-            {
-                MostrarMsg("Escolha lotação minima Sim/Não.", "warning");
-                ddlLotacaoMinima.Focus();
-                return;
-            }
 
             // CONVERSÕES SEGURAS            
             DateTime vigenciaInicial;
@@ -1048,7 +1415,7 @@ namespace NewCapit.dist.pages
             //tenta converter final
             if (!DateTime.TryParse(txtVigenciaFinal.Text, new CultureInfo("pt-BR"), DateTimeStyles.None, out vigenciaFinal))
             {
-                MostrarMsg("Data final vazia ou inválida.", "danger");
+                MostrarMsg("Data final vazoa ou inválida.", "danger");
                 txtVigenciaFinal.Focus();
                 return;
             }
@@ -1125,32 +1492,6 @@ namespace NewCapit.dist.pages
                 return;
             }
 
-            if (ddlLotacaoMinima.SelectedValue == "SIM")
-            {
-                if (string.IsNullOrWhiteSpace(txtPesoLotacao.Text))
-                {
-                    MostrarMsg("Peso de lotação é obrigatório quando a lotação mínima for SIM.", "warning");
-                    txtPesoLotacao.Focus();
-                    return;
-                }
-
-
-                if (!decimal.TryParse(txtPesoLotacao.Text, NumberStyles.Any, new CultureInfo("pt-BR"), out decimal peso))
-                {
-                    MostrarMsg("Peso de lotação inválido.", "danger");
-                    txtPesoLotacao.Focus();
-                    return;
-
-                }
-
-                if (peso <= 0)
-                {
-                    MostrarMsg("O peso de lotação não pode ser menor ou igual a zero quando a lotação mínima for SIM.", "warning");
-                    txtPesoLotacao.Focus();
-                    return;
-                }
-
-            }
 
             string usuario = Session["UsuarioLogado"] != null
                 ? Session["UsuarioLogado"].ToString()
@@ -1201,11 +1542,29 @@ namespace NewCapit.dist.pages
                 txtFretePagar.Focus();
                 return;
             }
-            using (SqlConnection conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+
+            // 🔹 Monta o campo descr_frete
+            string[] pagador = cboPagador.SelectedItem.Text.Split(' ');
+            string[] remetente = cboRemetente.Text.Split(' ');
+            string[] expedidor = cboExpedidor.Text.Split(' ');
+            string[] destinatario = cboDestinatario.Text.Split(' ');
+            string[] recebedor = cboRecebedor.Text.Split(' ');
+
+            string descr_frete = $"{txtCodPagador.Text} - {pagador[0]} - Inicio Prestação: {txtCidExpedidor.Text}/{txtUFExpedidor.Text} - Term. Prestação: {txtCidRecebedor.Text}/{txtUFRecebedor.Text}";
+            string sqlVerifica = @"
+            SELECT TOP 1 cod_frete
+            FROM tbtabeladefretes
+            WHERE desc_frete = @desc_frete";
+
+            using (SqlCommand cmd = new SqlCommand(sqlVerifica, conn))
             {
-                conn.Open();
-                string sql = @"
+                conn.Close();
+                // Inserir novo registro
+                using (SqlConnection conn = new SqlConnection(
+           WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    conn.Open();
+                    string sql = @"
                 IF EXISTS (
                     SELECT 1
                     FROM tbfretes
@@ -1223,7 +1582,7 @@ namespace NewCapit.dist.pages
                     tabela_antt = @tabela_antt,
                     tipo_carga = @tipo_carga,
                     material = @material,
-                    lotacao_minima = @lotacao_minima,
+                    detalhe_material = @detalhe_material,                   
                     lotacao_peso = @lotacao_peso,
                     vigencia_inicial = @vigencia_inicial,
                     vigencia_final = @vigencia_final,
@@ -1233,6 +1592,16 @@ namespace NewCapit.dist.pages
                     margem = @margem,
                     mensagem = @mensagem,
                     status = @status,
+                    gris=@gris,
+                    coleta=@coleta,
+                    entrega=@entrega,
+                    tde=@tde,
+                    tda=@tda,
+                    total_frete=@totalfrete,
+                    despesa_adm=@despesa_adm,
+                    sec_cat=@sec_cat,
+                    despacho=@despacho,
+                    outros=@outros,
                     responsavel = @responsavel,
                     data_alteracao = GETDATE()
                 WHERE cod_frete = @cod_frete
@@ -1254,7 +1623,7 @@ namespace NewCapit.dist.pages
                         tabela_antt,
                         tipo_carga,
                         material,
-                        lotacao_minima,
+                        detalhe_material,                        
                         lotacao_peso,
                         vigencia_inicial,
                         vigencia_final,
@@ -1264,7 +1633,17 @@ namespace NewCapit.dist.pages
                         margem,
                         mensagem,
                         status,
+                        gris,
+                        coleta,
+                        entrega,
+                        tde,
+                        tda,
+                        total_frete,
                         responsavel,
+                        despesa_adm,
+                        sec_cat,
+                        despacho,
+                        outros,
                         data_alteracao
                     )
                     VALUES
@@ -1279,7 +1658,7 @@ namespace NewCapit.dist.pages
                         @tabela_antt,
                         @tipo_carga,
                         @material,
-                        @lotacao_minima,
+                        @detalhe_material,                       
                         @lotacao_peso,
                         @vigencia_inicial,
                         @vigencia_final,
@@ -1289,53 +1668,82 @@ namespace NewCapit.dist.pages
                         @margem,
                         @mensagem,
                         @status,
+                        @gris,
+                        @coleta,
+                        @entrega,
+                        @tde,
+                        @tda,
+                        @totalfrete,
                         @responsavel,
+                        @despesa_adm,
+                        @sec_cat,
+                        @despacho,
+                        @outros,
                         GETDATE()
                     )
                 END";
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlCommand cmd2 = new SqlCommand(sql, conn);
 
-                // PARÂMETROS
-                cmd.Parameters.AddWithValue("@cod_frete", idTabela);
-                cmd.Parameters.AddWithValue("@id_rota", idRota);
-                cmd.Parameters.AddWithValue("@frete", ddlFrete.SelectedValue);
-                cmd.Parameters.AddWithValue("@medida", ddlTipoFrete.SelectedValue);
-                cmd.Parameters.AddWithValue("@tipo_viagem", cboTipoViagem.SelectedItem.Text.Trim());
-                cmd.Parameters.AddWithValue("@tipo_veiculo", cboTipoVeiculo.SelectedItem.Text.Trim());
-                cmd.Parameters.AddWithValue("@eixos", ddlEixos.SelectedValue);
-                cmd.Parameters.AddWithValue("@tabela_antt", ddlTabela.SelectedItem.Text.Trim());
-                cmd.Parameters.AddWithValue("@tipo_carga", ddlTipoCargaANTT.SelectedItem.Text.Trim());
-                cmd.Parameters.AddWithValue("@material", cboTipoMaterial.SelectedItem.Text.Trim());
-                cmd.Parameters.AddWithValue("@lotacao_minima", ddlLotacaoMinima.SelectedValue);
-                cmd.Parameters.AddWithValue("@lotacao_peso", pesoLotacao);
+                    // PARÂMETROS
+                    cmd2.Parameters.AddWithValue("@cod_frete", idTabela);
+                    cmd2.Parameters.AddWithValue("@id_rota", idRota);
+                    cmd2.Parameters.AddWithValue("@frete", ddlFrete.SelectedValue);
+                    cmd2.Parameters.AddWithValue("@medida", ddlTipoFrete.SelectedValue);
+                    cmd2.Parameters.AddWithValue("@tipo_viagem", cboTipoViagem.SelectedItem.Text.Trim());
+                    cmd2.Parameters.AddWithValue("@tipo_veiculo", cboTipoVeiculo.SelectedItem.Text.Trim());
+                    cmd2.Parameters.AddWithValue("@eixos", ddlEixos.SelectedValue);
+                    cmd2.Parameters.AddWithValue("@tabela_antt", ddlTabela.SelectedItem.Text.Trim());
+                    cmd2.Parameters.AddWithValue("@tipo_carga", ddlTipoCargaANTT.SelectedItem.Text.Trim());
+                    cmd2.Parameters.AddWithValue("@material", cboTipoMaterial.SelectedItem.Text.Trim());
+                    cmd2.Parameters.AddWithValue("@detalhe_material", txtDetalheMaterial.Text.Trim().ToUpper());
+                    cmd2.Parameters.AddWithValue("@lotacao_peso", pesoLotacao);
 
-                cmd.Parameters.AddWithValue("@vigencia_inicial", vigenciaInicial);
-                cmd.Parameters.AddWithValue("@vigencia_final", vigenciaFinal);
+                    cmd2.Parameters.AddWithValue("@vigencia_inicial", vigenciaInicial);
+                    cmd2.Parameters.AddWithValue("@vigencia_final", vigenciaFinal);
 
-                cmd.Parameters.Add("@frete_antt", SqlDbType.Decimal).Value =
-                    LimparMascaraMoeda(txtFreteMinimo.Text);
+                    cmd2.Parameters.Add("@frete_antt", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtFreteMinimo.Text);
 
-                cmd.Parameters.Add("@frete_receber", SqlDbType.Decimal).Value =
-                    LimparMascaraMoeda(txtFreteReceber.Text);
+                    cmd2.Parameters.Add("@frete_receber", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtFreteReceber.Text);
 
-                cmd.Parameters.Add("@frete_pagar", SqlDbType.Decimal).Value =
-                    LimparMascaraMoeda(txtFretePagar.Text);
+                    cmd2.Parameters.Add("@frete_pagar", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtFretePagar.Text);
 
-                cmd.Parameters.Add("@margem", SqlDbType.Decimal).Value =
-                    LimparMascaraMoeda(txtMargem.Text);
+                    cmd2.Parameters.Add("@margem", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtMargem.Text);
 
-                cmd.Parameters.AddWithValue("@status", "ATIVO");
-                cmd.Parameters.AddWithValue("@mensagem", txtObservacao.Text.Trim().ToUpper());
-                cmd.Parameters.AddWithValue("@responsavel", usuario);
+                    cmd2.Parameters.Add("@gris", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtGRIS.Text);
+                    cmd2.Parameters.Add("@coleta", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtColeta.Text);
+                    cmd2.Parameters.Add("@entrega", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtEntrega.Text);
+                    cmd2.Parameters.Add("@tde", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtTDE.Text);
+                    cmd2.Parameters.Add("@tda", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtTDA.Text);
+                    cmd2.Parameters.Add("@totalfrete", SqlDbType.Decimal).Value =
+                        LimparMascaraMoeda(txtTotalFrete.Text);
+                    cmd2.Parameters.Add("@despesa_adm", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespAdm.Text);
+                    cmd2.Parameters.Add("@sec_cat", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtSecCat.Text);
+                    cmd2.Parameters.Add("@despacho", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtDespacho.Text);
+                    cmd2.Parameters.Add("@outros", SqlDbType.Decimal).Value = LimparMascaraMoeda(txtOutros.Text);
+                    cmd2.Parameters.AddWithValue("@status", "ATIVO");
+                    cmd2.Parameters.AddWithValue("@mensagem", txtObservacao.Text.Trim().ToUpper());
+                    cmd2.Parameters.AddWithValue("@responsavel", usuario);
 
-                cmd.ExecuteNonQuery();
+                    cmd2.ExecuteNonQuery();
 
+                }
+                CarregarFretes(idTabela);
+                MostrarMsg("Frete atualizado com sucesso!", "success");
+                return;
             }
-            CarregarFretes(idTabela);
-            MostrarMsg("Frete atualizado com sucesso!", "success");
-            return;
         }
+
+
         private void CarregarFretes(int idTabela)
         {
             using (SqlConnection conn = new SqlConnection(
@@ -1350,11 +1758,18 @@ namespace NewCapit.dist.pages
                     tipo_viagem,
                     tipo_veiculo,
                     material,
+                    detalhe_material,
                     tabela_antt,
                     frete_antt,
                     frete_receber,
                     frete_pagar,
-                    margem,         
+                    margem, 
+                    gris,
+                    coleta, 
+                    entrega,
+                    tde,
+                    tda,
+                    total_frete,
                     vigencia_inicial,
                     vigencia_final,
                     status
@@ -1428,9 +1843,8 @@ namespace NewCapit.dist.pages
                     cboTipoViagem.SelectedItem.Text = dr["tipo_viagem"].ToString();
                     cboTipoVeiculo.SelectedItem.Text = dr["tipo_veiculo"].ToString();
                     cboTipoMaterial.SelectedItem.Text = dr["material"].ToString();
-                    ddlTabela.SelectedItem.Text = dr["tabela_antt"].ToString();
-
-                    ddlLotacaoMinima.SelectedItem.Text = dr["lotacao_minima"].ToString();
+                    txtDetalheMaterial.Text = dr["detalhe_material"].ToString();
+                    ddlTabela.SelectedItem.Text = dr["tabela_antt"].ToString();                    
                     txtPesoLotacao.Text = dr["lotacao_peso"].ToString();
                     ddlEixos.SelectedItem.Text = dr["eixos"].ToString();
                     ddlTipoCargaANTT.SelectedItem.Text = dr["tipo_carga"].ToString();
@@ -1441,7 +1855,12 @@ namespace NewCapit.dist.pages
                     txtMargem.Text = Convert.ToDecimal(dr["margem"]).ToString("N2", new CultureInfo("pt-BR"));
                     txtVigenciaInicial.Text = Convert.ToDateTime(dr["vigencia_inicial"]).ToString("dd/MM/yyyy");
                     txtVigenciaFinal.Text = Convert.ToDateTime(dr["vigencia_final"]).ToString("dd/MM/yyyy");
-
+                    txtGRIS.Text = Convert.ToDecimal(dr["gris"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtColeta.Text = Convert.ToDecimal(dr["coleta"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtEntrega.Text = Convert.ToDecimal(dr["entrega"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtTDE.Text = Convert.ToDecimal(dr["tde"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtTDA.Text = Convert.ToDecimal(dr["tda"]).ToString("N2", new CultureInfo("pt-BR"));
+                    txtTotalFrete.Text = Convert.ToDecimal(dr["total_frete"]).ToString("N2", new CultureInfo("pt-BR"));
                     txtObservacao.Text = dr["mensagem"].ToString();
                     txtResponsavel.Text = dr["responsavel"].ToString();
                     txtData_Alteracao.Text = Convert.ToDateTime(dr["data_alteracao"]).ToString("dd/MM/yyyy HH:mm");
