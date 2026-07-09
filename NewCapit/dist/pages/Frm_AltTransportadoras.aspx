@@ -120,10 +120,11 @@
         <section class="content">
             <div class="container-fluid">
                 <br />
-                <div id="toastContainerVermelho" class="alert alert-danger alert-dismissible" style="display: none;">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h5><i class="icon fas fa-exclamation-triangle"></i>Alerta!</h5>
-                    Alertas
+                <div id="divMsg" runat="server"
+                    class="alert alert-warning alert-dismissible fade show mt-3"
+                    role="alert" style="display: none;">
+                    <span id="lblMsgGeral" runat="server"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
                 <div class="col-md-12">
                     <div class="card card-info">
@@ -189,12 +190,23 @@
                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" ControlToValidate="ddlTipo" InitialValue="" ErrorMessage="* Obrigatório" ValidationGroup="Cadastro" Font-Size="9px" ForeColor="Red" Display="Dynamic" />
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form_group">
                                             <span class="details">FILIAL:</span>
                                             <asp:DropDownList ID="cbFiliais" runat="server" CssClass="form-control"></asp:DropDownList>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <span class="details">COD. VW:</span>
+                                            <asp:TextBox ID="txtCodVW"
+                                                runat="server"
+                                                CssClass="form-control"
+                                                AutoPostBack="true"
+                                                OnTextChanged="txtCodVW_TextChanged">
+                                            </asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -227,7 +239,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <div class="form-group">
-                                            <span class="details">CADASTRO:</span>
+                                            <span class="details">ABERTURA:</span>
                                             <asp:Label ID="txtDtCadastro" runat="server" CssClass="form-control" value=""></asp:Label>
                                         </div>
                                     </div>

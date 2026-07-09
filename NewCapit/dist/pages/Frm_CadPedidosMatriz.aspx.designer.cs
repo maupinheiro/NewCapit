@@ -42,6 +42,15 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox cboGR;
 
         /// <summary>
+        /// Controle txtFilial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFilial;
+
+        /// <summary>
         /// Controle txtCadastro.
         /// </summary>
         /// <remarks>
@@ -321,15 +330,6 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtUFPagador;
 
         /// <summary>
-        /// Controle txtFilial.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFilial;
-
-        /// <summary>
         /// Controle txtDeslocamento.
         /// </summary>
         /// <remarks>
@@ -427,6 +427,15 @@ namespace NewCapit.dist.pages
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cboMaterial;
+
+        /// <summary>
+        /// Controle txtDescMaterial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDescMaterial;
 
         /// <summary>
         /// Controle txtPeso.

@@ -118,15 +118,20 @@
                             <asp:DropDownList ID="cbSolicitantes" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="cbSolicitantes_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                         </div>
 
-                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">GR:</label>
+                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">GRIS.:</label>
                         <div class="col-sm-2">
                             <asp:TextBox ID="cboGR" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                         </div>
 
-                        <label for="inputFilial" class="col-sm-2 col-form-label" style="text-align: right">CADASTRO:</label>
+                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">FILIAL:</label>
+                        <div class="col-md-2">    
+                                <asp:TextBox ID="txtFilial" runat="server" CssClass="form-control" Style="text-align: left" ReadOnly="true"></asp:TextBox>    
+                        </div>
+
+                       <%-- <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">CADASTRO:</label>--%>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center"></asp:TextBox>
+                                <asp:TextBox ID="txtCadastro" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -260,12 +265,12 @@
                                 </div>
                                 <hr />
                                 <div class="row g-3">
-                                    <div class="col-md-2">
+                                    <%--<div class="col-md-2">
                                         <label for="inputFilial" style="text-align: right">FILIAL:</label>
                                         <div class="form-group">
                                             <asp:TextBox ID="txtFilial" runat="server" CssClass="form-control" Style="text-align: left" ReadOnly="true"></asp:TextBox>
                                         </div>
-                                    </div>
+                                    </div>--%>
                                     <div class="col-md-2">
                                         <label for="inputFilial" style="text-align: right">DESLOCAMENTO:</label>
                                         <div class="form-group">
@@ -285,34 +290,22 @@
                                         </div>
                                     </div>
                                     <div class="col-md-1">
-                                        <label for="inputFilial" style="text-align: right">EMITE PEDAGIO:</label>
+                                        <label for="inputFilial" style="text-align: right">PEDAGIADA:</label>
                                         <div class="form-group">
                                             <asp:TextBox ID="txtPedagio" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                         </div>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-7">
                                         <label for="inputFilial" style="text-align: right">ROTA:</label>
                                         <div class="form-group">
                                             <asp:TextBox ID="txtRota" runat="server" CssClass="form-control" Style="text-align: center" ReadOnly="true"></asp:TextBox>
                                         </div>
-                                    </div>
-                                    
+                                    </div>  
                                 </div>
                                 
                             </div>
                         </div>
                     </div>
-                    <%--<div class="form-group row">
-                        <label for="inputFilial" class="col-sm-1 col-form-label" style="text-align: right">PAGADOR/ROTA:</label>
-                        <div class="col-sm-1">
-                            <asp:TextBox ID="txtFrete" runat="server" CssClass="form-control" Style="text-align: center" OnTextChanged="txtFrete_TextChanged" AutoPostBack="true"></asp:TextBox>
-                        </div>
-                        <div class="col-md-9">
-                            <asp:DropDownList ID="cboFrete" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboFrete_SelectedIndexChanged"></asp:DropDownList>
-                        </div>
-                        
-                    </div>--%>
-                    
                     <div class="row g-3">
                         <div class="col-md-9">
                             <label for="inputFilial" style="text-align: right">OBSERVAÇÃO:</label>
@@ -340,11 +333,18 @@
                                 <asp:TextBox ID="txtNumPedido" onkeypress="return apenasNumeros(event);" class="form-control" runat="server" OnTextChanged="txtNumPedido_TextChanged" AutoPostBack="true"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-1">
                             <div class="form-group">
                                 <%--<label for="inputFilial" style="text-align: right">MATERIAL:</label>--%>
                                 <span class="details font-weight-bold">Material:</span>
                                 <asp:DropDownList ID="cboMaterial" runat="server" CssClass="form-control select2" AutoPostBack="true" OnSelectedIndexChanged="cboMaterial_SelectedIndexChanged"></asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <%--<label for="inputFilial" style="text-align: right">DT/OT/TU:</label>--%>
+                                <span class="details font-weight-bold">Descrição do Material:</span>
+                                <asp:TextBox ID="txtDescMaterial" runat="server" CssClass="form-control" value=""></asp:TextBox>
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -368,7 +368,7 @@
                                 <asp:DropDownList ID="cboDeposito" runat="server" CssClass="form-control select2"></asp:DropDownList>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-group">
                                 <%--<label for="inputFilial" style="text-align: right">SITUAÇÃO:</label>--%>
                                 <span class="details font-weight-bold">Situação:</span>
@@ -386,15 +386,13 @@
                             </div>
                         </div>
                         <div class="col-md-1">
-                            <div class="form-group">
-                                <%--<label for="inputFilial" style="text-align: right">PREV. ENTREGA:</label>--%>
+                            <div class="form-group">                               
                                 <span class="details font-weight-bold">Prev. Entrega:</span>
                                 <asp:TextBox ID="txtPrevEntrega" runat="server" Style="text-align: center" CssClass="form-control" MaxLength="10" OnTextChanged="txtPrevEntrega_TextChanged" AutoPostBack="true"></asp:TextBox>                               
                             </div>
                         </div>
                         <div class="col-md-1">
-                            <div class="form-group">
-                                <%--<label for="inputFilial" style="text-align: right">ENTREGA:</label>--%>
+                            <div class="form-group">                                
                                 <span class="details font-weight-bold">Tipo Entrega:</span>
                                 <asp:DropDownList ID="cboEntrega" runat="server" CssClass="form-control">
                                     <asp:ListItem Value="Normal" Text="Normal"></asp:ListItem>

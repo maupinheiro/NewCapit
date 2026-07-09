@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using NewCapit.dist.InterfacesCte;
 
 namespace NewCapit.dist.ServicesCte
 {
-    public class CfopService
+    public class CfopService : ICfopService
     {
         public string ObterCFOP(string ufOrigem, string ufDestino, string tipoCte)
         {

@@ -3,23 +3,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <style>
-        .pagination-centered {
-            text-align: center;
-        }
-
-            .pagination-centered table {
-                margin: 0 auto; /* Isso centraliza a tabela da paginação */
-            }
-    </style>
-   <!-- Page Heading -->
+ 
 <div class="content-wrapper">
-    <div class="content-header">
+    <section class="content">
+    <div class="container-fluid">
+        <div class="content-header">
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
              <h1 class="h3 mb-2 text-gray-800">
-                 <i class="fas fa-address-card"></i> Consulta Motoristas</h1>
-             <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server"><i class="fas fa-user-plus"></i> Novo Cadastro</asp:LinkButton>
-             
+                 <i class="fas fa-address-card"></i> Gestão de Motoristas</h1>
+             <asp:LinkButton ID="lnkNovoCadastro" OnClick="lnkNovoCadastro_Click" CssClass="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server"><i class="fas fa-user-plus"></i> Novo Cadastro</asp:LinkButton>             
          </div>
          <!-- Content Graficos -->
          <div class="row">
@@ -261,22 +253,98 @@
          </div>
     </div> 
     
-    <!-- Corpo da grid -->
-    <div class="card shadow mb-4">
-        <div class="card-header">
-            <asp:TextBox ID="myInput" CssClass="form-control myInput" OnTextChanged="myInput_TextChanged" placeholder="Pesquisar ..." AutoPostBack="true" runat="server" Width="100%"></asp:TextBox>
-        </div> 
-        <div class="card-body">
-            <div class="table-responsive">
-                 <asp:GridView runat="server" ID="gvListMotoristas" OnRowDataBound="gvListMotoristas_RowDataBound" CssClass="table table-bordered dataTable1 table-hover" Width="100%" AutoGenerateColumns="False" DataKeyNames="id" AllowPaging="True" PageSize="75" OnPageIndexChanging="gvListMotoristas_PageIndexChanging" ShowHeaderWhenEmpty="True">
-                    <PagerStyle HorizontalAlign="Center" CssClass="pagination-centered" />
+        <!-- Corpo da grid -->
+        <%--<div class="card shadow mb-3"> --%>
+         <div class="card shadow-sm">
+        <div class="card-body">  
+            <%--<div class="row g-2">--%>
+                <div class="row gy-0 mt-1">
+                    <div class="col-md-3">
+                        <asp:TextBox
+                            ID="txtMotorista"
+                            CssClass="form-control"
+                            placeholder="Código, Nome do Motorista..."
+                            runat="server"
+                            AutoPostBack="true"
+                            OnTextChanged="txtMotorista_TextChanged">
+                        </asp:TextBox>
+                    </div>
+                    <div class="col-md-2">
+                         <div class="form-group">                         
+                             <asp:DropDownList ID="ddlTipoMot" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoMot_SelectedIndexChanged">
+                                 <asp:ListItem Value="" Text="Tipo de Motorista..."></asp:ListItem>
+                                 <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
+                                 <asp:ListItem Value="AGREGADO FUNCIONÁRIO" Text="AGREGADO FUNCIONÁRIO"></asp:ListItem>
+                                 <asp:ListItem Value="FUNCIONÁRIO" Text="FUNCIONÁRIO"></asp:ListItem>
+                                 <asp:ListItem Value="TERCEIRO" Text="TERCEIRO"></asp:ListItem>
+                                 <asp:ListItem Value="FUNCIONÁRIO TERCEIRO" Text="FUNCIONÁRIO TERCEIRO" ></asp:ListItem>
+                             </asp:DropDownList>                        
+                         </div>
+                    </div>
+                    <div class="col-md-2">
+                         <div class="form-group">                         
+                             <asp:DropDownList ID="ddlCargo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlCargo_SelectedIndexChanged"> 
+                             </asp:DropDownList>                        
+                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:TextBox
+                            ID="txtTransportadora"
+                            CssClass="form-control"
+                            placeholder="Código, Nome do Proprietário/Transp..."
+                            runat="server"
+                            AutoPostBack="true"
+                            OnTextChanged="txtTransportadora_TextChanged">
+                        </asp:TextBox>
+                    </div>
+                    <div class="col-md-2">
+                         <div class="form-group">                         
+                             <asp:DropDownList ID="ddlSituacao" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlSituacao_SelectedIndexChanged">
+                                 <asp:ListItem Value="ATIVO" Text="ATIVO"></asp:ListItem>
+                                 <asp:ListItem Value="INATIVO" Text="INATIVO"></asp:ListItem>
+                                 <asp:ListItem Value="TODOS" Text="TODOS"></asp:ListItem>                             
+                             </asp:DropDownList>                        
+                         </div>
+                    </div> 
+                </div>
+                <div class="row gy-0 mt-1">
+                        <div class="col-3">
+                            <asp:TextBox
+                                ID="txtFilial"
+                                CssClass="form-control"
+                                placeholder="Filial..."
+                                runat="server"
+                                AutoPostBack="true"
+                                OnTextChanged="txtFilial_TextChanged">
+                            </asp:TextBox>
+                        </div>
+                        <div class="col-3">
+                            <span id="lblVisiveis"></span>
+                        </div>
+                        <div class="col-6">
+                            <span id="lblTotalGeral" runat="server" style="float: right;"></span>
+                        </div>
+                    </div>            
+           <%-- </div>--%>
+            <br />
+            <div class="row g-3">
+                <div class="table-responsive">                
+                <asp:GridView 
+                    ID="gvListMotoristas"
+                    runat="server"
+                    AutoGenerateColumns="False"
+                    CssClass="table-sap"
+                    HeaderStyle-CssClass="gv-header-custom"
+                    AllowPaging="false"
+                    DataKeyNames="id"      
+                    OnPageIndexChanging="gvListMotoristas_PageIndexChanging">                    
                 <Columns>
                     <%--tamanho da foto 45x45--%>
-                    <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="60" ItemStyle-Width="60" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
+                    <asp:ImageField DataImageUrlField="caminhofoto" HeaderText="Mot." ControlStyle-Width="50" ItemStyle-Width="50" ControlStyle-CssClass="rounded-circle" ItemStyle-HorizontalAlign="Center" />
                     
                     <asp:TemplateField HeaderText="MOTORISTA">
                         <ItemTemplate>
-                            <!-- <%# Eval("codmot") + " - " + Eval("nommot")%> -->
+                             <%--<%# Eval("codmot") + " - " + Eval("nommot")%> --%>
                             <%# Eval("codmot") %>
                             <br>
                             <%# Eval("nommot") %>
@@ -314,18 +382,18 @@
                     <asp:TemplateField HeaderText="CELULAR">
                         <ItemTemplate>
                             <%# Eval("fone2")%>
-                            </br>
+                            <%--</br>
                             <asp:Label ID="lblIdade" runat="server"></asp:Label>
-                            </br>
+                            </br>--%>
                         </ItemTemplate>
                     </asp:TemplateField>
 
                     <asp:TemplateField HeaderText="CADASTRO">
                         <ItemTemplate>
                             <%# Eval("cadmot") + " - " + Eval("status")%> 
-                            <br>
+                            <%--<br>
                             <asp:Label ID="lblTempoContrato" runat="server"></asp:Label>
-                            </br>                                 
+                            </br> --%>                                
                         </ItemTemplate>
                     </asp:TemplateField>
 
@@ -341,9 +409,54 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+                <pagertemplate>
+                  <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
+                       <asp:LinkButton ID="btnPrimeiro" runat="server"
+                                        OnClick="btnPrimeiro_Click"
+                                        CssClass="btn btn-light btn-sm">
+<i class="fas fa-angle-double-left"></i>
+                                    </asp:LinkButton>
+                       <asp:LinkButton ID="btnAnterior" runat="server"
+                                        OnClick="btnAnterior_Click"
+                                        CssClass="btn btn-light btn-sm">
+<i class="fa fa-angle-left"></i>
+                                    </asp:LinkButton>
+                       <span class="fw-bold">Página
+                           <asp:Label ID="lblPaginaAtual" runat="server" />
+                            de
+                           <asp:Label ID="lblTotalPaginas" runat="server" />
+                       </span>
+                      <asp:LinkButton
+                          ID="btnProximo" runat="server"
+                          OnClick="btnProximo_Click"
+                          CssClass="btn btn-light btn-sm">
+                          <i class="fa fa-angle-right"></i>
+                      </asp:LinkButton>
+                      <asp:LinkButton
+                          ID="btnUltimo" runat="server"
+                          OnClick="btnUltimo_Click"
+                          CssClass="btn btn-light btn-sm">
+                          <i class="fas fa-angle-double-right"></i>
+                      </asp:LinkButton>
+                      <span>Página:</span>
+                         <asp:TextBox
+                             ID="txtIrPagina" runat="server"
+                             CssClass="form-control form-control-sm"
+                             Style="width: 70px;" />
+                         <asp:LinkButton 
+                              ID="btnIrPagina" runat="server"
+                              CssClass="btn btn-primary btn-sm"
+                              OnClick="btnIrPagina_Click">
+                              Buscar
+                          </asp:LinkButton>
+                  </div>
+                </pagertemplate>
+            </div>
             </div>
         </div>
     </div>
+    </div>
+    </section>
 </div>
    
 </asp:Content>

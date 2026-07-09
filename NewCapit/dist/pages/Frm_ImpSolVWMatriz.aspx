@@ -159,48 +159,48 @@
             });
         }
     </script>
-  <script>
-      function abrirPasta() {
-          document.getElementById("folderInput").click();
-      }
+    <script>
+        function abrirPasta() {
+            document.getElementById("folderInput").click();
+        }
 
-      document.getElementById("folderInput").addEventListener("change", function () {
-          const files = this.files;
-          let totalValidos = 0;
-          const formData = new FormData();
+        document.getElementById("folderInput").addEventListener("change", function () {
+            const files = this.files;
+            let totalValidos = 0;
+            const formData = new FormData();
 
-          for (let file of files) {
-              const nome = file.name.toUpperCase();
-              if (nome.startsWith("SG") && nome.endsWith(".TXT")) {
-                  totalValidos++;
-                  formData.append("files", file);
-              }
-          }
+            for (let file of files) {
+                const nome = file.name.toUpperCase();
+                if (nome.startsWith("SG") && nome.endsWith(".TXT")) {
+                    totalValidos++;
+                    formData.append("files", file);
+                }
+            }
 
-          if (totalValidos === 0) {
-              document.getElementById("lblResumo").innerText =
-                  "Nenhum arquivo SG*.txt encontrado na pasta selecionada";
-              return;
-          }
+            if (totalValidos === 0) {
+                document.getElementById("lblResumo").innerText =
+                    "Nenhum arquivo SG*.txt encontrado na pasta selecionada";
+                return;
+            }
 
-          document.getElementById("lblResumo").innerText =
-              `${totalValidos} arquivos SG*.txt encontrados`;
+            document.getElementById("lblResumo").innerText =
+                `${totalValidos} arquivos SG*.txt encontrados`;
 
-          fetch("UploadHandler.ashx", {
-              method: "POST",
-              body: formData
-          })
-              .then(resp => {
-                  if (!resp.ok) throw new Error("Erro no upload");
-                  // 👉 AGORA sim
-                  iniciar();                                                                
-              })
-              .catch(err => {
-                  console.error(err);
-                  alert("Erro ao enviar arquivos");
-              });
-      });
-  </script>
+            fetch("UploadHandler.ashx", {
+                method: "POST",
+                body: formData
+            })
+                .then(resp => {
+                    if (!resp.ok) throw new Error("Erro no upload");
+                    // 👉 AGORA sim
+                    iniciar();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Erro ao enviar arquivos");
+                });
+        });
+    </script>
 
 
 
@@ -226,26 +226,26 @@
                                 let d = r.d;
 
                                 let bar = document.getElementById('<%= barProgresso.ClientID %>');
-                bar.style.width = d.percentual + '%';
-                bar.innerText = d.percentual + '%';
+                                bar.style.width = d.percentual + '%';
+                                bar.innerText = d.percentual + '%';
 
-                document.getElementById('<%= lblStatus.ClientID %>')
-                    .innerText = `Processando ${d.atual} de ${d.total}`;
+                                document.getElementById('<%= lblStatus.ClientID %>')
+                                    .innerText = `Processando ${d.atual} de ${d.total}`;
 
-                if (d.concluido) {
-                    clearInterval(timer);
-                    document.getElementById('<%= lblStatus.ClientID %>')
-                        .innerText = '✅ Concluído';
-                }
-            })
-                .catch(err => {
-                    console.error(err);
-                    clearInterval(timer);
-                    alert("Erro ao consultar progresso");
-                });
+                                if (d.concluido) {
+                                    clearInterval(timer);
+                                    document.getElementById('<%= lblStatus.ClientID %>')
+                                        .innerText = '✅ Concluído';
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                clearInterval(timer);
+                                alert("Erro ao consultar progresso");
+                            });
 
-        }, 500);
-    })
+                    }, 500);
+                })
                 .catch(err => {
                     console.error(err);
                     alert("Erro ao iniciar importação");
@@ -276,7 +276,7 @@
                             </div>
                             <!-- /.card-tools -->
                         </div>
-                        <div id="divMsg" runat="server" style="display:none">
+                        <div id="divMsg" runat="server" style="display: none">
                             <asp:Label ID="lblMsg" runat="server"></asp:Label>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
@@ -298,43 +298,33 @@
                                             <div class="callout callout-info">
                                                 <div class="row g-3">
                                                     <div class="col-md-12">
+                                                        <asp:UpdatePanel ID="upd" runat="server" UpdateMode="Conditional">
+                                                            <ContentTemplate>
+                                                                <div class="col-md-3">
+                                                                    <input type="file" id="folderInput" webkitdirectory multiple style="display: none" />
+                                                                    <button type="button" onclick="abrirPasta()" class="btn btn-primary">
+                                                                        Selecionar pasta e importar Arquivos
+                                                                    </button>
+                                                                    <br />
 
-                                                      
+                                                                    <span id="lblResumo"></span>
+                                                                </div>   
+                                                                <br />
+                                                                <br />
+                                                                <div class="progress">
+                                                                    <div id="barProgresso" runat="server"
+                                                                        class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                        role="progressbar"
+                                                                        style="width: 0%">
+                                                                    </div>
+                                                                </div>
+                                                                <br />
+                                                                <br />
+                                                                <asp:Label ID="lblStatus" runat="server"
+                                                                    CssClass="alert alert-info" />
 
-                                                          <asp:UpdatePanel ID="upd" runat="server" UpdateMode="Conditional">
-                                                                    <ContentTemplate>
-                                                                        <div class="col-md-3">
-                                                                           <input type="file" id="folderInput" webkitdirectory multiple style="display:none" />
-                                                                            <button type="button" onclick="abrirPasta()" class="btn btn-primary">
-                                                                                Selecionar pasta e importar Arquivos
-                                                                            </button><br />
-
-                                                                            <span id="lblResumo"></span>
-                                                                        </div>
-                                                                         <%-- <div class="col-md-3">
-                                                                               <asp:Button ID="btnImportar" runat="server"
-                                                                                 Text="Importar Arquivos"
-                                                                                 CssClass="btn btn-primary"
-                                                                                 OnClientClick="enviarPasta(); return false;" />
-                                                                          </div>--%>
-                                                                        <br /><br />
-                                                                       
-                                                                        <div class="progress">
-                                                                            <div id="barProgresso" runat="server"
-                                                                                class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                                role="progressbar"
-                                                                                style="width: 0%">
-                                                                                
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <br /><br />
-
-                                                                        <asp:Label ID="lblStatus" runat="server"
-                                                                            CssClass="alert alert-info" />
-
-                                                                    </ContentTemplate>
-                                                                </asp:UpdatePanel>
+                                                            </ContentTemplate>
+                                                        </asp:UpdatePanel>
 
 
 
@@ -342,17 +332,13 @@
                                                 </div>
                                                 <!-- botao /.row -->
                                                 <div class="row g-3">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <span class="details">&nbsp;</span>
                                                             <asp:TextBox ID="txtUsuario" runat="server" class="form-control font-weight-bold" ReadOnly="true"></asp:TextBox>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-7">
-                                                        <div class="form-group">
-                                                            <span class="details">&nbsp;</span>                                                            
-                                                        </div>
-                                                    </div>
+                                                    <div class="col-md-4"></div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <asp:Button ID="btnSair" runat="server" CssClass="btn btn-danger float-right" OnClick="btnSair_Click"
