@@ -12,9 +12,11 @@ using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Domain;
 using FluentEmail.Core;
 using Microsoft.SqlServer.Server;
+using RazorLight.Extensions;
 
 namespace NewCapit.dist.pages
 {
@@ -38,7 +40,6 @@ namespace NewCapit.dist.pages
                     Response.Redirect("Login.aspx");
 
                 }
-
                 VerificarBotoesPagina(btnAlterar: btnSalvar);
                 PreencherComboFiliais();                
                 DateTime dataHoraAtual = DateTime.Now;                
@@ -47,9 +48,6 @@ namespace NewCapit.dist.pages
                 CarregaDadosAgregado();
             }
         }
-        
-
-
         private void PreencherComboFiliais()
         {
             // Consulta SQL que retorna os dados desejados
@@ -140,7 +138,6 @@ namespace NewCapit.dist.pages
                 btnCnpj.Visible = false;
             }
         }
-
         protected void validaCPF()
         {
 
@@ -176,7 +173,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
             // Obtém o ID da transportadora da QueryString           
@@ -185,10 +181,10 @@ namespace NewCapit.dist.pages
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo, tac_etc_ctc=@tac_etc_ctc,banco=@banco,nome_banco=@nome_banco,agencia=@agencia,conta_corrente=@conta_corrente,email=@email,tipo_pagamento=@tipo_pagamento,forma_pagamento=@forma_pagamento,numero_cartao=@numero_cartao,cod_sapiens=@cod_sapiens,cod_rubi=@cod_rubi,gera_ciot=@gera_ciot,valor_ciot=@valor_ciot WHERE ID = @id";
+            string query = "UPDATE tbtransportadoras SET nomtra=@NomTra, contra=@ConTra, fantra=@FanTra, fone1=@Fone1, fone2=@Fone2, endtra=@EndTra, ceptra=@CepTra, baitra=@BaiTra, cidtra=@CidTra, uftra=@UfTra, ativa_inativa=@AtivaInativa, pessoa=@Pessoa, cnpj=@Cnpj, inscestadual=@InscEstadual, numero=@Numero, complemento=@Complemento, antt=@Antt, filial=@Filial, dtcalt=@DtCAlt, usualt=@UsuAlt, tipo=@Tipo, tac_etc_ctc=@tac_etc_ctc,banco=@banco,nome_banco=@nome_banco,agencia=@agencia,conta_corrente=@conta_corrente,email=@email,tipo_pagamento=@tipo_pagamento,forma_pagamento=@forma_pagamento,numero_cartao=@numero_cartao,cod_sapiens=@cod_sapiens,cod_rubi=@cod_rubi,gera_ciot=@gera_ciot,valor_ciot=@valor_ciot, cod_vw=@cod_vw WHERE ID = @id";
 
             // Atualiza informações do usuário logado e data de alteração
-            string usuarioLogado = Session["UsuarioLogado"]?.ToString() ?? "Usuário não identificado";
+            string usuarioLogado = Session["UsuarioLogado"]?.ToString() ?? "Sistema";
             DateTime dataAlteracao = DateTime.Now;
 
             //string codigoRubi = txtCodRubi_Sapiens.Text;
@@ -201,8 +197,8 @@ namespace NewCapit.dist.pages
             using (SqlConnection connection = new SqlConnection(con.ConnectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
-                {
+                //try
+                //{
                     command.Parameters.AddWithValue("@NomTra", txtRazCli.Text);
                     command.Parameters.AddWithValue("@ConTra", txtContato.Text);
                     command.Parameters.AddWithValue("@FanTra", txtFantasia.Text);
@@ -224,7 +220,7 @@ namespace NewCapit.dist.pages
                     command.Parameters.AddWithValue("@Antt", txtAntt.Text);
                     command.Parameters.AddWithValue("@Filial", cbFiliais.SelectedItem.ToString());
                     command.Parameters.AddWithValue("@Tipo", ddlTipo.SelectedItem.ToString());
-                    command.Parameters.AddWithValue("@tac_etc_ctc", tipoTAC.SelectedValue.ToString());
+                    command.Parameters.AddWithValue("@tac_etc_ctc", tipoTAC.SelectedValue);
                     command.Parameters.AddWithValue("@banco", txtCodigoBanco.Text.Trim());
                     command.Parameters.AddWithValue("@nome_banco", ddlBanco.SelectedItem.Text.Trim());
                     command.Parameters.AddWithValue("@agencia", txtAgencia.Text.Trim().ToUpper());
@@ -235,14 +231,22 @@ namespace NewCapit.dist.pages
                     command.Parameters.AddWithValue("@numero_cartao", txtCartao.Text.Trim());
                     command.Parameters.AddWithValue("@cod_rubi", txtCod_Rubi.Text.Trim());
                     command.Parameters.AddWithValue("@cod_sapiens", txtCod_Sapiens.Text.Trim());
+                    command.Parameters.AddWithValue("@cod_vw", txtCodVW.Text.Trim().ToUpper());
                     command.Parameters.AddWithValue("@gera_ciot", ddlGeraCIOT.SelectedValue.ToString());
-                    decimal valorCIOT;
+                decimal valorCIOT;
+                if (ddlTipo.SelectedItem.Text == "EMPRESA")
+                {
+                    command.Parameters.AddWithValue("@valor_ciot", "0.00");
+                }
+                else
+                {
+                    //decimal valorCIOT;
                     if (decimal.TryParse(txtValorCIOT.Text,
-                                         NumberStyles.Any,
-                                         new CultureInfo("pt-BR"),
-                                         out valorCIOT))
+                                             NumberStyles.Any,
+                                             new CultureInfo("pt-BR"),
+                                             out valorCIOT))
                     {
-                        command.Parameters.AddWithValue("@valor_ciot", valorCIOT);
+                        command.Parameters.Add("@valor_ciot", SqlDbType.Decimal).Value = valorCIOT;
                     }
                     else
                     {
@@ -250,7 +254,9 @@ namespace NewCapit.dist.pages
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Valor do CIOT inválido. Verifique, por favor!');", true);
                         txtValorCIOT.Focus();
                     }
-                    command.Parameters.AddWithValue("@ID", id);
+                }
+
+                command.Parameters.AddWithValue("@ID", id);
 
                     connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
@@ -265,15 +271,57 @@ namespace NewCapit.dist.pages
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "MensagemDeAlerta", "alert('Nenhum registro foi encontrado para atualizar.');", true);
                     }
-                }
-                catch (Exception ex)
+                //}
+                //catch (Exception ex)
+                //{
+                //    string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
+                //    ClientScript.RegisterStartupScript(this.GetType(), "Erro", $"alert('{mensagemErro}');", true);
+                //}
+            }
+        }
+        protected void txtCodVW_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtCodVW.Text))
+                return;
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+
+                string sql = @"SELECT TOP 1 *
+                       FROM tbtransportadoras
+                       WHERE cod_vw = @cod_vw";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    string mensagemErro = $"Erro ao atualizar: {HttpUtility.JavaScriptStringEncode(ex.Message)}";
-                    ClientScript.RegisterStartupScript(this.GetType(), "Erro", $"alert('{mensagemErro}');", true);
+                    cmd.Parameters.AddWithValue("@cod_vw", txtCodVW.Text.Trim());
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            // Encontrou                            
+                            MostrarMsg("Código VW já cadastrado para: " + dr["codtra"].ToString() + " - " + dr["fantra"].ToString(), "warning");
+                            txtCodVW.Focus();
+                            return;
+                        }
+                    }
                 }
             }
         }
+        protected void MostrarMsg(string mensagem, string tipo = "warning")
+        {
+            divMsg.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
+            lblMsgGeral.InnerText = mensagem;
+            divMsg.Style["display"] = "block";
 
+            string script = @"setTimeout(function() {
+                        var div = document.getElementById('divMsg');
+                        if (div) div.style.display = 'none';
+                      }, 5000);";
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
+        }
         public void CarregaDadosAgregado()
         {
             SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
@@ -406,10 +454,10 @@ namespace NewCapit.dist.pages
                 {
                     txtValorCIOT.Text = valorCIOT.ToString("N2", new CultureInfo("pt-BR"));
                 }
+                txtCodVW.Text = dt.Rows[0][42].ToString();
             }
 
         }        
-
         [System.Web.Services.WebMethod]
         public static string BuscarBancos(string codigo)
         {
@@ -462,7 +510,7 @@ namespace NewCapit.dist.pages
                 ddlBanco.DataValueField = "codigo";
                 ddlBanco.DataBind();
 
-                ddlBanco.Items.Insert(0, new ListItem("Selecione...", ""));
+                ddlBanco.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione...", ""));
             }
         }
         protected void txtCodigoBanco_TextChanged(object sender, EventArgs e)
@@ -483,7 +531,7 @@ namespace NewCapit.dist.pages
                 {
                     string codigo = dr["codigo"].ToString();
 
-                    ListItem item = ddlBanco.Items.FindByValue(codigo);
+                    System.Web.UI.WebControls.ListItem item = ddlBanco.Items.FindByValue(codigo);
 
                     if (item != null)
                     {
@@ -499,7 +547,6 @@ namespace NewCapit.dist.pages
                 }
             }
         }
-
         protected void ddlBanco_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtCodigoBanco.Text = ddlBanco.SelectedValue.ToString();

@@ -324,13 +324,13 @@ namespace NewCapit.dist.pages
                     txtPercentualAluguelCarreta.Text = Convert.ToDecimal(dr["aluguel_carreta"]).ToString("N2");
                     txtDespAdm.Text = Convert.ToDecimal(dr["despesa_adm"]).ToString("N2");  
                     lnkUrl.Text = dr["resolucao_vigente"].ToString();
-                    lnkUrl.NavigateUrl = dr["endereco_resolucao"].ToString();
-                    txtGRIS.Text = Convert.ToDecimal(dr["gris"]).ToString("N2", new CultureInfo("pt-BR"));
-                    txtColeta.Text = Convert.ToDecimal(dr["coleta"]).ToString("N2", new CultureInfo("pt-BR"));
-                    txtEntrega.Text = Convert.ToDecimal(dr["entrega"]).ToString("N2", new CultureInfo("pt-BR"));
-                    txtTDE.Text = Convert.ToDecimal(dr["tde"]).ToString("N2", new CultureInfo("pt-BR"));
-                    txtTDA.Text = Convert.ToDecimal(dr["tda"]).ToString("N2", new CultureInfo("pt-BR"));
-                    txtTotalFrete.Text = Convert.ToDecimal(dr["total_frete"]).ToString("N2", new CultureInfo("pt-BR"));
+                    lnkUrl.NavigateUrl = dr["endereco_resolucao"].ToString();                    
+                    txtGRIS.Text = FormatarDecimal(dr["gris"]);
+                    txtColeta.Text = FormatarDecimal(dr["coleta"]);
+                    txtEntrega.Text = FormatarDecimal(dr["entrega"]);
+                    txtTDE.Text = FormatarDecimal(dr["tde"]);
+                    txtTDA.Text = FormatarDecimal(dr["tda"]);
+                    txtTotalFrete.Text = FormatarDecimal(dr["total_frete"]);
                     txtCodConsignatario.Text = dr["cod_consignatario"].ToString();
                     cboConsignatario.SelectedItem.Text = dr["consignatario"].ToString();
                     txtCidConsignatario.Text = dr["cid_consignatario"].ToString();
@@ -360,6 +360,11 @@ namespace NewCapit.dist.pages
                 dr.Close();
             }
             
+        }
+        private string FormatarDecimal(object valor)
+        {
+            decimal numero = valor == DBNull.Value ? 0m : Convert.ToDecimal(valor);
+            return numero.ToString("N2", new CultureInfo("pt-BR"));
         }
         private void SetSelectedValue(DropDownList ddl, string value)
         {

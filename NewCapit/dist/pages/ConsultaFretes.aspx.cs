@@ -38,7 +38,6 @@ namespace NewCapit.dist.pages
             gvListFretes.PageIndex = e.NewPageIndex;
             CarregarGridFretes();  // Método para recarregar os dados no GridView
         }
-
         protected void Editar(object sender, EventArgs e)
         {
             LinkButton btn = (LinkButton)sender;
@@ -47,8 +46,7 @@ namespace NewCapit.dist.pages
             string id = gvListFretes.DataKeys[row.RowIndex].Value.ToString();
 
             Response.Redirect("Frm_Alt_TabelaPrecoMatriz.aspx?id=" + id);
-        }
-        
+        }       
 
         protected void CarregarGridFretes()
         {
@@ -149,142 +147,19 @@ namespace NewCapit.dist.pages
                 gvListFretes.DataBind();
             }
 
-
-            //int pageSize = 35;
-            //int paginaAtual = Session["Pagina"] != null ? (int)Session["Pagina"] : 1;
-            //string connStr = ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
-            //using (SqlConnection conn = new SqlConnection(connStr))
-            //{
-            //    string query = @"
-            //    SELECT 
-            //        cod_frete, cod_pagador, pagador,
-            //        cod_expedidor, expedidor, cid_expedidor, uf_expedidor,
-            //        cod_recebedor, recebedor, cid_recebedor, uf_recebedor,
-            //        situacao
-            //    FROM tbtabeladefretes
-            //    WHERE fl_exclusao IS NULL";
-
-            //    SqlCommand cmd = new SqlCommand();
-
-            //    cmd.Connection = conn;
-
-            //    // FILTRO: cod_frete
-            //    if (!string.IsNullOrEmpty(txtCodigo.Text))
-            //    {
-            //        query += " AND cod_frete = @Codigo";
-            //        cmd.Parameters.AddWithValue("@Codigo", txtCodigo.Text.Trim());
-            //    }
-
-            //    // FILTRO: pagador
-            //    if (!string.IsNullOrEmpty(txtPagador.Text))
-            //    {
-            //        query += " AND (cod_pagador = @codPagador OR pagador LIKE @nomePagador)";
-            //        cmd.Parameters.AddWithValue("@codPagador", txtPagador.Text.Trim());
-            //        cmd.Parameters.AddWithValue("@nomePagador", "%" + txtPagador.Text.Trim().ToUpper() + "%");
-            //    }
-
-            //    // FILTRO: expedidor
-            //    if (!string.IsNullOrEmpty(txtExpedidor.Text))
-            //    {
-            //        query += " AND (cod_expedidor = @codExpedidor OR expedidor LIKE @nomeExpedidor)";
-            //        cmd.Parameters.AddWithValue("@codExpedidor", txtExpedidor.Text.Trim());
-            //        cmd.Parameters.AddWithValue("@nomeExpedidor", "%" + txtExpedidor.Text.Trim().ToUpper() + "%");
-            //    }
-
-            //    // FILTRO: recebedor
-            //    if (!string.IsNullOrEmpty(txtRecebedor.Text))
-            //    {
-            //        query += " AND (cod_recebedor = @codRecebedor OR recebedor LIKE @nomeRecebedor)";
-            //        cmd.Parameters.AddWithValue("@codRecebedor", txtRecebedor.Text.Trim());
-            //        cmd.Parameters.AddWithValue("@nomeRecebedor", "%" + txtRecebedor.Text.Trim().ToUpper() + "%");
-            //    }
-
-            //    // ORDER BY (sempre no final)
-            //    query += " ORDER BY pagador";
-
-            //    cmd.CommandText = query;
-
-            //    SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //    DataTable dt = new DataTable();
-
-            //    conn.Open();
-
-            //    // 🔢 TOTAL
-            //    SqlCommand cmdTotal = new SqlCommand($@"
-            //    SELECT COUNT(*) 
-            //    FROM tbtabeladefretes
-            //    {query}", conn);
-
-            //    foreach (var p in cmd)
-            //        cmdTotal.Parameters.AddWithValue(p.ParameterName, p.Value);
-
-            //    int totalRegistros = (int)cmdTotal.ExecuteScalar();
-            //    int totalPaginas = (int)Math.Ceiling((double)totalRegistros / pageSize);
-
-            //    lblTotalGeral.InnerText = $"Página {paginaAtual} de {totalPaginas} | Total: {totalRegistros}";
-            //    lblPaginaAtual.Text = paginaAtual.ToString().Trim();
-            //    lblTotalPaginas.Text = totalPaginas.ToString().Trim();
-            //    Session["TotalPaginas"] = totalPaginas;
-
-            //    // 📋 GRID
-            //    string sql = $@"
-            //    WITH Dados AS(
-            //        SELECT *,
-            //        ROW_NUMBER() OVER(ORDER BY pagador ASC) AS RowNum
-            //        FROM tbtabeladefretes
-            //        {query}
-            //    )
-            //    SELECT *
-            //    FROM Dados
-            //    WHERE RowNum BETWEEN ((@pagina - 1) * @pageSize + 1)
-            //             AND (@pagina * @pageSize)";
-
-            //    SqlCommand cmdFretes = new SqlCommand(sql, con);
-
-            //    foreach (var p in cmd)
-            //        cmd.Parameters.AddWithValue(p.ParameterName, p.Value);
-
-            //    cmd.Parameters.AddWithValue("@pagina", paginaAtual);
-            //    cmd.Parameters.AddWithValue("@pageSize", pageSize);
-
-            //    SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //    DataTable dt = new DataTable();
-            //    da.Fill(dt);
-
-            //    gvListFretes.DataSource = dt;
-            //    gvListFretes.DataBind();
-
-
-
-
-
-
-
-
-
-            //da.Fill(dt);
-
-            //gvListFretes.DataSource = dt;
-            //gvListFretes.DataBind();
-
-            //Session["Tabela"] = dt;
         }        
-
         protected void txtCodigo_TextChanged(object sender, EventArgs e)
         {
             CarregarGridFretes();
         }
-
         protected void txtPagador_TextChanged(object sender, EventArgs e)
         {
             CarregarGridFretes();
         }
-
         protected void txtExpedidor_TextChanged(object sender, EventArgs e)
         {
             CarregarGridFretes();
         }
-
         protected void txtRecebedor_TextChanged(object sender, EventArgs e)
         {
             CarregarGridFretes();
@@ -336,12 +211,10 @@ namespace NewCapit.dist.pages
                 CarregarGridFretes();
             }
         }
-
         protected void lnkNovoCadastro_Click(object sender, EventArgs e)
         {
             Response.Redirect("Frm_TabelaPrecoMatriz.aspx");
         }
-
         protected void gvListFretes_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             VerificarBotoesGrid(e, idBtnEditar: "lnkEditar", idBtnExcluir: "lnkRemover");

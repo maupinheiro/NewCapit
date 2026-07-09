@@ -9,6 +9,9 @@ using GMaps.Classes;
 using ICSharpCode.SharpZipLib.Zip;
 using MathNet.Numerics;
 using MathNet.Numerics.Providers.SparseSolver;
+using NewCapit.dist.Models;
+using NewCapit.dist.Services;
+using NewCapit.dist.ServicesCte;
 using NewCapit.Models.Krona;
 using Newtonsoft.Json;
 using NPOI.SS.Formula;
@@ -55,7 +58,14 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using static NewCapit.dist.pages.Frm_TabelaPrecoMatriz;
 using static NPOI.HSSF.Util.HSSFColor;
+using static System.Reflection.Metadata.BlobBuilder;
 using DataTable = System.Data.DataTable;
+using NewCapit.dist.InterfacesCte;
+using System.Net.NetworkInformation;
+using DocumentFormat.OpenXml.Spreadsheet;
+using WebPage = System.Web.UI.Page;
+using DocumentFormat.OpenXml.VariantTypes;
+using NewCapit.dist.ModelsCVA;
 
 
 namespace NewCapit.dist.pages
@@ -72,6 +82,11 @@ namespace NewCapit.dist.pages
         string cvaOC;
         string chegada;
         string andamentoCarga;
+
+        private DataTable dtStatus;
+        private DataTable dtEmpresas;
+        private DataTable dtEstabelecimentos;
+        private DataTable dtVeiculos;
         public string Data { get; set; } // errado se não mapear
 
         DateTime dataHoraAtual = DateTime.Now;
@@ -87,18 +102,12 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-                    // txtAtualizadoPor.Text = nomeUsuario;
                 }
                 else
                 {
-                    var lblUsuario = "<Usuário>";
-                    // txtAtualizadoPor.Text = lblUsuario;
-                    //lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                     Response.Redirect("Login.aspx");
-
                 }
                 DateTime dataHoraAtual = DateTime.Now;
-                //lblAtualizadoEm.Text = dataHoraAtual.ToString("dd/MM/yyyy HH:mm");
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
 
                 PreencherComboMotoristas();
@@ -106,39 +115,71 @@ namespace NewCapit.dist.pages
                 CarregaMap(txtPlaca.Text);
                 PreencherClienteInicial();
                 PreencherClienteFinal();
-
-               
+                CarregarCombos();
+                CarregarColetas();
             }
             CarregaFoto();
-            //CarregarFotoMotorista(fotoMotorista);
-
-            //VerificaCargasFechadas();
-
         }
-        //private void PreencherEmpresas(DropDownList ddlEmpresa)
-        //{
-        //    string query = "SELECT codigo, descricao FROM tbempresa ORDER BY descricao";
+        protected void btnCalcular_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            RepeaterItem item = (RepeaterItem)btn.NamingContainer;
 
-        //    using (SqlConnection conn = new SqlConnection(
-        //        WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-        //    {
-        //        conn.Open();
+            // Recupera os controles do Repeater           
+            DropDownList ddlTipoCte = (DropDownList)item.FindControl("ddlTipoCte");
+            GridView gvComponentes = (GridView)item.FindControl("gvComponentes");
 
-        //        SqlCommand cmd = new SqlCommand(query, conn);
+            Label lblCFOP = (Label)item.FindControl("lblCFOP");
+            Label lblTotalFrete = (Label)item.FindControl("lblTotalFrete");
+            Label lblICMS = (Label)item.FindControl("lblICMS");
+            Label lblIBS = (Label)item.FindControl("lblIBS");
+            Label lblCBS = (Label)item.FindControl("lblCBS");
+            Label lblTotal = (Label)item.FindControl("lblTotal");
 
-        //        using (SqlDataReader reader = cmd.ExecuteReader())
-        //        {
-        //            ddlEmpresa.DataSource = reader;
-        //            ddlEmpresa.DataTextField = "descricao";
-        //            ddlEmpresa.DataValueField = "codigo";
-        //            ddlEmpresa.DataBind();
+            var service = new CteService(
+                new CfopService(),
+                new FreteService(),
+                new ImpostoService()
+            );
 
-        //ddlEmpresa.Items.Insert(0,
-        //                new System.Web.UI.WebControls.ListItem("Selecione a FILIAL", "0"));                    
-        //        }
-        //    }
-        //}
-        
+            string ufOrigem = txtUfOrigem.Text;
+            string ufDestino = txtUfDestino.Text;
+            string tipoCte = ddlTipoCte.SelectedValue;
+
+            List<ComponenteFrete> componentes = new List<ComponenteFrete>();
+
+            foreach (GridViewRow row in gvComponentes.Rows)
+            {
+                TextBox txtTipo = (TextBox)row.FindControl("txtTipo");
+                TextBox txtValor = (TextBox)row.FindControl("txtValor");
+
+                decimal valor = 0;
+                decimal.TryParse(txtValor.Text, out valor);
+
+                componentes.Add(new ComponenteFrete
+                {
+                    Tipo = txtTipo.Text,
+                    Valor = valor
+                });
+            }
+
+            var resultado = service.CalcularCte(
+                ufOrigem,
+                ufDestino,
+                tipoCte,
+                componentes,
+                12m, // ICMS
+                18m, // IBS
+                9m   // CBS
+            );
+
+            lblCFOP.Text = resultado.CFOP;
+            lblTotalFrete.Text = resultado.TotalComponentes.ToString("N2");
+            lblICMS.Text = resultado.ICMS.ToString("N2");
+            lblIBS.Text = resultado.IBS.ToString("N2");
+            lblCBS.Text = resultado.CBS.ToString("N2");
+            lblTotal.Text = resultado.TotalGeral.ToString("N2");
+        }
         public void CarregaFoto()
         {
             var codigo = txtCodMotorista.Text.Trim();
@@ -171,7 +212,6 @@ namespace NewCapit.dist.pages
             }
 
         }
-
         public void CarregaNumColeta()
         {
             if (HttpContext.Current.Request.QueryString["carregamento"].ToString() != "")
@@ -615,427 +655,1444 @@ namespace NewCapit.dist.pages
             idviagem = num_coleta;
             CarregarColetas(idviagem);
 
-            //GetPedidos();
-
-
         }
+        // protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        // {
+        //     //if (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem)
+        //     //    return;
+
+        //     Label lblTotal = (Label)e.Item.FindControl("lblTotal");
+        //     if (lblTotal != null)
+        //     {
+        //         lblTotal.Text = "0,00";
+        //     }
+        //     Label lblCBS = (Label)e.Item.FindControl("lblCBS");
+        //     if (lblCBS != null)
+        //     {
+        //         lblCBS.Text = "0,00";
+        //     }
+        //     Label lblTotalFrete = (Label)e.Item.FindControl("lblTotalFrete");
+        //     if (lblTotalFrete != null)
+        //     {
+        //         lblTotalFrete.Text = "0,00";
+        //     }
+        //     Label lblICMS = (Label)e.Item.FindControl("lblICMS");
+        //     if (lblICMS != null)
+        //     {
+        //         lblICMS.Text = "0,00";
+        //     }
+        //     Label lblIBS = (Label)e.Item.FindControl("lblIBS");
+        //     if (lblIBS != null)
+        //     {
+        //         lblIBS.Text = "0,00";
+        //     }
+
+        //     DropDownList ddlTipoCte = (DropDownList)e.Item.FindControl("ddlTipoCte");
+        //     if (ddlTipoCte != null)
+        //     {
+        //         string tipo = ddlTipoCte.SelectedValue;
+        //     }
+
+
+
+        //     var ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+        //     //if (ddlStatus == null) return;
+
+        //     // 1) carrega os status da tabela
+        //     const string sql = "SELECT cod_status, ds_status FROM tb_status";
+        //     using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //     using (var cmd = new SqlCommand(sql, conn))
+        //     {
+        //         try
+        //         {
+        //             conn.Open();
+        //             using (var rdr = cmd.ExecuteReader())
+        //             {
+        //                 ddlStatus.DataSource = rdr;
+        //                 ddlStatus.DataTextField = "ds_status";
+        //                 ddlStatus.DataValueField = "ds_status";
+        //                 ddlStatus.DataBind();
+        //             }
+        //             var drv = (HiddenField)e.Item.FindControl("hdfStatus"); ;
+        //             string statusDaColeta = drv.Value;  // o nome da coluna do seu DataTable
+        //             // opcional: insere item em branco no topo
+        //             ddlStatus.Items.Insert(0, new System.Web.UI.WebControls.ListItem(statusDaColeta, "0"));
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             // trate o erro como preferir
+        //             Response.Write("Erro ao carregar status: " + ex.Message);
+        //             return;
+        //         }
+        //     }
+
+        //     // Estabelecimentos no CVA
+        //     var ddlEstabelecimentoCVA = (DropDownList)e.Item.FindControl("ddlEstabelecimentoCVA");            
+        //     if (ddlEstabelecimentoCVA == null) return;
+        //     const string sqlEstabelecimentos = "select cod_estabelecimento, nom_estabelecimento from tbestabelecimentos where fl_exclusao is null and sit_estabelecimento = 'ATIVO'";
+        //     using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         using (var cmd = new SqlCommand(sqlEstabelecimentos, conn))
+        //     {
+        //         try
+        //         {
+        //             conn.Open();
+        //             using (var rdr = cmd.ExecuteReader())
+        //             {
+        //                 ddlEstabelecimentoCVA.DataSource = rdr;
+        //                 ddlEstabelecimentoCVA.DataTextField = "nom_estabelecimento";
+        //                 ddlEstabelecimentoCVA.DataValueField = "cod_estabelecimento";
+        //                 ddlEstabelecimentoCVA.DataBind();
+        //             }                  
+        //             //var drv = (HiddenField)e.Item.FindControl("hdfCVA"); ;
+        //             //string filialDaColeta = drv.Value;  // o nome da coluna do seu DataTable
+        //             // opcional: insere item em branco no topo
+        //             //cbFiliais.Items.Insert(0, new System.Web.UI.WebControls.ListItem(filialDaColeta, "0"));
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             // trate o erro como preferir
+        //             Response.Write("Erro ao carregar filiais: " + ex.Message);
+        //         }
+        //     }
+
+        //     // Filiais na Notas Fiscais
+        //     var ddlEmpresa = (DropDownList)e.Item.FindControl("ddlEmpresa");
+        //     if (ddlEmpresa == null) return;
+        //     const string sqlEmpresas = "SELECT codigo, descricao FROM tbempresa";
+        //     using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //     using (var cmd = new SqlCommand(sqlEmpresas, conn))
+        //     {
+        //         try
+        //         {
+        //             conn.Open();
+        //             using (var rdr = cmd.ExecuteReader())
+        //             {
+        //                 ddlEmpresa.DataSource = rdr;
+        //                 ddlEmpresa.DataTextField = "descricao";
+        //                 ddlEmpresa.DataValueField = "codigo";
+        //                 ddlEmpresa.DataBind();
+        //             }
+        //             ddlEmpresa.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione a FILIAL", "0")); 
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             // trate o erro como preferir
+        //             Response.Write("Erro ao carregar filiais: " + ex.Message);
+        //         }
+        //     }
+
+        //     // Veiculo cobrado
+        //     var ddlVeiculoCobrado = (DropDownList)e.Item.FindControl("ddlVeiculoCobrado");
+        //     if (ddlVeiculoCobrado == null) return;
+        //     const string sqlVeiculoCobrado = @"
+        //     SELECT DISTINCT RTRIM(LTRIM(descricao_tng)) AS descricao_tng
+        //     FROM tbtipoveic
+        //     WHERE descricao_tng IS NOT NULL
+        //     ORDER BY descricao_tng";
+        //     using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //     using (var cmd = new SqlCommand(sqlVeiculoCobrado, conn))
+        //     {
+        //         try
+        //         {
+        //             conn.Open();
+        //             using (var rdr = cmd.ExecuteReader())
+        //             {
+        //                 ddlVeiculoCobrado.DataSource = rdr;
+        //                 ddlVeiculoCobrado.DataTextField = "descricao_tng";
+        //                 ddlVeiculoCobrado.DataValueField = "descricao_tng";
+        //                 ddlVeiculoCobrado.DataBind();
+        //             }
+        //             ddlVeiculoCobrado.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione o VEICULO", "0"));
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             // trate o erro como preferir
+        //             Response.Write("Erro ao carregar filiais: " + ex.Message);
+        //         }
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         // ... (suas declarações de variáveis iniciais) ...
+        //         string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
+        //         string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
+        //         string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
+        //         string ufOrigem = DataBinder.Eval(e.Item.DataItem, "uf_expedidor")?.ToString();
+        //         string ufDestino = DataBinder.Eval(e.Item.DataItem, "uf_recebedor")?.ToString();
+        //         Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
+        //         HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
+        //         TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUfInicio");
+        //         TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUfFim");
+
+        //         // Abertura CVA
+        //         TextBox txtNumCVA = (TextBox)e.Item.FindControl("txtNumCVA");
+        //         string descMaterial = DataBinder.Eval(e.Item.DataItem, "desc_material")?.ToString();
+        //         string numSolicitacao = DataBinder.Eval(e.Item.DataItem, "carga")?.ToString();
+        //         string cvaSolicitacao = DataBinder.Eval(e.Item.DataItem, "cva")?.ToString();                
+        //         TextBox txtSitCVA = (TextBox)e.Item.FindControl("txtSitCVA"); 
+        //         if (string.IsNullOrWhiteSpace(cvaSolicitacao))
+        //         {                    
+        //             txtSitCVA.Text = "EM LANCAMENTO";
+        //             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //             {
+        //                 con.Open();
+
+        //                 // Procura a solicitação
+        //                 string sqlR1 = "SELECT r1_sol_tipo_geracao FROM tbsolicitacoes_r1 WHERE r1_sol_numero = @num";
+
+        //                 using (SqlCommand cmd = new SqlCommand(sqlR1, con))
+        //                 {
+        //                     cmd.Parameters.AddWithValue("@num", numSolicitacao);
+
+        //                     object tipoGeracao = cmd.ExecuteScalar();
+
+        //                     if (tipoGeracao == null)
+        //                     {
+        //                         MostrarMsgSolicitacao(e.Item, "Solicitação não encontrada. Faça a importação manual.", "danger");
+        //                         return;
+        //                     }
+
+        //                     // Procura o tipo de viagem
+        //                     string sqlTipo = "SELECT descricao FROM tbtipogeracaosolicitacao WHERE codvw = @cod";
+
+        //                     using (SqlCommand cmd2 = new SqlCommand(sqlTipo, con))
+        //                     {
+        //                         cmd2.Parameters.AddWithValue("@cod", tipoGeracao.ToString());
+
+        //                         object descricao = cmd2.ExecuteScalar();
+
+        //                         if (descricao == null)
+        //                         {
+        //                             ScriptManager.RegisterStartupScript(this, GetType(), "msg",
+        //                                 "alert('Tipo de geração não encontrado na tabela tbtipogeracaosolicitacao.');", true);
+
+
+        //                         }
+        //                         else
+        //                         {
+        //                             //txtTipoViagemCVA.Text = descricao.ToString();
+        //                         }
+        //                     }
+        //                 }
+        //             }
+
+        //         }
+        //         else
+        //         {
+        //             txtSitCVA.Text = "CADASTRADO";
+
+        //         }
+        //         DateTime previsao, dataHora;
+        //         DateTime agora = DateTime.Now;
+
+        //         if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
+        //         {
+        //             DateTime dataPrevisao = previsao.Date;
+        //             DateTime dataHoraComparacao = new DateTime(
+        //                 dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day,
+        //                 dataHora.Hour, dataHora.Minute, dataHora.Second
+        //             );
+
+        //             // Lógica para "Atrasado"
+        //             if (dataHoraComparacao < agora)
+        //             {
+        //                 lblAtendimento.Text = "Atrasado";
+        //                 // CORREÇÃO AQUI: Mova o BgColor para dentro do style
+        //                 tdAtendimento.Attributes["style"] = "background-color: Red; color: white; font-weight: bold;";
+        //             }
+        //             // Lógica para "No Prazo"
+        //             else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay)
+        //             {
+        //                 lblAtendimento.Text = "No Prazo";
+        //                 // CORREÇÃO AQUI: Mova o BgColor para dentro do style
+        //                 tdAtendimento.Attributes["style"] = "background-color: Green; color: white; font-weight: bold;";
+        //             }
+        //             // Lógica para "Antecipado"
+        //             else if (dataHoraComparacao > agora)
+        //             {
+        //                 lblAtendimento.Text = "Antecipado";
+        //                 // CORREÇÃO AQUI: Mova o BgColor para dentro do style
+        //                 tdAtendimento.Attributes["style"] = "background-color: Orange; color: white; font-weight: bold;";
+        //             }
+        //             else
+        //             {
+        //                 lblAtendimento.Text = status;
+        //                 // Opcional: Limpar estilos se não cair em nenhuma condição
+        //                 tdAtendimento.Attributes["style"] = "";
+        //             }
+        //         }
+
+
+
+
+
+        //     }
+        //     if (e.Item.ItemType == ListItemType.Item ||
+        //  e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         HiddenField hdIdCarga =
+        //             (HiddenField)e.Item.FindControl("hdIdCarga");
+
+        //         GridView gvPedidos =
+        //             (GridView)e.Item.FindControl("gvPedidos");
+
+        //         UpdatePanel upd =
+        //             (UpdatePanel)e.Item.FindControl("updTabs");
+
+        //         if (hdIdCarga != null && gvPedidos != null)
+        //         {
+        //             int idCarga;
+        //             if (int.TryParse(hdIdCarga.Value, out idCarga))
+        //             {
+        //                 CarregarPedidos(idCarga, gvPedidos);
+
+        //                 // força renderização do conteúdo
+        //                 //upd.Update();
+        //             }
+        //         }
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item ||
+        // e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         // 🔎 Pega o status
+        //         HiddenField hdfStatus = (HiddenField)e.Item.FindControl("hdfStatus");
+
+        //         if (hdfStatus != null &&
+        //             hdfStatus.Value.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
+        //         {
+        //             // 🔘 Botões
+        //             Button btnAtualizar = (Button)e.Item.FindControl("btnAtualizarColeta");
+        //             Button btnPedagioManual = (Button)e.Item.FindControl("btnPedagadioManual");
+        //             Button btnWhats = (Button)e.Item.FindControl("WhatsApp");
+        //             Button btnOrdem = (Button)e.Item.FindControl("btnOrdemColeta");
+
+        //             if (btnAtualizar != null)
+        //             {
+        //                 btnAtualizar.Enabled = false;
+        //                 btnAtualizar.CssClass += " disabled";
+        //             }
+
+        //             if (btnWhats != null)
+        //             {
+        //                 btnWhats.Enabled = false;
+        //                 btnWhats.CssClass += " disabled";
+        //             }
+
+        //             if (btnOrdem != null)
+        //             {
+        //                 btnOrdem.Enabled = false;
+        //                 btnOrdem.CssClass += " disabled";
+        //             }
+        //         }
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item ||
+        // e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+        //         string carga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+        //         using (SqlConnection conn = new SqlConnection(
+        //             ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //         {
+        //             string sqlr = @"SELECT id_rota, descricao_rota 
+        //                    FROM tbrotaskrona 
+        //                    ORDER BY descricao_rota";
+
+        //             using (SqlCommand cmd = new SqlCommand(sqlr, conn))
+        //             {
+        //                 conn.Open();
+        //                 ddlRotaKrona.DataSource = cmd.ExecuteReader();
+        //                 ddlRotaKrona.DataTextField = "descricao_rota";
+        //                 ddlRotaKrona.DataValueField = "id_rota";
+        //                 ddlRotaKrona.DataBind();
+        //             }
+        //         }
+
+        //         string sqlg = "select rota_krona from tbcargas where carga=" + carga + " and  rota_krona is not null";
+        //         System.Data.DataTable dt = new System.Data.DataTable();
+        //         SqlDataAdapter adp = new SqlDataAdapter(sqlg, con);
+        //         con.Open();
+        //         adp.Fill(dt);
+        //         con.Close();
+
+
+
+
+        //         if (dt.Rows.Count > 0)
+        //         {
+        //             string texto = dt.Rows[0][0].ToString();
+
+
+        //             //ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem(texto, codigo));
+
+        //             ddlRotaKrona.SelectedItem.Text = texto;
+        //         }
+        //         else
+        //         {
+        //             ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
+        //         }
+
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item ||
+        //e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         string carga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+        //         DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
+
+
+        //         string sqlg = "select percurso from tbcargas where carga=" + carga + " and percurso is not null";
+        //         System.Data.DataTable dt = new System.Data.DataTable();
+        //         SqlDataAdapter adp = new SqlDataAdapter(sqlg, con);
+        //         con.Open();
+        //         adp.Fill(dt);
+        //         con.Close();
+
+
+
+
+        //         if (dt.Rows.Count > 0)
+        //         {
+        //             string texto = dt.Rows[0][0].ToString();
+
+
+        //             //ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem(texto, codigo));
+
+        //             ddlPercurso.SelectedItem.Text = texto;
+        //         }
+
+
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         string idViagem = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+        //         GridView gv = (GridView)e.Item.FindControl("gvCte");
+        //         int index = e.Item.ItemIndex;
+
+        //         if (gv != null)
+        //         {
+        //             CarregarGridCte(gv, idViagem, index);
+        //         }
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         string idCarga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+        //         GridView gvn = (GridView)e.Item.FindControl("gvNF");
+        //         int index = e.Item.ItemIndex;
+
+        //         if (gvn != null)
+        //         {
+        //             CarregarNF(idCarga, gvn);
+        //         }
+        //     }
+        //     if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         GridView gv = (GridView)e.Item.FindControl("gvNF");
+        //         gv.RowCommand += gvNF_RowCommand;
+        //     }
+
+        //     if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        //     {
+        //         // Como no HTML está <asp:Button>, fazemos o Cast para Button aqui
+        //         Button btnGeraDoc = (Button)e.Item.FindControl("btnGeraDoc");
+
+        //         if (btnGeraDoc != null)
+        //         {
+        //             // Força o ScriptManager a tratar este Button específico como PostBack total (ignora o AJAX)
+        //             ScriptManager.GetCurrent(this).RegisterPostBackControl(btnGeraDoc);
+        //         }
+        //     }
+
+        // }
 
         protected void rptColetas_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem)
+            if (e.Item.ItemType != ListItemType.Item &&
+                e.Item.ItemType != ListItemType.AlternatingItem)
                 return;
 
-            var ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
-            if (ddlStatus == null) return;
+            InicializarLabels(e.Item);
 
-            // 1) carrega os status da tabela
-            const string sql = "SELECT cod_status, ds_status FROM tb_status";
-            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sql, conn))
+            CarregarStatus(e.Item);
+            CarregarEstabelecimentosCVA(e.Item);
+            CarregarEmpresas(e.Item);
+            CarregarVeiculos(e.Item);
+            ProcessarCVA(e.Item);
+            AtualizarAtendimento(e.Item);
+            CarregarPedidos(e.Item);
+            DesabilitarBotoes(e.Item);
+            CarregarRotaKrona(e.Item);
+            CarregarPercurso(e.Item);
+            CarregarGridCTe(e.Item);
+            CarregarGridNF(e.Item);
+            //RegistrarEventos(e.Item);
+
+            string numSolicitacao = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
+
+            CarregarDadosSolicitacao(e.Item, numSolicitacao);
+
+
+        }
+        private void CarregarPercurso(RepeaterItem item)
+        {
+            DropDownList ddlPercurso = (DropDownList)item.FindControl("ddlPercurso");
+
+            if (ddlPercurso == null)
+                return;
+
+            string carga = DataBinder.Eval(item.DataItem, "carga").ToString();
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                try
+                string sql = @"SELECT percurso
+                       FROM tbcargas
+                       WHERE carga = @carga
+                         AND percurso IS NOT NULL";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("@carga", carga);
+
                     conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
+
+                    object percurso = cmd.ExecuteScalar();
+
+                    if (percurso != null)
                     {
-                        ddlStatus.DataSource = rdr;
-                        ddlStatus.DataTextField = "ds_status";
-                        ddlStatus.DataValueField = "ds_status";
-                        ddlStatus.DataBind();
+                        System.Web.UI.WebControls.ListItem li = ddlPercurso.Items.FindByText(percurso.ToString());
+
+                        if (li != null)
+                        {
+                            ddlPercurso.ClearSelection();
+                            li.Selected = true;
+                        }
                     }
-                    var drv = (HiddenField)e.Item.FindControl("hdfStatus"); ;
-                    string statusDaColeta = drv.Value;  // o nome da coluna do seu DataTable
-                    // opcional: insere item em branco no topo
-                    ddlStatus.Items.Insert(0, new System.Web.UI.WebControls.ListItem(statusDaColeta, "0"));
                 }
-                catch (Exception ex)
+            }
+        }
+        private void CarregarRotaKrona(RepeaterItem item)
+        {
+            DropDownList ddl = (DropDownList)item.FindControl("ddlRotaKrona");
+
+            if (ddl == null)
+                return;
+
+            string carga = DataBinder.Eval(item.DataItem, "carga").ToString();
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                // Carrega a lista
+                SqlDataAdapter da = new SqlDataAdapter(
+                    "SELECT id_rota, descricao_rota FROM tbrotaskrona ORDER BY descricao_rota", conn);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ddl.DataSource = dt;
+                ddl.DataTextField = "descricao_rota";
+                ddl.DataValueField = "id_rota";
+                ddl.DataBind();
+
+                ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione --", ""));
+
+                // Recupera a rota da carga
+                SqlCommand cmd = new SqlCommand(
+                    "SELECT rota_krona FROM tbcargas WHERE carga=@carga", conn);
+
+                cmd.Parameters.AddWithValue("@carga", carga);
+
+                object rota = cmd.ExecuteScalar();
+
+                if (rota != null && rota != DBNull.Value)
                 {
-                    // trate o erro como preferir
-                    Response.Write("Erro ao carregar status: " + ex.Message);
-                    return;
+                    ddl.SelectedItem.Text = rota.ToString();
                 }
+            }
+        }
+        private void CarregarGridCTe(RepeaterItem item)
+        {
+            string idViagem = DataBinder.Eval(item.DataItem, "carga").ToString();
+            GridView gv = (GridView)item.FindControl("gvCte");
+            int index = item.ItemIndex;
+
+            if (gv != null)
+            {
+                CarregarGridCte(gv, idViagem, index);
+            }
+        }
+        private void CarregarGridNF(RepeaterItem item)
+        {
+            HiddenField hdIdCarga = item.FindControl("hdIdCarga") as HiddenField;
+            GridView gvNF = item.FindControl("gvNF") as GridView;
+
+            if (hdIdCarga == null || gvNF == null)
+                return;
+
+            if (int.TryParse(hdIdCarga.Value, out int idCarga))
+            {
+                CarregarNotas(idCarga, gvNF);
             }
 
-            // Filiais no CVA
-            var cbFiliais = (DropDownList)e.Item.FindControl("cbFiliais");            
-            if (cbFiliais == null) return;
-            const string sqlFiliais = "SELECT codigo, descricao FROM tbempresa";
-            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                using (var cmd = new SqlCommand(sqlFiliais, conn))
+
+
+        }
+        private void InicializarLabels(RepeaterItem item)
+        {
+            Label lbl;
+
+            lbl = item.FindControl("lblPeso") as Label;
+            if (lbl != null) lbl.Text = "0,000";
+
+            lbl = item.FindControl("lblPesoCTe") as Label;
+            if (lbl != null) lbl.Text = "0,000";
+
+            lbl = item.FindControl("lblPesoCarregadoCTe") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+
+            lbl = item.FindControl("lblValorMercCTe") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+
+            lbl = item.FindControl("lblTotal") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+
+            lbl = item.FindControl("lblCBS") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+
+            lbl = item.FindControl("lblIBS") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+
+            lbl = item.FindControl("lblICMS") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+
+            lbl = item.FindControl("lblTotalFrete") as Label;
+            if (lbl != null) lbl.Text = "0,00";
+        }
+        private void CarregarStatus(RepeaterItem item)
+        {
+            DropDownList ddlStatus = item.FindControl("ddlStatus") as DropDownList;
+
+            if (ddlStatus == null)
+                return;
+
+            const string sql = @"SELECT cod_status,ds_status
+                         FROM tb_status
+                         ORDER BY ds_status";
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                try
-                {
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        cbFiliais.DataSource = rdr;
-                        cbFiliais.DataTextField = "descricao";
-                        cbFiliais.DataValueField = "codigo";
-                        cbFiliais.DataBind();
-                    }                  
-                    //var drv = (HiddenField)e.Item.FindControl("hdfCVA"); ;
-                    //string filialDaColeta = drv.Value;  // o nome da coluna do seu DataTable
-                    // opcional: insere item em branco no topo
-                    //cbFiliais.Items.Insert(0, new System.Web.UI.WebControls.ListItem(filialDaColeta, "0"));
-                }
-                catch (Exception ex)
-                {
-                    // trate o erro como preferir
-                    Response.Write("Erro ao carregar filiais: " + ex.Message);
-                }
-            }
-            
-            // Filiais na Notas Fiscais
-            var ddlEmpresa = (DropDownList)e.Item.FindControl("ddlEmpresa");
-            if (ddlEmpresa == null) return;
-            const string sqlEmpresas = "SELECT codigo, descricao FROM tbempresa";
-            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sqlEmpresas, conn))
-            {
-                try
-                {
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        ddlEmpresa.DataSource = rdr;
-                        ddlEmpresa.DataTextField = "descricao";
-                        ddlEmpresa.DataValueField = "codigo";
-                        ddlEmpresa.DataBind();
-                    }
-                    ddlEmpresa.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione a FILIAL", "0")); 
-                }
-                catch (Exception ex)
-                {
-                    // trate o erro como preferir
-                    Response.Write("Erro ao carregar filiais: " + ex.Message);
-                }
+                conn.Open();
+
+                ddlStatus.DataSource = cmd.ExecuteReader();
+                ddlStatus.DataTextField = "ds_status";
+                ddlStatus.DataValueField = "ds_status";
+                ddlStatus.DataBind();
             }
 
-            // Veiculo cobrado
-            var ddlVeiculoCobrado = (DropDownList)e.Item.FindControl("ddlVeiculoCobrado");
-            if (ddlVeiculoCobrado == null) return;
-            const string sqlVeiculoCobrado = @"
-            SELECT DISTINCT RTRIM(LTRIM(descricao_tng)) AS descricao_tng
+            HiddenField hdfStatus = item.FindControl("hdfStatus") as HiddenField;
+
+            if (hdfStatus != null)
+                ddlStatus.Items.Insert(0, new System.Web.UI.WebControls.ListItem(hdfStatus.Value, "0"));
+        }
+        private void CarregarEstabelecimentosCVA(RepeaterItem item)
+        {
+            DropDownList ddl = item.FindControl("ddlEstabelecimentoCVA") as DropDownList;
+
+            if (ddl == null)
+                return;
+
+            const string sql = @"select cod_estabelecimento,
+                                nom_estabelecimento
+                         from tbestabelecimentos
+                         where fl_exclusao is null
+                         and sit_estabelecimento='ATIVO'
+                         order by nom_estabelecimento";
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                conn.Open();
+
+                ddl.DataSource = cmd.ExecuteReader();
+                ddl.DataTextField = "nom_estabelecimento";
+                ddl.DataValueField = "cod_estabelecimento";
+                ddl.DataBind();
+            }
+        }
+        private void CarregarEmpresas(RepeaterItem item)
+        {
+            DropDownList ddl = item.FindControl("ddlEmpresa") as DropDownList;
+
+            if (ddl == null)
+                return;
+
+            const string sql = @"SELECT codigo,descricao
+                         FROM tbempresa
+                         ORDER BY descricao";
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                conn.Open();
+
+                ddl.DataSource = cmd.ExecuteReader();
+                ddl.DataTextField = "descricao";
+                ddl.DataValueField = "codigo";
+                ddl.DataBind();
+            }
+
+            ddl.Items.Insert(0,
+                new System.Web.UI.WebControls.ListItem("Selecione a FILIAL", "0"));
+        }
+        private void CarregarVeiculos(RepeaterItem item)
+        {
+            DropDownList ddl = item.FindControl("ddlVeiculoCobrado") as DropDownList;
+
+            if (ddl == null)
+                return;
+
+            const string sql = @"
+            SELECT DISTINCT RTRIM(LTRIM(descricao_tng)) descricao_tng
             FROM tbtipoveic
             WHERE descricao_tng IS NOT NULL
             ORDER BY descricao_tng";
-            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sqlVeiculoCobrado, conn))
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                try
-                {
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        ddlVeiculoCobrado.DataSource = rdr;
-                        ddlVeiculoCobrado.DataTextField = "descricao_tng";
-                        ddlVeiculoCobrado.DataValueField = "descricao_tng";
-                        ddlVeiculoCobrado.DataBind();
-                    }
-                    ddlVeiculoCobrado.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione o VEICULO", "0"));
-                }
-                catch (Exception ex)
-                {
-                    // trate o erro como preferir
-                    Response.Write("Erro ao carregar filiais: " + ex.Message);
-                }
+                conn.Open();
+
+                ddl.DataSource = cmd.ExecuteReader();
+                ddl.DataTextField = "descricao_tng";
+                ddl.DataValueField = "descricao_tng";
+                ddl.DataBind();
             }
 
-            // CFOP
-            var ddlCFOP = (DropDownList)e.Item.FindControl("ddlCFOP");
-            if (ddlCFOP == null) return;
-
-            const string sqlCFOP = @"
-            SELECT DISTINCT 
-                RTRIM(LTRIM(cod_cfop)) AS cod_cfop,
-                desc_cfop,
-                RTRIM(LTRIM(cod_cfop)) + ' - ' + desc_cfop AS cfop_display
-            FROM tbcfop
-            WHERE cod_cfop IS NOT NULL
-            ORDER BY cod_cfop";
-
-            using (var conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sqlCFOP, conn))
-            {
-                try
-                {
-                    conn.Open();
-
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        ddlCFOP.DataSource = rdr;
-                        ddlCFOP.DataTextField = "cfop_display";   // 👈 aqui fica "duas colunas"
-                        ddlCFOP.DataValueField = "cod_cfop";
-                        ddlCFOP.DataBind();
-                    }
-
-                    ddlCFOP.Items.Insert(0,
-                        new System.Web.UI.WebControls.ListItem("Selecione o CFOP", "0"));
-                }
-                catch (Exception ex)
-                {
-                    Response.Write("Erro ao carregar CFOP: " + ex.Message);
-                }
-            }
-
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                // ... (suas declarações de variáveis iniciais) ...
-                string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
-                string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
-                string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
-                string ufOrigem = DataBinder.Eval(e.Item.DataItem, "uf_expedidor")?.ToString();
-                string ufDestino = DataBinder.Eval(e.Item.DataItem, "uf_recebedor")?.ToString();
-                Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
-                HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
-                TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUfInicio");
-                TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUfFim");
-                
-
-                DateTime previsao, dataHora;
-                DateTime agora = DateTime.Now;
-
-                if (DateTime.TryParse(previsaoStr, out previsao) && DateTime.TryParse(dataHoraStr, out dataHora))
-                {
-                    DateTime dataPrevisao = previsao.Date;
-                    DateTime dataHoraComparacao = new DateTime(
-                        dataPrevisao.Year, dataPrevisao.Month, dataPrevisao.Day,
-                        dataHora.Hour, dataHora.Minute, dataHora.Second
-                    );
-
-                    // Lógica para "Atrasado"
-                    if (dataHoraComparacao < agora)
-                    {
-                        lblAtendimento.Text = "Atrasado";
-                        // CORREÇÃO AQUI: Mova o BgColor para dentro do style
-                        tdAtendimento.Attributes["style"] = "background-color: Red; color: white; font-weight: bold;";
-                    }
-                    // Lógica para "No Prazo"
-                    else if (dataHoraComparacao.Date == agora.Date && dataHoraComparacao.TimeOfDay <= agora.TimeOfDay)
-                    {
-                        lblAtendimento.Text = "No Prazo";
-                        // CORREÇÃO AQUI: Mova o BgColor para dentro do style
-                        tdAtendimento.Attributes["style"] = "background-color: Green; color: white; font-weight: bold;";
-                    }
-                    // Lógica para "Antecipado"
-                    else if (dataHoraComparacao > agora)
-                    {
-                        lblAtendimento.Text = "Antecipado";
-                        // CORREÇÃO AQUI: Mova o BgColor para dentro do style
-                        tdAtendimento.Attributes["style"] = "background-color: Orange; color: white; font-weight: bold;";
-                    }
-                    else
-                    {
-                        lblAtendimento.Text = status;
-                        // Opcional: Limpar estilos se não cair em nenhuma condição
-                        tdAtendimento.Attributes["style"] = "";
-                    }
-                }
-                
-
-                
-
-
-            }
-            if (e.Item.ItemType == ListItemType.Item ||
-         e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                HiddenField hdIdCarga =
-                    (HiddenField)e.Item.FindControl("hdIdCarga");
-
-                GridView gvPedidos =
-                    (GridView)e.Item.FindControl("gvPedidos");
-
-                UpdatePanel upd =
-                    (UpdatePanel)e.Item.FindControl("updTabs");
-
-                if (hdIdCarga != null && gvPedidos != null)
-                {
-                    int idCarga;
-                    if (int.TryParse(hdIdCarga.Value, out idCarga))
-                    {
-                        CarregarPedidos(idCarga, gvPedidos);
-
-                        // força renderização do conteúdo
-                        //upd.Update();
-                    }
-                }
-            }
-
-            if (e.Item.ItemType == ListItemType.Item ||
-        e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                // 🔎 Pega o status
-                HiddenField hdfStatus = (HiddenField)e.Item.FindControl("hdfStatus");
-
-                if (hdfStatus != null &&
-                    hdfStatus.Value.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
-                {
-                    // 🔘 Botões
-                    Button btnAtualizar = (Button)e.Item.FindControl("btnAtualizarColeta");
-                    Button btnPedagioManual = (Button)e.Item.FindControl("btnPedagadioManual");
-                    Button btnWhats = (Button)e.Item.FindControl("WhatsApp");
-                    Button btnOrdem = (Button)e.Item.FindControl("btnOrdemColeta");
-
-                    if (btnAtualizar != null)
-                    {
-                        btnAtualizar.Enabled = false;
-                        btnAtualizar.CssClass += " disabled";
-                    }
-
-                    if (btnWhats != null)
-                    {
-                        btnWhats.Enabled = false;
-                        btnWhats.CssClass += " disabled";
-                    }
-
-                    if (btnOrdem != null)
-                    {
-                        btnOrdem.Enabled = false;
-                        btnOrdem.CssClass += " disabled";
-                    }
-                }
-            }
-
-            if (e.Item.ItemType == ListItemType.Item ||
-        e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
-                string carga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
-                using (SqlConnection conn = new SqlConnection(
-                    ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
-                {
-                    string sqlr = @"SELECT id_rota, descricao_rota 
-                           FROM tbrotaskrona 
-                           ORDER BY descricao_rota";
-
-                    using (SqlCommand cmd = new SqlCommand(sqlr, conn))
-                    {
-                        conn.Open();
-                        ddlRotaKrona.DataSource = cmd.ExecuteReader();
-                        ddlRotaKrona.DataTextField = "descricao_rota";
-                        ddlRotaKrona.DataValueField = "id_rota";
-                        ddlRotaKrona.DataBind();
-                    }
-                }
-
-                string sqlg = "select rota_krona from tbcargas where carga=" + carga + " and  rota_krona is not null";
-                System.Data.DataTable dt = new System.Data.DataTable();
-                SqlDataAdapter adp = new SqlDataAdapter(sqlg, con);
-                con.Open();
-                adp.Fill(dt);
-                con.Close();
-
-
-
-
-                if (dt.Rows.Count > 0)
-                {
-                    string texto = dt.Rows[0][0].ToString();
-
-
-                    //ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem(texto, codigo));
-
-                    ddlRotaKrona.SelectedItem.Text = texto;
-                }
-                else
-                {
-                    ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
-                }
-
-            }
-
-            if (e.Item.ItemType == ListItemType.Item ||
-       e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                string carga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
-                DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
-
-
-                string sqlg = "select percurso from tbcargas where carga=" + carga + " and percurso is not null";
-                System.Data.DataTable dt = new System.Data.DataTable();
-                SqlDataAdapter adp = new SqlDataAdapter(sqlg, con);
-                con.Open();
-                adp.Fill(dt);
-                con.Close();
-
-
-
-
-                if (dt.Rows.Count > 0)
-                {
-                    string texto = dt.Rows[0][0].ToString();
-
-
-                    //ddlRotaKrona.Items.Insert(0, new System.Web.UI.WebControls.ListItem(texto, codigo));
-
-                    ddlPercurso.SelectedItem.Text = texto;
-                }
-
-
-            }
-
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                string idViagem = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
-                GridView gv = (GridView)e.Item.FindControl("gvCte");
-                int index = e.Item.ItemIndex;
-
-                if (gv != null)
-                {
-                    CarregarGridCte(gv, idViagem, index);
-                }
-            }
-
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                string idCarga = DataBinder.Eval(e.Item.DataItem, "carga").ToString();
-                GridView gvn = (GridView)e.Item.FindControl("gvNF");
-                int index = e.Item.ItemIndex;
-
-                if (gvn != null)
-                {
-                    CarregarNF(idCarga, gvn);
-                }
-            }
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                GridView gv = (GridView)e.Item.FindControl("gvNF");
-                gv.RowCommand += gvNF_RowCommand;
-            }
-
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                // Como no HTML está <asp:Button>, fazemos o Cast para Button aqui
-                Button btnGeraDoc = (Button)e.Item.FindControl("btnGeraDoc");
-
-                if (btnGeraDoc != null)
-                {
-                    // Força o ScriptManager a tratar este Button específico como PostBack total (ignora o AJAX)
-                    ScriptManager.GetCurrent(this).RegisterPostBackControl(btnGeraDoc);
-                }
-            }
-
+            ddl.Items.Insert(0,
+                new System.Web.UI.WebControls.ListItem("Selecione o VEICULO", "0"));
         }
-        private void CarregarNF(string idCarga, GridView gvn)
+        private void ProcessarCVA(RepeaterItem item)
+        {
+            TextBox txtSitCVA = item.FindControl("txtSitCVA") as TextBox;
+            TextBox txtTipoViagemCVA = item.FindControl("txtTipoViagemCVA") as TextBox;
+            TextBox txtNumCVA = item.FindControl("txtNumCVA") as TextBox;
+            DropDownList ddlDevolucaoPecaCVA = (DropDownList)item.FindControl("ddlDevolucaoPecaCVA");
+            DropDownList ddlExpedidorCVA = (DropDownList)item.FindControl("ddlExpedidorCVA");
+            DropDownList ddlRecCVA = (DropDownList)item.FindControl("ddlRecCVA");
+            TextBox txtCodigoRemetenteCVA = item.FindControl("txtCodigoRemetenteCVA") as TextBox;
+            TextBox txtRemetenteCVA = item.FindControl("txtRemetenteCVA") as TextBox;
+            TextBox txtCodigoExpedidorCVA = item.FindControl("txtCodigoExpedidorCVA") as TextBox;
+            TextBox txtCodigoDestCVA = item.FindControl("txtCodigoDestCVA") as TextBox;
+            TextBox txtDestCVA = item.FindControl("txtDestCVA") as TextBox;
+            TextBox txtCodigoRecCVA = item.FindControl("txtCodigoRecCVA") as TextBox;
+            TextBox txtLocalColetaCVA = item.FindControl("txtLocalColetaCVA") as TextBox;
+            TextBox txtUFColetaCVA = item.FindControl("txtUFColetaCVA") as TextBox;
+            TextBox txtLocalEntregaCVA = item.FindControl("txtLocalEntregaCVA") as TextBox;
+            TextBox txtUFEntregaCVA = item.FindControl("txtUFEntregaCVA") as TextBox;
+            TextBox txtDataHoraColetaCVA = item.FindControl("txtDataHoraColetaCVA") as TextBox;
+            TextBox txtDataHoraEntregaCVA = item.FindControl("txtDataHoraEntregaCVA") as TextBox;
+            TextBox txtTipoSolicitacaoCVA = item.FindControl("txtTipoSolicitacaoCVA") as TextBox;
+            TextBox txtTipoVeiculoCVA = item.FindControl("txtTipoVeiculoCVA") as TextBox;
+            TextBox txtJustificaVeiculoCVA = item.FindControl("txtJustificaVeiculoCVA") as TextBox;
+            TextBox txtPlacaCVA = item.FindControl("txtPlacaCVA") as TextBox;
+            TextBox txtVeiculoCVA = item.FindControl("txtVeiculoCVA") as TextBox;
+            TextBox txtCapVeiculoCVA = item.FindControl("txtCapVeiculoCVA") as TextBox;
+            TextBox txtProprietarioVeiculoCVA = item.FindControl("txtProprietarioVeiculoCVA") as TextBox;
+            TextBox txtReboque1CVA = item.FindControl("txtReboque1CVA") as TextBox;
+            TextBox txtReboque2CVA = item.FindControl("txtReboque2CVA") as TextBox;
+            TextBox txtPropReb1 = item.FindControl("txtPropReb1") as TextBox;
+            TextBox txtPropReb2 = item.FindControl("txtPropReb2") as TextBox;
+            TextBox txtMotoristaCVA = item.FindControl("txtMotoristaCVA") as TextBox;
+            TextBox txtCPFCVA = item.FindControl("txtCPFCVA") as TextBox;
+            TextBox txtRGCVA = item.FindControl("txtRGCVA") as TextBox;
+            TextBox txtTranspMotoristaCVA = item.FindControl("txtTranspMotoristaCVA") as TextBox;
+            if (txtSitCVA == null)
+                return;
+            string numSolicitacao = Convert.ToString(DataBinder.Eval(item.DataItem, "carga"));
+            string cva = Convert.ToString(DataBinder.Eval(item.DataItem, "cva"));
+            string codigoMotorista = txtCodMotorista.Text.Trim();
+            string placaVeiculo = txtPlaca.Text.Trim();
+            string reboque1 = txtReboque1.Text.Trim();
+            string reboque2 = txtReboque2.Text.Trim();
+            txtMotoristaCVA.Text = codigoMotorista;
+            txtPlacaCVA.Text = placaVeiculo;
+            txtReboque1CVA.Text = reboque1;
+            txtReboque2CVA.Text = reboque2;
+            if (String.IsNullOrWhiteSpace(cva))
+            {
+                txtSitCVA.Text = "EM LANCAMENTO";
+
+                CarregarTipoViagemCVA(
+                    item,
+                    numSolicitacao,
+                    txtTipoViagemCVA);
+            }
+            else
+            {
+                txtSitCVA.Text = "CADASTRADO";
+
+                if (txtNumCVA != null)
+                    txtNumCVA.Text = cva;
+            }
+
+            // Pesquisar dados do motorista
+            using (SqlConnection con = new SqlConnection(
+               ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                con.Open();
+                string sqlMotorista = @"SELECT *
+                FROM tbmotoristas
+                WHERE codmot = @cod";
+
+                using (SqlCommand cmdMotorista = new SqlCommand(sqlMotorista, con))
+                {
+                    cmdMotorista.Parameters.AddWithValue("@cod", codigoMotorista);
+
+                    using (SqlDataReader drMotorista = cmdMotorista.ExecuteReader())
+                    {
+                        if (drMotorista.Read())
+                        {
+                            if (txtMotoristaCVA != null)
+                            {
+                                txtMotoristaCVA.Text = drMotorista["codmot"].ToString() +
+                                                         " - " +
+                                                       drMotorista["nommot"].ToString();
+                                txtTranspMotoristaCVA.Text = drMotorista["codtra"].ToString() +
+                                                         " - " +
+                                                       drMotorista["transp"].ToString();
+                                txtCPFCVA.Text = drMotorista["cpf"].ToString();
+                                txtRGCVA.Text = drMotorista["numrg"].ToString();
+                            }
+                        }
+                        else
+                        {
+                            if (txtMotoristaCVA != null)
+                                txtMotoristaCVA.Text = "";
+
+                            MostrarMsgSolicitacao(
+                                item,
+                                $"Motorista '{codigoMotorista}' não cadastrado na tabela tbmotoristas.",
+                                "warning");
+                        }
+                    }
+                }
+                //Pesquisar dados do veiculo
+                string sqlPlaca = @"SELECT *
+                FROM tbveiculos
+                WHERE plavei = @placa";
+                using (SqlCommand cmdPlaca = new SqlCommand(sqlPlaca, con))
+                {
+                    cmdPlaca.Parameters.AddWithValue("@placa", placaVeiculo);
+
+                    using (SqlDataReader drPlaca = cmdPlaca.ExecuteReader())
+                    {
+                        if (drPlaca.Read())
+                        {
+                            if (txtPlacaCVA != null)
+                            {
+                                txtPlacaCVA.Text = drPlaca["codvei"].ToString() +
+                                                         " - " +
+                                                     drPlaca["plavei"].ToString();
+
+                                txtVeiculoCVA.Text = drPlaca["tipvei"].ToString();
+
+                                txtCapVeiculoCVA.Text = drPlaca["pbt"].ToString();
+
+                                txtProprietarioVeiculoCVA.Text = drPlaca["codtra"].ToString() +
+                                                                 " - " +
+                                                                 drPlaca["transp"].ToString();
+                            }
+                        }
+                        else
+                        {
+                            if (txtMotoristaCVA != null)
+                                txtMotoristaCVA.Text = "";
+
+                            MostrarMsgSolicitacao(
+                                item,
+                                $"Veiculo '{placaVeiculo}' não cadastrado na tabela tbveiculos.",
+                                "warning");
+                        }
+                    }
+                }
+
+                //Pesquisar dados das carretas
+                if (reboque1 != null && reboque1 != "")
+                {
+                    string sqlReboque1 = @"SELECT *
+                    FROM tbcarretas
+                    WHERE placacarreta = @placaReboque1";
+                    using (SqlCommand cmdReboque1 = new SqlCommand(sqlReboque1, con))
+                    {
+                        cmdReboque1.Parameters.AddWithValue("@placaReboque1", reboque1);
+                        using (SqlDataReader drReboque1 = cmdReboque1.ExecuteReader())
+                        {
+                            if (drReboque1.Read())
+                            {
+                                if (txtReboque1CVA != null)
+                                {
+                                    txtReboque1CVA.Text = drReboque1["codcarreta"].ToString() +
+                                                       " - " +
+                                                       drReboque1["placacarreta"].ToString();
+                                    txtPropReb1.Text = drReboque1["codprop"].ToString() +
+                                                       " - " +
+                                                       drReboque1["descprop"].ToString();
+                                }
+                            }
+                            else
+                            {
+                                if (txtReboque1CVA != null)
+                                    txtReboque1CVA.Text = "";
+
+                                MostrarMsgSolicitacao(
+                                    item,
+                                    $"Carreta1 '{reboque1}' não cadastrada na tabela tbcarretas.",
+                                    "warning");
+                            }
+                        }
+                    }
+                }
+
+                if (reboque2 != null && reboque2 != "")
+                {
+                    string sqlReboque2 = @"SELECT *
+                    FROM tbcarretas
+                    WHERE placacarreta = @placaReboque2";
+                    using (SqlCommand cmdReboque2 = new SqlCommand(sqlReboque2, con))
+                    {
+                        cmdReboque2.Parameters.AddWithValue("@placaReboque2", reboque2);
+                        using (SqlDataReader drReboque2 = cmdReboque2.ExecuteReader())
+                        {
+                            if (drReboque2.Read())
+                            {
+                                if (txtReboque2CVA != null)
+                                {
+                                    txtReboque2CVA.Text = drReboque2["codcarreta"].ToString() +
+                                                       " - " +
+                                                       drReboque2["placacarreta"].ToString();
+                                    txtPropReb2.Text = drReboque2["codprop"].ToString() +
+                                                       " - " +
+                                                       drReboque2["descprop"].ToString();
+                                }
+                            }
+                            else
+                            {
+                                if (txtReboque2CVA != null)
+                                    txtReboque2CVA.Text = "";
+
+                                MostrarMsgSolicitacao(
+                                    item,
+                                    $"Carreta2 '{reboque2}' não cadastrada na tabela tbcarretas.",
+                                    "warning");
+                            }
+                        }
+                    }
+                }
+
+
+
+
+            }
+        }
+        private void CarregarDadosSolicitacao(RepeaterItem item, string numSolicitacao)
+        {
+            using (SqlConnection con = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                con.Open();
+
+                string sql = @"SELECT *
+                       FROM tbsolicitacoes_r1
+                       WHERE r1_sol_numero = @num";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@num", numSolicitacao);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (!dr.Read())
+                        {
+                            MostrarMsgSolicitacao(
+                                item,
+                                "Solicitação não encontrada.",
+                                "danger");
+                            return;
+                        }
+
+                        // A partir daqui você chama métodos específicos
+                        CarregarTipoViagem(item, dr);
+                        //CarregarTipoGeracao(item, dr);
+                        //CarregarOrigem(item, dr);
+                        //CarregarDestino(item, dr);
+                        //CarregarCliente(item, dr);
+                        //CarregarTransportador(item, dr);
+                        // ...
+                    }
+                }
+            }
+        }
+        private void CarregarTipoViagem(RepeaterItem item, SqlDataReader dr)
+        {
+            TextBox txtTipoViagemCVA =
+                (TextBox)item.FindControl("txtTipoViagemCVA");
+
+            string tipo = dr["r1_sol_tipo"].ToString();
+            string tipoVeiculo = dr["r1_sol_tipo_veiculo"].ToString();
+
+
+            using (SqlConnection con = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                con.Open();
+
+                string sql = @"SELECT codvw, descricao
+                       FROM tbtiposolicitacao
+                       WHERE codvw = @cod";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@cod", tipo);
+
+                    using (SqlDataReader drTipo = cmd.ExecuteReader())
+                    {
+                        if (drTipo.Read())
+                        {
+                            txtTipoViagemCVA.Text =
+                                drTipo["codvw"] + " - " + drTipo["descricao"];
+                        }
+                        else
+                        {
+                            MostrarMsgSolicitacao(
+                                item,
+                                "Tipo de viagem não cadastrado.",
+                                "warning");
+                        }
+                    }
+                }
+            }
+
+            // trata o tipo de geracao
+            TextBox txtTipoGeracaoCVA = (TextBox)item.FindControl("txtTipoGeracaoCVA");
+            TextBox txtContaCVA = item.FindControl("txtContaCVA") as TextBox;
+            TextBox txtCentroCustoCVA = item.FindControl("txtCentroCustoCVA") as TextBox;
+            TextBox txtComRetornoCVA = item.FindControl("txtComRetornoCVA") as TextBox;
+            TextBox txtDataSolicitacaoCVA = item.FindControl("txtDataSolicitacaoCVA") as TextBox;
+            TextBox txtDataHoraColetaCVA = item.FindControl("txtDataHoraColetaCVA") as TextBox;
+            TextBox txtTipoSolicitacaoCVA = item.FindControl("txtTipoSolicitacaoCVA") as TextBox;
+            TextBox txtTipoVeiculoCVA = item.FindControl("txtTipoVeiculoCVA") as TextBox;
+            string tipoGeracao = dr["r1_sol_tipo_geracao"].ToString();
+            if (tipoGeracao == "7" || tipoGeracao == "12")
+            {
+                txtComRetornoCVA.Text = "SIM";
+            }
+            else
+            {
+                txtComRetornoCVA.Text = "NAO";
+            }
+            txtContaCVA.Text = dr["r1_sol_conta"].ToString();
+            txtCentroCustoCVA.Text = dr["r1_sol_centro_custo"].ToString();
+            txtDataSolicitacaoCVA.Text = Convert.ToDateTime(dr["r1_sol_data_cadastro"]).ToString("dd/MM/yyyy HH:mm");
+            txtDataHoraColetaCVA.Text = Convert.ToDateTime(dr["r1_sol_data_hora_coleta"]).ToString("dd/MM/yyyy HH:mm");
+
+            using (SqlConnection con = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                con.Open();
+
+                string sqlGeracao = @"SELECT codvw, descricao
+                       FROM tbtipogeracaosolicitacao
+                       WHERE codvw = @cod";
+
+                using (SqlCommand cmdGeracao = new SqlCommand(sqlGeracao, con))
+                {
+                    cmdGeracao.Parameters.AddWithValue("@cod", tipoGeracao);
+
+                    using (SqlDataReader drTipoGeracao = cmdGeracao.ExecuteReader())
+                    {
+                        if (drTipoGeracao.Read())
+                        {
+                            txtTipoGeracaoCVA.Text =
+                                drTipoGeracao["codvw"] + " - " + drTipoGeracao["descricao"];
+                        }
+                        else
+                        {
+                            MostrarMsgSolicitacao(
+                                item,
+                                "Tipo de viagem não cadastrado.",
+                                "warning");
+                        }
+                    }
+                }
+
+                string sqlSolicitacao = @"SELECT codvw, descricao
+                       FROM tbtiposolicitacao
+                       WHERE codvw = @cod";
+
+                using (SqlCommand cmdSolicitacao = new SqlCommand(sqlSolicitacao, con))
+                {
+                    cmdSolicitacao.Parameters.AddWithValue("@cod", tipo);
+
+                    using (SqlDataReader drSolicitacao = cmdSolicitacao.ExecuteReader())
+                    {
+                        if (drSolicitacao.Read())
+                        {
+                            txtTipoSolicitacaoCVA.Text = drSolicitacao["descricao"].ToString();
+                        }
+                        else
+                        {
+                            MostrarMsgSolicitacao(
+                                item,
+                                "Tipo de viagem não cadastrado.",
+                                "warning");
+                        }
+                    }
+                }
+                // Procura o Tipo de Veiculo
+                string sqlVeiculo = @"SELECT codvw, descricao
+                FROM tbtipoveic
+                WHERE codvw = @cod";
+
+                using (SqlCommand cmdVeiculo = new SqlCommand(sqlVeiculo, con))
+                {
+                    cmdVeiculo.Parameters.AddWithValue("@cod", tipoVeiculo);
+
+                    using (SqlDataReader drVeiculo = cmdVeiculo.ExecuteReader())
+                    {
+                        if (drVeiculo.Read())
+                        {
+                            if (txtTipoVeiculoCVA != null)
+                            {
+                                txtTipoVeiculoCVA.Text = drVeiculo["codvw"].ToString() +
+                                                         " - " +
+                                                         drVeiculo["descricao"].ToString();
+                            }
+                        }
+                        else
+                        {
+                            if (txtTipoVeiculoCVA != null)
+                                txtTipoVeiculoCVA.Text = "";
+
+                            MostrarMsgSolicitacao(
+                                item,
+                                $"Tipo de veículo '{tipoVeiculo}' não cadastrado na tabela tbtipoveic.",
+                                "warning");
+                        }
+                    }
+                }
+            }
+        }
+        private void CarregarTipoViagemCVA(RepeaterItem item, string numSolicitacao, TextBox txtTipoViagemCVA)
+        {
+            // Localiza o TextBox do Tipo de Geração
+            TextBox txtTipoGeracaoCVA = (TextBox)item.FindControl("txtTipoGeracaoCVA");
+            using (SqlConnection con = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                con.Open();
+
+                // Procura a solicitação e obtém o tipo
+                string sql = @"SELECT r1_sol_tipo
+                       FROM tbsolicitacoes_r1
+                       WHERE r1_sol_numero = @num";
+
+                string tipo = null;
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@num", numSolicitacao);
+
+                    object obj = cmd.ExecuteScalar();
+
+                    if (obj != null && obj != DBNull.Value)
+                        tipo = obj.ToString();
+                }
+
+                if (string.IsNullOrWhiteSpace(tipo))
+                {
+                    MostrarMsgSolicitacao(
+                        item,
+                        "Solicitação não encontrada na tabela tbsolicitacoes_r1.",
+                        "danger");
+
+                    txtTipoViagemCVA.Text = "";
+                    //txtTipoSolicitacaoCVA.Text = "";
+                    if (txtTipoGeracaoCVA != null)
+                        txtTipoGeracaoCVA.Text = "";
+
+                    return;
+                }
+            }
+        }
+        private void CarregarCombos()
+        {
+            dtStatus = BuscarTabela(
+                "SELECT cod_status, ds_status FROM tb_status ORDER BY ds_status");
+
+            dtEmpresas = BuscarTabela(
+                "SELECT codigo, descricao FROM tbempresa ORDER BY descricao");
+
+            dtEstabelecimentos = BuscarTabela(
+                @"SELECT cod_estabelecimento,
+                 nom_estabelecimento
+              FROM tbestabelecimentos
+              WHERE fl_exclusao IS NULL
+              AND sit_estabelecimento='ATIVO'
+              ORDER BY nom_estabelecimento");
+
+            dtVeiculos = BuscarTabela(
+                @"SELECT DISTINCT descricao_tng
+              FROM tbtipoveic
+              WHERE descricao_tng IS NOT NULL
+              ORDER BY descricao_tng");
+        }
+        private DataTable BuscarTabela(string sql)
+        {
+            using (SqlConnection con = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlDataAdapter da = new SqlDataAdapter(sql, con))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                return dt;
+            }
+        }
+        private void AtualizarAtendimento(RepeaterItem item)
+        {
+            string previsaoStr = Convert.ToString(DataBinder.Eval(item.DataItem, "previsao"));
+            string dataHoraStr = Convert.ToString(DataBinder.Eval(item.DataItem, "data_hora"));
+            string status = Convert.ToString(DataBinder.Eval(item.DataItem, "status"));
+
+            Label lblAtendimento = item.FindControl("lblAtendimento") as Label;
+            HtmlTableCell tdAtendimento = item.FindControl("tdAtendimento") as HtmlTableCell;
+
+            if (lblAtendimento == null || tdAtendimento == null)
+                return;
+
+            DateTime previsao;
+            DateTime dataHora;
+
+            if (!DateTime.TryParse(previsaoStr, out previsao) ||
+                !DateTime.TryParse(dataHoraStr, out dataHora))
+            {
+                lblAtendimento.Text = status;
+                return;
+            }
+
+            DateTime agora = DateTime.Now;
+
+            DateTime dataHoraComparacao = new DateTime(
+                previsao.Year,
+                previsao.Month,
+                previsao.Day,
+                dataHora.Hour,
+                dataHora.Minute,
+                dataHora.Second);
+
+            if (dataHoraComparacao < agora)
+            {
+                lblAtendimento.Text = "Atrasado";
+                tdAtendimento.Attributes["style"] =
+                    "background-color:red;color:white;font-weight:bold;";
+            }
+            else if (dataHoraComparacao.Date == agora.Date &&
+                     dataHoraComparacao.TimeOfDay <= agora.TimeOfDay)
+            {
+                lblAtendimento.Text = "No Prazo";
+                tdAtendimento.Attributes["style"] =
+                    "background-color:green;color:white;font-weight:bold;";
+            }
+            else
+            {
+                lblAtendimento.Text = "Antecipado";
+                tdAtendimento.Attributes["style"] =
+                    "background-color:orange;color:white;font-weight:bold;";
+            }
+        }
+        private void DesabilitarBotoes(RepeaterItem item)
+        {
+            HiddenField hdfStatus = item.FindControl("hdfStatus") as HiddenField;
+
+            if (hdfStatus == null)
+                return;
+
+            if (!hdfStatus.Value.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            Button btnAtualizar = item.FindControl("btnAtualizarColeta") as Button;
+            Button btnPedagioManual = item.FindControl("btnPedagadioManual") as Button;
+            Button btnWhats = item.FindControl("WhatsApp") as Button;
+            Button btnOrdem = item.FindControl("btnOrdemColeta") as Button;
+
+            if (btnAtualizar != null)
+            {
+                btnAtualizar.Enabled = false;
+                btnAtualizar.CssClass += " disabled";
+            }
+
+            if (btnPedagioManual != null)
+            {
+                btnPedagioManual.Enabled = false;
+                btnPedagioManual.CssClass += " disabled";
+            }
+
+            if (btnWhats != null)
+            {
+                btnWhats.Enabled = false;
+                btnWhats.CssClass += " disabled";
+            }
+
+            if (btnOrdem != null)
+            {
+                btnOrdem.Enabled = false;
+                btnOrdem.CssClass += " disabled";
+            }
+        }
+        private void AtualizarResumoCarga(ControlesCarga c)
+        {
+            decimal pesoTotal = 0;
+            decimal valorTotal = 0;
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+            SELECT
+                ISNULL(SUM(peso_documento),0) AS PesoTotal,
+                ISNULL(SUM(valor_documento),0) AS ValorTotal
+            FROM tbcte
+            WHERE id_viagem = @carga";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@carga", Convert.ToInt32(c.Carga));
+
+                    conn.Open();
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    if (dr.Read())
+                    {
+                        pesoTotal = Convert.ToDecimal(dr["PesoTotal"]);
+                        valorTotal = Convert.ToDecimal(dr["ValorTotal"]);
+                    }
+                }
+            }
+            // Atualiza tbcte
+            AtualizarCTe(Convert.ToInt32(c.Carga), pesoTotal, valorTotal);
+
+            // Atualiza a interface
+            c.lblPesoCarregadoCTe.Text = pesoTotal.ToString("N3");
+            c.LblValorMercCTe.Text = valorTotal.ToString("N2");
+        }
+        private void AtualizarCTe(int idCarga, decimal peso, decimal valor)
         {
             using (SqlConnection conn = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                string sql = @"select idnfe, chavenfe, numeronfe,serienfe,peso,vnf from tbnfe where carga=@carga";
+                conn.Open();
+
+                string sql = @"
+                IF EXISTS (SELECT 1 FROM tbcte WHERE id_viagem = @carga)
+                BEGIN
+                    UPDATE tbcte
+                    SET peso_documento = @peso,
+                        valor_documento = @valor
+                    WHERE id_viagem = @carga
+                END
+                ELSE
+                BEGIN
+                    INSERT INTO tbcte (id_viagem, peso_documento, valor_documento)
+                    VALUES (@carga, @peso, @valor)
+                END";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.Add("@carga", SqlDbType.Int).Value = idCarga;
+                    //SqlHelper.Int(cmd, "@carga", idCarga);
+                    //SqlHelper.Decimal(cmd, "@peso", 18, 3, peso);
+                    //SqlHelper.Decimal(cmd, "@valor", 18, 2, valor);
+                    cmd.Parameters.AddWithValue("@carga", idCarga);
+                    cmd.Parameters.AddWithValue("@peso", peso);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        private (decimal peso, decimal valor) CalcularTotais(int idCarga)
+        {
+            decimal peso = 0;
+            decimal valor = 0;
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+            SELECT 
+                ISNULL(SUM(peso_documento),0) AS PesoTotal,
+                ISNULL(SUM(valor_documento),0) AS ValorTotal
+            FROM tbcte
+            WHERE id_viagem = @carga";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@carga", idCarga);
+
                     conn.Open();
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
-                        gvn.DataSource = dr;
-                        gvn.DataBind();
+                        if (dr.Read())
+                        {
+                            peso = Convert.ToDecimal(dr["PesoTotal"]);
+                            valor = Convert.ToDecimal(dr["ValorTotal"]);
+                        }
                     }
+                }
+            }
 
+            return (peso, valor);
+        }
+
+        private void CarregarNotas(int idCarga, GridView gvNF)
+        {
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                string sql = @"
+                SELECT
+                    idnfe,
+                    chavenfe,
+                    numeronfe,
+                    serienfe,
+                    peso,
+                    vnf,
+                    carga
+                FROM tbnfe
+                WHERE carga = @carga
+                ORDER BY numeronfe";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@carga", idCarga);
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        gvNF.DataSource = dt;
+                        gvNF.DataBind();
+                    }
                 }
             }
         }
@@ -1063,735 +2120,1694 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+        private void CarregarPedidos(RepeaterItem item)
+        {
+            HiddenField hdIdCarga = item.FindControl("hdIdCarga") as HiddenField;
+            GridView gvPedidos = item.FindControl("gvPedidos") as GridView;
 
+            if (hdIdCarga == null || gvPedidos == null)
+                return;
+
+            if (int.TryParse(hdIdCarga.Value, out int idCarga))
+            {
+                CarregarPedidos(idCarga, gvPedidos);
+            }
+        }
+
+        private decimal? SafeDecimalValueNullable(string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return null;
+
+            if (decimal.TryParse(valor.Trim(),
+                                 NumberStyles.Number,
+                                 new CultureInfo("pt-BR"),
+                                 out decimal resultado))
+            {
+                return resultado;
+            }
+
+            return null;
+        }
+        private DateTime? SafeDateValue(string valor)
+        {
+            if (DateTime.TryParse(valor, out DateTime data))
+                return data;
+
+            return null;
+        }
+        private object SafeDecimalValue(string valor)
+        {
+            if (!string.IsNullOrWhiteSpace(valor) &&
+                decimal.TryParse(valor, NumberStyles.Number,
+                    new CultureInfo("pt-BR"), out decimal resultado))
+            {
+                return resultado;
+            }
+
+            return DBNull.Value;
+        }
+        // protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
+        // {
+        //     GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+
+        //     if (e.CommandName == "Atualizar")
+        //     {
+        //         //genildo
+        //         string carga = e.CommandArgument.ToString();
+        //         //GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+
+        //         // Recuperar os controles de dentro do item
+        //         TextBox txtDataHoraColeta = (TextBox)e.Item.FindControl("txtDataHoraColeta");
+        //         TextBox txtVeiculoDisponivel = (TextBox)e.Item.FindControl("txtVeiculoDisponivel");
+        //         TextBox txtGateOrigem = (TextBox)e.Item.FindControl("txtGateOrigem");
+        //         TextBox txtPrevisaoChegada = (TextBox)e.Item.FindControl("txtPrevisaoChegada");
+        //         TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
+        //         TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
+        //         DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+        //         TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
+        //         TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+        //         TextBox txtAgDescarga = (TextBox)e.Item.FindControl("txtAgDescarga");
+        //         TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
+        //         TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
+        //         TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
+        //         Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
+        //         TextBox txtMaterial = (TextBox)e.Item.FindControl("txtMaterial");
+
+        //         TextBox txtCodExpedidor = (TextBox)e.Item.FindControl("txtCodExpedidor");
+        //         TextBox cboExpedidor = (TextBox)e.Item.FindControl("cboExpedidor");
+        //         TextBox txtCidExpedidor = (TextBox)e.Item.FindControl("txtCidExpedidor");
+        //         TextBox txtUFExpedidor = (TextBox)e.Item.FindControl("txtUFExpedidor");
+
+        //         TextBox txtCodRecebedor = (TextBox)e.Item.FindControl("txtCodRecebedor");
+        //         TextBox cboRecebedor = (TextBox)e.Item.FindControl("cboRecebedor");
+        //         TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
+        //         TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
+
+        //         TextBox txtLocalPernoite = (TextBox)e.Item.FindControl("txtLocalPernoite");
+        //         TextBox txtInicioPernoite = (TextBox)e.Item.FindControl("txtInicioPernoite");
+        //         TextBox txtFimPernoite = (TextBox)e.Item.FindControl("txtFimPernoite");
+        //         TextBox txtDuracaoP = (TextBox)e.Item.FindControl("txtDuracaoP");
+
+        //         // Recuperar os TextBoxes de UF
+        //         //TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUFExpedidor");
+        //         //TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUFRecebedor");
+
+        //         DropDownList ddlPercursoKrona = (DropDownList)e.Item.FindControl("ddlPercurso");
+        //         DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+        //         TextBox pesoKrona = (TextBox)e.Item.FindControl("txtPeso");
+        //         TextBox valorKrona = (TextBox)e.Item.FindControl("txtValorTotal");
+        //         DateTime? previsaoInicial = SafeDateValue(e.Item, "txtPrevisaoInicio");
+        //         DateTime? previsaoFinal = SafeDateValue(e.Item, "txtPrevisaoTermino");
+        //         string percursoKrona = ddlPercursoKrona.SelectedItem.Text;
+        //         string rotaKrona = ddlRotaKrona.SelectedItem.Text;
+        //         string id_rotaKrona = ddlRotaKrona.SelectedValue;
+
+        //         DateTime agora = DateTime.Now;
+
+        //         // Exemplo: atualizando no banco
+        //         using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         {
+        //             // Extrai os valores uma única vez                    
+        //             var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
+        //             var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
+        //             var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
+        //             var disponivel_solicitacao = SafeDateValue2(txtVeiculoDisponivel.Text.Trim());
+        //             var cvaOC = txtCVA.Text.Trim();
+
+        //             var CodExpedidor = SafeDateValue2(txtCodExpedidor.Text.Trim());
+        //             var Expedidor = SafeDateValue2(cboExpedidor.Text.Trim());
+        //             var Cid_Expedidor = SafeDateValue2(txtCidExpedidor.Text.Trim());
+        //             var UFExpedidor = SafeDateValue2(txtUFExpedidor.Text.Trim());
+
+        //             var CodRecebedor = SafeDateValue2(txtCodRecebedor.Text.Trim());
+        //             var Recebedor = SafeDateValue2(cboRecebedor.Text.Trim());
+        //             var CidRecebedor = SafeDateValue2(txtCidRecebedor.Text.Trim());
+        //             var UFRecebedor = SafeDateValue2(txtUFRecebedor.Text.Trim());
+        //             var localPernoite = SafeDateValue2(txtLocalPernoite.Text.Trim());
+        //             var inicioPernoite = SafeDateValue2(txtInicioPernoite.Text.Trim());
+        //             var fimPernoite = SafeDateValue2(txtFimPernoite.Text.Trim());
+        //             var duracaoP = txtDuracaoP.Text.Trim();
+
+        //             if (chegada != null && saida != null && saidaPlanta != null)
+        //             {
+        //                 statusOC = "Concluido";
+        //                 situacaoOC = "Pronto";
+        //                 andamentoCarga = "Entregue";
+        //             }
+        //             else if (chegada != null && saida != null)
+        //             {
+        //                 statusOC = "Ag. Descarga";
+        //                 situacaoOC = "EM ANDAMENTO";
+        //                 andamentoCarga = "Em Andamento";
+        //             }
+        //             else if (chegada != null && saida != null)
+        //             {
+        //                 statusOC = "Em Transito";
+        //                 situacaoOC = "EM ANDAMENTO";
+        //                 andamentoCarga = "Em Andamento";
+        //             }
+        //             else if (chegada != null)
+        //             {
+        //                 statusOC = "Ag. Carregamento";
+        //                 situacaoOC = "EM ANDAMENTO";
+        //                 andamentoCarga = "Em Andamento";
+        //             }
+        //             else
+        //             {
+        //                 statusOC = "Pendente";
+        //                 situacaoOC = "PROGRAMADA";
+        //                 andamentoCarga = "Programada";
+        //             }
+        //             if (ddlStatus.SelectedItem.Text != "Pendente" || ddlStatus.SelectedItem.Text != "Concluido")
+        //             {
+        //                 situacaoOC = "EM ANDAMENTO";
+        //                 andamentoCarga = "Em Andamento";
+        //                 statusOC = ddlStatus.SelectedItem.Text.Trim();
+
+        //             }
+        //             if (ddlStatus.SelectedItem.Text == "Pendente")
+        //             {
+        //                 situacaoOC = "PROGRAMADA";
+        //                 andamentoCarga = "Programada";
+        //                 //statusOC = ddlStatus.SelectedItem.Text.Trim();
+
+        //             }
+
+        //             string duracao = txtDuracaoP.Text.Trim();
+
+        //             string statusPernoite = "";
+
+        //             if (!string.IsNullOrEmpty(duracao))
+        //             {
+        //                 TimeSpan tsDuracao = TimeSpan.Parse(duracao);
+        //                 TimeSpan tsLimite = new TimeSpan(11, 0, 0);
+
+        //                 if (tsDuracao < tsLimite)
+        //                 {
+        //                     statusPernoite = "Não Cumpriu a Jornada de 11h";
+        //                 }
+        //                 else
+        //                 {
+        //                     statusPernoite = "Cumpriu Jornada de 11h";
+        //                 }
+        //             }
+
+        //             string query = @"UPDATE tbcargas SET                                  
+        //                          gate_origem = @gate_origem,
+        //                          gate_destino = @gate_destino,
+        //                          status = @status, 
+        //                          cva = @cva, 
+        //                          andamento = @andamento,
+        //                          saidaorigem = @saidaorigem,
+        //                          tempoagcarreg = @tempoagcarreg,
+        //                          chegadadestino = @chegadadestino,
+        //                          saidaplanta = @saidaplanta,
+        //                          prev_chegada = @prev_chegada,
+        //                          tempoagdescarreg=@tempoagdescarreg,
+        //                          duracao_transp=@duracao_transp,
+        //                          disponivel_solicitacao = @disponivel_solicitacao,
+        //                          codmot=@codmot, 
+        //                          local_pernoite=@local_pernoite,
+        //                          inicio_pernoite=@inicio_pernoite,
+        //                          fim_pernoite=@fim_pernoite,
+        //                          duracao_pernoite=@duracao_pernoite,
+        //                          status_pernoite=@status_pernoite,
+        //                          frota=@frota,
+        //                          percurso = @percurso,
+        //                          valor_total = @valor_total,
+        //                          previsao_inicio_krona = @previsao_inicio_krona,
+        //                          previsao_termino_krona = @previsao_termino_krona,
+        //                          rota_krona = @rota_krona,
+        //                          id_rota_krona = @id_rota_krona
+        //                          WHERE carga = @carga";
+
+        //             SqlCommand cmd = new SqlCommand(query, conn);
+        //             cmd.Parameters.AddWithValue("@carga", carga);
+        //             cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+        //             cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
+        //             cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@disponivel_solicitacao", SafeDateValue(txtVeiculoDisponivel.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
+        //             cmd.Parameters.AddWithValue("@frota", txtCodVeiculo.Text.Trim() ?? (object)DBNull.Value);
+        //             cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
+        //             cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
+
+        //             cmd.Parameters.AddWithValue("@local_pernoite", txtLocalPernoite.Text.Trim().ToUpper());
+        //             cmd.Parameters.AddWithValue("@inicio_pernoite", SafeDateValue(txtInicioPernoite.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@fim_pernoite", SafeDateValue(txtFimPernoite.Text.Trim()));
+        //             cmd.Parameters.AddWithValue("@duracao_pernoite", txtDuracaoP.Text.Trim());
+        //             cmd.Parameters.AddWithValue("@status_pernoite", statusPernoite);
+
+        //             cmd.Parameters.AddWithValue("@percurso", percursoKrona);
+        //             cmd.Parameters.AddWithValue("@valor_total", SafeDecimalValue(valorKrona?.Text));
+        //             cmd.Parameters.AddWithValue("@previsao_inicio_krona", (object)previsaoInicial ?? DBNull.Value);
+        //             cmd.Parameters.AddWithValue("@previsao_termino_krona", (object)previsaoFinal ?? DBNull.Value);
+
+        //             cmd.Parameters.AddWithValue("@rota_krona", rotaKrona);
+        //             cmd.Parameters.AddWithValue("@id_rota_krona", id_rotaKrona);
+        //             // Chama método que verifica no banco
+        //             conn.Open();
+        //             cmd.ExecuteNonQuery();
+
+        //             // TRATANDO O PREMIO AUTOMATICO DO MOTORISTA
+        //             if (ddlStatus.SelectedItem.Text == "Concluido" && txtMaterial.Text != "Vazio" && txtMaterial.Text != "Embalagem")
+        //             {
+        //                 // SOMENTE FUNCIONÁRIO
+        //                 if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+        //                 {
+        //                     using (SqlConnection conn2 = new SqlConnection(
+        //                         WebConfigurationManager
+        //                         .ConnectionStrings["conexao"].ConnectionString))
+        //                     {
+        //                         conn2.Open();
+
+        //                         SqlTransaction trans = conn2.BeginTransaction();
+
+        //                         try
+        //                         {
+        //                             // ============================================
+        //                             // FUNÇÃO
+        //                             // ============================================
+        //                             string funcao = "";
+
+        //                             if (!string.IsNullOrWhiteSpace(txtFuncao.Text))
+        //                             {
+        //                                 funcao = txtFuncao.Text
+        //                                     .Trim()
+        //                                     .Split(' ')[0]
+        //                                     .ToUpper();
+        //                             }
+
+        //                             decimal distancia = 0;
+        //                             decimal valorPremio = 0;
+
+        //                             // ============================================
+        //                             // BUSCA DISTÂNCIA
+        //                             // ============================================
+        //                             using (SqlCommand cmdDist = new SqlCommand(@"
+        //                              SELECT TOP 1 distancia
+        //                              FROM tbcargas
+        //                              WHERE carga = @carga",
+        //                                 conn2, trans))
+        //                             {
+        //                                 cmdDist.Parameters.AddWithValue("@carga", carga);
+
+        //                                 object result = cmdDist.ExecuteScalar();
+
+        //                                 if (result != null &&
+        //                                     result != DBNull.Value)
+        //                                 {
+        //                                     distancia =
+        //                                         Convert.ToDecimal(result);
+        //                                 }
+        //                                 else
+        //                                 {
+        //                                     trans.Rollback();
+        //                                     return;
+        //                                 }
+        //                             }
+
+        //                             // ============================================
+        //                             // BUSCA VALOR PRÊMIO
+        //                             // ============================================
+        //                             using (SqlCommand cmdPremio = new SqlCommand(@"
+        //                              SELECT TOP 1
+        //                                  motorista,
+        //                                  carreteiro,
+        //                                  bitrem
+        //                              FROM tbvalorpremiomotoristas
+        //                              WHERE @distancia
+        //                              BETWEEN distancia1 AND distancia2 AND status = 'ATIVO'AND empresa='MATRIZ'",
+        //                                 conn2, trans))
+        //                             {
+        //                                 cmdPremio.Parameters.AddWithValue(
+        //                                     "@distancia",
+        //                                     distancia);
+
+        //                                 using (SqlDataReader dr =
+        //                                     cmdPremio.ExecuteReader())
+        //                                 {
+        //                                     if (dr.Read())
+        //                                     {
+        //                                         switch (funcao)
+        //                                         {
+        //                                             case "MOTORISTA":
+
+        //                                                 valorPremio =
+        //                                                     dr["motorista"] != DBNull.Value
+        //                                                     ? Convert.ToDecimal(dr["motorista"])
+        //                                                     : 0;
+
+        //                                                 break;
+
+        //                                             case "CARRETEIRO":
+
+        //                                                 valorPremio =
+        //                                                     dr["carreteiro"] != DBNull.Value
+        //                                                     ? Convert.ToDecimal(dr["carreteiro"])
+        //                                                     : 0;
+
+        //                                                 break;
+
+        //                                             case "BITREM":
+
+        //                                                 valorPremio =
+        //                                                     dr["bitrem"] != DBNull.Value
+        //                                                     ? Convert.ToDecimal(dr["bitrem"])
+        //                                                     : 0;
+
+        //                                                 break;
+        //                                         }
+        //                                     }
+        //                                 }
+        //                             }
+
+        //                             // ============================================
+        //                             // VERIFICA EXISTÊNCIA
+        //                             // ============================================
+        //                             using (SqlCommand cmdExiste = new SqlCommand(@"
+        //                              SELECT COUNT(*)
+        //                              FROM tb_custo_motorista
+        //                              WHERE cod_cracha = @cod
+        //                              AND dt_custo = @data",
+        //                                 conn2, trans))
+        //                             {
+        //                                 cmdExiste.Parameters.AddWithValue(
+        //                                     "@cod",
+        //                                     txtCodMotorista.Text.Trim());
+
+        //                                 cmdExiste.Parameters.AddWithValue(
+        //                                     "@data",
+        //                                     SafeDateValue(txtSaidaPlanta.Text.Trim()));
+
+        //                                 int existe =
+        //                                     Convert.ToInt32(
+        //                                         cmdExiste.ExecuteScalar());
+
+        //                                 // ============================================
+        //                                 // UPDATE
+        //                                 // ============================================
+        //                                 if (existe > 0)
+        //                                 {
+        //                                     using (SqlCommand cmdUpdate =
+        //                                         new SqlCommand(@"
+        //                                      UPDATE tb_custo_motorista
+        //                                      SET vl_premio =
+        //                                          ISNULL(vl_premio,0) + @valor
+        //                                      WHERE cod_cracha = @cod
+        //                                      AND dt_custo = @data",
+        //                                         conn2, trans))
+        //                                     {
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@valor",
+        //                                             valorPremio);
+
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@cod",
+        //                                             txtCodMotorista.Text.Trim());
+
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@data",
+        //                                             SafeDateValue(
+        //                                                 txtSaidaPlanta.Text.Trim()));
+
+        //                                         cmdUpdate.ExecuteNonQuery();
+        //                                     }
+        //                                 }
+        //                                 else
+        //                                 {
+        //                                     // ============================================
+        //                                     // INSERT
+        //                                     // ============================================
+        //                                     using (SqlCommand cmdInsert =
+        //                                         new SqlCommand(@"
+        //                                          INSERT INTO tb_custo_motorista
+        //                                          (
+        //                                              cod_cracha,
+        //                                              dt_custo,
+        //                                              vl_premio
+        //                                          )
+        //                                          VALUES
+        //                                          (
+        //                                              @cod,
+        //                                              @data,
+        //                                              @valor
+        //                                          )",
+        //                                         conn2, trans))
+        //                                     {
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@cod",
+        //                                             txtCodMotorista.Text.Trim());
+
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@data",
+        //                                             SafeDateValue(
+        //                                                 txtSaidaPlanta.Text.Trim()));
+
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@valor",
+        //                                             valorPremio);
+
+        //                                         cmdInsert.ExecuteNonQuery();
+        //                                     }
+        //                                 }
+        //                             }
+
+        //                             trans.Commit();
+        //                         }
+        //                         catch (Exception ex)
+        //                         {
+        //                             trans.Rollback();
+
+        //                             MostrarMsg2(
+        //                                 "Erro prêmio motorista: "
+        //                                 + ex.Message);
+        //                         }
+        //                     }
+        //                 }
+        //             }
+
+        //             // TRATANDO A PERNOITE AUTOMATICA DO MOTORISTA
+        //             DateTime dataPernoite;
+        //             if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
+        //                 agora.TimeOfDay <= new TimeSpan(23, 59, 59))
+        //             {
+        //                 dataPernoite = agora.Date;
+        //                 if (ddlStatus.SelectedItem.Text.Trim() == "Pernoite")
+        //                 {
+        //                     // SOMENTE FUNCIONÁRIO
+        //                     if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+        //                     {
+        //                         using (SqlConnection conn2 = new SqlConnection(
+        //                             WebConfigurationManager
+        //                             .ConnectionStrings["conexao"].ConnectionString))
+        //                         {
+        //                             conn2.Open();
+
+        //                             SqlTransaction trans = conn2.BeginTransaction();
+
+        //                             try
+        //                             {
+        //                                 // ============================================
+        //                                 // VALOR PERNOITE
+        //                                 // ============================================
+        //                                 decimal valorPernoite = 0;
+        //                                 decimal valorCafe = 0;
+
+        //                                 using (SqlCommand cmdPernoite =
+        //                                     new SqlCommand(@"
+        //                                  SELECT TOP 1 pernoite
+        //                                  FROM tbvalorpremiomotoristas WHERE status = 'ATIVO' and empresa='MATRIZ'",
+        //                                     conn2, trans))
+        //                                 {
+        //                                     object result =
+        //                                         cmdPernoite.ExecuteScalar();
+
+        //                                     if (result != null &&
+        //                                         result != DBNull.Value)
+        //                                     {
+        //                                         valorPernoite =
+        //                                             Convert.ToDecimal(result);
+        //                                     }
+        //                                 }
+
+        //                                 // ============================================
+        //                                 // DATA
+        //                                 // ============================================
+        //                                 object dataCusto = dataPernoite;
+
+        //                                 if (dataCusto == null ||
+        //                                     dataCusto == DBNull.Value)
+        //                                 {
+        //                                     trans.Rollback();
+
+        //                                     MostrarMsg2(
+        //                                         "Data Pernoite inválida.");
+
+        //                                     return;
+        //                                 }
+
+        //                                 // ============================================
+        //                                 // VERIFICA EXISTÊNCIA
+        //                                 // ============================================
+        //                                 int existe = 0;
+
+        //                                 using (SqlCommand cmdExiste =
+        //                                     new SqlCommand(@"
+        //                                  SELECT COUNT(*)
+        //                                  FROM tb_custo_motorista
+        //                                  WHERE cod_cracha = @cod
+        //                                  AND dt_custo = @data",
+        //                                     conn2, trans))
+        //                                 {
+        //                                     cmdExiste.Parameters.AddWithValue(
+        //                                         "@cod",
+        //                                         txtCodMotorista.Text.Trim());
+
+        //                                     cmdExiste.Parameters.AddWithValue(
+        //                                         "@data",
+        //                                         dataCusto);
+
+        //                                     existe =
+        //                                         Convert.ToInt32(
+        //                                             cmdExiste.ExecuteScalar());
+        //                                 }
+
+        //                                 // ============================================
+        //                                 // UPDATE
+        //                                 // ============================================
+        //                                 if (existe > 0)
+        //                                 {
+        //                                     using (SqlCommand cmdUpdate =
+        //                                         new SqlCommand(@"
+        //                                      UPDATE tb_custo_motorista
+        //                                      SET vl_pernoite = @valor, vl_cafe = @cafe
+        //                                      WHERE cod_cracha = @cod
+        //                                      AND dt_custo = @data",
+        //                                         conn2, trans))
+        //                                     {
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@valor",
+        //                                             valorPernoite);
+
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@cafe",
+        //                                             valorCafe);
+
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@cod",
+        //                                             txtCodMotorista.Text.Trim());
+
+        //                                         cmdUpdate.Parameters.AddWithValue(
+        //                                             "@data",
+        //                                             dataCusto);
+
+        //                                         cmdUpdate.ExecuteNonQuery();
+        //                                     }
+        //                                 }
+        //                                 else
+        //                                 {
+        //                                     // ============================================
+        //                                     // INSERT
+        //                                     // ============================================
+        //                                     using (SqlCommand cmdInsert =
+        //                                         new SqlCommand(@"
+        //                                      INSERT INTO tb_custo_motorista
+        //                                      (
+        //                                          cod_cracha,
+        //                                          dt_custo,
+        //                                          vl_pernoite,
+        //                                          vl_cafe
+        //                                      )
+        //                                      VALUES
+        //                                      (
+        //                                          @cod,
+        //                                          @data,
+        //                                          @valor,
+        //                                          @cafe
+        //                                      )",
+        //                                         conn2, trans))
+        //                                     {
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@cod",
+        //                                             txtCodMotorista.Text.Trim());
+
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@data",
+        //                                             dataCusto);
+
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@valor",
+        //                                             valorPernoite);
+
+        //                                         cmdInsert.Parameters.AddWithValue(
+        //                                             "@cafe",
+        //                                             valorCafe);
+
+        //                                         cmdInsert.ExecuteNonQuery();
+        //                                     }
+        //                                 }
+
+        //                                 trans.Commit();
+
+        //                                 //MostrarMsg2(
+        //                                 //    "Pernoite salvo com sucesso.");
+        //                             }
+        //                             catch (Exception ex)
+        //                             {
+        //                                 trans.Rollback();
+
+        //                                 MostrarMsg2(
+        //                                     "Erro pernoite: "
+        //                                     + ex.Message);
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+
+        //             // TRATANDO O ALMOÇO AUTOMATICO DO MOTORISTA
+
+        //         }
+
+        //         // Atualizando a ordem de coleta 
+        //         using (SqlConnection conn = new SqlConnection(
+        //WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         {
+        //             var cvaOC = txtCVA.Text.Trim();
+
+        //             string queryCarregamento = @"
+        //              UPDATE tbcarregamentos SET 
+        //                  situacao = @situacao,
+        //                  cva = @cva,
+        //                  status = @status,                        
+        //                  cod_expedidor = @cod_expedidor,
+        //                  expedidor = @expedidor,
+        //                  cid_expedidor = @cid_expedidor,
+        //                  uf_expedidor = @uf_expedidor,
+        //                  cod_recebedor = @cod_recebedor,
+        //                  recebedor = @recebedor,
+        //                  cid_recebedor = @cid_recebedor,
+        //                  carga = @carga,
+        //                  dtsaida=@dtsaida,
+        //                  dtchegada=@dtchegada,
+        //                  dtconclusao=@dtconclusao,
+        //                  uf_recebedor = @uf_recebedor,
+        //                  dtalt = @dtalt,
+        //                  usualt = @usualt
+
+        //              WHERE num_carregamento = @num_carregamento";
+
+        //             using (SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn))
+        //             {
+        //                 // Num carregamento (obrigatório)
+        //                 cmdCarregamento.Parameters.Add("@num_carregamento", SqlDbType.NVarChar, 20)
+        //                     .Value = novaColeta.Text.Trim();
+
+        //                 // Status
+        //                 cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar, 50)
+        //                     .Value = string.IsNullOrWhiteSpace(situacaoOC)
+        //                         ? (object)DBNull.Value
+        //                         : situacaoOC.Trim();
+
+        //                 cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar, 50)
+        //                     .Value = string.IsNullOrWhiteSpace(cvaOC)
+        //                         ? (object)DBNull.Value
+        //                         : cvaOC.Trim();
+
+        //                 cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar, 50)
+        //                     .Value = string.IsNullOrWhiteSpace(statusOC)
+        //                         ? (object)DBNull.Value
+        //                         : statusOC.Trim();
+        //                 int cargaCarreg;
+        //                 cmdCarregamento.Parameters.Add("@carga", SqlDbType.Int)
+        //                     .Value = int.TryParse(carga, out cargaCarreg)
+        //                         ? (object)cargaCarreg
+        //                         : (object)DBNull.Value;
+
+        //                 // Expedidor
+        //                 int codExp;
+        //                 cmdCarregamento.Parameters.Add("@cod_expedidor", SqlDbType.Int)
+        //                     .Value = int.TryParse(txtCodExpedidor.Text, out codExp)
+        //                         ? (object)codExp
+        //                         : (object)DBNull.Value;
+
+        //                 cmdCarregamento.Parameters.Add("@expedidor", SqlDbType.NVarChar, 100)
+        //                     .Value = string.IsNullOrWhiteSpace(cboExpedidor.Text)
+        //                         ? (object)DBNull.Value
+        //                         : cboExpedidor.Text.Trim();
+
+        //                 cmdCarregamento.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar, 100)
+        //                     .Value = string.IsNullOrWhiteSpace(txtCidExpedidor.Text)
+        //                         ? (object)DBNull.Value
+        //                         : txtCidExpedidor.Text.Trim();
+
+        //                 cmdCarregamento.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2)
+        //                     .Value = string.IsNullOrWhiteSpace(txtUFExpedidor.Text)
+        //                         ? (object)DBNull.Value
+        //                         : txtUFExpedidor.Text.Trim();
+
+        //                 // Recebedor
+        //                 int codRec;
+        //                 cmdCarregamento.Parameters.Add("@cod_recebedor", SqlDbType.Int)
+        //                     .Value = int.TryParse(txtCodRecebedor.Text, out codRec)
+        //                         ? (object)codRec
+        //                         : (object)DBNull.Value;
+
+        //                 cmdCarregamento.Parameters.Add("@recebedor", SqlDbType.NVarChar, 100)
+        //                     .Value = string.IsNullOrWhiteSpace(cboRecebedor.Text)
+        //                         ? (object)DBNull.Value
+        //                         : cboRecebedor.Text.Trim();
+
+        //                 cmdCarregamento.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar, 100)
+        //                     .Value = string.IsNullOrWhiteSpace(txtCidRecebedor.Text)
+        //                         ? (object)DBNull.Value
+        //                         : txtCidRecebedor.Text.Trim();
+        //                 cmdCarregamento.Parameters.AddWithValue("@dtsaida", SafeDateValue(txtSaidaOrigem.Text.Trim()));
+        //                 cmdCarregamento.Parameters.AddWithValue("@dtchegada", SafeDateValue(txtChegadaDestino.Text.Trim()));
+        //                 cmdCarregamento.Parameters.AddWithValue("@dtconclusao", SafeDateValue(txtSaidaPlanta.Text.Trim()));
+
+        //                 cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2)
+        //                     .Value = string.IsNullOrWhiteSpace(txtUFRecebedor.Text)
+        //                         ? (object)DBNull.Value
+        //                         : txtUFRecebedor.Text.Trim();
+        //                 cmdCarregamento.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //                 cmdCarregamento.Parameters.AddWithValue("@usualt", Session["UsuarioLogado"].ToString());
+
+        //                 conn.Open();
+        //                 cmdCarregamento.ExecuteNonQuery();
+        //             }
+        //         }
+
+        //         using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         {
+        //             TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
+        //             TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
+        //             TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
+
+
+        //             string query = @"UPDATE tbpedidos SET                                  
+        //                          andamento = @andamento
+        //                          WHERE carga = @carga";
+
+        //             SqlCommand cmd = new SqlCommand(query, conn);
+        //             cmd.Parameters.AddWithValue("@carga", carga);
+        //             cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
+
+
+
+        //             // Chama método que verifica no banco
+        //             conn.Open();
+        //             cmd.ExecuteNonQuery();
+        //         }
+
+
+
+
+
+        //         // Após atualizar, recarregar os dados no Repeater
+        //         Session["Coletas"] = null;
+        //         CarregarColetas(novaColeta.Text);
+        //         //BuscarCteSalvos(idViagem);
+        //         CarregarPedidos(int.Parse(carga), gv);
+        //     }
+        //     if (e.CommandName == "AtualizarAbas")
+        //     {
+        //         //Atualiza CT-e
+        //         string carga = e.CommandArgument.ToString();
+        //         string idViagem = e.CommandArgument.ToString(); // O 'carga' que você passou no Eval
+        //         int index = e.Item.ItemIndex; // O índice da linha no Repeater
+        //         string nomeUsuario = Session["UsuarioLogado"].ToString();
+
+
+        //         // 1. Verificar se existem CT-es lidos na Session para este item
+        //         if (ListaCtePorItem.ContainsKey(index) && ListaCtePorItem[index].Count > 0)
+        //         {
+        //             List<CteLido> listaParaSalvar = ListaCtePorItem[index];
+
+        //             try
+        //             {
+        //                 if (con.State == ConnectionState.Closed) con.Open();
+        //                 SqlTransaction trans = con.BeginTransaction();
+
+        //                 try
+        //                 {
+        //                     foreach (var cte in listaParaSalvar)
+        //                     {
+        //                         string sql = @"INSERT INTO tbcte 
+        //                      (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
+        //                       num_documento, serie_documento, tipo_documento,mes_ano_documento,emitido_por, emissao_documento, id_viagem)
+        //                      VALUES 
+        //                      (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo,@mes_ano_documento, @emitido_por, @emissao_documento, @idViagem)";
+
+        //                         using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+        //                         {
+        //                             // Extraímos o CNPJ (posições 7 a 20 da chave de 44 dígitos)
+        //                             string cnpjExtraido = cte.ChaveOriginal.Substring(6, 14);
+
+        //                             cmd.Parameters.AddWithValue("@chave", cte.ChaveOriginal);
+        //                             cmd.Parameters.AddWithValue("@uf", cte.Estado);
+        //                             cmd.Parameters.AddWithValue("@cnpj", cnpjExtraido);
+        //                             cmd.Parameters.AddWithValue("@empresa", cte.Filial);
+        //                             cmd.Parameters.AddWithValue("@num", cte.Numero);
+        //                             cmd.Parameters.AddWithValue("@serie", cte.Serie);
+        //                             cmd.Parameters.AddWithValue("@tipo", "CT-e");
+        //                             cmd.Parameters.AddWithValue("@mes_ano_documento", cte.Emissao);
+        //                             cmd.Parameters.AddWithValue("@emitido_por", nomeUsuario);
+        //                             cmd.Parameters.AddWithValue("@emissao_documento", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.000"));
+        //                             cmd.Parameters.AddWithValue("@idViagem", carga);
+
+        //                             cmd.ExecuteNonQuery();
+        //                         }
+        //                     }
+
+        //                     trans.Commit();
+
+        //                     // 2. Limpar a Session deste índice específico
+        //                     ListaCtePorItem.Remove(index);
+
+        //                     // 3. Sucesso!
+        //                     MostrarMsg2("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
+
+        //                     // 4. IMPORTANTE: Rebindar o Repeater. 
+        //                     // Isso fará com que o ItemDataBound rode novamente, 
+        //                     // alimentando o GridView com os dados que agora estão no Banco.
+        //                     rptColetas.DataBind();
+        //                 }
+        //                 catch (Exception ex)
+        //                 {
+        //                     string erroLimpo = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", "");
+        //                     MostrarMsg2("ERRO REAL: " + erroLimpo);
+        //                 }
+        //             }
+        //             finally
+        //             {
+        //                 con.Close();
+        //             }
+        //         }
+        //         else
+        //         {
+        //             MostrarMsg2("Aviso: Nenhuma nova leitura pendente para salvar.");
+        //         }
+
+        //         if (gv != null)
+        //         {
+        //             try
+        //             {
+        //                 if (con.State == ConnectionState.Closed) con.Open();
+        //                 SqlTransaction trans = con.BeginTransaction();
+
+        //                 try
+        //                 {
+        //                     foreach (GridViewRow linha in gv.Rows)
+        //                     {
+        //                         // 1. Pegar as chaves da Grid
+        //                         // Index 0 = pedido, Index 1 = id_viagem (conforme definido no DataKeyNames)
+        //                         string numPedido = gv.DataKeys[linha.RowIndex].Values[0].ToString();
+
+
+        //                         // 2. Localizar os controles da linha
+        //                         TextBox txtIni = (TextBox)linha.FindControl("txtInicioCar");
+        //                         TextBox txtFim = (TextBox)linha.FindControl("txtTermCar");
+        //                         TextBox txtDur = (TextBox)linha.FindControl("txtTempoTotal");
+        //                         DropDownList ddlMot = (DropDownList)linha.FindControl("ddlMotCar");
+
+        //                         // 3. Query de Update
+        //                         string sql = @"UPDATE tbpedidos SET 
+        //                                 iniciocar = @ini, 
+        //                                 termcar = @fim, 
+        //                                 duracao = @dur,
+        //                                 motcar = @mot
+        //                                 WHERE pedido = @pedido ";
+
+        //                         using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+        //                         {
+        //                             // Conversão segura para DateTime (DateTimeLocal envia yyyy-MM-ddTHH:mm)
+        //                             DateTime dtIni, dtFim;
+
+        //                             if (DateTime.TryParse(txtIni.Text, out dtIni))
+        //                                 cmd.Parameters.AddWithValue("@ini", dtIni);
+        //                             else
+        //                                 cmd.Parameters.AddWithValue("@ini", DBNull.Value);
+
+        //                             if (DateTime.TryParse(txtFim.Text, out dtFim))
+        //                                 cmd.Parameters.AddWithValue("@fim", dtFim);
+        //                             else
+        //                                 cmd.Parameters.AddWithValue("@fim", DBNull.Value);
+
+        //                             cmd.Parameters.AddWithValue("@dur", txtDur.Text);
+        //                             cmd.Parameters.AddWithValue("@mot", ddlMot.SelectedItem.Text);
+        //                             cmd.Parameters.AddWithValue("@pedido", numPedido);
+        //                             //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+        //                             cmd.ExecuteNonQuery();
+        //                         }
+        //                     }
+
+        //                     trans.Commit();
+        //                     MostrarMsg2("Alterações salvas com sucesso!");
+        //                 }
+        //                 catch (Exception ex)
+        //                 {
+        //                     trans.Rollback();
+        //                     throw ex;
+        //                 }
+        //             }
+        //             catch (Exception ex)
+        //             {
+        //                 MostrarMsg2("Erro ao salvar pedidos: " + ex.Message);
+        //             }
+        //             finally
+        //             {
+        //                 con.Close();
+        //             }
+        //         }
+
+        //         TextBox txtHistoricoObservacao = (TextBox)e.Item.FindControl("txtHistoricoObservacao");
+
+        //         if (txtHistoricoObservacao.Text != string.Empty)
+        //         {
+        //             try
+        //             {
+        //                 if (con.State == ConnectionState.Closed) con.Open();
+        //                 SqlTransaction trans = con.BeginTransaction();
+
+        //                 try
+        //                 {
+
+        //                     // 3. Query de Update
+        //                     string sql = @"UPDATE tbcargas SET 
+        //                                 observacao = @observacao 
+        //                                 WHERE carga = @carga ";
+
+        //                     using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+        //                     {
+
+        //                         cmd.Parameters.AddWithValue("@observacao", txtHistoricoObservacao.Text);
+        //                         cmd.Parameters.AddWithValue("@carga", carga);
+        //                         //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+        //                         cmd.ExecuteNonQuery();
+        //                     }
+
+
+        //                     trans.Commit();
+        //                     MostrarMsg("Alterações salvas com sucesso!");
+        //                 }
+        //                 catch (Exception ex)
+        //                 {
+        //                     trans.Rollback();
+        //                     throw ex;
+        //                 }
+        //             }
+        //             catch (Exception ex)
+        //             {
+        //                 MostrarMsg("Erro ao salvar Observacao: " + ex.Message);
+        //             }
+        //             finally
+        //             {
+        //                 con.Close();
+        //             }
+        //         }
+
+        //         TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFe");
+
+        //         if (txtMDFe.Text != string.Empty)
+        //         {
+        //             try
+        //             {
+        //                 if (con.State == ConnectionState.Closed) con.Open();
+        //                 SqlTransaction trans = con.BeginTransaction();
+
+        //                 try
+        //                 {
+
+        //                     // 3. Query de Update
+        //                     string sql = @"UPDATE tbcargas SET 
+        //                                 mdfe = @mdfe 
+        //                                 WHERE carga = @carga ";
+
+        //                     using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+        //                     {
+
+        //                         cmd.Parameters.AddWithValue("@mdfe", txtMDFe.Text);
+        //                         cmd.Parameters.AddWithValue("@carga", carga);
+        //                         //cmd.Parameters.AddWithValue("@idViagem", idViagem);
+
+        //                         cmd.ExecuteNonQuery();
+        //                     }
+
+
+        //                     trans.Commit();
+        //                     MostrarMsg("Alterações salvas com sucesso!");
+        //                 }
+        //                 catch (Exception ex)
+        //                 {
+        //                     trans.Rollback();
+        //                     throw ex;
+        //                 }
+        //             }
+        //             catch (Exception ex)
+        //             {
+        //                 MostrarMsg2("Erro ao salvar MDFe: " + ex.Message);
+        //             }
+        //             finally
+        //             {
+        //                 con.Close();
+        //             }
+        //         }
+        //         TextBox txtNFSe = (TextBox)e.Item.FindControl("txtNFSe");
+
+        //         if (txtNFSe != null && !string.IsNullOrWhiteSpace(txtNFSe.Text))
+        //         {
+        //             try
+        //             {
+        //                 if (con.State == ConnectionState.Closed) con.Open();
+        //                 string sqlExiste = "SELECT COUNT(1) FROM tbnfse WHERE num_documento = @num_documento";
+
+        //                 using (SqlCommand cmdExiste = new SqlCommand(sqlExiste, con))
+        //                 {
+
+        //                     cmdExiste.Parameters.AddWithValue("@num_documento", txtNFSe.Text);
+
+        //                     int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
+
+        //                     if (existe > 0)
+        //                     {
+        //                         MostrarMsg2("Já existe uma NFS-e cadastrada com esta chave:\n" + txtNFSe.Text);
+        //                         return; // ⛔ não continua o método
+        //                     }
+        //                 }
+
+        //                 using (SqlTransaction trans = con.BeginTransaction())
+        //                 {
+        //                     try
+        //                     {
+        //                         string sql = @"INSERT INTO tbnfse 
+        //                      (num_documento, serie_documento, tipo_documento, emitido_por, emissao_documento, status_documento,situacao_documento, idviagem)
+        //                      VALUES 
+        //                      (@num, @serie, @tipo, @emitido_por, @emissao_documento, @status_documento,@situacao_documento, @idViagem)";
+
+        //                         using (SqlCommand cmd = new SqlCommand(sql, con, trans))
+        //                         {
+        //                             DateTime agora = DateTime.Now;
+
+        //                             cmd.Parameters.AddWithValue("@num", txtNFSe.Text);
+        //                             cmd.Parameters.AddWithValue("@serie", "1");
+        //                             cmd.Parameters.AddWithValue("@tipo", "NFS-e");
+        //                             cmd.Parameters.AddWithValue("@emitido_por", nomeUsuario);
+        //                             // Passando como DateTime puro (mais seguro)
+        //                             cmd.Parameters.AddWithValue("@status_documento", "Pendente");
+        //                             cmd.Parameters.AddWithValue("@situacao_documento", "Emitido");
+        //                             cmd.Parameters.AddWithValue("@emissao_documento", agora);
+        //                             cmd.Parameters.AddWithValue("@idViagem", carga);
+
+        //                             cmd.ExecuteNonQuery();
+        //                         }
+
+        //                         trans.Commit(); // Commit primeiro
+
+        //                         // Agora que os dados estão "vivos" no banco, fazemos o bind
+        //                         rptColetas.DataBind();
+
+        //                         MostrarMsg2("Alterações salvas com sucesso!");
+        //                     }
+        //                     catch (Exception ex)
+        //                     {
+        //                         trans.Rollback();
+        //                         throw ex;
+        //                     }
+        //                 }
+        //             }
+        //             catch (Exception ex)
+        //             {
+        //                 MostrarMsg("Erro ao salvar NFS-e: " + ex.Message);
+        //             }
+        //             finally
+        //             {
+        //                 if (con.State == ConnectionState.Open) con.Close();
+        //             }
+        //         }
+
+        //         Session["Coletas"] = null;
+        //         CarregarColetas(novaColeta.Text);
+        //         BuscarCteSalvos(idViagem);
+        //         CarregarPedidos(int.Parse(carga), gv);
+
+
+
+
+        //     }
+        //     if (e.CommandName == "Coletas")
+        //     {
+        //         int id = Convert.ToInt32(e.CommandArgument);
+        //         string idCarga = id.ToString(); // esse valor viria da lógica do seu código
+        //                                         //hdIdCarga.Value = idCarga;
+        //         Session["idCarga"] = idCarga;
+        //         //GetPedidos();
+        //         //string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
+        //         //string script = $"window.open('{url}', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=794,height=1123');";
+        //         //ClientScript.RegisterStartupScript(this.GetType(), "abrirJanela", script, true);
+        //     }
+        //     if (e.CommandName == "AtualizarColeta")
+        //     {
+        //         string carga = e.CommandArgument.ToString();
+
+        //         // Recuperar os controles de dentro do item                
+
+
+
+        //         // Exemplo: atualizando no banco
+        //         using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         {
+        //             TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
+        //             TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
+        //             TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
+
+
+        //             string query = @"UPDATE tbcargas SET                                  
+        //                          ot = @ot,
+        //                          catraca = @catraca,
+        //                          rede = @rede 
+        //                          WHERE carga = @carga";
+
+        //             SqlCommand cmd = new SqlCommand(query, conn);
+        //             cmd.Parameters.AddWithValue("@carga", carga);
+        //             cmd.Parameters.AddWithValue("@ot", txtOT.Text);
+        //             cmd.Parameters.AddWithValue("@catraca", txtCatracas.Text);
+        //             cmd.Parameters.AddWithValue("@rede", txtRedes.Text.Trim());
+
+
+        //             // Chama método que verifica no banco
+        //             conn.Open();
+        //             cmd.ExecuteNonQuery();
+        //         }
+
+
+
+        //         // Após atualizar, recarregar os dados no Repeater
+        //         MostrarMsg2("Dados Salvos!");
+        //         Session["Coletas"] = null;
+        //         CarregarColetas(novaColeta.Text);
+        //     }
+        //     if (e.CommandName == "PedagioManual")
+        //     {
+        //         using (SqlConnection conn = new SqlConnection(
+        //         WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //         {
+        //             string query = @"UPDATE tbcarregamentos SET 
+        //              pedagio = @pedagio,                                 
+        //              pedagiofeito = @pedagiofeito 
+        //              WHERE num_carregamento = @num_carregamento";
+
+        //             using (SqlCommand cmdPedagio = new SqlCommand(query, conn))
+        //             {
+        //                 cmdPedagio.Parameters.Add("@num_carregamento", SqlDbType.Int)
+        //                                      .Value = Convert.ToInt32(novaColeta.Text);
+
+        //                 cmdPedagio.Parameters.Add("@pedagio", SqlDbType.VarChar)
+        //                                      .Value = "SIM";
+
+        //                 cmdPedagio.Parameters.Add("@pedagiofeito", SqlDbType.VarChar)
+        //                                      .Value = "Pendente";
+
+        //                 conn.Open();
+        //                 int linhas = cmdPedagio.ExecuteNonQuery();
+
+        //                 if (linhas == 0)
+        //                 {
+        //                     throw new Exception("Nenhum registro encontrado para atualizar.");
+        //                 }
+        //             }
+        //         }
+
+
+        //         // Após atualizar, recarregar os dados no Repeater
+        //         // MostrarMsg2("Pedágio enviado com sucesso!");
+        //         //Session["Coletas"] = null;
+        //         //CarregarColetas(novaColeta.Text);
+        //     }
+        //     if (e.CommandName == "EnviarSM")
+        //     {
+        //         // 1. Captura os dados da interface ANTES do processo assíncrono
+        //         string idCarga = e.CommandArgument.ToString();
+
+        //         DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
+        //         DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+        //         string peso = ((TextBox)e.Item.FindControl("txtPeso")).Text;
+        //         string valor = ((TextBox)e.Item.FindControl("txtValorTotal")).Text;
+        //         string previsao_inicial = ((TextBox)e.Item.FindControl("txtPrevisaoInicio")).Text;
+        //         string previsao_final = ((TextBox)e.Item.FindControl("txtPrevisaoTermino")).Text;
+        //         string codmotorista = txtCodMotorista.Text;
+        //         string percurso = ddlPercurso.SelectedItem.Text;
+        //         string rota = ddlRotaKrona.SelectedItem.Text;
+        //         string id_rota = ddlRotaKrona.SelectedValue;
+        //         string placa = txtPlaca.Text;
+        //         string codveiculo = txtCodVeiculo.Text;
+
+        //         try
+        //         {
+        //             // 1. Monta o objeto
+        //             var solicitacao = CriarObjetoSolicitacao(idCarga, placa, valor, peso, previsao_inicial, previsao_final, percurso, rota, id_rota, codmotorista, codveiculo);
+
+        //             // 2. Serializa
+        //             string jsonEnvio = System.Text.Json.JsonSerializer.Serialize(solicitacao, new JsonSerializerOptions
+        //             {
+        //                 WriteIndented = true,
+        //                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        //             });
+
+        //             // 3. Grava Arquivo Físico (Auditoria)
+        //             string caminhoFisico = Server.MapPath("~/EnviaSM/SM_Solicitacao_" + idCarga + ".json");
+        //             System.IO.File.WriteAllText(caminhoFisico, jsonEnvio, System.Text.Encoding.UTF8);
+
+        //             // 4. ENVIO SÍNCRONO (A página vai "carregar" enquanto espera a resposta)
+        //             string jsonResposta = EnviarRequisicaoKronaSincrona(jsonEnvio);
+
+        //             // 5. Salva no Banco (Corrigindo a ordem dos parâmetros para bater com a definição do método)
+        //             // Ordem correta baseada no seu método: (json, carga, valor, previsao_init, previsao_fim, percurso, rota, id_rota)
+        //             ProcessarESalvarRetorno(jsonResposta, idCarga, valor, previsao_inicial, previsao_final, percurso, rota, id_rota);
+
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             MostrarMsg2("Erro: " + ex.Message);
+        //         }
+        //     }
+        //     if (e.CommandName == "BuscarNfe")
+        //     {
+        //         string idCarga = e.CommandArgument.ToString();
+        //         string chave = ((TextBox)e.Item.FindControl("txtChaveNF")).Text;
+        //         GridView gvn = (GridView)e.Item.FindControl("gvNF");
+        //         TextBox txtChaveNF = (TextBox)e.Item.FindControl("txtChaveNF");
+
+        //         //string chave = "35260259104422002446550370009554061775712904";
+        //         string apiKey = "025caf00-6477-4d97-b133-f34ad21594f3";
+
+        //         // ========= 1ª CHAMADA (PUT) =========
+        //         var request = (HttpWebRequest)WebRequest.Create(
+        //             "https://api.meudanfe.com.br/v2/fd/add/" + chave);
+
+        //         request.Method = "PUT";
+        //         request.Accept = "application/json";
+        //         request.Headers.Add("Api-Key", apiKey);
+        //         request.ContentLength = 0; // 👈 MUITO IMPORTANTE
+
+        //         string jsonPut;
+
+        //         using (var requestStream = request.GetRequestStream())
+        //         {
+        //             // não escreve nada, só força o envio do corpo vazio
+        //         }
+
+        //         using (var response = (HttpWebResponse)request.GetResponse())
+        //         using (var reader = new StreamReader(response.GetResponseStream()))
+        //         {
+        //             jsonPut = reader.ReadToEnd();
+        //         }
+
+        //         var serializer = new JavaScriptSerializer();
+        //         RetornoPut retornoPut = serializer.Deserialize<RetornoPut>(jsonPut);
+
+        //         // ========= SE STATUS FOR OK =========
+        //         if (retornoPut.status == "OK")
+        //         {
+        //             // ========= 2ª CHAMADA (GET XML) =========
+        //             var requestXml = (HttpWebRequest)WebRequest.Create(
+        //                 "https://api.meudanfe.com.br/v2/fd/get/xml/" + chave);
+
+        //             requestXml.Method = "GET";
+        //             requestXml.Accept = "application/json";
+        //             requestXml.Headers.Add("Api-Key", apiKey);
+
+        //             string jsonXml;
+
+        //             using (var responseXml = (HttpWebResponse)requestXml.GetResponse())
+        //             using (var readerXml = new StreamReader(responseXml.GetResponseStream()))
+        //             {
+        //                 jsonXml = readerXml.ReadToEnd();
+        //             }
+
+        //             RetornoXml retornoXml = serializer.Deserialize<RetornoXml>(jsonXml);
+
+        //             string xmlNfe = retornoXml.data;
+
+        //             // aqui você já tem o XML puro
+        //             // pode salvar em arquivo, banco, ou carregar em XmlDocument
+
+        //             // exemplo salvando em arquivo:
+        //             //File.WriteAllText(Server.MapPath("~/nfe.xml"), xmlNfe);
+
+        //             SalvarXmlNoBanco(xmlNfe, idCarga);
+        //             txtChaveNF.Text = string.Empty;
+        //             txtChaveNF.Focus();
+        //             CarregarNF(idCarga, gvn);
+
+
+        //         }
+        //         else
+        //         {
+        //             // erro retornado pela API
+        //             string msgErro = retornoPut.statusMessage;
+
+        //             MostrarMsg2("Erro ao executar o processo: " + msgErro);
+        //         }
+
+        //     }
+        //     if (e.CommandName == "GeraDoc")
+        //     {
+        //         int idCarga = int.Parse(e.CommandArgument.ToString());
+
+        //         // 1. Sua validação que você confirmou que funciona:
+        //         if (!PossuiNotasLancadas(idCarga))
+        //         {
+        //             MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
+        //             return;
+        //         }
+
+        //         // 2. Define o tipo e gera o número no banco
+        //         bool ehServico = VerificarSeEhServico(idCarga);
+        //         string numeroDocumento = ehServico ? GerarEObterProximoNFse() : GerarEObterProximoCte();
+
+        //         if (string.IsNullOrEmpty(numeroDocumento))
+        //         {
+        //             MostrarMsg2("Erro ao gerar a numeração do documento.");
+        //             return;
+        //         }
+
+        //         // 3. Em vez de chamar o DispararDownload aqui, chamamos a página dedicada via JavaScript.
+        //         // O window.open faz o navegador abrir o fluxo de download nativo sem sair da página atual.
+        //         string urlDownload = $"DownloadSapiens.aspx?idCarga={idCarga}&numDoc={numeroDocumento}&serv={ehServico.ToString().ToLower()}";
+        //         string script = $"window.open('{urlDownload}', '_blank');";
+
+        //         ScriptManager.RegisterStartupScript(this, this.GetType(), "dispararDownloadSapiens", script, true);
+        //     }
+        //     if (e.CommandName == "GeraXml")
+        //     {
+        //         try
+        //         {
+        //             int idCarga = int.Parse(e.CommandArgument.ToString());
+
+        //             // 1. Validação de segurança
+        //             if (!PossuiNotasLancadas(idCarga))
+        //             {
+        //                 MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
+        //                 return;
+        //             }
+
+        //             // 2. Determina o tipo e busca o próximo número no banco
+        //             bool ehServico = VerificarSeEhServico(idCarga);
+        //             string numeroDoc = ehServico ? GerarEObterProximoNFse() : GerarEObterProximoCte();
+
+        //             if (string.IsNullOrEmpty(numeroDoc))
+        //             {
+        //                 MostrarMsg2("Erro ao gerar a numeração do documento.");
+        //                 return;
+        //             }
+
+        //             // 3. Em vez de chamar o DispararDownload interno com problema de AJAX,
+        //             // redireciona para a página dedicada passando o parâmetro &formato=xml
+        //             string urlDownload = $"DownloadSapiens.aspx?idCarga={idCarga}&numDoc={numeroDoc}&serv={ehServico.ToString().ToLower()}&formato=xml";
+        //             string script = $"window.open('{urlDownload}', '_blank');";
+
+        //             ScriptManager.RegisterStartupScript(this, this.GetType(), "dispararDownloadXml", script, true);
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             MostrarMsg2("Erro ao processar documento: " + ex.Message);
+        //         }
+        //     }
+        //     if (e.CommandName == "CancelarCarga")
+        //     {
+        //         // 1. Verificação de permissão por usuário
+        //         string usuarioLogado = Session["UsuarioLogado"]?.ToString();
+        //         string usuarioSistema = Session["UsuarioSistema"]?.ToString();
+        //         if (usuarioSistema != "TNG30976" && usuarioSistema != "admin")
+        //         {
+        //             // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
+        //             ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
+        //                 "alert('Essa opção não está disponível para o seu usuário.');", true);
+        //             return;
+        //         }
+
+        //         string carga = e.CommandArgument.ToString();
+        //         string usuarioFormatado = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + usuarioLogado;
+
+        //         using (SqlConnection conn = new SqlConnection(
+        //             WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //         {
+        //             conn.Open();
+        //             using (SqlTransaction trans = conn.BeginTransaction())
+        //             {
+        //                 try
+        //                 {
+        //                     int idViagem;
+
+        //                     // 🔹 1. Buscar idviagem da carga
+        //                     string sqlBusca = "SELECT idviagem FROM tbcargas WHERE carga = @carga";
+        //                     using (SqlCommand cmd = new SqlCommand(sqlBusca, conn, trans))
+        //                     {
+        //                         cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+        //                         idViagem = Convert.ToInt32(cmd.ExecuteScalar());
+        //                     }
+
+        //                     // 🔹 2. Cancelar a carga na tbcargas
+        //                     string sqlUpdateCarga = @"UPDATE tbcargas 
+        //                                   SET status = 'Cancelada',
+        //                                       andamento = 'CANCELADA',
+        //                                       atualizacao = @usuario,
+        //                                       material = 'Vazio',
+        //                                       fl_exclusao = 'S' 
+        //                                   WHERE carga = @carga";
+
+        //                     using (SqlCommand cmd = new SqlCommand(sqlUpdateCarga, conn, trans))
+        //                     {
+        //                         cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+        //                         cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuarioFormatado;
+        //                         cmd.ExecuteNonQuery();
+        //                     }
+
+        //                     // 🔹 NOVO: 3. Cancelar na tbpedidos usando a carga como parâmetro
+        //                     string sqlUpdatePedidos = "UPDATE tbpedidos SET fl_exclusao = 'S' WHERE carga = @carga";
+        //                     using (SqlCommand cmd = new SqlCommand(sqlUpdatePedidos, conn, trans))
+        //                     {
+        //                         cmd.Parameters.Add("@carga", SqlDbType.Int).Value = Convert.ToInt32(carga);
+        //                         cmd.ExecuteNonQuery();
+        //                     }
+
+        //                     // 🔹 4. Verificar se ainda existem cargas ativas
+        //                     string sqlVerifica = @"SELECT COUNT(*) 
+        //                                 FROM tbcargas 
+        //                                 WHERE idviagem = @idviagem 
+        //                                 AND fl_exclusao IS NULL";
+
+        //                     int totalAtivas = 0;
+        //                     using (SqlCommand cmd = new SqlCommand(sqlVerifica, conn, trans))
+        //                     {
+        //                         cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
+        //                         totalAtivas = Convert.ToInt32(cmd.ExecuteScalar());
+        //                     }
+
+        //                     // 🔹 5. Se não existir nenhuma ativa → cancelar OC
+        //                     if (totalAtivas == 0)
+        //                     {
+        //                         string sqlOC = @"UPDATE tbcarregamentos
+        //                               SET status = 'Cancelada',
+        //                                   situacao = 'O. C. CANCELADA',
+        //                                   fl_exclusao = 'S',
+        //                                   usualt = @usuario,
+        //                                   dtalt = GETDATE()
+        //                               WHERE num_carregamento = @idviagem";
+
+        //                         using (SqlCommand cmd = new SqlCommand(sqlOC, conn, trans))
+        //                         {
+        //                             cmd.Parameters.Add("@idviagem", SqlDbType.Int).Value = idViagem;
+        //                             cmd.Parameters.Add("@usuario", SqlDbType.VarChar).Value = usuarioLogado;
+        //                             cmd.ExecuteNonQuery();
+        //                         }
+        //                     }
+
+        //                     trans.Commit();
+
+        //                     if (totalAtivas == 0)
+        //                     {
+        //                         Response.Redirect("GestaoDeEntregasMatriz.aspx");
+        //                     }
+        //                     else
+        //                     {
+        //                         Session["Coletas"] = null;
+        //                         CarregarColetas(novaColeta.Text);
+        //                     }
+        //                 }
+        //                 catch (Exception)
+        //                 {
+        //                     //trans.Rollback();
+        //                     throw;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        private ControlesCarga ObterControles(GridView gvNF)
+        {
+            RepeaterItem item = (RepeaterItem)gvNF.NamingContainer;
+            HiddenField hdIdCarga = (HiddenField)item.FindControl("hdIdCarga");
+
+            DropDownList ddlStatus = (DropDownList)item.FindControl("ddlStatus");
+            TextBox txtCVA = (TextBox)item.FindControl("txtCVA");
+
+            Label lblPesoCTe = (Label)item.FindControl("lblPesoCTe");
+            Label lblPesoCarregadoCTe = (Label)item.FindControl("lblPesoCarregadoCTe");
+            Label lblValorMercCTe = (Label)item.FindControl("lblValorMercCTe");
+            Label lblTotal = (Label)item.FindControl("lblTotal");
+            Label lblCBS = (Label)item.FindControl("lblCBS");
+            Label lblIBS = (Label)item.FindControl("lblIBS");
+            Label lblICMS = (Label)item.FindControl("lblICMS");
+            Label lblTotalFrete = (Label)item.FindControl("lblTotalFrete");
+
+
+            return new ControlesCarga
+            {
+                Carga = Convert.ToInt32(hdIdCarga.Value),
+
+                Status = ddlStatus?.SelectedItem.Text,
+                CVA = txtCVA?.Text,
+
+                GvNF = gvNF,
+
+                LblPesoCTe = lblPesoCTe,
+                lblPesoCarregadoCTe = lblPesoCarregadoCTe,
+                LblValorMercCTe = lblValorMercCTe,
+                LblTotal = lblTotal,
+                LblCBS = lblCBS,
+                LblIBS = lblIBS,
+                LblICMS = lblICMS,
+                LblTotalFrete = lblTotalFrete
+            };
+        }
+        private ControlesCarga ObterControles(RepeaterCommandEventArgs e)
+        {
+            DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+            TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
+            TextBox txtDuracaoPernoite = (TextBox)e.Item.FindControl("txtDuracaoPernoite");
+            TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
+            TextBox txtLocalPernoite = (TextBox)e.Item.FindControl("txtLocalPernoite");
+            if (ddlStatus.SelectedItem.Text == "Cancelada" || ddlStatus.SelectedItem.Text == "Concluido")
+            {
+                andamentoCarga = "CONCLUIDO";
+            }
+            // Krona            
+            TextBox txtPrevisaoInicio = (TextBox)e.Item.FindControl("txtPrevisaoInicio");
+            TextBox txtPrevisaoTermino = (TextBox)e.Item.FindControl("txtPrevisaoTermino");
+            TextBox txtPeso = (TextBox)e.Item.FindControl("txtPeso");
+            TextBox txtValorTotal = (TextBox)e.Item.FindControl("txtValorTotal");
+            TextBox txtSmEnviadaPor = (TextBox)e.Item.FindControl("txtSmEnviadaPor");
+            TextBox txtSM = (TextBox)e.Item.FindControl("txtSM");
+            DropDownList ddlPercurso = (DropDownList)e.Item.FindControl("ddlPercurso");
+            DropDownList ddlRota = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+            int sm = 0;
+            int.TryParse(txtSM?.Text, out sm);
+            decimal peso;
+            decimal.TryParse(
+                txtPeso.Text.Replace(".", ","),
+                out peso
+            );
+
+            // Nota Fiscal
+            GridView gvNF = (GridView)e.Item.FindControl("gvNF");
+            Label lblPesoCTe = (Label)e.Item.FindControl("lblPesoCTe");
+            Label lblValorMercCTe = (Label)e.Item.FindControl("lblValorMercCTe");
+            Label lblTotal = (Label)e.Item.FindControl("lblTotal");
+            Label lblCBS = (Label)e.Item.FindControl("lblCBS");
+            Label lblIBS = (Label)e.Item.FindControl("lblIBS");
+            Label lblICMS = (Label)e.Item.FindControl("lblICMS");
+            Label lblTotalFrete = (Label)e.Item.FindControl("lblTotalFrete");
+            //Label lblPeso = (Label)e.Item.FindControl("lblPeso");
+
+
+            return new ControlesCarga
+            {
+                Carga = Convert.ToInt32(e.CommandArgument),
+                // Nota Fiscal
+                GvNF = gvNF,
+                //LblPesoCTe = txtPeso,
+                LblValorMercCTe = lblValorMercCTe,
+                LblTotal = lblTotal,
+                LblCBS = lblCBS,
+                LblIBS = lblIBS,
+                LblICMS = lblICMS,
+                LblTotalFrete = lblTotalFrete,
+
+                // Outros
+                Status = ddlStatus.SelectedItem.Text,
+                Andamento = andamentoCarga,
+                CVA = txtCVA.Text.Trim(),
+                statusPernoite = txtDuracaoPernoite.Text,
+                SaidaOrigem = SafeDateValue(txtSaidaOrigem.Text),
+
+                LocalPernoite = txtLocalPernoite?.Text.Trim().ToUpper(),
+                // Krona
+                ValorTotal = SafeDecimalValueNullable(txtValorTotal.Text),
+                Percurso = ddlPercurso.SelectedItem.Text,
+                RotaKrona = ddlRota.SelectedItem.Text,
+                IdRotaKrona = ddlRota.SelectedValue,
+                PrevisaoInicioKrona = SafeDateValue(txtPrevisaoInicio.Text),
+                PrevisaoTerminoKrona = SafeDateValue(txtPrevisaoTermino.Text),
+                SM = sm,
+                SmEnviadaPor = txtSmEnviadaPor?.Text.Trim().ToUpper(),
+                txtPeso = peso
+            };
+        }
+        private string ObterSqlAtualizacao()
+        {
+            return @"
+            UPDATE tbcargas
+            SET
+                status = @status,
+                andamento = @andamento,
+                cva = @cva,
+                saidaorigem = @saidaorigem,
+                tempoagcarreg = @tempoagcarreg,
+                duracao_transp = @duracao_transp,
+                tempoagdescarreg = @tempoagdescarreg,
+                chegadadestino = @chegadadestino,
+                disponivel_solicitacao = @disponivel_solicitacao,
+                prev_chegada = @prev_chegada,
+                saidaplanta = @saidaplanta,
+                codmot = @codmot,
+                frota = @frota,
+                gate_origem = @gate_origem,
+                gate_destino = @gate_destino,
+                local_pernoite = @local_pernoite,
+                inicio_pernoite = @inicio_pernoite,
+                fim_pernoite = @fim_pernoite,
+                duracao_pernoite = @duracao_pernoite,
+                status_pernoite = @status_pernoite,
+                percurso = @percurso,
+                valor_total = @valor_total,
+                previsao_inicio_krona = @previsao_inicio_krona,
+                previsao_termino_krona = @previsao_termino_krona,
+                rota_krona = @rota_krona,
+                id_rota_krona = @id_rota_krona,
+                num_sm=@num_sm,                 
+                usu_envio_krona=@usu_envio_krona
+               
+            WHERE carga = @carga";
+        }
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             GridView gv = (GridView)e.Item.FindControl("gvPedidos");
-
             if (e.CommandName == "Atualizar")
             {
-                string carga = e.CommandArgument.ToString();
-                //GridView gv = (GridView)e.Item.FindControl("gvPedidos");
-
-                // Recuperar os controles de dentro do item
-                TextBox txtDataHoraColeta = (TextBox)e.Item.FindControl("txtDataHoraColeta");
-                TextBox txtVeiculoDisponivel = (TextBox)e.Item.FindControl("txtVeiculoDisponivel");
-                TextBox txtGateOrigem = (TextBox)e.Item.FindControl("txtGateOrigem");
-                TextBox txtPrevisaoChegada = (TextBox)e.Item.FindControl("txtPrevisaoChegada");
-                TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
-                TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
-                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
-                TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
-                TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
-                TextBox txtAgDescarga = (TextBox)e.Item.FindControl("txtAgDescarga");
-                TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
-                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
-                TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
-                Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
-                TextBox txtMaterial = (TextBox)e.Item.FindControl("txtMaterial");
-
-                TextBox txtCodExpedidor = (TextBox)e.Item.FindControl("txtCodExpedidor");
-                TextBox cboExpedidor = (TextBox)e.Item.FindControl("cboExpedidor");
-                TextBox txtCidExpedidor = (TextBox)e.Item.FindControl("txtCidExpedidor");
-                TextBox txtUFExpedidor = (TextBox)e.Item.FindControl("txtUFExpedidor");
-
-                TextBox txtCodRecebedor = (TextBox)e.Item.FindControl("txtCodRecebedor");
-                TextBox cboRecebedor = (TextBox)e.Item.FindControl("cboRecebedor");
-                TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
-                TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
-
-                TextBox txtLocalPernoite = (TextBox)e.Item.FindControl("txtLocalPernoite");
-                TextBox txtInicioPernoite = (TextBox)e.Item.FindControl("txtInicioPernoite");
-                TextBox txtFimPernoite = (TextBox)e.Item.FindControl("txtFimPernoite");
-                TextBox txtDuracaoP = (TextBox)e.Item.FindControl("txtDuracaoP");
-
-                // Recuperar os TextBoxes de UF
-                //TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUFExpedidor");
-                //TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUFRecebedor");
-
-                DateTime agora = DateTime.Now;
-
-                // Exemplo: atualizando no banco
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                var c = ObterControles(e);
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
                 {
-                    // Extrai os valores uma única vez                    
-                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
-                    var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
-                    var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
-                    var disponivel_solicitacao = SafeDateValue2(txtVeiculoDisponivel.Text.Trim());
-                    var cvaOC = txtCVA.Text.Trim();
+                    SqlCommand cmd = new SqlCommand(ObterSqlAtualizacao(), conn);
+                    cmd.Parameters.AddWithValue("@carga", c.Carga);
 
-                    var CodExpedidor = SafeDateValue2(txtCodExpedidor.Text.Trim());
-                    var Expedidor = SafeDateValue2(cboExpedidor.Text.Trim());
-                    var Cid_Expedidor = SafeDateValue2(txtCidExpedidor.Text.Trim());
-                    var UFExpedidor = SafeDateValue2(txtUFExpedidor.Text.Trim());
+                    AdicionarParametrosGerais(cmd, c, andamentoCarga);
+                    AdicionarParametrosPernoite(cmd, c);
+                    AdicionarParametrosKrona(cmd, c);
 
-                    var CodRecebedor = SafeDateValue2(txtCodRecebedor.Text.Trim());
-                    var Recebedor = SafeDateValue2(cboRecebedor.Text.Trim());
-                    var CidRecebedor = SafeDateValue2(txtCidRecebedor.Text.Trim());
-                    var UFRecebedor = SafeDateValue2(txtUFRecebedor.Text.Trim());
-                    var localPernoite = SafeDateValue2(txtLocalPernoite.Text.Trim());
-                    var inicioPernoite = SafeDateValue2(txtInicioPernoite.Text.Trim());
-                    var fimPernoite = SafeDateValue2(txtFimPernoite.Text.Trim());
-                    var duracaoP = txtDuracaoP.Text.Trim();
-
-
-                    if (chegada != null && saida != null && saidaPlanta != null)
-                    {
-                        statusOC = "Concluido";
-                        situacaoOC = "Pronto";
-                        andamentoCarga = "Entregue";
-                    }
-                    else if (chegada != null && saida != null)
-                    {
-                        statusOC = "Ag. Descarga";
-                        situacaoOC = "EM ANDAMENTO";
-                        andamentoCarga = "Em Andamento";
-                    }
-                    else if (chegada != null && saida != null)
-                    {
-                        statusOC = "Em Transito";
-                        situacaoOC = "EM ANDAMENTO";
-                        andamentoCarga = "Em Andamento";
-                    }
-                    else if (chegada != null)
-                    {
-                        statusOC = "Ag. Carregamento";
-                        situacaoOC = "EM ANDAMENTO";
-                        andamentoCarga = "Em Andamento";
-                    }
-                    else
-                    {
-                        statusOC = "Pendente";
-                        situacaoOC = "PROGRAMADA";
-                        andamentoCarga = "Programada";
-                    }
-                    if (ddlStatus.SelectedItem.Text != "Pendente" || ddlStatus.SelectedItem.Text != "Concluido")
-                    {
-                        situacaoOC = "EM ANDAMENTO";
-                        andamentoCarga = "Em Andamento";
-                        statusOC = ddlStatus.SelectedItem.Text.Trim();
-
-                    }
-                    if (ddlStatus.SelectedItem.Text == "Pendente")
-                    {
-                        situacaoOC = "PROGRAMADA";
-                        andamentoCarga = "Programada";
-                        //statusOC = ddlStatus.SelectedItem.Text.Trim();
-
-                    }
-
-                    string duracao = txtDuracaoP.Text.Trim();
-
-                    string statusPernoite = "";
-
-                    if (!string.IsNullOrEmpty(duracao))
-                    {
-                        TimeSpan tsDuracao = TimeSpan.Parse(duracao);
-                        TimeSpan tsLimite = new TimeSpan(11, 0, 0);
-
-                        if (tsDuracao < tsLimite)
-                        {
-                            statusPernoite = "Não Cumpriu a Jornada de 11h";
-                        }
-                        else
-                        {
-                            statusPernoite = "Cumpriu Jornada de 11h";
-                        }
-                    }
-
-                    string query = @"UPDATE tbcargas SET                                  
-                                gate_origem = @gate_origem,
-                                gate_destino = @gate_destino,
-                                status = @status, 
-                                cva = @cva, 
-                                andamento = @andamento,
-                                saidaorigem = @saidaorigem,
-                                tempoagcarreg = @tempoagcarreg,
-                                chegadadestino = @chegadadestino,
-                                saidaplanta = @saidaplanta,
-                                prev_chegada = @prev_chegada,
-                                tempoagdescarreg=@tempoagdescarreg,
-                                duracao_transp=@duracao_transp,
-                                disponivel_solicitacao = @disponivel_solicitacao,
-                                codmot=@codmot, 
-                                local_pernoite=@local_pernoite,
-                                inicio_pernoite=@inicio_pernoite,
-                                fim_pernoite=@fim_pernoite,
-                                duracao_pernoite=@duracao_pernoite,
-                                status_pernoite=@status_pernoite,
-                                frota=@frota
-                                WHERE carga = @carga";
-
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
-                    cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
-                    cmd.Parameters.AddWithValue("@saidaorigem", SafeDateValue(txtSaidaOrigem.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@chegadadestino", SafeDateValue(txtChegadaDestino.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@disponivel_solicitacao", SafeDateValue(txtVeiculoDisponivel.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@prev_chegada", SafeDateValue(txtPrevisaoChegada.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@saidaplanta", SafeDateValue(txtSaidaPlanta.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@codmot", txtCodMotorista.Text.Trim() ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@frota", txtCodVeiculo.Text.Trim() ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@gate_origem", SafeDateValue(txtGateOrigem.Text.Trim()) ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@gate_destino", SafeDateValue(txtGateDestino.Text.Trim()) ?? (object)DBNull.Value);
-
-                    cmd.Parameters.AddWithValue("@local_pernoite", txtLocalPernoite.Text.Trim().ToUpper());
-                    cmd.Parameters.AddWithValue("@inicio_pernoite", SafeDateValue(txtInicioPernoite.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@fim_pernoite", SafeDateValue(txtFimPernoite.Text.Trim())); 
-                    cmd.Parameters.AddWithValue("@duracao_pernoite", txtDuracaoP.Text.Trim());
-                    cmd.Parameters.AddWithValue("@status_pernoite", statusPernoite);
-                    // Chama método que verifica no banco
                     conn.Open();
-                    cmd.ExecuteNonQuery();
 
-                    // TRATANDO O PREMIO AUTOMATICO DO MOTORISTA
-                    if (ddlStatus.SelectedItem.Text == "Concluido" && txtMaterial.Text != "Vazio" && txtMaterial.Text != "Embalagem")
-                    {
-                        // SOMENTE FUNCIONÁRIO
-                        if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
-                        {
-                            using (SqlConnection conn2 = new SqlConnection(
-                                WebConfigurationManager
-                                .ConnectionStrings["conexao"].ConnectionString))
-                            {
-                                conn2.Open();
-
-                                SqlTransaction trans = conn2.BeginTransaction();
-
-                                try
-                                {
-                                    // ============================================
-                                    // FUNÇÃO
-                                    // ============================================
-                                    string funcao = "";
-
-                                    if (!string.IsNullOrWhiteSpace(txtFuncao.Text))
-                                    {
-                                        funcao = txtFuncao.Text
-                                            .Trim()
-                                            .Split(' ')[0]
-                                            .ToUpper();
-                                    }
-
-                                    decimal distancia = 0;
-                                    decimal valorPremio = 0;
-
-                                    // ============================================
-                                    // BUSCA DISTÂNCIA
-                                    // ============================================
-                                    using (SqlCommand cmdDist = new SqlCommand(@"
-                                    SELECT TOP 1 distancia
-                                    FROM tbcargas
-                                    WHERE carga = @carga",
-                                        conn2, trans))
-                                    {
-                                        cmdDist.Parameters.AddWithValue("@carga", carga);
-
-                                        object result = cmdDist.ExecuteScalar();
-
-                                        if (result != null &&
-                                            result != DBNull.Value)
-                                        {
-                                            distancia =
-                                                Convert.ToDecimal(result);
-                                        }
-                                        else
-                                        {
-                                            trans.Rollback();
-                                            return;
-                                        }
-                                    }
-
-                                    // ============================================
-                                    // BUSCA VALOR PRÊMIO
-                                    // ============================================
-                                    using (SqlCommand cmdPremio = new SqlCommand(@"
-                                    SELECT TOP 1
-                                        motorista,
-                                        carreteiro,
-                                        bitrem
-                                    FROM tbvalorpremiomotoristas
-                                    WHERE @distancia
-                                    BETWEEN distancia1 AND distancia2 AND status = 'ATIVO'AND empresa='MATRIZ'",
-                                        conn2, trans))
-                                    {
-                                        cmdPremio.Parameters.AddWithValue(
-                                            "@distancia",
-                                            distancia);
-
-                                        using (SqlDataReader dr =
-                                            cmdPremio.ExecuteReader())
-                                        {
-                                            if (dr.Read())
-                                            {
-                                                switch (funcao)
-                                                {
-                                                    case "MOTORISTA":
-
-                                                        valorPremio =
-                                                            dr["motorista"] != DBNull.Value
-                                                            ? Convert.ToDecimal(dr["motorista"])
-                                                            : 0;
-
-                                                        break;
-
-                                                    case "CARRETEIRO":
-
-                                                        valorPremio =
-                                                            dr["carreteiro"] != DBNull.Value
-                                                            ? Convert.ToDecimal(dr["carreteiro"])
-                                                            : 0;
-
-                                                        break;
-
-                                                    case "BITREM":
-
-                                                        valorPremio =
-                                                            dr["bitrem"] != DBNull.Value
-                                                            ? Convert.ToDecimal(dr["bitrem"])
-                                                            : 0;
-
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    // ============================================
-                                    // VERIFICA EXISTÊNCIA
-                                    // ============================================
-                                    using (SqlCommand cmdExiste = new SqlCommand(@"
-                                    SELECT COUNT(*)
-                                    FROM tb_custo_motorista
-                                    WHERE cod_cracha = @cod
-                                    AND dt_custo = @data",
-                                        conn2, trans))
-                                    {
-                                        cmdExiste.Parameters.AddWithValue(
-                                            "@cod",
-                                            txtCodMotorista.Text.Trim());
-
-                                        cmdExiste.Parameters.AddWithValue(
-                                            "@data",
-                                            SafeDateValue(txtSaidaPlanta.Text.Trim()));
-
-                                        int existe =
-                                            Convert.ToInt32(
-                                                cmdExiste.ExecuteScalar());
-
-                                        // ============================================
-                                        // UPDATE
-                                        // ============================================
-                                        if (existe > 0)
-                                        {
-                                            using (SqlCommand cmdUpdate =
-                                                new SqlCommand(@"
-                                            UPDATE tb_custo_motorista
-                                            SET vl_premio =
-                                                ISNULL(vl_premio,0) + @valor
-                                            WHERE cod_cracha = @cod
-                                            AND dt_custo = @data",
-                                                conn2, trans))
-                                            {
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@valor",
-                                                    valorPremio);
-
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@cod",
-                                                    txtCodMotorista.Text.Trim());
-
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@data",
-                                                    SafeDateValue(
-                                                        txtSaidaPlanta.Text.Trim()));
-
-                                                cmdUpdate.ExecuteNonQuery();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // ============================================
-                                            // INSERT
-                                            // ============================================
-                                            using (SqlCommand cmdInsert =
-                                                new SqlCommand(@"
-                                                INSERT INTO tb_custo_motorista
-                                                (
-                                                    cod_cracha,
-                                                    dt_custo,
-                                                    vl_premio
-                                                )
-                                                VALUES
-                                                (
-                                                    @cod,
-                                                    @data,
-                                                    @valor
-                                                )",
-                                                conn2, trans))
-                                            {
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@cod",
-                                                    txtCodMotorista.Text.Trim());
-
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@data",
-                                                    SafeDateValue(
-                                                        txtSaidaPlanta.Text.Trim()));
-
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@valor",
-                                                    valorPremio);
-
-                                                cmdInsert.ExecuteNonQuery();
-                                            }
-                                        }
-                                    }
-
-                                    trans.Commit();
-                                }
-                                catch (Exception ex)
-                                {
-                                    trans.Rollback();
-
-                                    MostrarMsg2(
-                                        "Erro prêmio motorista: "
-                                        + ex.Message);
-                                }
-                            }
-                        }
-                    }
-                    
-                    // TRATANDO A PERNOITE AUTOMATICA DO MOTORISTA
-                    DateTime dataPernoite;                                        
-                    if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
-                        agora.TimeOfDay <= new TimeSpan(23, 59, 59))
-                    {
-                        dataPernoite = agora.Date;
-                        if (ddlStatus.SelectedItem.Text.Trim() == "Pernoite")
-                        {
-                            // SOMENTE FUNCIONÁRIO
-                            if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
-                            {
-                                using (SqlConnection conn2 = new SqlConnection(
-                                    WebConfigurationManager
-                                    .ConnectionStrings["conexao"].ConnectionString))
-                                {
-                                    conn2.Open();
-
-                                    SqlTransaction trans = conn2.BeginTransaction();
-
-                                    try
-                                    {
-                                        // ============================================
-                                        // VALOR PERNOITE
-                                        // ============================================
-                                        decimal valorPernoite = 0;
-                                        decimal valorCafe = 0;
-
-                                        using (SqlCommand cmdPernoite =
-                                            new SqlCommand(@"
-                                        SELECT TOP 1 pernoite
-                                        FROM tbvalorpremiomotoristas WHERE status = 'ATIVO' and empresa='MATRIZ'",
-                                            conn2, trans))
-                                        {
-                                            object result =
-                                                cmdPernoite.ExecuteScalar();
-
-                                            if (result != null &&
-                                                result != DBNull.Value)
-                                            {
-                                                valorPernoite =
-                                                    Convert.ToDecimal(result);
-                                            }
-                                        }
-
-                                        // ============================================
-                                        // DATA
-                                        // ============================================
-                                        object dataCusto = dataPernoite;
-
-                                        if (dataCusto == null ||
-                                            dataCusto == DBNull.Value)
-                                        {
-                                            trans.Rollback();
-
-                                            MostrarMsg2(
-                                                "Data Pernoite inválida.");
-
-                                            return;
-                                        }
-
-                                        // ============================================
-                                        // VERIFICA EXISTÊNCIA
-                                        // ============================================
-                                        int existe = 0;
-
-                                        using (SqlCommand cmdExiste =
-                                            new SqlCommand(@"
-                                        SELECT COUNT(*)
-                                        FROM tb_custo_motorista
-                                        WHERE cod_cracha = @cod
-                                        AND dt_custo = @data",
-                                            conn2, trans))
-                                        {
-                                            cmdExiste.Parameters.AddWithValue(
-                                                "@cod",
-                                                txtCodMotorista.Text.Trim());
-
-                                            cmdExiste.Parameters.AddWithValue(
-                                                "@data",
-                                                dataCusto);
-
-                                            existe =
-                                                Convert.ToInt32(
-                                                    cmdExiste.ExecuteScalar());
-                                        }
-
-                                        // ============================================
-                                        // UPDATE
-                                        // ============================================
-                                        if (existe > 0)
-                                        {
-                                            using (SqlCommand cmdUpdate =
-                                                new SqlCommand(@"
-                                            UPDATE tb_custo_motorista
-                                            SET vl_pernoite = @valor, vl_cafe = @cafe
-                                            WHERE cod_cracha = @cod
-                                            AND dt_custo = @data",
-                                                conn2, trans))
-                                            {
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@valor",
-                                                    valorPernoite);
-
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@cafe",
-                                                    valorCafe);
-
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@cod",
-                                                    txtCodMotorista.Text.Trim());
-
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@data",
-                                                    dataCusto);
-
-                                                cmdUpdate.ExecuteNonQuery();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // ============================================
-                                            // INSERT
-                                            // ============================================
-                                            using (SqlCommand cmdInsert =
-                                                new SqlCommand(@"
-                                            INSERT INTO tb_custo_motorista
-                                            (
-                                                cod_cracha,
-                                                dt_custo,
-                                                vl_pernoite,
-                                                vl_cafe
-                                            )
-                                            VALUES
-                                            (
-                                                @cod,
-                                                @data,
-                                                @valor,
-                                                @cafe
-                                            )",
-                                                conn2, trans))
-                                            {
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@cod",
-                                                    txtCodMotorista.Text.Trim());
-
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@data",
-                                                    dataCusto);
-
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@valor",
-                                                    valorPernoite);
-
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@cafe",
-                                                    valorCafe);
-
-                                                cmdInsert.ExecuteNonQuery();
-                                            }
-                                        }
-
-                                        trans.Commit();
-
-                                        //MostrarMsg2(
-                                        //    "Pernoite salvo com sucesso.");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        trans.Rollback();
-
-                                        MostrarMsg2(
-                                            "Erro pernoite: "
-                                            + ex.Message);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    // TRATANDO O ALMOÇO AUTOMATICO DO MOTORISTA
-                    
-                }
-
-                // Atualizando a ordem de coleta 
-                using (SqlConnection conn = new SqlConnection(
-       WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                {
-                    var cvaOC = txtCVA.Text.Trim();
-
-                    string queryCarregamento = @"
-                    UPDATE tbcarregamentos SET 
-                        situacao = @situacao,
-                        cva = @cva,
-                        status = @status,                        
-                        cod_expedidor = @cod_expedidor,
-                        expedidor = @expedidor,
-                        cid_expedidor = @cid_expedidor,
-                        uf_expedidor = @uf_expedidor,
-                        cod_recebedor = @cod_recebedor,
-                        recebedor = @recebedor,
-                        cid_recebedor = @cid_recebedor,
-                        carga = @carga,
-                        dtsaida=@dtsaida,
-                        dtchegada=@dtchegada,
-                        dtconclusao=@dtconclusao,
-                        uf_recebedor = @uf_recebedor,
-                        dtalt = @dtalt,
-                        usualt = @usualt
-
-                    WHERE num_carregamento = @num_carregamento";
-
-                    using (SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn))
-                    {
-                        // Num carregamento (obrigatório)
-                        cmdCarregamento.Parameters.Add("@num_carregamento", SqlDbType.NVarChar, 20)
-                            .Value = novaColeta.Text.Trim();
-
-                        // Status
-                        cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar, 50)
-                            .Value = string.IsNullOrWhiteSpace(situacaoOC)
-                                ? (object)DBNull.Value
-                                : situacaoOC.Trim();
-
-                        cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar, 50)
-                            .Value = string.IsNullOrWhiteSpace(cvaOC)
-                                ? (object)DBNull.Value
-                                : cvaOC.Trim();
-
-                        cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar, 50)
-                            .Value = string.IsNullOrWhiteSpace(statusOC)
-                                ? (object)DBNull.Value
-                                : statusOC.Trim();
-                        int cargaCarreg;
-                        cmdCarregamento.Parameters.Add("@carga", SqlDbType.Int)
-                            .Value = int.TryParse(carga, out cargaCarreg)
-                                ? (object)cargaCarreg
-                                : (object)DBNull.Value;
-
-                        // Expedidor
-                        int codExp;
-                        cmdCarregamento.Parameters.Add("@cod_expedidor", SqlDbType.Int)
-                            .Value = int.TryParse(txtCodExpedidor.Text, out codExp)
-                                ? (object)codExp
-                                : (object)DBNull.Value;
-
-                        cmdCarregamento.Parameters.Add("@expedidor", SqlDbType.NVarChar, 100)
-                            .Value = string.IsNullOrWhiteSpace(cboExpedidor.Text)
-                                ? (object)DBNull.Value
-                                : cboExpedidor.Text.Trim();
-
-                        cmdCarregamento.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar, 100)
-                            .Value = string.IsNullOrWhiteSpace(txtCidExpedidor.Text)
-                                ? (object)DBNull.Value
-                                : txtCidExpedidor.Text.Trim();
-
-                        cmdCarregamento.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2)
-                            .Value = string.IsNullOrWhiteSpace(txtUFExpedidor.Text)
-                                ? (object)DBNull.Value
-                                : txtUFExpedidor.Text.Trim();
-
-                        // Recebedor
-                        int codRec;
-                        cmdCarregamento.Parameters.Add("@cod_recebedor", SqlDbType.Int)
-                            .Value = int.TryParse(txtCodRecebedor.Text, out codRec)
-                                ? (object)codRec
-                                : (object)DBNull.Value;
-
-                        cmdCarregamento.Parameters.Add("@recebedor", SqlDbType.NVarChar, 100)
-                            .Value = string.IsNullOrWhiteSpace(cboRecebedor.Text)
-                                ? (object)DBNull.Value
-                                : cboRecebedor.Text.Trim();
-
-                        cmdCarregamento.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar, 100)
-                            .Value = string.IsNullOrWhiteSpace(txtCidRecebedor.Text)
-                                ? (object)DBNull.Value
-                                : txtCidRecebedor.Text.Trim();
-                        cmdCarregamento.Parameters.AddWithValue("@dtsaida", SafeDateValue(txtSaidaOrigem.Text.Trim()));
-                        cmdCarregamento.Parameters.AddWithValue("@dtchegada", SafeDateValue(txtChegadaDestino.Text.Trim()));
-                        cmdCarregamento.Parameters.AddWithValue("@dtconclusao", SafeDateValue(txtSaidaPlanta.Text.Trim()));
-
-                        cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2)
-                            .Value = string.IsNullOrWhiteSpace(txtUFRecebedor.Text)
-                                ? (object)DBNull.Value
-                                : txtUFRecebedor.Text.Trim();
-                        cmdCarregamento.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                        cmdCarregamento.Parameters.AddWithValue("@usualt", Session["UsuarioLogado"].ToString());
-
-                        conn.Open();
-                        cmdCarregamento.ExecuteNonQuery();
-                    }
-                }
-
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                {
-                    TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
-                    TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
-                    TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
-
-
-                    string query = @"UPDATE tbpedidos SET                                  
-                                andamento = @andamento
-                                WHERE carga = @carga";
-
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@carga", carga);
-                    cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
-
-
-
-                    // Chama método que verifica no banco
-                    conn.Open();
                     cmd.ExecuteNonQuery();
                 }
 
-
-
-
-
-                // Após atualizar, recarregar os dados no Repeater
                 Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
-                //BuscarCteSalvos(idViagem);
-                CarregarPedidos(int.Parse(carga), gv);
             }
+
+
+
             if (e.CommandName == "AtualizarAbas")
             {
                 //Atualiza CT-e
@@ -1799,8 +3815,6 @@ namespace NewCapit.dist.pages
                 string idViagem = e.CommandArgument.ToString(); // O 'carga' que você passou no Eval
                 int index = e.Item.ItemIndex; // O índice da linha no Repeater
                 string nomeUsuario = Session["UsuarioLogado"].ToString();
-
-
                 // 1. Verificar se existem CT-es lidos na Session para este item
                 if (ListaCtePorItem.ContainsKey(index) && ListaCtePorItem[index].Count > 0)
                 {
@@ -1816,10 +3830,10 @@ namespace NewCapit.dist.pages
                             foreach (var cte in listaParaSalvar)
                             {
                                 string sql = @"INSERT INTO tbcte 
-                            (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
-                             num_documento, serie_documento, tipo_documento,mes_ano_documento,emitido_por, emissao_documento, id_viagem)
-                            VALUES 
-                            (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo,@mes_ano_documento, @emitido_por, @emissao_documento, @idViagem)";
+                             (chave_de_acesso, uf_emissor, cnpj_empresa, empresa_emissora, 
+                              num_documento, serie_documento, tipo_documento,mes_ano_documento,emitido_por, emissao_documento, id_viagem)
+                             VALUES 
+                             (@chave, @uf, @cnpj, @empresa, @num, @serie, @tipo,@mes_ano_documento, @emitido_por, @emissao_documento, @idViagem)";
 
                                 using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                                 {
@@ -1848,7 +3862,7 @@ namespace NewCapit.dist.pages
                             ListaCtePorItem.Remove(index);
 
                             // 3. Sucesso!
-                            MostrarMsg2("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
+                            MostrarMsg("Sucesso: " + listaParaSalvar.Count + " documentos salvos.");
 
                             // 4. IMPORTANTE: Rebindar o Repeater. 
                             // Isso fará com que o ItemDataBound rode novamente, 
@@ -1858,7 +3872,7 @@ namespace NewCapit.dist.pages
                         catch (Exception ex)
                         {
                             string erroLimpo = ex.Message.Replace("'", "").Replace("\r", "").Replace("\n", "");
-                            MostrarMsg2("ERRO REAL: " + erroLimpo);
+                            MostrarMsg("ERRO REAL: " + erroLimpo);
                         }
                     }
                     finally
@@ -1868,11 +3882,8 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-                    MostrarMsg2("Aviso: Nenhuma nova leitura pendente para salvar.");
+                    MostrarMsg("Aviso: Nenhuma nova leitura pendente para salvar.");
                 }
-
-
-
                 if (gv != null)
                 {
                     try
@@ -1897,17 +3908,15 @@ namespace NewCapit.dist.pages
 
                                 // 3. Query de Update
                                 string sql = @"UPDATE tbpedidos SET 
-                                       iniciocar = @ini, 
-                                       termcar = @fim, 
-                                       duracao = @dur,
-                                       motcar = @mot
-                                       WHERE pedido = @pedido ";
+                                        iniciocar = @ini, 
+                                        termcar = @fim, 
+                                        duracao = @dur,
+                                        motcar = @mot
+                                        WHERE pedido = @pedido ";
 
                                 using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                                 {
-                                    // Conversão segura para DateTime (DateTimeLocal envia yyyy-MM-ddTHH:mm)
                                     DateTime dtIni, dtFim;
-
                                     if (DateTime.TryParse(txtIni.Text, out dtIni))
                                         cmd.Parameters.AddWithValue("@ini", dtIni);
                                     else
@@ -1928,7 +3937,7 @@ namespace NewCapit.dist.pages
                             }
 
                             trans.Commit();
-                            MostrarMsg2("Alterações salvas com sucesso!");
+                            MostrarMsg("Alterações salvas com sucesso!");
                         }
                         catch (Exception ex)
                         {
@@ -1938,7 +3947,7 @@ namespace NewCapit.dist.pages
                     }
                     catch (Exception ex)
                     {
-                        MostrarMsg2("Erro ao salvar pedidos: " + ex.Message);
+                        MostrarMsg("Erro ao salvar pedidos: " + ex.Message);
                     }
                     finally
                     {
@@ -1946,8 +3955,8 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+                //Salvar historico
                 TextBox txtHistoricoObservacao = (TextBox)e.Item.FindControl("txtHistoricoObservacao");
-
                 if (txtHistoricoObservacao.Text != string.Empty)
                 {
                     try
@@ -1957,23 +3966,16 @@ namespace NewCapit.dist.pages
 
                         try
                         {
-
-                            // 3. Query de Update
                             string sql = @"UPDATE tbcargas SET 
-                                       observacao = @observacao 
-                                       WHERE carga = @carga ";
+                                        observacao = @observacao 
+                                        WHERE carga = @carga ";
 
                             using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                             {
-
                                 cmd.Parameters.AddWithValue("@observacao", txtHistoricoObservacao.Text);
                                 cmd.Parameters.AddWithValue("@carga", carga);
-                                //cmd.Parameters.AddWithValue("@idViagem", idViagem);
-
                                 cmd.ExecuteNonQuery();
                             }
-
-
                             trans.Commit();
                             MostrarMsg("Alterações salvas com sucesso!");
                         }
@@ -1993,8 +3995,8 @@ namespace NewCapit.dist.pages
                     }
                 }
 
+                // Salvar MDFe
                 TextBox txtMDFe = (TextBox)e.Item.FindControl("txtMDFe");
-
                 if (txtMDFe.Text != string.Empty)
                 {
                     try
@@ -2004,11 +4006,9 @@ namespace NewCapit.dist.pages
 
                         try
                         {
-
-                            // 3. Query de Update
                             string sql = @"UPDATE tbcargas SET 
-                                       mdfe = @mdfe 
-                                       WHERE carga = @carga ";
+                                        mdfe = @mdfe 
+                                        WHERE carga = @carga ";
 
                             using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                             {
@@ -2019,8 +4019,6 @@ namespace NewCapit.dist.pages
 
                                 cmd.ExecuteNonQuery();
                             }
-
-
                             trans.Commit();
                             MostrarMsg("Alterações salvas com sucesso!");
                         }
@@ -2032,15 +4030,16 @@ namespace NewCapit.dist.pages
                     }
                     catch (Exception ex)
                     {
-                        MostrarMsg2("Erro ao salvar MDFe: " + ex.Message);
+                        MostrarMsg("Erro ao salvar MDFe: " + ex.Message);
                     }
                     finally
                     {
                         con.Close();
                     }
                 }
-                TextBox txtNFSe = (TextBox)e.Item.FindControl("txtNFSe");
 
+                // Salvar NFS-e
+                TextBox txtNFSe = (TextBox)e.Item.FindControl("txtNFSe");
                 if (txtNFSe != null && !string.IsNullOrWhiteSpace(txtNFSe.Text))
                 {
                     try
@@ -2050,26 +4049,22 @@ namespace NewCapit.dist.pages
 
                         using (SqlCommand cmdExiste = new SqlCommand(sqlExiste, con))
                         {
-
                             cmdExiste.Parameters.AddWithValue("@num_documento", txtNFSe.Text);
-
                             int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
-
                             if (existe > 0)
                             {
-                                MostrarMsg2("Já existe uma NFS-e cadastrada com esta chave:\n" + txtNFSe.Text);
+                                MostrarMsg("Já existe uma NFS-e cadastrada com esta chave:\n" + txtNFSe.Text);
                                 return; // ⛔ não continua o método
                             }
                         }
-
                         using (SqlTransaction trans = con.BeginTransaction())
                         {
                             try
                             {
                                 string sql = @"INSERT INTO tbnfse 
-                            (num_documento, serie_documento, tipo_documento, emitido_por, emissao_documento, status_documento,situacao_documento, idviagem)
-                            VALUES 
-                            (@num, @serie, @tipo, @emitido_por, @emissao_documento, @status_documento,@situacao_documento, @idViagem)";
+                             (num_documento, serie_documento, tipo_documento, emitido_por, emissao_documento, status_documento,situacao_documento, idviagem)
+                             VALUES 
+                             (@num, @serie, @tipo, @emitido_por, @emissao_documento, @status_documento,@situacao_documento, @idViagem)";
 
                                 using (SqlCommand cmd = new SqlCommand(sql, con, trans))
                                 {
@@ -2087,13 +4082,11 @@ namespace NewCapit.dist.pages
 
                                     cmd.ExecuteNonQuery();
                                 }
-
                                 trans.Commit(); // Commit primeiro
 
-                                // Agora que os dados estão "vivos" no banco, fazemos o bind
+                                // Agora que os dados estão no banco, fazemos o bind
                                 rptColetas.DataBind();
-
-                                MostrarMsg2("Alterações salvas com sucesso!");
+                                MostrarMsg("Alterações salvas com sucesso!");
                             }
                             catch (Exception ex)
                             {
@@ -2116,12 +4109,16 @@ namespace NewCapit.dist.pages
                 CarregarColetas(novaColeta.Text);
                 BuscarCteSalvos(idViagem);
                 CarregarPedidos(int.Parse(carga), gv);
+
+
+
+
             }
             if (e.CommandName == "Coletas")
             {
                 int id = Convert.ToInt32(e.CommandArgument);
                 string idCarga = id.ToString(); // esse valor viria da lógica do seu código
-                //hdIdCarga.Value = idCarga;
+                                                //hdIdCarga.Value = idCarga;
                 Session["idCarga"] = idCarga;
                 //GetPedidos();
                 //string url = $"OrdemColetaImpressaoIndividual.aspx?id={idCarga}";
@@ -2145,10 +4142,10 @@ namespace NewCapit.dist.pages
 
 
                     string query = @"UPDATE tbcargas SET                                  
-                                ot = @ot,
-                                catraca = @catraca,
-                                rede = @rede 
-                                WHERE carga = @carga";
+                                 ot = @ot,
+                                 catraca = @catraca,
+                                 rede = @rede 
+                                 WHERE carga = @carga";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@carga", carga);
@@ -2165,7 +4162,7 @@ namespace NewCapit.dist.pages
 
 
                 // Após atualizar, recarregar os dados no Repeater
-                MostrarMsg2("Dados Salvos!");
+                MostrarMsg("Dados Salvos!");
                 Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
@@ -2175,9 +4172,9 @@ namespace NewCapit.dist.pages
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
                     string query = @"UPDATE tbcarregamentos SET 
-                    pedagio = @pedagio,                                 
-                    pedagiofeito = @pedagiofeito 
-                    WHERE num_carregamento = @num_carregamento";
+                     pedagio = @pedagio,                                 
+                     pedagiofeito = @pedagiofeito 
+                     WHERE num_carregamento = @num_carregamento";
 
                     using (SqlCommand cmdPedagio = new SqlCommand(query, conn))
                     {
@@ -2202,7 +4199,7 @@ namespace NewCapit.dist.pages
 
 
                 // Após atualizar, recarregar os dados no Repeater
-                // MostrarMsg2("Pedágio enviado com sucesso!");
+                // MostrarMsg("Pedágio enviado com sucesso!");
                 //Session["Coletas"] = null;
                 //CarregarColetas(novaColeta.Text);
             }
@@ -2250,14 +4247,15 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    MostrarMsg2("Erro: " + ex.Message);
+                    MostrarMsg("Erro: " + ex.Message);
                 }
             }
             if (e.CommandName == "BuscarNfe")
             {
-                string idCarga = e.CommandArgument.ToString();
+                //string idCarga = e.CommandArgument.ToString();
+                int idCarga = Convert.ToInt32(e.CommandArgument);
                 string chave = ((TextBox)e.Item.FindControl("txtChaveNF")).Text;
-                GridView gvn = (GridView)e.Item.FindControl("gvNF");
+                GridView gvNF = (GridView)e.Item.FindControl("gvNF");
                 TextBox txtChaveNF = (TextBox)e.Item.FindControl("txtChaveNF");
 
                 //string chave = "35260259104422002446550370009554061775712904";
@@ -2320,7 +4318,7 @@ namespace NewCapit.dist.pages
                     SalvarXmlNoBanco(xmlNfe, idCarga);
                     txtChaveNF.Text = string.Empty;
                     txtChaveNF.Focus();
-                    CarregarNF(idCarga, gvn);
+                    CarregarNotas(idCarga, gvNF);
 
 
                 }
@@ -2329,7 +4327,7 @@ namespace NewCapit.dist.pages
                     // erro retornado pela API
                     string msgErro = retornoPut.statusMessage;
 
-                    MostrarMsg2("Erro ao executar o processo: " + msgErro);
+                    MostrarMsg("Erro ao executar o processo: " + msgErro);
                 }
 
             }
@@ -2340,7 +4338,7 @@ namespace NewCapit.dist.pages
                 // 1. Sua validação que você confirmou que funciona:
                 if (!PossuiNotasLancadas(idCarga))
                 {
-                    MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
+                    MostrarMsg("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
                     return;
                 }
 
@@ -2350,7 +4348,7 @@ namespace NewCapit.dist.pages
 
                 if (string.IsNullOrEmpty(numeroDocumento))
                 {
-                    MostrarMsg2("Erro ao gerar a numeração do documento.");
+                    MostrarMsg("Erro ao gerar a numeração do documento.");
                     return;
                 }
 
@@ -2361,8 +4359,6 @@ namespace NewCapit.dist.pages
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "dispararDownloadSapiens", script, true);
             }
-
-
             if (e.CommandName == "GeraXml")
             {
                 try
@@ -2372,7 +4368,7 @@ namespace NewCapit.dist.pages
                     // 1. Validação de segurança
                     if (!PossuiNotasLancadas(idCarga))
                     {
-                        MostrarMsg2("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
+                        MostrarMsg("O arquivo só pode ser gerado quando as NF-e forem lançadas.");
                         return;
                     }
 
@@ -2382,7 +4378,7 @@ namespace NewCapit.dist.pages
 
                     if (string.IsNullOrEmpty(numeroDoc))
                     {
-                        MostrarMsg2("Erro ao gerar a numeração do documento.");
+                        MostrarMsg("Erro ao gerar a numeração do documento.");
                         return;
                     }
 
@@ -2395,7 +4391,7 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    MostrarMsg2("Erro ao processar documento: " + ex.Message);
+                    MostrarMsg("Erro ao processar documento: " + ex.Message);
                 }
             }
             if (e.CommandName == "CancelarCarga")
@@ -2403,7 +4399,7 @@ namespace NewCapit.dist.pages
                 // 1. Verificação de permissão por usuário
                 string usuarioLogado = Session["UsuarioLogado"]?.ToString();
                 string usuarioSistema = Session["UsuarioSistema"]?.ToString();
-                if (usuarioSistema != "TNG30976" && usuarioSistema !="admin")
+                if (usuarioSistema != "TNG30976" && usuarioSistema != "admin")
                 {
                     // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
                     ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
@@ -2434,12 +4430,12 @@ namespace NewCapit.dist.pages
 
                             // 🔹 2. Cancelar a carga na tbcargas
                             string sqlUpdateCarga = @"UPDATE tbcargas 
-                                         SET status = 'Cancelada',
-                                             andamento = 'CANCELADA',
-                                             atualizacao = @usuario,
-                                             material = 'Vazio',
-                                             fl_exclusao = 'S' 
-                                         WHERE carga = @carga";
+                                          SET status = 'Cancelada',
+                                              andamento = 'CANCELADA',
+                                              atualizacao = @usuario,
+                                              material = 'Vazio',
+                                              fl_exclusao = 'S' 
+                                          WHERE carga = @carga";
 
                             using (SqlCommand cmd = new SqlCommand(sqlUpdateCarga, conn, trans))
                             {
@@ -2458,9 +4454,9 @@ namespace NewCapit.dist.pages
 
                             // 🔹 4. Verificar se ainda existem cargas ativas
                             string sqlVerifica = @"SELECT COUNT(*) 
-                                       FROM tbcargas 
-                                       WHERE idviagem = @idviagem 
-                                       AND fl_exclusao IS NULL";
+                                        FROM tbcargas 
+                                        WHERE idviagem = @idviagem 
+                                        AND fl_exclusao IS NULL";
 
                             int totalAtivas = 0;
                             using (SqlCommand cmd = new SqlCommand(sqlVerifica, conn, trans))
@@ -2473,12 +4469,12 @@ namespace NewCapit.dist.pages
                             if (totalAtivas == 0)
                             {
                                 string sqlOC = @"UPDATE tbcarregamentos
-                                     SET status = 'Cancelada',
-                                         situacao = 'O. C. CANCELADA',
-                                         fl_exclusao = 'S',
-                                         usualt = @usuario,
-                                         dtalt = GETDATE()
-                                     WHERE num_carregamento = @idviagem";
+                                      SET status = 'Cancelada',
+                                          situacao = 'O. C. CANCELADA',
+                                          fl_exclusao = 'S',
+                                          usualt = @usuario,
+                                          dtalt = GETDATE()
+                                      WHERE num_carregamento = @idviagem";
 
                                 using (SqlCommand cmd = new SqlCommand(sqlOC, conn, trans))
                                 {
@@ -2509,6 +4505,236 @@ namespace NewCapit.dist.pages
                 }
             }
         }
+
+        private void AdicionarParametrosKrona(SqlCommand cmd,
+                                      ControlesCarga c)
+        {
+            SqlHelper.NVarChar(cmd, "@percurso", 20, c.Percurso);
+            SqlHelper.Decimal(cmd, "@valor_total", c.ValorTotal);
+            SqlHelper.DateTime(cmd, "@previsao_inicio_krona", c.PrevisaoInicioKrona);
+            SqlHelper.DateTime(cmd, "@previsao_termino_krona", c.PrevisaoTerminoKrona);
+            SqlHelper.NVarChar(cmd, "@rota_krona", 50, c.RotaKrona);
+            SqlHelper.NVarChar(cmd, "@id_rota_krona", 10, c.IdRotaKrona);
+            SqlHelper.Int(cmd, "@num_sm", c.SM);
+            SqlHelper.NVarChar(cmd, "@usu_envio_krona", 60, c.SmEnviadaPor);
+
+        }
+        private void AdicionarParametrosGerais(SqlCommand cmd, ControlesCarga c, string andamentoCarga)
+        {
+            SqlHelper.NVarChar(cmd, "@cva", 20, c.CVA);
+            SqlHelper.NVarChar(cmd, "@status", 50, c.Status);
+            SqlHelper.NVarChar(cmd, "@andamento", 50, c.Andamento);
+            SqlHelper.DateTime(cmd, "@saidaorigem", c.SaidaOrigem);
+            SqlHelper.NVarChar(cmd, "@tempoagcarreg", 20, c.TempoAgCarreg);
+            SqlHelper.NVarChar(cmd, "@duracao_transp", 20, c.DuracaoTransporte);
+            SqlHelper.NVarChar(cmd, "@tempoagdescarreg", 20, c.TempoAgDescarga);
+            SqlHelper.DateTime(cmd, "@chegadadestino", c.ChegadaDestino);
+            SqlHelper.DateTime(cmd, "@disponivel_solicitacao", c.VeiculoDisponivel);
+            SqlHelper.DateTime(cmd, "@prev_chegada", c.PrevisaoChegada);
+            SqlHelper.DateTime(cmd, "@saidaplanta", c.SaidaPlanta);
+            SqlHelper.NVarChar(cmd, "@codmot", 10, c.CodMotorista);
+            SqlHelper.NVarChar(cmd, "@frota", 10, c.Frota);
+            SqlHelper.DateTime(cmd, "@gate_origem", c.GateOrigem);
+            SqlHelper.DateTime(cmd, "@gate_destino", c.GateDestino);
+        }
+        private void AdicionarParametrosPernoite(SqlCommand cmd, ControlesCarga c)
+        {
+            SqlHelper.NVarChar(cmd, "@local_pernoite", 50, c.LocalPernoite.ToUpper());
+            SqlHelper.DateTime(cmd, "@inicio_pernoite", c.InicioPernoite);
+            SqlHelper.DateTime(cmd, "@fim_pernoite", c.FimPernoite);
+            SqlHelper.NVarChar(cmd, "@duracao_pernoite", 5, c.DuracaoPernoite);
+            SqlHelper.NVarChar(cmd, "@status_pernoite", 50, c.statusPernoite);
+        }
+        protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // 1. Localiza o DropDownList da linha
+                DropDownList ddlMotCar = (DropDownList)e.Row.FindControl("ddlMotCar");
+
+                if (ddlMotCar != null)
+                {
+                    // 2. Busca os motoristas do banco de dados (Exemplo de método)
+                    DataTable dtMotoristas = ObterListaMotoristas();
+
+                    ddlMotCar.DataSource = dtMotoristas;
+                    ddlMotCar.DataTextField = "nommot";
+                    ddlMotCar.DataValueField = "codmot";
+                    ddlMotCar.DataBind();
+
+                    // 3. Adiciona uma opção em branco padrão
+                    ddlMotCar.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Motorista que irá carregar o veículo.", ""));
+
+                    // 4. Seleciona o motorista atual do banco de dados para este pedido
+                    string motcarAtual = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
+                    if (!string.IsNullOrEmpty(motcarAtual))
+                    {
+                        ddlMotCar.SelectedItem.Text = motcarAtual;
+                    }
+                }
+            }
+
+            //if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+            //// Select2 Motoristas
+            //if (e.Row.RowType == DataControlRowType.DataRow)
+            //{
+            //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+            //    if (ddl != null)
+            //    {
+            //        GetMotoristas(ddl);
+            //    }
+            //}
+
+            // Calcular tempo
+            //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
+            //DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
+
+            //Label lblTempo = (Label)e.Row.FindControl("lblTempo");
+
+            //if (inicio.HasValue && fim.HasValue)
+            //{
+            //    TimeSpan t = fim.Value - inicio.Value;
+            //    lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+            //}
+
+            //if (e.Row.RowType == DataControlRowType.DataRow)
+            //{
+            //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+
+            //    if (ddl != null)
+            //    {
+            //        // 1. Buscamos os motoristas (Ideal buscar uma vez só fora do loop, mas vamos focar na correção agora)
+            //        DataTable dtMot = BuscarTodosMotoristas();
+
+            //        ddl.DataSource = dtMot;
+            //        ddl.DataTextField = "nommot"; // Verifique se o nome da coluna no seu SQL é 'nome'
+            //        ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
+            //        ddl.DataBind();
+
+
+
+            //        // 2. Pegar o valor que veio do banco para esta linha
+            //        // Importante: motcar deve ser o ID do motorista
+            //        string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
+
+
+            //        ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
+            //        //ddl.SelectedItem.Text = motoristaSalvo;
+
+            //    }
+            //}
+
+
+        }
+        private DataTable ObterListaMotoristas()
+        {
+            string stringConexao = System.Configuration.ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(stringConexao))
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT codmot, nommot FROM tbmotoristas where fl_exclusao IS NULL and status = 'ATIVO' ORDER BY Nommot", conn))
+                {
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+        }
+        protected void btnSalvarCarregamento_Click(object sender, EventArgs e)
+        {
+            // 1. Identifica o botão que disparou o clique            
+            LinkButton btn = (LinkButton)sender;
+
+            // 2. Sobe na árvore de componentes para achar a linha da GridView (GridViewRow)
+            GridViewRow linha = (GridViewRow)btn.NamingContainer;
+
+            // 3. Sobe mais um nível para achar a GridView correspondente
+            GridView gvPedidos = (GridView)linha.NamingContainer;
+
+            // 4. Pega o índice da linha da GridView
+            int index = linha.RowIndex;
+
+            // 5. Recupera as chaves "pedido" e "carga" daquela linha específica
+            string pedido = gvPedidos.DataKeys[index]["pedido"].ToString();
+
+            // 6. Localiza os controles na linha usando FindControl
+            DropDownList ddlMotCar = (DropDownList)linha.FindControl("ddlMotCar");
+            TextBox txtInicioCar = (TextBox)linha.FindControl("txtInicioCar");
+            TextBox txtTermCar = (TextBox)linha.FindControl("txtTermCar");
+            TextBox txtTempoTotal = (TextBox)linha.FindControl("txtTempoTotal");
+
+
+            DateTime? iniciocar = null;
+            if (DateTime.TryParse(txtInicioCar.Text, out DateTime dtInicio))
+            {
+                iniciocar = dtInicio;
+            }
+            DateTime? termcar = null;
+            if (DateTime.TryParse(txtTermCar.Text, out DateTime dtTerm))
+            {
+                termcar = dtTerm;
+            }
+
+            // 7. Captura e valida os valores digitados/selecionados
+            string motcar = ddlMotCar.SelectedItem.Text;
+
+            //DateTime? iniciocar = null;
+            //if (DateTime.TryParse(txtInicioCar.Text, out DateTime dtInicio)) iniciocar = dtInicio;
+
+            //DateTime? termcar = null;
+            //if (DateTime.TryParse(txtTermCar.Text, out DateTime dtFim)) termcar = dtFim;
+
+            //string duracao = txtTempoTotal.Text;
+            // 1. Captura o texto do campo
+            string textoDuracao = txtTempoTotal.Text.Trim();
+
+            // 2. Cria a variável TimeSpan anulável (TimeSpan?)
+            TimeSpan? duracao = null;
+
+            // 3. Tenta converter o texto para o formato correto de tempo (ex: "02:30" ou "12:45:00")
+            if (TimeSpan.TryParse(textoDuracao, out TimeSpan tsResultado))
+            {
+                duracao = tsResultado;
+            }
+
+
+            // 8. Executa a atualização no Banco de Dados
+            string query = @"UPDATE tbpedidos 
+                     SET motcar = @motcar, 
+                         iniciocar = @iniciocar, 
+                         termcar = @termcar, 
+                         duracao = @duracao 
+                     WHERE pedido = @pedido";
+
+            string stringConexao = System.Configuration.ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(stringConexao))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    SqlHelper.NVarChar(cmd, "@motcar", 60, motcar);
+                    SqlHelper.DateTime(cmd, "@iniciocar", dtInicio);
+                    SqlHelper.DateTime(cmd, "@termcar", dtTerm);
+                    SqlHelper.Time(cmd, "@duracao", duracao);
+                    SqlHelper.NVarChar(cmd, "@pedido", 50, pedido);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            // Opcional: Recarregar apenas os dados deste Repeater se necessário
+        }
+
+
+
+
+
+
+
         private string GerarEObterProximoCte()
         {
             string numdocumento = "";
@@ -2543,12 +4769,11 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    MostrarMsg2("Erro no contador CTE: " + ex.Message);
+                    MostrarMsg("Erro no contador CTE: " + ex.Message);
                 }
             }
             return numdocumento;
         }
-
         private string GerarEObterProximoNFse()
         {
             string numdocumento = "";
@@ -2581,7 +4806,7 @@ namespace NewCapit.dist.pages
                 }
                 catch (Exception ex)
                 {
-                    MostrarMsg2("Erro no contador NFSe: " + ex.Message);
+                    MostrarMsg("Erro no contador NFSe: " + ex.Message);
                 }
             }
             return numdocumento;
@@ -2672,7 +4897,6 @@ namespace NewCapit.dist.pages
             public string status { get; set; }
             public string statusMessage { get; set; }
         }
-
         public class RetornoXml
         {
             public string name { get; set; }
@@ -2680,10 +4904,8 @@ namespace NewCapit.dist.pages
             public string format { get; set; }
             public string data { get; set; } // aqui vem o XML
         }
-        public void SalvarXmlNoBanco(string xml, string carga)
+        public void SalvarXmlNoBanco(string xml, int carga)
         {
-
-
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
 
@@ -2744,7 +4966,7 @@ namespace NewCapit.dist.pages
 
                 if (existe > 0)
                 {
-                    MostrarMsg2("Já existe uma NF-e cadastrada com esta chave:\n" + chave);
+                    MostrarMsg("Já existe uma NF-e cadastrada com esta chave:\n" + chave);
                     return; // ⛔ não continua o método
                 }
                 con.Close();
@@ -2772,7 +4994,7 @@ namespace NewCapit.dist.pages
                 {
                     if (!dr.Read())
                     {
-                        MostrarMsg2("Carga não encontrada na tbcargas.");
+                        MostrarMsg("Carga não encontrada na tbcargas.");
                         return;
                     }
                     cnpjRemCarga = dr["cnpj_remetente"].ToString().Trim();
@@ -2784,32 +5006,32 @@ namespace NewCapit.dist.pages
             // 🔍 VALIDAÇÃO DE CAMPOS EM BRANCO
             if (string.IsNullOrWhiteSpace(cnpjRemCarga) && string.IsNullOrWhiteSpace(cnpjDestCarga))
             {
-                MostrarMsg2("CNPJ do REMETENTE e do DESTINATÁRIO não estão cadastrados na carga.");
+                MostrarMsg("CNPJ do REMETENTE e do DESTINATÁRIO não estão cadastrados na carga.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(cnpjRemCarga))
             {
-                MostrarMsg2("CNPJ do REMETENTE não está cadastrado na carga.");
+                MostrarMsg("CNPJ do REMETENTE não está cadastrado na carga.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(cnpjDestCarga))
             {
-                MostrarMsg2("CNPJ do DESTINATÁRIO não está cadastrado na carga.");
+                MostrarMsg("CNPJ do DESTINATÁRIO não está cadastrado na carga.");
                 return;
             }
 
             // 🔐 VALIDAÇÃO DE CONFERÊNCIA COM O XML
             if (emitCnpjLimpo != cnpjRemCarga)
             {
-                MostrarMsg2("CNPJ do EMITENTE da NF não confere com o REMETENTE da carga.");
+                MostrarMsg("CNPJ do EMITENTE da NF não confere com o REMETENTE da carga.");
                 return;
             }
 
             if (destCnpjLimpo != cnpjDestCarga)
             {
-                MostrarMsg2("CNPJ do DESTINATÁRIO da NF não confere com o DESTINATÁRIO da carga.");
+                MostrarMsg("CNPJ do DESTINATÁRIO da NF não confere com o DESTINATÁRIO da carga.");
                 return;
             }
 
@@ -3370,7 +5592,7 @@ namespace NewCapit.dist.pages
                 string nomeUsuario = Session["UsuarioLogado"].ToString();
                 if (string.IsNullOrEmpty(jsonResposta))
                 {
-                    MostrarMsg2("Erro: A API da Krona não retornou nenhum dado.");
+                    MostrarMsg("Erro: A API da Krona não retornou nenhum dado.");
                     return;
                 }
 
@@ -3388,7 +5610,7 @@ namespace NewCapit.dist.pages
                 {
                     // Se a mensagem de erro também estiver vazia, mostramos o JSON bruto para depurar
                     string msgFinal = !string.IsNullOrEmpty(mensagemErro) ? mensagemErro : "Resposta bruta: " + jsonResposta;
-                    MostrarMsg2("Krona não gerou SM. Motivo: " + msgFinal);
+                    MostrarMsg("Krona não gerou SM. Motivo: " + msgFinal);
                     return;
                 }
 
@@ -3421,13 +5643,13 @@ namespace NewCapit.dist.pages
                     cmd.ExecuteNonQuery();
                 }
 
-                MostrarMsg2("Sucesso! SM Gerada: " + numeroSM);
+                MostrarMsg("Sucesso! SM Gerada: " + numeroSM);
                 Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
             }
             catch (Exception ex)
             {
-                MostrarMsg2("Erro ao processar SM: " + ex.Message);
+                MostrarMsg("Erro ao processar SM: " + ex.Message);
             }
         }
 
@@ -4513,9 +6735,9 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@codmotorista", SafeValue(txtCodMotorista.Text));
                 cmd.Parameters.AddWithValue("@nucleo", SafeValue(txtFilialMot.Text));
                 cmd.Parameters.AddWithValue("@tipomot", SafeValue(txtTipoMot.Text));
-                cmd.Parameters.AddWithValue("@valtoxicologico", SafeDateValue(txtExameToxic.Text));
+                cmd.Parameters.AddWithValue("@valtoxicologico", SafeDateValue2(txtExameToxic.Text));
                 cmd.Parameters.AddWithValue("@venccnh", SafeDateCNH(txtCNH.Text));
-                cmd.Parameters.AddWithValue("@valgr", SafeDateValue(txtLibGR.Text));
+                cmd.Parameters.AddWithValue("@valgr", SafeDateValue2(txtLibGR.Text));
                 cmd.Parameters.AddWithValue("@foto", SafeValue(fotoMotorista)); // Se for byte[], troque tipo do parâmetro!
                 cmd.Parameters.AddWithValue("@nomemotorista", SafeValue(ddlMotorista.SelectedItem.Text));
                 cmd.Parameters.AddWithValue("@cpf", SafeValue(txtCPF.Text));
@@ -4524,11 +6746,11 @@ namespace NewCapit.dist.pages
                 cmd.Parameters.AddWithValue("@foneparticular", SafeValue(txtCelular.Text));
                 cmd.Parameters.AddWithValue("@veiculo", SafeValue(txtCodVeiculo.Text));
                 cmd.Parameters.AddWithValue("@veiculotipo", SafeValue(txtVeiculoTipo.Text));
-                cmd.Parameters.AddWithValue("@valcet", SafeDateValue(txtCET.Text));
-                cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue(txtCRLVVeiculo.Text));
-                cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue(txtCRLVReb1.Text));
-                cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue(txtCRLVReb2.Text));
-                cmd.Parameters.AddWithValue("@valopacidade", SafeDateValue(txtOpacidade.Text));
+                cmd.Parameters.AddWithValue("@valcet", SafeDateValue2(txtCET.Text));
+                cmd.Parameters.AddWithValue("@valcrlvveiculo", SafeDateValue2(txtCRLVVeiculo.Text));
+                cmd.Parameters.AddWithValue("@valcrlvreboque1", SafeDateValue2(txtCRLVReb1.Text));
+                cmd.Parameters.AddWithValue("@valcrlvreboque2", SafeDateValue2(txtCRLVReb2.Text));
+                cmd.Parameters.AddWithValue("@valopacidade", SafeDateValue2(txtOpacidade.Text));
                 cmd.Parameters.AddWithValue("@placa", SafeValue(txtPlaca.Text));
                 cmd.Parameters.AddWithValue("@tipoveiculo", SafeValue(txtTipoVeiculo.Text));
                 cmd.Parameters.AddWithValue("@reboque1", SafeValue(txtReboque1.Text));
@@ -4764,18 +6986,8 @@ namespace NewCapit.dist.pages
         {
             return string.IsNullOrWhiteSpace(input) ? (object)DBNull.Value : input;
         }
-        private DateTime? SafeDateValue2(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-                return null;
 
-            DateTime dt;
-            if (DateTime.TryParse(input, out dt))
-                return dt;
-
-            return null;
-        }
-        private object SafeDateValue(string input)
+        private object SafeDateValue2(string input)
         {
             DateTime dt;
             if (DateTime.TryParse(input, out dt))
@@ -5034,7 +7246,7 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                MostrarMsg2("Informar campos obrigatórios da carga!");
+                MostrarMsg("Informar campos obrigatórios da carga!");
             }
 
 
@@ -5436,24 +7648,6 @@ namespace NewCapit.dist.pages
 
 
         }
-
-        void CarregarPedidos(int idCarga)
-        {
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {
-                string sql = @"SELECT pedido, emissao, peso, material, portao,
-                            iniciocar, termcar
-                    FROM tbPedidos
-                    WHERE id = @idCarga";
-
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add("@idCarga", SqlDbType.Int).Value = idCarga;
-
-                conn.Open();
-                //gvPedidos.DataSource = cmd.ExecuteReader();
-                //gvPedidos.DataBind();
-            }
-        }
         void GetMotoristas(DropDownList ddl)
         {
             using (SqlConnection conn = new SqlConnection(
@@ -5477,7 +7671,6 @@ namespace NewCapit.dist.pages
 
             //ddl.Items.Insert(0, new ListItem("Selecione", ""));
         }
-
         private DataTable BuscarTodosMotoristas()
         {
             DataTable dt = new DataTable();
@@ -5488,59 +7681,7 @@ namespace NewCapit.dist.pages
             }
             return dt;
         }
-        protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType != DataControlRowType.DataRow) return;
 
-            // Select2 Motoristas
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
-                if (ddl != null)
-                {
-                    GetMotoristas(ddl);
-                }
-            }
-
-            // Calcular tempo
-            //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
-            //DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
-
-            //Label lblTempo = (Label)e.Row.FindControl("lblTempo");
-
-            //if (inicio.HasValue && fim.HasValue)
-            //{
-            //    TimeSpan t = fim.Value - inicio.Value;
-            //    lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
-            //}
-
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
-
-                if (ddl != null)
-                {
-                    // 1. Buscamos os motoristas (Ideal buscar uma vez só fora do loop, mas vamos focar na correção agora)
-                    DataTable dtMot = BuscarTodosMotoristas();
-
-                    ddl.DataSource = dtMot;
-                    ddl.DataTextField = "nommot"; // Verifique se o nome da coluna no seu SQL é 'nome'
-                    ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
-                    ddl.DataBind();
-
-
-
-                    // 2. Pegar o valor que veio do banco para esta linha
-                    // Importante: motcar deve ser o ID do motorista
-                    string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
-
-
-                    ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
-                    //ddl.SelectedItem.Text = motoristaSalvo;
-
-                }
-            }
-        }
 
         [System.Web.Services.WebMethod]
         public static bool VerificarCVA(string numeroCVA)
@@ -5843,11 +7984,10 @@ namespace NewCapit.dist.pages
             }
             else
             {
-                MostrarMsg2(mensagemErro);
+                MostrarMsg(mensagemErro);
             }
 
         }
-
         protected void txtCodMotorista_TextChanged(object sender, EventArgs e)
         {
             divMsg.Visible = true;
@@ -6337,7 +8477,6 @@ namespace NewCapit.dist.pages
 
 
         }
-
         protected void ddlRotaKrona_SelectedIndexChanged(object sender, EventArgs e)
         {
             DropDownList ddl = (DropDownList)sender;
@@ -6359,63 +8498,6 @@ namespace NewCapit.dist.pages
             {
                 txtId_Rota.Text = "";
             }
-        }
-
-
-
-        protected void ExibirToastErro(string mensagem)
-        {
-            string script = $@"
-            <script>
-                document.getElementById('toastMessage3').innerText = '{mensagem.Replace("'", "\\'")}';
-                var toastEl = document.getElementById('myToast3');
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();
-            </script>";
-
-            ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
-        }
-        private void ShowToastrSuccess(string message)
-        {
-            string script = $"showSuccessToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrSuccess", script, true);
-        }
-        private void ShowToastrError(string message)
-        {
-            string script = $"showErrorToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrError", script, true);
-
-        }
-        private void ShowToastrInfo(string message)
-        {
-            string script = $"showInfoToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrInfo", script, true);
-        }
-        private void ShowToastrWarning(string message)
-        {
-            string script = $"showWarningToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
-        }
-        private void ShowToastrSuccessVeiculo(string message)
-        {
-            string script = $"showSuccessToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrSuccess", script, true);
-        }
-        private void ShowToastrErrorVeiculo(string message)
-        {
-            string script = $"showErrorToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrError", script, true);
-
-        }
-        private void ShowToastrInfoVeiculo(string message)
-        {
-            string script = $"showInfoToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrInfo", script, true);
-        }
-        private void ShowToastrWarningVeiculo(string message)
-        {
-            string script = $"showWarningToast('{message}');";
-            ClientScript.RegisterStartupScript(this.GetType(), "toastrWarning", script, true);
         }
         private DataTable BuscarCteSalvos(string idViagem)
         {
@@ -6485,11 +8567,21 @@ namespace NewCapit.dist.pages
                 MostrarMsg("Erro ao carregar Grid: " + ex.Message);
             }
         }
+        private string RemoverEspacos(string texto)
+        {   // remover espaços em branco entre os números digitados 
+            if (string.IsNullOrWhiteSpace(texto))
+                return string.Empty;
+
+            return new string(texto
+                .Where(c => !char.IsWhiteSpace(c))
+                .ToArray());
+        }
         protected void txtChaveCte_TextChanged(object sender, EventArgs e)
         {
             //35251055890016000109570010001725711001725910
             TextBox txt = (TextBox)sender;
             string chave = txt.Text.Trim();
+            chave = RemoverEspacos(txt.Text);
 
             if (chave.Length != 44) return;
 
@@ -6513,7 +8605,7 @@ namespace NewCapit.dist.pages
                 if (jaLidoSessao || jaSalvoBanco)
                 {
                     string msg = jaLidoSessao ? "Este CT-e já foi lido agora." : "Este CT-e já está salvo no banco de dados.";
-                    MostrarMsg2("Aviso: " + msg);
+                    MostrarMsg("Aviso: " + msg);
                     txt.Text = string.Empty;
                     txt.Focus();
                     return;
@@ -6568,7 +8660,7 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-                    MostrarMsg2("CNPJ do emissor não encontrado no cadastro de clientes.");
+                    MostrarMsg("CNPJ do emissor não encontrado no cadastro de clientes.");
 
 
 
@@ -6584,27 +8676,9 @@ namespace NewCapit.dist.pages
             }
             catch (Exception ex)
             {
-                MostrarMsg2("Erro ao processar chave: " + ex.Message);
+                MostrarMsg("Erro ao processar chave: " + ex.Message);
             }
         }
-        public void MostrarMsg2(string mensagem)
-        {
-            // Limpa a string para evitar quebras no JS
-            string mensagemLimpa = mensagem.Replace("'", "").Replace("\n", "\\n").Replace("\r", "");
-            string script = $"alert('{mensagemLimpa}');";
-
-            // O segredo está em usar o ScriptManager.RegisterStartupScript 
-            // referenciando o controle específico ou a página de forma global para AJAX
-            ScriptManager.RegisterStartupScript(
-                this.Page,
-                typeof(Page),
-                Guid.NewGuid().ToString(), // Chave única para evitar conflitos
-                script,
-                true
-            );
-        }
-
-        // Função auxiliar para checar o banco
         private bool CteJaExisteNoBanco(string chave)
         {
             bool existe = false;
@@ -6621,8 +8695,6 @@ namespace NewCapit.dist.pages
             finally { con.Close(); }
             return existe;
         }
-
-
         public class CteLido
         {
             public string ChaveOriginal { get; set; } // Adicione este campo
@@ -6635,7 +8707,6 @@ namespace NewCapit.dist.pages
             public string Emissao { get; set; }
             public string Status { get; set; }
         }
-
         private Dictionary<int, List<CteLido>> ListaCtePorItem
         {
             get
@@ -6646,7 +8717,6 @@ namespace NewCapit.dist.pages
                 return (Dictionary<int, List<CteLido>>)Session["CTE_ITENS"];
             }
         }
-
         // mostrar dados da nota fiscal na grid
         public class NFeResponse
         {
@@ -6659,7 +8729,6 @@ namespace NewCapit.dist.pages
             public Destinatario destinatario { get; set; }
             public List<NFeProduto> produtos { get; set; }
         }
-
         public class NFeProduto
         {
             public string produto { get; set; }
@@ -6667,7 +8736,6 @@ namespace NewCapit.dist.pages
             public decimal peso { get; set; }
             public decimal valor { get; set; }
         }
-
         protected async void txtChaveNF_TextChanged(object sender, EventArgs e)
         {
             TextBox txtChave = (TextBox)sender;
@@ -6690,7 +8758,7 @@ namespace NewCapit.dist.pages
             try
             {
                 string chave = txtChave.Text.Trim();
-
+                chave = RemoverEspacos(txtChave.Text);
                 MeuDanfeService service = new MeuDanfeService();
                 NFeResponse nfe = await service.ConsultarNFe(chave);
 
@@ -6726,41 +8794,20 @@ namespace NewCapit.dist.pages
                     "erro", $"alert('{ex.Message}');", true);
             }
         }
-
         private string LimparCNPJ(string cnpj)
         {
             return new string(cnpj.Where(char.IsDigit).ToArray());
         }
-        //private void LimparTela()
-        //{
-        //    gvProdutosNF.DataSource = null;
-        //    gvProdutosNF.DataBind();
-
-        //    lblChaveNF.Text = "";
-        //    lblNumeroNF.Text = "";
-        //    lblSerieNF.Text = "";
-        //    lblEmissaoNF.Text = "";
-        //    lblStatusNF.Text = "";
-        //    lblPesoTotalNF.Text = "";
-        //    lblValorTotalNF.Text = "";
-
-        //    Session["NFE"] = null;
-        //}
-
-        // fim da nota fiscal
         public class Emitente
         {
             public string nome { get; set; }
             public string cnpj { get; set; }
         }
-
         public class Destinatario
         {
             public string nome { get; set; }
             public string cpf_cnpj { get; set; }
         }
-
-
         public void CarregaMap(string ds_placa)
         {
 
@@ -6898,28 +8945,38 @@ namespace NewCapit.dist.pages
 
                 MostrarMsgMapa(txtPlaca.Text.Trim() + " Sinal do veículo não direcionado a base de dados.", "info");
             }
-
-
-
-
         }
-
         protected void gvNF_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            GridView gv = (GridView)sender;
+            ControlesCarga c = ObterControles(gv);
+
             if (e.CommandName == "SalvarPeso")
             {
-                GridView gv = (GridView)sender;
                 GridViewRow row = (GridViewRow)((System.Web.UI.Control)e.CommandSource).NamingContainer;
 
-                TextBox txtPeso = (TextBox)row.FindControl("txtPeso");
                 HiddenField hfIdNfe = (HiddenField)row.FindControl("hfIdNfe");
-
-                decimal peso = Convert.ToDecimal(txtPeso.Text.Replace(",", "."),
-                                  System.Globalization.CultureInfo.InvariantCulture);
+                TextBox txtPeso = (TextBox)row.FindControl("txtPeso");
 
                 int idNfe = Convert.ToInt32(hfIdNfe.Value);
+                decimal peso = Convert.ToDecimal(txtPeso.Text);
 
+                int idCarga = Convert.ToInt32(e.CommandArgument);
+
+                // 1. salva peso da NF
                 AtualizarPeso(idNfe, peso);
+
+                // 2. recalcula totais automaticamente
+                var totais = CalcularTotais(idCarga);
+
+                // 3. atualiza tbcte
+                //AtualizarCTe(idCarga, totais.peso, totais.valor);
+
+                // recarrega a grid
+                CarregarNotas(Convert.ToInt32(c.Carga), c.GvNF);
+
+                // atualiza os totais
+                AtualizarResumoCarga(c);
             }
             if (e.CommandName == "BaixarDanfe")
             {
@@ -6929,6 +8986,7 @@ namespace NewCapit.dist.pages
             }
 
         }
+
 
         public void BaixarDanfe(string chave)
         {
@@ -6947,7 +9005,7 @@ namespace NewCapit.dist.pages
                 DanfeResult result = JsonConvert.DeserializeObject<DanfeResult>(json);
 
                 if (result == null || string.IsNullOrEmpty(result.data))
-                    MostrarMsg2("API não retornou o PDF. Resposta: " + json);
+                    MostrarMsg("API não retornou o PDF. Resposta: " + json);
 
                 byte[] pdfBytes = Convert.FromBase64String(result.data);
 
@@ -6961,12 +9019,8 @@ namespace NewCapit.dist.pages
                 HttpContext.Current.Response.End();
             }
         }
-
-
         private void AtualizarPeso(int idNfe, decimal peso)
         {
-
-
             using (SqlConnection con = new SqlConnection(
                 WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
             {
@@ -6980,18 +9034,16 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@id", idNfe);
                     cmd.ExecuteNonQuery();
 
-                    MostrarMsg2("Peso salvo com sucesso");
+                    MostrarMsg("Peso salvo com sucesso");
                 }
             }
         }
-
         public class ApiDanfeResponse
         {
             public bool success { get; set; }
             public string name { get; set; }
             public string data { get; set; }
         }
-
         public class DanfeResult
         {
             public string name { get; set; }
@@ -6999,7 +9051,6 @@ namespace NewCapit.dist.pages
             public string format { get; set; }
             public string data { get; set; }
         }
-
         protected void MostrarMsgMapa(string mensagem, string tipo = "info")
         {
             divMsgMapa.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
@@ -7013,12 +9064,10 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
-
         protected void ddlTipoMaterial_SelectedIndexChanged(object sender, EventArgs e)
         {
             AplicarRegras();
         }
-
         protected void tmAtualizaMapa_Tick(object sender, EventArgs e)
         {
             if (Session["placaAtual"] != null)
@@ -7040,14 +9089,6 @@ namespace NewCapit.dist.pages
 
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
-
-        
-
-        //protected void btnVoltar_Click(object sender, EventArgs e)
-        //{
-        //    Response.Redirect("GestaoDeEntregasMatriz.aspx");
-        //}
-
         protected void MostrarMsgCNH(string mensagem, string tipo = "warning")
         {
             divMsgCNH.Attributes["class"] = "alert alert-" + tipo + " alert-dismissible fade show mt-3";
@@ -7172,7 +9213,7 @@ namespace NewCapit.dist.pages
             // 🔎 1 - Validar tamanho
             if (chave.Length != 44 || !chave.All(char.IsDigit))
             {
-                MostrarMsg2("A chave de acesso deve conter 44 dígitos numéricos.");
+                MostrarMsg("A chave de acesso deve conter 44 dígitos numéricos.");
                 return;
             }
 
@@ -7216,7 +9257,7 @@ namespace NewCapit.dist.pages
                 object estadoObj = cmdUF.ExecuteScalar();
                 if (estadoObj == null)
                 {
-                    MostrarMsg2("UF não encontrada.");
+                    MostrarMsg("UF não encontrada.");
                     return;
                 }
                 string estado = estadoObj.ToString();
@@ -7235,7 +9276,7 @@ namespace NewCapit.dist.pages
                 object empresaObj = cmdEmpresa.ExecuteScalar();
                 if (empresaObj == null)
                 {
-                    MostrarMsg2("Empresa não encontrada para o CNPJ informado.");
+                    MostrarMsg("Empresa não encontrada para o CNPJ informado.");
                     return;
                 }
                 string empresa = empresaObj.ToString();
@@ -7246,7 +9287,7 @@ namespace NewCapit.dist.pages
 
                 if (!ValidarChaveMDFe(chave))
                 {
-                    MostrarMsg2("Chave inválida (dígito verificador incorreto).");
+                    MostrarMsg("Chave inválida (dígito verificador incorreto).");
                     return;
                 }
 
@@ -7275,7 +9316,7 @@ namespace NewCapit.dist.pages
 
                 cmdUpdate.ExecuteNonQuery();
 
-                MostrarMsg2("MDF-e vinculado com sucesso.");
+                MostrarMsg("MDF-e vinculado com sucesso.");
             }
         }
 
@@ -7649,6 +9690,1123 @@ namespace NewCapit.dist.pages
             }
         }
 
-        
+        protected void MostrarMsgSolicitacao(RepeaterItem item, string mensagem, string tipo = "warning")
+        {
+            HtmlGenericControl divMsg =
+                (HtmlGenericControl)item.FindControl("divMsgSolicitacao");
+
+            HtmlGenericControl lblMsg =
+                (HtmlGenericControl)item.FindControl("lblMsgSolicitacao");
+
+            if (divMsg == null || lblMsg == null)
+                return;
+
+            divMsg.Attributes["class"] = $"alert alert-{tipo} alert-dismissible fade show mt-3";
+            lblMsg.InnerText = mensagem;
+            divMsg.Style["display"] = "block";
+        }
+
+        //private string GerarNumeroCVA(SqlConnection conn,
+        //                      SqlTransaction trans)
+        //{
+        //    SqlCommand cmd = new SqlCommand(@"
+
+        //    DECLARE @Numero INT;
+
+        //    SELECT @Numero = cva
+        //    FROM tbcontadores WITH (UPDLOCK,HOLDLOCK);
+
+        //    SET @Numero=@Numero+1;
+
+        //    UPDATE tbcontadores
+        //    SET cva=@Numero;
+
+        //    SELECT @Numero;
+
+        //    ", conn, trans);
+
+        //    int numero = Convert.ToInt32(cmd.ExecuteScalar());
+
+        //    return "TNG" + numero.ToString("D7");
+        //}
+        //private void SalvarCVA()
+        //{
+        //    using (SqlConnection conn = new SqlConnection(
+        //        ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+        //    {
+        //        conn.Open();
+
+        //        SqlTransaction trans = conn.BeginTransaction();
+
+        //        try
+        //        {
+        //            // 1 - Gera número CVA
+        //            string numeroCVA = GerarNumeroCVA(conn, trans);
+
+
+        //            // 2 - Grava cabeçalho
+        //            InserirCabecalho(conn, trans, numeroCVA);
+
+
+        //            // 3 - Copia produtos da solicitação
+        //            CopiarProdutos(conn,
+        //                           trans,
+        //                           numeroCVA,
+        //                           numeroSolicitacao);
+
+
+        //            // 4 - Copia embalagens da solicitação
+        //            CopiarEmbalagens(conn,
+        //                             trans,
+        //                             numeroCVA,
+        //                             txtNumeroSolicitacao.Text);
+
+
+        //            // 5 - Copia quantidades da solicitação
+        //            CopiarQuantidades(conn,
+        //                              trans,
+        //                              numeroCVA,
+        //                              txtNumeroSolicitacao.Text);
+
+
+        //            // 6 - Grava fornecedor vindo da tela
+        //            InserirFornecedor(conn,
+        //                              trans,
+        //                              numeroCVA);
+
+
+        //            // Confirma tudo
+        //            trans.Commit();
+
+
+        //            lblMensagem.Text =
+        //                "CVA gerada com sucesso: " + numeroCVA;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            trans.Rollback();
+
+        //            lblMensagem.Text =
+        //                "Erro ao gerar CVA: " + ex.Message;
+        //        }
+        //    }
+        //}
+        //private void CopiarProdutos(SqlConnection conn,
+        //                    SqlTransaction trans,
+        //                    string numeroCVA,
+        //                    string numeroSolicitacao)
+        //{
+        //    string sql = @"
+        //INSERT INTO tbcva_produtos
+        //(
+        //    r3_tipo_registro,
+        //    r3_numero_cva,
+        //    r3_numero_solicitacao,
+        //    r3_cod_produto,
+        //    r3_quant_produto
+        //)
+        //SELECT
+        //    r2_sol_tipo_registro,
+        //    @numeroCVA,
+        //    r2_sol_numero,
+        //    r2_sol_codigo_produto,
+        //    r2_sol_quant_solicitada_produto
+        //FROM tbsolicitacoes_produtos
+        //WHERE r2_sol_numero = @numeroSolicitacao";
+
+        //    using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+        //    {
+        //        cmd.Parameters.AddWithValue("@numeroCVA", numeroCVA);
+        //        cmd.Parameters.AddWithValue("@numeroSolicitacao", numeroSolicitacao);
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+
+        //private void CopiarEmbalagens(SqlConnection conn,
+        //                      SqlTransaction trans,
+        //                      string numeroCVA,
+        //                      string numeroSolicitacao)
+        //{
+        //    string sql = @"
+        //INSERT INTO tbcva_embalagens
+        //(
+        //    r4_tipo_registro,
+        //    r4_numero_cva,
+        //    r4_numero_solicitacao,
+        //    r4_cod_embalagem,
+        //    r4_quant_embalagem
+        //)
+        //SELECT
+        //    r3_sol_tipo_registro,
+        //    @numeroCVA,
+        //    r3_sol_numero,
+        //    r3_sol_codigo_embalagem,
+        //    r3_sol_quant_embalagem
+        //FROM tbsolicitacoes_embalagens
+        //WHERE r3_sol_numero = @numeroSolicitacao";
+
+        //    using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+        //    {
+        //        cmd.Parameters.AddWithValue("@numeroCVA", numeroCVA);
+        //        cmd.Parameters.AddWithValue("@numeroSolicitacao", numeroSolicitacao);
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+        //private void CopiarQuantidades(SqlConnection conn,
+        //                       SqlTransaction trans,
+        //                       string numeroCVA,
+        //                       string numeroSolicitacao)
+        //{
+        //    string sql = @"
+        //INSERT INTO tbcva_quantidades
+        //(
+        //    r6_tipo_registro,
+        //    r6_numero_cva,
+        //    r6_numero_solicitacao,
+        //    r6_quant_registro_01,
+        //    r6_quant_registro_02,
+        //    r6_quant_registro_03,
+        //    r6_quant_registro_04,
+        //    r6_quant_registro_05
+        //)
+        //SELECT
+        //    r4_sol_tipo_registro,
+        //    @numeroCVA,
+        //    r4_sol_numero_solicitacao,
+        //    r4_sol_quant_registro_01,
+        //    r4_sol_quant_registro_02,
+        //    r4_sol_quant_registro_03,
+        //    r4_sol_quant_registro_04,
+        //    r4_sol_quant_registro_05
+        //FROM tbsolicitacoes_quantidades
+        //WHERE r4_sol_numero_solicitacao = @numeroSolicitacao";
+
+        //    using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+        //    {
+        //        cmd.Parameters.AddWithValue("@numeroCVA", numeroCVA);
+        //        cmd.Parameters.AddWithValue("@numeroSolicitacao", numeroSolicitacao);
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+        //private void InserirFornecedor(SqlConnection conn,
+        //                        SqlTransaction trans,
+        //                        string numeroCVA)
+        //{
+        //    string sql = @"
+        //INSERT INTO tbcva_fornecedor
+        //(
+        //    r2_tipo_registro,
+        //    r2_numero_cva,
+        //    r2_numero_solicitacao,
+        //    r2_tipo_registro1,
+        //    r2_cod_fornecedor,
+        //    r2_prev_chegada,
+        //    r2_prev_saida,
+        //    r2_cod_just_reagendamento,
+        //    r2_obs_just_reagendamento,
+        //    r2_coleta_entrega
+        //)
+        //VALUES
+        //(
+        //    @tipoRegistro,
+        //    @numeroCVA,
+        //    @numeroSolicitacao,
+        //    @tipoRegistro1,
+        //    @codFornecedor,
+        //    @prevChegada,
+        //    @prevSaida,
+        //    @codJustReagendamento,
+        //    @obsJustReagendamento,
+        //    @coletaEntrega
+        //)";
+
+        //    using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+        //    {
+        //        cmd.Parameters.AddWithValue("@tipoRegistro", "05");
+        //        cmd.Parameters.AddWithValue("@numeroCVA", numeroCVA);
+        //        cmd.Parameters.AddWithValue("@numeroSolicitacao", txtNumeroSolicitacao.Text);
+
+        //        cmd.Parameters.AddWithValue("@tipoRegistro1", ddlTipoRegistro.SelectedValue);
+        //        cmd.Parameters.AddWithValue("@codFornecedor", txtCodFornecedor.Text);
+
+        //        cmd.Parameters.AddWithValue("@prevChegada",
+        //            string.IsNullOrEmpty(txtPrevChegada.Text)
+        //            ? (object)DBNull.Value
+        //            : Convert.ToDateTime(txtPrevChegada.Text));
+
+        //        cmd.Parameters.AddWithValue("@prevSaida",
+        //            string.IsNullOrEmpty(txtPrevSaida.Text)
+        //            ? (object)DBNull.Value
+        //            : Convert.ToDateTime(txtPrevSaida.Text));
+
+        //        cmd.Parameters.AddWithValue("@codJustReagendamento",
+        //            txtCodJustReagendamento.Text);
+
+        //        cmd.Parameters.AddWithValue("@obsJustReagendamento",
+        //            txtObsJustReagendamento.Text);
+
+        //        cmd.Parameters.AddWithValue("@coletaEntrega",
+        //            ddlColetaEntrega.SelectedValue);
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+        //private void InserirCabecalho(SqlConnection conn,
+        //                      SqlTransaction trans,
+        //                      string numeroCVA)
+        //{
+        //    string sql = @"
+        //INSERT INTO tbcvas
+        //(
+        //    r1_tipo_registro,
+        //    r1_cod_planta,
+        //    r1_numero_cva,
+        //    r1_cod_transportadora,
+        //    r1_placa,
+        //    r1_cpf_motorista,
+        //    r1_prev_cheg_gate,
+        //    r1_tipo_veiculo,
+        //    r1_tipo_viagem,
+        //    r1_cod_tipo_solicitacao,
+        //    r1_numero_solicitacao,
+        //    r1_tipo_geracao_cva,
+        //    r1_nome_motorista,
+        //    r1_num_rota,
+        //    r1_fluxo,
+        //    r1_km_total,
+        //    situacao,
+        //    tipo,
+        //    viagem_com_retorno,
+        //    devolucao_peca,
+        //    data_solicitacao
+        //)
+        //VALUES
+        //(
+        //    @tipoRegistro,
+        //    @codPlanta,
+        //    @numeroCVA,
+        //    @codTransportadora,
+        //    @placa,
+        //    @cpfMotorista,
+        //    @prevChegadaGate,
+        //    @tipoVeiculo,
+        //    @tipoViagem,
+        //    @codTipoSolicitacao,
+        //    @numeroSolicitacao,
+        //    @tipoGeracaoCVA,
+        //    @nomeMotorista,
+        //    @numRota,
+        //    @fluxo,
+        //    @kmTotal,
+        //    @situacao,
+        //    @tipo,
+        //    @viagemRetorno,
+        //    @devolucaoPeca,
+        //    GETDATE()
+        //)";
+
+
+        //    using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+        //    {
+        //        cmd.Parameters.AddWithValue("@tipoRegistro", "01");
+
+        //        cmd.Parameters.AddWithValue("@codPlanta",
+        //            txtCodPlanta.Text);
+
+        //        cmd.Parameters.AddWithValue("@numeroCVA",
+        //            numeroCVA);
+
+        //        cmd.Parameters.AddWithValue("@codTransportadora",
+        //            txtCodTransportadora.Text);
+
+        //        cmd.Parameters.AddWithValue("@placa",
+        //            txtPlaca.Text);
+
+        //        cmd.Parameters.AddWithValue("@cpfMotorista",
+        //            txtCpfMotorista.Text);
+
+        //        cmd.Parameters.AddWithValue("@prevChegadaGate",
+        //            string.IsNullOrEmpty(txtPrevChegadaGate.Text)
+        //            ? (object)DBNull.Value
+        //            : Convert.ToDateTime(txtPrevChegadaGate.Text));
+
+        //        cmd.Parameters.AddWithValue("@tipoVeiculo",
+        //            txtTipoVeiculo.Text);
+
+        //        cmd.Parameters.AddWithValue("@tipoViagem",
+        //            txtTipoViagem.Text);
+
+        //        cmd.Parameters.AddWithValue("@codTipoSolicitacao",
+        //            txtCodTipoSolicitacao.Text);
+
+        //        cmd.Parameters.AddWithValue("@numeroSolicitacao",
+        //            txtNumeroSolicitacao.Text);
+
+        //        cmd.Parameters.AddWithValue("@tipoGeracaoCVA",
+        //            "MANUAL");
+
+        //        cmd.Parameters.AddWithValue("@nomeMotorista",
+        //            txtNomeMotorista.Text);
+
+        //        cmd.Parameters.AddWithValue("@numRota",
+        //            txtRota.Text);
+
+        //        cmd.Parameters.AddWithValue("@fluxo",
+        //            txtFluxo.Text);
+
+        //        cmd.Parameters.AddWithValue("@kmTotal",
+        //            string.IsNullOrEmpty(txtKmTotal.Text)
+        //            ? 0
+        //            : Convert.ToDecimal(txtKmTotal.Text));
+
+        //        cmd.Parameters.AddWithValue("@situacao",
+        //            "ABERTA");
+
+        //        cmd.Parameters.AddWithValue("@tipo",
+        //            ddlTipo.SelectedValue);
+
+        //        cmd.Parameters.AddWithValue("@viagemRetorno",
+        //            ddlRetorno.SelectedValue);
+
+        //        cmd.Parameters.AddWithValue("@devolucaoPeca",
+        //            ddlDevolucaoPeca.SelectedValue);
+
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+        //private const string SQL_INSERT_CVA = @"
+
+        //    INSERT INTO tbcvas
+        //    (
+        //        r1_tipo_registro,
+        //        r1_cod_planta,
+        //        r1_numero_cva,
+        //        r1_cod_transportadora,
+        //        r1_placa,
+        //        r1_cpf_motorista,
+        //        r1_prev_cheg_gate,
+        //        r1_tipo_veiculo,
+        //        r1_tipo_viagem,
+        //        r1_cod_tipo_solicitacao,
+        //        r1_numero_solicitacao,
+        //        r1_tipo_geracao_cva,
+        //        r1_cod_just_reagendamento,
+        //        r1_obs_just_reagendamento,
+        //        r1_rg_motorista,
+        //        r1_nome_motorista,
+        //        r1_num_rota,
+        //        r1_fluxo,
+        //        r1_just_tipo_veiculo,
+        //        r1_conta,
+        //        r1_setor,
+        //        r1_km_total,
+        //        r1_num_remessa,
+
+        //        situacao,
+        //        tipo,
+        //        viagem_com_retorno,
+        //        devolucao_peca,
+
+        //        cod_remetente,
+        //        remetente,
+        //        cnpj_remetente,
+        //        cid_remetente,
+        //        uf_remetente,
+
+        //        cod_expedidor,
+        //        expedidor,
+        //        cnpj_expedidor,
+        //        cid_expedidor,
+        //        uf_expedidor,
+
+        //        cod_destinatario,
+        //        destinatario,
+        //        cnpj_destinatario,
+        //        cid_destinatario,
+        //        uf_destinatario,
+
+        //        cod_recebedor,
+        //        recebedor,
+        //        cnpj_recebedor,
+        //        cid_recebedor,
+        //        uf_recebedor,
+
+        //        cod_pagador,
+        //        pagador,
+        //        cnpj_pagador,
+        //        cid_pagador,
+        //        uf_pagador,
+
+        //        tipo_cva,
+        //        estabelecimento,
+        //        cnpj_recebedor1,
+
+        //        tipo_viagem,
+        //        tipo_geracao,
+        //        conta,
+        //        centro_custo,
+
+        //        data_solicitacao,
+        //        data_entrega,
+
+        //        tipo_solicitacao,
+        //        tipo_veiculo,
+        //        cap_veiculo,
+
+        //        cod_motorista,
+        //        transp_motorista,
+        //        transp_veiculo,
+        //        transp_reboque,
+
+        //        reboque1,
+        //        reboque2,
+
+        //        resp_abertura
+        //    )
+
+        //    VALUES
+        //    (
+        //        @r1_tipo_registro,
+        //        @r1_cod_planta,
+        //        @r1_numero_cva,
+        //        @r1_cod_transportadora,
+        //        @r1_placa,
+        //        @r1_cpf_motorista,
+        //        @r1_prev_cheg_gate,
+        //        @r1_tipo_veiculo,
+        //        @r1_tipo_viagem,
+        //        @r1_cod_tipo_solicitacao,
+        //        @r1_numero_solicitacao,
+        //        @r1_tipo_geracao_cva,
+        //        @r1_cod_just_reagendamento,
+        //        @r1_obs_just_reagendamento,
+        //        @r1_rg_motorista,
+        //        @r1_nome_motorista,
+        //        @r1_num_rota,
+        //        @r1_fluxo,
+        //        @r1_just_tipo_veiculo,
+        //        @r1_conta,
+        //        @r1_setor,
+        //        @r1_km_total,
+        //        @r1_num_remessa,
+
+        //        @situacao,
+        //        @tipo,
+        //        @viagem_com_retorno,
+        //        @devolucao_peca,
+
+        //        @cod_remetente,
+        //        @remetente,
+        //        @cnpj_remetente,
+        //        @cid_remetente,
+        //        @uf_remetente,
+
+        //        @cod_expedidor,
+        //        @expedidor,
+        //        @cnpj_expedidor,
+        //        @cid_expedidor,
+        //        @uf_expedidor,
+
+        //        @cod_destinatario,
+        //        @destinatario,
+        //        @cnpj_destinatario,
+        //        @cid_destinatario,
+        //        @uf_destinatario,
+
+        //        @cod_recebedor,
+        //        @recebedor,
+        //        @cnpj_recebedor,
+        //        @cid_recebedor,
+        //        @uf_recebedor,
+
+        //        @cod_pagador,
+        //        @pagador,
+        //        @cnpj_pagador,
+        //        @cid_pagador,
+        //        @uf_pagador,
+
+        //        @tipo_cva,
+        //        @estabelecimento,
+        //        @cnpj_recebedor1,
+
+        //        @tipo_viagem2,
+        //        @tipo_geracao,
+        //        @conta,
+        //        @centro_custo,
+
+        //        @data_solicitacao,
+        //        @data_entrega,
+
+        //        @tipo_solicitacao,
+        //        @tipo_veiculo2,
+        //        @cap_veiculo,
+
+        //        @cod_motorista,
+        //        @transp_motorista,
+        //        @transp_veiculo,
+        //        @transp_reboque,
+
+        //        @reboque1,
+        //        @reboque2,
+
+        //        @resp_abertura
+        //)";
+        //private void InserirCabecalho(SqlConnection conn,
+        //                          SqlTransaction trans,
+        //                          CVA c)
+        //{
+        //    using (SqlCommand cmd = new SqlCommand(SQL_INSERT_CVA, conn, trans))
+        //    {
+        //        AdicionarParametrosCabecalho(cmd, c);
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+        //}
+        //private void AdicionarParametrosCabecalho(SqlCommand cmd, CVA c)
+        //{
+        //    SqlHelper.NVarChar(cmd, "@r1_tipo_registro", 2, c.TipoRegistro);
+
+        //    SqlHelper.Int(cmd, "@r1_cod_planta", c.CodPlanta);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_numero_cva", 20, c.NumeroCVA);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_cod_transportadora", 20, c.CodTransportadora);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_placa", 10, c.Placa);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_cpf_motorista", 20, c.CPFMotorista);
+
+        //    SqlHelper.Date(cmd, "@r1_prev_cheg_gate", c.PrevChegGate);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_tipo_veiculo", 100, c.TipoVeiculo);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_tipo_viagem", 100, c.TipoViagem);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_cod_tipo_solicitacao", 30, c.CodTipoSolicitacao);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_numero_solicitacao", 30, c.NumeroSolicitacao);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_tipo_geracao_cva", 50, c.TipoGeracaoCVA);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_cod_just_reagendamento", 30, c.CodJustReagendamento);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_obs_just_reagendamento", 500, c.ObsJustReagendamento);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_rg_motorista", 20, c.RGMotorista);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_nome_motorista", 150, c.NomeMotorista);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_num_rota", 30, c.NumRota);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_fluxo", 50, c.Fluxo);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_just_tipo_veiculo", 500, c.JustTipoVeiculo);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_conta", 30, c.Conta);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_setor", 100, c.Setor);
+
+        //    SqlHelper.Decimal(cmd, "@r1_km_total", c.KmTotal);
+
+        //    SqlHelper.NVarChar(cmd, "@r1_num_remessa", 30, c.NumRemessa);
+
+        //    SqlHelper.NVarChar(cmd, "@situacao", 30, c.Situacao);
+
+        //    SqlHelper.NVarChar(cmd, "@tipo", 30, c.Tipo);
+
+        //    SqlHelper.NVarChar(cmd, "@viagem_com_retorno", 10, c.ViagemComRetorno);
+
+        //    SqlHelper.NVarChar(cmd, "@devolucao_peca", 10, c.DevolucaoPeca);
+
+        //    SqlHelper.NVarChar(cmd, "@cod_remetente", 30, c.CodRemetente);
+
+        //    SqlHelper.NVarChar(cmd, "@remetente", 150, c.Remetente);
+
+        //    SqlHelper.NVarChar(cmd, "@cnpj_remetente", 20, c.CNPJRemetente);
+
+        //    SqlHelper.NVarChar(cmd, "@cid_remetente", 100, c.CidadeRemetente);
+
+        //    SqlHelper.NVarChar(cmd, "@uf_remetente", 2, c.UFRemetente);
+
+        //    SqlHelper.NVarChar(cmd, "@cod_expedidor", 30, c.CodExpedidor);
+
+        //    SqlHelper.NVarChar(cmd, "@expedidor", 150, c.Expedidor);
+
+        //    SqlHelper.NVarChar(cmd, "@cnpj_expedidor", 20, c.CNPJExpedidor);
+
+        //    SqlHelper.NVarChar(cmd, "@cid_expedidor", 100, c.CidadeExpedidor);
+
+        //    SqlHelper.NVarChar(cmd, "@uf_expedidor", 2, c.UFExpedidor);
+
+        //    SqlHelper.NVarChar(cmd, "@cod_destinatario", 30, c.CodDestinatario);
+
+        //    SqlHelper.NVarChar(cmd, "@destinatario", 150, c.Destinatario);
+
+        //    SqlHelper.NVarChar(cmd, "@cnpj_destinatario", 20, c.CNPJDestinatario);
+
+        //    SqlHelper.NVarChar(cmd, "@cid_destinatario", 100, c.CidadeDestinatario);
+
+        //    SqlHelper.NVarChar(cmd, "@uf_destinatario", 2, c.UFDestinatario);
+
+        //    SqlHelper.NVarChar(cmd, "@cod_recebedor", 30, c.CodRecebedor);
+
+        //    SqlHelper.NVarChar(cmd, "@recebedor", 150, c.Recebedor);
+
+        //    SqlHelper.NVarChar(cmd, "@cnpj_recebedor", 20, c.CNPJRecebedor);
+
+        //    SqlHelper.NVarChar(cmd, "@cid_recebedor", 100, c.CidadeRecebedor);
+
+        //    SqlHelper.NVarChar(cmd, "@uf_recebedor", 2, c.UFRecebedor);
+
+        //    SqlHelper.NVarChar(cmd, "@cod_pagador", 30, c.CodPagador);
+
+        //    SqlHelper.NVarChar(cmd, "@pagador", 150, c.Pagador);
+
+        //    SqlHelper.NVarChar(cmd, "@cnpj_pagador", 20, c.CNPJPagador);
+
+        //    SqlHelper.NVarChar(cmd, "@cid_pagador", 100, c.CidadePagador);
+
+        //    SqlHelper.NVarChar(cmd, "@uf_pagador", 2, c.UFPagador);
+
+        //    SqlHelper.NVarChar(cmd, "@tipo_cva", 50, c.TipoCVA);
+
+        //    SqlHelper.NVarChar(cmd, "@estabelecimento", 50, c.Estabelecimento);
+
+        //    SqlHelper.NVarChar(cmd, "@cnpj_recebedor1", 20, c.CNPJRecebedor1);
+
+        //    SqlHelper.NVarChar(cmd, "@tipo_viagem2", 100, c.TipoViagemCVA);
+
+        //    SqlHelper.NVarChar(cmd, "@tipo_geracao", 50, c.TipoGeracao);
+
+        //    SqlHelper.NVarChar(cmd, "@conta", 30, c.ContaCVA);
+
+        //    SqlHelper.NVarChar(cmd, "@centro_custo", 30, c.CentroCusto);
+
+        //    SqlHelper.Date(cmd, "@data_solicitacao", c.DataSolicitacao);
+
+        //    SqlHelper.Date(cmd, "@data_entrega", c.DataEntrega);
+
+        //    SqlHelper.NVarChar(cmd, "@tipo_solicitacao", 100, c.TipoSolicitacao);
+
+        //    SqlHelper.NVarChar(cmd, "@tipo_veiculo2", 100, c.TipoVeiculoCVA);
+
+        //    SqlHelper.NVarChar(cmd, "@cap_veiculo", 30, c.CapVeiculo);
+
+        //    SqlHelper.NVarChar(cmd, "@cod_motorista", 20, c.CodMotorista);
+
+        //    SqlHelper.NVarChar(cmd, "@transp_motorista", 150, c.TranspMotorista);
+
+        //    SqlHelper.NVarChar(cmd, "@transp_veiculo", 150, c.TranspVeiculo);
+
+        //    SqlHelper.NVarChar(cmd, "@transp_reboque", 150, c.TranspReboque);
+
+        //    SqlHelper.NVarChar(cmd, "@reboque1", 20, c.Reboque1);
+
+        //    SqlHelper.NVarChar(cmd, "@reboque2", 20, c.Reboque2);
+
+        //    SqlHelper.NVarChar(cmd, "@resp_abertura", 100, c.ResponsavelAbertura);
+
+        //}
+        //private CVA LerTela()
+        //{
+        //    CVA c = new CVA();
+
+        //    //=========================
+        //    // Dados R1
+        //    //=========================
+
+        //    c.TipoRegistro = "01";
+
+        //    c.CodPlanta = SafeInt(txtCodPlanta.Text);
+
+        //    c.CodTransportadora = txtCodTransportadora.Text.Trim();
+
+        //    c.Placa = txtPlacaCVA.Text.Trim();
+
+        //    c.CPFMotorista = txtCPFCVA.Text.Trim();
+
+        //    c.PrevChegGate = SafeDate(txtPrevChegadaGate.Text);
+
+        //    c.TipoVeiculo = txtTipoVeiculoCVA.Text.Trim();
+
+        //    c.TipoViagem = txtTipoViagemCVA.Text.Trim();
+
+        //    c.CodTipoSolicitacao = txtCodTipoSolicitacao.Text.Trim();
+
+        //    c.NumeroSolicitacao = txtNumeroSolicitacao.Text.Trim();
+
+        //    c.TipoGeracaoCVA = txtTipoGeracaoCVA.Text.Trim();
+
+        //    c.CodJustReagendamento =
+        //        txtCodJustificativa.Text.Trim();
+
+        //    c.ObsJustReagendamento =
+        //        txtObsJustificativa.Text.Trim();
+
+        //    c.RGMotorista = txtRGCVA.Text.Trim();
+
+        //    c.NomeMotorista = txtMotoristaCVA.Text.Trim();
+
+        //    c.NumRota = txtRota.Text.Trim();
+
+        //    c.Fluxo = txtFluxo.Text.Trim();
+
+        //    c.JustTipoVeiculo =
+        //        txtJustificaVeiculoCVA.Text.Trim();
+
+        //    c.Conta = txtContaCVA.Text.Trim();
+
+        //    c.Setor = txtSetor.Text.Trim();
+
+        //    c.KmTotal = SafeDecimal(txtKmTotal.Text);
+
+        //    c.NumRemessa = txtRemessa.Text.Trim();
+
+        //    c.CodRemetente = txtCodigoRemetenteCVA.Text.Trim();
+
+        //    c.Remetente = txtRemetenteCVA.Text.Trim();
+
+        //    c.CNPJRemetente = txtCNPJRemetente.Text.Trim();
+
+        //    c.CidadeRemetente = txtLocalColetaCVA.Text.Trim();
+
+        //    c.UFRemetente = txtUFColetaCVA.Text.Trim();
+
+        //    c.CodExpedidor = txtCodigoExpedidorCVA.Text.Trim();
+
+        //    c.Expedidor = txtExpedidorCVA.Text.Trim();
+
+        //    c.CNPJExpedidor = txtCNPJExpedidor.Text.Trim();
+
+        //    c.CidadeExpedidor = txtCidadeExpedidor.Text.Trim();
+
+        //    c.UFExpedidor = txtUFExpedidor.Text.Trim();
+
+        //    c.CodDestinatario = txtCodigoDestCVA.Text.Trim();
+
+        //    c.Destinatario =
+        //        txtDestCVA.Text.Trim();
+
+        //    c.CNPJDestinatario =
+        //        txtCNPJDestinatario.Text.Trim();
+
+        //    c.CidadeDestinatario =
+        //        txtCidadeDestino.Text.Trim();
+
+        //    c.UFDestinatario =
+        //        txtUFDestino.Text.Trim();
+
+        //    c.CodRecebedor = txtCodigoRecCVA.Text.Trim();
+
+        //    c.Recebedor =
+        //        txtRecCVA.Text.Trim();
+
+        //    c.CNPJRecebedor =
+        //        txtCNPJRecebedor.Text.Trim();
+
+        //    c.CidadeRecebedor =
+        //        txtLocalEntregaCVA.Text.Trim();
+
+        //    c.UFRecebedor =
+        //        txtUFEntregaCVA.Text.Trim();
+
+        //    c.TipoCVA = ddlTipoCVA.SelectedValue;
+
+        //    c.Estabelecimento =
+        //        ddlEstabelecimentoCVA.SelectedValue;
+
+        //    c.TipoViagemCVA =
+        //        txtTipoViagemCVA.Text.Trim();
+
+        //    c.TipoGeracao =
+        //        txtTipoGeracaoCVA.Text.Trim();
+
+        //    c.ContaCVA =
+        //        txtContaCVA.Text.Trim();
+
+        //    c.CentroCusto =
+        //        txtCentroCustoCVA.Text.Trim();
+
+        //    c.DataSolicitacao =
+        //        SafeDate(txtDataSolicitacaoCVA.Text);
+
+        //    c.DataEntrega =
+        //        SafeDate(txtDataHoraEntregaCVA.Text);
+
+        //    c.TipoSolicitacao =
+        //        txtTipoSolicitacaoCVA.Text.Trim();
+
+        //    c.TipoVeiculoCVA =
+        //        txtTipoVeiculoCVA.Text.Trim();
+
+        //    c.CapVeiculo =
+        //        txtCapVeiculoCVA.Text.Trim();
+
+        //    c.CodMotorista = txtCodigoMotorista.Text.Trim();
+
+        //    c.TranspMotorista =
+        //        txtTranspMotoristaCVA.Text.Trim();
+
+        //    c.TranspVeiculo =
+        //        txtProprietarioVeiculoCVA.Text.Trim();
+
+        //    c.TranspReboque =
+        //        txtPropReb1.Text.Trim();
+
+        //    c.Reboque1 =
+        //        txtReboque1CVA.Text.Trim();
+
+        //    c.Reboque2 =
+        //        txtReboque2CVA.Text.Trim();
+
+        //    c.ResponsavelAbertura =
+        //        Session["usuario"]?.ToString();
+
+        //    return c;
+        //}
+        //private int SafeInt(string valor)
+        //{
+        //    int.TryParse(valor, out int n);
+        //    return n;
+        //}
+
+        //private decimal? SafeDecimal(string valor)
+        //{
+        //    if (decimal.TryParse(valor, out decimal n))
+        //        return n;
+
+        //    return null;
+        //}
+
+        //private DateTime? SafeDate(string valor)
+        //{
+        //    if (DateTime.TryParse(valor, out DateTime d))
+        //        return d;
+
+        //    return null;
+        //}
+
+        //protected void btnSalvar_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        string numero = GerarCVA();
+
+        //        Mensagem("CVA " + numero + " gerada com sucesso.");
+
+        //        CarregarCVA(numero);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Mensagem(ex.Message);
+        //    }
+        //}
+        //private bool ValidarTela()
+        //{
+        //    if (string.IsNullOrWhiteSpace(txtNumeroSolicitacao.Text))
+        //    {
+        //        Mensagem("Informe a Solicitação.");
+        //        txtNumeroSolicitacao.Focus();
+        //        return false;
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(txtTipoCVA.Text))
+        //    {
+        //        Mensagem("Informe o Tipo da CVA.");
+        //        txtTipoCVA.Focus();
+        //        return false;
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(txtPlacaCVA.Text))
+        //    {
+        //        Mensagem("Informe a Placa.");
+        //        txtPlacaCVA.Focus();
+        //        return false;
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(txtMotoristaCVA.Text))
+        //    {
+        //        Mensagem("Informe o Motorista.");
+        //        txtMotoristaCVA.Focus();
+        //        return false;
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(txtCodigoFornecedor.Text))
+        //    {
+        //        Mensagem("Informe o Fornecedor.");
+        //        txtCodigoFornecedor.Focus();
+        //        return false;
+        //    }
+
+        //    return true;
+        //}
+
+        //public class CVAGravacao
+        //{
+        //    public CVA Cabecalho { get; set; }
+
+        //    public List<CVAFornecedor> Fornecedores { get; set; }
+
+        //    public List<CVAProduto> Produtos { get; set; }
+
+        //    public List<CVAEmbalagem> Embalagens { get; set; }
+
+        //    public List<CVAQuantidade> Quantidades { get; set; }
+        //}
+
+        //public class CVAParametros
+        //{
+        //    //Solicitação
+        //    public string NumeroSolicitacao { get; set; }
+
+        //    //Cabeçalho
+        //    public string TipoCVA { get; set; }
+        //    public string Estabelecimento { get; set; }
+        //    public string TipoViagem { get; set; }
+        //    public string TipoGeracao { get; set; }
+        //    public string Conta { get; set; }
+        //    public string CentroCusto { get; set; }
+
+        //    public string ViagemComRetorno { get; set; }
+        //    public string DevolucaoPeca { get; set; }
+
+        //    //Remetente
+        //    public string CodRemetente { get; set; }
+        //    public string Remetente { get; set; }
+
+        //    //Expedidor
+        //    public string CodExpedidor { get; set; }
+        //    public string Expedidor { get; set; }
+
+        //    //Destinatário
+        //    public string CodDestinatario { get; set; }
+        //    public string Destinatario { get; set; }
+
+        //    //Recebedor
+        //    public string CodRecebedor { get; set; }
+        //    public string Recebedor { get; set; }
+
+        //    public string CidadeColeta { get; set; }
+        //    public string UFColeta { get; set; }
+
+        //    public string CidadeEntrega { get; set; }
+        //    public string UFEntrega { get; set; }
+
+        //    public DateTime? DataEntrega { get; set; }
+
+        //    public string TipoSolicitacao { get; set; }
+
+        //    public string TipoVeiculo { get; set; }
+
+        //    public string JustificativaVeiculo { get; set; }
+
+        //    public string Placa { get; set; }
+
+        //    public string Veiculo { get; set; }
+
+        //    public decimal? Capacidade { get; set; }
+
+        //    public string ProprietarioVeiculo { get; set; }
+
+        //    public string Reboque1 { get; set; }
+
+        //    public string ProprietarioReboque1 { get; set; }
+
+        //    public string Reboque2 { get; set; }
+
+        //    public string ProprietarioReboque2 { get; set; }
+
+        //    public string Motorista { get; set; }
+
+        //    public string CPF { get; set; }
+
+        //    public string RG { get; set; }
+
+        //    public string Transportadora { get; set; }
+
+        //    //Fornecedor
+        //    public string CodFornecedor { get; set; }
+
+        //    public DateTime? PrevChegada { get; set; }
+
+        //    public DateTime? PrevSaida { get; set; }
+
+        //    public int TipoOperacao { get; set; }
+
+        //    public string ColetaEntrega { get; set; }
+
+        //    public string Usuario { get; set; }
+        //}
+
+        //private CVAParametros LerTela()
+        //{
+        //    CVAParametros c = new CVAParametros();
+
+        //    // Dados principais CVA
+        //    c.Id = string.IsNullOrEmpty(hfIdCVA.Value)
+        //        ? 0
+        //        : Convert.ToInt32(hfIdCVA.Value);
+
+        //    c.TipoRegistro = txtTipoRegistroCVA.Text.Trim();
+        //    c.Numero = txtNumeroCVA.Text.Trim();
+        //    c.NumeroCVA = txtNumeroCVA2.Text.Trim();
+
+        //    c.TipoGeracao = ddlTipoGeracaoCVA.SelectedValue;
+        //    c.Tipo = ddlTipoCVA.SelectedValue;
+
+
+        //    // Dados do solicitante
+        //    c.Solicitante = txtSolicitanteCVA.Text.Trim();
+        //    c.DataSolicitacao = SafeDate(txtDataSolicitacaoCVA.Text);
+
+
+        //    // Dados de viagem
+        //    c.TipoViagem = txtTipoViagemCVA.Text.Trim();
+
+        //    c.Origem = txtOrigemCVA.Text.Trim();
+        //    c.Destino = txtDestinoCVA.Text.Trim();
+
+        //    c.CidadeOrigem = txtCidadeOrigemCVA.Text.Trim();
+        //    c.UfOrigem = ddlUfOrigemCVA.SelectedValue;
+
+        //    c.CidadeDestino = txtCidadeDestinoCVA.Text.Trim();
+        //    c.UfDestino = ddlUfDestinoCVA.SelectedValue;
+
+
+        //    // Veículo
+        //    c.Placa = txtPlacaCVA.Text.Trim();
+        //    c.Reboque1 = txtReboque1CVA.Text.Trim();
+        //    c.Reboque2 = txtReboque2CVA.Text.Trim();
+
+        //    c.Motorista = txtMotoristaCVA.Text.Trim();
+        //    c.CodMotorista = SafeInt(txtCodMotoristaCVA.Text);
+
+
+        //    // Valores
+        //    c.Peso = SafeDecimal(txtPesoCVA.Text);
+
+        //    c.Observacao = txtObservacaoCVA.Text.Trim();
+
+
+        //    // Status
+        //    c.Status = ddlStatusCVA.SelectedValue;
+
+
+        //    return c;
+        //}
+
+
     }
 }
+
+
+
+
+
+
+
+ 

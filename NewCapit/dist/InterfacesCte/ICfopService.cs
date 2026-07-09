@@ -10,3 +10,5 @@ namespace NewCapit.dist.InterfacesCte
         string ObterCFOP(string ufOrigem, string ufDestino, string tipoCte);
     }
 }
+
+

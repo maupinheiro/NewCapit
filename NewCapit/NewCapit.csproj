@@ -679,6 +679,7 @@
     <Content Include="dist\pages\reajustefretes.aspx" />
     <Content Include="dist\pages\RequisicaoCompra.aspx" />
     <Content Include="dist\pages\SimuladorFrete.aspx" />
+    <Content Include="dist\pages\tabelasauxiliares.aspx" />
     <Content Include="dist\pages\TrocaSenha.aspx" />
     <Content Include="dist\pages\UploadNF.aspx" />
     <Content Include="dist\pages\Ver_txt.aspx" />
@@ -4814,6 +4815,8 @@
     <Compile Include="dist\ModelsCte\ComponenteFrete.cs" />
     <Compile Include="dist\ModelsCte\ImpostoCte.cs" />
     <Compile Include="dist\ModelsCte\ResultadoCte.cs" />
+    <Compile Include="dist\ModelsCVA\CVA.cs" />
+    <Compile Include="dist\ModelsCVA\CVARepository.cs" />
     <Compile Include="dist\pages\ColaboradoresManutencao.aspx.cs">
       <DependentUpon>ColaboradoresManutencao.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4835,6 +4838,7 @@
     <Compile Include="dist\pages\ControlePneus.aspx.designer.cs">
       <DependentUpon>ControlePneus.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\ControlesCarga.cs" />
     <Compile Include="dist\pages\DownloadSapiens.aspx.cs">
       <DependentUpon>DownloadSapiens.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5483,6 +5487,14 @@
     </Compile>
     <Compile Include="dist\pages\SimuladorFrete.aspx.designer.cs">
       <DependentUpon>SimuladorFrete.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\SqlHelper.cs" />
+    <Compile Include="dist\pages\tabelasauxiliares.aspx.cs">
+      <DependentUpon>tabelasauxiliares.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\tabelasauxiliares.aspx.designer.cs">
+      <DependentUpon>tabelasauxiliares.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\TrocaSenha.aspx.cs">
       <DependentUpon>TrocaSenha.aspx</DependentUpon>
