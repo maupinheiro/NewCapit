@@ -656,6 +656,7 @@
     <Content Include="dist\pages\GerarTabelaDeAvaliacaoMotoristas.aspx" />
     <Content Include="dist\pages\GerenciarRotasKrona.aspx" />
     <Content Include="dist\pages\GestaoDeCargasMatriz.aspx" />
+    <Content Include="dist\pages\GestaoDeCargasCC.aspx" />
     <Content Include="dist\pages\GestaoDeEntregasMatriz.aspx" />
     <Content Include="dist\pages\GestaoDeMultas.aspx" />
     <Content Include="dist\pages\GestaoDePedidos.aspx" />
@@ -5285,6 +5286,13 @@
     </Compile>
     <Compile Include="dist\pages\GestaoDeCargasMatriz.aspx.designer.cs">
       <DependentUpon>GestaoDeCargasMatriz.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasCC.aspx.cs">
+      <DependentUpon>GestaoDeCargasCC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\GestaoDeCargasCC.aspx.designer.cs">
+      <DependentUpon>GestaoDeCargasCC.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\GestaoDeEntregasMatriz.aspx.cs">
       <DependentUpon>GestaoDeEntregasMatriz.aspx</DependentUpon>

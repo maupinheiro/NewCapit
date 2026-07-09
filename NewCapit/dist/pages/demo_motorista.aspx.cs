@@ -139,14 +139,32 @@ namespace NewCapit.dist.pages
                         grdMotoristas.DataBind();
                     }
                 }
-                string sql6 = "select nm_usuario from tb_exclusao_macro where dt_macro='" + data1 + "' and cod_cracha=" + cracha + " group by nm_usuario";
-                SqlDataAdapter apt6 = new SqlDataAdapter(sql6, con);
+                // 1. Criamos a query unificada com UNION e parâmetros (@data e @cracha)
+                string sql6 = @"
+                            SELECT nm_usuario FROM tb_exclusao_macro 
+                            WHERE dt_macro = @data AND cod_cracha = @cracha 
+                            GROUP BY nm_usuario
+
+                            UNION
+
+                            SELECT u.nm_usuario FROM tb_usuario AS u 
+                            INNER JOIN tb_parada AS p ON u.cod_usuario = p.cod_usuario_alt 
+                            WHERE p.dt_posicao_parada = @data AND p.cod_cracha = @cracha 
+                            GROUP BY u.nm_usuario";
+
+                SqlCommand cmd6 = new SqlCommand(sql6, con);
+                // Passando os parâmetros corretamente
+                cmd6.Parameters.AddWithValue("@data", data1);
+                cmd6.Parameters.AddWithValue("@cracha", cracha);
+
+                SqlDataAdapter apt6 = new SqlDataAdapter(cmd6);
                 DataTable dt6 = new DataTable();
+
                 con.Open();
                 apt6.Fill(dt6);
                 con.Close();
 
-                string[] usuarios; // Declare without initialization for clarity
+                string[] usuarios;
 
                 if (dt6.Rows.Count > 0)
                 {
@@ -158,10 +176,10 @@ namespace NewCapit.dist.pages
                 }
                 else
                 {
-                    usuarios = new string[0]; // Empty array if no results
+                    usuarios = new string[0];
                 }
 
-                // Concatenate usuarios into a comma-separated string using StringBuilder
+                // Junta os usuários separados por vírgula
                 StringBuilder sb = new StringBuilder();
                 foreach (string usuario in usuarios)
                 {
@@ -174,14 +192,14 @@ namespace NewCapit.dist.pages
 
                 string usuariosSeparadosPorVirgula = sb.ToString();
 
-                if (usuariosSeparadosPorVirgula.Length == 0)
+                if (usuariosSeparadosPorVirgula.Length > 0)
                 {
-
+                    lblAltera.Text = "Relatório Alterado por: " + usuariosSeparadosPorVirgula;
                 }
                 else
                 {
-                    lblAltera.Text = "Relatório Alterado por: " + usuariosSeparadosPorVirgula;
-
+                    // Opcional: limpar o label ou tratar caso não haja alterações
+                    lblAltera.Text = "";
                 }
             }
         }

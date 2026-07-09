@@ -576,9 +576,9 @@
 
                 <div class="col-md-12">
                     <div class="card card-info">
-                        <div class="card-header" style="background-color: #A020F0; font-weight: bold;">
+                        <div class="card-header">
 
-                            <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;Ordem de Coleta - OC: &nbsp;<asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
+                            <h3 class="card-title"><i class="fas fa-shipping-fast"></i>&nbsp;ORDEM DE COLETA/ENTREGA - &nbsp;<asp:Label ID="novaColeta" runat="server"></asp:Label></h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
@@ -1446,131 +1446,81 @@
                                                                                                         </Columns>
                                                                                                     </asp:GridView>
  </div>                                                                                                
-<!-- aba notas fiscais -->
 <div class="tab-pane fade" id='<%# "tabNotas_" + ((RepeaterItem)Container).ItemIndex %>'>
-    <div class="row g-3">
-        <div class="col-md-2">
-            <div class="form_group">
-                <span class="details">TIPO DE CTE:</span>
-                <asp:DropDownList ID="ddlTipoCte" runat="server" CssClass="form-select select2-active">
-                    <asp:ListItem Text="NORMAL" Value="NORMAL" />
-                    <asp:ListItem Text="COMPLEMENTAR" Value="COMPLEMENTAR" />
-                    <asp:ListItem Text="ANULACAO" Value="ANULACAO" />
-                </asp:DropDownList>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form_group">
-                <span class="details">FILIAL:</span>
-                <asp:DropDownList ID="ddlEmpresa" runat="server" CssClass="form-select select2-active"></asp:DropDownList> 
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form_group">
-                <span class="details">REFATURAMENTO:</span>
-                <asp:DropDownList ID="ddlRefatura" runat="server" CssClass="form-control">
-                    <asp:ListItem Text="Selecione..." Value="" />
-                    <asp:ListItem Text="SIM" Value="SIM" />
-                    <asp:ListItem Text="NAO" Value="NAO" />                    
-                </asp:DropDownList>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form_group">
-                <span class="details">VIAGEM:</span>
-                <asp:DropDownList ID="ddlViagem" runat="server" CssClass="form-control">
-                    <asp:ListItem Text="Selecione..." Value="" />
-                    <asp:ListItem Text="NORMAL" Value="NORMAL" />
-                    <asp:ListItem Text="CVA" Value="CVA" />
-                </asp:DropDownList>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form_group">
-                <span class="details">VEICULO COBRADO:</span>
-                <asp:DropDownList ID="ddlVeiculoCobrado" runat="server" CssClass="form-control select2-active"></asp:DropDownList>
-            </div>
-        </div>
-        
-        <div class="col-md-1">
-            <div class="form_group">
-                <span class="details">ORIGEM:</span>
-                <asp:TextBox ID="txtUfInicio" runat="server" Text='<%# Eval("uf_expedidor") %>' CssClass="form-control" />
-            </div>
-        </div>
-        <div class="col-md-1">
-            <div class="form_group">
-                <span class="details">DESTINO:</span>
-                <asp:TextBox ID="txtUfFim" runat="server" Text='<%# Eval("uf_recebedor") %>' CssClass="form-control" />
-            </div>
-        </div>
-    </div>
-    </br>    
-    <div class="row g-3">
-        <div class="col-md-6">
-            <asp:TextBox ID="txtChaveNF" runat="server" CssClass="form-control" AutoPostBack="true" placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
-        </div>
-        <div class="col-md-2">
-            <asp:Button ID="btnBuscarNfe" CssClass="btn btn-outline-success w-100" CommandName="BuscarNfe" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Buscar NFe" />
-        </div>
-    </div>
-    <br />
-    <div class="row g-3">
-        <div class="col-md-12">
-            <asp:GridView ID="gvNF" runat="server" OnRowCommand="gvNF_RowCommand"
-                CssClass="table table-bordered"
-                AutoGenerateColumns="false">
-                <Columns>
-                    <asp:BoundField DataField="chavenfe" HeaderText="Chave NF-e" />
-                    <asp:BoundField DataField="numeronfe" HeaderText="Numero" />
-                    <asp:BoundField DataField="serienfe" HeaderText="Serie" />
-                    <asp:TemplateField HeaderText="Peso Total">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtPeso" runat="server"
-                                Text='<%# Bind("peso","{0:0.000}") %>'
-                                CssClass="form-control"
-                                Width="100px"
-                                onkeyup="formatarPeso(this)" />
 
-                            <asp:HiddenField ID="hfIdNfe" runat="server"
-                                Value='<%# Bind("idnfe") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="vnf" HeaderText="Valor NF" DataFormatString="{0:N3}" />
-                    <asp:TemplateField HeaderText="Ação">
-                        <ItemTemplate>
-                            <asp:Button ID="btnSalvarPeso" runat="server"
-                                Text="Salvar"
-                                CssClass="btn btn-sm btn-success"
-                                CommandName="SalvarPeso" />
-                        </ItemTemplate>
 
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="PDF">
-                        <ItemTemplate>
-                            <asp:Button
-                                ID="btnDanfe"
-                                runat="server"
-                                Text="Baixar DANFE"
-                                CssClass="btn btn-sm btn-warning"
-                                CommandName="BaixarDanfe"
-                                CommandArgument='<%# Eval("chavenfe") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
-        </div>
-    </div>
-    <div class="row g-3">
-        <div class="col-md-2">
-            <asp:Button ID="btnGeraDoc" CssClass="btn btn-outline-warning w-100" CommandName="GeraDoc" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e TXT" />
-        </div>
-        <div class="col-md-2">
-            <asp:Button ID="btnGerarXml" CssClass="btn btn-outline-warning w-100" CommandName="GeraXml" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e XML" />
-        </div>
-    </div>                                                                                                
+
+                                                                                                    <div class="row g-3">
+                                                                                                        <div class="col-md-6">
+                                                                                                            <asp:TextBox ID="txtChaveNF" runat="server"
+                                                                                                                CssClass="form-control"
+                                                                                                                AutoPostBack="true"
+                                                                                                                placeholder="Chave de Acesso da nota fiscal (44 dígitos)" />
+                                                                                                            <!-- OnTextChanged="txtChaveNF_TextChanged" -->
+                                                                                                        </div>
+                                                                                                        <div class="col-md-2">
+                                                                                                            <asp:Button ID="btnBuscarNfe" CssClass="btn btn-outline-success w-100" CommandName="BuscarNfe" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Buscar NFe" />
+                                                                                                        </div>
+                                                                                                    </div>
+<br />
+<div class="row g-3">
+<div class="col-md-12">
+                                                                                                            <asp:GridView ID="gvNF" runat="server" OnRowCommand="gvNF_RowCommand"
+                                                                                                                CssClass="table table-bordered"
+                                                                                                                AutoGenerateColumns="false">
+                                                                                                                <Columns>
+                                                                                                                    <asp:BoundField DataField="chavenfe" HeaderText="Chave NF-e" />
+                                                                                                                    <asp:BoundField DataField="numeronfe" HeaderText="Numero" />
+                                                                                                                    <asp:BoundField DataField="serienfe" HeaderText="Serie" />
+                                                                                                                    <asp:TemplateField HeaderText="Peso Total">
+                                                                                                                        <ItemTemplate>
+                                                                                                                            <asp:TextBox ID="txtPeso" runat="server"
+                                                                                                                                Text='<%# Bind("peso","{0:0.000}") %>'
+                                                                                                                                CssClass="form-control"
+                                                                                                                                Width="100px"
+                                                                                                                                onkeyup="formatarPeso(this)" />
+
+                                                                                                                            <asp:HiddenField ID="hfIdNfe" runat="server"
+                                                                                                                                Value='<%# Bind("idnfe") %>' />
+                                                                                                                        </ItemTemplate>
+                                                                                                                    </asp:TemplateField>
+                                                                                                                    <asp:BoundField DataField="vnf" HeaderText="Valor NF" DataFormatString="{0:N3}" />
+                                                                                                                    <asp:TemplateField HeaderText="Ação">
+                                                                                                                        <ItemTemplate>
+                                                                                                                            <asp:Button ID="btnSalvarPeso" runat="server"
+                                                                                                                                Text="Salvar"
+                                                                                                                                CssClass="btn btn-sm btn-success"
+                                                                                                                                CommandName="SalvarPeso" />
+                                                                                                                        </ItemTemplate>
+
+                                                                                                                    </asp:TemplateField>
+                                                                                                                    <asp:TemplateField HeaderText="PDF">
+                                                                                                                        <ItemTemplate>
+                                                                                                                            <asp:Button
+                                                                                                                                ID="btnDanfe"
+                                                                                                                                runat="server"
+                                                                                                                                Text="Baixar DANFE"
+                                                                                                                                CssClass="btn btn-sm btn-warning"
+                                                                                                                                CommandName="BaixarDanfe"
+                                                                                                                                CommandArgument='<%# Eval("chavenfe") %>' />
+                                                                                                                        </ItemTemplate>
+                                                                                                                    </asp:TemplateField>
+                                                                                                                </Columns>
+                                                                                                            </asp:GridView>
+                                                                                                        </div>
 </div>
-<!-- aba cte -->                                                                                                   <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
+                                                                                                        <div class="col-md-2">
+                                                                                                               <asp:Button ID="btnGeraDoc" CssClass="btn btn-outline-warning w-100" CommandName="GeraDoc" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e TXT" />
+                                                                                                            </div>
+                                                                                                             
+                                                                                                        <div class="col-md-2">
+                                                                                                                <asp:Button ID="btnGerarXml" CssClass="btn btn-outline-warning w-100" CommandName="GeraXml" CommandArgument='<%# Eval("carga") %>' runat="server" Text="Gerar CT-e / NFS-e XML" />
+                                                                                                             </div>
+                                                                                                   <%-- </div>
+                                                                                                   
+                                                                                                </div>--%>
+</div>
+                                                                                                   <div class="tab-pane fade" id='<%# "tabCte_" + ((RepeaterItem)Container).ItemIndex %>'>
                                                                                                     <!-- Conteúdo CT-e / NFS-e MDF-e -->
                                                                                                     <div class="form-group row">
                                                                                                         <div class="col-md-4">

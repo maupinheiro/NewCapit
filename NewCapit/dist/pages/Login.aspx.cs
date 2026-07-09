@@ -40,68 +40,76 @@ namespace NewCapit
 
             var user = UsersDAL.CheckLogin(obj);
 
-            if (user != null)
+            if (user.fl_status != "I")
             {
-                // Define o ID do usuário na sessão (necessário em ambos os casos)
-                Session["CodUsuario"] = user.cod_usuario.ToString();
-                Session["UsuarioLogado"] = user.nm_nome;
-
-                // 3. Verifica se a senha é a temporária para forçar a troca
-                if (senha == "mudar123")
+                if (user != null)
                 {
-                    // Redireciona imediatamente sem carregar permissões ou outras sessões
+                    // Define o ID do usuário na sessão (necessário em ambos os casos)
                     Session["CodUsuario"] = user.cod_usuario.ToString();
                     Session["UsuarioLogado"] = user.nm_nome;
-                    Session["SenhaAtual"] = "mudar123";
-                    Response.Redirect("/dist/pages/TrocaSenha.aspx");
-                }
-                else
-                {
-                    // Fluxo normal: Carrega todas as informações de sessão
-                    Session["EmpresaTrabalho"] = user.emp_usuario;
-                    Session["FuncaoUsuario"] = user.fun_usuario;
-                    Session["PermissaoUsuario"] = user.fl_permissao;
-                    Session["FotoUsuario"] = user.foto_usuario;
-                    Session["UsuarioSistema"] = user.nm_usuario;
 
-                    // Registro de login
-                    int idLog = UsersDAL.RegistrarLogin(user.cod_usuario);
-                    Session["IdSessaoLog"] = idLog;
-
-                    // Carregamento das permissões (Telas)
-                    List<string> idsTelas = new List<string>();
-                    try
+                    // 3. Verifica se a senha é a temporária para forçar a troca
+                    if (senha == "mudar123")
                     {
-                        conn.Open();
-                        string sql = "SELECT DISTINCT IdTela FROM Usuario_permissao WHERE IdUsuario = @IdUsuario";
-                        using (SqlCommand cmd = new SqlCommand(sql, conn))
+                        // Redireciona imediatamente sem carregar permissões ou outras sessões
+                        Session["CodUsuario"] = user.cod_usuario.ToString();
+                        Session["UsuarioLogado"] = user.nm_nome;
+                        Session["SenhaAtual"] = "mudar123";
+                        Response.Redirect("/dist/pages/TrocaSenha.aspx");
+                    }
+                    else
+                    {
+                        // Fluxo normal: Carrega todas as informações de sessão
+                        Session["EmpresaTrabalho"] = user.emp_usuario;
+                        Session["FuncaoUsuario"] = user.fun_usuario;
+                        Session["PermissaoUsuario"] = user.fl_permissao;
+                        Session["FotoUsuario"] = user.foto_usuario;
+                        Session["UsuarioSistema"] = user.nm_usuario;
+
+                        // Registro de login
+                        int idLog = UsersDAL.RegistrarLogin(user.cod_usuario);
+                        Session["IdSessaoLog"] = idLog;
+
+                        // Carregamento das permissões (Telas)
+                        List<string> idsTelas = new List<string>();
+                        try
                         {
-                            cmd.Parameters.AddWithValue("@IdUsuario", user.cod_usuario);
-                            using (SqlDataReader rdr = cmd.ExecuteReader())
+                            conn.Open();
+                            string sql = "SELECT DISTINCT IdTela FROM Usuario_permissao WHERE IdUsuario = @IdUsuario";
+                            using (SqlCommand cmd = new SqlCommand(sql, conn))
                             {
-                                while (rdr.Read())
+                                cmd.Parameters.AddWithValue("@IdUsuario", user.cod_usuario);
+                                using (SqlDataReader rdr = cmd.ExecuteReader())
                                 {
-                                    idsTelas.Add(rdr["IdTela"].ToString());
+                                    while (rdr.Read())
+                                    {
+                                        idsTelas.Add(rdr["IdTela"].ToString());
+                                    }
                                 }
                             }
                         }
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
+                        finally
+                        {
+                            conn.Close();
+                        }
 
-                    Session["TelasPermitidas"] = string.Join(",", idsTelas);
+                        Session["TelasPermitidas"] = string.Join(",", idsTelas);
 
-                    // Redireciona para o sistema
-                    Response.Redirect("/dist/pages/Home.aspx");
+                        // Redireciona para o sistema
+                        Response.Redirect("/dist/pages/Home.aspx");
+                    }
+                }
+                else
+                {
+                    // Caso o usuário ou senha não confiram
+                    lblError.Text = "Usuário ou Senha Incorreto(s)!";
                 }
             }
             else
             {
-                // Caso o usuário ou senha não confiram
-                lblError.Text = "Usuário ou Senha Incorreto(s)!";
+                lblError.Text = "Usuário Inativo!";
             }
+            
         }
     }
 }

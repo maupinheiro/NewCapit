@@ -151,6 +151,7 @@ namespace NewCapit
                     TelaGestaoDePedidosPernambuco.Visible = telasPermitidas.Contains(92);
 
                     // --- FILIAL DIADEMA / CNT (id_modulo = 5) ---
+                    TelaGestaoDeCargasCC.Visible = telasPermitidas.Contains(83);
                     TelaConsultaColetasCNT.Visible = telasPermitidas.Contains(7);
                     TelaConsultaEntregas.Visible = telasPermitidas.Contains(9);
                     TelaImportarPlanejamento.Visible = telasPermitidas.Contains(96);

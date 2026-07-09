@@ -1,6 +1,5 @@
 ﻿using AjaxControlToolkit.Design;
 using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office.Word;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Domain;
@@ -55,7 +54,6 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using static NewCapit.dist.pages.Frm_TabelaPrecoMatriz;
 using static NPOI.HSSF.Util.HSSFColor;
-using DataTable = System.Data.DataTable;
 
 
 namespace NewCapit.dist.pages
@@ -102,12 +100,18 @@ namespace NewCapit.dist.pages
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
 
                 PreencherComboMotoristas();
+                //if (Request.QueryString["num_carregamento"] != null)
+                //{
+                //    int id = Convert.ToInt32(Request.QueryString["num_carregamento"]);
+                //    CarregaDados(id);
+                //}
+
                 CarregaDados();
                 CarregaMap(txtPlaca.Text);
                 PreencherClienteInicial();
                 PreencherClienteFinal();
 
-               
+
             }
             CarregaFoto();
             //CarregarFotoMotorista(fotoMotorista);
@@ -115,30 +119,41 @@ namespace NewCapit.dist.pages
             //VerificaCargasFechadas();
 
         }
-        //private void PreencherEmpresas(DropDownList ddlEmpresa)
+        //private void PreencherComboFiliais()
         //{
-        //    string query = "SELECT codigo, descricao FROM tbempresa ORDER BY descricao";
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT codigo, descricao FROM tbempresa";
 
-        //    using (SqlConnection conn = new SqlConnection(
-        //        WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
         //    {
-        //        conn.Open();
-
-        //        SqlCommand cmd = new SqlCommand(query, conn);
-
-        //        using (SqlDataReader reader = cmd.ExecuteReader())
+        //        try
         //        {
-        //            ddlEmpresa.DataSource = reader;
-        //            ddlEmpresa.DataTextField = "descricao";
-        //            ddlEmpresa.DataValueField = "codigo";
-        //            ddlEmpresa.DataBind();
+        //            // Abra a conexão com o banco de dados
+        //            conn.Open();
 
-        //ddlEmpresa.Items.Insert(0,
-        //                new System.Web.UI.WebControls.ListItem("Selecione a FILIAL", "0"));                    
+        //            // Crie o comando SQL
+        //            SqlCommand cmd = new SqlCommand(query, conn);
+
+        //            // Execute o comando e obtenha os dados em um DataReader
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            // Preencher o ComboBox com os dados do DataReader
+        //            cbFiliais.DataSource = reader;
+        //            cbFiliais.DataTextField = "descricao";  // Campo que será mostrado no ComboBox
+        //            cbFiliais.DataValueField = "codigo";  // Campo que será o valor de cada item                    
+        //            cbFiliais.DataBind();  // Realiza o binding dos dados                   
+        //            cbFiliais.Items.Insert(0, new ListItem("", "0"));
+        //            // Feche o reader
+        //            reader.Close();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Trate exceções
+        //            Response.Write("Erro: " + ex.Message);
         //        }
         //    }
         //}
-        
         public void CarregaFoto()
         {
             var codigo = txtCodMotorista.Text.Trim();
@@ -190,7 +205,7 @@ namespace NewCapit.dist.pages
             string sql = "select * from tbcarregamentos where num_carregamento='" + num_coleta + "'";
 
             SqlDataAdapter adtp = new SqlDataAdapter(sql, con);
-            System.Data.DataTable dt = new System.Data.DataTable();
+            DataTable dt = new DataTable();
             con.Open();
             adtp.Fill(dt);
             con.Close();
@@ -657,11 +672,11 @@ namespace NewCapit.dist.pages
             }
 
             // Filiais no CVA
-            var cbFiliais = (DropDownList)e.Item.FindControl("cbFiliais");            
+            var cbFiliais = (DropDownList)e.Item.FindControl("cbFiliais");
             if (cbFiliais == null) return;
             const string sqlFiliais = "SELECT codigo, descricao FROM tbempresa";
             using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-                using (var cmd = new SqlCommand(sqlFiliais, conn))
+            using (var cmd = new SqlCommand(sqlFiliais, conn))
             {
                 try
                 {
@@ -672,7 +687,7 @@ namespace NewCapit.dist.pages
                         cbFiliais.DataTextField = "descricao";
                         cbFiliais.DataValueField = "codigo";
                         cbFiliais.DataBind();
-                    }                  
+                    }
                     //var drv = (HiddenField)e.Item.FindControl("hdfCVA"); ;
                     //string filialDaColeta = drv.Value;  // o nome da coluna do seu DataTable
                     // opcional: insere item em branco no topo
@@ -684,100 +699,8 @@ namespace NewCapit.dist.pages
                     Response.Write("Erro ao carregar filiais: " + ex.Message);
                 }
             }
-            
-            // Filiais na Notas Fiscais
-            var ddlEmpresa = (DropDownList)e.Item.FindControl("ddlEmpresa");
-            if (ddlEmpresa == null) return;
-            const string sqlEmpresas = "SELECT codigo, descricao FROM tbempresa";
-            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sqlEmpresas, conn))
-            {
-                try
-                {
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        ddlEmpresa.DataSource = rdr;
-                        ddlEmpresa.DataTextField = "descricao";
-                        ddlEmpresa.DataValueField = "codigo";
-                        ddlEmpresa.DataBind();
-                    }
-                    ddlEmpresa.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione a FILIAL", "0")); 
-                }
-                catch (Exception ex)
-                {
-                    // trate o erro como preferir
-                    Response.Write("Erro ao carregar filiais: " + ex.Message);
-                }
-            }
 
-            // Veiculo cobrado
-            var ddlVeiculoCobrado = (DropDownList)e.Item.FindControl("ddlVeiculoCobrado");
-            if (ddlVeiculoCobrado == null) return;
-            const string sqlVeiculoCobrado = @"
-            SELECT DISTINCT RTRIM(LTRIM(descricao_tng)) AS descricao_tng
-            FROM tbtipoveic
-            WHERE descricao_tng IS NOT NULL
-            ORDER BY descricao_tng";
-            using (var conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sqlVeiculoCobrado, conn))
-            {
-                try
-                {
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        ddlVeiculoCobrado.DataSource = rdr;
-                        ddlVeiculoCobrado.DataTextField = "descricao_tng";
-                        ddlVeiculoCobrado.DataValueField = "descricao_tng";
-                        ddlVeiculoCobrado.DataBind();
-                    }
-                    ddlVeiculoCobrado.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione o VEICULO", "0"));
-                }
-                catch (Exception ex)
-                {
-                    // trate o erro como preferir
-                    Response.Write("Erro ao carregar filiais: " + ex.Message);
-                }
-            }
 
-            // CFOP
-            var ddlCFOP = (DropDownList)e.Item.FindControl("ddlCFOP");
-            if (ddlCFOP == null) return;
-
-            const string sqlCFOP = @"
-            SELECT DISTINCT 
-                RTRIM(LTRIM(cod_cfop)) AS cod_cfop,
-                desc_cfop,
-                RTRIM(LTRIM(cod_cfop)) + ' - ' + desc_cfop AS cfop_display
-            FROM tbcfop
-            WHERE cod_cfop IS NOT NULL
-            ORDER BY cod_cfop";
-
-            using (var conn = new SqlConnection(
-                WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            using (var cmd = new SqlCommand(sqlCFOP, conn))
-            {
-                try
-                {
-                    conn.Open();
-
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        ddlCFOP.DataSource = rdr;
-                        ddlCFOP.DataTextField = "cfop_display";   // 👈 aqui fica "duas colunas"
-                        ddlCFOP.DataValueField = "cod_cfop";
-                        ddlCFOP.DataBind();
-                    }
-
-                    ddlCFOP.Items.Insert(0,
-                        new System.Web.UI.WebControls.ListItem("Selecione o CFOP", "0"));
-                }
-                catch (Exception ex)
-                {
-                    Response.Write("Erro ao carregar CFOP: " + ex.Message);
-                }
-            }
 
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
@@ -785,13 +708,9 @@ namespace NewCapit.dist.pages
                 string previsaoStr = DataBinder.Eval(e.Item.DataItem, "previsao")?.ToString();
                 string dataHoraStr = DataBinder.Eval(e.Item.DataItem, "data_hora")?.ToString();
                 string status = DataBinder.Eval(e.Item.DataItem, "status")?.ToString();
-                string ufOrigem = DataBinder.Eval(e.Item.DataItem, "uf_expedidor")?.ToString();
-                string ufDestino = DataBinder.Eval(e.Item.DataItem, "uf_recebedor")?.ToString();
+
                 Label lblAtendimento = (Label)e.Item.FindControl("lblAtendimento");
                 HtmlTableCell tdAtendimento = (HtmlTableCell)e.Item.FindControl("tdAtendimento");
-                TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUfInicio");
-                TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUfFim");
-                
 
                 DateTime previsao, dataHora;
                 DateTime agora = DateTime.Now;
@@ -832,11 +751,6 @@ namespace NewCapit.dist.pages
                         tdAtendimento.Attributes["style"] = "";
                     }
                 }
-                
-
-                
-
-
             }
             if (e.Item.ItemType == ListItemType.Item ||
          e.Item.ItemType == ListItemType.AlternatingItem)
@@ -921,7 +835,7 @@ namespace NewCapit.dist.pages
                 }
 
                 string sqlg = "select rota_krona from tbcargas where carga=" + carga + " and  rota_krona is not null";
-                System.Data.DataTable dt = new System.Data.DataTable();
+                DataTable dt = new DataTable();
                 SqlDataAdapter adp = new SqlDataAdapter(sqlg, con);
                 con.Open();
                 adp.Fill(dt);
@@ -954,7 +868,7 @@ namespace NewCapit.dist.pages
 
 
                 string sqlg = "select percurso from tbcargas where carga=" + carga + " and percurso is not null";
-                System.Data.DataTable dt = new System.Data.DataTable();
+                DataTable dt = new DataTable();
                 SqlDataAdapter adp = new SqlDataAdapter(sqlg, con);
                 con.Open();
                 adp.Fill(dt);
@@ -1105,9 +1019,7 @@ namespace NewCapit.dist.pages
                 TextBox txtFimPernoite = (TextBox)e.Item.FindControl("txtFimPernoite");
                 TextBox txtDuracaoP = (TextBox)e.Item.FindControl("txtDuracaoP");
 
-                // Recuperar os TextBoxes de UF
-                //TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUFExpedidor");
-                //TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUFRecebedor");
+
 
                 DateTime agora = DateTime.Now;
 
@@ -1130,6 +1042,7 @@ namespace NewCapit.dist.pages
                     var Recebedor = SafeDateValue2(cboRecebedor.Text.Trim());
                     var CidRecebedor = SafeDateValue2(txtCidRecebedor.Text.Trim());
                     var UFRecebedor = SafeDateValue2(txtUFRecebedor.Text.Trim());
+
                     var localPernoite = SafeDateValue2(txtLocalPernoite.Text.Trim());
                     var inicioPernoite = SafeDateValue2(txtInicioPernoite.Text.Trim());
                     var fimPernoite = SafeDateValue2(txtFimPernoite.Text.Trim());
@@ -1243,7 +1156,7 @@ namespace NewCapit.dist.pages
 
                     cmd.Parameters.AddWithValue("@local_pernoite", txtLocalPernoite.Text.Trim().ToUpper());
                     cmd.Parameters.AddWithValue("@inicio_pernoite", SafeDateValue(txtInicioPernoite.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@fim_pernoite", SafeDateValue(txtFimPernoite.Text.Trim())); 
+                    cmd.Parameters.AddWithValue("@fim_pernoite", SafeDateValue(txtFimPernoite.Text.Trim()));
                     cmd.Parameters.AddWithValue("@duracao_pernoite", txtDuracaoP.Text.Trim());
                     cmd.Parameters.AddWithValue("@status_pernoite", statusPernoite);
                     // Chama método que verifica no banco
@@ -1467,9 +1380,9 @@ namespace NewCapit.dist.pages
                             }
                         }
                     }
-                    
+
                     // TRATANDO A PERNOITE AUTOMATICA DO MOTORISTA
-                    DateTime dataPernoite;                                        
+                    DateTime dataPernoite;
                     if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
                         agora.TimeOfDay <= new TimeSpan(23, 59, 59))
                     {
@@ -1646,9 +1559,9 @@ namespace NewCapit.dist.pages
                             }
                         }
                     }
-                    
+
                     // TRATANDO O ALMOÇO AUTOMATICO DO MOTORISTA
-                    
+
                 }
 
                 // Atualizando a ordem de coleta 
@@ -2403,7 +2316,7 @@ namespace NewCapit.dist.pages
                 // 1. Verificação de permissão por usuário
                 string usuarioLogado = Session["UsuarioLogado"]?.ToString();
                 string usuarioSistema = Session["UsuarioSistema"]?.ToString();
-                if (usuarioSistema != "TNG30976" && usuarioSistema !="admin")
+                if (usuarioSistema != "TNG30976" && usuarioSistema != "admin")
                 {
                     // Aqui você pode usar um ScriptManager para alertar o usuário no navegador
                     ScriptManager.RegisterStartupScript(this, GetType(), "alertMessage",
@@ -2933,7 +2846,7 @@ namespace NewCapit.dist.pages
             // --- 1. MOTORISTA ---
             string mot = "select nommot,cpf,numrg,orgaorg,dtnasc,nomemae,estcivil,numregcnh,catcnh,venccnh, endmot,complemento,baimot,cidmot,ufmot,cepmot,fone3,fone2,tipomot,codtra from tbmotoristas where codmot='" + codmotorista + "'";
             SqlDataAdapter adptm = new SqlDataAdapter(mot, con);
-            System.Data.DataTable dm = new System.Data.DataTable();
+            DataTable dm = new DataTable();
             adptm.Fill(dm);
 
             // Proteção: Se não achar motorista, cria linha vazia para não quebrar o dm.Rows[0]
@@ -7041,7 +6954,7 @@ namespace NewCapit.dist.pages
             ScriptManager.RegisterStartupScript(this, GetType(), "EscondeMsg", script, true);
         }
 
-        
+
 
         //protected void btnVoltar_Click(object sender, EventArgs e)
         //{
@@ -7649,6 +7562,5 @@ namespace NewCapit.dist.pages
             }
         }
 
-        
     }
 }

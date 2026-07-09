@@ -864,6 +864,7 @@
                                     <li class="nav-item" id="MenuDiadema" runat="server">
                                         <a href="#" class="nav-link"><i class="far fa-circle nav-icon text-purple"></i><p>CNT (CC) <i class="right fas fa-angle-left"></i></p></a>
                                         <ul class="nav nav-treeview pl-3">
+                                            <li class="nav-item" id="TelaGestaoDeCargasCC" runat="server"><a href="/dist/pages/GestaoDeCargasCC.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
                                              <li class="nav-item" id="TelaConsultaEntregas" runat="server"><a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Solicitaçao VW</p></a></li>
                                             <li class="nav-item" id="TelaImportarPlanejamento" runat="server"><a href="/dist/pages/ImportarPlanejamento.aspx" class="nav-link"><p>Importar Planejamento</p></a></li>
                                             <li class="nav-item" id="TelaConsultaColetasCNT" runat="server"><a href="/dist/pages/ConsultaColetasCNT.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Coletas</p></a></li>                                           

@@ -24,6 +24,7 @@ namespace Domain
 
         public string nm_nome { get; set;}
         public string fl_permissao { get; set; }
+        public string fl_status { get; set; }
 
 
     }
