@@ -66,6 +66,11 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using WebPage = System.Web.UI.Page;
 using DocumentFormat.OpenXml.VariantTypes;
 using NewCapit.dist.ModelsCVA;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Vml;
+using static NPOI.HSSF.Record.UnicodeString;
+using TextBox = System.Web.UI.WebControls.TextBox;
 
 
 namespace NewCapit.dist.pages
@@ -3781,32 +3786,824 @@ namespace NewCapit.dist.pages
                 usu_envio_krona=@usu_envio_krona
                
             WHERE carga = @carga";
+
+            
+            
         }
+
+        private string ObterSqlAtualizacaoTbcarregamentos()
+        {
+            return @"
+                   UPDATE tbcarregamentos 
+                   SET 
+                          situacao = @situacao,
+                          cva = @cva,
+                          status = @status,                        
+                          cod_expedidor = @cod_expedidor,
+                          expedidor = @expedidor,
+                          cid_expedidor = @cid_expedidor,
+                          uf_expedidor = @uf_expedidor,
+                          cod_recebedor = @cod_recebedor,
+                          recebedor = @recebedor,
+                          cid_recebedor = @cid_recebedor,
+                          carga = @carga,
+                          dtsaida=@dtsaida,
+                          dtchegada=@dtchegada,
+                          dtconclusao=@dtconclusao,
+                          uf_recebedor = @uf_recebedor,
+                          dtalt = @dtalt,
+                          usualt = @usualt
+                      WHERE num_carregamento = @num_carregamento";
+
+
+        }
+
+
+
+
+
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             GridView gv = (GridView)e.Item.FindControl("gvPedidos");
+            //if (e.CommandName == "Atualizar")
+            //{
+            //    var c = ObterControles(e);
+            //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            //    {
+            //        SqlCommand cmd = new SqlCommand(ObterSqlAtualizacao(), conn);
+            //        cmd.Parameters.AddWithValue("@carga", c.Carga);
+
+            //        AdicionarParametrosGerais(cmd, c, andamentoCarga);
+            //        AdicionarParametrosPernoite(cmd, c);
+            //        AdicionarParametrosKrona(cmd, c);
+            //        AdicionarParametrosTbcarregamentos(cmd, c);
+
+            //        conn.Open();
+
+            //        cmd.ExecuteNonQuery();
+            //    }
+
+            //    Session["Coletas"] = null;
+            //    CarregarColetas(novaColeta.Text);
+            //}
+
             if (e.CommandName == "Atualizar")
             {
-                var c = ObterControles(e);
-                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                //genildo
+                string carga = e.CommandArgument.ToString();
+               
+                GridView gvPedidos = (GridView)e.Item.FindControl("gvPedidos");
+
+                /// Recuperar os controles de dentro do item
+                TextBox txtDataHoraColeta = (TextBox)e.Item.FindControl("txtDataHoraColeta");
+                TextBox txtVeiculoDisponivel = (TextBox)e.Item.FindControl("txtVeiculoDisponivel");
+                TextBox txtGateOrigem = (TextBox)e.Item.FindControl("txtGateOrigem");
+                TextBox txtPrevisaoChegada = (TextBox)e.Item.FindControl("txtPrevisaoChegada");
+                TextBox txtGateDestino = (TextBox)e.Item.FindControl("txtGateDestino");
+                TextBox txtCVA = (TextBox)e.Item.FindControl("txtCVA");
+                DropDownList ddlStatus = (DropDownList)e.Item.FindControl("ddlStatus");
+                TextBox txtSaidaOrigem = (TextBox)e.Item.FindControl("txtSaidaOrigem");
+                TextBox txtAgCarreg = (TextBox)e.Item.FindControl("txtAgCarreg");
+                TextBox txtAgDescarga = (TextBox)e.Item.FindControl("txtAgDescarga");
+                TextBox txtDurTransp = (TextBox)e.Item.FindControl("txtDurTransp");
+                TextBox txtChegadaDestino = (TextBox)e.Item.FindControl("txtChegadaDestino");
+                TextBox txtSaidaPlanta = (TextBox)e.Item.FindControl("txtSaidaPlanta");
+                Label lblMensagem = (Label)e.Item.FindControl("lblMensagem");
+                TextBox txtMaterial = (TextBox)e.Item.FindControl("txtMaterial");
+
+                TextBox txtCodExpedidor = (TextBox)e.Item.FindControl("txtCodExpedidor");
+                TextBox cboExpedidor = (TextBox)e.Item.FindControl("cboExpedidor");
+                TextBox txtCidExpedidor = (TextBox)e.Item.FindControl("txtCidExpedidor");
+                TextBox txtUFExpedidor = (TextBox)e.Item.FindControl("txtUFExpedidor");
+
+                TextBox txtCodRecebedor = (TextBox)e.Item.FindControl("txtCodRecebedor");
+                TextBox cboRecebedor = (TextBox)e.Item.FindControl("cboRecebedor");
+                TextBox txtCidRecebedor = (TextBox)e.Item.FindControl("txtCidRecebedor");
+                TextBox txtUFRecebedor = (TextBox)e.Item.FindControl("txtUFRecebedor");
+
+                TextBox txtLocalPernoite = (TextBox)e.Item.FindControl("txtLocalPernoite");
+                TextBox txtInicioPernoite = (TextBox)e.Item.FindControl("txtInicioPernoite");
+                TextBox txtFimPernoite = (TextBox)e.Item.FindControl("txtFimPernoite");
+                TextBox txtDuracaoP = (TextBox)e.Item.FindControl("txtDuracaoP");
+
+               // Recuperar os TextBoxes de UF
+               TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUFExpedidor");
+                TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUFRecebedor");
+
+                DropDownList ddlPercursoKrona = (DropDownList)e.Item.FindControl("ddlPercurso");
+                DropDownList ddlRotaKrona = (DropDownList)e.Item.FindControl("ddlRotaKrona");
+                TextBox pesoKrona = (TextBox)e.Item.FindControl("txtPeso");
+                TextBox valorKrona = (TextBox)e.Item.FindControl("txtValorTotal");
+                DateTime? previsaoInicial = SafeDateValue(e.Item, "txtPrevisaoInicio");
+                DateTime? previsaoFinal = SafeDateValue(e.Item, "txtPrevisaoTermino");
+                string percursoKrona = ddlPercursoKrona.SelectedItem.Text;
+                string rotaKrona = ddlRotaKrona.SelectedItem.Text;
+                string id_rotaKrona = ddlRotaKrona.SelectedValue;
+
+                DateTime agora = DateTime.Now;
+
+            //Exemplo: atualizando no banco
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
                 {
-                    SqlCommand cmd = new SqlCommand(ObterSqlAtualizacao(), conn);
-                    cmd.Parameters.AddWithValue("@carga", c.Carga);
+                   // Extrai os valores uma única vez
+                    var saida = SafeDateValue2(txtSaidaOrigem.Text.Trim());
+                    var saidaPlanta = SafeDateValue2(txtSaidaPlanta.Text.Trim());
+                    var chegada = SafeDateValue2(txtChegadaDestino.Text.Trim());
+                    var disponivel_solicitacao = SafeDateValue2(txtVeiculoDisponivel.Text.Trim());
+                    var cvaOC = txtCVA.Text.Trim();
 
-                    AdicionarParametrosGerais(cmd, c, andamentoCarga);
-                    AdicionarParametrosPernoite(cmd, c);
-                    AdicionarParametrosKrona(cmd, c);
+                    var CodExpedidor = SafeDateValue2(txtCodExpedidor.Text.Trim());
+                    var Expedidor = SafeDateValue2(cboExpedidor.Text.Trim());
+                    var Cid_Expedidor = SafeDateValue2(txtCidExpedidor.Text.Trim());
+                    var UFExpedidor = SafeDateValue2(txtUFExpedidor.Text.Trim());
 
+                    var CodRecebedor = SafeDateValue2(txtCodRecebedor.Text.Trim());
+                    var Recebedor = SafeDateValue2(cboRecebedor.Text.Trim());
+                    var CidRecebedor = SafeDateValue2(txtCidRecebedor.Text.Trim());
+                    var UFRecebedor = SafeDateValue2(txtUFRecebedor.Text.Trim());
+                    var localPernoite = SafeDateValue2(txtLocalPernoite.Text.Trim());
+                    var inicioPernoite = SafeDateValue2(txtInicioPernoite.Text.Trim());
+                    var fimPernoite = SafeDateValue2(txtFimPernoite.Text.Trim());
+                    var duracaoP = txtDuracaoP.Text.Trim();
+
+                    if (chegada != null && saida != null && saidaPlanta != null)
+                    {
+                        statusOC = "Concluido";
+                        situacaoOC = "Pronto";
+                        andamentoCarga = "Entregue";
+                    }
+                    else if (chegada != null && saida != null)
+                    {
+                        statusOC = "Ag. Descarga";
+                        situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
+                    }
+                    else if (chegada != null && saida != null)
+                    {
+                        statusOC = "Em Transito";
+                        situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
+                    }
+                    else if (chegada != null)
+                    {
+                        statusOC = "Ag. Carregamento";
+                        situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
+                    }
+                    else
+                    {
+                        statusOC = "Pendente";
+                        situacaoOC = "PROGRAMADA";
+                        andamentoCarga = "Programada";
+                    }
+                    if (ddlStatus.SelectedItem.Text != "Pendente" || ddlStatus.SelectedItem.Text != "Concluido")
+                    {
+                        situacaoOC = "EM ANDAMENTO";
+                        andamentoCarga = "Em Andamento";
+                        statusOC = ddlStatus.SelectedItem.Text.Trim();
+
+                    }
+                    if (ddlStatus.SelectedItem.Text == "Pendente")
+                    {
+                        situacaoOC = "PROGRAMADA";
+                        andamentoCarga = "Programada";
+                        statusOC = ddlStatus.SelectedItem.Text.Trim();
+
+                    }
+
+                    string duracao = txtDuracaoP.Text.Trim();
+
+                    string statusPernoite = "";
+
+                    if (!string.IsNullOrEmpty(duracao))
+                    {
+                        TimeSpan tsDuracao = TimeSpan.Parse(duracao);
+                        TimeSpan tsLimite = new TimeSpan(11, 0, 0);
+
+                        if (tsDuracao < tsLimite)
+                        {
+                            statusPernoite = "Não Cumpriu a Jornada de 11h";
+                        }
+                        else
+                        {
+                            statusPernoite = "Cumpriu Jornada de 11h";
+                        }
+                    }
+
+                    string query = @"UPDATE tbcargas SET
+    gate_origem = @gate_origem,
+    gate_destino = @gate_destino,
+    status = @status,
+    cva = @cva,
+    andamento = @andamento,
+    saidaorigem = @saidaorigem,
+    tempoagcarreg = @tempoagcarreg,
+    chegadadestino = @chegadadestino,
+    saidaplanta = @saidaplanta,
+    prev_chegada = @prev_chegada,
+    tempoagdescarreg = @tempoagdescarreg,
+    duracao_transp = @duracao_transp,
+    disponivel_solicitacao = @disponivel_solicitacao,
+    codmot = @codmot,
+    local_pernoite = @local_pernoite,
+    inicio_pernoite = @inicio_pernoite,
+    fim_pernoite = @fim_pernoite,
+    duracao_pernoite = @duracao_pernoite,
+    status_pernoite = @status_pernoite,
+    frota = @frota
+WHERE carga = @carga";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@gate_origem", (object)SafeDateValue(txtGateOrigem.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@gate_destino", (object)SafeDateValue(txtGateDestino.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@cva", txtCVA.Text.Trim());
+                        cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
+
+                        cmd.Parameters.AddWithValue("@saidaorigem", (object)SafeDateValue(txtSaidaOrigem.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@tempoagcarreg", SafeValue(txtAgCarreg.Text.Trim()));
+                        cmd.Parameters.AddWithValue("@chegadadestino", (object)SafeDateValue(txtChegadaDestino.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@saidaplanta", (object)SafeDateValue(txtSaidaPlanta.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@prev_chegada", (object)SafeDateValue(txtPrevisaoChegada.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@tempoagdescarreg", SafeValue(txtAgDescarga.Text.Trim()));
+                        cmd.Parameters.AddWithValue("@duracao_transp", SafeValue(txtDurTransp.Text.Trim()));
+                        cmd.Parameters.AddWithValue("@disponivel_solicitacao", (object)SafeDateValue(txtVeiculoDisponivel.Text.Trim()) ?? DBNull.Value);
+
+                        cmd.Parameters.AddWithValue("@codmot",
+                            string.IsNullOrWhiteSpace(txtCodMotorista.Text)
+                                ? (object)DBNull.Value
+                                : txtCodMotorista.Text.Trim());
+
+                        cmd.Parameters.AddWithValue("@local_pernoite", txtLocalPernoite.Text.Trim().ToUpper());
+
+                        cmd.Parameters.AddWithValue("@inicio_pernoite", (object)SafeDateValue(txtInicioPernoite.Text.Trim()) ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@fim_pernoite", (object)SafeDateValue(txtFimPernoite.Text.Trim()) ?? DBNull.Value);
+
+                        cmd.Parameters.AddWithValue("@duracao_pernoite", txtDuracaoP.Text.Trim());
+                        cmd.Parameters.AddWithValue("@status_pernoite", statusPernoite);
+
+                        cmd.Parameters.AddWithValue("@frota",
+                            string.IsNullOrWhiteSpace(txtCodVeiculo.Text)
+                                ? (object)DBNull.Value
+                                : txtCodVeiculo.Text.Trim());
+
+                        cmd.Parameters.AddWithValue("@carga", carga);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // TRATANDO O PREMIO AUTOMATICO DO MOTORISTA
+                    if (ddlStatus.SelectedItem.Text == "Concluido" && txtMaterial.Text != "Vazio" && txtMaterial.Text != "Embalagem")
+                    {
+                       // SOMENTE FUNCIONÁRIO
+                        if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+                        {
+                            using (SqlConnection conn2 = new SqlConnection(
+                                WebConfigurationManager
+                                .ConnectionStrings["conexao"].ConnectionString))
+                            {
+                                conn2.Open();
+
+                                SqlTransaction trans = conn2.BeginTransaction();
+
+                                try
+                                {
+                                  //   ============================================
+                                 //    FUNÇÃO
+                                 //    ============================================
+                                    string funcao = "";
+
+                                    if (!string.IsNullOrWhiteSpace(txtFuncao.Text))
+                                    {
+                                        funcao = txtFuncao.Text
+                                            .Trim()
+                                            .Split(' ')[0]
+                                            .ToUpper();
+                                    }
+
+                                    decimal distancia = 0;
+                                    decimal valorPremio = 0;
+
+                                 //    ============================================
+                                 //    BUSCA DISTÂNCIA
+                                  //   ============================================
+                                    using (SqlCommand cmdDist = new SqlCommand(@"
+                                      SELECT TOP 1 distancia
+                                      FROM tbcargas
+                                      WHERE carga = @carga",
+                                        conn2, trans))
+                                    {
+                                        cmdDist.Parameters.AddWithValue("@carga", carga);
+
+                                        object result = cmdDist.ExecuteScalar();
+
+                                        if (result != null &&
+                                            result != DBNull.Value)
+                                        {
+                                            distancia =
+                                                Convert.ToDecimal(result);
+                                        }
+                                        else
+                                        {
+                                            trans.Rollback();
+                                            return;
+                                        }
+                                    }
+
+                                 //    ============================================
+                                 //    BUSCA VALOR PRÊMIO
+                                 //    ============================================
+                                    using (SqlCommand cmdPremio = new SqlCommand(@"
+                                      SELECT TOP 1
+                                          motorista,
+                                          carreteiro,
+                                          bitrem
+                                      FROM tbvalorpremiomotoristas
+                                      WHERE @distancia
+                                      BETWEEN distancia1 AND distancia2 AND status = 'ATIVO'AND empresa='MATRIZ'",
+                                        conn2, trans))
+                                    {
+                                        cmdPremio.Parameters.AddWithValue(
+                                            "@distancia",
+                                            distancia);
+
+                                        using (SqlDataReader dr =
+                                            cmdPremio.ExecuteReader())
+                                        {
+                                            if (dr.Read())
+                                            {
+                                                switch (funcao)
+                                                {
+                                                    case "MOTORISTA":
+
+                                                        valorPremio =
+                                                            dr["motorista"] != DBNull.Value
+                                                            ? Convert.ToDecimal(dr["motorista"])
+                                                            : 0;
+
+                                                        break;
+
+                                                    case "CARRETEIRO":
+
+                                                        valorPremio =
+                                                            dr["carreteiro"] != DBNull.Value
+                                                            ? Convert.ToDecimal(dr["carreteiro"])
+                                                            : 0;
+
+                                                        break;
+
+                                                    case "BITREM":
+
+                                                        valorPremio =
+                                                            dr["bitrem"] != DBNull.Value
+                                                            ? Convert.ToDecimal(dr["bitrem"])
+                                                            : 0;
+
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                   //  ============================================
+                                   //  VERIFICA EXISTÊNCIA
+                                   //  ============================================
+                                    using (SqlCommand cmdExiste = new SqlCommand(@"
+                                      SELECT COUNT(*)
+                                      FROM tb_custo_motorista
+                                      WHERE cod_cracha = @cod
+                                      AND dt_custo = @data",
+                                        conn2, trans))
+                                    {
+                                        cmdExiste.Parameters.AddWithValue(
+                                            "@cod",
+                                            txtCodMotorista.Text.Trim());
+
+                                        cmdExiste.Parameters.AddWithValue(
+                                            "@data",
+                                            SafeDateValue(txtSaidaPlanta.Text.Trim()));
+
+                                        int existe =
+                                            Convert.ToInt32(
+                                                cmdExiste.ExecuteScalar());
+
+                                     //    ============================================
+                                     //    UPDATE
+                                      //   ============================================
+                                        if (existe > 0)
+                                        {
+                                            using (SqlCommand cmdUpdate =
+                                                new SqlCommand(@"
+                                              UPDATE tb_custo_motorista
+                                              SET vl_premio =
+                                                  ISNULL(vl_premio,0) + @valor
+                                              WHERE cod_cracha = @cod
+                                              AND dt_custo = @data",
+                                                conn2, trans))
+                                            {
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPremio);
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@data",
+                                                    SafeDateValue(
+                                                        txtSaidaPlanta.Text.Trim()));
+
+                                                cmdUpdate.ExecuteNonQuery();
+                                            }
+                                        }
+                                        else
+                                        {
+                                          //   ============================================
+                                         //    INSERT
+                                         //    ============================================
+                                            using (SqlCommand cmdInsert =
+                                                new SqlCommand(@"
+                                                  INSERT INTO tb_custo_motorista
+                                                  (
+                                                      cod_cracha,
+                                                      dt_custo,
+                                                      vl_premio
+                                                  )
+                                                  VALUES
+                                                  (
+                                                      @cod,
+                                                      @data,
+                                                      @valor
+                                                  )",
+                                                conn2, trans))
+                                            {
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@data",
+                                                    SafeDateValue(
+                                                        txtSaidaPlanta.Text.Trim()));
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPremio);
+
+                                                cmdInsert.ExecuteNonQuery();
+                                            }
+                                        }
+                                    }
+
+                                    trans.Commit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    trans.Rollback();
+
+                                    MostrarMsg(
+                                        "Erro prêmio motorista: "
+                                        + ex.Message);
+                                }
+                            }
+                        }
+                    }
+
+                   // TRATANDO A PERNOITE AUTOMATICA DO MOTORISTA
+                    DateTime dataPernoite;
+                    if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
+                        agora.TimeOfDay <= new TimeSpan(23, 59, 59))
+                    {
+                        dataPernoite = agora.Date;
+                        if (ddlStatus.SelectedItem.Text.Trim() == "Pernoite")
+                        {
+                           // SOMENTE FUNCIONÁRIO
+                            if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+                            {
+                                using (SqlConnection conn2 = new SqlConnection(
+                                    WebConfigurationManager
+                                    .ConnectionStrings["conexao"].ConnectionString))
+                                {
+                                    conn2.Open();
+
+                                    SqlTransaction trans = conn2.BeginTransaction();
+
+                                    try
+                                    {
+                                      //   ============================================
+                                      //   VALOR PERNOITE
+                                       //  ============================================
+                                        decimal valorPernoite = 0;
+                                        decimal valorCafe = 0;
+
+                                        using (SqlCommand cmdPernoite =
+                                            new SqlCommand(@"
+                                          SELECT TOP 1 pernoite
+                                          FROM tbvalorpremiomotoristas WHERE status = 'ATIVO' and empresa='MATRIZ'",
+                                            conn2, trans))
+                                        {
+                                            object result =
+                                                cmdPernoite.ExecuteScalar();
+
+                                            if (result != null &&
+                                                result != DBNull.Value)
+                                            {
+                                                valorPernoite =
+                                                    Convert.ToDecimal(result);
+                                            }
+                                        }
+
+                                      //   ============================================
+                                      //   DATA
+                                      //   ============================================
+                                        object dataCusto = dataPernoite;
+
+                                        if (dataCusto == null ||
+                                            dataCusto == DBNull.Value)
+                                        {
+                                            trans.Rollback();
+
+                                            MostrarMsg(
+                                                "Data Pernoite inválida.");
+
+                                            return;
+                                        }
+
+                                       //  ============================================
+                                       //  VERIFICA EXISTÊNCIA
+                                       //  ============================================
+                                        int existe = 0;
+
+                                        using (SqlCommand cmdExiste =
+                                            new SqlCommand(@"
+                                          SELECT COUNT(*)
+                                          FROM tb_custo_motorista
+                                          WHERE cod_cracha = @cod
+                                          AND dt_custo = @data",
+                                            conn2, trans))
+                                        {
+                                            cmdExiste.Parameters.AddWithValue(
+                                                "@cod",
+                                                txtCodMotorista.Text.Trim());
+
+                                            cmdExiste.Parameters.AddWithValue(
+                                                "@data",
+                                                dataCusto);
+
+                                            existe =
+                                                Convert.ToInt32(
+                                                    cmdExiste.ExecuteScalar());
+                                        }
+
+                                        // ============================================
+                                        // UPDATE
+                                        // ============================================
+                                        if (existe > 0)
+                                        {
+                                            using (SqlCommand cmdUpdate =
+                                                new SqlCommand(@"
+                                              UPDATE tb_custo_motorista
+                                              SET vl_pernoite = @valor, vl_cafe = @cafe
+                                              WHERE cod_cracha = @cod
+                                              AND dt_custo = @data",
+                                                conn2, trans))
+                                            {
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPernoite);
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@cafe",
+                                                    valorCafe);
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdUpdate.Parameters.AddWithValue(
+                                                    "@data",
+                                                    dataCusto);
+
+                                                cmdUpdate.ExecuteNonQuery();
+                                            }
+                                        }
+                                        else
+                                        {
+                                          //   ============================================
+                                          //   INSERT
+                                          //   ============================================
+                                            using (SqlCommand cmdInsert =
+                                                new SqlCommand(@"
+                                              INSERT INTO tb_custo_motorista
+                                              (
+                                                  cod_cracha,
+                                                  dt_custo,
+                                                  vl_pernoite,
+                                                  vl_cafe
+                                              )
+                                              VALUES
+                                              (
+                                                  @cod,
+                                                  @data,
+                                                  @valor,
+                                                  @cafe
+                                              )",
+                                                conn2, trans))
+                                            {
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@cod",
+                                                    txtCodMotorista.Text.Trim());
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@data",
+                                                    dataCusto);
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@valor",
+                                                    valorPernoite);
+
+                                                cmdInsert.Parameters.AddWithValue(
+                                                    "@cafe",
+                                                    valorCafe);
+
+                                                cmdInsert.ExecuteNonQuery();
+                                            }
+                                        }
+
+                                        trans.Commit();
+
+                                        MostrarMsg(
+                                            "Pernoite salvo com sucesso.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        trans.Rollback();
+
+                                        MostrarMsg(
+                                            "Erro pernoite: "
+                                            + ex.Message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                   // TRATANDO O ALMOÇO AUTOMATICO DO MOTORISTA
+
+                }
+
+               // Atualizando a ordem de coleta
+                using (SqlConnection conn = new SqlConnection(
+       WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    var cvaOC = txtCVA.Text.Trim();
+
+                    string queryCarregamento = @"
+                      UPDATE tbcarregamentos SET 
+                          situacao = @situacao,
+                          cva = @cva,
+                          status = @status,                        
+                          cod_expedidor = @cod_expedidor,
+                          expedidor = @expedidor,
+                          cid_expedidor = @cid_expedidor,
+                          uf_expedidor = @uf_expedidor,
+                          cod_recebedor = @cod_recebedor,
+                          recebedor = @recebedor,
+                          cid_recebedor = @cid_recebedor,
+                          carga = @carga,
+                          dtsaida=@dtsaida,
+                          dtchegada=@dtchegada,
+                          dtconclusao=@dtconclusao,
+                          uf_recebedor = @uf_recebedor,
+                          dtalt = @dtalt,
+                          usualt = @usualt
+
+                      WHERE num_carregamento = @num_carregamento";
+
+                    using (SqlCommand cmdCarregamento = new SqlCommand(queryCarregamento, conn))
+                    {
+                        //Num carregamento(obrigatório)
+                        cmdCarregamento.Parameters.Add("@num_carregamento", SqlDbType.NVarChar, 20)
+                            .Value = novaColeta.Text.Trim();
+
+                        //Status
+                        cmdCarregamento.Parameters.Add("@situacao", SqlDbType.NVarChar, 50)
+                            .Value = string.IsNullOrWhiteSpace(situacaoOC)
+                                ? (object)DBNull.Value
+                                : situacaoOC.Trim();
+
+                        cmdCarregamento.Parameters.Add("@cva", SqlDbType.NVarChar, 50)
+                            .Value = string.IsNullOrWhiteSpace(cvaOC)
+                                ? (object)DBNull.Value
+                                : cvaOC.Trim();
+
+                        cmdCarregamento.Parameters.Add("@status", SqlDbType.NVarChar, 50)
+                            .Value = string.IsNullOrWhiteSpace(statusOC)
+                                ? (object)DBNull.Value
+                                : statusOC.Trim();
+                        int cargaCarreg;
+                        cmdCarregamento.Parameters.Add("@carga", SqlDbType.Int)
+                            .Value = int.TryParse(carga, out cargaCarreg)
+                                ? (object)cargaCarreg
+                                : (object)DBNull.Value;
+
+                       // Expedidor
+                        int codExp;
+                        cmdCarregamento.Parameters.Add("@cod_expedidor", SqlDbType.Int)
+                            .Value = int.TryParse(txtCodExpedidor.Text, out codExp)
+                                ? (object)codExp
+                                : (object)DBNull.Value;
+
+                        cmdCarregamento.Parameters.Add("@expedidor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(cboExpedidor.Text)
+                                ? (object)DBNull.Value
+                                : cboExpedidor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@cid_expedidor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(txtCidExpedidor.Text)
+                                ? (object)DBNull.Value
+                                : txtCidExpedidor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@uf_expedidor", SqlDbType.NVarChar, 2)
+                            .Value = string.IsNullOrWhiteSpace(txtUFExpedidor.Text)
+                                ? (object)DBNull.Value
+                                : txtUFExpedidor.Text.Trim();
+
+                       // Recebedor
+                        int codRec;
+                        cmdCarregamento.Parameters.Add("@cod_recebedor", SqlDbType.Int)
+                            .Value = int.TryParse(txtCodRecebedor.Text, out codRec)
+                                ? (object)codRec
+                                : (object)DBNull.Value;
+
+                        cmdCarregamento.Parameters.Add("@recebedor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(cboRecebedor.Text)
+                                ? (object)DBNull.Value
+                                : cboRecebedor.Text.Trim();
+
+                        cmdCarregamento.Parameters.Add("@cid_recebedor", SqlDbType.NVarChar, 100)
+                            .Value = string.IsNullOrWhiteSpace(txtCidRecebedor.Text)
+                                ? (object)DBNull.Value
+                                : txtCidRecebedor.Text.Trim();
+                        cmdCarregamento.Parameters.Add("@dtsaida", SqlDbType.DateTime)
+    .Value = SafeDateValue(txtSaidaOrigem.Text.Trim()) ?? (object)DBNull.Value;
+
+                        cmdCarregamento.Parameters.Add("@dtchegada", SqlDbType.DateTime)
+                            .Value = SafeDateValue(txtChegadaDestino.Text.Trim()) ?? (object)DBNull.Value;
+
+                        cmdCarregamento.Parameters.Add("@dtconclusao", SqlDbType.DateTime)
+                            .Value = SafeDateValue(txtSaidaPlanta.Text.Trim()) ?? (object)DBNull.Value;
+
+                        cmdCarregamento.Parameters.Add("@uf_recebedor", SqlDbType.NVarChar, 2)
+                            .Value = string.IsNullOrWhiteSpace(txtUFRecebedor.Text)
+                                ? (object)DBNull.Value
+                                : txtUFRecebedor.Text.Trim();
+                        cmdCarregamento.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        cmdCarregamento.Parameters.Add("@usualt", SqlDbType.NVarChar, 50)
+    .Value = Session["UsuarioLogado"] == null
+        ? (object)DBNull.Value
+        : Session["UsuarioLogado"].ToString();
+
+                        conn.Open();
+                        cmdCarregamento.ExecuteNonQuery();
+                    }
+                }
+
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+                {
+                    TextBox txtRedes = (TextBox)e.Item.FindControl("txtRedes");
+                    TextBox txtCatracas = (TextBox)e.Item.FindControl("txtCatracas");
+                    TextBox txtOT = (TextBox)e.Item.FindControl("txtOT");
+
+
+                    string query = @"UPDATE tbpedidos SET                                  
+                                  andamento = @andamento
+                                  WHERE carga = @carga";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@carga", carga);
+                    cmd.Parameters.AddWithValue("@andamento", andamentoCarga);
+
+
+
+                   // Chama método que verifica no banco
                     conn.Open();
-
                     cmd.ExecuteNonQuery();
                 }
 
+
+
+
+
+               // Após atualizar, recarregar os dados no Repeater
                 Session["Coletas"] = null;
                 CarregarColetas(novaColeta.Text);
+                BuscarCteSalvos(carga);  // idViagem
+                CarregarPedidos(int.Parse(carga), gv);
             }
-
-
 
             if (e.CommandName == "AtualizarAbas")
             {
@@ -4728,8 +5525,35 @@ namespace NewCapit.dist.pages
 
             // Opcional: Recarregar apenas os dados deste Repeater se necessário
         }
+        private DateTime? SafeDateValue(RepeaterItem item, string controlId)
+        {
+            TextBox txt = item.FindControl(controlId) as TextBox;
 
+            if (txt == null || string.IsNullOrWhiteSpace(txt.Text))
+                return null;
 
+            DateTime data;
+
+            string[] formatos =
+            {
+        "dd/MM/yyyy",
+        "yyyy-MM-dd",
+        "dd/MM/yyyy HH:mm",
+        "yyyy-MM-dd HH:mm"
+    };
+
+            if (DateTime.TryParseExact(
+                    txt.Text,
+                    formatos,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out data))
+            {
+                return data;
+            }
+
+            return null;
+        }
 
 
 
@@ -10809,4 +11633,3 @@ namespace NewCapit.dist.pages
 
 
 
- 

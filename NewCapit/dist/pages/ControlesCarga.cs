@@ -68,7 +68,23 @@ namespace NewCapit.dist.pages
         public Label LblICMS { get; set; }
         public Label LblTotalFrete { get; set; }
 
+        public RepeaterItem Item { get; }
 
+        public TextBox txtCVA;
+        public TextBox txtSaidaOrigem;
+        public TextBox txtChegadaDestino;
+        public TextBox txtSaidaPlanta;
+        public TextBox txtGateOrigem;
+        public TextBox txtGateDestino;
+        public TextBox txtAgCarreg;
+        public TextBox txtAgDescarga;
+        public TextBox txtDurTransp;
+
+        public TextBox txtCodMotorista;
+        public TextBox txtCodVeiculo;
+
+        public DropDownList ddlStatus;
+          
 
     }
 }

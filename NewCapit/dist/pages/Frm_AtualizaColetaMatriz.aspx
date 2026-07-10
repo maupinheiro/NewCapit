@@ -532,19 +532,19 @@
     <link href="https://jsdelivr.net" rel="stylesheet" />
     <script src="https://jsdelivr.net"></script>--%>
 
-    <%--<script type="text/javascript">
+    <script type="text/javascript">
         // Executa no primeiro carregamento da página
-        $(document).ready(function () {
-            reinicializarSelect2();
-        });
+        //$(document).ready(function () {
+        //    reinicializarSelect2();
+        //});
 
         // Executa após atualizações parciais do ASP.NET (UpdatePanels / PostBacks de botões)
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
-        if (prm != null) {
-            prm.add_endRequest(function (sender, e) {
-                reinicializarSelect2();
-            });
-        }
+        //var prm = Sys.WebForms.PageRequestManager.getInstance();
+        //if (prm != null) {
+        //    prm.add_endRequest(function (sender, e) {
+        //        reinicializarSelect2();
+        //    });
+        //}
 
         // Função que aplica o Select2 em todos os DropDowns com a classe 'select2'
         //function reinicializarSelect2() {
@@ -555,7 +555,7 @@
         //    });
         //}
 
-       <%-- function reinicializarSelect2() {
+        function reinicializarSelect2() {
             $('.select2').each(function () {
                 // 1. Guarda o valor atual que veio selecionado do C# (banco de dados)
                 var valorAtual = $(this).val();
@@ -573,7 +573,7 @@
                 }
             });
         }
-    </script>--%>--%>
+    </script>
 
 
 
@@ -1545,8 +1545,9 @@
     <div class="row g-3">
         <div class="col-md-12">
             <asp:UpdatePanel ID="upNF" runat="server" UpdateMode="Conditional">
+                <%--//OnRowCommand="gvNF_RowCommand" --%>
                 <ContentTemplate>
-                    <asp:GridView ID="gvNF" runat="server" OnRowCommand="gvNF_RowCommand"               
+                    <asp:GridView ID="gvNF" runat="server" 
                         CssClass="table-sap"
                         HeaderStyle-CssClass="gv-header-custom"
                         AllowPaging="false"
@@ -2605,7 +2606,7 @@
                                                                                             <div class="form-group">
                                                                                                 <span class="details">Núm. CVA:</span>
                                                                                                 <div class="input-group">
-                                                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center"></asp:TextBox>
+                                                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center" MaxLength="10"></asp:TextBox>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
