@@ -65,7 +65,7 @@ namespace NewCapit
                         Session["PermissaoUsuario"] = user.fl_permissao;
                         Session["FotoUsuario"] = user.foto_usuario;
                         Session["UsuarioSistema"] = user.nm_usuario;
-
+                        Session["SenhaAtual"] = string.Empty;
                         // Registro de login
                         int idLog = UsersDAL.RegistrarLogin(user.cod_usuario);
                         Session["IdSessaoLog"] = idLog;

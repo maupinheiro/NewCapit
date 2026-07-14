@@ -32,12 +32,17 @@ namespace NewCapit.dist.pages
                     
 
                 }
-               
+                if (Session["SenhaAtual"].ToString() != string.Empty)
+                {
+                    txtSenhaAtual.Text = Session["SenhaAtual"].ToString();
+                }
+                else
+                {
+                    txtSenhaAtual.Text = string.Empty;
+                }
+
             }
-            if (Session["SenhaAtual"].ToString() != string.Empty)
-            {
-                txtSenhaAtual.Text = Session["SenhaAtual"].ToString();
-            }
+            
 
         }
 
