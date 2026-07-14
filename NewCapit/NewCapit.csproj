@@ -752,6 +752,7 @@
     <Content Include="fotos\T8707.JPG" />
     <Content Include="fotos\T8714.JPG" />
     <Content Include="fotos\T8722.JPG" />
+    <Content Include="fotos\TNG30976.JPG" />
     <Content Include="fotos\usuario.JPG" />
     <Content Include="fotos\1075.JPG" />
     <Content Include="fotos\1091.JPG" />
@@ -1061,6 +1062,7 @@
     <Content Include="js\sb-admin-2.min.js" />
     <Content Include="js\scriptComboBox.js" />
     <Content Include="dist\pages\Login.aspx" />
+    <Content Include="dist\pages\PerfilUsuario.aspx" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="plugins\bootstrap-colorpicker\js\bootstrap-colorpicker.js" />
@@ -5649,6 +5651,13 @@
     <Compile Include="MeuDanfeService.cs" />
     <Compile Include="PaginaBase.cs">
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\PerfilUsuario.aspx.cs">
+      <DependentUpon>PerfilUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\PerfilUsuario.aspx.designer.cs">
+      <DependentUpon>PerfilUsuario.aspx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="dist\pages\Ver_txt.aspx.cs">

@@ -132,6 +132,12 @@
             "timeOut": "10000"
         };
     </script>
+    
+    <style>
+        .vertical-middle {
+            vertical-align: middle !important;
+        }
+    </style>
     <style>
         /* Cabeçalho da GridView */
         .gv-header-custom th {
@@ -393,8 +399,10 @@
 </style>
 </head>
 
-<!-- layout-fixed -->
-<body class="hold-transition sidebar-mini layout-fixed">
+<!-- menu fixo -->
+<%--<body class="hold-transition sidebar-mini layout-fixed">--%>
+    <!-- menu recolhido -->
+    <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
@@ -827,7 +835,7 @@
                         </ul>
                     </nav>--%>
                     <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
         
                             <li class="nav-item" id="MenuModuloFiliais" runat="server">
                                 <a href="#" class="nav-link active" style="background-color: #A020F0; font-weight: bold;">
@@ -994,10 +1002,8 @@
                                     <p>Gestão <i class="fas fa-angle-left right"></i></p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="TelaIndicadores" runat="server"><a href="/dist/pages/Indicadores.aspx" class="nav-link"><i class="fas fa-chart-pie"></i><p> Indicadores</p></a></li>
-                                    <li class="nav-item" id="Li1" runat="server"><a href="/dist/pages/tabelasauxiliares.aspx" class="nav-link"><i class="fas fa-book"></i><p> Tabelas</p></a></li>
-
-
+                                    <li class="nav-item" id="TelaIndicadores" runat="server"><a href="/dist/pages/Indicadores.aspx" class="nav-link"><i class="fas fa-chart-pie nav-icon"></i><p> Indicadores</p></a></li>
+                                    <li class="nav-item" id="TelaTabelas" runat="server"><a href="/dist/pages/tabelasauxiliares.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Tabelas</p></a></li>
                                 </ul>
                             </li>
 
@@ -1010,11 +1016,13 @@
                                     <li class="nav-item" id="TelaConsultaUsuarios" runat="server"><a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle Usuários</p></a></li>
                                     <li class="nav-item" id="TelaControleAcesso" runat="server"><a href="/dist/pages/ControleAcesso.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle Acesso</p></a></li>
                                     <li class="nav-item" id="TelaTrocaSenha" runat="server"><a href="/dist/pages/TrocaSenha.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Trocar Senha</p></a></li>
+                                    <li class="nav-item" id="TelaTrocaFoto" runat="server"><a href="/dist/pages/PerfilUsuario.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Trocar Foto</p></a></li>
                                 </ul>
                             </li>
 
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#modalSair"><i class="nav-icon fas fa-power-off"></i>Sair</a>
+                            <li class="nav-item" id="ModalSairSistema" runat="server">
+                                <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#modalSair">
+                                  <i class="fas fa-power-off nav-icon"></i><p>Sair</p></a>
                             </li>
                         </ul>
                     </nav>

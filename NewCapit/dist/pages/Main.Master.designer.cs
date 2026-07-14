@@ -636,13 +636,13 @@ namespace NewCapit
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaIndicadores;
 
         /// <summary>
-        /// Controle Li1.
+        /// Controle TelaTabelas.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Li1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTabelas;
 
         /// <summary>
         /// Controle MenuModuloSistema.
@@ -679,6 +679,24 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTrocaSenha;
+
+        /// <summary>
+        /// Controle TelaTrocaFoto.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTrocaFoto;
+
+        /// <summary>
+        /// Controle ModalSairSistema.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ModalSairSistema;
 
         /// <summary>
         /// Controle btnSair.
