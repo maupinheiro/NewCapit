@@ -115,7 +115,7 @@ namespace NewCapit.dist.pages
                 DateTime dataHoraAtual = DateTime.Now;
                 fotoMotorista = "/fotos/motoristasemfoto.jpg";
 
-                PreencherComboMotoristas();
+                CarregarMotoristas();
                 CarregaDados();
                 CarregaMap(txtPlaca.Text);
                 PreencherClienteInicial();
@@ -1181,19 +1181,59 @@ namespace NewCapit.dist.pages
         }
         private void CarregarRotaKrona(RepeaterItem item)
         {
+            //DropDownList ddl = (DropDownList)item.FindControl("ddlRotaKrona");
+
+            //if (ddl == null)
+            //    return;
+
+            //string carga = DataBinder.Eval(item.DataItem, "carga").ToString();
+
+            //using (SqlConnection conn = new SqlConnection(
+            //    ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            //{
+            //    conn.Open();
+
+            //    // Carrega a lista
+            //    SqlDataAdapter da = new SqlDataAdapter(
+            //        "SELECT id_rota, descricao_rota FROM tbrotaskrona ORDER BY descricao_rota", conn);
+
+            //    DataTable dt = new DataTable();
+            //    da.Fill(dt);
+
+            //    ddl.DataSource = dt;
+            //    ddl.DataTextField = "descricao_rota";
+            //    ddl.DataValueField = "id_rota";
+            //    ddl.DataBind();
+
+            //    ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione --", ""));
+
+            //    // Recupera a rota da carga
+            //    SqlCommand cmd = new SqlCommand(
+            //        "SELECT rota_krona FROM tbcargas WHERE carga=@carga", conn);
+
+            //    cmd.Parameters.AddWithValue("@carga", carga);
+
+            //    object rota = cmd.ExecuteScalar();
+
+            //    if (rota != null && rota != DBNull.Value)
+            //    {
+            //        ddl.SelectedItem.Text = rota.ToString();
+            //    }
+            //}
+
             DropDownList ddl = (DropDownList)item.FindControl("ddlRotaKrona");
 
             if (ddl == null)
                 return;
 
-            string carga = DataBinder.Eval(item.DataItem, "carga").ToString();
+            string carga = Convert.ToString(DataBinder.Eval(item.DataItem, "carga"));
 
             using (SqlConnection conn = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
                 conn.Open();
 
-                // Carrega a lista
+                // Carrega as rotas
                 SqlDataAdapter da = new SqlDataAdapter(
                     "SELECT id_rota, descricao_rota FROM tbrotaskrona ORDER BY descricao_rota", conn);
 
@@ -1205,11 +1245,11 @@ namespace NewCapit.dist.pages
                 ddl.DataValueField = "id_rota";
                 ddl.DataBind();
 
-                ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione --", ""));
+                ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Selecione a rota --", ""));
 
                 // Recupera a rota da carga
                 SqlCommand cmd = new SqlCommand(
-                    "SELECT rota_krona FROM tbcargas WHERE carga=@carga", conn);
+                    "SELECT rota_krona FROM tbcargas WHERE carga = @carga", conn);
 
                 cmd.Parameters.AddWithValue("@carga", carga);
 
@@ -1217,9 +1257,26 @@ namespace NewCapit.dist.pages
 
                 if (rota != null && rota != DBNull.Value)
                 {
-                    ddl.SelectedItem.Text = rota.ToString();
+                    string rotaAtual = rota.ToString();
+
+                    // Primeiro tenta pelo Value (id_rota)
+                    System.Web.UI.WebControls.ListItem itemSelecionado = ddl.Items.FindByValue(rotaAtual);
+
+                    // Se não encontrar, tenta pelo Text (descricao_rota)
+                    if (itemSelecionado == null)
+                        itemSelecionado = ddl.Items.FindByText(rotaAtual);
+
+                    if (itemSelecionado != null)
+                    {
+                        ddl.ClearSelection();
+                        itemSelecionado.Selected = true;
+                    }
                 }
             }
+
+
+
+
         }
         private void CarregarGridCTe(RepeaterItem item)
         {
@@ -3664,7 +3721,7 @@ namespace NewCapit.dist.pages
                 Carga = Convert.ToInt32(hdIdCarga.Value),
 
                 Status = ddlStatus?.SelectedItem.Text,
-                CVA = txtCVA?.Text,
+                CVA = txtCVA?.Text.Trim(),
 
                 GvNF = gvNF,
 
@@ -5344,44 +5401,17 @@ WHERE carga = @carga";
         }
         protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+            // Select2 Motoristas
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                // 1. Localiza o DropDownList da linha
-                DropDownList ddlMotCar = (DropDownList)e.Row.FindControl("ddlMotCar");
-
-                if (ddlMotCar != null)
+                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+                if (ddl != null)
                 {
-                    // 2. Busca os motoristas do banco de dados (Exemplo de método)
-                    DataTable dtMotoristas = ObterListaMotoristas();
-
-                    ddlMotCar.DataSource = dtMotoristas;
-                    ddlMotCar.DataTextField = "nommot";
-                    ddlMotCar.DataValueField = "codmot";
-                    ddlMotCar.DataBind();
-
-                    // 3. Adiciona uma opção em branco padrão
-                    ddlMotCar.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Motorista que irá carregar o veículo.", ""));
-
-                    // 4. Seleciona o motorista atual do banco de dados para este pedido
-                    string motcarAtual = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
-                    if (!string.IsNullOrEmpty(motcarAtual))
-                    {
-                        ddlMotCar.SelectedItem.Text = motcarAtual;
-                    }
+                    GetMotoristas(ddl);
                 }
             }
-
-            //if (e.Row.RowType != DataControlRowType.DataRow) return;
-
-            //// Select2 Motoristas
-            //if (e.Row.RowType == DataControlRowType.DataRow)
-            //{
-            //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
-            //    if (ddl != null)
-            //    {
-            //        GetMotoristas(ddl);
-            //    }
-            //}
 
             // Calcular tempo
             //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
@@ -5395,35 +5425,157 @@ WHERE carga = @carga";
             //    lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
             //}
 
-            //if (e.Row.RowType == DataControlRowType.DataRow)
-            //{
-            //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
 
-            //    if (ddl != null)
-            //    {
-            //        // 1. Buscamos os motoristas (Ideal buscar uma vez só fora do loop, mas vamos focar na correção agora)
-            //        DataTable dtMot = BuscarTodosMotoristas();
+                if (ddl != null)
+                {
+                    // 1. Buscamos os motoristas (Ideal buscar uma vez só fora do loop, mas vamos focar na correção agora)
+                    DataTable dtMot = BuscarTodosMotoristas();
 
-            //        ddl.DataSource = dtMot;
-            //        ddl.DataTextField = "nommot"; // Verifique se o nome da coluna no seu SQL é 'nome'
-            //        ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
-            //        ddl.DataBind();
-
-
-
-            //        // 2. Pegar o valor que veio do banco para esta linha
-            //        // Importante: motcar deve ser o ID do motorista
-            //        string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
+                    ddl.DataSource = dtMot;
+                    ddl.DataTextField = "nommot"; // Verifique se o nome da coluna no seu SQL é 'nome'
+                    ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
+                    ddl.DataBind();
 
 
-            //        ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
-            //        //ddl.SelectedItem.Text = motoristaSalvo;
 
-            //    }
-            //}
+                    // 2. Pegar o valor que veio do banco para esta linha
+                    // Importante: motcar deve ser o ID do motorista
+                    string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
 
 
+                    ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
+                    //ddl.SelectedItem.Text = motoristaSalvo;
+
+                }
+            }
         }
+
+
+        //protected void gvPedidos_RowDataBound(object sender, GridViewRowEventArgs e)
+        //{
+        //    //if (e.Row.RowType == DataControlRowType.DataRow)
+        //    //{
+        //    //    // 1. Localiza o DropDownList da linha
+        //    //    DropDownList ddlMotCar = (DropDownList)e.Row.FindControl("ddlMotCar");
+
+        //    //    if (ddlMotCar != null)
+        //    //    {
+        //    //        // 2. Busca os motoristas do banco de dados (Exemplo de método)
+        //    //        DataTable dtMotoristas = ObterListaMotoristas();
+
+        //    //        ddlMotCar.DataSource = dtMotoristas;
+        //    //        ddlMotCar.DataTextField = "nommot";
+        //    //        ddlMotCar.DataValueField = "codmot";
+        //    //        ddlMotCar.DataBind();
+
+        //    //        // 3. Adiciona uma opção em branco padrão
+        //    //        ddlMotCar.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Motorista que irá carregar o veículo.", ""));
+
+        //    //        // 4. Seleciona o motorista atual do banco de dados para este pedido
+        //    //        string motcarAtual = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
+        //    //        if (!string.IsNullOrEmpty(motcarAtual))
+        //    //        {
+        //    //            ddlMotCar.SelectedItem.Text = motcarAtual;
+        //    //        }
+        //    //    }
+        //    //}
+
+        //    if (e.Row.RowType == DataControlRowType.DataRow)
+        //    {
+        //        // Localiza o DropDownList da linha
+        //        DropDownList ddlMotCar = (DropDownList)e.Row.FindControl("ddlMotCar");
+
+        //        if (ddlMotCar != null)
+        //        {
+        //            // Carrega a lista de motoristas
+        //            DataTable dtMotoristas = ObterListaMotoristas();
+
+        //            ddlMotCar.DataSource = dtMotoristas;
+        //            ddlMotCar.DataTextField = "nommot";
+        //            ddlMotCar.DataValueField = "codmot";
+        //            ddlMotCar.DataBind();
+
+        //            // Adiciona a opção padrão
+        //            ddlMotCar.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Motorista que irá carregar o veículo.", ""));
+
+        //            // Recupera o motorista gravado na linha
+        //            string motcarAtual = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "motcar"));
+
+        //            if (!string.IsNullOrWhiteSpace(motcarAtual))
+        //            {
+        //                // Primeiro tenta localizar pelo código
+        //                System.Web.UI.WebControls.ListItem item = ddlMotCar.Items.FindByValue(motcarAtual);
+
+        //                // Se não encontrar, tenta localizar pelo nome
+        //                if (item == null)
+        //                    item = ddlMotCar.Items.FindByText(motcarAtual);
+
+        //                if (item != null)
+        //                {
+        //                    ddlMotCar.ClearSelection();
+        //                    item.Selected = true;
+        //                }
+        //            }
+        //        }
+        //    }
+
+
+        //    //if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+        //    //// Select2 Motoristas
+        //    //if (e.Row.RowType == DataControlRowType.DataRow)
+        //    //{
+        //    //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+        //    //    if (ddl != null)
+        //    //    {
+        //    //        GetMotoristas(ddl);
+        //    //    }
+        //    //}
+
+        //    // Calcular tempo
+        //    //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
+        //    //DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
+
+        //    //Label lblTempo = (Label)e.Row.FindControl("lblTempo");
+
+        //    //if (inicio.HasValue && fim.HasValue)
+        //    //{
+        //    //    TimeSpan t = fim.Value - inicio.Value;
+        //    //    lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+        //    //}
+
+        //    //if (e.Row.RowType == DataControlRowType.DataRow)
+        //    //{
+        //    //    DropDownList ddl = (DropDownList)e.Row.FindControl("ddlMotCar");
+
+        //    //    if (ddl != null)
+        //    //    {
+        //    //        // 1. Buscamos os motoristas (Ideal buscar uma vez só fora do loop, mas vamos focar na correção agora)
+        //    //        DataTable dtMot = BuscarTodosMotoristas();
+
+        //    //        ddl.DataSource = dtMot;
+        //    //        ddl.DataTextField = "nommot"; // Verifique se o nome da coluna no seu SQL é 'nome'
+        //    //        ddl.DataValueField = "id";   // Verifique se o nome da coluna no seu SQL é 'id'
+        //    //        ddl.DataBind();
+
+
+
+        //    //        // 2. Pegar o valor que veio do banco para esta linha
+        //    //        // Importante: motcar deve ser o ID do motorista
+        //    //        string motoristaSalvo = DataBinder.Eval(e.Row.DataItem, "motcar").ToString();
+
+
+        //    //        ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem(motoristaSalvo, "0"));
+        //    //        //ddl.SelectedItem.Text = motoristaSalvo;
+
+        //    //    }
+        //    //}
+
+
+        //}
         private DataTable ObterListaMotoristas()
         {
             string stringConexao = System.Configuration.ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
@@ -5455,72 +5607,44 @@ WHERE carga = @carga";
             int index = linha.RowIndex;
 
             // 5. Recupera as chaves "pedido" e "carga" daquela linha específica
-            string pedido = gvPedidos.DataKeys[index]["pedido"].ToString();
+            string numPedido = gvPedidos.DataKeys[index]["pedido"].ToString();
 
             // 6. Localiza os controles na linha usando FindControl
-            DropDownList ddlMotCar = (DropDownList)linha.FindControl("ddlMotCar");
-            TextBox txtInicioCar = (TextBox)linha.FindControl("txtInicioCar");
-            TextBox txtTermCar = (TextBox)linha.FindControl("txtTermCar");
-            TextBox txtTempoTotal = (TextBox)linha.FindControl("txtTempoTotal");
-
-
-            DateTime? iniciocar = null;
-            if (DateTime.TryParse(txtInicioCar.Text, out DateTime dtInicio))
-            {
-                iniciocar = dtInicio;
-            }
-            DateTime? termcar = null;
-            if (DateTime.TryParse(txtTermCar.Text, out DateTime dtTerm))
-            {
-                termcar = dtTerm;
-            }
-
-            // 7. Captura e valida os valores digitados/selecionados
-            string motcar = ddlMotCar.SelectedItem.Text;
-
-            //DateTime? iniciocar = null;
-            //if (DateTime.TryParse(txtInicioCar.Text, out DateTime dtInicio)) iniciocar = dtInicio;
-
-            //DateTime? termcar = null;
-            //if (DateTime.TryParse(txtTermCar.Text, out DateTime dtFim)) termcar = dtFim;
-
-            //string duracao = txtTempoTotal.Text;
-            // 1. Captura o texto do campo
-            string textoDuracao = txtTempoTotal.Text.Trim();
-
-            // 2. Cria a variável TimeSpan anulável (TimeSpan?)
-            TimeSpan? duracao = null;
-
-            // 3. Tenta converter o texto para o formato correto de tempo (ex: "02:30" ou "12:45:00")
-            if (TimeSpan.TryParse(textoDuracao, out TimeSpan tsResultado))
-            {
-                duracao = tsResultado;
-            }
-
+            TextBox txtIni = (TextBox)linha.FindControl("txtInicioCar");
+            TextBox txtFim = (TextBox)linha.FindControl("txtTermCar");
+            TextBox txtDur = (TextBox)linha.FindControl("txtTempoTotal");
+            DropDownList ddlMot = (DropDownList)linha.FindControl("ddlMotCar");
 
             // 8. Executa a atualização no Banco de Dados
             string query = @"UPDATE tbpedidos 
                      SET motcar = @motcar, 
-                         iniciocar = @iniciocar, 
-                         termcar = @termcar, 
-                         duracao = @duracao 
+                         iniciocar = @ini, 
+                         termcar = @fim, 
+                         duracao = @dur 
                      WHERE pedido = @pedido";
 
             string stringConexao = System.Configuration.ConfigurationManager.ConnectionStrings["conexao"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(stringConexao))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    SqlHelper.NVarChar(cmd, "@motcar", 60, motcar);
-                    SqlHelper.DateTime(cmd, "@iniciocar", dtInicio);
-                    SqlHelper.DateTime(cmd, "@termcar", dtTerm);
-                    SqlHelper.Time(cmd, "@duracao", duracao);
-                    SqlHelper.NVarChar(cmd, "@pedido", 50, pedido);
+                conn.Open();
+                DateTime dtIni, dtFim;
 
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
+                if (DateTime.TryParse(txtIni.Text, out dtIni))
+                    cmd.Parameters.AddWithValue("@ini", dtIni);
+                else
+                    cmd.Parameters.AddWithValue("@ini", DBNull.Value);
+
+                if (DateTime.TryParse(txtFim.Text, out dtFim))
+                    cmd.Parameters.AddWithValue("@fim", dtFim);
+                else
+                    cmd.Parameters.AddWithValue("@fim", DBNull.Value);
+
+                cmd.Parameters.AddWithValue("@dur", txtDur.Text);
+                cmd.Parameters.AddWithValue("@motcar", ddlMot.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@pedido", numPedido);                
+                cmd.ExecuteNonQuery();
             }
 
             // Opcional: Recarregar apenas os dados deste Repeater se necessário
@@ -6039,7 +6163,7 @@ WHERE carga = @carga";
             DataTable dg = new DataTable();
             if (!string.IsNullOrEmpty(idCarga) && idCarga != "0")
             {
-                string carga = "select codorigem, coddestino, cod_expedidor, cva from tbcargas where carga=" + idCarga;
+                string carga = "select codorigem, coddestino, cod_expedidor, RTRIM(cva) AS cva from tbcargas where carga=" + idCarga;
                 new SqlDataAdapter(carga, con).Fill(dg);
             }
 
@@ -6962,49 +7086,101 @@ WHERE carga = @carga";
                 }
 
             }
-            //}
+         }
+        //private void PreencherComboMotoristas()
+        //{
+        //    // Consulta SQL que retorna os dados desejados
+        //    string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao is null AND status = 'ATIVO' ORDER BY nommot";
+
+        //    // Crie uma conexão com o banco de dados
+        //    using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+        //    {
+        //        //try
+        //        //{
+        //        // Abra a conexão com o banco de dados
+        //        conn.Open();
+
+        //        // Crie o comando SQL
+        //        SqlCommand cmd = new SqlCommand(query, conn);
 
 
 
-        }
-        private void PreencherComboMotoristas()
+        //        SqlDataReader reader = cmd.ExecuteReader();
+
+        //        // Preencher o ComboBox com os dados do DataReader
+        //        ddlMotorista.DataSource = reader;
+        //        ddlMotorista.DataTextField = "nommot";
+        //        ddlMotorista.DataValueField = "codmot";
+        //        ddlMotorista.DataBind();
+
+        //        // motoristaBanco = nome do motorista vindo do banco
+        //        string motoristaBanco = ddlMotorista.SelectedItem.Text.Trim(); /* ex.: "JOÃO SILVA" */;
+
+        //        ddlMotorista.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione o motorista...", ""));
+
+        //        if (!string.IsNullOrWhiteSpace(motoristaBanco))
+        //        {
+        //            System.Web.UI.WebControls.ListItem item = ddlMotorista.Items.FindByText(motoristaBanco);
+
+        //            if (item != null)
+        //            {
+        //                ddlMotorista.ClearSelection();
+        //                item.Selected = true;
+        //            }
+        //        }
+
+
+
+        //        //ddlMotorista.Items.Insert(0, "");
+
+        //        // Feche o reader
+        //        reader.Close();
+        //        //}
+        //        //catch (Exception ex)
+        //        //{
+        //        //    // Trate exceções
+        //        //    Response.Write("Erro: " + ex.Message);
+        //        //}
+        //    }
+        //}
+
+        private void CarregarMotoristas()
         {
-            // Consulta SQL que retorna os dados desejados
-            string query = "SELECT codmot, nommot FROM tbmotoristas WHERE fl_exclusao is null AND status = 'ATIVO' ORDER BY nommot";
+            // Guarda o motorista selecionado
+            string codMotorista = ddlMotorista.SelectedValue;
 
-            // Crie uma conexão com o banco de dados
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            string query = @"SELECT codmot, nommot
+                     FROM tbmotoristas
+                     WHERE fl_exclusao IS NULL
+                       AND status = 'ATIVO'
+                     ORDER BY nommot";
+
+            using (SqlConnection conn = new SqlConnection(
+                WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                //try
-                //{
-                // Abra a conexão com o banco de dados
                 conn.Open();
 
-                // Crie o comando SQL
-                SqlCommand cmd = new SqlCommand(query, conn);
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    ddlMotorista.DataSource = dr;
+                    ddlMotorista.DataTextField = "nommot";
+                    ddlMotorista.DataValueField = "codmot";
+                    ddlMotorista.DataBind();
+                }
+            }
 
+            ddlMotorista.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecione o motorista...", ""));
 
-
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                // Preencher o ComboBox com os dados do DataReader
-                ddlMotorista.DataSource = reader;
-                ddlMotorista.DataTextField = "nommot";
-                ddlMotorista.DataValueField = "codmot";
-                ddlMotorista.DataBind();
-
-                //ddlMotorista.Items.Insert(0, "");
-
-                // Feche o reader
-                reader.Close();
-                //}
-                //catch (Exception ex)
-                //{
-                //    // Trate exceções
-                //    Response.Write("Erro: " + ex.Message);
-                //}
+            // Restaura a seleção
+            if (!string.IsNullOrWhiteSpace(codMotorista) &&
+                ddlMotorista.Items.FindByValue(codMotorista) != null)
+            {
+                ddlMotorista.SelectedValue = codMotorista;
             }
         }
+
+
         protected void btnPesquisarVeiculo_Click(object sender, EventArgs e)
         {
             if (txtCodVeiculo.Text.Trim() == "")

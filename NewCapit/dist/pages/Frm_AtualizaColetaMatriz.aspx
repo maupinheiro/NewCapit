@@ -223,7 +223,7 @@
            PEDIDOS (TAB)
         ========================= */
         function carregarPedidos(idCarga) {
-            fetch("Carga.aspx/GetPedidos", {
+            fetch("Frm_AtualizaColetaMatriz.aspx/GetPedidos", {
                 method: "POST",
                 headers: { "Content-Type": "application/json; charset=utf-8" },
                 body: JSON.stringify({ idCarga })
@@ -373,7 +373,26 @@
 
     </script>
     <script>
-        function aplicarPluginsDinamicos() {
+        function InicializarSelect2() {
+            $('.select2').select2({
+                width: '100%'
+            });
+        }
+
+        $(document).ready(function () {
+            InicializarSelect2();
+        });
+
+        if (typeof (Sys) !== "undefined") {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                InicializarSelect2();
+            });
+        }
+    </script>
+    
+    <script>       
+        function aplicarPluginsDinamicos() {           
+
             $('.select2').each(function () {
                 var $meuSelect = $(this);
                 var $meuModal = $meuSelect.closest('.modal');
@@ -392,6 +411,10 @@
                 //});
             });
         }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+            aplicarPluginsDinamicos();
+        });
 
         // SOLUÇÃO PARA O CAMPO DE BUSCA TRAVADO:
         // O Bootstrap 4 impede que elementos fora do "foco principal" do modal recebam digitação.
@@ -1483,29 +1506,63 @@
           HeaderStyle-CssClass="gv-header-custom"
           AllowPaging="false"
           DataKeyNames="pedido" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
-        <Columns>                                                                                                            <asp:BoundField DataField="pedido" HeaderText="Pedido" />
-               <asp:BoundField DataField="emissao" HeaderText="Emissão" DataFormatString="{0:dd/MM/yyyy}" />
-               <asp:BoundField DataField="peso" HeaderText="Peso" />  
-               <asp:BoundField DataField="material" HeaderText="Material" />   
-               <asp:BoundField DataField="portao" HeaderText="Portão" /> 
+        <Columns>                                                                                                            <asp:BoundField DataField="pedido" HeaderText="Pedido">
+                    <ItemStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+                    <HeaderStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+               </asp:BoundField>
+               <asp:BoundField DataField="emissao" HeaderText="Emissão" DataFormatString="{0:dd/MM/yyyy}">
+                    <ItemStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+                    <HeaderStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+               </asp:BoundField>
+               <asp:BoundField DataField="peso" HeaderText="Peso"> 
+                    <ItemStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+                    <HeaderStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+               </asp:BoundField>
+               <asp:BoundField DataField="material" HeaderText="Material">
+                    <ItemStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+                    <HeaderStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+               </asp:BoundField>
+               <asp:BoundField DataField="portao" HeaderText="Portão">
+                    <ItemStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+                    <HeaderStyle CssClass="vertical-middle" HorizontalAlign="Center" />
+               </asp:BoundField>
                <asp:TemplateField HeaderText="Motorista"> 
                <ItemTemplate>                                                                                      <asp:DropDownList ID="ddlMotCar" runat="server" CssClass="form-select select2"></asp:DropDownList>
                </ItemTemplate>
                </asp:TemplateField>
-                 <asp:TemplateField HeaderText="Início">
+              
+            <asp:TemplateField HeaderText="Início">
                <ItemTemplate>
                  <asp:TextBox ID="txtInicioCar"
                    TextMode="DateTimeLocal" runat="server"
                    CssClass="form-control hora-inicio"
                    Text='<%# Eval("iniciocar") != DBNull.Value ? Convert.ToDateTime(Eval("iniciocar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
                </ItemTemplate>
-               </asp:TemplateField>     
-               <asp:TemplateField HeaderText="Fim">    
-               <ItemTemplate>                                                                                      <asp:TextBox ID="txtTermCar" TextMode="DateTimeLocal" runat="server"                                                CssClass="form-control hora-fim"                                                                       Text='<%# Eval("termcar") != DBNull.Value ? Convert.ToDateTime(Eval("termcar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'></asp:TextBox>
-               </ItemTemplate>
-               </asp:TemplateField>                                                                       <asp:TemplateField HeaderText="Tempo">                                                        <ItemTemplate>                                                                                     <asp:TextBox ID="txtTempoTotal" runat="server" CssClass="form-control hora-total" Text='<%# Eval("duracao")%>' TabIndex="-1" ReadOnly="true"></asp:TextBox>
-                 </ItemTemplate>
-                </asp:TemplateField>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Fim">
+                    <ItemTemplate>
+                        <asp:TextBox
+                            ID="txtTermCar"
+                            runat="server"
+                            TextMode="DateTimeLocal"
+                            CssClass="form-control hora-fim"
+                            Text='<%# Eval("termcar") != DBNull.Value ? Convert.ToDateTime(Eval("termcar")).ToString("yyyy-MM-ddTHH:mm") : "" %>'>
+                        </asp:TextBox>
+                    </ItemTemplate>
+            </asp:TemplateField>
+              
+            <asp:TemplateField HeaderText="Tempo"> 
+                <ItemTemplate>   
+                   <asp:TextBox ID="txtTempoTotal"
+                        runat="server"
+                        CssClass="form-control hora-total"
+                        Text='<%# Eval("duracao").ToString().Replace(".0", "") %>'
+                        ReadOnly="true">
+                   </asp:TextBox>                  
+                </ItemTemplate>
+             </asp:TemplateField>
+
              <asp:TemplateField HeaderText="Ações">
                 <ItemTemplate>
                     <asp:LinkButton ID="btnSalvarCarregamento" runat="server" 
@@ -2119,7 +2176,7 @@
             OnSelectedIndexChanged="ddlRotaKrona_SelectedIndexChanged">
         </asp:DropDownList>
         </div>--%>
-        <span class="details">&nbsp;</span>
+        <span class="details">Rota:</span>
         <asp:DropDownList ID="ddlRotaKrona"
                           runat="server"
                           CssClass="form-select select2">
@@ -2283,7 +2340,7 @@
         <div class="form-group row">
             <label for="inputCVA" class="col-sm-1 col-form-label" style="text-align: right">CVA:</label>
             <div class="col-md-2">
-                <asp:TextBox ID="txtNumCVA" runat="server" CssClass="form-control" ReadOnly="true" style="text-align: center" ></asp:TextBox>                
+                <asp:TextBox ID="txtNumCVA" runat="server" CssClass="form-control" style="text-align: center" ReadOnly="true" ></asp:TextBox>                
             </div>            
             <div class="col-md-2">
                 <asp:TextBox ID="txtSitCVA" runat="server" CssClass="form-control" style="text-align: center" Text="" ReadOnly="true" ></asp:TextBox>
@@ -2606,7 +2663,7 @@
                                                                                             <div class="form-group">
                                                                                                 <span class="details">Núm. CVA:</span>
                                                                                                 <div class="input-group">
-                                                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Bind("cva") %>' class="form-control" Style="text-align: center" MaxLength="10"></asp:TextBox>
+                                                                                                    <asp:TextBox ID="txtCVA" runat="server" Text='<%# Eval("cva") %>' class="form-control" Style="text-align: center" MaxLength="10" ></asp:TextBox>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

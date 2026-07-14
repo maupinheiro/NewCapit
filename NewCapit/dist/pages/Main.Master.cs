@@ -198,11 +198,13 @@ namespace NewCapit
 
                     // --- MÓDULO GESTÃO (id_modulo = 12) ---
                     TelaIndicadores.Visible = telasPermitidas.Contains(98);
+                    TelaTabelas.Visible = telasPermitidas.Contains(98);
 
                     // --- MÓDULO SISTEMA (id_modulo = 13) ---
                     TelaConsultaUsuarios.Visible = telasPermitidas.Contains(14);
                     TelaControleAcesso.Visible = telasPermitidas.Contains(20);
                     TelaTrocaSenha.Visible = telasPermitidas.Contains(113);
+                    TelaTrocaFoto.Visible = telasPermitidas.Contains(113);
                 }
                 else
                 {
@@ -210,10 +212,7 @@ namespace NewCapit
                 }
 
             }
-            foto_usuario = (string)Session["FotoUsuario"];
-
-            
-
+            foto_usuario = (string)Session["FotoUsuario"]; 
             String path = Server.MapPath("../../fotos/");
             string file = foto_usuario;
             if (File.Exists(path + file))
@@ -224,8 +223,6 @@ namespace NewCapit
             {
                 foto = "../../fotos/motoristasemfoto.jpg";
             }
-           
-           
         }
 
         private void EsconderTodosOsModulos()
