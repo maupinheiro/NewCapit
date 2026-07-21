@@ -5,9 +5,10 @@ using System.Net;
 using System.Text;
 using System.Web;
 using Newtonsoft.Json;
+using static NewCapit.dist.pages.empresas;
 
 namespace NewCapit
-{    
+{
     public class Empresa
     {
         public string abertura { get; set; }
@@ -15,7 +16,8 @@ namespace NewCapit
         public string tipo { get; set; }
         public string nome { get; set; }
         public string porte { get; set; }
-        public string natureza_juridica { get; set; }        
+        public string natureza_juridica { get; set; }
+        public List<Atividade> atividade_principal { get; set; }
         public string logradouro { get; set; }
         public string numero { get; set; }
         public string municipio { get; set; }
@@ -32,17 +34,26 @@ namespace NewCapit
         public string complemento { get; set; }
         public string email { get; set; }
         public string efr { get; set; }
-        public string situacao_especial { get; set; }        
+        public string situacao_especial { get; set; }
+
 
         public static Empresa ObterCnpj(string cnpj)
         {
             string url = "https://www.receitaws.com.br/v1/cnpj/" + cnpj;
             WebClient client = new WebClient();
-            client.Encoding = Encoding.UTF8;            
+            client.Encoding = Encoding.UTF8;
             string json = client.DownloadString(url);
+
+            System.Diagnostics.Debug.WriteLine(typeof(Empresa).AssemblyQualifiedName);
+            System.Diagnostics.Debug.WriteLine(json);
 
             var empresa = JsonConvert.DeserializeObject<Empresa>(json);
             return empresa;
         }
+    }
+    public class Atividade
+    {
+        public string code { get; set; }
+        public string text { get; set; }
     }
 }

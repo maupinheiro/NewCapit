@@ -1054,7 +1054,7 @@
                                                             <HeaderTemplate>
 
                                                                 <table id="gridCargas" class="table table-bordered table-hover">
-
+                                                               
                                                                     <thead>
                                                                         <tr>
                                                                             <th>--</th>
@@ -1070,6 +1070,7 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
+                                                                       
                                                             </HeaderTemplate>
                                                             <ItemTemplate>
                                                                 <td>
@@ -1501,10 +1502,11 @@
 <div class="tab-content border border-top-0 p-3">
 <!-- ABA PEDIDOS -->
 <div class="tab-pane fade show active" id='<%# "tabPedidos_" + ((RepeaterItem)Container).ItemIndex %>'>
-      <asp:GridView ID="gvPedidos" runat="server"
-          CssClass="table-sap"
-          HeaderStyle-CssClass="gv-header-custom"
-          AllowPaging="false"
+      <asp:GridView ID="gvPedidos"
+          runat="server"
+          CssClass="grid-sap"          
+          GridLines="None"
+          ShowHeaderWhenEmpty="True"
           DataKeyNames="pedido" AutoGenerateColumns="False" OnRowDataBound="gvPedidos_RowDataBound">
         <Columns>                                                                                                            <asp:BoundField DataField="pedido" HeaderText="Pedido">
                     <ItemStyle CssClass="vertical-middle" HorizontalAlign="Center" />
@@ -1604,11 +1606,12 @@
             <asp:UpdatePanel ID="upNF" runat="server" UpdateMode="Conditional">
                 <%--//OnRowCommand="gvNF_RowCommand" --%>
                 <ContentTemplate>
-                    <asp:GridView ID="gvNF" runat="server" 
-                        CssClass="table-sap"
-                        HeaderStyle-CssClass="gv-header-custom"
-                        AllowPaging="false"
-                        AutoGenerateColumns="false">
+                    <asp:GridView ID="gvNF"
+                        runat="server"
+                        CssClass="grid-sap"
+                        AutoGenerateColumns="False"
+                        GridLines="None"
+                        ShowHeaderWhenEmpty="True">
                     <Columns>
                         <asp:BoundField DataField="chavenfe" HeaderText="Chave NF-e" />
                         <asp:BoundField DataField="numeronfe" HeaderText="Nota Fiscal" />
@@ -2052,10 +2055,11 @@
     <%--CssClass="table table-sm table-bordered mt-2"--%>
  <div class="row g-3">
      <asp:HiddenField ID="hdflIdviagem" Value='<%# Eval("carga") %>' runat="server" />
-     <asp:GridView ID="gvCte" runat="server"
-         CssClass="table-sap"
-         HeaderStyle-CssClass="gv-header-custom"
+     <asp:GridView ID="gvCte" 
+         runat="server"
+         CssClass="grid-sap"
          AutoGenerateColumns="False"
+         ShowHeaderWhenEmpty="True"
          GridLines="Both"
          BorderColor="Black"
          BorderWidth="1px">

@@ -132,8 +132,54 @@
             "timeOut": "10000"
         };
     </script>
-    
     <style>
+        .card-sap{
+            border:1px solid #d9dde3;
+            border-radius:4px;
+        }
+
+        .card-sap .card-header{
+            background:#0A6ED1;
+            color:#fff;
+            padding:8px 12px;
+        }
+
+        .grid-scroll{
+            height:500px;
+            overflow:auto;
+        }
+
+        .grid-sap{
+            width:100%;
+            border-collapse:collapse;
+            font-size:12px;
+        }
+
+        .grid-sap th{
+            position:sticky;
+            top:0;
+            background:#0A6ED1;
+            color:#fff;
+            z-index:100;
+            white-space:nowrap;
+            text-align:left;
+            padding:8px;
+        }
+
+        .grid-sap td{
+            white-space:nowrap;
+            padding:6px;
+        }
+
+        .grid-sap tr:nth-child(even){
+            background:#f7f9fb;
+        }
+
+        .grid-sap tr:hover{
+            background:#dbeeff;
+        }
+    </style>
+    <%--<style>
         .vertical-middle {
             vertical-align: middle !important;
         }
@@ -146,14 +192,14 @@
             font-weight: bold;
             text-align: center;
         }
-    </style>
+    </style>--%>
     <asp:ContentPlaceHolder ID="head" runat="server">
-        <style>
+        <%--<style>
             .img-custom {
                 width: 200px;
                 height: 200px;
             }
-        </style>
+        </style>--%>
     </asp:ContentPlaceHolder>
     <script type="text/javascript">
         function fecharModal() {
@@ -216,187 +262,7 @@
         });
     </script>
 
-    <style>
-    .table-sap {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: "Segoe UI", Arial, sans-serif;
-        font-size: 13px;
-    }
-
-    /* Cabeçalho SAP */
-    .table-sap thead {
-        background-color: #0A6ED1;
-        color: #fff;
-    }
-
-    .table-sap thead th {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #d9d9d9;
-    }
-
-    /* Corpo */
-    .table-sap tbody td {
-        padding: 8px;
-        border: 1px solid #e5e5e5;
-    }
-
-    /* Zebra */
-    .table-sap tbody tr:nth-child(even) {
-        background-color: #f5f7fa;
-    }
-
-    /* Hover */
-    .table-sap tbody tr:hover {
-        background-color: #e8f3ff;
-    }
-
-    /* Controles DataTable */
-    .dataTables_wrapper .dataTables_filter input {
-        border: 1px solid #ccc;
-        padding: 5px;
-        border-radius: 4px;
-    }
-
-    .dataTables_wrapper .dataTables_length select {
-        border: 1px solid #ccc;
-        padding: 4px;
-    }
-
-    /* Paginação estilo SAP */
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        background: #f5f5f5;
-        border: 1px solid #d9d9d9 !important;
-        padding: 5px 10px;
-        margin: 2px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-        background: #0A6ED1 !important;
-        color: #fff !important;
-        border: 1px solid #0A6ED1 !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        background: #e8f3ff !important;
-    }
-    /* Info */
-    .dataTables_info {
-        margin-top: 10px;
-    }
-
-    .sub-info {
-        font-size: 11px;
-        color: #00050a;
-    }
-
-    .table-sap td div {
-        line-height: 16px;
-    }
-
-    .grid-sap-container {
-        max-height: 450px; /* 👈 altura da grade */
-        overflow-y: auto; /* 👈 scroll vertical */
-        border: 1px solid #d9d9d9;
-    }
-
-    /* mantém header fixo estilo ERP */
-    .gv-header-custom {
-        position: sticky;
-        top: 0;
-        background-color: #0A6ED1;
-        color: #fff;
-        z-index: 10;
-    }
-
-    .gv-header-custom th {
-        height: 45px; /* 👈 altura do cabeçalho */
-        padding: 10px 8px; /* 👈 controle do “respiro” interno */
-        line-height: 20px; /* 👈 alinhamento vertical */
-        font-size: 13px;
-        text-align: left;
-        vertical-align: middle;
-    }
-
-    .grid-sap-container {
-        max-height: 500px; /* altura da grid */
-        overflow-y: auto; /* scroll vertical */
-        border: 1px solid #d9d9d9;
-    }
-
-    /* Cabeçalho fixo estilo SAP */
-    .gv-header-custom th {
-        position: sticky;
-        top: 0; /* fixa no topo */
-        z-index: 100;
-        background-color: #0A6ED1;
-        color: #fff;
-        height: 45px;
-        padding: 10px 8px;
-        text-align: left;
-        vertical-align: middle;
-        border-bottom: 2px solid #084c9e;
-    }
-
-    /* Garante que o body não sobrepõe o header */
-    .table-sap {
-        border-collapse: collapse;
-        width: 100%;
-        font-family: "Segoe UI", Arial;
-        font-size: 13px;
-    }
-
-    .table-sap td {
-        padding: 8px;
-        border: 1px solid #e5e5e5;
-    }
-
-    .kpi-container {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        font-size: 12px;
-    }
-
-    .kpi-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .kpi-label {
-        width: 130px;
-    }
-
-    .kpi-bar {
-        flex: 1;
-        height: 8px;
-        background: #eee;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-
-    .kpi-fill {
-        height: 100%;
-        border-radius: 5px;
-    }
-
-    .kpi-value {
-        width: 35px;
-        text-align: right;
-        font-weight: bold;
-        font-size: 13px;
-    }
-    .form-switch .form-check-input {
-    appearance: checkbox !important;
-    width: 1em;
-    height: 1em;
-    border-radius: 0;
-    }
-</style>
+    <link href="~/dist/css/erp.css" rel="stylesheet" />
 </head>
 
 <!-- menu fixo -->
@@ -1004,6 +870,8 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item" id="TelaIndicadores" runat="server"><a href="/dist/pages/Indicadores.aspx" class="nav-link"><i class="fas fa-chart-pie nav-icon"></i><p> Indicadores</p></a></li>
                                     <li class="nav-item" id="TelaTabelas" runat="server"><a href="/dist/pages/tabelasauxiliares.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Tabelas</p></a></li>
+                                    <li class="nav-item" id="TelaInativarMotoristas" runat="server"><a href="/dist/pages/motoristasinativos.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Inativar Motoristas</p></a></li>
+                                    <li class="nav-item" id="TelaEmpresas" runat="server"><a href="/dist/pages/empresas.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Empresas</p></a></li>
                                 </ul>
                             </li>
 
@@ -1102,6 +970,31 @@
         </div>
         <strong>Copyright &copy; 2023-2026 <a href="#">Capit Logística</a>.</strong> Todos os direitos reservados.
     </footer>
+        <!-- jQuery -->
+        <script src="~/dist/plugins/jquery/jquery.min.js"></script>
+
+        <!-- Bootstrap -->
+        <script src="~/dist/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- DataTables -->
+        <script src="~/dist/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/dist/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+
+        <!-- Select2 -->
+        <script src="~/dist/plugins/select2/js/select2.full.min.js"></script>
+
+        <!-- Mask -->
+        <script src="~/dist/plugins/jquery-mask/jquery.mask.min.js"></script>
+
+        <!-- SweetAlert -->
+        <script src="~/dist/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+
+        <!-- ERP -->
+        <script src="<%= ResolveUrl("~/dist/js/erp.js") %>"></script>
+
+
+
+
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->

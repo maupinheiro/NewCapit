@@ -296,7 +296,7 @@ namespace NewCapit.dist.pages
                 return;
             }
 
-            string sql = @"SELECT codmot, nommot, status, cargo, nucleo, cpf, venccnh, codliberacao, validade, venceti, cartaomot, tipomot, venccartao, ISNULL(caminhofoto, '/fotos/motoristasemfoto.jpg') AS caminhofoto,fone2, codtra, transp, frota 
+            string sql = @"SELECT codmot, nommot, status, cargo, nucleo, cpf, venccnh, codliberacao, validade, venceti, cartaomot, tipomot, venccartao, ISNULL(caminhofoto, '/fotos/motoristasemfoto.jpg') AS caminhofoto,fone2, codtra, transp, frota, status, inativo 
                    FROM tbmotoristas 
                    WHERE codmot = @id";
 
@@ -369,103 +369,113 @@ namespace NewCapit.dist.pages
                 // FOTO
                 //CarregarFotoMotorista(fotoMotorista);
                 // valida Exame Toxicologico
-                if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
+                if (dt.Rows[0]["status"].ToString() == "INATIVO")
                 {
-                    DateTime dataETI;
-                    if (!DateTime.TryParse(txtExameToxic.Text, out dataETI))
+                    MostrarMsg("- " + dt.Rows[0]["codmot"].ToString() + " - " + dt.Rows[0]["nommot"].ToString() + ", << INATIVO >> MOTIVO: " + dt.Rows[0]["inativo"].ToString(), "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                    return;                        
+                }
+                else if (dt.Rows[0]["status"].ToString() == "ATIVO")
+                {
+                    if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
                     {
-                        MostrarMsg("Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançado. Verifique", "danger");
+                        DateTime dataETI;
+                        if (!DateTime.TryParse(txtExameToxic.Text, out dataETI))
+                        {
+                            MostrarMsg("Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançado. Verifique", "danger");
 
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+
+                        }
+                        else
+                        {
+                            DateTime validadeET = Convert.ToDateTime(dt.Rows[0]["venceti"]);
+                            TimeSpan diferencaET = validadeET - DateTime.Today;
+
+                            if (validadeET < DateTime.Today)
+                            {
+                                MostrarMsg("Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDO. Verifique!", "danger");
+                                txtExameToxic.BackColor = System.Drawing.Color.Red;
+                                txtExameToxic.ForeColor = System.Drawing.Color.White;
+                                txtCodMotorista.Text = "";
+                                txtCodMotorista.Focus();
+                            }
+                            else if (diferencaET.TotalDays <= 30)
+                            {
+                                MostrarMsg("Atenção! Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaET.Days + " dias.", "warning");
+                                txtExameToxic.BackColor = System.Drawing.Color.Khaki;
+                                txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
+                            }
+                        }
+
+                    }
+
+
+                    // valida CNH
+                    DateTime dataCNH;
+                    if (!DateTime.TryParse(txtValCNH.Text, out dataCNH))
+                    {
+                        MostrarMsgCNH("Validade da CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
                         txtCodMotorista.Text = "";
                         txtCodMotorista.Focus();
-
                     }
                     else
                     {
-                        DateTime validadeET = Convert.ToDateTime(dt.Rows[0]["venceti"]);
-                        TimeSpan diferencaET = validadeET - DateTime.Today;
+                        // valida cnh
+                        DateTime validadeCNH = Convert.ToDateTime(dt.Rows[0]["venccnh"]);
+                        TimeSpan diferencaCNH = validadeCNH - DateTime.Today;
 
-                        if (validadeET < DateTime.Today)
+                        if (validadeCNH < DateTime.Today)
                         {
-                            MostrarMsg("Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDO. Verifique!", "danger");
-                            txtExameToxic.BackColor = System.Drawing.Color.Red;
-                            txtExameToxic.ForeColor = System.Drawing.Color.White;
+                            MostrarMsgCNH("CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!", "danger");
+                            txtValCNH.BackColor = System.Drawing.Color.Red;
+                            txtValCNH.ForeColor = System.Drawing.Color.White;
                             txtCodMotorista.Text = "";
                             txtCodMotorista.Focus();
                         }
-                        else if (diferencaET.TotalDays <= 30)
+                        else if (diferencaCNH.TotalDays <= 30)
                         {
-                            MostrarMsg("Atenção! Exame Toxicologico do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaET.Days + " dias.", "warning");
-                            txtExameToxic.BackColor = System.Drawing.Color.Khaki;
-                            txtExameToxic.ForeColor = System.Drawing.Color.OrangeRed;
+                            MostrarMsgCNH("Atenção! A CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaCNH.Days + " dias.", "warning");
+                            txtValCNH.BackColor = System.Drawing.Color.Khaki;
+                            txtValCNH.ForeColor = System.Drawing.Color.OrangeRed;
                         }
                     }
 
-                }
-                
-
-                // valida CNH
-                DateTime dataCNH;
-                if (!DateTime.TryParse(txtValCNH.Text, out dataCNH))
-                {
-                    MostrarMsgCNH("Validade da CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-                }
-                else
-                {
-                    // valida cnh
-                    DateTime validadeCNH = Convert.ToDateTime(dt.Rows[0]["venccnh"]);
-                    TimeSpan diferencaCNH = validadeCNH - DateTime.Today;
-
-                    if (validadeCNH < DateTime.Today)
+                    // valida GR
+                    DateTime dataGR;
+                    if (!DateTime.TryParse(txtValGR.Text, out dataGR))
                     {
-                        MostrarMsgCNH("CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!", "danger");
-                        txtValCNH.BackColor = System.Drawing.Color.Red;
-                        txtValCNH.ForeColor = System.Drawing.Color.White;
+                        MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
                         txtCodMotorista.Text = "";
                         txtCodMotorista.Focus();
                     }
-                    else if (diferencaCNH.TotalDays <= 30)
+                    else
                     {
-                        MostrarMsgCNH("Atenção! A CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaCNH.Days + " dias.", "warning");
-                        txtValCNH.BackColor = System.Drawing.Color.Khaki;
-                        txtValCNH.ForeColor = System.Drawing.Color.OrangeRed;
+                        // valida liberação de risco 
+                        DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
+                        TimeSpan diferencaGR = validadeGR - DateTime.Today;
+
+                        if (validadeGR < DateTime.Today)
+                        {
+                            MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
+                            txtValGR.BackColor = System.Drawing.Color.Red;
+                            txtValGR.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaGR.TotalDays <= 30)
+                        {
+                            MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
+                            txtValGR.BackColor = System.Drawing.Color.Khaki;
+                            txtValGR.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
                     }
+
+                    txtCodVeiculo.Text = dt.Rows[0]["frota"].ToString();
+
                 }
-
-                // valida GR
-                DateTime dataGR;
-                if (!DateTime.TryParse(txtValGR.Text, out dataGR))
-                {
-                    MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-                }
-                else
-                {
-                    // valida liberação de risco 
-                    DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
-                    TimeSpan diferencaGR = validadeGR - DateTime.Today;
-
-                    if (validadeGR < DateTime.Today)
-                    {
-                        MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
-                        txtValGR.BackColor = System.Drawing.Color.Red;
-                        txtValGR.ForeColor = System.Drawing.Color.White;
-                        txtCodMotorista.Text = "";
-                        txtCodMotorista.Focus();
-                    }
-                    else if (diferencaGR.TotalDays <= 30)
-                    {
-                        MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
-                        txtValGR.BackColor = System.Drawing.Color.Khaki;
-                        txtValGR.ForeColor = System.Drawing.Color.OrangeRed;
-                    }
-                }
-
-                txtCodVeiculo.Text = dt.Rows[0]["frota"].ToString();
-
             }
 
             //Dados do veiculos

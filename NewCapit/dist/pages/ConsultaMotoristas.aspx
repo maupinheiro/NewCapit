@@ -330,12 +330,12 @@
             <div class="row g-3">
                 <div class="table-responsive">                
                 <asp:GridView 
-                    ID="gvListMotoristas"
+                    ID="gvListMotoristas"                    
                     runat="server"
+                    CssClass="grid-sap"
                     AutoGenerateColumns="False"
-                    CssClass="table-sap"
-                    HeaderStyle-CssClass="gv-header-custom"
-                    AllowPaging="false"
+                    GridLines="None"
+                    ShowHeaderWhenEmpty="True"
                     DataKeyNames="id"      
                     OnPageIndexChanging="gvListMotoristas_PageIndexChanging">                    
                 <Columns>

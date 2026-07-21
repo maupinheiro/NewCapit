@@ -486,10 +486,13 @@
     <Content Include="dist\bandeiras\icone-mato-grosso-do-sul.png" />
     <Content Include="dist\bandeiras\icone-paraiba.png" />
     <Content Include="dist\bandeiras\icone-sergipe.png" />
+    <Content Include="dist\css\erp.css" />
+    <Content Include="dist\js\erp.js" />
     <Content Include="dist\pages\ColaboradoresManutencao.aspx" />
     <Content Include="dist\pages\ControleAbastecimento.aspx" />
     <Content Include="dist\pages\ControlePneus.aspx" />
     <Content Include="dist\pages\DownloadSapiens.aspx" />
+    <Content Include="dist\pages\empresas.aspx" />
     <Content Include="dist\pages\EntradaCombustivel.aspx" />
     <Content Include="dist\pages\EntradaPecas.aspx" />
     <Content Include="dist\pages\FinalizarOS.aspx" />
@@ -673,6 +676,7 @@
     <Content Include="dist\pages\Mapa.aspx" />
     <Content Include="dist\pages\MapaVeiculo.aspx" />
     <Content Include="dist\pages\ImportarPlanejamento.aspx" />
+    <Content Include="dist\pages\motoristasinativos.aspx" />
     <Content Include="dist\pages\NovaRota.aspx" />
     <Content Include="dist\pages\NumerarPneu.aspx" />
     <Content Include="dist\pages\OrdemColetaImpressaoIndividual.aspx" />
@@ -703,6 +707,8 @@
     <Content Include="dist\pages\GestaoDeEntregasPernambuco.aspx" />
     <Content Include="dist\pages\ControleDePedagioPernambuco.aspx" />
     <Content Include="dist\pages\ControleAcesso2.aspx" />
+    <Content Include="DynamicData\FieldTemplates\ucCadastro.ascx" />
+    <Content Include="DynamicData\FieldTemplates\ucCadastro_Edit.ascx" />
     <Content Include="fotos\1010.jpg" />
     <Content Include="fotos\1070.JPG" />
     <Content Include="fotos\1499.JPG" />
@@ -4849,6 +4855,13 @@
     <Compile Include="dist\pages\DownloadSapiens.aspx.designer.cs">
       <DependentUpon>DownloadSapiens.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\empresas.aspx.cs">
+      <DependentUpon>empresas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\empresas.aspx.designer.cs">
+      <DependentUpon>empresas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\EntradaCombustivel.aspx.cs">
       <DependentUpon>EntradaCombustivel.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5447,6 +5460,13 @@
     <Compile Include="dist\pages\ImportarPlanejamento.aspx.designer.cs">
       <DependentUpon>ImportarPlanejamento.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\motoristasinativos.aspx.cs">
+      <DependentUpon>motoristasinativos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\motoristasinativos.aspx.designer.cs">
+      <DependentUpon>motoristasinativos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\NovaRota.aspx.cs">
       <DependentUpon>NovaRota.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5647,6 +5667,20 @@
     <Compile Include="dist\ServicesCte\CteService.cs" />
     <Compile Include="dist\ServicesCte\FreteService.cs" />
     <Compile Include="dist\ServicesCte\ImpostoService.cs" />
+    <Compile Include="DynamicData\FieldTemplates\ucCadastro.ascx.cs">
+      <DependentUpon>ucCadastro.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DynamicData\FieldTemplates\ucCadastro.ascx.designer.cs">
+      <DependentUpon>ucCadastro.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicData\FieldTemplates\ucCadastro_Edit.ascx.cs">
+      <DependentUpon>ucCadastro_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DynamicData\FieldTemplates\ucCadastro_Edit.ascx.designer.cs">
+      <DependentUpon>ucCadastro_Edit.ascx</DependentUpon>
+    </Compile>
     <Compile Include="KronaModels.cs" />
     <Compile Include="MeuDanfeService.cs" />
     <Compile Include="PaginaBase.cs">
@@ -5831,6 +5865,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="dist\Anexos\" />
+    <Folder Include="dist\controles\" />
     <Folder Include="docnf\" />
     <Folder Include="EnviaSM\" />
     <Folder Include="ImportacaoTemp\" />

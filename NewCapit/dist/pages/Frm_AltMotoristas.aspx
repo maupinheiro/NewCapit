@@ -5,6 +5,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             function aplicarMascara(input, mascara) {
@@ -299,7 +301,16 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <span class="details">E-mail:</span>
+                            <div class="input-group">
+                                <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" class="form-control"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Linha 4 do formulário -->
                 <asp:UpdatePanel ID="updCnh" UpdateMode="Conditional" runat="server">
@@ -563,16 +574,113 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <span class="details">HISTORICO DO MOTORISTA:</span>
-                            <asp:TextBox Rows="3" ID="txtHistorico" runat="server" class="form-control" placeholder="Historico ..." TextMode="MultiLine"></asp:TextBox>
+                            <asp:TextBox Rows="3" ID="txtHistorico" runat="server" class="form-control" placeholder="Historico..." TextMode="MultiLine"></asp:TextBox>
                         </div>
                     </div>
+                </div>    
+                <div class="row">    
+                    <div class="col-md-12">           
+                    <div class="card card-warning collapsed-card">
+                 <div class="card-header">
+                    <h3 class="card-title">Últimas Viagens</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>            
+                 <div class="card-body">
+                     <div class="row g-3">
+                         <div class="col-md-12">                    
+                           <div class="card card-sap mt-3">
+                            <div class="card-header">
+                                <div class="row align-items-left">
+                                    <div class="col-md-3 text-end">
+                                        <label class="me-1 fw-bold">Mês:</label>
+                                        <asp:DropDownList
+                                            ID="ddlMes"
+                                            runat="server"
+                                            CssClass="form-select form-select-sm d-inline"
+                                            Width="150px"
+                                            AutoPostBack="true"
+                                            OnSelectedIndexChanged="FiltroViagensChanged">
+                                            <asp:ListItem Value="1">Janeiro</asp:ListItem>
+                                            <asp:ListItem Value="2">Fevereiro</asp:ListItem>
+                                            <asp:ListItem Value="3">Março</asp:ListItem>
+                                            <asp:ListItem Value="4">Abril</asp:ListItem>
+                                            <asp:ListItem Value="5">Maio</asp:ListItem>
+                                            <asp:ListItem Value="6">Junho</asp:ListItem>
+                                            <asp:ListItem Value="7">Julho</asp:ListItem>
+                                            <asp:ListItem Value="8">Agosto</asp:ListItem>
+                                            <asp:ListItem Value="9">Setembro</asp:ListItem>
+                                            <asp:ListItem Value="10">Outubro</asp:ListItem>
+                                            <asp:ListItem Value="11">Novembro</asp:ListItem>
+                                            <asp:ListItem Value="12">Dezembro</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <label class="ms-3 me-1 fw-bold">Ano:</label>
+                                        <asp:DropDownList
+                                            ID="ddlAno"
+                                            runat="server"
+                                            CssClass="form-select form-select-sm d-inline"
+                                            Width="100px"
+                                            AutoPostBack="true"
+                                            OnSelectedIndexChanged="FiltroViagensChanged">
+                                            <asp:ListItem>2026</asp:ListItem>
+                                            <asp:ListItem>2027</asp:ListItem>
+                                            <asp:ListItem>2028</asp:ListItem>
+                                            <asp:ListItem>2029</asp:ListItem>
+                                            <asp:ListItem>2030</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid-scroll">
+                                <asp:GridView
+                                    ID="gvViagensMotorista"
+                                    runat="server"
+                                    CssClass="grid-sap"
+                                    AutoGenerateColumns="False"
+                                    GridLines="None"
+                                    ShowHeaderWhenEmpty="True">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="#">
+                                            <ItemTemplate>
+                                                <%# Container.DataItemIndex + 1 %>
+                                            </ItemTemplate>
+                                            <ItemStyle Width="50px" HorizontalAlign="Center" />
+                                        </asp:TemplateField>
+
+                                        <asp:BoundField DataField="carga"
+                                            HeaderText="CARGA" />
+                                        <asp:BoundField DataField="material"
+                                            HeaderText="MATERIAL" />
+                                        <asp:BoundField DataField="data"
+                                            HeaderText="DATA"
+                                            DataFormatString="{0:dd/MM/yyyy}" />
+                                        <asp:BoundField DataField="Expedidor"
+                                            HeaderText="EXPEDIDOR" />
+                                        <asp:BoundField DataField="Recebedor"
+                                            HeaderText="RECEBEDOR" />
+                                        <asp:BoundField DataField="Veiculo"
+                                            HeaderText="VEÍCULO" />
+                                    </Columns>
+                                </asp:GridView>
+                            </div>
+                           </div>
+                         </div>
+                     </div>
+                </div>
+                </div>
+                </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-11">
                         <div class="form-group">
                             <asp:Label ID="motivoInativo" runat="server" class="details">MOTIVO DA INATIVAÇÃO:</asp:Label>
                             <asp:TextBox ID="txtMotivoInativacao" runat="server" CssClass="form-control" placeholder="" MaxLength="60" ForeColor="Red"></asp:TextBox>
-
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -636,8 +744,6 @@
             </div>
         </div>
     </div>
-
-
     <script>
         function mostrarToastNaoEncontrado() {
             var toastEl = document.getElementById('toastNotFound');

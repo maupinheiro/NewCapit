@@ -44,6 +44,7 @@
        }
    </script>
     <div class="content-wrapper">
+        <br />
         <div class="container mt-4">
     <div id="divMsgSenha" runat="server" class="alert alert-info alert-dismissible fade show mt-3" role="alert" style="display: none;">
         <span id="lblMsgSenha" runat="server"></span>

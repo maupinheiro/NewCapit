@@ -3876,9 +3876,311 @@ namespace NewCapit.dist.pages
         }
 
 
+        private void InserirMotoristaViagem(SqlConnection con, RepeaterItem item)
+        {
+            HiddenField hdIdCarga = (HiddenField)item.FindControl("hdIdCarga");
+
+            if (hdIdCarga == null)
+                throw new Exception("HiddenField hdIdCarga não encontrado.");
+
+            string carga = hdIdCarga.Value.Trim();
+
+            if (string.IsNullOrEmpty(carga))
+                throw new Exception("Número da carga não informado.");
+
+            
+            TextBox txtSaidaOrigemViagem = (TextBox)item.FindControl("txtSaidaOrigem");
+            TextBox txtChegadaDestinoViagem = (TextBox)item.FindControl("txtChegadaDestino");
+            TextBox txtSaidaPlantaViagem = (TextBox)item.FindControl("txtSaidaPlanta");
+
+            TextBox txtCodRecebedor = (TextBox)item.FindControl("txtCodRecebedor");
+            TextBox cboRecebedor = (TextBox)item.FindControl("cboRecebedor");
+            TextBox txtCidRecebedor = (TextBox)item.FindControl("txtCidRecebedor");
+            TextBox txtUFRecebedor = (TextBox)item.FindControl("txtUFRecebedor");
+
+            TextBox txtCodExpedidorViagem = (TextBox)item.FindControl("txtCodExpedidor");
+            TextBox cboExpedidorViagem = (TextBox)item.FindControl("cboExpedidor");
+            TextBox txtCidExpedidorViagem = (TextBox)item.FindControl("txtCidExpedidor");
+            TextBox txtUFExpedidorViagem = (TextBox)item.FindControl("txtUFExpedidor");
+
+            TextBox txtMaterial = (TextBox)item.FindControl("txtMaterial");
+            string placa = txtPlaca.Text.Trim();
+            string codVeiculo = txtCodVeiculo.Text.Trim();
+            string codTransportadora = txtCodTransportadora.Text.Trim();
+            string codMotorista = txtCodMotorista.Text.Trim();
+            string motorista = ddlMotorista.SelectedItem.Text.Trim();
+            string transportadora = txtTransportadora.Text.Trim();
+
+            if (!string.Equals(txtMaterial.Text, "Vazio", StringComparison.OrdinalIgnoreCase) &&
+    !string.IsNullOrWhiteSpace(txtSaidaOrigemViagem.Text))
+            {
+                string sql = @"
+            INSERT INTO tbmotoristas_viagens
+            (
+                carga,
+                data,
+                material,
+                cod_recebedor,
+                recebedor,
+                cid_recebedor,
+                uf_recebedor,
+                cod_expedidor,
+                expedidor,
+                cid_expedidor,
+                uf_expedidor,
+                cod_motorista,
+                motorista,
+                cod_veiculo,
+                placa,
+                cod_transportadora,
+                transportadora,
+                situacao,
+                saida,
+                chegada,
+                conclusao
+            )
+            VALUES
+            (
+                @carga,
+                @data,
+                @material,
+                @cod_recebedor,
+                @recebedor,
+                @cid_recebedor,
+                @uf_recebedor,
+                @cod_expedidor,
+                @expedidor,
+                @cid_expedidor,
+                @uf_expedidor,
+                @cod_motorista,
+                @motorista,
+                @cod_veiculo,
+                @placa,
+                @cod_transportadora,
+                @transportadora,
+                'Efetuada',
+                @saida,
+                @chegada,
+                @conclusao
+            )";
+
+                SqlCommand cmd = new SqlCommand(sql, con);
+
+                cmd.Parameters.AddWithValue("@carga", carga);
+
+                DateTime data;
+                if (DateTime.TryParse(txtSaidaOrigemViagem.Text, out data))
+                    cmd.Parameters.AddWithValue("@data", data);
+                else
+                    cmd.Parameters.AddWithValue("@data", DBNull.Value);
+
+                cmd.Parameters.AddWithValue("@material", txtMaterial.Text.Trim());
+                cmd.Parameters.AddWithValue("@cod_recebedor", txtCodRecebedor.Text.Trim());
+                cmd.Parameters.AddWithValue("@recebedor", cboRecebedor.Text.Trim());
+                cmd.Parameters.AddWithValue("@cid_recebedor", txtCidRecebedor.Text.Trim());
+                cmd.Parameters.AddWithValue("@uf_recebedor", txtUFRecebedor.Text.Trim());
+
+                cmd.Parameters.AddWithValue("@cod_expedidor", txtCodExpedidorViagem.Text.Trim());
+                cmd.Parameters.AddWithValue("@expedidor", cboExpedidorViagem.Text.Trim());
+                cmd.Parameters.AddWithValue("@cid_expedidor", txtCidExpedidorViagem.Text.Trim());
+                cmd.Parameters.AddWithValue("@uf_expedidor", txtUFExpedidorViagem.Text.Trim());
+
+                cmd.Parameters.AddWithValue("@cod_motorista", codMotorista);
+                cmd.Parameters.AddWithValue("@motorista", motorista);
+
+                cmd.Parameters.AddWithValue("@cod_veiculo", codVeiculo);
+                cmd.Parameters.AddWithValue("@placa", placa);
+
+                cmd.Parameters.AddWithValue("@cod_transportadora", codTransportadora);
+                cmd.Parameters.AddWithValue("@transportadora", transportadora);
+
+                DateTime saida;
+                if (DateTime.TryParse(txtSaidaOrigemViagem.Text, out saida))
+                    cmd.Parameters.AddWithValue("@saida", saida);
+                else
+                    cmd.Parameters.AddWithValue("@saida", DBNull.Value);
+
+                DateTime chegada;
+                if (DateTime.TryParse(txtChegadaDestinoViagem.Text, out chegada))
+                    cmd.Parameters.AddWithValue("@chegada", chegada);
+                else
+                    cmd.Parameters.AddWithValue("@chegada", DBNull.Value);
+               
+                DateTime conclusao;
+                if (DateTime.TryParse(txtSaidaPlantaViagem.Text, out conclusao))
+                    cmd.Parameters.AddWithValue("@conclusao", conclusao);
+                else
+                    cmd.Parameters.AddWithValue("@conclusao", DBNull.Value);
+
+                cmd.ExecuteNonQuery();
+
+            }
 
 
+            
+        }
+        
 
+        private void AtualizarColetaMotorista(RepeaterItem item)
+        {            
+            HiddenField hdIdCarga = (HiddenField)item.FindControl("hdIdCarga");
+
+            if (hdIdCarga == null)
+                throw new Exception("HiddenField hdIdCarga não encontrado.");
+
+            string carga = hdIdCarga.Value.Trim();
+
+            if (string.IsNullOrEmpty(carga))
+                throw new Exception("Número da carga não informado.");
+                     
+            string placa = txtPlaca.Text.Trim();
+            string codVeiculo = txtCodVeiculo.Text.Trim();
+            string codTransportadora = txtCodTransportadora.Text.Trim();
+            string codMotorista = txtCodMotorista.Text.Trim();
+            string motorista = ddlMotorista.SelectedItem.Text;
+            string transportadora = txtTransportadora.Text.Trim();
+            //string material = txtMaterial.Text.Trim();
+
+            TextBox txtMaterial = (TextBox)item.FindControl("txtMaterial");
+            TextBox txtSaidaOrigemViagem = (TextBox)item.FindControl("txtSaidaOrigem");
+            TextBox txtChegadaDestinoViagem = (TextBox)item.FindControl("txtChegadaDestino");
+            TextBox txtSaidaPlantaViagem = (TextBox)item.FindControl("txtSaidaPlanta");
+
+            TextBox txtCodRecebedor = (TextBox)item.FindControl("txtCodRecebedor");
+            TextBox cboRecebedor = (TextBox)item.FindControl("cboRecebedor");
+            TextBox txtCidRecebedor = (TextBox)item.FindControl("txtCidRecebedor");
+            TextBox txtUFRecebedor = (TextBox)item.FindControl("txtUFRecebedor");
+
+            TextBox txtCodExpedidorViagem = (TextBox)item.FindControl("txtCodExpedidor");
+            TextBox cboExpedidorViagem = (TextBox)item.FindControl("cboExpedidor");
+            TextBox txtCidExpedidorViagem = (TextBox)item.FindControl("txtCidExpedidor");
+            TextBox txtUFExpedidorViagem = (TextBox)item.FindControl("txtUFExpedidor");
+
+            if (txtMaterial.Text != "Vazio" && txtMaterial.Text != "VAZIO")
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+                {
+                    con.Open();
+
+                    // Procura a carga ativa
+                    string sqlBusca = @"SELECT TOP 1
+                    id,
+                    cod_motorista
+                    FROM tbmotoristas_viagens
+                    WHERE carga=@carga
+                    AND situacao='Efetuada'";
+
+                    SqlCommand cmdBusca = new SqlCommand(sqlBusca, con);
+                    cmdBusca.Parameters.AddWithValue("@carga", carga);
+
+                    SqlDataReader dr = cmdBusca.ExecuteReader();
+
+                    if (!dr.Read())
+                    {
+                        dr.Close();
+
+                        // Não existe a carga
+                        InserirMotoristaViagem(con, item);
+                        return;
+                    }
+
+                    int id = Convert.ToInt32(dr["id"]);
+                    string motoristaBanco = dr["cod_motorista"].ToString();
+
+                    dr.Close();
+
+                    // Mesmo motorista -> Atualiza os dados
+                    if (motoristaBanco == codMotorista)
+                    {
+                        string sqlAtualiza = @"
+                    UPDATE tbmotoristas_viagens
+                    SET
+                        data = @data,
+                        material = @material,
+                        cod_recebedor = @cod_recebedor,
+                        recebedor = @recebedor,
+                        cid_recebedor = @cid_recebedor,
+                        uf_recebedor = @uf_recebedor,
+                        cod_expedidor = @cod_expedidor,
+                        expedidor = @expedidor,
+                        cid_expedidor = @cid_expedidor,
+                        uf_expedidor = @uf_expedidor,
+                        motorista = @motorista,
+                        cod_veiculo = @cod_veiculo,
+                        placa = @placa,
+                        cod_transportadora = @cod_transportadora,
+                        transportadora = @transportadora,
+                        saida=@saida,
+                        chegada=@chegada,
+                        conclusao=@conclusao
+                    WHERE id=@id";
+
+                        SqlCommand cmd = new SqlCommand(sqlAtualiza, con);
+
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@data",
+                            string.IsNullOrWhiteSpace(txtSaidaOrigemViagem.Text)
+                                ? (object)DBNull.Value
+                                : Convert.ToDateTime(txtSaidaOrigemViagem.Text));
+                        cmd.Parameters.AddWithValue("@material", txtMaterial.Text);
+                        cmd.Parameters.AddWithValue("@cod_recebedor", txtCodRecebedor.Text);
+                        cmd.Parameters.AddWithValue("@recebedor", cboRecebedor.Text);
+                        cmd.Parameters.AddWithValue("@cid_recebedor", txtCidRecebedor.Text);
+                        cmd.Parameters.AddWithValue("@uf_recebedor", txtUFRecebedor.Text);
+
+                        cmd.Parameters.AddWithValue("@cod_expedidor", txtCodExpedidorViagem.Text);
+                        cmd.Parameters.AddWithValue("@expedidor", cboExpedidorViagem.Text);
+                        cmd.Parameters.AddWithValue("@cid_expedidor", txtCidExpedidorViagem.Text);
+                        cmd.Parameters.AddWithValue("@uf_expedidor", txtUFExpedidorViagem.Text);
+
+                        cmd.Parameters.AddWithValue("@motorista", motorista);
+
+                        cmd.Parameters.AddWithValue("@cod_veiculo", codVeiculo);
+                        cmd.Parameters.AddWithValue("@placa", placa);
+
+                        cmd.Parameters.AddWithValue("@cod_transportadora", codTransportadora);
+                        cmd.Parameters.AddWithValue("@transportadora", transportadora); 
+
+                        cmd.Parameters.AddWithValue("@saida",
+                            string.IsNullOrWhiteSpace(txtSaidaOrigemViagem.Text)
+                                ? (object)DBNull.Value
+                                : Convert.ToDateTime(txtSaidaOrigemViagem.Text));
+
+                        cmd.Parameters.AddWithValue("@chegada",
+                            string.IsNullOrWhiteSpace(txtChegadaDestinoViagem.Text)
+                                ? (object)DBNull.Value
+                                : Convert.ToDateTime(txtChegadaDestinoViagem.Text));
+
+                        cmd.Parameters.AddWithValue("@conclusao",
+                            string.IsNullOrWhiteSpace(txtSaidaPlantaViagem.Text)
+                                ? (object)DBNull.Value
+                                : Convert.ToDateTime(txtSaidaPlantaViagem.Text));
+
+
+                        cmd.ExecuteNonQuery();
+
+                        return;
+                    }
+
+                    // Motorista diferente -> Cancela o registro anterior
+                    string sqlCancela = @"
+                UPDATE tbmotoristas_viagens
+                SET situacao='Cancelada'
+                WHERE id=@id";
+
+                    SqlCommand cmdCancela = new SqlCommand(sqlCancela, con);
+                    cmdCancela.Parameters.AddWithValue("@id", id);
+                    cmdCancela.ExecuteNonQuery();
+
+                    // Insere o novo registro
+                    InserirMotoristaViagem(con, item);
+                }
+
+            }
+
+
+           
+        }
         protected void rptColetas_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             GridView gv = (GridView)e.Item.FindControl("gvPedidos");
@@ -3906,8 +4208,10 @@ namespace NewCapit.dist.pages
 
             if (e.CommandName == "Atualizar")
             {
-                //genildo
                 string carga = e.CommandArgument.ToString();
+
+                //Lançar viagem do motorista na tbmotoristas_viagens
+                AtualizarColetaMotorista(e.Item);                
                
                 GridView gvPedidos = (GridView)e.Item.FindControl("gvPedidos");
 
@@ -3943,8 +4247,8 @@ namespace NewCapit.dist.pages
                 TextBox txtFimPernoite = (TextBox)e.Item.FindControl("txtFimPernoite");
                 TextBox txtDuracaoP = (TextBox)e.Item.FindControl("txtDuracaoP");
 
-               // Recuperar os TextBoxes de UF
-               TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUFExpedidor");
+                // Recuperar os TextBoxes de UF
+                TextBox txtUfInicio = (TextBox)e.Item.FindControl("txtUFExpedidor");
                 TextBox txtUfFim = (TextBox)e.Item.FindControl("txtUFRecebedor");
 
                 DropDownList ddlPercursoKrona = (DropDownList)e.Item.FindControl("ddlPercurso");
@@ -4048,27 +4352,27 @@ namespace NewCapit.dist.pages
                     }
 
                     string query = @"UPDATE tbcargas SET
-    gate_origem = @gate_origem,
-    gate_destino = @gate_destino,
-    status = @status,
-    cva = @cva,
-    andamento = @andamento,
-    saidaorigem = @saidaorigem,
-    tempoagcarreg = @tempoagcarreg,
-    chegadadestino = @chegadadestino,
-    saidaplanta = @saidaplanta,
-    prev_chegada = @prev_chegada,
-    tempoagdescarreg = @tempoagdescarreg,
-    duracao_transp = @duracao_transp,
-    disponivel_solicitacao = @disponivel_solicitacao,
-    codmot = @codmot,
-    local_pernoite = @local_pernoite,
-    inicio_pernoite = @inicio_pernoite,
-    fim_pernoite = @fim_pernoite,
-    duracao_pernoite = @duracao_pernoite,
-    status_pernoite = @status_pernoite,
-    frota = @frota
-WHERE carga = @carga";
+                        gate_origem = @gate_origem,
+                        gate_destino = @gate_destino,
+                        status = @status,
+                        cva = @cva,
+                        andamento = @andamento,
+                        saidaorigem = @saidaorigem,
+                        tempoagcarreg = @tempoagcarreg,
+                        chegadadestino = @chegadadestino,
+                        saidaplanta = @saidaplanta,
+                        prev_chegada = @prev_chegada,
+                        tempoagdescarreg = @tempoagdescarreg,
+                        duracao_transp = @duracao_transp,
+                        disponivel_solicitacao = @disponivel_solicitacao,
+                        codmot = @codmot,
+                        local_pernoite = @local_pernoite,
+                        inicio_pernoite = @inicio_pernoite,
+                        fim_pernoite = @fim_pernoite,
+                        duracao_pernoite = @duracao_pernoite,
+                        status_pernoite = @status_pernoite,
+                        frota = @frota
+                    WHERE carga = @carga";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -5413,7 +5717,7 @@ WHERE carga = @carga";
                 }
             }
 
-            // Calcular tempo
+            //// Calcular tempo
             //DateTime? inicio = DataBinder.Eval(e.Row.DataItem, "iniciocar") as DateTime?;
             //DateTime? fim = DataBinder.Eval(e.Row.DataItem, "termcar") as DateTime?;
 
@@ -5614,6 +5918,20 @@ WHERE carga = @carga";
             TextBox txtFim = (TextBox)linha.FindControl("txtTermCar");
             TextBox txtDur = (TextBox)linha.FindControl("txtTempoTotal");
             DropDownList ddlMot = (DropDownList)linha.FindControl("ddlMotCar");
+
+            // Calcular tempo
+            DateTime? inicio = DataBinder.Eval(linha.DataItem, "iniciocar") as DateTime?;
+            DateTime? fim = DataBinder.Eval(linha.DataItem, "termcar") as DateTime?;
+
+            Label lblTempo = (Label)linha.FindControl("lblTempo");
+
+            if (inicio.HasValue && fim.HasValue)
+            {
+                TimeSpan t = fim.Value - inicio.Value;
+                lblTempo.Text = $"{t.Hours:D2}:{t.Minutes:D2}";
+            }
+
+
 
             // 8. Executa a atualização no Banco de Dados
             string query = @"UPDATE tbpedidos 
@@ -9006,7 +9324,7 @@ WHERE carga = @carga";
                 return;
             }
 
-            string sql = @"SELECT codmot, nommot, status, cargo, nucleo, cpf, venccnh, codliberacao, validade, venceti, cartaomot, tipomot, venccartao, ISNULL(caminhofoto, '/fotos/motoristasemfoto.jpg') AS caminhofoto,fone2, codtra, transp, frota 
+            string sql = @"SELECT codmot, nommot, status, cargo, nucleo, cpf, venccnh, codliberacao, validade, venceti, cartaomot, tipomot, venccartao, ISNULL(caminhofoto, '/fotos/motoristasemfoto.jpg') AS caminhofoto,fone2, codtra, transp, frota, status, inativo 
                    FROM tbmotoristas 
                    WHERE codmot = @id";
 
@@ -9045,9 +9363,17 @@ WHERE carga = @carga";
                 txtTransportadora.Text = dt.Rows[0]["transp"].ToString();
                 fotoMotorista = dt.Rows[0]["caminhofoto"].ToString();
                 txtLiberacao.Text = dt.Rows[0]["codliberacao"].ToString();
-
-                // valida Exame Toxicologico
-                if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
+                if (dt.Rows[0]["status"].ToString() == "INATIVO")
+                {
+                    MostrarMsg("- " + dt.Rows[0]["codmot"].ToString() + " - " + dt.Rows[0]["nommot"].ToString() + ", << INATIVO >> MOTIVO: " + dt.Rows[0]["inativo"].ToString(), "danger");
+                    txtCodMotorista.Text = "";
+                    txtCodMotorista.Focus();
+                    return;
+                }
+                else if (dt.Rows[0]["status"].ToString() == "ATIVO")
+                {
+                    // valida Exame Toxicologico
+                    if (dt.Rows[0]["tipomot"].ToString() == "FUNCIONÁRIO")
                 {
                     DateTime dataETI;
                     if (!DateTime.TryParse(txtExameToxic.Text, out dataETI))
@@ -9080,70 +9406,67 @@ WHERE carga = @carga";
                     }
 
                 }
-
-
-                // valida CNH
-                DateTime dataCNH;
-                if (!DateTime.TryParse(txtCNH.Text, out dataCNH))
-                {
-                    MostrarMsgCNH("Validade da CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-                }
-                else
-                {
-                    // valida cnh
-                    DateTime validadeCNH = Convert.ToDateTime(dt.Rows[0]["venccnh"]);
-                    TimeSpan diferencaCNH = validadeCNH - DateTime.Today;
-
-                    if (validadeCNH < DateTime.Today)
+                    // valida CNH
+                    DateTime dataCNH;
+                    if (!DateTime.TryParse(txtCNH.Text, out dataCNH))
                     {
-                        MostrarMsgCNH("CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!", "danger");
-                        txtCNH.BackColor = System.Drawing.Color.Red;
-                        txtCNH.ForeColor = System.Drawing.Color.White;
+                        MostrarMsgCNH("Validade da CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
                         txtCodMotorista.Text = "";
                         txtCodMotorista.Focus();
                     }
-                    else if (diferencaCNH.TotalDays <= 30)
+                    else
                     {
-                        MostrarMsgCNH("Atenção! A CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaCNH.Days + " dias.", "warning");
-                        txtCNH.BackColor = System.Drawing.Color.Khaki;
-                        txtCNH.ForeColor = System.Drawing.Color.OrangeRed;
+                        // valida cnh
+                        DateTime validadeCNH = Convert.ToDateTime(dt.Rows[0]["venccnh"]);
+                        TimeSpan diferencaCNH = validadeCNH - DateTime.Today;
+
+                        if (validadeCNH < DateTime.Today)
+                        {
+                            MostrarMsgCNH("CNH do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!", "danger");
+                            txtCNH.BackColor = System.Drawing.Color.Red;
+                            txtCNH.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaCNH.TotalDays <= 30)
+                        {
+                            MostrarMsgCNH("Atenção! A CNH do " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaCNH.Days + " dias.", "warning");
+                            txtCNH.BackColor = System.Drawing.Color.Khaki;
+                            txtCNH.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
                     }
-                }
-
-                // valida GR
-                DateTime dataGR;
-                if (!DateTime.TryParse(txtLibGR.Text, out dataGR))
-                {
-                    MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
-                    txtCodMotorista.Text = "";
-                    txtCodMotorista.Focus();
-                }
-                else
-                {
-                    // valida liberação de risco 
-                    DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
-                    TimeSpan diferencaGR = validadeGR - DateTime.Today;
-
-                    if (validadeGR < DateTime.Today)
+                    // valida GR
+                    DateTime dataGR;
+                    if (!DateTime.TryParse(txtLibGR.Text, out dataGR))
                     {
-                        MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
-                        txtLibGR.BackColor = System.Drawing.Color.Red;
-                        txtLibGR.ForeColor = System.Drawing.Color.White;
+                        MostrarMsgGR("Validade da Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", não foi lançada. Verifique!", "danger");
                         txtCodMotorista.Text = "";
                         txtCodMotorista.Focus();
                     }
-                    else if (diferencaGR.TotalDays <= 30)
+                    else
                     {
-                        MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
-                        txtLibGR.BackColor = System.Drawing.Color.Khaki;
-                        txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
+                        // valida liberação de risco 
+                        DateTime validadeGR = Convert.ToDateTime(dt.Rows[0]["validade"]);
+                        TimeSpan diferencaGR = validadeGR - DateTime.Today;
+
+                        if (validadeGR < DateTime.Today)
+                        {
+                            MostrarMsgGR("Liberação de Risco do " + ddlMotorista.SelectedItem.Text.Trim() + ", está VENCIDA. Verifique!.", "danger");
+                            txtLibGR.BackColor = System.Drawing.Color.Red;
+                            txtLibGR.ForeColor = System.Drawing.Color.White;
+                            txtCodMotorista.Text = "";
+                            txtCodMotorista.Focus();
+                        }
+                        else if (diferencaGR.TotalDays <= 30)
+                        {
+                            MostrarMsgGR("Atenção! Liberação de Risco do motorista " + ddlMotorista.SelectedItem.Text.Trim() + ", vence em " + diferencaGR.Days + " dias.", "warning");
+                            txtLibGR.BackColor = System.Drawing.Color.Khaki;
+                            txtLibGR.ForeColor = System.Drawing.Color.OrangeRed;
+                        }
                     }
+
+                    txtCodVeiculo.Text = dt.Rows[0]["frota"].ToString();
                 }
-
-                txtCodVeiculo.Text = dt.Rows[0]["frota"].ToString();
-
             }
 
             //if(txtTipoMot.Text != "FUNCIONÁRIO")

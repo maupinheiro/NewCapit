@@ -31,16 +31,12 @@ namespace NewCapit.dist.pages
                 {
                     string nomeUsuario = Session["UsuarioLogado"].ToString();
                     var lblUsuario = nomeUsuario;
-
-                    //  txtAlteradoPor.Text = nomeUsuario;
-
                 }
                 else
                 {
                     var lblUsuario = "<Usuário>";
                     //txtAlteradoPor.Text = lblUsuario;
                     Response.Redirect("Login.aspx");
-
                 }
                 VerificarBotoesPagina(btnInserir: btnSalvar1);
                 PreencherComboCargo();
@@ -51,7 +47,10 @@ namespace NewCapit.dist.pages
                 CarregarEstadosNascimento();
                 CarregarEstCNH();              
                 CarregaDadosMotorista();
-                
+
+                ddlMes.SelectedValue = DateTime.Now.Month.ToString();
+                ddlAno.SelectedValue = DateTime.Now.Year.ToString();
+                CarregarViagensMotorista();
             }
               
 
@@ -112,10 +111,7 @@ namespace NewCapit.dist.pages
         private void CarregarMunicipioNasc()
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
-            {              
-
-
-
+            {   
                 SqlCommand cmd = new SqlCommand("SELECT nome_municipio FROM tbmunicipiosbrasileiros WHERE IdRegiao = @RegiaoId AND Uf = @Uf", conn);
                 cmd.Parameters.AddWithValue("@RegiaoId", ddlRegioes.SelectedValue);
                 cmd.Parameters.AddWithValue("@Uf", ddlEstNasc.SelectedValue);
@@ -211,7 +207,7 @@ namespace NewCapit.dist.pages
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sql = "SELECT codmot, nommot, status, CONVERT(varchar, emissaorg, 103) as emissaorg, numrg, cargo, nucleo, orgaorg, cpf, numregcnh, codsegurancacnh, catcnh, CONVERT(varchar, venccnh, 103) as venccnh, codliberacao, numpis, endmot, baimot, cidmot, ufmot, cepmot, fone3, fone2, validade, CONVERT(varchar, dtnasc, 103) as dtnasc, estcivil, sexo, horario, nomepai, nomemae, codtra, transp, CONVERT(varchar, cadmot, 103) as cadmot, inativo, CONVERT(varchar, dtinativo, 103) as dtinativo, historico, alterado, dataalteracao, cartaomot, naturalmot, numero, complemento, tipomot, codprop, placa, reboque1, reboque2, tipoveiculo, venccartao, horario, funcao, frota, usucad, CONVERT(varchar, dtccad, 103) as dtccad, venceti, codvei, ufnascimento, formulariocnh, ufcnh, municipiocnh, vencmoop, cracha, regiao, numinss, caminhofoto FROM tbmotoristas WHERE id = " + id;
+            string sql = "SELECT codmot, nommot, status, CONVERT(varchar, emissaorg, 103) as emissaorg, numrg, cargo, nucleo, orgaorg, cpf, numregcnh, codsegurancacnh, catcnh, CONVERT(varchar, venccnh, 103) as venccnh, codliberacao, numpis, endmot, baimot, cidmot, ufmot, cepmot, fone3, fone2, validade, CONVERT(varchar, dtnasc, 103) as dtnasc, estcivil, sexo, horario, nomepai, nomemae, codtra, transp, CONVERT(varchar, cadmot, 103) as cadmot, inativo, CONVERT(varchar, dtinativo, 103) as dtinativo, historico, alterado, dataalteracao, cartaomot, naturalmot, numero, complemento, tipomot, codprop, placa, reboque1, reboque2, tipoveiculo, venccartao, horario, funcao, frota, usucad, CONVERT(varchar, dtccad, 103) as dtccad, venceti, codvei, ufnascimento, formulariocnh, ufcnh, municipiocnh, vencmoop, cracha, regiao, numinss, caminhofoto,email FROM tbmotoristas WHERE id = " + id;
 
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
@@ -225,6 +221,7 @@ namespace NewCapit.dist.pages
                 if (dt.Rows[0][0].ToString() != string.Empty)
                 {
                     txtCodMot.Text = dt.Rows[0][0].ToString();
+                    CarregarViagensMotorista();
                 }
                 txtNomMot.Text = dt.Rows[0][1].ToString();
                 ddlStatus.SelectedValue = dt.Rows[0][2].ToString();
@@ -313,7 +310,7 @@ namespace NewCapit.dist.pages
                 txtINSS.Text = dt.Rows[0][62].ToString();
                 txtCaminhoFoto.Text = dt.Rows[0][63].ToString();
                 fotoMotorista = dt.Rows[0][63].ToString();
-                
+                txtEmail.Text = dt.Rows[0][64].ToString();
 
                 //SALVAR A FOTO DO MOTORISTA
                 // aspx
@@ -435,7 +432,8 @@ namespace NewCapit.dist.pages
                          cracha = @cracha,
                          regiao = @regiao,
                          numinss = @numinss,
-                         caminhofoto = @caminhofoto
+                         caminhofoto = @caminhofoto,
+                         email = @email
                         WHERE id = @id";
             try
             {
@@ -500,6 +498,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@municipiocnh", ddlMunicCnh.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@vencmoop", txtVAlMoop.Text);
                     cmd.Parameters.AddWithValue("@cracha", txtCracha.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@email", txtEmail.Text);
                     cmd.Parameters.AddWithValue("@regiao", ddlRegioes.SelectedItem.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@numinss", txtINSS.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@id", idConvertido);
@@ -971,5 +970,50 @@ namespace NewCapit.dist.pages
 
             ClientScript.RegisterStartupScript(this.GetType(), "toastScript", script, false);
         }
+        private void CarregarViagensMotorista()
+        {
+            if (string.IsNullOrWhiteSpace(txtCodMot.Text))
+                return;
+            string sql = @"
+            SELECT
+                carga,
+                material,
+                data,
+                ISNULL(cod_expedidor,'') + ' - ' +
+                ISNULL(expedidor,'') + ' (' +
+                ISNULL(cid_expedidor,'') + '/' +
+                ISNULL(uf_expedidor,'') + ')' AS Expedidor,
+
+                ISNULL(cod_recebedor,'') + ' - ' +
+                ISNULL(recebedor,'') + ' (' +
+                ISNULL(cid_recebedor,'') + '/' +
+                ISNULL(uf_recebedor,'') + ')' AS Recebedor,
+
+                ISNULL(cod_veiculo,'') + ' - ' +
+                ISNULL(placa,'') AS Veiculo
+            FROM tbmotoristas_viagens
+            WHERE cod_motorista=@cod_motorista
+            AND MONTH(data)=@mes
+            AND YEAR(data)=@ano
+            ORDER BY data DESC";
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@cod_motorista", txtCodMot.Text);
+                cmd.Parameters.AddWithValue("@mes", ddlMes.SelectedValue);
+                cmd.Parameters.AddWithValue("@ano", ddlAno.SelectedValue);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                gvViagensMotorista.DataSource = dt;
+                gvViagensMotorista.DataBind();
+            }
+        }      
+        protected void FiltroViagensChanged(object sender, EventArgs e)
+        {
+            CarregarViagensMotorista();
+        }
+
     }
 }

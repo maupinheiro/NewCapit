@@ -200,6 +200,8 @@ namespace NewCapit
                     // --- MÓDULO GESTÃO (id_modulo = 12) ---
                     TelaIndicadores.Visible = telasPermitidas.Contains(98);
                     TelaTabelas.Visible = telasPermitidas.Contains(98);
+                    TelaInativarMotoristas.Visible = telasPermitidas.Contains(98);
+                    TelaEmpresas.Visible = telasPermitidas.Contains(98);
 
                     // --- MÓDULO SISTEMA (id_modulo = 13) ---
                     TelaConsultaUsuarios.Visible = telasPermitidas.Contains(14);

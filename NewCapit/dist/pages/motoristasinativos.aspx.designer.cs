@@ -1,0 +1,89 @@
+﻿//------------------------------------------------------------------------------
+// <gerado automaticamente>
+//     Esse código foi gerado por uma ferramenta.
+//
+//     As alterações ao arquivo poderão causar comportamento incorreto e serão perdidas se
+//     o código for recriado
+// </gerado automaticamente>
+//------------------------------------------------------------------------------
+
+namespace NewCapit.dist.pages
+{
+
+
+    public partial class motoristasinativos
+    {
+
+        /// <summary>
+        /// Controle divMsg.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMsg;
+
+        /// <summary>
+        /// Controle lblMsgGeral.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMsgGeral;
+
+        /// <summary>
+        /// Controle txtDias.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDias;
+
+        /// <summary>
+        /// Controle ddlFilial.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFilial;
+
+        /// <summary>
+        /// Controle btnPesquisar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPesquisar;
+
+        /// <summary>
+        /// Controle gvMotoristas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvMotoristas;
+
+        /// <summary>
+        /// Controle lblQuantidade.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblQuantidade;
+
+        /// <summary>
+        /// Controle btnInativar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnInativar;
+    }
+}

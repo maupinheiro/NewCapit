@@ -193,6 +193,7 @@
     <Compile Include="ConRotas.cs" />
     <Compile Include="ConUsuarios.cs" />
     <Compile Include="ConVeiculos.cs" />
+    <Compile Include="EmpresaDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersDAL.cs" />
   </ItemGroup>
