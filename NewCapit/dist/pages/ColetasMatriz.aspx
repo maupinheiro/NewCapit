@@ -195,7 +195,7 @@
                 __doPostBack(btn.name, "");
                 return true;
             }
-</script>
+        </script>
 
     <div class="content-wrapper">
         <section class="content">

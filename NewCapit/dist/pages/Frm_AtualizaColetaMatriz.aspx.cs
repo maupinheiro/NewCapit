@@ -4634,183 +4634,183 @@ namespace NewCapit.dist.pages
                     }
 
                    // TRATANDO A PERNOITE AUTOMATICA DO MOTORISTA
-                    DateTime dataPernoite;
-                    if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
-                        agora.TimeOfDay <= new TimeSpan(23, 59, 59))
-                    {
-                        dataPernoite = agora.Date;
-                        if (ddlStatus.SelectedItem.Text.Trim() == "Pernoite")
-                        {
-                           // SOMENTE FUNCIONÁRIO
-                            if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
-                            {
-                                using (SqlConnection conn2 = new SqlConnection(
-                                    WebConfigurationManager
-                                    .ConnectionStrings["conexao"].ConnectionString))
-                                {
-                                    conn2.Open();
+                    //DateTime dataPernoite;
+                    //if (agora.TimeOfDay >= new TimeSpan(19, 0, 0) &&
+                    //    agora.TimeOfDay <= new TimeSpan(23, 59, 59))
+                    //{
+                    //    dataPernoite = agora.Date;
+                    //    if (ddlStatus.SelectedItem.Text.Trim() == "Pernoite")
+                    //    {
+                    //       // SOMENTE FUNCIONÁRIO
+                    //        if (txtTipoMot.Text.Trim().ToUpper() == "FUNCIONÁRIO")
+                    //        {
+                    //            using (SqlConnection conn2 = new SqlConnection(
+                    //                WebConfigurationManager
+                    //                .ConnectionStrings["conexao"].ConnectionString))
+                    //            {
+                    //                conn2.Open();
 
-                                    SqlTransaction trans = conn2.BeginTransaction();
+                    //                SqlTransaction trans = conn2.BeginTransaction();
 
-                                    try
-                                    {
-                                      //   ============================================
-                                      //   VALOR PERNOITE
-                                       //  ============================================
-                                        decimal valorPernoite = 0;
-                                        decimal valorCafe = 0;
+                    //                try
+                    //                {
+                    //                  //   ============================================
+                    //                  //   VALOR PERNOITE
+                    //                   //  ============================================
+                    //                    decimal valorPernoite = 0;
+                    //                    decimal valorCafe = 0;
 
-                                        using (SqlCommand cmdPernoite =
-                                            new SqlCommand(@"
-                                          SELECT TOP 1 pernoite
-                                          FROM tbvalorpremiomotoristas WHERE status = 'ATIVO' and empresa='MATRIZ'",
-                                            conn2, trans))
-                                        {
-                                            object result =
-                                                cmdPernoite.ExecuteScalar();
+                    //                    using (SqlCommand cmdPernoite =
+                    //                        new SqlCommand(@"
+                    //                      SELECT TOP 1 pernoite
+                    //                      FROM tbvalorpremiomotoristas WHERE status = 'ATIVO' and empresa='MATRIZ'",
+                    //                        conn2, trans))
+                    //                    {
+                    //                        object result =
+                    //                            cmdPernoite.ExecuteScalar();
 
-                                            if (result != null &&
-                                                result != DBNull.Value)
-                                            {
-                                                valorPernoite =
-                                                    Convert.ToDecimal(result);
-                                            }
-                                        }
+                    //                        if (result != null &&
+                    //                            result != DBNull.Value)
+                    //                        {
+                    //                            valorPernoite =
+                    //                                Convert.ToDecimal(result);
+                    //                        }
+                    //                    }
 
-                                      //   ============================================
-                                      //   DATA
-                                      //   ============================================
-                                        object dataCusto = dataPernoite;
+                    //                  //   ============================================
+                    //                  //   DATA
+                    //                  //   ============================================
+                    //                    object dataCusto = dataPernoite;
 
-                                        if (dataCusto == null ||
-                                            dataCusto == DBNull.Value)
-                                        {
-                                            trans.Rollback();
+                    //                    if (dataCusto == null ||
+                    //                        dataCusto == DBNull.Value)
+                    //                    {
+                    //                        trans.Rollback();
 
-                                            MostrarMsg(
-                                                "Data Pernoite inválida.");
+                    //                        MostrarMsg(
+                    //                            "Data Pernoite inválida.");
 
-                                            return;
-                                        }
+                    //                        return;
+                    //                    }
 
-                                       //  ============================================
-                                       //  VERIFICA EXISTÊNCIA
-                                       //  ============================================
-                                        int existe = 0;
+                    //                   //  ============================================
+                    //                   //  VERIFICA EXISTÊNCIA
+                    //                   //  ============================================
+                    //                    int existe = 0;
 
-                                        using (SqlCommand cmdExiste =
-                                            new SqlCommand(@"
-                                          SELECT COUNT(*)
-                                          FROM tb_custo_motorista
-                                          WHERE cod_cracha = @cod
-                                          AND dt_custo = @data",
-                                            conn2, trans))
-                                        {
-                                            cmdExiste.Parameters.AddWithValue(
-                                                "@cod",
-                                                txtCodMotorista.Text.Trim());
+                    //                    using (SqlCommand cmdExiste =
+                    //                        new SqlCommand(@"
+                    //                      SELECT COUNT(*)
+                    //                      FROM tb_custo_motorista
+                    //                      WHERE cod_cracha = @cod
+                    //                      AND dt_custo = @data",
+                    //                        conn2, trans))
+                    //                    {
+                    //                        cmdExiste.Parameters.AddWithValue(
+                    //                            "@cod",
+                    //                            txtCodMotorista.Text.Trim());
 
-                                            cmdExiste.Parameters.AddWithValue(
-                                                "@data",
-                                                dataCusto);
+                    //                        cmdExiste.Parameters.AddWithValue(
+                    //                            "@data",
+                    //                            dataCusto);
 
-                                            existe =
-                                                Convert.ToInt32(
-                                                    cmdExiste.ExecuteScalar());
-                                        }
+                    //                        existe =
+                    //                            Convert.ToInt32(
+                    //                                cmdExiste.ExecuteScalar());
+                    //                    }
 
-                                        // ============================================
-                                        // UPDATE
-                                        // ============================================
-                                        if (existe > 0)
-                                        {
-                                            using (SqlCommand cmdUpdate =
-                                                new SqlCommand(@"
-                                              UPDATE tb_custo_motorista
-                                              SET vl_pernoite = @valor, vl_cafe = @cafe
-                                              WHERE cod_cracha = @cod
-                                              AND dt_custo = @data",
-                                                conn2, trans))
-                                            {
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@valor",
-                                                    valorPernoite);
+                    //                    // ============================================
+                    //                    // UPDATE
+                    //                    // ============================================
+                    //                    if (existe > 0)
+                    //                    {
+                    //                        using (SqlCommand cmdUpdate =
+                    //                            new SqlCommand(@"
+                    //                          UPDATE tb_custo_motorista
+                    //                          SET vl_pernoite = @valor, vl_cafe = @cafe
+                    //                          WHERE cod_cracha = @cod
+                    //                          AND dt_custo = @data",
+                    //                            conn2, trans))
+                    //                        {
+                    //                            cmdUpdate.Parameters.AddWithValue(
+                    //                                "@valor",
+                    //                                valorPernoite);
 
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@cafe",
-                                                    valorCafe);
+                    //                            cmdUpdate.Parameters.AddWithValue(
+                    //                                "@cafe",
+                    //                                valorCafe);
 
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@cod",
-                                                    txtCodMotorista.Text.Trim());
+                    //                            cmdUpdate.Parameters.AddWithValue(
+                    //                                "@cod",
+                    //                                txtCodMotorista.Text.Trim());
 
-                                                cmdUpdate.Parameters.AddWithValue(
-                                                    "@data",
-                                                    dataCusto);
+                    //                            cmdUpdate.Parameters.AddWithValue(
+                    //                                "@data",
+                    //                                dataCusto);
 
-                                                cmdUpdate.ExecuteNonQuery();
-                                            }
-                                        }
-                                        else
-                                        {
-                                          //   ============================================
-                                          //   INSERT
-                                          //   ============================================
-                                            using (SqlCommand cmdInsert =
-                                                new SqlCommand(@"
-                                              INSERT INTO tb_custo_motorista
-                                              (
-                                                  cod_cracha,
-                                                  dt_custo,
-                                                  vl_pernoite,
-                                                  vl_cafe
-                                              )
-                                              VALUES
-                                              (
-                                                  @cod,
-                                                  @data,
-                                                  @valor,
-                                                  @cafe
-                                              )",
-                                                conn2, trans))
-                                            {
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@cod",
-                                                    txtCodMotorista.Text.Trim());
+                    //                            cmdUpdate.ExecuteNonQuery();
+                    //                        }
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                      //   ============================================
+                    //                      //   INSERT
+                    //                      //   ============================================
+                    //                        using (SqlCommand cmdInsert =
+                    //                            new SqlCommand(@"
+                    //                          INSERT INTO tb_custo_motorista
+                    //                          (
+                    //                              cod_cracha,
+                    //                              dt_custo,
+                    //                              vl_pernoite,
+                    //                              vl_cafe
+                    //                          )
+                    //                          VALUES
+                    //                          (
+                    //                              @cod,
+                    //                              @data,
+                    //                              @valor,
+                    //                              @cafe
+                    //                          )",
+                    //                            conn2, trans))
+                    //                        {
+                    //                            cmdInsert.Parameters.AddWithValue(
+                    //                                "@cod",
+                    //                                txtCodMotorista.Text.Trim());
 
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@data",
-                                                    dataCusto);
+                    //                            cmdInsert.Parameters.AddWithValue(
+                    //                                "@data",
+                    //                                dataCusto);
 
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@valor",
-                                                    valorPernoite);
+                    //                            cmdInsert.Parameters.AddWithValue(
+                    //                                "@valor",
+                    //                                valorPernoite);
 
-                                                cmdInsert.Parameters.AddWithValue(
-                                                    "@cafe",
-                                                    valorCafe);
+                    //                            cmdInsert.Parameters.AddWithValue(
+                    //                                "@cafe",
+                    //                                valorCafe);
 
-                                                cmdInsert.ExecuteNonQuery();
-                                            }
-                                        }
+                    //                            cmdInsert.ExecuteNonQuery();
+                    //                        }
+                    //                    }
 
-                                        trans.Commit();
+                    //                    trans.Commit();
 
-                                        MostrarMsg(
-                                            "Pernoite salvo com sucesso.");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        trans.Rollback();
+                    //                    MostrarMsg(
+                    //                        "Pernoite salvo com sucesso.");
+                    //                }
+                    //                catch (Exception ex)
+                    //                {
+                    //                    trans.Rollback();
 
-                                        MostrarMsg(
-                                            "Erro pernoite: "
-                                            + ex.Message);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //                    MostrarMsg(
+                    //                        "Erro pernoite: "
+                    //                        + ex.Message);
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                    // TRATANDO O ALMOÇO AUTOMATICO DO MOTORISTA
 
