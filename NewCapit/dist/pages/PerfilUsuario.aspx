@@ -77,7 +77,7 @@ Alterar Foto de Perfil
     ID="imgFoto"
     runat="server"
     CssClass="foto-perfil"
-    ImageUrl="~/fotos/usuario.jpg" />
+    ImageUrl="/fotos/usuario.jpg" />
 
 </div>
 

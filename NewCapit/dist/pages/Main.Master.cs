@@ -15,6 +15,7 @@ namespace NewCapit
 
         public string foto;
         string id_usuario, foto_usuario;
+        //public string foto = "~/fotos/motoristasemfoto.jpg";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack) {
@@ -36,6 +37,26 @@ namespace NewCapit
                 {
                    // lblFuncao.Text = "<Função>";
                 }
+                if (Session["EmpresaTrabalho"] != null)
+                {
+                    string nomeEmpresa = Session["EmpresaTrabalho"].ToString();
+                    lblNucleo.Text = nomeEmpresa;
+                }
+                else
+                {
+                    // lblFuncao.Text = "<Função>";
+                }
+
+                if (Session["FotoUsuario"] != null)
+                {
+                    //string fotoUsuario = Session["FotoUsuario"].ToString();
+                    foto = Session["FotoUsuario"].ToString();
+                }
+                else
+                {
+                    foto = "/fotos/motoristasemfoto.jpg";
+                }
+
 
                 //if (Session["EmpresaTrabalho"] != null)
                 //{
@@ -207,7 +228,7 @@ namespace NewCapit
                     TelaConsultaUsuarios.Visible = telasPermitidas.Contains(14);
                     TelaControleAcesso.Visible = telasPermitidas.Contains(20);
                     TelaTrocaSenha.Visible = telasPermitidas.Contains(113);
-                    TelaTrocaFoto.Visible = telasPermitidas.Contains(113);
+                    TelaTrocaFoto.Visible = telasPermitidas.Contains(113);                    
                 }
                 else
                 {
@@ -215,17 +236,39 @@ namespace NewCapit
                 }
 
             }
-            foto_usuario = (string)Session["FotoUsuario"]; 
-            String path = Server.MapPath("../../fotos/");
-            string file = foto_usuario;
-            if (File.Exists(path + file))
+            //string foto_usuario = Session["FotoUsuario"]?.ToString();
+
+            //if (!string.IsNullOrEmpty(foto_usuario))
+            //{
+            //    //string caminhoFisico = Server.MapPath(foto_usuario);
+            //    string caminhoFisico = foto_usuario;
+
+            //    if (File.Exists(caminhoFisico))
+            //        foto = foto_usuario;
+            //    else
+            //        foto = "/fotos/motoristasemfoto.jpg";
+            //}
+            //else
+            //{
+            //    foto = "/fotos/motoristasemfoto.jpg";
+            //}
+
+            string fotoUsuario = Session["FotoUsuario"]?.ToString();
+
+            foto = "/fotos/motoristasemfoto.jpg"; // Foto padrão
+
+            if (!string.IsNullOrWhiteSpace(fotoUsuario))
             {
-                foto = "../../fotos/" + file + "";
+                string caminhoFisico = Server.MapPath(fotoUsuario);
+
+                if (File.Exists(caminhoFisico))
+                {
+                    foto = fotoUsuario;
+                }
             }
-            else
-            {
-                foto = "../../fotos/motoristasemfoto.jpg";
-            }
+
+
+
         }
 
         private void EsconderTodosOsModulos()

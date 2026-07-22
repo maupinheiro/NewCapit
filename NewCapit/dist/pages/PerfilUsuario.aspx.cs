@@ -54,7 +54,7 @@ namespace NewCapit
                 }
                 else
                 {
-                    imgFoto.ImageUrl = "~/fotos/usuario.jpg";
+                    imgFoto.ImageUrl = "/fotos/usuario.jpg";
                 }
             }
         }
@@ -89,10 +89,8 @@ namespace NewCapit
 
             try
             {
-                string usuario = txtUsuario.Text;
-
-                string pasta = Server.MapPath("~/Fotos/");
-
+                string usuario = txtUsuario.Text;               
+                string pasta = Server.MapPath("~/fotos/");               
                 if (!Directory.Exists(pasta))
                     Directory.CreateDirectory(pasta);
 
@@ -109,13 +107,13 @@ namespace NewCapit
                 if (File.Exists(arquivoPng))
                     File.Delete(arquivoPng);
 
-                string nomeArquivo = usuario + extensao;
+                string nomeArquivo = usuario.Trim() + extensao;
 
                 string caminhoFisico = Path.Combine(pasta, nomeArquivo);
 
                 fuFoto.SaveAs(caminhoFisico);
 
-                string caminhoBanco = "~/Fotos/" + nomeArquivo;
+                string caminhoBanco = "/fotos/" + nomeArquivo;
 
                 using (SqlConnection con = new SqlConnection(conexao))
                 {

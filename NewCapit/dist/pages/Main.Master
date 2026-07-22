@@ -375,8 +375,8 @@
                         <div class="card-header">
                             <div class="user-block">
                                 <img class="img-circle" src="<%=foto%>" alt="User Image">
-                                <span class="username"><a href="#">
-                                    <asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></a></span>
+                                <span class="username">
+                                    <asp:Label ID="lblUsuario" runat="server" Text=""></asp:Label></span>
                                 <span class="description">
                                     <asp:Label ID="lblNucleo" runat="server" Text=""></asp:Label></span>
                             </div>
