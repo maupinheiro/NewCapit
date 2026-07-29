@@ -262,7 +262,14 @@
                                 <br />
                                 <asp:Button ID="btnCep" runat="server" Text="Pesquisar" CssClass="btn btn-outline-warning" OnClick="btnCep_Click" />
                             </div>
-                            <div class="col-md-7">
+                         <div class="col-md-1">
+                                  <div class="form-group">
+                                      <span class="details">IBGE:</span>
+                                      <asp:TextBox ID="txtCod_IBGE" runat="server" CssClass="form-control" MaxLength="15"></asp:TextBox>
+                                      <asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator1" ControlToValidate="txtEndCli" ValidationGroup="Cadastro" ErrorMessage="* Obrigatório" Font-Size="9px" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>
+                                  </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <span class="details">ENDEREÇO:</span>
                                     <asp:TextBox ID="txtEndCli" runat="server" CssClass="form-control" MaxLength="60"></asp:TextBox>

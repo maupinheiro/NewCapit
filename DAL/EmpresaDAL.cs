@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using Domain;
+using System.Web.Configuration;
+using System.Web;
 
 namespace DAL
 {
@@ -22,16 +25,19 @@ namespace DAL
                 string sql = @"
 
                 SELECT                   
-                    codigo_empresa,
-                    descricao,
+                    codigo_empresa,                    
                     razao_social,
                     nome_fantasia,
                     cnpj,
+                    inscricao_estadual,
+                    municipio,
+                    uf,
+                    abertura,
                     status
 
                 FROM tbempresa
 
-                ORDER BY descricao";
+                ORDER BY nome_fantasia";
 
                 using (SqlDataAdapter da = new SqlDataAdapter(sql, cn))
                 {
@@ -57,8 +63,8 @@ namespace DAL
                 cmd.Parameters.Add("@codigo", SqlDbType.Int).Value = codigo;
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.Read())
-                {                    
-                    empresa.CodigoEmpresa = dr["codigo_empresa"].ToString();                   
+                {
+                    empresa.Codigo = Convert.ToInt32(dr["codigo_empresa"]); 
                     empresa.RazaoSocial = dr["razao_social"].ToString();
                     empresa.NomeFantasia = dr["nome_fantasia"].ToString();
                     empresa.CNPJ = dr["cnpj"].ToString();
@@ -73,12 +79,24 @@ namespace DAL
                     empresa.Telefone = dr["telefone"].ToString();
                     empresa.Modal = dr["modal"].ToString();
                     empresa.Numero = dr["numero"].ToString();
+                    empresa.Complemento = dr["complemento"].ToString();
                     empresa.RNTRC = dr["rntrc"].ToString();
                     empresa.Logo = dr["logo"].ToString();
                     empresa.Status = dr["status"].ToString();
+                    empresa.Tipo = dr["tipo"].ToString();
+                    empresa.Situacao = dr["situacao"].ToString();
+                    empresa.AtividadePrincipal = dr["atividade_principal"].ToString();
+                    empresa.UsuarioCadastro = dr["usuario_cadastro"].ToString();
+                    empresa.UsuarioAlteracao = dr["usuario_alteracao"].ToString();
 
                     if (dr["abertura"] != DBNull.Value)
                         empresa.Abertura = Convert.ToDateTime(dr["abertura"]);
+                    if (dr["cadastro"] != DBNull.Value)
+                        empresa.Cadastro = Convert.ToDateTime(dr["cadastro"]);
+                    if (dr["data_cadastro"] != DBNull.Value)
+                        empresa.DataCadastro = Convert.ToDateTime(dr["data_cadastro"]);
+                    if (dr["data_alteracao"] != DBNull.Value)
+                        empresa.DataAlteracao = Convert.ToDateTime(dr["data_alteracao"]);
                 }
 
                 dr.Close();
@@ -142,111 +160,38 @@ namespace DAL
 
                 cmd.ExecuteNonQuery();
             }
-        }
-        public int Salvar(Domain.EmpresaDTO empresa)
+        }       
+        public int Salvar(EmpresaDTO empresa)
         {
-            using (SqlConnection cn = new SqlConnection(conexao))
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
             {
-                cn.Open();
+                conn.Open();
 
-                SqlTransaction trans = cn.BeginTransaction();
+                SqlTransaction trans = conn.BeginTransaction();
 
                 try
                 {
-                    SqlCommand cmd = new SqlCommand();
+                    // Verifica se a empresa já existe
+                    bool existe;
 
-                    cmd.Connection = cn;
-                    cmd.Transaction = trans;
-
-                    if (empresa.Codigo == 0)
+                    using (SqlCommand cmdExiste = new SqlCommand(
+                        "SELECT COUNT(*) FROM tbempresa WHERE codigo_empresa = @codigo",
+                        conn, trans))
                     {
-                        cmd.CommandText = @"
+                        cmdExiste.Parameters.AddWithValue("@codigo", empresa.Codigo);
 
-                        INSERT INTO tbempresa
-                        (
-                            codigo_empresa,                            
-                            razao_social,
-                            nome_fantasia,
-                            cnpj,
-                            inscricao_estadual,
-                            codigo_municipal,
-                            endereco,
-                            cep,
-                            bairro,
-                            municipio,
-                            uf,
-                            uf_nome,
-                            telefone,
-                            modal,
-                            numero,
-                            rntrc,
-                            logo,
-                            abertura,
-                            status
-                        )
+                        existe = Convert.ToInt32(cmdExiste.ExecuteScalar()) > 0;
+                    }
 
-                        VALUES
-                        (
-                            @codigo_empresa,                            
-                            @razao_social,
-                            @nome_fantasia,
-                            @cnpj,
-                            @inscricao_estadual,
-                            @codigo_municipal,
-                            @endereco,
-                            @cep,
-                            @bairro,
-                            @municipio,
-                            @uf,
-                            @uf_nome,
-                            @telefone,
-                            @modal,
-                            @numero,
-                            @rntrc,
-                            @logo,
-                            @abertura,
-                            @status
-                        );
-
-                        SELECT SCOPE_IDENTITY();
-                        ";
+                    if (existe)
+                    {
+                        // Atualiza
+                        AtualizarEmpresa(conn, trans, empresa);
                     }
                     else
                     {
-                        cmd.CommandText = @"
-                        UPDATE tbempresa SET
-                        codigo_empresa=@codigo_empresa,  
-                        razao_social=@razao_social,
-                        nome_fantasia=@nome_fantasia,
-                        cnpj=@cnpj,
-                        inscricao_estadual=@inscricao_estadual,
-                        codigo_municipal=@codigo_municipal,
-                        endereco=@endereco,
-                        cep=@cep,
-                        bairro=@bairro,
-                        municipio=@municipio,
-                        uf=@uf,
-                        uf_nome=@uf_nome,
-                        telefone=@telefone,
-                        modal=@modal,
-                        numero=@numero,
-                        rntrc=@rntrc,
-                        logo=@logo,
-                        abertura=@abertura,
-                        status=@status
-                        WHERE codigo_empresa=@codigo;
-                        ";
-                    }
-
-                    AdicionarParametros(cmd, empresa);
-
-                    if (empresa.Codigo == 0)
-                    {
-                        empresa.Codigo = Convert.ToInt32(cmd.ExecuteScalar());
-                    }
-                    else
-                    {
-                        cmd.ExecuteNonQuery();
+                        // Insere
+                        InserirEmpresa(conn, trans, empresa);
                     }
 
                     trans.Commit();
@@ -260,11 +205,11 @@ namespace DAL
                 }
             }
         }
-        private void AdicionarParametros(SqlCommand cmd, Domain.EmpresaDTO empresa)
+        private void PreencherParametros(SqlCommand cmd, Domain.EmpresaDTO empresa)
         {
             cmd.Parameters.Clear();
-            cmd.Parameters.Add("@codigo_empresa", SqlDbType.VarChar).Value =
-                (object)empresa.CodigoEmpresa ?? DBNull.Value;            
+            cmd.Parameters.Add("@codigo", SqlDbType.VarChar).Value =
+                (object)empresa.Codigo ?? DBNull.Value;            
             cmd.Parameters.Add("@razao_social", SqlDbType.VarChar).Value =
                 (object)empresa.RazaoSocial ?? DBNull.Value;
             cmd.Parameters.Add("@nome_fantasia", SqlDbType.VarChar).Value =
@@ -285,7 +230,7 @@ namespace DAL
                 (object)empresa.Municipio ?? DBNull.Value;
             cmd.Parameters.Add("@uf", SqlDbType.VarChar).Value =
                 (object)empresa.UF ?? DBNull.Value;
-            cmd.Parameters.Add("@uf_nome", SqlDbType.VarChar).Value =
+            cmd.Parameters.Add("@nome_uf", SqlDbType.VarChar).Value =
                 (object)empresa.UFNome ?? DBNull.Value;
             cmd.Parameters.Add("@telefone", SqlDbType.VarChar).Value =
                 (object)empresa.Telefone ?? DBNull.Value;
@@ -293,16 +238,32 @@ namespace DAL
                 (object)empresa.Modal ?? DBNull.Value;
             cmd.Parameters.Add("@numero", SqlDbType.VarChar).Value =
                 (object)empresa.Numero ?? DBNull.Value;
+            cmd.Parameters.Add("@complemento", SqlDbType.VarChar).Value =
+                (object)empresa.Complemento ?? DBNull.Value;
             cmd.Parameters.Add("@rntrc", SqlDbType.VarChar).Value =
                 (object)empresa.RNTRC ?? DBNull.Value;
             cmd.Parameters.Add("@logo", SqlDbType.VarChar).Value =
                 (object)empresa.Logo ?? DBNull.Value;
             cmd.Parameters.Add("@abertura", SqlDbType.Date).Value =
-                empresa.Abertura == DateTime.MinValue
+                empresa.Abertura.HasValue
+                    ? (object)empresa.Abertura.Value
+                    : DBNull.Value;
+            cmd.Parameters.Add("@cadastro", SqlDbType.Date).Value =
+                empresa.Cadastro == DateTime.MinValue
                     ? DBNull.Value
-                    : (object)empresa.Abertura;
+                    : (object)empresa.Cadastro;            
             cmd.Parameters.Add("@status", SqlDbType.VarChar).Value =
                 (object)empresa.Status ?? DBNull.Value;
+            cmd.Parameters.Add("@email", SqlDbType.VarChar).Value =
+                (object)empresa.Email ?? DBNull.Value;
+            cmd.Parameters.Add("@tipo", SqlDbType.VarChar).Value =
+                (object)empresa.Tipo ?? DBNull.Value;
+            cmd.Parameters.Add("@situacao", SqlDbType.VarChar).Value =
+                (object)empresa.Situacao ?? DBNull.Value;
+            cmd.Parameters.Add("@site", SqlDbType.VarChar).Value =
+                (object)empresa.Site ?? DBNull.Value;
+            cmd.Parameters.Add("@atividade_principal", SqlDbType.VarChar).Value =
+                (object)empresa.AtividadePrincipal ?? DBNull.Value;    
         }
         public void AtualizarLogo(int codigo, string logo)
         {
@@ -313,7 +274,7 @@ namespace DAL
                 string sql = @"
                 UPDATE tbempresa
                 SET logo=@logo
-                WHERE codigo=@codigo";
+                WHERE codigo_empresa=@codigo";
 
                 using (SqlCommand cmd = new SqlCommand(sql, cn))
                 {
@@ -323,6 +284,132 @@ namespace DAL
 
                     cmd.ExecuteNonQuery();
                 }
+            }
+        }        
+        private int InserirEmpresa(SqlConnection conn, SqlTransaction trans, EmpresaDTO empresa)
+        {
+            string sql = @"
+            INSERT INTO tbempresa
+            (
+                codigo_empresa,
+                razao_social,
+                nome_fantasia,
+                cnpj,
+                inscricao_estadual,
+                codigo_municipal,
+                endereco,
+                cep,
+                bairro,
+                municipio,
+                uf,
+                uf_nome,
+                telefone,
+                modal,
+                numero,
+                complemento,
+                rntrc,
+                logo,
+                abertura,
+                tipo,
+                situacao,
+                status,
+                cadastro,
+                atividade_principal,
+                email,
+                site,
+                data_cadastro,
+                usuario_cadastro
+            )
+            VALUES
+            (
+                @codigo,
+                @razao_social,
+                @nome_fantasia,
+                @cnpj,
+                @inscricao_estadual,
+                @codigo_municipal,
+                @endereco,
+                @cep,
+                @bairro,
+                @municipio,
+                @uf,
+                @nome_uf,
+                @telefone,
+                @modal,
+                @numero,
+                @complemento,
+                @rntrc,
+                @logo,
+                @abertura,
+                @tipo,
+                @situacao,
+                @status,
+                @cadastro,
+                @atividade_principal,
+                @email,
+                @site,
+                @data_cadastro,
+                @usuario_cadastro
+            );";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+            {
+                PreencherParametros(cmd, empresa);
+
+                string usuario = HttpContext.Current.Session["UsuarioLogado"]?.ToString() ?? "";
+
+                cmd.Parameters.AddWithValue("@data_cadastro", DateTime.Now);
+                cmd.Parameters.AddWithValue("@usuario_cadastro", usuario);
+
+                cmd.ExecuteNonQuery();
+
+                return empresa.Codigo;
+            }
+        }
+        private void AtualizarEmpresa(SqlConnection conn, SqlTransaction trans, EmpresaDTO empresa)
+        {
+            string sql = @"
+            UPDATE tbempresa
+            SET
+                razao_social        = @razao_social,
+                nome_fantasia       = @nome_fantasia,
+                cnpj                = @cnpj,
+                inscricao_estadual  = @inscricao_estadual,
+                codigo_municipal    = @codigo_municipal,
+                endereco            = @endereco,
+                cep                 = @cep,
+                bairro              = @bairro,
+                municipio           = @municipio,
+                uf                  = @uf,
+                uf_nome             = @nome_uf,
+                telefone            = @telefone,
+                modal               = @modal,
+                numero              = @numero,
+                complemento         = @complemento,
+                rntrc               = @rntrc,
+                logo                = @logo,
+                abertura            = @abertura,
+                tipo                = @tipo,
+                situacao            = @situacao,
+                status              = @status,
+                cadastro            = @cadastro,
+                atividade_principal = @atividade_principal,
+                email               = @email,
+                site                = @site,
+                data_alteracao      = @data_alteracao,
+                usuario_alteracao   = @usuario_alteracao
+            WHERE codigo_empresa = @codigo";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+            {
+                PreencherParametros(cmd, empresa);
+
+                string usuario = HttpContext.Current.Session["UsuarioLogado"]?.ToString() ?? "";
+
+                cmd.Parameters.AddWithValue("@data_alteracao", DateTime.Now);
+                cmd.Parameters.AddWithValue("@usuario_alteracao", usuario);
+
+                cmd.ExecuteNonQuery();
             }
         }
     }

@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Policy;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DAL;
+using Domain;
+using FluentEmail.Core;
+using NewCapit.DynamicData.FieldTemplates;
+using NPOI.SS.Formula.Functions;
 using NPOI.XSSF.UserModel;
 using static NPOI.HSSF.Util.HSSFColor;
 
@@ -16,6 +24,7 @@ namespace NewCapit.dist.pages
     public partial class empresas : System.Web.UI.Page
     {
         private EmpresaDAL empresaDAL = new EmpresaDAL();
+        SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString());
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -51,7 +60,7 @@ namespace NewCapit.dist.pages
             LimparTela();
             txtCodigo.Text = "";
             ddlStatus.SelectedValue = "ATIVO";
-            txtAbertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            txtCadastro.Text = DateTime.Now.ToString("dd/MM/yyyy");
             txtCodigo.Focus();
             EmEdicao = false;
         }
@@ -66,11 +75,11 @@ namespace NewCapit.dist.pages
             ViewState["IdEmpresa"] = null;
             ViewState["Modo"] = "Novo";
             ddlStatus.SelectedValue = "ATIVO";
-            txtAbertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            txtCadastro.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
             txtCNPJ.Focus();
 
-            imgLogo.ImageUrl = "~/dist/img/logo_transnovag.png";
+            imgLogo.ImageUrl = "~/dist/img/logo_em_branco.png";
         }
         private void LimparControles(Control controle)
         {
@@ -106,8 +115,8 @@ namespace NewCapit.dist.pages
 
             //int codigo;
             //string.TryParse(txtCodigo.Text, out codigo);
-
-            empresa.CodigoEmpresa = txtCodigo.Text.Trim();            
+            string usuario = Session["UsuarioLogado"]?.ToString();
+            empresa.Codigo = Convert.ToInt32(txtCodigo.Text.Trim());
             empresa.RazaoSocial = txtRazaoSocial.Text.Trim();
             empresa.NomeFantasia = txtNomeFantasia.Text.Trim();
             empresa.CNPJ = txtCNPJ.Text.Trim();
@@ -122,18 +131,34 @@ namespace NewCapit.dist.pages
             empresa.Telefone = txtTelefone.Text.Trim();
             empresa.Modal = ddlModal.SelectedValue;
             empresa.Numero = txtNumero.Text.Trim();
+            empresa.Complemento = txtComplemento.Text.Trim();
             empresa.RNTRC = txtRNTRC.Text.Trim();
             empresa.Status = ddlStatus.SelectedValue;
-
+            empresa.Tipo = txtTipo.Text.Trim();
+            empresa.Email = txtEmail.Text.Trim();
+            empresa.Site = txtSite.Text.Trim();
+            empresa.AtividadePrincipal = txtAtividade_Principal.Text.Trim();            
+            empresa.UsuarioCadastro = Session["UsuarioLogado"]?.ToString();
+            empresa.UsuarioAlteracao = Session["UsuarioLogado"]?.ToString();
+            empresa.Situacao = txtSituacao.Text.Trim();
+            DateTime cadastro;
+            if (DateTime.TryParse(txtCadastro.Text, out cadastro))
+                empresa.Cadastro = cadastro;
             DateTime abertura;
-            if (DateTime.TryParse(txtAbertura.Text, out abertura))
+            if (DateTime.TryParse(txtDtAbertura.Text, out abertura))
                 empresa.Abertura = abertura;
+            DateTime dataCadastro;
+            if (DateTime.TryParse(txtDataCadastro.Text, out dataCadastro))
+                empresa.DataCadastro = dataCadastro;
+            DateTime dataAlteracao;
+            if (DateTime.TryParse(txtDataAlteracao.Text, out dataAlteracao))
+                empresa.DataAlteracao = dataAlteracao;
 
             return empresa;
         }
         private void PreencherTela(Domain.EmpresaDTO empresa)
-        {           
-            txtCodigo.Text = empresa.CodigoEmpresa;            
+        {
+            txtCodigo.Text = Convert.ToString(empresa.Codigo);
             txtRazaoSocial.Text = empresa.RazaoSocial;
             txtNomeFantasia.Text = empresa.NomeFantasia;
             txtCNPJ.Text = empresa.CNPJ;
@@ -148,16 +173,53 @@ namespace NewCapit.dist.pages
             txtTelefone.Text = empresa.Telefone;
             ddlModal.SelectedValue = empresa.Modal;
             txtNumero.Text = empresa.Numero;
+            txtComplemento.Text = empresa.Complemento;
             txtRNTRC.Text = empresa.RNTRC;
             ddlStatus.SelectedValue = empresa.Status;
+            txtTipo.Text = empresa.Tipo;
+            txtEmail.Text = empresa.Email;
+            txtSite.Text = empresa.Site;
+            txtAtividade_Principal.Text = empresa.AtividadePrincipal;
+            txtSituacao.Text = empresa.Situacao;
+            txtTipo.Text = empresa.Tipo;
+            txtUsuarioCadastro.Text = empresa.UsuarioCadastro;
+            txtUsuarioAlteracao.Text = empresa.UsuarioAlteracao;
 
+            
             if (empresa.Abertura.HasValue)
             {
-                txtAbertura.Text = empresa.Abertura.Value.ToString("yyyy-MM-dd");
+                txtDtAbertura.Text = empresa.Abertura.Value.ToString("dd/MM/yyyy");
             }
             else
             {
-                txtAbertura.Text = "";
+                txtDtAbertura.Text = "";
+            }
+
+
+            if (empresa.Cadastro.HasValue)
+            {
+                txtCadastro.Text = empresa.Cadastro.Value.ToString("dd/MM/yyyy");
+            }
+            else
+            {
+                txtCadastro.Text = "";
+            }
+
+            if (empresa.DataCadastro.HasValue)
+            {
+                txtDataCadastro.Text = empresa.DataCadastro.Value.ToString("dd/MM/yyyy HH:mm");
+            }
+            else
+            {
+                txtDataCadastro.Text = "";
+            }
+            if (empresa.DataAlteracao.HasValue)
+            {
+                txtDataAlteracao.Text = empresa.DataAlteracao.Value.ToString("dd/MM/yyyy HH:mm");
+            }
+            else
+            {
+                txtDataAlteracao.Text = "";
             }
 
             if (!string.IsNullOrWhiteSpace(empresa.Logo))
@@ -167,42 +229,10 @@ namespace NewCapit.dist.pages
         {
             DAL.EmpresaDAL dal = new DAL.EmpresaDAL();
 
-            rpEmpresas.DataSource = dal.Listar();
+            gvEmpresas.DataSource = dal.Listar();
 
-            rpEmpresas.DataBind();
-        }
-        protected void btnSalvar_Click(object sender, EventArgs e)
-        {
-            if (!ValidarTela())
-                return;
-
-            Domain.EmpresaDTO empresa = LerTela();
-
-            DAL.EmpresaDAL dal = new DAL.EmpresaDAL();
-
-            int codigo = dal.Salvar(empresa);
-
-            string logo = SalvarLogo(codigo);
-
-            if (logo != empresa.Logo)
-            {
-                empresa.Codigo = codigo;
-                empresa.Logo = logo;
-
-                dal.AtualizarLogo(codigo, logo);
-            }
-
-            CarregarGrid();
-
-            Novo();
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "ok",
-                "MensagemSucesso('Empresa salva com sucesso.');",
-                true);
-        }
+            gvEmpresas.DataBind();
+        }        
         protected void btnEditar_Click(object sender, EventArgs e)
         {
             LinkButton botao = (LinkButton)sender;
@@ -235,7 +265,7 @@ namespace NewCapit.dist.pages
                 throw new Exception("Formato de imagem inválido.");
             }
 
-            string pasta = Server.MapPath("~/Uploads/");
+            string pasta = Server.MapPath("~/dist/img/");
 
             if (!Directory.Exists(pasta))
                 Directory.CreateDirectory(pasta);
@@ -246,7 +276,7 @@ namespace NewCapit.dist.pages
 
             fuLogo.SaveAs(caminhoFisico);
 
-            return "~/Uploads/" + nomeArquivo;
+            return "~/dist/img/" + nomeArquivo;
         }
         private bool ValidarTela()
         {
@@ -313,33 +343,12 @@ namespace NewCapit.dist.pages
         }
         protected void btnNovo_Click(object sender, EventArgs e)
         {
-
-
-            // Limpa os campos para iniciar um novo cadastro
-            Novo();
-            //txtCNPJ.Text = "";
-            //txtRazaoSocial.Text = "";
-            //txtNomeFantasia.Text = "";
-            //txtInscricaoEstadual.Text = "";
-            //txtEmail.Text = "";
-            //txtTelefone.Text = "";
-
-            // Caso tenha DropDownLists
-            // ddlTipoEmpresa.SelectedIndex = 0;
-
-            // Caso tenha campos de endereço
-            //txtCEP.Text = "";
-            //txtEndereco.Text = "";
-            //txtNumero.Text = "";
-            //txtBairro.Text = "";
-            //txtMunicipio.Text = "";
-            //ddlUF.SelectedIndex = 0;
-
-            //// Foco no primeiro campo
-            //txtCNPJ.Focus();
-
-            //// Controle de modo da tela
-            //ViewState["Modo"] = "Novo";
+            LimparTela();
+            txtCodigo.Text = "";
+            ddlStatus.SelectedValue = "ATIVO";
+            txtCadastro.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            txtCodigo.Focus();
+            EmEdicao = false;   
         }
         protected void btnCnpj_Click(object sender, EventArgs e)
         {
@@ -356,7 +365,6 @@ namespace NewCapit.dist.pages
             // Remove os caracteres não numéricos (pontos, barras e traços)
             return System.Text.RegularExpressions.Regex.Replace(cep, @"[^\d]", "");
         }
-
         private void PesquisarCnpj()
         {
             string cnpjSemMascara = RemoverMascaraCNPJ(txtCNPJ.Text);
@@ -384,8 +392,7 @@ namespace NewCapit.dist.pages
             }
 
 
-        }
-        
+        }        
         private string NomeEstado(string uf)
         {
             switch (uf.ToUpper())
@@ -442,7 +449,7 @@ namespace NewCapit.dist.pages
                 }
 
                 // Novo cadastro
-                txtAbertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                txtCadastro.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
                 if (ddlStatus.Items.FindByText("ATIVO") != null)
                 {
@@ -452,6 +459,206 @@ namespace NewCapit.dist.pages
                 txtCNPJ.Focus();
             }            
         }
-        
+        public int Salvar(EmpresaDTO empresa)
+        {
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ToString()))
+            {
+                conn.Open();
+
+                // Verifica se já existe
+                string sqlExiste = "SELECT COUNT(*) FROM tbempresa WHERE codigo_empresa = @codigo";
+
+                SqlCommand cmdExiste = new SqlCommand(sqlExiste, conn);
+                cmdExiste.Parameters.AddWithValue("@codigo", empresa.Codigo);
+
+                bool existe = Convert.ToInt32(cmdExiste.ExecuteScalar()) > 0;
+
+                if (existe)
+                {
+                    AtualizarEmpresa(conn, empresa);
+                    return empresa.Codigo;
+                }
+                else
+                {
+                    return InserirEmpresa(conn, empresa);
+                }
+            }
+        }
+        private int InserirEmpresa(SqlConnection conn, EmpresaDTO empresa)
+        {
+            string sql = @"
+            INSERT INTO tbempresa
+            (
+                codigo_empresa,
+                razao_social,
+                nome_fantasia,
+                cnpj,
+                inscricao_estadual,
+                codigo_municipal,
+                endereco,
+                cep,
+                bairro,
+                municipio,
+                uf,
+                nome_uf,
+                telefone,
+                modal,
+                numero,
+                complemento,
+                rntrc,                
+                logo,
+                abertura,
+                tipo,
+                situacao,
+                status,
+                cadastro,
+                atividade_principal,
+                email,
+                site,
+                data_cadastro,
+                usuario_cadastro                
+            )
+            VALUES
+            (
+                @codigo,
+                @razao_social,
+                @nome_fantasia,
+                @cnpj,
+                @inscricao_estadual,
+                @codigo_municipal,
+                @endereco,
+                @cep,
+                @bairro,
+                @municipio,
+                @uf,
+                @nome_uf,
+                @telefone,
+                @modal,
+                @numero,
+                @complemento,
+                @rntrc,               
+                @logo,
+                @abertura,
+                @tipo,
+                @situacao,
+                @status,
+                @cadastro,
+                @atividade_principal,
+                @email,
+                @site,
+                @data_cadastro,
+                @usuario_cadastro
+            );
+            SELECT @codigo;";
+            string usuario = HttpContext.Current.Session["UsuarioLogado"]?.ToString() ?? "";
+            
+            SqlCommand cmd = new SqlCommand(sql, conn);
+
+            PreencherParametros(cmd, empresa);
+            cmd.Parameters.AddWithValue("@data_cadastro", DateTime.Now);
+            cmd.Parameters.AddWithValue("@usuario_cadastro", usuario);
+
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+        private void AtualizarEmpresa(SqlConnection conn, EmpresaDTO empresa)
+        {
+            string sql = @"
+            UPDATE tbempresa
+            SET
+               razao_social        = @razao_social,
+               nome_fantasia       = @nome_fantasia,
+               cnpj                = @cnpj,
+               inscricao_estadual  = @inscricao_estadual,
+               codigo_municipal    = @codigo_municipal,
+               endereco            = @endereco,
+               cep                 = @cep,
+               bairro              = @bairro,
+               municipio           = @municipio,
+               uf                  = @uf,
+               uf_nome             = @nome_uf,
+               telefone            = @telefone,
+               modal               = @modal,
+               numero              = @numero,
+               complemento         = @complemento,
+               rntrc               = @rntrc,               
+               logo                = @logo,
+               abertura            = @abertura,
+               tipo                = @tipo,
+               situacao            = @situacao,
+               status              = @status,               
+               atividade_principal = @atividade_principal,
+               email               = @email,
+               site                = @site,                
+               data_alteracao      = @data_alteracao,
+               usuario_alteracao   = @usuario_alteracao
+            WHERE codigo_empresa   = @codigo";
+
+            SqlCommand cmd = new SqlCommand(sql, conn);
+
+            PreencherParametros(cmd, empresa);
+            string usuario = HttpContext.Current.Session["UsuarioLogado"]?.ToString() ?? "";
+            cmd.Parameters.AddWithValue("@data_alteracao", DateTime.Now);
+            cmd.Parameters.AddWithValue("@usuario_alteracao", usuario);
+            cmd.ExecuteNonQuery();
+        }
+        private void PreencherParametros(SqlCommand cmd, EmpresaDTO empresa)
+        {
+            cmd.Parameters.AddWithValue("@codigo", empresa.Codigo);
+            cmd.Parameters.AddWithValue("@razao_social", empresa.RazaoSocial ?? "");
+            cmd.Parameters.AddWithValue("@nome_fantasia", empresa.NomeFantasia ?? "");
+            cmd.Parameters.AddWithValue("@cnpj", empresa.CNPJ ?? "");
+            cmd.Parameters.AddWithValue("@inscricao_estadual", empresa.InscricaoEstadual ?? "");
+            cmd.Parameters.AddWithValue("@codigo_municipal", empresa.CodigoMunicipal ?? "");
+            cmd.Parameters.AddWithValue("@abertura", (object)empresa.Abertura ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@cep", empresa.CEP ?? "");
+            cmd.Parameters.AddWithValue("@endereco", empresa.Endereco ?? "");
+            cmd.Parameters.AddWithValue("@numero", empresa.Numero ?? "");
+            cmd.Parameters.AddWithValue("@complemento", empresa.Complemento ?? "");
+            cmd.Parameters.AddWithValue("@bairro", empresa.Bairro ?? "");
+            cmd.Parameters.AddWithValue("@municipio", empresa.Municipio ?? "");
+            cmd.Parameters.AddWithValue("@uf", empresa.UF ?? "");
+            cmd.Parameters.AddWithValue("@nome_uf", empresa.UFNome ?? "");
+            cmd.Parameters.AddWithValue("@telefone", empresa.Telefone ?? "");
+            cmd.Parameters.AddWithValue("@email", empresa.Email ?? "");            
+            cmd.Parameters.AddWithValue("@situacao", empresa.Situacao ?? "");
+            cmd.Parameters.AddWithValue("@modal", empresa.Modal ?? "");
+            cmd.Parameters.AddWithValue("@rntrc", empresa.RNTRC ?? "");
+            cmd.Parameters.AddWithValue("@logo", empresa.Logo ?? "");
+            cmd.Parameters.AddWithValue("@tipo", empresa.Tipo ?? "");
+            cmd.Parameters.AddWithValue("@status", empresa.Status ?? "");
+            cmd.Parameters.AddWithValue("@cadastro", (object)empresa.Cadastro ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@atividade_principal", empresa.AtividadePrincipal ?? "");
+            cmd.Parameters.AddWithValue("@site", empresa.Site ?? "");            
+        }
+        protected void btnSalvar_Click(object sender, EventArgs e)
+        {
+            if (!ValidarTela())
+                return;
+
+            EmpresaDTO empresa = LerTela();
+
+            EmpresaDAL dal = new EmpresaDAL();
+
+            // Aqui chama o método que decide se insere ou atualiza
+            int codigo = dal.Salvar(empresa);
+
+            string logo = SalvarLogo(codigo);
+
+            if (!string.IsNullOrWhiteSpace(logo))
+            {
+                dal.AtualizarLogo(codigo, logo);
+            }
+
+            CarregarGrid();
+            Novo();
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "ok",
+                "MensagemSucesso('Empresa salva com sucesso.');",
+                true);
+        }
+
     }
 }

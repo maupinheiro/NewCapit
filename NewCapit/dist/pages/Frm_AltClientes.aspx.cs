@@ -57,7 +57,7 @@ namespace NewCapit.dist.pages
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sql = "select codcli, razcli, nomcli,tc1cli,tc2cli,endcli,cepcli,numero,complemento,baicli,cidcli,estcli,cnpj,inscestadual,programador,contato,email,codvw,unidade,codsapiens,longitude,latitude,ativo_inativo,usucad,CONVERT(varchar, dtccad, 103) as dtccad,usualt,CONVERT(varchar, dtcalt, 103) as dtcalt,tipo,raio,regiao,abertura,situacao,tipoempresa,ramal from tbclientes where id = " + id;
+            string sql = "select codcli, razcli, nomcli,tc1cli,tc2cli,endcli,cepcli,numero,complemento,baicli,cidcli,estcli,cnpj,inscestadual,programador,contato,email,codvw,unidade,codsapiens,longitude,latitude,ativo_inativo,usucad,CONVERT(varchar, dtccad, 103) as dtccad,usualt,CONVERT(varchar, dtcalt, 103) as dtcalt,tipo,raio,regiao,abertura,situacao,tipoempresa,ramal, cod_ibge from tbclientes where id = " + id;
             SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
             DataTable dt = new DataTable();
             con.Open();
@@ -103,6 +103,7 @@ namespace NewCapit.dist.pages
                 txtTipo.Text = dt.Rows[0][32].ToString();
                 //txtConCli.Text = dt.Rows[0]["ConCli"].ToString();
                 txtRamal.Text = dt.Rows[0][33].ToString();
+                txtCod_IBGE.Text = dt.Rows[0][34].ToString();
             }
         }
 
@@ -126,7 +127,7 @@ namespace NewCapit.dist.pages
             {
                 id = HttpContext.Current.Request.QueryString["id"].ToString();
             }
-            string sqlAtualizarCliente = "UPDATE tbclientes SET razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usualt = @usualt, dtcalt = @dtcalt, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa, ramal = @ramal WHERE id=" + id;
+            string sqlAtualizarCliente = "UPDATE tbclientes SET razcli = @razcli, concli = @concli, nomcli = @nomcli, tc1cli = @tc1cli, tc2cli = @tc2cli, endcli = @endcli, cepcli = @cepcli, baicli = @baicli, cidcli = @cidcli, estcli = @estcli, programador = @programador, contato = @contato, email = @email, codvw = @codvw, cnpj = @cnpj, inscestadual = @inscestadual, numero = @numero, complemento = @complemento, codsapiens = @codsapiens, longitude = @longitude, latitude = @latitude, ativo_inativo = @ativo_inativo, usualt = @usualt, dtcalt = @dtcalt, tipo = @tipo, unidade = @unidade, raio = @raio, regiao = @regiao, abertura = @abertura, situacao = @situacao, tipoempresa = @tipoempresa, ramal = @ramal, cod_ibge=@cod_ibge WHERE id=" + id;
            
             SqlCommand comando = new SqlCommand(sqlAtualizarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
@@ -162,6 +163,7 @@ namespace NewCapit.dist.pages
             comando.Parameters.AddWithValue("@situacao", txtSituacao.Text.ToUpper());
             comando.Parameters.AddWithValue("@tipoempresa", txtTipo.Text.ToUpper());
             comando.Parameters.AddWithValue("@ramal", txtRamal.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cod_ibge", txtCod_IBGE.Text.ToUpper());
 
             try
             {
@@ -222,6 +224,8 @@ namespace NewCapit.dist.pages
             txtCidCli.Text = cep.Cidade.ToString();
             txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
             txtEstCli.Text = cep.UF.ToString();
+            txtCod_IBGE.Text = cep.IBGE.ToString();
+            cboRegiao.SelectedItem.Text = cep.Regiao.ToString().ToUpper();
             txtNumero.Focus();
         }
         private string RemoverMascaraCNPJ(string cnpj)

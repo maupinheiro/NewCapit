@@ -78,13 +78,13 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
         /// <summary>
-        /// Controle txtAbertura.
+        /// Controle txtCadastro.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAbertura;
+        protected global::System.Web.UI.WebControls.TextBox txtCadastro;
 
         /// <summary>
         /// Controle txtRazaoSocial.
@@ -276,6 +276,42 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtSite;
 
         /// <summary>
+        /// Controle txtDataCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDataCadastro;
+
+        /// <summary>
+        /// Controle txtUsuarioCadastro.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUsuarioCadastro;
+
+        /// <summary>
+        /// Controle txtDataAlteracao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDataAlteracao;
+
+        /// <summary>
+        /// Controle txtUsuarioAlteracao.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUsuarioAlteracao;
+
+        /// <summary>
         /// Controle btnNovo.
         /// </summary>
         /// <remarks>
@@ -312,21 +348,12 @@ namespace NewCapit.dist.pages
         protected global::System.Web.UI.WebControls.TextBox txtPesquisar;
 
         /// <summary>
-        /// Controle rpEmpresas.
+        /// Controle gvEmpresas.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rpEmpresas;
-
-        /// <summary>
-        /// Controle Repeater1.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater Repeater1;
+        protected global::System.Web.UI.WebControls.GridView gvEmpresas;
     }
 }

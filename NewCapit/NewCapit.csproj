@@ -487,9 +487,11 @@
     <Content Include="dist\bandeiras\icone-paraiba.png" />
     <Content Include="dist\bandeiras\icone-sergipe.png" />
     <Content Include="dist\css\erp.css" />
+    <Content Include="dist\img\logo_em_branco.png" />
     <Content Include="dist\js\erp.js" />
     <Content Include="dist\pages\ColaboradoresManutencao.aspx" />
     <Content Include="dist\pages\ControleAbastecimento.aspx" />
+    <Content Include="dist\pages\ControleFaltasMotoristas.aspx" />
     <Content Include="dist\pages\ControlePneus.aspx" />
     <Content Include="dist\pages\DownloadSapiens.aspx" />
     <Content Include="dist\pages\empresas.aspx" />
@@ -1015,6 +1017,7 @@
     <Content Include="img\caminhao.png" />
     <Content Include="img\caminhoes.png" />
     <Content Include="img\logo.png" />
+    <Content Include="img\logo_em_branco.png" />
     <Content Include="img\logo_transnovag.png" />
     <Content Include="img\os_aberta.png" />
     <Content Include="img\os_cancelada.png" />
@@ -4838,6 +4841,13 @@
     </Compile>
     <Compile Include="dist\pages\ControleAbastecimento.aspx.designer.cs">
       <DependentUpon>ControleAbastecimento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\pages\ControleFaltasMotoristas.aspx.cs">
+      <DependentUpon>ControleFaltasMotoristas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\ControleFaltasMotoristas.aspx.designer.cs">
+      <DependentUpon>ControleFaltasMotoristas.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ControlePneus.aspx.cs">
       <DependentUpon>ControlePneus.aspx</DependentUpon>

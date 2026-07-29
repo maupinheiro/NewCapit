@@ -9,14 +9,323 @@
     <!-- Bibliotecas necessárias -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <style>
+    .table-sap {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 13px;
+    }
 
+        /* Cabeçalho SAP */
+        .table-sap thead {
+            background-color: #0A6ED1;
+            color: #fff;
+        }
+
+            .table-sap thead th {
+                padding: 10px;
+                text-align: center;
+                border: 1px solid #d9d9d9;
+            }
+
+        /* Corpo */
+        .table-sap tbody td {
+            padding: 8px;
+            border: 1px solid #e5e5e5;
+        }
+
+        /* Zebra */
+        .table-sap tbody tr:nth-child(even) {
+            background-color: #f5f7fa;
+        }
+
+        /* Hover */
+        .table-sap tbody tr:hover {
+            background-color: #e8f3ff;
+        }
+
+    /* Controles DataTable */
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        border: 1px solid #ccc;
+        padding: 4px;
+    }
+
+    /* Paginação estilo SAP */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        background: #f5f5f5;
+        border: 1px solid #d9d9d9 !important;
+        padding: 5px 10px;
+        margin: 2px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #0A6ED1 !important;
+            color: #fff !important;
+            border: 1px solid #0A6ED1 !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #e8f3ff !important;
+        }
+    /* Info */
+    .dataTables_info {
+        margin-top: 10px;
+    }
+
+    .sub-info {
+        font-size: 11px;
+        color: #00050a;
+    }
+
+    .table-sap td div {
+        line-height: 16px;
+    }
+
+    .grid-sap-container {
+        max-height: 450px; /* 👈 altura da grade */
+        overflow-y: auto; /* 👈 scroll vertical */
+        border: 1px solid #d9d9d9;
+    }
+
+    /* mantém header fixo estilo ERP */
+    .gv-header-custom {
+        position: sticky;
+        top: 0;
+        background-color: #0A6ED1;
+        color: #fff;
+        z-index: 10;
+    }
+
+        .gv-header-custom th {
+            height: 45px; /* 👈 altura do cabeçalho */
+            padding: 10px 8px; /* 👈 controle do “respiro” interno */
+            line-height: 20px; /* 👈 alinhamento vertical */
+            font-size: 13px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .grid-sap-container {
+        max-height: 500px; /* altura da grid */
+        overflow-y: auto; /* scroll vertical */
+        border: 1px solid #d9d9d9;
+    }
+
+    /* Cabeçalho fixo estilo SAP */
+    .gv-header-custom th {
+        position: sticky;
+        top: 0; /* fixa no topo */
+        z-index: 100;
+        background-color: #0A6ED1;
+        color: #fff;
+        height: 45px;
+        padding: 10px 8px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 2px solid #084c9e;
+    }
+
+    /* Garante que o body não sobrepõe o header */
+    .table-sap {
+        border-collapse: collapse;
+        width: 100%;
+        font-family: "Segoe UI", Arial;
+        font-size: 13px;
+    }
+
+        .table-sap td {
+            padding: 8px;
+            border: 1px solid #e5e5e5;
+        }
+
+    .kpi-container {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+    }
+
+    .kpi-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .kpi-label {
+        width: 130px;
+    }
+
+    .kpi-bar {
+        flex: 1;
+        height: 8px;
+        background: #eee;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .kpi-fill {
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    .kpi-value {
+        width: 35px;
+        text-align: right;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .form-switch .form-check-input {
+        appearance: checkbox !important;
+        width: 1em;
+        height: 1em;
+        border-radius: 0;
+    }
+
+    @keyframes flickerAnimation {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.3;
+            transform: scale(1.1);
+            color: #ff0000;
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .animate-flicker {
+        animation: flickerAnimation 1.2s infinite;
+        display: inline-block;
+    }
+
+    .btn-alerta-sirene {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+</style>
     <script>
+
         function mascaraMoeda(campo) {
             let valor = campo.value.replace(/\D/g, "");
             valor = (valor / 100).toFixed(2) + "";
             valor = valor.replace(".", ",");
             valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             campo.value = valor;
+        }
+
+        function moedaParaNumero(valor) {
+
+            if (!valor)
+                return 0;
+
+            valor = valor.replace(/\./g, "");
+            valor = valor.replace(",", ".");
+
+            return parseFloat(valor) || 0;
+        }
+
+        function numeroParaMoeda(valor) {
+
+            return valor.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        }
+
+        function calcularFrete() {
+
+            var tipoFrete = document.getElementById('<%= ddlFrete.ClientID %>').value;
+
+            var txtReceber = document.getElementById('<%= txtFreteReceber.ClientID %>');
+            var txtPagar = document.getElementById('<%= txtFretePagar.ClientID %>');
+            var txtMargem = document.getElementById('<%= txtMargem.ClientID %>');
+            var txtAluguel = document.getElementById('<%= txtPercentualAluguelCarreta.ClientID %>');
+
+            var freteReceber = moedaParaNumero(txtReceber.value);
+            var margem = moedaParaNumero(txtMargem.value);
+            var aluguel = moedaParaNumero(txtAluguel.value);
+
+            var fretePagar = 0;
+
+            if (tipoFrete == "")
+                return;
+
+            switch (tipoFrete) {
+
+                case "FROTA":
+
+                    txtMargem.value = "100,00";
+                    txtPagar.value = txtReceber.value;
+
+                    return;
+
+                case "AGREGADO":
+
+                    fretePagar =
+                        freteReceber
+                        - (freteReceber * margem / 100)
+                        - (freteReceber * aluguel / 100);
+
+                    break;
+
+                case "TERCEIRO":
+
+                    fretePagar =
+                        freteReceber
+                        - (freteReceber * margem / 100);
+
+                    break;
+            }
+
+            txtPagar.value = numeroParaMoeda(fretePagar);
+
+          }
+
+
+        function calcularMargem() {
+
+        var tipoFrete = document.getElementById('<%= ddlFrete.ClientID %>').value;
+
+        var txtReceber = document.getElementById('<%= txtFreteReceber.ClientID %>');
+        var txtPagar = document.getElementById('<%= txtFretePagar.ClientID %>');
+        var txtMargem = document.getElementById('<%= txtMargem.ClientID %>');
+
+            var freteReceber = moedaParaNumero(txtReceber.value);
+            var fretePagar = moedaParaNumero(txtPagar.value);
+
+            if (freteReceber <= 0)
+                return;
+
+            if (tipoFrete == "FROTA") {
+
+                txtMargem.value = "100,00";
+                return;
+
+            }
+
+            var margem = ((freteReceber - fretePagar) / freteReceber) * 100;
+
+            txtMargem.value = numeroParaMoeda(margem);
+
         }
 
         function formatar4Casas(campo) {
@@ -28,95 +337,6 @@
                     maximumFractionDigits: 4
                 });
             }
-        }
-
-        function moedaParaNumero(valor) {
-            if (!valor) return 0;
-
-            valor = valor.replace(/\./g, '');
-            valor = valor.replace(',', '.');
-
-            return parseFloat(valor) || 0;
-        }
-
-        function numeroParaMoeda(valor) {
-            return valor.toLocaleString('pt-BR', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-        }
-
-        function calcularFrete() {
-            var ddlFrete = document.getElementById('<%= ddlFrete.ClientID %>').value;
-
-            var txtFreteReceber = document.getElementById('<%= txtFreteReceber.ClientID %>');
-            var txtFretePagar = document.getElementById('<%= txtFretePagar.ClientID %>');
-            var txtMargem = document.getElementById('<%= txtMargem.ClientID %>');
-
-            var freteReceber = moedaParaNumero(
-                document.getElementById('<%= txtFreteReceber.ClientID %>').value
-            );
-
-            var margem = moedaParaNumero(
-                document.getElementById('<%= txtMargem.ClientID %>').value
-            );
-
-            var aluguel = moedaParaNumero(
-                document.getElementById('<%= txtPercentualAluguelCarreta.ClientID %>').value
-            );
-
-            var fretePagar = 0;
-
-            if (ddlFrete == "FROTA") {
-
-                txtMargem.value = "100,00";
-
-                txtFretePagar.value = txtFreteReceber.value;
-
-                return;
-            }
-            else if (ddlFrete == "AGREGADO") {
-
-                fretePagar =
-                    freteReceber
-                    - (freteReceber * margem / 100)
-                    - (freteReceber * aluguel / 100);
-            }
-            else if (ddlFrete == "TERCEIRO") {
-
-                fretePagar =
-                    freteReceber
-                    - (freteReceber * margem / 100);
-            }
-
-            document.getElementById('<%= txtFretePagar.ClientID %>').value =
-                numeroParaMoeda(fretePagar);
-        }
-
-        function calcularMargem() {
-
-            var freteReceber = moedaParaNumero(
-                document.getElementById('<%= txtFreteReceber.ClientID %>').value
-            );
-
-            var fretePagar = moedaParaNumero(
-                document.getElementById('<%= txtFretePagar.ClientID %>').value
-            );
-
-            if (freteReceber <= 0)
-                return;
-
-            var margem = ((freteReceber - fretePagar) / freteReceber) * 100;
-            If(ddlfrete == "FROTA")
-            {
-                document.getElementById('<%= txtMargem.ClientID %>').value = "100,00"
-            }
-            If(ddlfrete == "AGREGADO" || ddlfrete == "TERCEIRO")
-            {
-                document.getElementById('<%= txtMargem.ClientID %>').value =
-                    margem.toFixed(2).replace('.', ',');
-            }
-
         }
 
     </script>
@@ -661,7 +881,11 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <span class="details">FRETE:</span>
-                                                <asp:DropDownList ID="ddlFrete" runat="server" CssClass="form-control">
+                                                <asp:DropDownList ID="ddlFrete" runat="server"
+                                                    CssClass="form-control"
+                                                    AutoPostBack="true"
+                                                    onchange="calcularFrete();"
+                                                    OnSelectedIndexChanged="ddlFrete_SelectedIndexChanged">
                                                     <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
                                                     <asp:ListItem Value="FROTA" Text="FROTA"></asp:ListItem>
                                                     <asp:ListItem Value="AGREGADO" Text="AGREGADO"></asp:ListItem>
@@ -677,6 +901,17 @@
                                                     <asp:ListItem Value="TONELADA" Text="TONELADA"></asp:ListItem>
                                                     <asp:ListItem Value="FTL" Text="FTL"></asp:ListItem>
 
+                                                </asp:DropDownList>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <span class="details">TIPO DE CIOT:</span>
+                                                <asp:DropDownList ID="ddlTipoCIOT" runat="server" CssClass="form-control">
+                                                    <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                                    <asp:ListItem Value="CIOT Lotação" Text="CIOT Lotação"></asp:ListItem>
+                                                    <asp:ListItem Value="CIOT Fracionado" Text="CIOT Fracionado"></asp:ListItem>
+                                                    <asp:ListItem Value="CIOT Agregado" Text="CIOT Agregado"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                         </div>
@@ -795,7 +1030,7 @@
                                                 <asp:TextBox ID="txtFreteReceber"
                                                     runat="server"
                                                     CssClass="form-control"
-                                                    oninput="mascaraMoeda(this); calcularTotalFrete();">
+                                                    oninput="mascaraMoeda(this); calcularFrete(); calcularTotalFrete();" >
                                                 </asp:TextBox>
                                             </div>
                                             <div class="col-sm-2">
@@ -803,7 +1038,7 @@
                                                 <asp:TextBox ID="txtTotalFrete"
                                                     runat="server"
                                                     CssClass="form-control"
-                                                    oninput="mascaraMoeda(this); calcularTotalFrete();"
+                                                    oninput="mascaraMoeda(this); calcularFrete(); calcularTotalFrete();"
                                                     ReadOnly="true">
                                                 </asp:TextBox>
                                             </div>
@@ -811,9 +1046,8 @@
                                                 <span class="details"><strong>MARGEM(%)</strong></span>
                                                 <asp:TextBox ID="txtMargem"
                                                     runat="server"
-                                                    CssClass="form-control"
-                                                    oninput="mascaraMoeda(this);"
-                                                    onblur="calcularFrete();">
+                                                    CssClass="form-control" 
+                                                    oninput="mascaraMoeda(this); calcularFrete()">
                                                 </asp:TextBox>
                                             </div>
                                             <div class="col-sm-2">
@@ -821,8 +1055,8 @@
                                                 <asp:TextBox ID="txtFretePagar"
                                                     runat="server"
                                                     CssClass="form-control"
-                                                    oninput="mascaraMoeda(this);"
-                                                    onblur="calcularMargem();">
+                                                    oninput="mascaraMoeda(this); calcularMargem();"
+                                                    >
                                                 </asp:TextBox>
                                             </div>
                                         </div>
@@ -855,6 +1089,8 @@
                                                 runat="server"
                                                 AutoGenerateColumns="False"
                                                 CssClass="table-sap"
+                                                HeaderStyle-CssClass="gv-header-custom"
+                                                AllowPaging="false"
                                                 DataKeyNames="id_frete"
                                                 OnRowCommand="gvFretes_RowCommand">
 

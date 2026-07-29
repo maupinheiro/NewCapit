@@ -736,6 +736,17 @@
                                                             </asp:DropDownList>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <span class="details">TIPO DE CIOT:</span>
+                                                            <asp:DropDownList ID="ddlTipoCIOT" runat="server" CssClass="form-control">
+                                                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
+                                                                <asp:ListItem Value="CIOT Lotação" Text="CIOT Lotação"></asp:ListItem>
+                                                                <asp:ListItem Value="CIOT Fracionado" Text="CIOT Fracionado"></asp:ListItem>
+                                                                <asp:ListItem Value="CIOT Agregado" Text="CIOT Agregado"></asp:ListItem>
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="row g-3">
                                                     <div class="col-md-3">

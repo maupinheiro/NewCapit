@@ -1,4 +1,5 @@
 ﻿using DAL;
+using NewCapit.dist.pages;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -201,6 +202,8 @@ namespace NewCapit
                     TelaAcertodePonto.Visible = telasPermitidas.Contains(65);
                     TelaFrm_GerarTXT.Visible = telasPermitidas.Contains(70);
                     TelaGerarTabelaDeAvaliacaoMotoristas.Visible = telasPermitidas.Contains(78);
+                    TelaInativarMotoristas.Visible = telasPermitidas.Contains(120);
+                    ControleFaltas.Visible = telasPermitidas.Contains(122);
 
                     // --- MÓDULO POSTOS (id_modulo = 10) ---
                     TelaControleAbastecimento.Visible = telasPermitidas.Contains(19);
@@ -220,15 +223,14 @@ namespace NewCapit
 
                     // --- MÓDULO GESTÃO (id_modulo = 12) ---
                     TelaIndicadores.Visible = telasPermitidas.Contains(98);
-                    TelaTabelas.Visible = telasPermitidas.Contains(98);
-                    TelaInativarMotoristas.Visible = telasPermitidas.Contains(98);
-                    TelaEmpresas.Visible = telasPermitidas.Contains(98);
+                    TelaTabelas.Visible = telasPermitidas.Contains(117);                    
+                    TelaEmpresas.Visible = telasPermitidas.Contains(121);
 
                     // --- MÓDULO SISTEMA (id_modulo = 13) ---
                     TelaConsultaUsuarios.Visible = telasPermitidas.Contains(14);
                     TelaControleAcesso.Visible = telasPermitidas.Contains(20);
                     TelaTrocaSenha.Visible = telasPermitidas.Contains(113);
-                    TelaTrocaFoto.Visible = telasPermitidas.Contains(113);                    
+                    TelaTrocaFoto.Visible = telasPermitidas.Contains(119);                    
                 }
                 else
                 {
@@ -307,6 +309,12 @@ namespace NewCapit
             TelaDashboardManutencao.Visible = false; TelaFinalizarOS.Visible = false; TelaListaOS.Visible = false;
             TelaRequisicaoCompra.Visible = false; TelaIndicadores.Visible = false; TelaConsultaUsuarios.Visible = false;
             TelaControleAcesso.Visible = false; TelaTrocaSenha.Visible = false;
+            TelaTabelas.Visible = false; TelaTrocaSenha.Visible = false;
+            TelaInativarMotoristas.Visible = false; TelaTrocaSenha.Visible = false;
+            TelaEmpresas.Visible = false; TelaTrocaSenha.Visible = false;
+            ControleFaltas.Visible = false; TelaTrocaSenha.Visible = false;
+
+
         }
 
         protected void btnSair_Click(object sender, EventArgs e)

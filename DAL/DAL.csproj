@@ -191,9 +191,11 @@
     <Compile Include="ConnectionUtil.cs" />
     <Compile Include="ConPostos.cs" />
     <Compile Include="ConRotas.cs" />
+    <Compile Include="ControleFaltasDAL.cs" />
     <Compile Include="ConUsuarios.cs" />
     <Compile Include="ConVeiculos.cs" />
     <Compile Include="EmpresaDAL.cs" />
+    <Compile Include="MotoristaDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersDAL.cs" />
   </ItemGroup>
