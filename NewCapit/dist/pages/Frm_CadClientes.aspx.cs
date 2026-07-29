@@ -143,8 +143,8 @@ namespace NewCapit.dist.pages
         }
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa,ramal)" +
-              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa,@ramal)";
+            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa,ramal,cod_ibge)" +
+              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa,@ramal,@cod_ibge)";
             //teste
 
             SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
@@ -169,6 +169,7 @@ namespace NewCapit.dist.pages
             comando.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
             comando.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
             comando.Parameters.AddWithValue("@codsapiens", txtCodSapiens.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cod_ibge", txtCod_IBGE.Text.Trim());
             comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
@@ -226,8 +227,8 @@ namespace NewCapit.dist.pages
 
         private void SalvarCliente()
         {
-            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa)" +
-              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa)";
+            string sqlSalvarCliente = "insert into tbclientes" + "(codcli,dtccli,razcli,concli,nomcli,tc1cli,tc2cli,endcli,cepcli,baicli,cidcli,estcli,programador,contato,email,codvw,cnpj,inscestadual,numero,complemento,codsapiens,longitude,latitude,ativo_inativo,usucad,dtccad,tipo,unidade,raio,regiao,abertura,situacao,tipoempresa, cod_ibge)" +
+              "values" + "(@codcli,@dtccli,@razcli,@concli,@nomcli,@tc1cli,@tc2cli,@endcli,@cepcli,@baicli,@cidcli,@estcli,@programador,@contato,@email,@codvw,@cnpj,@inscestadual,@numero,@complemento,@codsapiens,@longitude,@latitude,@ativo_inativo,@usucad,@dtccad,@tipo,@unidade,@raio,@regiao,@abertura,@situacao,@tipoempresa, cod_ibge)";
             SqlCommand comando = new SqlCommand(sqlSalvarCliente, con);
             comando.Parameters.AddWithValue("@codcli", txtCodCli.Text);
             comando.Parameters.AddWithValue("@dtccli", DateTime.Parse(lblDtCadastro.Text).ToString("yyyy-MM-dd"));
@@ -250,6 +251,7 @@ namespace NewCapit.dist.pages
             comando.Parameters.AddWithValue("@numero", txtNumero.Text.ToUpper());
             comando.Parameters.AddWithValue("@complemento", txtComplemento.Text.ToUpper());
             comando.Parameters.AddWithValue("@codsapiens", txtCodSapiens.Text.ToUpper());
+            comando.Parameters.AddWithValue("@cod_ibge", txtCod_IBGE.Text.Trim());
             comando.Parameters.AddWithValue("@longitude", longitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@latitude", latitude.Text.ToUpper());
             comando.Parameters.AddWithValue("@ativo_inativo", status.SelectedValue.ToUpper());
@@ -311,6 +313,9 @@ namespace NewCapit.dist.pages
             txtCidCli.Text = cep.Cidade.ToString();
             txtEndCli.Text = cep.TipoLagradouro.ToString() + " " + cep.Lagradouro.ToString();
             txtEstCli.Text = cep.UF.ToString();
+            txtCod_IBGE.Text = cep.IBGE.ToString();
+            cboRegiao.SelectedItem.Text = cep.Regiao.ToString().ToUpper();
+
             txtNumero.Focus();
         }
 

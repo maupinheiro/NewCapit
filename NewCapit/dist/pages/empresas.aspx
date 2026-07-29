@@ -27,6 +27,251 @@
 
         }
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function aplicarMascara(input, mascara) {
+                input.addEventListener("input", function () {
+                    let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+                    let resultado = "";
+                    let posicao = 0;
+
+                    for (let i = 0; i < mascara.length; i++) {
+                        if (mascara[i] === "0") {
+                            if (valor[posicao]) {
+                                resultado += valor[posicao];
+                                posicao++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            resultado += mascara[i];
+                        }
+                    }
+
+                    input.value = resultado;
+                });
+            }
+
+            // Pegando os elementos no ASP.NET
+            let txtCNPJ = document.getElementById("<%= txtCNPJ.ClientID %>");
+            let txtTelefone = document.getElementById("<%= txtTelefone.ClientID %>");
+
+            if (txtCNPJ) aplicarMascara(txtCNPJ, "00.000.000/0000-00");
+            if (txtTelefone) aplicarMascara(txtTelefone, "(00) 0000-0000");
+        });
+    </script>
+    <style>
+        .table-sap {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 13px;
+        }
+
+            /* Cabeçalho SAP */
+            .table-sap thead {
+                background-color: #0A6ED1;
+                color: #fff;
+            }
+
+                .table-sap thead th {
+                    padding: 10px;
+                    text-align: center;
+                    border: 1px solid #d9d9d9;
+                }
+
+            /* Corpo */
+            .table-sap tbody td {
+                padding: 8px;
+                border: 1px solid #e5e5e5;
+            }
+
+            /* Zebra */
+            .table-sap tbody tr:nth-child(even) {
+                background-color: #f5f7fa;
+            }
+
+            /* Hover */
+            .table-sap tbody tr:hover {
+                background-color: #e8f3ff;
+            }
+
+        /* Controles DataTable */
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 1px solid #ccc;
+            padding: 4px;
+        }
+
+        /* Paginação estilo SAP */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: #f5f5f5;
+            border: 1px solid #d9d9d9 !important;
+            padding: 5px 10px;
+            margin: 2px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: #0A6ED1 !important;
+                color: #fff !important;
+                border: 1px solid #0A6ED1 !important;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background: #e8f3ff !important;
+            }
+        /* Info */
+        .dataTables_info {
+            margin-top: 10px;
+        }
+
+        .sub-info {
+            font-size: 11px;
+            color: #00050a;
+        }
+
+        .table-sap td div {
+            line-height: 16px;
+        }
+
+        .grid-sap-container {
+            max-height: 450px; /* 👈 altura da grade */
+            overflow-y: auto; /* 👈 scroll vertical */
+            border: 1px solid #d9d9d9;
+        }
+
+        /* mantém header fixo estilo ERP */
+        .gv-header-custom {
+            position: sticky;
+            top: 0;
+            background-color: #0A6ED1;
+            color: #fff;
+            z-index: 10;
+        }
+
+            .gv-header-custom th {
+                height: 45px; /* 👈 altura do cabeçalho */
+                padding: 10px 8px; /* 👈 controle do “respiro” interno */
+                line-height: 20px; /* 👈 alinhamento vertical */
+                font-size: 13px;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+        .grid-sap-container {
+            max-height: 500px; /* altura da grid */
+            overflow-y: auto; /* scroll vertical */
+            border: 1px solid #d9d9d9;
+        }
+
+        /* Cabeçalho fixo estilo SAP */
+        .gv-header-custom th {
+            position: sticky;
+            top: 0; /* fixa no topo */
+            z-index: 100;
+            background-color: #0A6ED1;
+            color: #fff;
+            height: 45px;
+            padding: 10px 8px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 2px solid #084c9e;
+        }
+
+        /* Garante que o body não sobrepõe o header */
+        .table-sap {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: "Segoe UI", Arial;
+            font-size: 13px;
+        }
+
+            .table-sap td {
+                padding: 8px;
+                border: 1px solid #e5e5e5;
+            }
+
+        .kpi-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .kpi-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kpi-label {
+            width: 130px;
+        }
+
+        .kpi-bar {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .kpi-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .kpi-value {
+            width: 35px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .form-switch .form-check-input {
+            appearance: checkbox !important;
+            width: 1em;
+            height: 1em;
+            border-radius: 0;
+        }
+
+        @keyframes flickerAnimation {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(1.1);
+                color: #ff0000;
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-flicker {
+            animation: flickerAnimation 1.2s infinite;
+            display: inline-block;
+        }
+
+        .btn-alerta-sirene {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
     <div class="content-wrapper">
         <section class="content">
             <div class="container-fluid">
@@ -43,49 +288,45 @@
                                 <div class="row">
                                     <!-- LOGO -->
                                     <div class="col-md-2 text-center">
-                                        <div class="erp-logo-box">
-                                            <asp:Image
-                                                ID="imgLogo"
-                                                runat="server"
-                                                ImageUrl="~/dist/img/no-image.png"
-                                                CssClass="img-fluid" />
-                                        </div>  
+                                        <asp:Image ID="imgLogo" runat="server"
+                                            ImageUrl="~/dist/img/logo_em_branco.png"
+                                            Width="180"
+                                            CssClass="img-thumbnail" />
                                         <br />
-                                        <asp:FileUpload
-                                            ID="fuLogo"
+
+                                        <asp:FileUpload ID="fuLogo"
                                             runat="server"
                                             CssClass="form-control"
-                                            onchange="PreviewImagem(this,'<%= imgLogo.ClientID %>');" />
-
+                                            onchange="PreviewLogo(this);" />
                                     </div>
                                     <!-- DADOS -->
                                     <div class="col-md-10">
                                         <h5 class="erp-section-title">Dados da Empresa</h5>
-                                        <div class="row">                                           
+                                        <div class="row">
                                             <div class="col-md-1">
                                                 <label>Empresa:</label>
-                                               <asp:TextBox
+                                                <asp:TextBox
                                                     ID="txtCodigo"
                                                     runat="server"
                                                     CssClass="form-control"
                                                     AutoPostBack="true"
                                                     OnTextChanged="txtCodigo_TextChanged">
-                                               </asp:TextBox>
+                                                </asp:TextBox>
                                             </div>
                                             <div class="col-md-2">
-                                                 <label>CNPJ:</label>
-                                                 <asp:TextBox
-                                                     ID="txtCNPJ"
-                                                     runat="server"
-                                                     CssClass="form-control mask-cnpj text-center text-blue" />
+                                                <label>CNPJ:</label>
+                                                <asp:TextBox
+                                                    ID="txtCNPJ"
+                                                    runat="server"
+                                                    CssClass="form-control text-center text-blue" />
                                             </div>
                                             <div class="col-md-2 d-flex align-items-end">
-                                                 <asp:Button
-                                                     ID="btnConsultarReceita"
-                                                     runat="server"
-                                                     Text="Consultar"
-                                                     CssClass="btn btn-primary w-100" 
-                                                     OnClick="btnCnpj_Click"/>
+                                                <asp:Button
+                                                    ID="btnConsultarReceita"
+                                                    runat="server"
+                                                    Text="Consultar"
+                                                    CssClass="btn btn-primary w-100"
+                                                    OnClick="btnCnpj_Click" />
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Status:</label>
@@ -93,20 +334,18 @@
                                                     ID="ddlStatus"
                                                     runat="server"
                                                     CssClass="form-select">
-                                                    <asp:ListItem>ATIVO</asp:ListItem>
-                                                    <asp:ListItem>INATIVO</asp:ListItem>
+                                                    <asp:ListItem Value="ATIVO">ATIVO</asp:ListItem>
+                                                    <asp:ListItem Value="INATIVO">INATIVO</asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Cadastro:</label>
                                                 <asp:TextBox
-                                                    ID="txtAbertura"
-                                                    runat="server" 
+                                                    ID="txtCadastro"
+                                                    runat="server"
                                                     CssClass="form-control text-center" />
                                             </div>
-                                           
-                                            
-                                        </div>                                      
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>Razão Social:</label>
@@ -123,382 +362,353 @@
                                                     CssClass="form-control" />
                                             </div>
                                             <div class="col-md-2">
-                                                  <label>Tipo:</label>
-                                                  <asp:TextBox
-                                                      ID="txtTipo"
-                                                      runat="server" 
-                                                      CssClass="form-control text-center" />
+                                                <label>Tipo:</label>
+                                                <asp:TextBox
+                                                    ID="txtTipo"
+                                                    runat="server"
+                                                    CssClass="form-control text-center" />
                                             </div>
-                                                                                      
-                                        </div>                                         
-                                        <div class="row">  
+
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-8">
                                                 <label>Atividade Principal:</label>
                                                 <asp:TextBox
                                                     ID="txtAtividade_Principal"
-                                                    runat="server" 
+                                                    runat="server"
                                                     CssClass="form-control text-left" />
-                                            </div>  
+                                            </div>
                                             <div class="col-md-2">
                                                 <label>Abertura:</label>
                                                 <asp:TextBox
                                                     ID="txtDtAbertura"
-                                                    runat="server" 
+                                                    runat="server"
                                                     CssClass="form-control text-center" />
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Situação:</label>
                                                 <asp:TextBox
                                                     ID="txtSituacao"
-                                                    runat="server" 
+                                                    runat="server"
                                                     CssClass="form-control text-center" />
                                             </div>
                                         </div>
 
+                                    </div>
+
                                 </div>
 
                             </div>
-
-                        </div>
-                        <!-- ========================================================= -->
-                        <!-- ENDEREÇO -->
-                        <!-- ========================================================= -->
-                        <div class="erp-card">
-                            <div class="erp-card-header">
-                                <i class="fas fa-map-marker-alt"></i>
-                                Endereço
-                            </div>
-                            <div class="erp-card-body">
-                                <div class="row">
-                                    <div class="col-md-1">
-                                        <label>CEP:</label>
-                                        <asp:TextBox
-                                            ID="txtCEP"
-                                            runat="server"
-                                            CssClass="form-control mask-cep text-center" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <label>Endereço:</label>
-                                        <asp:TextBox
-                                            ID="txtEndereco"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                    <div class="col-md-1">
-                                        <label>Número:</label>
-                                        <asp:TextBox
-                                            ID="txtNumero"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                     <div class="col-md-2">
-                                         <label>Complemento:</label>
-                                         <asp:TextBox
-                                             ID="txtComplemento"
-                                             runat="server"
-                                             CssClass="form-control" />
-                                     </div>
+                            <!-- ========================================================= -->
+                            <!-- ENDEREÇO -->
+                            <!-- ========================================================= -->
+                            <div class="erp-card">
+                                <div class="erp-card-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Endereço
                                 </div>
-                                <div class="row"> 
-                                    <div class="col-md-4">
-                                        <label>Bairro:</label>
-                                        <asp:TextBox
-                                            ID="txtBairro"
-                                            runat="server"
-                                            CssClass="form-control" />
+                                <div class="erp-card-body">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <label>CEP:</label>
+                                            <asp:TextBox
+                                                ID="txtCEP"
+                                                runat="server"
+                                                CssClass="form-control mask-cep text-center" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label>Endereço:</label>
+                                            <asp:TextBox
+                                                ID="txtEndereco"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label>Número:</label>
+                                            <asp:TextBox
+                                                ID="txtNumero"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label>Complemento:</label>
+                                            <asp:TextBox
+                                                ID="txtComplemento"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label>Município:</label>
-                                        <asp:TextBox
-                                            ID="txtMunicipio"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                    <div class="col-md-1">
-                                        <label>UF:</label>
-                                        <asp:DropDownList
-                                            ID="ddlUF"
-                                            runat="server"
-                                            CssClass="form-select">
-                                            <asp:ListItem Value="">Selecione</asp:ListItem>
-                                            <asp:ListItem>AC</asp:ListItem>
-                                            <asp:ListItem>AL</asp:ListItem>
-                                            <asp:ListItem>AP</asp:ListItem>
-                                            <asp:ListItem>AM</asp:ListItem>
-                                            <asp:ListItem>BA</asp:ListItem>
-                                            <asp:ListItem>CE</asp:ListItem>
-                                            <asp:ListItem>DF</asp:ListItem>
-                                            <asp:ListItem>ES</asp:ListItem>
-                                            <asp:ListItem>GO</asp:ListItem>
-                                            <asp:ListItem>MA</asp:ListItem>
-                                            <asp:ListItem>MT</asp:ListItem>
-                                            <asp:ListItem>MS</asp:ListItem>
-                                            <asp:ListItem>MG</asp:ListItem>
-                                            <asp:ListItem>PA</asp:ListItem>
-                                            <asp:ListItem>PB</asp:ListItem>
-                                            <asp:ListItem>PR</asp:ListItem>
-                                            <asp:ListItem>PE</asp:ListItem>
-                                            <asp:ListItem>PI</asp:ListItem>
-                                            <asp:ListItem>RJ</asp:ListItem>
-                                            <asp:ListItem>RN</asp:ListItem>
-                                            <asp:ListItem>RS</asp:ListItem>
-                                            <asp:ListItem>RO</asp:ListItem>
-                                            <asp:ListItem>RR</asp:ListItem>
-                                            <asp:ListItem>SC</asp:ListItem>
-                                            <asp:ListItem>SP</asp:ListItem>
-                                            <asp:ListItem>SE</asp:ListItem>
-                                            <asp:ListItem>TO</asp:ListItem>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>Bairro:</label>
+                                            <asp:TextBox
+                                                ID="txtBairro"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Município:</label>
+                                            <asp:TextBox
+                                                ID="txtMunicipio"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label>UF:</label>
+                                            <asp:DropDownList
+                                                ID="ddlUF"
+                                                runat="server"
+                                                CssClass="form-select">
+                                                <asp:ListItem Value="">Selecione</asp:ListItem>
+                                                <asp:ListItem>AC</asp:ListItem>
+                                                <asp:ListItem>AL</asp:ListItem>
+                                                <asp:ListItem>AP</asp:ListItem>
+                                                <asp:ListItem>AM</asp:ListItem>
+                                                <asp:ListItem>BA</asp:ListItem>
+                                                <asp:ListItem>CE</asp:ListItem>
+                                                <asp:ListItem>DF</asp:ListItem>
+                                                <asp:ListItem>ES</asp:ListItem>
+                                                <asp:ListItem>GO</asp:ListItem>
+                                                <asp:ListItem>MA</asp:ListItem>
+                                                <asp:ListItem>MT</asp:ListItem>
+                                                <asp:ListItem>MS</asp:ListItem>
+                                                <asp:ListItem>MG</asp:ListItem>
+                                                <asp:ListItem>PA</asp:ListItem>
+                                                <asp:ListItem>PB</asp:ListItem>
+                                                <asp:ListItem>PR</asp:ListItem>
+                                                <asp:ListItem>PE</asp:ListItem>
+                                                <asp:ListItem>PI</asp:ListItem>
+                                                <asp:ListItem>RJ</asp:ListItem>
+                                                <asp:ListItem>RN</asp:ListItem>
+                                                <asp:ListItem>RS</asp:ListItem>
+                                                <asp:ListItem>RO</asp:ListItem>
+                                                <asp:ListItem>RR</asp:ListItem>
+                                                <asp:ListItem>SC</asp:ListItem>
+                                                <asp:ListItem>SP</asp:ListItem>
+                                                <asp:ListItem>SE</asp:ListItem>
+                                                <asp:ListItem>TO</asp:ListItem>
 
-                                        </asp:DropDownList>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>Nome da UF:</label>
-                                        <asp:TextBox
-                                            ID="txtUFNome"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- ========================================================= -->
-                        <!-- FISCAL -->
-                        <!-- ========================================================= -->
-                        <div class="erp-card">
-                            <div class="erp-card-header">
-                                <i class="fas fa-file-invoice"></i>
-                                Dados Fiscais
-                            </div>
-                            <div class="erp-card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label>Inscrição Estadual:</label>
-                                        <asp:TextBox
-                                            ID="txtInscricaoEstadual"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>Código Município:</label>
-                                        <asp:TextBox
-                                            ID="txtCodigoMunicipio"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>RNTRC:</label>
-                                        <asp:TextBox
-                                            ID="txtRNTRC"
-                                            runat="server"
-                                            CssClass="form-control" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>Modal:</label>
-                                        <asp:DropDownList
-                                            ID="ddlModal"
-                                            runat="server"
-                                            CssClass="form-select">
-                                            <asp:ListItem Value="">Selecione</asp:ListItem>
-                                            <asp:ListItem>Rodoviário</asp:ListItem>
-                                            <asp:ListItem>Ferroviário</asp:ListItem>
-                                            <asp:ListItem>Aéreo</asp:ListItem>
-                                            <asp:ListItem>Marítimo</asp:ListItem>
-                                        </asp:DropDownList>
+                                            </asp:DropDownList>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Nome da UF:</label>
+                                            <asp:TextBox
+                                                ID="txtUFNome"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        </div>
-                        <!-- ===================================================== -->
-                        <!-- CONTATOS -->
-                        <!-- ===================================================== -->
-                        <div class="erp-card">
-                            <div class="erp-card-header">
-                                <i class="fas fa-phone"></i>
-                                Contatos
                             </div>
-                            <div class="erp-card-body">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <label>Telefone:</label>
-                                        <asp:TextBox
-                                            ID="txtTelefone"
-                                            runat="server"
-                                            CssClass="form-control mask-telefone" />
+                            <!-- ========================================================= -->
+                            <!-- FISCAL -->
+                            <!-- ========================================================= -->
+                            <div class="erp-card">
+                                <div class="erp-card-header">
+                                    <i class="fas fa-file-invoice"></i>
+                                    Dados Fiscais
+                                </div>
+                                <div class="erp-card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>Inscrição Estadual:</label>
+                                            <asp:TextBox
+                                                ID="txtInscricaoEstadual"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Código Município:</label>
+                                            <asp:TextBox
+                                                ID="txtCodigoMunicipio"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>RNTRC:</label>
+                                            <asp:TextBox
+                                                ID="txtRNTRC"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Modal:</label>
+                                            <asp:DropDownList
+                                                ID="ddlModal"
+                                                runat="server"
+                                                CssClass="form-select">
+                                                <asp:ListItem Value="">Selecione</asp:ListItem>
+                                                <asp:ListItem>Rodoviário</asp:ListItem>
+                                                <asp:ListItem>Ferroviário</asp:ListItem>
+                                                <asp:ListItem>Aéreo</asp:ListItem>
+                                                <asp:ListItem>Marítimo</asp:ListItem>
+                                            </asp:DropDownList>
+                                        </div>
                                     </div>
-                                    <div class="col-md-5">
-                                        <label>E-mail:</label>
-                                        <asp:TextBox
-                                            ID="txtEmail"
-                                            runat="server"
-                                            CssClass="form-control"
-                                            TextMode="Email" />
+                                </div>
+
+                            </div>
+                            <!-- ===================================================== -->
+                            <!-- CONTATOS -->
+                            <!-- ===================================================== -->
+                            <div class="erp-card">
+                                <div class="erp-card-header">
+                                    <i class="fas fa-phone"></i>
+                                    Contatos
+                                </div>
+                                <div class="erp-card-body">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Telefone:</label>
+                                            <asp:TextBox
+                                                ID="txtTelefone"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label>E-mail:</label>
+                                            <asp:TextBox
+                                                ID="txtEmail"
+                                                runat="server"
+                                                CssClass="form-control"
+                                                TextMode="Email" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label>Site:</label>
+                                            <asp:TextBox
+                                                ID="txtSite"
+                                                runat="server"
+                                                CssClass="form-control" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-5">
-                                        <label>Site:</label>
-                                        <asp:TextBox
-                                            ID="txtSite"
-                                            runat="server"
-                                            CssClass="form-control" />
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>Cadastro:</label>
+                                            <asp:TextBox
+                                                ID="txtDataCadastro"
+                                                runat="server"
+                                                ReadOnly="true"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Cadastrado por:</label>
+                                            <asp:TextBox
+                                                ID="txtUsuarioCadastro"
+                                                runat="server"
+                                                ReadOnly="true"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label>Atualização:</label>
+                                            <asp:TextBox
+                                                ID="txtDataAlteracao"
+                                                runat="server"
+                                                ReadOnly="true"
+                                                CssClass="form-control" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Atualizado por:</label>
+                                            <asp:TextBox
+                                                ID="txtUsuarioAlteracao"
+                                                runat="server"
+                                                ReadOnly="true"
+                                                CssClass="form-control" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="text-center mt-4 mb-4">
-                            <asp:Button
-                                ID="btnNovo"
-                                runat="server"
-                                Text="Novo"
-                                CssClass="btn btn-secondary btn-lg me-2"
-                                OnClick="btnNovo_Click" />
-                            <asp:Button
-                                ID="btnSalvar"
-                                runat="server"
-                                Text="Salvar"
-                                CssClass="btn btn-success btn-lg me-2"
-                                OnClick="btnSalvar_Click" />
-                            <asp:Button
-                                ID="btnCancelar"
-                                runat="server"
-                                Text="Cancelar"
-                                CssClass="btn btn-danger btn-lg"
-                                OnClick="btnCancelar_Click" />
-                        </div>
-                        <div class="erp-card">
-                            <div class="erp-card-header">
-                                <i class="fas fa-search"></i>
-                                Empresas Cadastradas
+                            <div class="text-center mt-4 mb-4">
+                                <asp:Button
+                                    ID="btnNovo"
+                                    runat="server"
+                                    Text="Novo"
+                                    CssClass="btn btn-secondary btn-lg me-2"
+                                    OnClick="btnNovo_Click" />
+                                <asp:Button
+                                    ID="btnSalvar"
+                                    runat="server"
+                                    Text="Salvar"
+                                    CssClass="btn btn-success btn-lg me-2"
+                                    OnClick="btnSalvar_Click" />
+                                <asp:Button
+                                    ID="btnCancelar"
+                                    runat="server"
+                                    Text="Cancelar"
+                                    CssClass="btn btn-danger btn-lg"
+                                    OnClick="btnCancelar_Click" />
                             </div>
-                            <div class="erp-card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <asp:TextBox
-                                            ID="txtPesquisar"
-                                            runat="server"
-                                            CssClass="form-control"
-                                            placeholder="Pesquisar..." />
-
-                                    </div>
+                            <div class="erp-card">
+                                <div class="erp-card-header">
+                                    <i class="fas fa-search"></i>
+                                    Empresas Cadastradas
                                 </div>
-                                <table id="tblEmpresasCadastradas"
-                                    class="table table-bordered table-hover table-striped erp-grid">
-                                    <thead>
-                                        <tr>
-                                            <th>Empresa</th>
-                                            <th>Razão Social</th>
-                                            <th>Fantasia</th>
-                                            <th>CNPJ</th>
-                                            <th>Status</th>
-                                            <th width="70">Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <asp:Repeater
-                                            ID="rpEmpresas"
-                                            runat="server">
-                                            <ItemTemplate>
-                                                <tr>
-                                                    <td><%# Eval("codigo_empresa") %></td>
-                                                    <td><%# Eval("razao_social") %></td>
-                                                    <td><%# Eval("nome_fantasia") %></td>
-                                                    <td><%# Eval("cnpj") %></td>
-                                                    <td>
-                                                        <span class='<%# Eval("status").ToString()=="ATIVO" ? "status-ativo" : "status-inativo" %>'>
+                                <div class="erp-card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <asp:TextBox
+                                                ID="txtPesquisar"
+                                                runat="server"
+                                                CssClass="form-control"
+                                                placeholder="Pesquisar..." />
 
+                                        </div>
+                                    </div>                                   
+                                    <asp:GridView ID="gvEmpresas"
+                                            runat="server"
+                                            AutoGenerateColumns="False"
+                                            CssClass="table-sap"
+                                            HeaderStyle-CssClass="gv-header-custom"
+                                            GridLines="None"
+                                            ShowHeader="true"
+                                            EmptyDataText="Nenhuma empresa encontrada."
+                                            >
+                                            <Columns>
+                                                <asp:BoundField DataField="codigo_empresa" HeaderText="Empresa" />
+                                                <asp:BoundField DataField="razao_social" HeaderText="Razão Social" />
+                                                <asp:BoundField DataField="nome_fantasia" HeaderText="Fantasia" />
+                                                <asp:BoundField DataField="cnpj" HeaderText="CNPJ" />
+                                                <asp:BoundField DataField="inscricao_estadual" HeaderText="Insc. Estadual" />
+                                                <asp:TemplateField HeaderText="Municipio/UF">
+                                                    <ItemTemplate>
+                                                        <span><%# Eval("municipio") + "/" + Eval("uf") %></span>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:BoundField
+                                                    DataField="abertura"
+                                                    HeaderText="Abertura"
+                                                    DataFormatString="{0:dd/MM/yyyy}"
+                                                    HtmlEncode="false" />
+                                                <asp:TemplateField HeaderText="Status">
+                                                    <ItemTemplate>
+                                                        <span class='<%# Eval("status").ToString() == "ATIVO" ? "status-ativo" : "status-inativo" %>'>
                                                             <%# Eval("status") %>
-
                                                         </span>
-
-                                                    </td>
-
-                                                    <td class="text-center">
-
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>                                                
+                                                <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="70px">
+                                                    <ItemTemplate>
                                                         <asp:LinkButton
                                                             ID="btnEditar"
                                                             runat="server"
                                                             CssClass="btn btn-primary btn-grid"
                                                             CommandArgument='<%# Eval("codigo_empresa") %>'
+                                                            ToolTip="Editar"
                                                             OnClick="btnEditar_Click">
-
-                            <i class="fas fa-edit"></i>
-
+                                                            <i class="fas fa-edit"></i>
                                                         </asp:LinkButton>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
 
-                                                    </td>
-
-                                                </tr>
-
-                                            </ItemTemplate>
-
-                                        </asp:Repeater>
-
-                                    </tbody>
-
-                                </table>
-                                <table id="tblEmpresas"
-                                    class="table table-bordered table-hover table-striped erp-grid">
-                                    <thead>
-                                        <tr>                                           
-                                            <th>Empresa</th>
-                                            <th>Descrição</th>
-                                            <th>Razão Social</th>
-                                            <th>Fantasia</th>
-                                            <th>CNPJ</th>
-                                            <th>Status</th>
-                                            <th width="70">Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <asp:Repeater
-                                            ID="Repeater1"
-                                            runat="server">
-                                            <ItemTemplate>
-                                                <tr>                                                    
-                                                    <td><%# Eval("codigo_empresa") %></td>
-                                                    <td><%# Eval("descricao") %></td>
-                                                    <td><%# Eval("razao_social") %></td>
-                                                    <td><%# Eval("nome_fantasia") %></td>
-                                                    <td><%# Eval("cnpj") %></td>
-                                                    <td>
-                                                        <span class='<%# Eval("status").ToString()=="ATIVO" ? "status-ativo" : "status-inativo" %>'>
-
-                                                            <%# Eval("status") %>
-
-                                                        </span>
-
-                                                    </td>
-
-                                                    <td class="text-center">
-
-                                                        <asp:LinkButton
-                                                            ID="btnEditar"
-                                                            runat="server"
-                                                            CssClass="btn btn-primary btn-grid"
-                                                            CommandArgument='<%# Eval("codigo") %>'
-                                                            OnClick="btnEditar_Click">
-
-                            <i class="fas fa-edit"></i>
-
-                                                        </asp:LinkButton>
-
-                                                    </td>
-
-                                                </tr>
-
-                                            </ItemTemplate>
-
-                                        </asp:Repeater>
-
-                                    </tbody>
-
-                                </table>
-
-
+                                            </Columns>
+                                    </asp:GridView>  
+                                </div>
+                                </section>
                             </div>
-                            </section>
-                        </div>
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="btnSalvar" />
+                    </Triggers>
                 </asp:UpdatePanel>
             </div>
         </section>

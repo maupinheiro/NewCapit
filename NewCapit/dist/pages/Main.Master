@@ -56,6 +56,7 @@
 
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
     <script type="text/javascript">
         function showSuccessToast(message) {
             toastr.success(message, 'Sucesso');
@@ -820,7 +821,9 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item" id="TelaConsultaMotoristas" runat="server"><a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
                                      <li class="nav-item" id="TelaGerarTabelaDeAvaliacaoMotoristas" runat="server"><a href="/dist/pages/GerarTabelaDeAvaliacaoMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Avaliar Motoristas</p></a></li>
-                                     <li class="nav-item" id="TelaAcertodePonto" runat="server"><a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Acerto de Ponto</p></a></li>
+                                    <li class="nav-item" id="TelaInativarMotoristas" runat="server"><a href="/dist/pages/motoristasinativos.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Inativar Motoristas</p></a></li>
+                                    <li class="nav-item" id="ControleFaltas" runat="server"><a href="/dist/pages/ControleFaltasMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle de Faltas</p></a></li>
+                                     <li class="nav-item" id="TelaAcertodePonto" runat="server"><a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Acerto de Ponto</p></a></li>                                    
                                     <li class="nav-item" id="TelaFrm_GerarTXT" runat="server"><a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link"><i class="far fa-check-circle nav-icon"></i><p>Gera TXT Folha</p></a></li>
                                    
                                    
@@ -869,8 +872,7 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item" id="TelaIndicadores" runat="server"><a href="/dist/pages/Indicadores.aspx" class="nav-link"><i class="fas fa-chart-pie nav-icon"></i><p> Indicadores</p></a></li>
-                                    <li class="nav-item" id="TelaTabelas" runat="server"><a href="/dist/pages/tabelasauxiliares.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Tabelas</p></a></li>
-                                    <li class="nav-item" id="TelaInativarMotoristas" runat="server"><a href="/dist/pages/motoristasinativos.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Inativar Motoristas</p></a></li>
+                                    <li class="nav-item" id="TelaTabelas" runat="server"><a href="/dist/pages/tabelasauxiliares.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Tabelas</p></a></li>                                    
                                     <li class="nav-item" id="TelaEmpresas" runat="server"><a href="/dist/pages/empresas.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Empresas</p></a></li>
                                 </ul>
                             </li>

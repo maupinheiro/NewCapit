@@ -6,8 +6,10 @@ namespace Domain
     public class EmpresaDTO
     {
         public int Codigo { get; set; }
-        public string CodigoEmpresa { get; set; }
-        public string Descricao { get; set; }
+        public string CodigoEstabelecimento { get; set; }
+        public string DescricaoEsbelecimento { get; set; }
+        public string Tipo { get; set; }
+        public string Situacao { get; set; }
         public string RazaoSocial { get; set; }
         public string NomeFantasia { get; set; }
         public string CNPJ { get; set; }
@@ -29,10 +31,13 @@ namespace Domain
         public string Logo { get; set; }
         public DateTime? Abertura { get; set; }
         public string Status { get; set; }
+        public DateTime? Cadastro { get; set; }
+        public string AtividadePrincipal { get; set; }
         // Campos para controle do sistema
         public DateTime? DataCadastro { get; set; }
         public DateTime? DataAlteracao { get; set; }
         public string UsuarioCadastro { get; set; }
         public string UsuarioAlteracao { get; set; }
+        
     }
 }

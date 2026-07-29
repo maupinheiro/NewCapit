@@ -474,6 +474,24 @@ namespace NewCapit
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGerarTabelaDeAvaliacaoMotoristas;
 
         /// <summary>
+        /// Controle TelaInativarMotoristas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaInativarMotoristas;
+
+        /// <summary>
+        /// Controle ControleFaltas.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ControleFaltas;
+
+        /// <summary>
         /// Controle TelaAcertodePonto.
         /// </summary>
         /// <remarks>
@@ -643,15 +661,6 @@ namespace NewCapit
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTabelas;
-
-        /// <summary>
-        /// Controle TelaInativarMotoristas.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaInativarMotoristas;
 
         /// <summary>
         /// Controle TelaEmpresas.
