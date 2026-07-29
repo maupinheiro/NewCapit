@@ -82,11 +82,11 @@ namespace NewCapit.dist.pages
         {
             DataTable dt = new DataTable();
             List<string> colunasObrigatorias = new List<string>
-            {
-                "FILIAL", "CODDESTINO", "PLANTA DESTINO", "ROTA", "VEÍCULO", "CODORIGEM", "COLETA FORNECEDOR",
-                "Quant./ Pallet´s", "VIAGEM TIPO", "SOLICITAÇÃO Nº", "DATA /HORA",
-                "PESO", "M³", "ESTUDO / ROTA", "REMESSA", "PLANTA SOLICITANTE"
-            };
+    {
+        "FILIAL", "CODDESTINO", "PLANTA DESTINO", "ROTA", "VEÍCULO", "CODORIGEM", "COLETA FORNECEDOR",
+        "Quant./ Pallet´s", "VIAGEM TIPO", "SOLICITAÇÃO Nº", "DATA /HORA",
+        "PESO", "M³", "ESTUDO / ROTA", "REMESSA", "PLANTA SOLICITANTE"
+    };
 
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -94,15 +94,29 @@ namespace NewCapit.dist.pages
                 ISheet sheet = workbook.GetSheetAt(0);
 
                 IRow headerRow = sheet.GetRow(0);
+                if (headerRow == null)
+                {
+                    lblMensagem.Text = "Erro: A planilha está vazia.";
+                    return;
+                }
+
                 int cellCount = headerRow.LastCellNum;
 
+                // Dicionário para mapear [Índice do Excel] -> [Nome da Coluna]
+                Dictionary<int, string> colunasValidas = new Dictionary<int, string>();
                 List<string> colunasDaPlanilha = new List<string>();
+
                 for (int i = 0; i < cellCount; i++)
                 {
                     string nomeColuna = headerRow.GetCell(i)?.ToString().Trim();
                     if (!string.IsNullOrEmpty(nomeColuna))
                     {
-                        dt.Columns.Add(nomeColuna);
+                        if (!dt.Columns.Contains(nomeColuna))
+                        {
+                            dt.Columns.Add(nomeColuna);
+                        }
+
+                        colunasValidas[i] = nomeColuna;
                         colunasDaPlanilha.Add(nomeColuna.ToUpper());
                     }
                 }
@@ -118,6 +132,7 @@ namespace NewCapit.dist.pages
                     return;
                 }
 
+                // Leitura das linhas de dados
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
@@ -125,41 +140,42 @@ namespace NewCapit.dist.pages
 
                     DataRow dr = dt.NewRow();
 
-                    for (int j = 0; j < cellCount; j++)
+                    // Itera apenas sobre as colunas válidas mapeadas
+                    foreach (var col in colunasValidas)
                     {
-                        var cell = row.GetCell(j);
+                        int colIndex = col.Key;
+                        string colName = col.Value;
+
+                        var cell = row.GetCell(colIndex);
                         if (cell != null)
                         {
                             if (cell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(cell))
                             {
-                                // Trata data/hora formatada corretamente
-                                dr[j] = ((DateTime)cell.DateCellValue).ToString("dd/MM/yyyy HH:mm");
+                                dr[colName] = ((DateTime)cell.DateCellValue).ToString("dd/MM/yyyy HH:mm");
                             }
                             else if (cell.CellType == CellType.Numeric)
                             {
-                                // Trata campos numéricos como texto puro (ex: "REMESSA" pode ser 0001)
-                                string nomeColuna = headerRow.GetCell(j)?.ToString().Trim().ToUpper();
-                                if (nomeColuna == "REMESSA")
+                                if (colName.ToUpper() == "REMESSA")
                                 {
-                                    dr[j] = cell.NumericCellValue.ToString("0"); // remove ponto decimal
+                                    dr[colName] = cell.NumericCellValue.ToString("0");
                                 }
                                 else
                                 {
-                                    dr[j] = cell.NumericCellValue.ToString();
+                                    dr[colName] = cell.NumericCellValue.ToString();
                                 }
                             }
                             else if (cell.CellType == CellType.String)
                             {
-                                dr[j] = cell.StringCellValue.Trim();
+                                dr[colName] = cell.StringCellValue.Trim();
                             }
                             else
                             {
-                                dr[j] = cell.ToString();
+                                dr[colName] = cell.ToString();
                             }
                         }
                         else
                         {
-                            dr[j] = "";
+                            dr[colName] = "";
                         }
                     }
 
