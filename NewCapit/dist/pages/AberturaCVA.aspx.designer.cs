@@ -7,578 +7,506 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace NewCapit
+namespace NewCapit.dist.pages
 {
 
 
-    public partial class Main
+    public partial class AberturaCVA
     {
 
         /// <summary>
-        /// Controle head.
+        /// Controle txtNumCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
+        protected global::System.Web.UI.WebControls.TextBox txtNumCVA;
 
         /// <summary>
-        /// Controle form1.
+        /// Controle txtSitCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.TextBox txtSitCVA;
 
         /// <summary>
-        /// Controle ScriptManager1.
+        /// Controle ddlTipoCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.ScriptManager ScriptManager1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoCVA;
 
         /// <summary>
-        /// Controle divLogoEmpresa.
+        /// Controle ddlEstabelecimentoCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divLogoEmpresa;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEstabelecimentoCVA;
 
         /// <summary>
-        /// Controle imgLogoEmpresa.
+        /// Controle txtSolicitacao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgLogoEmpresa;
+        protected global::System.Web.UI.WebControls.TextBox txtSolicitacao;
 
         /// <summary>
-        /// Controle ddlEmpresa.
+        /// Controle btnPesquisar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEmpresa;
+        protected global::System.Web.UI.WebControls.Button btnPesquisar;
 
         /// <summary>
-        /// Controle lblUsuario.
+        /// Controle btnLimpar.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUsuario;
+        protected global::System.Web.UI.WebControls.Button btnLimpar;
 
         /// <summary>
-        /// Controle lblNucleo.
+        /// Controle btnGerarCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNucleo;
+        protected global::System.Web.UI.WebControls.Button btnGerarCVA;
 
         /// <summary>
-        /// Controle TelaGestaoDePedidos.
+        /// Controle txtDataHoraEntregaCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGestaoDePedidos;
+        protected global::System.Web.UI.WebControls.TextBox txtDataHoraEntregaCVA;
 
         /// <summary>
-        /// Controle TelaGestaoDeCargasMatriz.
+        /// Controle txtComRetornoCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGestaoDeCargasMatriz;
+        protected global::System.Web.UI.WebControls.TextBox txtComRetornoCVA;
 
         /// <summary>
-        /// Controle TelaFrm_ImpSolVWMatriz.
+        /// Controle txtDtRetorno.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaFrm_ImpSolVWMatriz;
+        protected global::System.Web.UI.WebControls.TextBox txtDtRetorno;
 
         /// <summary>
-        /// Controle TelaGerarCVA.
+        /// Controle ddlDevolucaoPecaCVA.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGerarCVA;
+        protected global::System.Web.UI.WebControls.DropDownList ddlDevolucaoPecaCVA;
 
         /// <summary>
-        /// Controle TelaGestaoDeEntregasMatriz.
+        /// Controle txtEmissao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGestaoDeEntregasMatriz;
+        protected global::System.Web.UI.WebControls.TextBox txtEmissao;
 
         /// <summary>
-        /// Controle TelaControleDePedagio.
+        /// Controle txtColeta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControleDePedagio;
+        protected global::System.Web.UI.WebControls.TextBox txtColeta;
 
         /// <summary>
-        /// Controle MenuModuloClientes.
+        /// Controle txtCentroCusto.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloClientes;
+        protected global::System.Web.UI.WebControls.TextBox txtCentroCusto;
 
         /// <summary>
-        /// Controle TelaConsultaClientes.
+        /// Controle txtConta.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaClientes;
+        protected global::System.Web.UI.WebControls.TextBox txtConta;
 
         /// <summary>
-        /// Controle TelaConsultaRotas.
+        /// Controle txtTipoVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaRotas;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoVeiculo;
 
         /// <summary>
-        /// Controle TelaConsultaFretes.
+        /// Controle txtTipoVeiculoDescricao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaFretes;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoVeiculoDescricao;
 
         /// <summary>
-        /// Controle TelaSimuladorFrete.
+        /// Controle txtCodTipoGeracao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaSimuladorFrete;
+        protected global::System.Web.UI.WebControls.TextBox txtCodTipoGeracao;
 
         /// <summary>
-        /// Controle TelaFrm_DistanciaEntreCidades.
+        /// Controle txtTipoGeracao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaFrm_DistanciaEntreCidades;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoGeracao;
 
         /// <summary>
-        /// Controle TelaGerenciarRotasKrona.
+        /// Controle txtTipoSolicitacao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGerenciarRotasKrona;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoSolicitacao;
 
         /// <summary>
-        /// Controle MenuModuloProprietarios.
+        /// Controle txtTipoSolicitacaoDescricao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloProprietarios;
+        protected global::System.Web.UI.WebControls.TextBox txtTipoSolicitacaoDescricao;
 
         /// <summary>
-        /// Controle TelaConsulta_Agregados.
+        /// Controle txtCodRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsulta_Agregados;
+        protected global::System.Web.UI.WebControls.TextBox txtCodRemetente;
 
         /// <summary>
-        /// Controle TelaControleCreditoAbastecimento.
+        /// Controle txtRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControleCreditoAbastecimento;
+        protected global::System.Web.UI.WebControls.TextBox txtRemetente;
 
         /// <summary>
-        /// Controle TelaFreteMinimoANTT.
+        /// Controle txtCNPJRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaFreteMinimoANTT;
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJRemetente;
 
         /// <summary>
-        /// Controle MenuModuloVeiculos.
+        /// Controle txtCidRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloVeiculos;
+        protected global::System.Web.UI.WebControls.TextBox txtCidRemetente;
 
         /// <summary>
-        /// Controle TelaConsultaVeiculos.
+        /// Controle txtUfRemetente.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaVeiculos;
+        protected global::System.Web.UI.WebControls.TextBox txtUfRemetente;
 
         /// <summary>
-        /// Controle TelaControlesValidades.
+        /// Controle txtCodExpedidor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControlesValidades;
+        protected global::System.Web.UI.WebControls.TextBox txtCodExpedidor;
 
         /// <summary>
-        /// Controle TelaControleCarretas.
+        /// Controle txtExpedidor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControleCarretas;
+        protected global::System.Web.UI.WebControls.TextBox txtExpedidor;
 
         /// <summary>
-        /// Controle TelaGestaoDeMultas.
+        /// Controle txtCNPJExpedidor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGestaoDeMultas;
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJExpedidor;
 
         /// <summary>
-        /// Controle MenuModuloMotoristas.
+        /// Controle txtCidExpedidor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloMotoristas;
+        protected global::System.Web.UI.WebControls.TextBox txtCidExpedidor;
 
         /// <summary>
-        /// Controle TelaConsultaMotoristas.
+        /// Controle txtUfExpedidor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaMotoristas;
+        protected global::System.Web.UI.WebControls.TextBox txtUfExpedidor;
 
         /// <summary>
-        /// Controle TelaGerarTabelaDeAvaliacaoMotoristas.
+        /// Controle txtCodDestinatario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGerarTabelaDeAvaliacaoMotoristas;
+        protected global::System.Web.UI.WebControls.TextBox txtCodDestinatario;
 
         /// <summary>
-        /// Controle TelaInativarMotoristas.
+        /// Controle txtDestinatario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaInativarMotoristas;
+        protected global::System.Web.UI.WebControls.TextBox txtDestinatario;
 
         /// <summary>
-        /// Controle ControleFaltas.
+        /// Controle txtCNPJDestinatario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ControleFaltas;
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJDestinatario;
 
         /// <summary>
-        /// Controle TelaAcertodePonto.
+        /// Controle txtCidDestinatario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaAcertodePonto;
+        protected global::System.Web.UI.WebControls.TextBox txtCidDestinatario;
 
         /// <summary>
-        /// Controle TelaFrm_GerarTXT.
+        /// Controle txtUfDestinatario.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaFrm_GerarTXT;
+        protected global::System.Web.UI.WebControls.TextBox txtUfDestinatario;
 
         /// <summary>
-        /// Controle MenuModuloPostos.
+        /// Controle txtCodRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloPostos;
+        protected global::System.Web.UI.WebControls.TextBox txtCodRecebedor;
 
         /// <summary>
-        /// Controle TelaEntradaCombustivel.
+        /// Controle txtRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaEntradaCombustivel;
+        protected global::System.Web.UI.WebControls.TextBox txtRecebedor;
 
         /// <summary>
-        /// Controle TelaGestaoPostos.
+        /// Controle txtCNPJRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaGestaoPostos;
+        protected global::System.Web.UI.WebControls.TextBox txtCNPJRecebedor;
 
         /// <summary>
-        /// Controle TelaControleAbastecimento.
+        /// Controle txtCidRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControleAbastecimento;
+        protected global::System.Web.UI.WebControls.TextBox txtCidRecebedor;
 
         /// <summary>
-        /// Controle MenuModuloManutencao.
+        /// Controle txtUfRecebedor.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloManutencao;
+        protected global::System.Web.UI.WebControls.TextBox txtUfRecebedor;
 
         /// <summary>
-        /// Controle TelaDashboardManutencao.
+        /// Controle txtCodMot.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaDashboardManutencao;
+        protected global::System.Web.UI.WebControls.TextBox txtCodMot;
 
         /// <summary>
-        /// Controle TelaConsultaFornecedores.
+        /// Controle txtNome.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaFornecedores;
+        protected global::System.Web.UI.WebControls.TextBox txtNome;
 
         /// <summary>
-        /// Controle TelaRequisicaoCompra.
+        /// Controle txtCPF.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaRequisicaoCompra;
+        protected global::System.Web.UI.WebControls.TextBox txtCPF;
 
         /// <summary>
-        /// Controle TelaColaboradoresManutencao.
+        /// Controle txtRG.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaColaboradoresManutencao;
+        protected global::System.Web.UI.WebControls.TextBox txtRG;
 
         /// <summary>
-        /// Controle TelaControlaEstoque.
+        /// Controle txtTranspMotorista.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControlaEstoque;
+        protected global::System.Web.UI.WebControls.TextBox txtTranspMotorista;
 
         /// <summary>
-        /// Controle TelaControlePneus.
+        /// Controle txtCodVei.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControlePneus;
+        protected global::System.Web.UI.WebControls.TextBox txtCodVei;
 
         /// <summary>
-        /// Controle TelaListaOS.
+        /// Controle txtTipVei.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaListaOS;
+        protected global::System.Web.UI.WebControls.TextBox txtTipVei;
 
         /// <summary>
-        /// Controle TelaAbrirOS.
+        /// Controle txtPlaca.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaAbrirOS;
+        protected global::System.Web.UI.WebControls.TextBox txtPlaca;
 
         /// <summary>
-        /// Controle TelaFinalizarOS.
+        /// Controle txtCapacidade.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaFinalizarOS;
+        protected global::System.Web.UI.WebControls.TextBox txtCapacidade;
 
         /// <summary>
-        /// Controle MenuModuloGestao.
+        /// Controle txtTranspVeiculo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloGestao;
+        protected global::System.Web.UI.WebControls.TextBox txtTranspVeiculo;
 
         /// <summary>
-        /// Controle TelaIndicadores.
+        /// Controle txtReboque1.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaIndicadores;
+        protected global::System.Web.UI.WebControls.TextBox txtReboque1;
 
         /// <summary>
-        /// Controle TelaTabelas.
+        /// Controle txtPlacaReboque2.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTabelas;
+        protected global::System.Web.UI.WebControls.TextBox txtPlacaReboque2;
 
         /// <summary>
-        /// Controle TelaEmpresas.
+        /// Controle gvProdutosSolicitacao.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaEmpresas;
-
-        /// <summary>
-        /// Controle MenuModuloSistema.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MenuModuloSistema;
-
-        /// <summary>
-        /// Controle TelaConsultaUsuarios.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaConsultaUsuarios;
-
-        /// <summary>
-        /// Controle TelaControleAcesso.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaControleAcesso;
-
-        /// <summary>
-        /// Controle TelaTrocaSenha.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTrocaSenha;
-
-        /// <summary>
-        /// Controle TelaTrocaFoto.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TelaTrocaFoto;
-
-        /// <summary>
-        /// Controle ModalSairSistema.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ModalSairSistema;
-
-        /// <summary>
-        /// Controle btnSair.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSair;
-
-        /// <summary>
-        /// Controle ContentPlaceHolder1.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder1;
+        protected global::System.Web.UI.WebControls.GridView gvProdutosSolicitacao;
     }
 }

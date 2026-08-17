@@ -8091,7 +8091,7 @@ namespace NewCapit.dist.pages
                 //cmd.Parameters.AddWithValue("@almoco", SafeValue(txtAlmoco.Text));
                 //cmd.Parameters.AddWithValue("@janta", SafeValue(txtJanta.Text));
 
-                cmd.Parameters.AddWithValue("@empresa", SafeValue("1111"));
+                cmd.Parameters.AddWithValue("@empresa", SafeValue(Session["CodEmpresa"].ToString()));
                 cmd.Parameters.AddWithValue("@dtalt", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                 cmd.Parameters.AddWithValue("@usualt", Session["UsuarioLogado"].ToString());
 
@@ -8520,7 +8520,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
                     cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
                     cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
-                    cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@empresa", Session["CodEmpresa"].ToString()); // ou valor padrão
                     cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                     cmd.Parameters.AddWithValue("@andamento", "Pendente");
                     cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
@@ -12122,6 +12122,490 @@ namespace NewCapit.dist.pages
         //    return c;
         //}
 
+        public class CVAControles
+        {
+            // TextBox
+            public TextBox txtNumeroSolicitacao;
+            public TextBox txtTipoSolicitacaoCVA;
+
+            // Grids
+            public GridView gvProdutos;
+            public GridView gvEmbalagens;
+            public GridView gvQuantidades;
+
+            // Divs
+            public HtmlGenericControl divEmbalagens;
+        }
+        private CVAControles ObterControles(RepeaterItem item)
+        {
+            return new CVAControles
+            {
+                txtNumeroSolicitacao = (TextBox)item.FindControl("txtNumeroSolicitacao"),
+                txtTipoSolicitacaoCVA = (TextBox)item.FindControl("txtTipoSolicitacaoCVA"),
+
+                gvProdutos = (GridView)item.FindControl("gvProdutos"),
+                gvEmbalagens = (GridView)item.FindControl("gvEmbalagens"),
+                gvQuantidades = (GridView)item.FindControl("gvQuantidades"),
+
+                divEmbalagens = (HtmlGenericControl)item.FindControl("divEmbalagens")
+            };
+        }
+        private void CarregarDadosSolicitacao(RepeaterItem item)
+        {
+            var c = ObterControles(item);
+
+            if (string.IsNullOrWhiteSpace(c.txtNumeroSolicitacao.Text))
+                return;
+
+            CarregarProdutos(c);
+            CarregarEmbalagens(c);
+            CarregarQuantidades(c);
+        }
+        private void CarregarProdutos(CVAControles c)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection conn =
+                new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+
+                SELECT
+
+                r2_sol_codigo_produto,
+
+                RIGHT('0'+CAST(r2_sol_numero AS VARCHAR(2)),2) r2_sol_numero,
+
+                RIGHT(REPLICATE('0',10)+CAST(r2_sol_quant_solicitada_produto AS VARCHAR(20)),10)
+                r2_sol_quant_solicitada_produto,
+
+                RIGHT(REPLICATE('0',10)+CAST(r2_sol_quant_solicitada_produto AS VARCHAR(20)),10)
+                Quantidade
+
+                FROM tbsolicitacoes_produtos
+
+                WHERE r2_sol_numero_solicitacao=@numero
+
+                ORDER BY r2_sol_numero";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+
+                da.SelectCommand.Parameters.AddWithValue("@numero",
+                    c.txtNumeroSolicitacao.Text.Trim());
+
+                da.Fill(dt);
+            }
+
+            c.gvProdutos.DataSource = dt;
+            c.gvProdutos.DataBind();
+        }
+        private void CarregarEmbalagens(CVAControles c)
+        {
+            if (c.txtTipoSolicitacaoCVA.Text.Trim() == "Distribuição de Aço")
+            {
+                c.divEmbalagens.Visible = false;
+                return;
+            }
+
+            c.divEmbalagens.Visible = true;
+
+            DataTable dt = new DataTable();
+
+            using (SqlConnection conn =
+                new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+
+                SELECT
+
+                r3_sol_codigo_embalagem,
+
+                r3_sol_quant_solicitada,
+
+                r3_sol_altura_embalagem,
+
+                r3_sol_largura_embalagem,
+
+                r3_sol_comprimento_embalagem,
+
+                r3_sol_peso_embalagem
+
+                FROM tbsolicitacoes_embalagens
+
+WHERE r3_sol_numero_solicitacao=@numero";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+
+                da.SelectCommand.Parameters.AddWithValue("@numero",
+                    c.txtNumeroSolicitacao.Text.Trim());
+
+                da.Fill(dt);
+            }
+
+            c.gvEmbalagens.DataSource = dt;
+            c.gvEmbalagens.DataBind();
+        }
+        private void CarregarQuantidades(CVAControles c)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection conn =
+                new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+
+                SELECT
+
+                RIGHT(REPLICATE('0',10)+CAST(r4_sol_quant_registro_01 AS VARCHAR(20)),10)
+                r4_sol_quant_registro_01,
+
+                RIGHT(REPLICATE('0',10)+CAST(r4_sol_quant_registro_02 AS VARCHAR(20)),10)
+                r4_sol_quant_registro_02,
+
+                RIGHT(REPLICATE('0',10)+CAST(r4_sol_quant_registro_03 AS VARCHAR(20)),10)
+                r4_sol_quant_registro_03
+
+                FROM tbsolicitacoes_quantidades
+
+                WHERE r4_sol_numero_solicitacao=@numero";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+
+                da.SelectCommand.Parameters.AddWithValue("@numero",
+                    c.txtNumeroSolicitacao.Text.Trim());
+
+                da.Fill(dt);
+            }
+
+            c.gvQuantidades.DataSource = dt;
+            c.gvQuantidades.DataBind();
+        }        
+        private List<CVAProduto> CarregarProdutos(string numeroSolicitacao)
+        {
+            List<CVAProduto> lista = new List<CVAProduto>();
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+
+                SELECT
+
+                r2_sol_codigo_produto,
+
+                RIGHT('0'+CAST(r2_sol_numero AS VARCHAR(2)),2) r2_sol_numero,
+
+                RIGHT(REPLICATE('0',10)+CAST(r2_sol_quant_solicitada_produto AS VARCHAR(20)),10)
+                r2_sol_quant_solicitada_produto
+
+                FROM tbsolicitacoes_produtos
+
+                WHERE r2_sol_numero_solicitacao=@numero
+
+                ORDER BY r2_sol_numero";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@numero", numeroSolicitacao);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    lista.Add(new CVAProduto
+                    {
+                        r2_sol_codigo_produto = dr["r2_sol_codigo_produto"].ToString(),
+
+                        r2_sol_numero = dr["r2_sol_numero"].ToString(),
+
+                        r2_sol_quant_solicitada_produto =
+                            dr["r2_sol_quant_solicitada_produto"].ToString(),
+
+                        Quantidade =
+                            dr["r2_sol_quant_solicitada_produto"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }
+        private List<CVAEmbalagem> CarregarEmbalagens(string numeroSolicitacao, string tipoSolicitacao)
+        {
+            List<CVAEmbalagem> lista = new List<CVAEmbalagem>();
+
+            if (tipoSolicitacao == "Distribuição de Aço")
+                return lista;
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+
+                SELECT
+
+                r3_sol_codigo_embalagem,
+
+                r3_sol_quant_solicitada,
+
+                r3_sol_altura_embalagem,
+
+                r3_sol_largura_embalagem,
+
+                r3_sol_comprimento_embalagem,
+
+                r3_sol_peso_embalagem
+
+                FROM tbsolicitacoes_embalagens
+
+                WHERE r3_sol_numero_solicitacao=@numero";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@numero", numeroSolicitacao);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    lista.Add(new CVAEmbalagem
+                    {
+                        r3_sol_codigo_embalagem = dr["r3_sol_codigo_embalagem"].ToString(),
+
+                        r3_sol_quant_solicitada = dr["r3_sol_quant_solicitada"].ToString(),
+
+                        r3_sol_altura_embalagem = dr["r3_sol_altura_embalagem"].ToString(),
+
+                        r3_sol_largura_embalagem = dr["r3_sol_largura_embalagem"].ToString(),
+
+                        r3_sol_comprimento_embalagem = dr["r3_sol_comprimento_embalagem"].ToString(),
+
+                        r3_sol_peso_embalagem = dr["r3_sol_peso_embalagem"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }
+        private List<CVAQuantidade> CarregarQuantidades(string numeroSolicitacao)
+        {
+            List<CVAQuantidade> lista = new List<CVAQuantidade>();
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            {
+                conn.Open();
+
+                string sql = @"
+
+                SELECT
+
+                RIGHT(REPLICATE('0',10)+CAST(r4_sol_quant_registro_01 AS VARCHAR(20)),10)
+                r4_sol_quant_registro_01,
+
+                RIGHT(REPLICATE('0',10)+CAST(r4_sol_quant_registro_02 AS VARCHAR(20)),10)
+                r4_sol_quant_registro_02,
+
+                RIGHT(REPLICATE('0',10)+CAST(r4_sol_quant_registro_03 AS VARCHAR(20)),10)
+                r4_sol_quant_registro_03
+
+                FROM tbsolicitacoes_quantidades
+
+                WHERE r4_sol_numero_solicitacao=@numero";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@numero", numeroSolicitacao);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    lista.Add(new CVAQuantidade
+                    {
+                        r4_sol_quant_registro_01 = dr["r4_sol_quant_registro_01"].ToString(),
+
+                        r4_sol_quant_registro_02 = dr["r4_sol_quant_registro_02"].ToString(),
+
+                        r4_sol_quant_registro_03 = dr["r4_sol_quant_registro_03"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }                
+        private DataTable ExecutarConsulta(string sql, params SqlParameter[] parametros)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["conexao"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                if (parametros != null)
+                    cmd.Parameters.AddRange(parametros);
+
+                da.Fill(dt);
+            }
+
+            return dt;
+        }
+        //private CVAArquivo MontarArquivoCVA(RepeaterItem item)
+        //{
+        //    CVAControles c = ObterControles(item);
+
+        //    CVAArquivo arquivo = new CVAArquivo();
+
+        //    // Registro 02
+        //    arquivo.Produtos = CarregarProdutos(c.txtNumeroSolicitacao.Text.Trim());
+
+        //    // Registro 03
+        //    arquivo.Embalagens = CarregarEmbalagens(
+        //        c.txtNumeroSolicitacao.Text.Trim(),
+        //        c.txtTipoSolicitacaoCVA.Text.Trim());
+
+        //    // Registro 04
+        //    arquivo.Quantidades = CarregarQuantidades(c.txtNumeroSolicitacao.Text.Trim());
+
+        //    return arquivo;
+        //}
+        private DataTable BuscarProdutos(string numeroSolicitacao)
+        {
+            string sql = @"
+
+            SELECT
+
+                r2_sol_codigo_produto,
+
+                RIGHT('0' + CAST(r2_sol_numero AS VARCHAR(2)),2)
+                    AS r2_sol_numero,
+
+                RIGHT(REPLICATE('0',10) +
+                    CAST(ISNULL(r2_sol_quant_solicitada_produto,0) AS VARCHAR(20)),10)
+                    AS r2_sol_quant_solicitada_produto,
+
+                RIGHT(REPLICATE('0',10) +
+                    CAST(ISNULL(r2_sol_quant_solicitada_produto,0) AS VARCHAR(20)),10)
+                    AS Quantidade
+
+            FROM tbsolicitacoes_produtos
+
+            WHERE r2_sol_numero_solicitacao=@numero
+
+            ORDER BY r2_sol_numero";
+
+            return ExecutarConsulta(sql,
+                new SqlParameter("@numero", numeroSolicitacao));
+        }
+        private DataTable BuscarEmbalagens(string numeroSolicitacao)
+        {
+            string sql = @"
+
+            SELECT
+
+                r3_sol_codigo_embalagem,
+
+                r3_sol_quant_solicitada,
+
+                r3_sol_altura_embalagem,
+
+                r3_sol_largura_embalagem,
+
+                r3_sol_comprimento_embalagem,
+
+                r3_sol_peso_embalagem
+
+            FROM tbsolicitacoes_embalagens
+
+            WHERE r3_sol_numero_solicitacao=@numero
+
+            ORDER BY r3_sol_codigo_embalagem";
+
+            return ExecutarConsulta(sql,
+                new SqlParameter("@numero", numeroSolicitacao));
+        }
+        private DataTable BuscarQuantidades(string numeroSolicitacao)
+        {
+            string sql = @"
+
+            SELECT
+
+            RIGHT(REPLICATE('0',10)+
+            CAST(ISNULL(r4_sol_quant_registro_01,0) AS VARCHAR(20)),10)
+            AS r4_sol_quant_registro_01,
+
+            RIGHT(REPLICATE('0',10)+
+            CAST(ISNULL(r4_sol_quant_registro_02,0) AS VARCHAR(20)),10)
+            AS r4_sol_quant_registro_02,
+
+            RIGHT(REPLICATE('0',10)+
+            CAST(ISNULL(r4_sol_quant_registro_03,0) AS VARCHAR(20)),10)
+            AS r4_sol_quant_registro_03
+
+            FROM tbsolicitacoes_quantidades
+
+            WHERE r4_sol_numero_solicitacao=@numero";
+
+            return ExecutarConsulta(sql,
+                new SqlParameter("@numero", numeroSolicitacao));
+        }
+
+        private void AtualizarGrids(RepeaterItem item)
+        {
+            CVAControles c = ObterControles(item);
+
+            string numero = c.txtNumeroSolicitacao.Text.Trim();
+
+            if (string.IsNullOrEmpty(numero))
+                return;
+
+            //---------------- PRODUTOS ----------------
+
+            DataTable dtProdutos = BuscarProdutos(numero);
+
+            c.gvProdutos.DataSource = dtProdutos;
+            c.gvProdutos.DataBind();
+
+            //---------------- EMBALAGENS ----------------
+
+            if (c.txtTipoSolicitacaoCVA.Text.Trim() == "Distribuição de Aço")
+            {
+                c.divEmbalagens.Visible = false;
+            }
+            else
+            {
+                c.divEmbalagens.Visible = true;
+
+                DataTable dtEmbalagens = BuscarEmbalagens(numero);
+
+                c.gvEmbalagens.DataSource = dtEmbalagens;
+                c.gvEmbalagens.DataBind();
+            }
+
+            //---------------- QUANTIDADES ----------------
+
+            DataTable dtQuantidades = BuscarQuantidades(numero);
+
+            c.gvQuantidades.DataSource = dtQuantidades;
+            c.gvQuantidades.DataBind();
+        }
+
+        public class DadosSolicitacaoCVA
+        {
+            public DataTable Produtos { get; set; }
+
+            public DataTable Embalagens { get; set; }
+
+            public DataTable Quantidades { get; set; }
+        }
+
+       
 
     }
 }

@@ -886,7 +886,8 @@ namespace NewCapit.dist.pages
                 return;
             }
 
-            int eixos = Convert.ToInt32(ddlEixos.SelectedValue);
+            //int eixos = Convert.ToInt32(ddlEixos.SelectedValue);
+            string eixos = ddlEixos.SelectedItem.Text;
             decimal valorKm = 0;
             decimal ccd = 0;
 

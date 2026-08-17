@@ -489,6 +489,7 @@
     <Content Include="dist\css\erp.css" />
     <Content Include="dist\img\logo_em_branco.png" />
     <Content Include="dist\js\erp.js" />
+    <Content Include="dist\pages\AberturaCVA.aspx" />
     <Content Include="dist\pages\ColaboradoresManutencao.aspx" />
     <Content Include="dist\pages\ControleAbastecimento.aspx" />
     <Content Include="dist\pages\ControleFaltasMotoristas.aspx" />
@@ -4828,6 +4829,13 @@
     <Compile Include="dist\ModelsCte\ResultadoCte.cs" />
     <Compile Include="dist\ModelsCVA\CVA.cs" />
     <Compile Include="dist\ModelsCVA\CVARepository.cs" />
+    <Compile Include="dist\pages\AberturaCVA.aspx.cs">
+      <DependentUpon>AberturaCVA.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\pages\AberturaCVA.aspx.designer.cs">
+      <DependentUpon>AberturaCVA.aspx</DependentUpon>
+    </Compile>
     <Compile Include="dist\pages\ColaboradoresManutencao.aspx.cs">
       <DependentUpon>ColaboradoresManutencao.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4857,6 +4865,11 @@
       <DependentUpon>ControlePneus.aspx</DependentUpon>
     </Compile>
     <Compile Include="dist\pages\ControlesCarga.cs" />
+    <Compile Include="dist\pages\CVAArquivo.cs" />
+    <Compile Include="dist\pages\CVAArquivoService.cs" />
+    <Compile Include="dist\pages\CVAEmbalagem.cs" />
+    <Compile Include="dist\pages\CVAProduto.cs" />
+    <Compile Include="dist\pages\CVAQuantidade.cs" />
     <Compile Include="dist\pages\DownloadSapiens.aspx.cs">
       <DependentUpon>DownloadSapiens.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4871,6 +4884,7 @@
     <Compile Include="dist\pages\empresas.aspx.designer.cs">
       <DependentUpon>empresas.aspx</DependentUpon>
     </Compile>
+    <Compile Include="dist\pages\EmpresaUsuarioHelper.cs" />
     <Compile Include="dist\pages\EntradaCombustivel.aspx.cs">
       <DependentUpon>EntradaCombustivel.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

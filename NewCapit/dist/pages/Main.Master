@@ -179,28 +179,154 @@
         .grid-sap tr:hover{
             background:#dbeeff;
         }
-    </style>
-    <%--<style>
-        .vertical-middle {
-            vertical-align: middle !important;
+
+        .navbar-nav.ml-auto {
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
-    </style>
-    <style>
-        /* Cabeçalho da GridView */
-        .gv-header-custom th {
-            background-color: #cce5ff !important; /* azul clarinho */
-            color: #000000 !important; /* texto preto */
-            font-weight: bold;
-            text-align: center;
+
+        /* Logo da empresa */
+        .logo-empresa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            margin-right: 8px;
         }
-    </style>--%>
-    <asp:ContentPlaceHolder ID="head" runat="server">
-        <%--<style>
-            .img-custom {
-                width: 200px;
-                height: 200px;
-            }
-        </style>--%>
+
+        .img-logo-empresa {
+            height: 35px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Combo da empresa */
+        .empresa-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .empresa-container select {
+            height: 32px;
+            margin: 0;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        /* Itens da navbar */
+        .navbar-nav.ml-auto > .nav-item {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .navbar-nav.ml-auto .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+
+        .menu-search-nav {
+    display: flex;
+    align-items: center;
+}
+
+.menu-search-wrapper {
+    position: relative;
+    width: 350px;
+}
+
+.menu-search-box {
+    position: relative;
+    width: 100%;
+}
+
+.menu-search-box .form-control {
+    height: 34px;
+    padding-left: 34px;
+    padding-right: 10px;
+    font-size: 13px;
+    border-radius: 4px;
+}
+
+.menu-search-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 13px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.menu-search-box .form-control:focus {
+    box-shadow: none;
+    border-color: #007bff;
+}
+
+.menu-search-box .form-control:focus + .menu-search-icon {
+    color: #007bff;
+}
+
+.resultado-pesquisa-menu {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 350px;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.20);
+    z-index: 99999;
+    display: none;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.resultado-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 9px 12px;
+    color: #343a40 !important;
+    background: #ffffff;
+    text-decoration: none !important;
+    font-size: 13px;
+    border-bottom: 1px solid #eeeeee;
+    cursor: pointer;
+}
+
+.resultado-menu-item:hover {
+    background-color: #f1f3f5;
+    color: #007bff !important;
+    text-decoration: none !important;
+}
+
+.resultado-menu-item i {
+    width: 25px;
+    margin-right: 8px;
+    text-align: center;
+    color: #007bff;
+}
+
+.resultado-sem-menu {
+    padding: 12px;
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+}
+
+
+    </style>
+    
+    <asp:ContentPlaceHolder ID="head" runat="server">       
     </asp:ContentPlaceHolder>
     <script type="text/javascript">
         function fecharModal() {
@@ -219,6 +345,7 @@
             }, 5000); // Fecha o toast após 5 segundos alerta de atenção
         }
     </script>
+    
     <script>
         function validarCNPJ(cnpj) {
             cnpj = cnpj.replace(/[^\d]+/g, '');
@@ -265,6 +392,7 @@
 
     <link href="~/dist/css/erp.css" rel="stylesheet" />
 </head>
+    
 
 <!-- menu fixo -->
 <%--<body class="hold-transition sidebar-mini layout-fixed">--%>
@@ -290,6 +418,7 @@
             }
     </script>
 
+    
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
         <div class="wrapper">
@@ -299,67 +428,100 @@
                 <img class="animation__shake" src="/dist/img/logo.png" alt="Capit" height="60" width="60">
             </div>
 
-            <!-- Navbar -->
+            <!-- Navbar -->            
             <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
                 <!-- Left navbar links -->
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
+
+                    <!-- MENU -->
                     <li class="nav-item">
-                        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                        <a class="nav-link"
+                           data-widget="pushmenu"
+                           href="#"
+                           role="button">
+                            <i class="fas fa-bars"></i>
+                        </a>
                     </li>
+
+                    <!-- HOME -->
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="home.aspx" class="nav-link">Home</a>
+                        <a href="home.aspx" class="nav-link">
+                            Home
+                        </a>
                     </li>
+                    
+                    <!-- Pesquisa de menus -->
+                    <li class="nav-item menu-search-nav">
+    <div class="menu-search-wrapper">
+
+        <div class="menu-search-box">
+
+            <input type="text"
+                   id="txtPesquisaMenu"
+                   class="form-control"
+                   placeholder="Pesquisar menu..."
+                   autocomplete="off" />
+
+            <i class="fas fa-search menu-search-icon"></i>
+
+        </div>
+
+        <div id="resultadoPesquisaMenu"
+             class="resultado-pesquisa-menu">
+        </div>
+
+    </div>
+</li>
+
                 </ul>
+
 
                 <!-- Right navbar links -->
-                <ul class="navbar-nav ml-auto">
-                    <!-- Navbar Search -->
-                    <li class="nav-item">
-                        <%-- <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                            <i class="fas fa-search"></i>
-                        </a>--%>
-                        <%-- <div class="navbar-search-block">
-                             <form class="form-inline">
-                                <div class="input-group input-group-sm">
-                                    <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-navbar" type="submit">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                        <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>--%>
+                <ul class="navbar-nav ml-auto align-items-center">
+
+                    <!-- Logo + Empresa -->
+                    <li class="nav-item empresa-nav-item">
+
+                        <div id="divLogoEmpresa"
+                             runat="server"
+                             class="logo-empresa">
+
+                            <asp:Image
+                                ID="imgLogoEmpresa"
+                                runat="server"
+                                CssClass="img-logo-empresa" />
+
+                        </div>
+
+                        <div class="empresa-container">
+
+                            <asp:DropDownList
+                                ID="ddlEmpresa"
+                                runat="server"
+                                CssClass="form-select form-select-sm"
+                                AutoPostBack="true"
+                                OnSelectedIndexChanged="ddlEmpresa_SelectedIndexChanged">
+                            </asp:DropDownList>
+
+                        </div>
+
                     </li>
 
-                    <!-- Messages Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-comments"></i>
-                            <span class="badge badge-danger navbar-badge">0</span>
-                        </a>
-                      
-                    </li>
-                    <!-- Notifications Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">0</span>
-                        </a>
-                        
-                    </li>
+                    <!-- Tela cheia -->
                     <li class="nav-item">
-                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <a class="nav-link"
+                           data-widget="fullscreen"
+                           href="#"
+                           role="button">
                             <i class="fas fa-expand-arrows-alt"></i>
                         </a>
-                   
-                </ul>
-            </nav>
-            <!-- /.navbar -->
+                    </li>
 
+                </ul>
+
+            </nav>
+               
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Capit Logo -->
@@ -368,10 +530,9 @@
                     <span class="brand-text font-weight-light">Capit Logística</span>
                 </a>
 
-                <!-- Sidebar -->
+                <!-- Sidebar lateral -->
                 <div class="sidebar">
-                    <!-- Sidebar user panel (optional) -->
-
+                    <!-- Sidebar user panel foto/nome/nucleo -->
                     <div class="card card-widget">
                         <div class="card-header">
                             <div class="user-block">
@@ -383,464 +544,122 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- SidebarSearch Form -->
-                    <div class="form-inline">
-                        <div class="input-group" data-widget="sidebar-search">
-                            <input class="form-control form-control-sidebar" type="search" placeholder="Pesquisar..." aria-label="Search">
-                            <div class="input-group-append">
-                                <button class="btn btn-sidebar">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Sidebar Menu -->
-                    <%--<nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <!-- Add icons to the links using the .nav-icon class
-                              with font-awesome or any other icon font library -->
-                            <li class="nav-item menu-open">
-                                <a href="#" class="nav-link active" style="background-color: #A020F0; font-weight: bold;">
-                                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                                    <p>
-                                        Filiais               
-                                    <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="MenuMatriz" runat="server">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Matriz</p>
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link">
-                                                    <i class="fas fa-pallet nav-icon"></i>
-                                                    <p>Pedidos</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link">
-                                                    <i class="fas fa-boxes nav-icon"></i>
-                                                    <p>Cargas</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/Frm_ImpSolVWMatriz.aspx" class="nav-link">
-                                                    <i class="far fa-folder-open nav-icon"></i>
-                                                    <p>Imp. Solic. VW</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link">
-                                                    <i class="nav-icon fas fa-shipping-fast"></i>
-                                                    <p>
-                                                        Coletas/Entregas 
-                                                    </p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/ControleDePedagio.aspx" class="nav-link">
-                                                    <i class="fas fa-map-marker-alt nav-icon"></i>
-                                                    <p>Controle de Pedágio</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <!-- Ipiranga -->
-                                    <li class="nav-item" id="MenuIpiranga" runat="server">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Ipiranga</p>
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDePedidosIpiranga.aspx" class="nav-link">
-                                                    <i class="fas fa-pallet nav-icon"></i>
-                                                    <p>Pedidos</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDeCargasIpiranga.aspx" class="nav-link">
-                                                    <i class="fas fa-boxes nav-icon"></i>
-                                                    <p>Cargas</p>
-                                                </a>
-                                            </li>
-                                           
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/GestaoDeEntregasIpiranga.aspx" class="nav-link">
-                                                    <i class="nav-icon fas fa-shipping-fast"></i>
-                                                    <p>
-                                                        Coletas/Entregas 
-                                                    </p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/dist/pages/ControleDePedagioIpiranga.aspx" class="nav-link">
-                                                    <i class="fas fa-map-marker-alt nav-icon"></i>
-                                                    <p>Controle de Pedágio</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <!-- Minas -->
-                                    <li class="nav-item" id="MenuMinas" runat="server">
-                                            <a href="#" class="nav-link">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Minas</p>
-                                            </a>
-                                            <ul class="nav nav-treeview">
-                                                <li class="nav-item">
-                                                    <a href="/dist/pages/GestaoDePedidosMinas.aspx" class="nav-link">
-                                                        <i class="fas fa-pallet nav-icon"></i>
-                                                        <p>Pedidos</p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="/dist/pages/GestaoDeCargasMinas.aspx" class="nav-link">
-                                                        <i class="fas fa-boxes nav-icon"></i>
-                                                        <p>Cargas</p>
-                                                    </a>
-                                                </li>
-                                               
-                                                <li class="nav-item">
-                                                    <a href="/dist/pages/GestaoDeEntregasMinas.aspx" class="nav-link">
-                                                        <i class="nav-icon fas fa-shipping-fast"></i>
-                                                        <p>
-                                                            Coletas/Entregas 
-                                                        </p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="/dist/pages/ControleDePedagioMinas.aspx" class="nav-link">
-                                                        <i class="fas fa-map-marker-alt nav-icon"></i>
-                                                        <p>Controle de Pedágio</p>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    <!-- Pernambuco -->
-                                    <li class="nav-item" id="MenuPernambuco" runat="server">
-                                                <a href="#" class="nav-link">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p>Pernambuco</p>
-                                                </a>
-                                                <ul class="nav nav-treeview">
-                                                    <li class="nav-item">
-                                                        <a href="/dist/pages/GestaoDePedidosPernambuco.aspx" class="nav-link">
-                                                            <i class="fas fa-pallet nav-icon"></i>
-                                                            <p>Pedidos</p>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="/dist/pages/GestaoDeCargasPernambuco.aspx" class="nav-link">
-                                                            <i class="fas fa-boxes nav-icon"></i>
-                                                            <p>Cargas</p>
-                                                        </a>
-                                                    </li>
-                                                  
-                                                    <li class="nav-item">
-                                                        <a href="/dist/pages/GestaoDeEntregasPernambuco.aspx" class="nav-link">
-                                                            <i class="nav-icon fas fa-shipping-fast"></i>
-                                                            <p>
-                                                                Coletas/Entregas 
-                                                            </p>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a href="/dist/pages/ControleDePedagioPernambuco.aspx" class="nav-link">
-                                                            <i class="fas fa-map-marker-alt nav-icon"></i>
-                                                            <p>Controle de Pedágio</p>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                    <li class="nav-item" id="MenuDiadema" runat="server">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>CC - Diadema</p>
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <li class="nav-item">
-                                                    <a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link">
-                                                        <i class="fas fa-shipping-fast nav-icon"></i>
-                                                        <p>Solicitações VW</p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="ImportarPlanejamento.aspx" class="nav-link">
-                                                        <i class="fas fa-boxes nav-icon"></i>
-                                                        <p>Importar Planejamento</p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="/dist/pages/ConsultaColetasCNT.aspx" class="nav-link">
-                                                        <i class="fas fa-calendar-alt nav-icon"></i>
-                                                        <p>Coletas</p>
-                                                    </a>
-                                                </li>
-                                               
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                </ul>
-                            </li>
-
-                           <li class="nav-item" id="MenuModuloClientes" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-industry"></i>
-                <p>Clientes <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/ConsultaClientes.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ConsultaRotas.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Gestão de Rotas</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ConsultaFretes.aspx" class="nav-link"><i class="fas fa-dollar-sign nav-icon"></i><p>Gestão de Fretes</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/SimuladorFrete.aspx" class="nav-link"><i class="far fa-money-bill-alt nav-icon"></i><p>Simular Frete</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/Frm_DistanciaEntreCidades.aspx" class="nav-link"><i class="fas fa-road nav-icon"></i><p>Distância entre Cidades</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/GerenciarRotasKrona.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Gestão de Rotas Krona</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloProprietarios" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-user-friends"></i>
-                <p>Proprietários <i class="right fas fa-angle-left"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ControleCreditoAbastecimento.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Limite de Crédito</p></a></li>
-                <li class="nav-item"><a href="https://calculadorafrete.antt.gov.br/" class="nav-link" target="_blank" rel="noopener noreferrer"><i class="far fa-circle nav-icon"></i><p>Frete Mínimo ANTT</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloVeiculos" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-truck"></i>
-                <p>Veículos <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ControlesValidades.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controla Validades</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ControleCarretas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão de Carretas</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/GestaoDeMultas.aspx" class="nav-link"><i class="fas fa-traffic-light nav-icon"></i><p>Gestão de Multas</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloMotoristas" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-user-tie"></i>
-                <p>Motoristas <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/GerarTabelaDeAvaliacaoMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Avaliar Motoristas</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Acerto de Ponto</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link"><i class="far fa-check-circle nav-icon"></i><p>Gera TXT Folha</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloPostos" runat="server">
-            <a href="#" class="nav-link">
-                <i class="fas fa-gas-pump nav-icon"></i>
-                <p>Gestão de Postos <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/EntradaCombustivel.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Combustíveis</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/GestaoPostos.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Autorizados</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ControleAbastecimento.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Controle</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloManutencao" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-tools"></i>
-                <p>Manutenção <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/DashboardManutencao.aspx" class="nav-link"><i class="fas fa-truck nav-icon"></i><p>Gestão</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link"><i class="fas fa-building nav-icon"></i><p>Fornecedores</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/RequisicaoCompra.aspx" class="nav-link"><i class="fas fa-comments-dollar nav-icon"></i><p>Compras</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ColaboradoresManutencao.aspx" class="nav-link"><i class="fas fa-hard-hat nav-icon"></i><p>Colaboradores</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/controlaestoque.aspx" class="nav-link"><i class="fas fa-wrench nav-icon"></i><p>Estoque de Peças</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ControlePneus.aspx" class="nav-link"><i class="fas fa-road nav-icon"></i><p>Pneus</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ListaOS.aspx" class="nav-link"><i class="far fa-file-alt nav-icon"></i><p>Listar O.S.</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/AbrirOS.aspx" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><p>Abrir O.S.</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/FinalizarOS.aspx" class="nav-link"><i class="fas fa-calendar-alt nav-icon"></i><p>Finalizar O.S.</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloGestao" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-building"></i>
-                <p>Gestão <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/Indicadores.aspx" class="nav-link"><i class="fas fa-chart-pie"></i><p>Indicadores</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item" id="MenuModuloSistema" runat="server">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-user-circle"></i>
-                <p>Usuários <i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item"><a href="/dist/pages/TrocaSenha.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Trocar Senha</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle de Usuários</p></a></li>
-                <li class="nav-item"><a href="/dist/pages/ControleAcesso.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle de Acesso</p></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item">
-            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#modalSair"><i class="nav-icon fas fa-power-off"></i>Sair</a>
-        </li>
-                        </ul>
-                    </nav>--%>
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
-        
-                            <li class="nav-item" id="MenuModuloFiliais" runat="server">
-                                <a href="#" class="nav-link active" style="background-color: #A020F0; font-weight: bold;">
-                                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                                    <p>Filiais <i class="right fas fa-angle-left"></i></p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                
-                                    <li class="nav-item" id="MenuMatriz" runat="server">
-                                        <a href="#" class="nav-link"><i class="far fa-circle nav-icon text-purple"></i><p>MATRIZ <i class="right fas fa-angle-left"></i></p></a>
-                                        <ul class="nav nav-treeview pl-3">
-                                             <li class="nav-item" id="TelaGestaoDePedidos" runat="server"><a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link"><i class="fas fa-pallet nav-icon"></i><p>Pedidos</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeCargasMatriz" runat="server"><a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
-                                             <li class="nav-item" id="TelaFrm_ImpSolVWMatriz" runat="server"><a href="/dist/pages/Frm_ImpSolVWMatriz.aspx" class="nav-link"><i class="far fa-folder-open nav-icon"></i><p>Sol. VW Matriz</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeEntregasMatriz" runat="server"><a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Coletas/Entregas</p></a></li>
-                                            <%--<li class="nav-item" id="TelaColetasMatriz" runat="server"><a href="/dist/pages/ColetasMatriz.aspx" class="nav-link"><p>Coletas Matriz</p></a></li>--%>
-                                            <li class="nav-item" id="TelaControleDePedagio" runat="server"><a href="/dist/pages/ControleDePedagio.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Controle Pedágio</p></a></li>
-                                           <%-- <li class="nav-item" id="TelaFrm_CadPedidosMatriz" runat="server"><a href="/dist/pages/Frm_CadPedidosMatriz.aspx" class="nav-link"><p>Cad. Pedidos Matriz</p></a></li>--%>
-                                           
-                                            
-                                            
-                                           
-                                        </ul>
-                                    </li>
+                            
+                            <li class="nav-item" id="TelaGestaoDePedidos" runat="server"><a href="/dist/pages/GestaoDePedidos.aspx" class="nav-link"><i class="fas fa-pallet nav-icon"></i><p>Pedidos</p></a></li>
 
-                                    <li class="nav-item" id="MenuIpiranga" runat="server">
-                                        <a href="#" class="nav-link"><i class="far fa-circle nav-icon text-purple"></i><p>IPIRANGA <i class="right fas fa-angle-left"></i></p></a>
-                                        <ul class="nav nav-treeview pl-3">
-                                            <li class="nav-item" id="TelaGestaoDePedidosIpiranga" runat="server"><a href="/dist/pages/GestaoDePedidosIpiranga.aspx" class="nav-link"><i class="fas fa-pallet nav-icon"></i><p>Pedidos</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeCargasIpiranga" runat="server"><a href="/dist/pages/GestaoDeCargasIpiranga.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeEntregasIpiranga" runat="server"><a href="/dist/pages/GestaoDeEntregasIpiranga.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Coletas/Entregas</p></a></li>
-                                            <li class="nav-item" id="TelaControleDePedagioIpiranga" runat="server"><a href="/dist/pages/ControleDePedagioIpiranga.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Controle de Pedágio</p></a></li>
-                                            
-                                        </ul>
-                                    </li>
-
-                                    <li class="nav-item" id="MenuMinas" runat="server">
-                                        <a href="#" class="nav-link"><i class="far fa-circle nav-icon text-purple"></i><p>MINAS GERAIS <i class="right fas fa-angle-left"></i></p></a>
-                                        <ul class="nav nav-treeview pl-3">
-                                            <li class="nav-item" id="TelaGestaoDePedidosMinas" runat="server"><a href="/dist/pages/GestaoDePedidosMinas.aspx" class="nav-link"><i class="fas fa-pallet nav-icon"></i><p>Pedidos</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeCargasMinas" runat="server"><a href="/dist/pages/GestaoDeCargasMinas.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeEntregasMinas" runat="server"><a href="/dist/pages/GestaoDeEntregasMinas.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Coletas/Entregas</p></a></li>
-                                            <li class="nav-item" id="TelaControleDePedagioMinas" runat="server"><a href="/dist/pages/ControleDePedagioMinas.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Controle Pedágio</p></a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="nav-item" id="MenuPernambuco" runat="server">
-                                        <a href="#" class="nav-link"><i class="far fa-circle nav-icon text-purple"></i><p>PERNAMBUCO <i class="right fas fa-angle-left"></i></p></a>
-                                        <ul class="nav nav-treeview pl-3">
-                                          <li class="nav-item" id="TelaGestaoDePedidosPernambuco" runat="server"><a href="/dist/pages/GestaoDePedidosPernambuco.aspx" class="nav-link"><i class="fas fa-pallet nav-icon"></i><p>Pedidos</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeCargasPernambuco" runat="server"><a href="/dist/pages/GestaoDeCargasPernambuco.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
-                                            <li class="nav-item" id="TelaGestaoDeEntregasPernambuco" runat="server"><a href="/dist/pages/GestaoDeEntregasPernambuco.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Coletas/Entregas</p></a></li>                                           
-                                             <li class="nav-item" id="TelaControleDePedagioPernambuco" runat="server"><a href="/dist/pages/ControleDePedagioPernambuco.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Controle Pedágio</p></a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="nav-item" id="MenuDiadema" runat="server">
-                                        <a href="#" class="nav-link"><i class="far fa-circle nav-icon text-purple"></i><p>CNT (CC) <i class="right fas fa-angle-left"></i></p></a>
-                                        <ul class="nav nav-treeview pl-3">
-                                            <li class="nav-item" id="TelaGestaoDeCargasCC" runat="server"><a href="/dist/pages/GestaoDeCargasCC.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
-                                             <li class="nav-item" id="TelaConsultaEntregas" runat="server"><a href="/dist/pages/ConsultaEntregas.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Solicitaçao VW</p></a></li>
-                                            <li class="nav-item" id="TelaImportarPlanejamento" runat="server"><a href="/dist/pages/ImportarPlanejamento.aspx" class="nav-link"><p>Importar Planejamento</p></a></li>
-                                            <li class="nav-item" id="TelaConsultaColetasCNT" runat="server"><a href="/dist/pages/ConsultaColetasCNT.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Coletas</p></a></li>                                           
-                                            
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-
+                            <li class="nav-item" id="TelaGestaoDeCargasMatriz" runat="server"><a href="/dist/pages/GestaoDeCargasMatriz.aspx" class="nav-link"><i class="fas fa-boxes nav-icon"></i><p>Cargas</p></a></li>
+                            
+                            <li class="nav-item" id="TelaFrm_ImpSolVWMatriz" runat="server"><a href="/dist/pages/Frm_ImpSolVWMatriz.aspx" class="nav-link"><i class="far fa-folder-open nav-icon"></i><p>Sol. VW Matriz</p></a></li>
+                            
+                            <li class="nav-item" id="TelaGerarCVA" runat="server"><a href="/dist/pages/AberturaCVA.aspx" class="nav-link"><i class="far fa-folder-open nav-icon"></i><p>Gerar CVA</p></a></li>
+                            
+                            <li class="nav-item" id="TelaGestaoDeEntregasMatriz" runat="server"><a href="/dist/pages/GestaoDeEntregasMatriz.aspx" class="nav-link"><i class="nav-icon fas fa-shipping-fast"></i><p>Coletas/Entregas</p></a></li>
+                            
+                            <li class="nav-item" id="TelaControleDePedagio" runat="server"><a href="/dist/pages/ControleDePedagio.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Controle Pedágio</p></a></li>
+                           
+                            <!-- Menu Cliente e submenus -->
                             <li class="nav-item" id="MenuModuloClientes" runat="server">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-industry"></i>
                                     <p>Clientes <i class="fas fa-angle-left right"></i></p>
                                 </a>
+                                <!-- SubMenu -->
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="TelaConsultaClientes" runat="server"><a href="/dist/pages/ConsultaClientes.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
+                                   
+                                    <li class="nav-item" id="TelaConsultaClientes" runat="server"><a href="/dist/pages/ConsultaClientes.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão de Clientes</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaConsultaRotas" runat="server"><a href="/dist/pages/ConsultaRotas.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Gestão de Rotas</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaConsultaFretes" runat="server"><a href="/dist/pages/ConsultaFretes.aspx" class="nav-link"><i class="fas fa-dollar-sign nav-icon"></i><p>Gestão de Fretes</p></a></li>
+                                  
                                     <li class="nav-item" id="TelaSimuladorFrete" runat="server"><a href="/dist/pages/SimuladorFrete.aspx" class="nav-link"><i class="far fa-money-bill-alt nav-icon"></i><p>Simular Frete</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaFrm_DistanciaEntreCidades" runat="server"><a href="/dist/pages/Frm_DistanciaEntreCidades.aspx" class="nav-link"><i class="fas fa-road nav-icon"></i><p>Distância entre Cidades</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaGerenciarRotasKrona" runat="server"><a href="/dist/pages/GerenciarRotasKrona.aspx" class="nav-link"><i class="fas fa-map-marker-alt nav-icon"></i><p>Gestão de Rotas Krona</p></a></li>
                                     
                                 </ul>
+
                             </li>
 
+                            <!-- Menu Proprietario e submenus -->
                             <li class="nav-item" id="MenuModuloProprietarios" runat="server">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-user-friends"></i>
                                     <p>Proprietários <i class="right fas fa-angle-left"></i></p>
                                 </a>
+                                <!-- SubMenu -->
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="TelaConsulta_Agregados" runat="server"><a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
+                                    
+                                    <li class="nav-item" id="TelaConsulta_Agregados" runat="server"><a href="/dist/pages/Consulta_Agregados.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão de Proprietários</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaControleCreditoAbastecimento" runat="server"><a href="/dist/pages/ControleCreditoAbastecimento.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Limite de Crédito</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaFreteMinimoANTT" runat="server"><a href="/dist/pages/FreteMinimoANTT.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Frete Mínimo ANTT</p></a></li>
+
                                 </ul>
                             </li>
 
+                            <!-- Menu Veiculos e submenu -->
                             <li class="nav-item" id="MenuModuloVeiculos" runat="server">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-truck"></i>
                                     <p>Veículos <i class="fas fa-angle-left right"></i></p>
                                 </a>
+                                <!-- SubMenu -->
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="TelaConsultaVeiculos" runat="server"><a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
+
+                                    <li class="nav-item" id="TelaConsultaVeiculos" runat="server"><a href="/dist/pages/ConsultaVeiculos.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão de Veículos</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaControlesValidades" runat="server"><a href="/dist/pages/ControlesValidades.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controla Validades</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaControleCarretas" runat="server"><a href="/dist/pages/ControleCarretas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão Carretas</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaGestaoDeMultas" runat="server"><a href="/dist/pages/GestaoDeMultas.aspx" class="nav-link"><i class="fas fa-traffic-light nav-icon"></i><p>Gestão de Multas</p></a></li>
+
                                 </ul>
                             </li>
-
+                            <!-- Menu Motoristas e submenu -->
                             <li class="nav-item" id="MenuModuloMotoristas" runat="server">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-user-tie"></i>
                                     <p>Motoristas <i class="fas fa-angle-left right"></i></p>
                                 </a>
+                                <!-- SubMenu -->
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="TelaConsultaMotoristas" runat="server"><a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão</p></a></li>
-                                     <li class="nav-item" id="TelaGerarTabelaDeAvaliacaoMotoristas" runat="server"><a href="/dist/pages/GerarTabelaDeAvaliacaoMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Avaliar Motoristas</p></a></li>
+
+                                    <li class="nav-item" id="TelaConsultaMotoristas" runat="server"><a href="/dist/pages/ConsultaMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Gestão de Motoristas</p></a></li>
+                                    
+                                    <li class="nav-item" id="TelaGerarTabelaDeAvaliacaoMotoristas" runat="server"><a href="/dist/pages/GerarTabelaDeAvaliacaoMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Avaliar Motoristas</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaInativarMotoristas" runat="server"><a href="/dist/pages/motoristasinativos.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Inativar Motoristas</p></a></li>
+                                    
                                     <li class="nav-item" id="ControleFaltas" runat="server"><a href="/dist/pages/ControleFaltasMotoristas.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle de Faltas</p></a></li>
-                                     <li class="nav-item" id="TelaAcertodePonto" runat="server"><a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Acerto de Ponto</p></a></li>                                    
-                                    <li class="nav-item" id="TelaFrm_GerarTXT" runat="server"><a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link"><i class="far fa-check-circle nav-icon"></i><p>Gera TXT Folha</p></a></li>
-                                   
+                                    
+                                    <li class="nav-item" id="TelaAcertodePonto" runat="server"><a href="/dist/pages/Frm_DiarioDeBordo.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Acerto de Ponto</p></a></li>                                    
+                                    
+                                    <li class="nav-item" id="TelaFrm_GerarTXT" runat="server"><a href="/dist/pages/Frm_GerarTXT.aspx" class="nav-link"><i class="far fa-check-circle nav-icon"></i><p>Gera TXT Folha</p></a></li>  
                                    
                                 </ul>
                             </li>
 
+                            <!-- Menu Postos -->
                             <li class="nav-item" id="MenuModuloPostos" runat="server">
                                 <a href="#" class="nav-link">
                                     <i class="fas fa-gas-pump nav-icon"></i>
                                     <p>Gestão de Postos <i class="fas fa-angle-left right"></i></p>
                                 </a>
-                                <ul class="nav nav-treeview">                                    
+                                <!-- Sub Menu -->
+                                <ul class="nav nav-treeview"> 
+                                    
                                     <li class="nav-item" id="TelaEntradaCombustivel" runat="server"><a href="/dist/pages/EntradaCombustivel.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Combustíveis</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaGestaoPostos" runat="server"><a href="/dist/pages/GestaoPostos.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Autorizados</p></a></li>
-                                    <li class="nav-item" id="TelaControleAbastecimento" runat="server"><a href="/dist/pages/ControleAbastecimento.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Controle</p></a></li>
                                     
-                                    
+                                    <li class="nav-item" id="TelaControleAbastecimento" runat="server"><a href="/dist/pages/ControleAbastecimento.aspx" class="nav-link"><i class="fas fa-gas-pump nav-icon"></i><p>Controle</p></a></li>           
                                     
                                 </ul>
                             </li>
@@ -851,14 +670,23 @@
                                     <p>Manutenção <i class="fas fa-angle-left right"></i></p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item" id="TelaDashboardManutencao" runat="server"><a href="/dist/pages/DashboardManutencao.aspx" class="nav-link"><i class="fas fa-truck nav-icon"></i><p>Gestão</p></a></li>
-                                     <li class="nav-item" id="TelaConsultaFornecedores" runat="server"><a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link"><i class="fas fa-building nav-icon"></i><p>Fornecedores</p></a></li>                                   
-                                     <li class="nav-item" id="TelaRequisicaoCompra" runat="server"><a href="/dist/pages/RequisicaoCompra.aspx" class="nav-link"><i class="fas fa-building nav-icon"></i><p>Compras</p></a></li>
-                                     <li class="nav-item" id="TelaColaboradoresManutencao" runat="server"><a href="/dist/pages/ColaboradoresManutencao.aspx" class="nav-link"><i class="fas fa-hard-hat nav-icon"></i><p>Colaboradores</p></a></li>
+                                   
+                                    <li class="nav-item" id="TelaDashboardManutencao" runat="server"><a href="/dist/pages/DashboardManutencao.aspx" class="nav-link"><i class="fas fa-truck nav-icon"></i><p>Gestão Manutenção</p></a></li>
+                                    
+                                    <li class="nav-item" id="TelaConsultaFornecedores" runat="server"><a href="/dist/pages/ConsultaFornecedores.aspx" class="nav-link"><i class="fas fa-building nav-icon"></i><p>Fornecedores</p></a></li>                                   
+                                    
+                                    <li class="nav-item" id="TelaRequisicaoCompra" runat="server"><a href="/dist/pages/RequisicaoCompra.aspx" class="nav-link"><i class="fas fa-building nav-icon"></i><p>Compras</p></a></li>
+                                    
+                                    <li class="nav-item" id="TelaColaboradoresManutencao" runat="server"><a href="/dist/pages/ColaboradoresManutencao.aspx" class="nav-link"><i class="fas fa-hard-hat nav-icon"></i><p>Colaboradores</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaControlaEstoque" runat="server"><a href="/dist/pages/controlaestoque.aspx" class="nav-link"><i class="fas fa-wrench nav-icon"></i><p>Estoque Peças</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaControlePneus" runat="server"><a href="/dist/pages/ControlePneus.aspx" class="nav-link"><i class="fas fa-road nav-icon"></i><p>Pneus</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaListaOS" runat="server"><a href="/dist/pages/ListaOS.aspx" class="nav-link"><i class="far fa-file-alt nav-icon"></i><p>Listar O.S.</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaAbrirOS" runat="server"><a href="/dist/pages/AbrirOS.aspx" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><p>Abrir O.S.</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaFinalizarOS" runat="server"><a href="/dist/pages/FinalizarOS.aspx" class="nav-link"><i class="fas fa-calendar-alt nav-icon"></i><p>Finalizar O.S.</p></a></li>
                                  
                                   
@@ -868,12 +696,16 @@
                             <li class="nav-item" id="MenuModuloGestao" runat="server">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-chart-pie"></i>
-                                    <p>Gestão <i class="fas fa-angle-left right"></i></p>
+                                    <p>Gerencial <i class="fas fa-angle-left right"></i></p>
                                 </a>
                                 <ul class="nav nav-treeview">
+                                   
                                     <li class="nav-item" id="TelaIndicadores" runat="server"><a href="/dist/pages/Indicadores.aspx" class="nav-link"><i class="fas fa-chart-pie nav-icon"></i><p> Indicadores</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaTabelas" runat="server"><a href="/dist/pages/tabelasauxiliares.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Tabelas</p></a></li>                                    
+                                    
                                     <li class="nav-item" id="TelaEmpresas" runat="server"><a href="/dist/pages/empresas.aspx" class="nav-link"><i class="fas fa-book nav-icon"></i><p>Empresas</p></a></li>
+
                                 </ul>
                             </li>
 
@@ -883,10 +715,15 @@
                                     <p>Usuários / Sistema <i class="fas fa-angle-left right"></i></p>
                                 </a>
                                 <ul class="nav nav-treeview">
+
                                     <li class="nav-item" id="TelaConsultaUsuarios" runat="server"><a href="/dist/pages/ConsultaUsuarios.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle Usuários</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaControleAcesso" runat="server"><a href="/dist/pages/ControleAcesso.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Controle Acesso</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaTrocaSenha" runat="server"><a href="/dist/pages/TrocaSenha.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Trocar Senha</p></a></li>
+                                    
                                     <li class="nav-item" id="TelaTrocaFoto" runat="server"><a href="/dist/pages/PerfilUsuario.aspx" class="nav-link"><i class="far fa-circle nav-icon"></i><p>Trocar Foto</p></a></li>
+
                                 </ul>
                             </li>
 
@@ -1218,6 +1055,135 @@
         sparkline3.draw([15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21])
 
     </script>
+
+     <script>         
+         $(document).ready(function () {
+
+             var campo = $("#txtPesquisaMenu");
+             var resultado = $("#resultadoPesquisaMenu");
+
+             campo.on("input", function () {
+
+                 var texto = $(this).val()
+                     .toLowerCase()
+                     .trim();
+
+                 resultado.empty();
+
+                 if (texto === "") {
+                     resultado.hide();
+                     return;
+                 }
+
+                 var encontrou = false;
+
+                 $(".main-sidebar a.nav-link").each(function () {
+
+                     var link = $(this);
+
+                     // Nome do menu
+                     var nomeMenu = link.find("p")
+                         .clone()
+                         .children()
+                         .remove()
+                         .end()
+                         .text()
+                         .replace(/\s+/g, " ")
+                         .trim();
+
+                     if (!nomeMenu) {
+                         return;
+                     }
+
+                     // Pesquisa
+                     if (nomeMenu.toLowerCase().indexOf(texto) === -1) {
+                         return;
+                     }
+
+                     // Pega o href ORIGINAL
+                     var url = link.attr("href");
+
+                     // Ignora menus que não são páginas
+                     if (!url || url === "#") {
+                         return;
+                     }
+
+                     if (url.toLowerCase().indexOf("javascript:") === 0) {
+                         return;
+                     }
+
+                     encontrou = true;
+
+                     // Cria um link REAL
+                     var item = $("<a></a>");
+
+                     item.attr("href", url);
+                     item.addClass("resultado-menu-item");
+
+                     // Ícone
+                     var icone = link.find("i.nav-icon").first();
+
+                     if (icone.length) {
+
+                         $("<i></i>")
+                             .addClass(icone.attr("class"))
+                             .appendTo(item);
+
+                     }
+
+                     // Nome
+                     $("<span></span>")
+                         .text(nomeMenu)
+                         .appendTo(item);
+
+                     resultado.append(item);
+
+                 });
+
+                 if (encontrou) {
+                     resultado.show();
+                 } else {
+
+                     resultado
+                         .html(
+                             '<div class="resultado-sem-menu">' +
+                             '<i class="fas fa-search"></i> ' +
+                             'Nenhuma opção encontrada' +
+                             '</div>'
+                         )
+                         .show();
+                 }
+
+             });
+
+
+             // Fecha ao clicar fora
+             $(document).on("click", function (e) {
+
+                 if (!$(e.target).closest(".menu-search-wrapper").length) {
+                     resultado.hide();
+                 }
+
+             });
+
+
+             // ESC
+             campo.on("keydown", function (e) {
+
+                 if (e.key === "Escape") {
+
+                     campo.val("");
+                     resultado.hide();
+
+                 }
+
+             });
+
+         });
+     </script>
+
+
+
 </body>
 
 </html>

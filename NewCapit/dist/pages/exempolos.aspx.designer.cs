@@ -15,6 +15,60 @@ namespace NewCapit.dist.pages
     {
 
         /// <summary>
+        /// Controle txtNumCVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNumCVA;
+
+        /// <summary>
+        /// Controle txtSitCVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSitCVA;
+
+        /// <summary>
+        /// Controle txtDataHoraEntregaCVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDataHoraEntregaCVA;
+
+        /// <summary>
+        /// Controle txtComRetornoCVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtComRetornoCVA;
+
+        /// <summary>
+        /// Controle txtDtRetorno.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDtRetorno;
+
+        /// <summary>
+        /// Controle ddlDevolucaoPecaCVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDevolucaoPecaCVA;
+
+        /// <summary>
         /// Controle novaColeta.
         /// </summary>
         /// <remarks>

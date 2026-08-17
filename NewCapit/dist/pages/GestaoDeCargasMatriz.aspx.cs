@@ -48,7 +48,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // 1. Base da query
-                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao,cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, andamento, idviagem, saidaorigem, chegadadestino, saidaplanta , ot, codmot, frota FROM tbcargas WHERE empresa = '1111' ";
+                string query = "SELECT Id, carga, emissao, peso, status, CONVERT(varchar, previsao, 103) AS previsao,cod_expedidor, expedidor, cid_expedidor, uf_expedidor, cod_recebedor, recebedor, cid_recebedor, uf_recebedor, andamento, idviagem, saidaorigem, chegadadestino, saidaplanta , ot, codmot, frota FROM tbcargas WHERE empresa = " + Session["CodEmpresa"]?.ToString();
 
                 // 2. Montagem dinâmica da string
                 if (!string.IsNullOrEmpty(DataInicio.Text))

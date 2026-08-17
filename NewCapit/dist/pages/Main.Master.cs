@@ -2,6 +2,9 @@
 using NewCapit.dist.pages;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -28,6 +31,8 @@ namespace NewCapit
                 {
                     lblUsuario.Text = "<Usuário>";
                 }
+
+
 
                 if (Session["FuncaoUsuario"] != null)
                 {
@@ -58,6 +63,8 @@ namespace NewCapit
                     foto = "/fotos/motoristasemfoto.jpg";
                 }
 
+                CarregarEmpresas();
+                CarregarEmpresaUsuario();
 
                 //if (Session["EmpresaTrabalho"] != null)
                 //{
@@ -113,12 +120,12 @@ namespace NewCapit
                         .ToList();
 
                     // Mapeia se o usuário tem acesso a alguma das Filiais (módulos de 1 a 5)
-                    MenuModuloFiliais.Visible = modulosUsuario.Any(m => m >= 1 && m <= 5);
-                    MenuMatriz.Visible = modulosUsuario.Contains(1);
-                    MenuIpiranga.Visible = modulosUsuario.Contains(2);
-                    MenuMinas.Visible = modulosUsuario.Contains(3);
-                    MenuPernambuco.Visible = modulosUsuario.Contains(4);
-                    MenuDiadema.Visible = modulosUsuario.Contains(5);
+                    //MenuModuloFiliais.Visible = modulosUsuario.Any(m => m >= 1 && m <= 5);
+                    //MenuMatriz.Visible = modulosUsuario.Contains(1);
+                    //MenuIpiranga.Visible = modulosUsuario.Contains(2);
+                    //MenuMinas.Visible = modulosUsuario.Contains(3);
+                    //MenuPernambuco.Visible = modulosUsuario.Contains(4);
+                    //MenuDiadema.Visible = modulosUsuario.Contains(5);
 
                     // Mapeia os módulos numéricos do sistema
                     MenuModuloClientes.Visible = modulosUsuario.Contains(6);
@@ -149,34 +156,35 @@ namespace NewCapit
                     //TelaColetasMatriz.Visible = telasPermitidas.Contains(3);
                     TelaControleDePedagio.Visible = telasPermitidas.Contains(23);
                     //TelaFrm_CadPedidosMatriz.Visible = telasPermitidas.Contains(58);
-                    TelaFrm_ImpSolVWMatriz.Visible = telasPermitidas.Contains(72);
+                    TelaFrm_ImpSolVWMatriz.Visible = telasPermitidas.Contains(123);
+                    TelaGerarCVA.Visible = telasPermitidas.Contains(72);
                     TelaGestaoDeCargasMatriz.Visible = telasPermitidas.Contains(81);
                     TelaGestaoDeEntregasMatriz.Visible = telasPermitidas.Contains(85);
                     TelaGestaoDePedidos.Visible = telasPermitidas.Contains(89);
 
                     // --- FILIAL IPIRANGA (id_modulo = 2) ---
-                    TelaControleDePedagioIpiranga.Visible = telasPermitidas.Contains(24);
-                    TelaGestaoDeCargasIpiranga.Visible = telasPermitidas.Contains(80);
-                    TelaGestaoDeEntregasIpiranga.Visible = telasPermitidas.Contains(84);
-                    TelaGestaoDePedidosIpiranga.Visible = telasPermitidas.Contains(90);
+                    //TelaControleDePedagioIpiranga.Visible = telasPermitidas.Contains(24);
+                    //TelaGestaoDeCargasIpiranga.Visible = telasPermitidas.Contains(80);
+                    //TelaGestaoDeEntregasIpiranga.Visible = telasPermitidas.Contains(84);
+                    //TelaGestaoDePedidosIpiranga.Visible = telasPermitidas.Contains(90);
 
                     // --- FILIAL MINAS (id_modulo = 3) ---
-                    TelaControleDePedagioMinas.Visible = telasPermitidas.Contains(25);
-                    TelaGestaoDeCargasMinas.Visible = telasPermitidas.Contains(82);
-                    TelaGestaoDeEntregasMinas.Visible = telasPermitidas.Contains(86);
-                    TelaGestaoDePedidosMinas.Visible = telasPermitidas.Contains(91);
+                    //TelaControleDePedagioMinas.Visible = telasPermitidas.Contains(25);
+                    //TelaGestaoDeCargasMinas.Visible = telasPermitidas.Contains(82);
+                    //TelaGestaoDeEntregasMinas.Visible = telasPermitidas.Contains(86);
+                    //TelaGestaoDePedidosMinas.Visible = telasPermitidas.Contains(91);
 
                     // --- FILIAL PERNAMBUCO (id_modulo = 4) ---
-                    TelaControleDePedagioPernambuco.Visible = telasPermitidas.Contains(26);
-                    TelaGestaoDeCargasPernambuco.Visible = telasPermitidas.Contains(83);
-                    TelaGestaoDeEntregasPernambuco.Visible = telasPermitidas.Contains(87);
-                    TelaGestaoDePedidosPernambuco.Visible = telasPermitidas.Contains(92);
+                    //TelaControleDePedagioPernambuco.Visible = telasPermitidas.Contains(26);
+                    //TelaGestaoDeCargasPernambuco.Visible = telasPermitidas.Contains(83);
+                    //TelaGestaoDeEntregasPernambuco.Visible = telasPermitidas.Contains(87);
+                    //TelaGestaoDePedidosPernambuco.Visible = telasPermitidas.Contains(92);
 
                     // --- FILIAL DIADEMA / CNT (id_modulo = 5) ---
-                    TelaGestaoDeCargasCC.Visible = telasPermitidas.Contains(83);
-                    TelaConsultaColetasCNT.Visible = telasPermitidas.Contains(7);
-                    TelaConsultaEntregas.Visible = telasPermitidas.Contains(9);
-                    TelaImportarPlanejamento.Visible = telasPermitidas.Contains(96);
+                    //TelaGestaoDeCargasCC.Visible = telasPermitidas.Contains(83);
+                    //TelaConsultaColetasCNT.Visible = telasPermitidas.Contains(7);
+                    //TelaConsultaEntregas.Visible = telasPermitidas.Contains(9);
+                    //TelaImportarPlanejamento.Visible = telasPermitidas.Contains(96);
 
                     // --- MÓDULO CLIENTES (id_modulo = 6) ---
                     TelaConsultaClientes.Visible = telasPermitidas.Contains(6);
@@ -237,23 +245,7 @@ namespace NewCapit
                     EsconderTodasAsTelas();
                 }
 
-            }
-            //string foto_usuario = Session["FotoUsuario"]?.ToString();
-
-            //if (!string.IsNullOrEmpty(foto_usuario))
-            //{
-            //    //string caminhoFisico = Server.MapPath(foto_usuario);
-            //    string caminhoFisico = foto_usuario;
-
-            //    if (File.Exists(caminhoFisico))
-            //        foto = foto_usuario;
-            //    else
-            //        foto = "/fotos/motoristasemfoto.jpg";
-            //}
-            //else
-            //{
-            //    foto = "/fotos/motoristasemfoto.jpg";
-            //}
+            }            
 
             string fotoUsuario = Session["FotoUsuario"]?.ToString();
 
@@ -273,9 +265,256 @@ namespace NewCapit
 
         }
 
-        private void EsconderTodosOsModulos()
+        private void CarregarEmpresas()
         {
-            MenuModuloFiliais.Visible = false;
+            string sql = @"
+            SELECT
+                codigo_empresa,
+                nome_fantasia,
+                CAST(codigo_empresa AS VARCHAR(20)) + ' - ' + nome_fantasia AS empresa_exibicao
+            FROM tbempresa
+            ORDER BY nome_fantasia";
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager
+                    .ConnectionStrings["conexao"]
+                    .ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                conn.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    ddlEmpresa.DataSource = dr;
+
+                    // Valor utilizado internamente
+                    ddlEmpresa.DataValueField = "codigo_empresa";
+
+                    // O que aparece para o usuário
+                    ddlEmpresa.DataTextField = "empresa_exibicao";
+
+                    ddlEmpresa.DataBind();
+                }
+            }
+
+            ddlEmpresa.Items.Insert(
+                0,
+                new ListItem("-- Selecione a empresa --", ""));
+        }
+        private void CarregarEmpresaUsuario()
+        {
+            DataTable dt = EmpresaUsuarioHelper.ObterEmpresaUsuario();
+
+            if (dt == null || dt.Rows.Count == 0)
+                return;
+
+            DataRow row = dt.Rows[0];
+
+            string codigoEmpresa =
+                row["cod_empresa"] == DBNull.Value
+                    ? ""
+                    : row["cod_empresa"].ToString().Trim();
+
+            string nomeEmpresa =
+                row["nom_empresa"] == DBNull.Value
+                    ? ""
+                    : row["nom_empresa"].ToString().Trim();
+
+            if (string.IsNullOrWhiteSpace(codigoEmpresa))
+                return;
+
+            Session["CodEmpresa"] = codigoEmpresa;
+            Session["NomEmpresa"] = nomeEmpresa;
+
+            ListItem item =
+                ddlEmpresa.Items.FindByValue(codigoEmpresa);
+
+            if (item != null)
+            {
+                ddlEmpresa.ClearSelection();
+                item.Selected = true;
+            }
+
+            CarregarLogoEmpresa(codigoEmpresa);
+        }
+        protected void ddlEmpresa_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string codigoEmpresa = ddlEmpresa.SelectedValue;
+
+                if (string.IsNullOrWhiteSpace(codigoEmpresa))
+                {
+                    MostrarMensagem("Selecione uma empresa.");
+                    return;
+                }
+
+                // Exemplo:
+                // 001 - EMPRESA TESTE
+                string texto = ddlEmpresa.SelectedItem.Text;
+
+                string nomeEmpresa = texto;
+
+                int pos = texto.IndexOf(" - ");
+
+                if (pos >= 0)
+                    nomeEmpresa = texto.Substring(pos + 3).Trim();
+
+                // UPDATE DA EMPRESA SELECIONADA
+                EmpresaUsuarioHelper.SalvarEmpresaUsuario(
+                    codigoEmpresa,
+                    nomeEmpresa);
+
+                // Se chegou aqui, o UPDATE funcionou.
+
+                //Response.Redirect(
+                //    "~/dist/pages/Home.aspx",
+                //    false);
+
+                Response.Redirect(
+                    "~/dist/pages/Login.aspx",
+                    false);                
+
+                Context.ApplicationInstance.CompleteRequest();
+            }
+            catch (Exception ex)
+            {
+                MostrarMensagem(
+                    "Erro ao alterar empresa: " + ex.Message);
+            }
+        }
+        private void CarregarLogoEmpresa(string codigoEmpresa)
+        {
+            string sql = @"
+            SELECT logo
+            FROM tbempresa
+            WHERE codigo_empresa = @codigo_empresa";
+
+
+            using (SqlConnection conn =
+                new SqlConnection(
+                    ConfigurationManager
+                    .ConnectionStrings["conexao"]
+                    .ConnectionString))
+            using (SqlCommand cmd =
+                new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue(
+                    "@codigo_empresa",
+                    codigoEmpresa);
+
+                conn.Open();
+
+                object resultado =
+                    cmd.ExecuteScalar();
+
+
+                string logo = resultado == null ||
+                              resultado == DBNull.Value
+                    ? ""
+                    : resultado.ToString().Trim();
+
+
+                if (string.IsNullOrWhiteSpace(logo))
+                {
+                    imgLogoEmpresa.ImageUrl =
+                        "~/dist/img/logo_em_branco.png";
+
+                    return;
+                }
+
+
+                if (logo.StartsWith("~/"))
+                {
+                    imgLogoEmpresa.ImageUrl = logo;
+                }
+                else if (logo.StartsWith("/"))
+                {
+                    //imgLogoEmpresa.ImageUrl =
+                    //    "~" + logo;
+                    imgLogoEmpresa.ImageUrl = logo;
+                }
+                else
+                {
+                    //imgLogoEmpresa.ImageUrl =
+                    //    "~/dist/img/" + logo;
+                    imgLogoEmpresa.ImageUrl = logo;
+                }
+            }
+        }
+        private void FecharFormulariosAbertos()
+        {
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "FecharFormularios",
+                @"
+                setTimeout(function () {
+
+                    // Fecha modais
+                    document
+                        .querySelectorAll('.modal')
+                        .forEach(function (modalElement) {
+
+                            var modal =
+                                bootstrap.Modal
+                                .getInstance(modalElement);
+
+                            if (modal) {
+                                modal.hide();
+                            }
+                        });
+
+
+                    // Fecha offcanvas
+                    document
+                        .querySelectorAll('.offcanvas')
+                        .forEach(function (element) {
+
+                            var offcanvas =
+                                bootstrap.Offcanvas
+                                .getInstance(element);
+
+                            if (offcanvas) {
+                                offcanvas.hide();
+                            }
+                        });
+
+
+                        // Remove possíveis backdrops
+                        document
+                            .querySelectorAll('.modal-backdrop')
+                            .forEach(function (element) {
+                                element.remove();
+                            });
+
+
+                        document.body.classList
+                            .remove('modal-open');
+
+                    }, 100);
+                    ",
+                true);
+        }
+        private void MostrarMensagem(string mensagem)
+        {
+            string script = "mostrarMensagem('" +
+                            HttpUtility.JavaScriptStringEncode(mensagem) +
+                            "');";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "Mensagem",
+                script,
+                true
+            );
+        }
+
+
+
+        private void EsconderTodosOsModulos()
+        {           
             MenuModuloClientes.Visible = false;
             MenuModuloProprietarios.Visible = false;
             MenuModuloVeiculos.Visible = false;
@@ -290,29 +529,53 @@ namespace NewCapit
         private void EsconderTodasAsTelas()
         {
             // Reseta a visibilidade de todas as sub-telas caso falhe a validação
-            /*TelaColetasMatriz.Visible = false;*/ TelaControleDePedagio.Visible = false; /*TelaFrm_CadPedidosMatriz.Visible = false;*/
+            //TelaColetasMatriz.Visible = false;
+            TelaControleDePedagio.Visible = false;
+            //TelaFrm_CadPedidosMatriz.Visible = false;
             TelaAcertodePonto.Visible = false;
-            TelaFrm_ImpSolVWMatriz.Visible = false; TelaGestaoDeCargasMatriz.Visible = false; TelaGestaoDeEntregasMatriz.Visible = false;
-            TelaGestaoDePedidos.Visible = false; TelaControleDePedagioIpiranga.Visible = false; TelaGestaoDeCargasIpiranga.Visible = false;
-            TelaGestaoDeEntregasIpiranga.Visible = false; TelaGestaoDePedidosIpiranga.Visible = false; TelaControleDePedagioMinas.Visible = false;
-            TelaGestaoDeCargasMinas.Visible = false; TelaGestaoDeEntregasMinas.Visible = false; TelaGestaoDePedidosMinas.Visible = false;
-            TelaControleDePedagioPernambuco.Visible = false; TelaGestaoDeCargasPernambuco.Visible = false; TelaGestaoDeEntregasPernambuco.Visible = false;
-            TelaGestaoDePedidosPernambuco.Visible = false; TelaConsultaColetasCNT.Visible = false; TelaConsultaEntregas.Visible = false;
-            TelaImportarPlanejamento.Visible = false; TelaConsultaClientes.Visible = false; TelaConsultaFretes.Visible = false;
-            TelaConsultaRotas.Visible = false; TelaFrm_DistanciaEntreCidades.Visible = false; TelaGerenciarRotasKrona.Visible = false;
-            TelaSimuladorFrete.Visible = false; TelaConsulta_Agregados.Visible = false; TelaControleCreditoAbastecimento.Visible = false;
-            TelaFreteMinimoANTT.Visible = false; TelaConsultaVeiculos.Visible = false; TelaControleCarretas.Visible = false;
-            TelaControlesValidades.Visible = false; TelaGestaoDeMultas.Visible = false; TelaConsultaMotoristas.Visible = false;
-            TelaFrm_GerarTXT.Visible = false; TelaGerarTabelaDeAvaliacaoMotoristas.Visible = false; TelaControleAbastecimento.Visible = false;
-            TelaEntradaCombustivel.Visible = false; TelaGestaoPostos.Visible = false; TelaColaboradoresManutencao.Visible = false;
-            TelaConsultaFornecedores.Visible = false; TelaControlaEstoque.Visible = false; TelaControlePneus.Visible = false;
-            TelaDashboardManutencao.Visible = false; TelaFinalizarOS.Visible = false; TelaListaOS.Visible = false;
-            TelaRequisicaoCompra.Visible = false; TelaIndicadores.Visible = false; TelaConsultaUsuarios.Visible = false;
-            TelaControleAcesso.Visible = false; TelaTrocaSenha.Visible = false;
-            TelaTabelas.Visible = false; TelaTrocaSenha.Visible = false;
-            TelaInativarMotoristas.Visible = false; TelaTrocaSenha.Visible = false;
-            TelaEmpresas.Visible = false; TelaTrocaSenha.Visible = false;
-            ControleFaltas.Visible = false; TelaTrocaSenha.Visible = false;
+            TelaFrm_ImpSolVWMatriz.Visible = false; TelaGestaoDeCargasMatriz.Visible = false;
+            TelaGerarCVA.Visible = false; TelaGerarCVA.Visible = false;
+            TelaGestaoDeEntregasMatriz.Visible = false;
+            TelaGestaoDePedidos.Visible = false; 
+            TelaConsultaClientes.Visible = false; 
+            TelaConsultaFretes.Visible = false;
+            TelaConsultaRotas.Visible = false;
+            TelaFrm_DistanciaEntreCidades.Visible = false; 
+            TelaGerenciarRotasKrona.Visible = false;
+            TelaSimuladorFrete.Visible = false;
+            TelaConsulta_Agregados.Visible = false; 
+            TelaControleCreditoAbastecimento.Visible = false;
+            TelaFreteMinimoANTT.Visible = false; 
+            TelaConsultaVeiculos.Visible = false;
+            TelaControleCarretas.Visible = false;
+            TelaControlesValidades.Visible = false; 
+            TelaGestaoDeMultas.Visible = false; 
+            TelaConsultaMotoristas.Visible = false;
+            TelaFrm_GerarTXT.Visible = false; 
+            TelaGerarTabelaDeAvaliacaoMotoristas.Visible = false;
+            TelaControleAbastecimento.Visible = false;
+            TelaEntradaCombustivel.Visible = false; 
+            TelaGestaoPostos.Visible = false; 
+            TelaColaboradoresManutencao.Visible = false;
+            TelaConsultaFornecedores.Visible = false;
+            TelaControlaEstoque.Visible = false; 
+            TelaControlePneus.Visible = false;
+            TelaDashboardManutencao.Visible = false;
+            TelaFinalizarOS.Visible = false;
+            TelaListaOS.Visible = false;
+            TelaRequisicaoCompra.Visible = false; 
+            TelaIndicadores.Visible = false;
+            TelaConsultaUsuarios.Visible = false;
+            TelaControleAcesso.Visible = false; 
+            TelaTrocaSenha.Visible = false;
+            TelaTabelas.Visible = false;
+            TelaTrocaSenha.Visible = false;
+            TelaInativarMotoristas.Visible = false;
+            TelaTrocaSenha.Visible = false;
+            TelaEmpresas.Visible = false; 
+            TelaTrocaSenha.Visible = false;
+            ControleFaltas.Visible = false; 
+            TelaTrocaSenha.Visible = false;
 
 
         }

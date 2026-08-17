@@ -2445,7 +2445,7 @@
              <asp:TextBox ID="txtRecCVA" runat="server" CssClass="form-control" Text='<%# Eval("recebedor") %>' ReadOnly="true"  >  
              </asp:TextBox>   
         </div>          
-</div>
+    </div>
     <div class="row gy-0 mt-1">       
         <div class="col-md-5">
               <label>LOCAL DA COLETA:</label>
@@ -2556,33 +2556,154 @@
         </div>
     
     </div>
-    
-    
-    <%--<div class="row g-3">
+    <div class="row g-3">
+        <div class="erp-card mt-3">
+             <div class="erp-card-header">
+                Produtos da Solicitação
+             </div>
+             <div class="table-responsive">
+             <asp:GridView ID="gvProdutos"
+                runat="server"
+                CssClass="table table-bordered table-hover table-sm"
+                AutoGenerateColumns="False"
+                Width="100%"
+                GridLines="Both"
+                EmptyDataText="Sem produtos cadastrados.">
 
-        <div class="col-md-3">
-        <div class="form_group">
-            <span class="details">FILIAL:</span>
-            <asp:DropDownList ID="cbFiliais" runat="server" CssClass="form-control select2"></asp:DropDownList> 
-        </div>
-    </div>--%>
+                <Columns>
+                    <asp:BoundField
+                        DataField="r2_sol_codigo_produto"
+                        HeaderText="Produto" />
+
+                    <asp:BoundField
+                        DataField="r2_sol_numero"
+                        HeaderText="Solicitação" />
+
+                    <asp:BoundField
+                        DataField="r2_sol_quant_solicitada_produto"
+                        HeaderText="Qtde. Solicitada" />
+
+                    <asp:BoundField
+                        DataField="r2_sol_quant_solicitada_produto"
+                        HeaderText="Qtde. Confirama" />
+
+                </Columns>
+
+                <EmptyDataRowStyle
+                    HorizontalAlign="Center"
+                    CssClass="text-danger" />
+
+             </asp:GridView>
+
     </div>
-    <div class="row g-3"></div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div id="divEmbalagens" runat="server" class="erp-card mt-3">
+            <div class="erp-card-header">
+                Embalagens da Solicitação
+            </div>
+            <div class="table-responsive">
+                <asp:GridView ID="gvEmbalagens"
+                    runat="server"
+                    CssClass="table table-bordered table-hover table-sm"
+                    AutoGenerateColumns="False"
+                    Width="100%"
+                    GridLines="Both"
+                    EmptyDataText="Sem embalagens cadastradas.">
+
+                    <Columns>
+
+                        <asp:BoundField
+                            DataField="r3_sol_codigo_embalagem"
+                            HeaderText="Embalagem" />
+
+                        <asp:BoundField
+                            DataField="r3_sol_quant_solicitada"
+                            HeaderText="Quantidade" />
+
+                        <asp:BoundField
+                            DataField="r3_sol_altura_embalagem"
+                            HeaderText="Altura" />
+
+                        <asp:BoundField
+                            DataField="r3_sol_largura_embalagem"
+                            HeaderText="Largura" />
+
+                        <asp:BoundField
+                            DataField="r3_sol_comprimento_embalagem"
+                            HeaderText="Comprimento" />
+
+                        <asp:BoundField
+                            DataField="r3_sol_peso_embalagem"
+                            HeaderText="Peso" />
+
+                    </Columns>
+
+                    <EmptyDataRowStyle
+                        HorizontalAlign="Center"
+                        CssClass="text-danger" />
+
+                </asp:GridView>
+
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="erp-card mt-3">
+            <div class="erp-card-header">
+                Quantidades da Solicitação
+            </div>
+            <div class="table-responsive">
+                <asp:GridView ID="gvQuantidades"
+                    runat="server"
+                    CssClass="table table-bordered table-hover table-sm"
+                    AutoGenerateColumns="False"
+                    Width="100%"
+                    GridLines="Both"
+                    EmptyDataText="Sem quantidades cadastradas.">
+
+                    <Columns>
+
+                        <asp:BoundField
+                            DataField="r4_sol_quant_registro_01"
+                            HeaderText="Registro 01" />
+
+                        <asp:BoundField
+                            DataField="r4_sol_quant_registro_02"
+                            HeaderText="Registro 02" />
+
+                        <asp:BoundField
+                            DataField="r4_sol_quant_registro_03"
+                            HeaderText="Registro 03" />
+
+                    </Columns>
+
+                    <EmptyDataRowStyle
+                        HorizontalAlign="Center"
+                        CssClass="text-danger" />
+
+                </asp:GridView>
+            </div>
+        </div>
+    </div>
+
+<!-- fim -->    
+</div>
+
 
 </div>                                                           
-                                                                                           <div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
-                                                                                                <!-- Conteúdo Histórico -->
-                                                                                                <div class="row g-3">
-                                                                                                    <div class="col-md-12">
-                                                                                                        <div class="form-group">
-                                                                                                            <span class="details">Observações:</span>
-                                                                                                            <asp:TextBox ID="txtHistoricoObservacao" Text='<%# Eval("observacao") %>' TextMode="MultiLine" Rows="4" class="form-control" runat="server"></asp:TextBox>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-
-
-                                                                                            </div>
+<div class="tab-pane fade" id='<%# "tabHistorico_" + ((RepeaterItem)Container).ItemIndex %>'>
+     <!-- Conteúdo Histórico -->
+      <div class="row g-3">
+           <div class="col-md-12">
+                <div class="form-group">
+                     <span class="details">Observações:</span>
+                     <asp:TextBox ID="txtHistoricoObservacao" Text='<%# Eval("observacao") %>' TextMode="MultiLine" Rows="4" class="form-control" runat="server"></asp:TextBox>
+                </div>
+           </div>
+      </div>
+</div>
 
                                                                                             <div class="tab-pane fade" id='<%# "tabAlteracoes_" + ((RepeaterItem)Container).ItemIndex %>'>
                                                                                                 <!-- Conteúdo Alterações -->

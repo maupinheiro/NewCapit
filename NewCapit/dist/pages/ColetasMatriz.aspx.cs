@@ -1788,7 +1788,7 @@ namespace NewCapit.dist.pages
                     cmd.Parameters.AddWithValue("@uf_recebedor", ufDestino);
                     cmd.Parameters.AddWithValue("@cid_expedidor", municipioOrigem);
                     cmd.Parameters.AddWithValue("@cid_recebedor", municipioDestino);
-                    cmd.Parameters.AddWithValue("@empresa", "1111"); // ou valor padrão
+                    cmd.Parameters.AddWithValue("@empresa", Session["CodEmpresa"]?.ToString()); // ou valor padrão
                     cmd.Parameters.AddWithValue("@cadastro", DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " - " + Session["UsuarioLogado"].ToString());
                     cmd.Parameters.AddWithValue("@andamento", "Pendente");
                     cmd.Parameters.AddWithValue("@cod_pagador", codigoPagadorVazio);
@@ -2172,7 +2172,7 @@ namespace NewCapit.dist.pages
                         cmd.Parameters.Add("@fonecorporativo", SqlDbType.VarChar, 20).Value = DbString(txtFoneCorp.Text);
 
                         // CONTROLE
-                        cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 10).Value = "1111";
+                        cmd.Parameters.Add("@empresa", SqlDbType.VarChar, 10).Value = Session["CodEmpresa"]?.ToString();
                         cmd.Parameters.Add("@dtcad", SqlDbType.DateTime).Value = DateTime.Now;
                         cmd.Parameters.Add("@usucad", SqlDbType.VarChar, 50).Value = DbString(nomeUsuario);
                         cmd.Parameters.Add("@situacao", SqlDbType.VarChar, 20).Value = "PROGRAMADA";
