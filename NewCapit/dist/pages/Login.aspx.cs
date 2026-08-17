@@ -39,7 +39,13 @@ namespace NewCapit
             };
 
             var user = UsersDAL.CheckLogin(obj);
-
+            if (user == null)
+            {
+                lblError.Text = "Usuário não encontrado!";
+                txtUsuario.Text = "";
+                txtUsuario.Focus();
+                return;
+            }
             if (user.fl_status != "I")
             {
                 if (user != null)

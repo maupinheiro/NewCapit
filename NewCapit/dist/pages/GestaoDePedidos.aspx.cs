@@ -45,7 +45,7 @@ namespace NewCapit.dist.pages
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // 1. Iniciamos com "WHERE 1=1" para poder concatenar "AND" livremente
-                string query = "SELECT Id, pedido, solicitante, carga, CONVERT(varchar, previsao, 103) AS previsao, cliorigem, clidestino, andamento, chegada, idviagem FROM tbpedidos WHERE 1=1";
+                string query = "SELECT Id, pedido, solicitante, carga, CONVERT(varchar, previsao, 103) AS previsao, cliorigem, clidestino, andamento, chegada, idviagem FROM tbpedidos WHERE 1=1 AND empresa= " + Session["CodEmpresa"]?.ToString();
 
                 if (!string.IsNullOrEmpty(DataInicio.Text))
                     query += " AND previsao >= @DataInicio";

@@ -787,19 +787,7 @@
                                                                 ID="ddlTipoCargaANTT"
                                                                 runat="server"
                                                                 CssClass="form-control">
-                                                                <asp:ListItem Value="" Text="Selecione..."></asp:ListItem>
-                                                                <asp:ListItem Value="Granel sólido" Text="Granel sólido"></asp:ListItem>
-                                                                <asp:ListItem Value="Granel líquido" Text="Granel líquido"></asp:ListItem>
-                                                                <asp:ListItem Value="Frigorificada ou Aquecida" Text="Frigorificada ou Aquecida"></asp:ListItem>
-                                                                <asp:ListItem Value="Conteinerizada" Text="Conteinerizada"></asp:ListItem>
-                                                                <asp:ListItem Value="Carga Geral" Text="Carga Geral"></asp:ListItem>
-                                                                <asp:ListItem Value="Neogranel" Text="Neogranel"></asp:ListItem>
-                                                                <asp:ListItem Value="Perigosa (granel sólido)" Text="Perigosa (granel sólido)"></asp:ListItem>
-                                                                <asp:ListItem Value="Perigosa (granel líquido)" Text="Perigosa (granel líquido)"></asp:ListItem>
-                                                                <asp:ListItem Value="Perigosa (frigorificada ou aquecida)" Text="Perigosa (frigorificada ou aquecida)"></asp:ListItem>
-                                                                <asp:ListItem Value="Perigosa (conteinerizada)" Text="Perigosa (conteinerizada)"></asp:ListItem>
-                                                                <asp:ListItem Value="Perigosa (carga geral)" Text="Perigosa (carga geral)"></asp:ListItem>
-                                                                <asp:ListItem Value="Carga Granel Pressurizada" Text="Carga Granel Pressurizada"></asp:ListItem>
+                                                                <asp:ListItem Value="Carga Geral" Text="Carga Geral"></asp:ListItem>                                                                
                                                             </asp:DropDownList>
                                                         </div>
                                                     </div>

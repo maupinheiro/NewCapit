@@ -86,9 +86,7 @@ namespace NewCapit.dist.pages
                 dataFim = DateTime.Now;
 
             string sqlFiltro = @"
-    WHERE c.empresa = '1111'
-    AND c.emissao >= @ini
-    AND c.emissao < DATEADD(DAY, 1, @fim)";
+    WHERE c.empresa = " + Session["CodEmpresa"]?.ToString() + " AND c.emissao >= @ini AND c.emissao < DATEADD(DAY, 1, @fim)";
 
             List<SqlParameter> parametros = new List<SqlParameter>
     {
@@ -419,9 +417,7 @@ WHERE RowNum BETWEEN ((@pagina - 1) * @pageSize + 1) AND (@pagina * @pageSize)";
                     cid_recebedor, uf_recebedor,
                     num_carregamento, carga, emissao, situacao, status
                 FROM tbcarregamentos as c
-                WHERE empresa = '1111'
-                AND emissao >= @ini
-                AND emissao < DATEADD(DAY,1,@fim)";
+                WHERE empresa = " + Session["CodEmpresa"]?.ToString() + " AND emissao >= @ini AND emissao < DATEADD(DAY,1,@fim)";
 
                 List<SqlParameter> parametros = new List<SqlParameter>
                 {

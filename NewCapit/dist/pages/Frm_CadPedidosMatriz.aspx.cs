@@ -782,8 +782,8 @@ namespace NewCapit.dist.pages
                         else
                         {
                             conn.Close();
-                            string sqlSalvarPedido = "insert into tbpedidos " + "(pedido, carga, emissao, status, solicitante, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, andamento, ufcliorigem, ufclidestino, tomador, cidorigem, ciddestino, gr, cadastro, lotacao)" +
-              "values" + "(@pedido, @carga, @emissao, @status, @solicitante, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @andamento, @ufcliorigem, @ufclidestino, @tomador, @cidorigem, @ciddestino, @gr, @cadastro, @lotacao)";
+                            string sqlSalvarPedido = "insert into tbpedidos " + "(pedido, carga, emissao, status, solicitante, entrega, peso, material, portao, situacao, previsao, codorigem, cliorigem, coddestino, clidestino, observacao, andamento, ufcliorigem, ufclidestino, tomador, cidorigem, ciddestino, gr, cadastro, lotacao, empresa)" +
+              "values" + "(@pedido, @carga, @emissao, @status, @solicitante, @entrega, @peso, @material, @portao, @situacao, @previsao, @codorigem, @cliorigem, @coddestino, @clidestino, @observacao, @andamento, @ufcliorigem, @ufclidestino, @tomador, @cidorigem, @ciddestino, @gr, @cadastro, @lotacao, @empresa)";
 
                             SqlCommand comando = new SqlCommand(sqlSalvarPedido, conn);
                             comando.Parameters.AddWithValue("@pedido", txtNumPedido.Text);
@@ -811,6 +811,7 @@ namespace NewCapit.dist.pages
                             comando.Parameters.AddWithValue("@gr", cboGR.Text);
                             comando.Parameters.AddWithValue("@cadastro", dataHoraAtual.ToString("dd/MM/yyyy HH:mm") + " - " + nomeUsuario.ToUpper());
                             comando.Parameters.AddWithValue("@lotacao", txtLotacao.Text);
+                            comando.Parameters.AddWithValue("@empresa", Session["CodEmpresa"].ToString());
                             try
                             {
                                 conn.Open();

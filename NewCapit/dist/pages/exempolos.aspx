@@ -1,4 +1,105 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="exempolos.aspx.cs" Inherits="NewCapit.dist.pages.exempolos" %>
+﻿ <div class="row mb-2">
+      <div class="col-md-12">
+          <div class="form-group row align-items-center justify-content-end">
+              <label for="<%= txtNumCVA.ClientID %>"
+                     class="col-md-1 col-form-label text-end">
+                  CVA:
+              </label>
+              <div class="col-md-2">
+                  <asp:TextBox
+                      ID="txtNumCVA"
+                      runat="server"
+                      CssClass="form-control form-control-sm text-center"
+                      ReadOnly="true">
+                  </asp:TextBox>
+              </div>
+              <label for="<%= txtSitCVA.ClientID %>"
+                     class="col-md-1 col-form-label text-end">
+                  Situação:
+              </label>
+              <div class="col-md-2">
+                  <asp:TextBox
+                      ID="txtSitCVA"
+                      runat="server"
+                      CssClass="form-control form-control-sm text-center"
+                      ReadOnly="true">
+                  </asp:TextBox>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  
+
+  <div class="row gy-0 mt-1 align-items-center">
+      <!-- DATA DA ENTREGA -->
+      <label for="<%= txtDataHoraEntregaCVA.ClientID %>"
+             class="col-md-2 col-form-label text-end">
+          DATA DA ENTREGA:
+      </label>
+
+      <div class="col-md-2">
+          <asp:TextBox
+              ID="txtDataHoraEntregaCVA"
+              runat="server"
+              CssClass="form-control form-control-sm text-center">
+          </asp:TextBox>
+      </div>
+      <!-- VIAGEM COM RETORNO -->
+      <label for="<%= txtComRetornoCVA.ClientID %>"
+             class="col-md-2 col-form-label text-end">
+          VIAGEM COM RETORNO:
+      </label>
+      <div class="col-md-1">
+          <asp:TextBox
+              ID="txtComRetornoCVA"
+              runat="server"
+              CssClass="form-control form-control-sm text-center"
+              ReadOnly="true">
+          </asp:TextBox>
+      </div>
+      <!-- DATA RETORNO -->
+     <%-- <label for="<%= txtDtRetorno.ClientID %>"
+             class="col-md-1 col-form-label text-end">
+          RETORNO:
+      </label>--%>
+      <div class="col-md-2">
+          <asp:TextBox
+              ID="txtDtRetorno"
+              runat="server"
+              CssClass="form-control form-control-sm text-center">
+          </asp:TextBox>
+      </div>
+      <!-- DEVOLUÇÃO -->
+      <label for="<%= ddlDevolucaoPecaCVA.ClientID %>"
+             class="col-md-2 col-form-label text-end">
+          APENAS DEVOLUÇÃO:
+      </label>
+      <div class="col-md-1">
+          <asp:DropDownList
+              ID="ddlDevolucaoPecaCVA"
+              runat="server"
+              CssClass="form-control form-control-sm"
+              AutoPostBack="true">
+
+              <asp:ListItem Value="NAO" Text="NAO"></asp:ListItem>
+              <asp:ListItem Value="SIM" Text="SIM"></asp:ListItem>
+
+          </asp:DropDownList>
+      </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+<%@ Page Title="" Language="C#" MasterPageFile="~/dist/pages/Main.Master" AutoEventWireup="true" CodeBehind="exempolos.aspx.cs" Inherits="NewCapit.dist.pages.exempolos" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
